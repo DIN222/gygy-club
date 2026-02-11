@@ -6,34 +6,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GY-GY Club</title>
     <style>
-        body { margin: 0; background: #000; color: #d4af37; font-family: 'Georgia', serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; display: flex; justify-content: center; align-items: center; }
-        .screen { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s; z-index: 5; }
-        .door-img { width: 85%; max-width: 400px; border: 1px solid #d4af37; border-radius: 4px; cursor: pointer; }
-        .hidden { opacity: 0; pointer-events: none; display: none !important; }
-        .retro-card { width: 80%; max-width: 320px; padding: 40px 20px; border: 1px solid #d4af37; background: #0a0a0a; box-shadow: 0 0 20px rgba(212,175,55,0.2); }
-        .jazz-btn { display: inline-block; margin-top: 30px; padding: 15px 30px; background: #d4af37; color: #000; font-weight: bold; text-decoration: none; border-radius: 2px; }
+        body { margin: 0; background: #000; color: #d4af37; font-family: 'Georgia', serif; text-align: center; height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+        .screen { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s; }
+        .door-img { width: 80%; max-width: 350px; border: 1px solid #d4af37; cursor: pointer; filter: sepia(0.5); }
+        .hidden { display: none !important; opacity: 0; }
+        
+        .card { width: 85%; max-width: 320px; padding: 30px 15px; border: 1px solid #d4af37; background: #0a0a0a; position: relative; }
+        .nick { font-size: 24px; text-transform: uppercase; margin: 10px 0; letter-spacing: 2px; }
+        .id-badge { font-family: monospace; font-size: 10px; color: #666; }
+        
+        /* Кнопки меню */
+        .menu-btn { 
+            display: block; width: 100%; margin-top: 15px; padding: 12px;
+            background: none; border: 1px solid #444; color: #d4af37;
+            text-transform: uppercase; font-size: 11px; cursor: pointer;
+            transition: 0.3s;
+        }
+        .menu-btn:active { background: #d4af37; color: #000; border-color: #d4af37; }
+        .exit-btn { border-color: #d4af37; margin-top: 30px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <audio id="snd-creak"><source src="door_creak.mp3" type="audio/mpeg"></audio>
-    <audio id="snd-jazz" loop><source src="jazz_bar.mp3" type="audio/mpeg"></audio>
-
     <div id="door-screen" class="screen">
-        <div style="margin-bottom: 20px; letter-spacing: 5px;">ENTER THE CLUB</div>
-        <img src="door_1.jpg" class="door-img" onclick="startClub()">
-        <div style="margin-top: 20px; font-size: 10px; color: #555;">[ TOUCH THE DOOR ]</div>
-    </div>
-
-    <div id="welcome-screen" class="screen hidden">
-        <h1 style="font-size: 40px; letter-spacing: 10px;">WELCOME</h1>
+        <div style="margin-bottom: 20px; letter-spacing: 4px; font-size: 14px;">PRIVATE ENTRANCE</div>
+        <img src="door_1.jpg" class="door-img" onclick="enterClub()">
     </div>
 
     <div id="foyer-screen" class="screen hidden">
-        <div class="retro-card">
-            <div id="user-nick" style="font-size: 24px; margin-bottom: 10px;">GUEST</div>
-            <div id="user-id" style="font-family: monospace; font-size: 11px; color: #8a7a5a;">ID: ---</div>
-            <a href="https://t.me/твой_бот" class="jazz-btn">BACK TO CHAT</a>
+        <div class="card">
+            <div style="font-size: 9px; opacity: 0.5;">MEMBERSHIP CARD</div>
+            <div id="user-nick" class="nick">LOADING...</div>
+            <div id="user-id" class="id-badge">SERIAL: 00-000</div>
+            
+            <hr style="border: 0; border-top: 1px solid #222; margin: 20px 0;">
+            
+            <button class="menu-btn" onclick="alert('Скоро: Карта напитков')">Bar Menu</button>
+            <button class="menu-btn" onclick="alert('Скоро: Живая музыка')">Events</button>
+            
+            <button class="menu-btn exit-btn" onclick="closeApp()">Return to Chat</button>
         </div>
     </div>
 
@@ -42,32 +53,26 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        function startClub() {
-            // Пытаемся играть звуки. Если они пустые — ошибка просто уйдет в консоль, не ломая код.
-            try {
-                document.getElementById('snd-creak').play();
-                document.getElementById('snd-jazz').play();
-            } catch(e) { console.log("Audio skipped"); }
+        // Генерация или получение данных
+        let userData = JSON.parse(localStorage.getItem('gygy_member')) || {
+            id: Math.floor(1000 + Math.random() * 9000),
+            nick: ['JAZZ DUKE', 'NIGHT OWL', 'MYSTIC GUEST'][Math.floor(Math.random() * 3)]
+        };
+        localStorage.setItem('gygy_member', JSON.stringify(userData));
 
-            // Переход
+        function enterClub() {
+            // Визуальный переход без ожидания звука
             document.getElementById('door-screen').classList.add('hidden');
-            document.getElementById('welcome-screen').classList.remove('hidden');
+            document.getElementById('foyer-screen').classList.remove('hidden');
+            
+            document.getElementById('user-nick').innerText = userData.nick;
+            document.getElementById('user-id').innerText = 'SERIAL: GY-' + userData.id;
 
-            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('heavy');
+            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+        }
 
-            setTimeout(() => {
-                document.getElementById('welcome-screen').classList.add('hidden');
-                const foyer = document.getElementById('foyer-screen');
-                foyer.classList.remove('hidden');
-                
-                // Данные пользователя
-                let userData = JSON.parse(localStorage.getItem('gygy_member')) || {
-                    id: '№' + Math.floor(Math.random() * 90000),
-                    nick: 'SILENT LION'
-                };
-                document.getElementById('user-nick').innerText = userData.nick;
-                document.getElementById('user-id').innerText = 'SERIAL ' + userData.id;
-            }, 2500);
+        function closeApp() {
+            tg.close(); // Официальная команда закрытия
         }
     </script>
 </body>
