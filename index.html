@@ -1,94 +1,169 @@
 
-
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club</title>
+    <title>GY-GY Club - Jazz Era</title>
     <style>
-        body { margin: 0; background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw; overflow: hidden; color: #d4af37; font-family: 'Georgia', serif; cursor: pointer; }
-        
-        /* Экран Двери */
-        #door-screen { text-align: center; width: 100%; max-width: 600px; transition: all 1.2s ease-in-out; padding: 10px; box-sizing: border-box; }
-        .door-img { width: 100%; height: auto; border-radius: 8px; box-shadow: 0 0 40px rgba(212, 175, 55, 0.25); }
-        .label { font-size: 24px; letter-spacing: 4px; margin-bottom: 25px; text-transform: uppercase; }
-        .fade-out { transform: scale(2.5); opacity: 0; }
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Special+Elite&display=swap');
 
-        /* Экран WELCOME */
-        #welcome-screen { position: absolute; opacity: 0; text-align: center; transition: opacity 1.5s; display: none; }
-        h1 { font-size: clamp(40px, 10vw, 70px); letter-spacing: 12px; font-weight: normal; }
+        body { 
+            margin: 0; 
+            background: #0d0d0d; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            width: 100vw; 
+            overflow: hidden; 
+            color: #d4af37; 
+            font-family: 'Special Elite', serif; 
+            cursor: pointer; 
+        }
 
-        /* Экран ФОЙЕ */
-        #foyer-screen { position: absolute; opacity: 0; text-align: center; width: 90%; max-width: 400px; transition: opacity 2s; display: none; }
-        .passport { border: 1px solid #d4af37; padding: 30px; background: #0a0a0a; border-radius: 15px; box-shadow: 0 0 20px rgba(212, 175, 55, 0.1); }
-        .tg-button { display: inline-block; margin-top: 25px; padding: 12px 25px; background: #d4af37; color: #000; text-decoration: none; border-radius: 5px; font-weight: bold; font-family: sans-serif; text-transform: uppercase; font-size: 14px; }
+        /* Экраны */
+        #door-screen, #welcome-screen, #foyer-screen { 
+            text-align: center; 
+            width: 100%; 
+            position: absolute; 
+            transition: all 1.5s ease-in-out; 
+        }
+
+        /* Дверь */
+        .door-img { 
+            width: 90%; 
+            max-width: 450px; 
+            border: 3px solid #d4af37; 
+            padding: 5px; 
+            background: #000;
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.3);
+        }
+
+        .label { 
+            font-family: 'Playfair Display', serif;
+            font-size: 28px; 
+            letter-spacing: 6px; 
+            margin-bottom: 20px; 
+            text-shadow: 2px 2px 4px #000;
+        }
+
+        .fade-out { transform: scale(1.2) translateY(-100px); opacity: 0; }
+
+        /* Фойе в ретро стиле */
+        .retro-card {
+            width: 85%;
+            max-width: 350px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: radial-gradient(circle, #2a0a0a 0%, #050505 100%);
+            border: 2px solid #d4af37;
+            border-radius: 5px;
+            box-shadow: inset 0 0 20px #000, 0 0 30px rgba(212, 175, 55, 0.2);
+            position: relative;
+        }
+
+        .retro-card::before {
+            content: "";
+            position: absolute;
+            top: 5px; left: 5px; right: 5px; bottom: 5px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            pointer-events: none;
+        }
+
+        .member-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            color: #e5c100;
+            margin: 15px 0;
+            text-transform: uppercase;
+        }
+
+        .serial-number {
+            font-size: 12px;
+            letter-spacing: 2px;
+            color: #8a7a5a;
+            border-top: 1px solid #d4af37;
+            padding-top: 10px;
+        }
+
+        .jazz-btn {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 10px 20px;
+            border: 2px solid #d4af37;
+            color: #d4af37;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.3s;
+            background: transparent;
+        }
+
+        .jazz-btn:hover { background: #d4af37; color: #000; }
+
+        h1 { font-family: 'Playfair Display', serif; font-size: 50px; letter-spacing: 15px; }
     </style>
 </head>
-<body onclick="handleFirstClick()">
+<body onclick="handleEnter()">
+
+    <audio id="bg-music" loop>
+        <source src="https://www.mfiles.co.uk/mp3-downloads/bobby-shafter.mp3" type="audio/mpeg">
+    </audio>
 
     <div id="door-screen">
         <div class="label">ENTER THE CLUB</div>
         <img src="door_1.jpg" class="door-img" alt="Door">
     </div>
 
-    <div id="welcome-screen">
+    <div id="welcome-screen" style="display:none; opacity:0;">
         <h1>WELCOME</h1>
     </div>
 
-    <div id="foyer-screen">
-        <div class="passport">
-            <div style="font-size: 12px; color: #666; margin-bottom: 10px;">GUEST IDENTIFIED</div>
-            <div id="user-nick" style="font-size: 28px; margin-bottom: 5px;">Member</div>
-            <div id="user-id" style="font-size: 10px; color: #d4af37; letter-spacing: 2px;">ID: 000-000</div>
-            <hr style="border: 0; border-top: 1px solid #222; margin: 20px 0;">
-            <p style="font-size: 14px; line-height: 1.6;">Добро пожаловать в кулуары GY-GY Club. Здесь интеллект встречается с иронией.</p>
-            <a href="https://t.me/твой_логин_бота" class="tg-button">TELEGRAM CONTACT</a>
+    <div id="foyer-screen" style="display:none; opacity:0;">
+        <div class="retro-card">
+            <div style="font-size: 10px; color: #d4af37; opacity: 0.6;">AUTHENTICATED MEMBER</div>
+            <div class="member-name" id="user-nick">Loading...</div>
+            <div class="serial-number" id="user-id">TRACE NO. 000000</div>
+            <p style="font-size: 13px; margin-top: 20px; color: #bba37e;">
+                <i>"In a world of noise, we appreciate the melody."</i>
+            </p>
+            <a href="https://t.me/your_bot" class="jazz-btn">TELEGRAM LINE</a>
         </div>
     </div>
-
-    <audio id="bg-music" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-    </audio>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        let isEntered = false;
+        let step = 0;
+        let userData = JSON.parse(localStorage.getItem('gygy_member')) || {
+            id: '№ ' + Math.floor(Math.random() * 99999),
+            nick: ['GENTLEMAN JAKE', 'SILENT LEO', 'DUKE OF IRONY', 'NOBLE GUEST'][Math.floor(Math.random() * 4)]
+        };
+        localStorage.setItem('gygy_member', JSON.stringify(userData));
 
-        // Логика ID и Ника (из твоего плана)
-        let userData = JSON.parse(localStorage.getItem('gygy_member'));
-        if (!userData) {
-            const nicks = ['Golden Lion', 'Silent Duke', 'Irony Master', 'Night Owl'];
-            userData = {
-                id: 'GY-' + Math.floor(100000 + Math.random() * 900000),
-                nick: nicks[Math.floor(Math.random() * nicks.length)]
-            };
-            localStorage.setItem('gygy_member', JSON.stringify(userData));
-        }
+        function handleEnter() {
+            if (step !== 0) return;
+            step = 1;
 
-        function handleFirstClick() {
-            if (isEntered) return;
-            isEntered = true;
-            
-            // Запуск музыки
-            document.getElementById('bg-music').play().catch(e => console.log("Music blocked by browser"));
-            
-            // Анимация двери
+            // Музыка
+            const music = document.getElementById('bg-music');
+            music.volume = 0.5;
+            music.play();
+
+            // Анимация Двери
             document.getElementById('door-screen').classList.add('fade-out');
             
             setTimeout(() => {
                 document.getElementById('door-screen').style.display = 'none';
                 const welcome = document.getElementById('welcome-screen');
                 welcome.style.display = 'block';
-                setTimeout(() => { welcome.style.opacity = '1'; }, 50);
+                setTimeout(() => { welcome.style.opacity = '1'; }, 100);
 
-                // Через 3 секунды после WELCOME переходим в Фойе
-                setTimeout(showFoyer, 3000);
-            }, 1000);
+                // Переход в Фойе через 2.5 сек
+                setTimeout(showFoyer, 2500);
+            }, 1200);
 
             if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('heavy');
         }
@@ -101,15 +176,15 @@
             setTimeout(() => {
                 welcome.style.display = 'none';
                 foyer.style.display = 'block';
-                
-                // Заполняем данные гостя
                 document.getElementById('user-nick').innerText = userData.nick;
-                document.getElementById('user-id').innerText = 'Digital Trace: ' + userData.id;
-                
-                setTimeout(() => { foyer.style.opacity = '1'; }, 50);
-            }, 1500);
+                document.getElementById('user-id').innerText = 'SERIAL ' + userData.id;
+                setTimeout(() => { foyer.style.opacity = '1'; }, 100);
+            }, 1000);
         }
     </script>
 </body>
 </html>
 
+
+
+      
