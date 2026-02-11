@@ -1,38 +1,67 @@
 
-
-  
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GY-GY Club</title>
     <style>
-        body { margin: 0; background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw; overflow: hidden; color: #d4af37; font-family: 'Georgia', serif; cursor: pointer; }
-        #main-container { text-align: center; width: 100%; transition: all 1.2s ease-in-out; }
-        .door-img { width: 80%; max-width: 380px; border-radius: 5px; box-shadow: 0 0 30px rgba(212, 175, 55, 0.2); }
-        
-        /* Исправленная надпись: чуть меньше интервал, чтобы буква G не убегала */
-        .label { 
-            font-size: 22px; 
-            letter-spacing: 3px; 
-            margin-bottom: 20px; 
-            text-transform: uppercase;
-            width: 100%;
-            display: block;
+        body { 
+            margin: 0; 
+            background: #000; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            width: 100vw;
+            overflow: hidden; 
+            color: #d4af37; 
+            font-family: 'Georgia', serif;
+            cursor: pointer;
         }
-        
-        .fade-out { transform: scale(3); opacity: 0; }
-        #welcome-screen { position: absolute; opacity: 0; text-align: center; transition: opacity 1.5s; display: none; }
-        h1 { font-size: 40px; letter-spacing: 8px; font-weight: normal; }
+        #main-container {
+            text-align: center;
+            width: 100%;
+            transition: all 1.2s ease-in-out;
+        }
+        .door-img { 
+            width: 80%; 
+            max-width: 380px;
+            border-radius: 5px; 
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
+        }
+        /* Увеличил ширину контейнера для надписи, чтобы буква Y не пропадала */
+        .label { 
+            font-size: 26px;
+            letter-spacing: 4px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            display: block;
+            width: 100%;
+            white-space: nowrap; /* Запрещаем перенос букв */
+        }
+        .fade-out {
+            transform: scale(3);
+            opacity: 0;
+        }
+        #welcome-screen {
+            position: absolute;
+            opacity: 0;
+            text-align: center;
+            transition: opacity 1.5s;
+            display: none;
+        }
+        h1 { font-size: 40px; letter-spacing: 10px; font-weight: normal; }
     </style>
 </head>
 <body onclick="enterClub()">
 
     <div id="main-container">
-        <div class="label">GY-GY CLUB</div>
+        <div class="label">GY-GY</div>
+        
         <img src="door_1.jpg" class="door-img" alt="Door">
-        <div style="margin-top: 15px; font-size: 10px; color: #444; letter-spacing: 2px;">ENTER THE CLUB</div>
+        
+        <div style="margin-top: 20px; font-size: 12px; color: #555; letter-spacing: 3px;">ENTER THE CLUB</div>
     </div>
 
     <div id="welcome-screen">
@@ -46,20 +75,28 @@
 
         function enterClub() {
             document.getElementById('main-container').classList.add('fade-out');
+            
             setTimeout(() => {
                 document.getElementById('main-container').style.display = 'none';
                 const welcome = document.getElementById('welcome-screen');
                 welcome.style.display = 'block';
-                setTimeout(() => { welcome.style.opacity = '1'; }, 50);
+                setTimeout(() => { 
+                    welcome.style.opacity = '1'; 
+                }, 50);
             }, 1000);
-            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+            
+            if (tg.HapticFeedback) {
+                tg.HapticFeedback.impactOccurred('medium');
+            }
         }
     </script>
 </body>
 </html>
+  
+   
+   
 
 
-    
  
 
     
@@ -68,6 +105,7 @@
       
             
  
+
 
 
 
