@@ -1,40 +1,66 @@
+
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GY-GY Club</title>
     <style>
-        body { margin: 0; background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw; overflow: hidden; color: #d4af37; font-family: 'Georgia', serif; }
-        #main-container { text-align: center; width: 100%; transition: all 1s ease-in-out; cursor: pointer; }
-        .door-img { width: 85%; max-width: 400px; border-radius: 5px; box-shadow: 0 0 30px rgba(212, 175, 55, 0.15); }
-        .label { font-size: 20px; letter-spacing: 3px; margin-bottom: 15px; text-transform: uppercase; }
-        .fade-out { transform: scale(1.5); opacity: 0; pointer-events: none; }
-        
-        #welcome-screen { position: absolute; opacity: 0; text-align: center; width: 90%; transition: opacity 1.5s; display: none; }
-        .passport { border: 1px solid #d4af37; padding: 25px; background: linear-gradient(145deg, #1a1a1a, #000); border-radius: 15px; }
-        .avatar-circle { width: 80px; height: 80px; border: 2px solid #d4af37; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 40px; background: #111; }
-        .id-badge { font-family: monospace; font-size: 11px; color: #666; margin-top: 10px; }
-        .magic-key { display: inline-block; margin-top: 20px; padding: 10px 20px; border: 1px solid #d4af37; font-size: 13px; text-decoration: none; color: #000; background: #d4af37; border-radius: 5px; font-weight: bold; }
+        body { 
+            margin: 0; 
+            background: #000; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            width: 100vw;
+            overflow: hidden; 
+            color: #d4af37; 
+            font-family: 'Georgia', serif;
+            cursor: pointer;
+        }
+        #main-container {
+            text-align: center;
+            width: 100%;
+            transition: all 1.2s ease-in-out;
+        }
+        .door-img { 
+            width: 80%; 
+            max-width: 380px;
+            border-radius: 5px; 
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
+        }
+        .label { 
+            font-size: 24px;
+            letter-spacing: 5px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+        .fade-out {
+            transform: scale(3);
+            opacity: 0;
+        }
+        #welcome-screen {
+            position: absolute;
+            opacity: 0;
+            text-align: center;
+            transition: opacity 1.5s;
+            display: none;
+        }
     </style>
 </head>
 <body onclick="enterClub()">
 
     <div id="main-container">
-        <div id="status-label" class="label">Войти в Клуб</div>
-        <img src="door_1.jpg" class="door-img" alt="GY-GY Club Door">
-        <div style="margin-top: 20px; font-size: 10px; color: #444; letter-spacing: 2px;">IDENTIFYING...</div>
+        <div class="label">ENTER THE CLUB</div>
+        <img src="door_1.jpg" class="door-img" alt="Door">
+        <div style="margin-top: 20px; font-size: 12px; color: #555;">[ TAP TO OPEN ]</div>
     </div>
 
     <div id="welcome-screen">
-        <div class="passport">
-            <div class="avatar-circle" id="user-avatar">👤</div>
-            <h2 style="font-size: 18px; margin: 0; color: #888;">MEMBERSHIP CARD</h2>
-            <div id="user-name" style="font-size: 26px; margin: 15px 0; color: #d4af37;">...</div>
-            <div class="id-badge" id="user-id">TRACE ID: 000-000</div>
-            <div style="margin-top: 15px; font-size: 12px; color: #aaa; font-style: italic;">"Интеллект, ирония, фенхель"</div>
-            <a href="#" class="magic-key" onclick="downloadKey(event)">DOWNLOAD MAGIC KEY</a>
-        </div>
+        <h1 style="font-size: 30px;">WELCOME</h1>
+        <p>Вы вошли в GY-GY Club</p>
+        <p style="color: #888; font-size: 14px; font-style: italic;">Интеллект, ирония, фенхель...</p>
     </div>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -42,49 +68,30 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        // Данные для автоматического назначения (Архитектурный план)
-        const avatars = ['🦁', '🎩', '🦉', '🥃', '🎭', '🗝️'];
-        const nicknames = ['Golden Lion', 'Silent Duke', 'Irony Master', 'Night Owl', 'Secret Gent'];
-
-        let userData = JSON.parse(localStorage.getItem('gygy_member'));
-        
-        if (!userData) {
-            const newId = 'GY-' + Math.floor(100000 + Math.random() * 900000);
-            const newNick = nicknames[Math.floor(Math.random() * nicknames.length)];
-            const newAvatar = avatars[Math.floor(Math.random() * avatars.length)];
-            userData = { id: newId, name: newNick, avatar: newAvatar };
-            localStorage.setItem('gygy_member', JSON.stringify(userData));
-        } else {
-            document.getElementById('status-label').innerText = "С Возвращением";
-        }
-
         function enterClub() {
             document.getElementById('main-container').classList.add('fade-out');
             
             setTimeout(() => {
                 document.getElementById('main-container').style.display = 'none';
-                const screen = document.getElementById('welcome-screen');
-                screen.style.display = 'block';
-                
-                document.getElementById('user-name').innerText = userData.name;
-                document.getElementById('user-avatar').innerText = userData.avatar;
-                document.getElementById('user-id').innerText = 'Digital Trace: ' + userData.id;
-                
-                setTimeout(() => { screen.style.opacity = '1'; }, 50);
-            }, 800);
-
-            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('heavy');
-        }
-
-        function downloadKey(e) {
-            e.stopPropagation(); // Чтобы не срабатывал клик по body
-            alert("Ваш Magic Key (" + userData.id + ") зашифрован в браузере. В следующей версии мы добавим генерацию QR-кода!");
+                const welcome = document.getElementById('welcome-screen');
+                welcome.style.display = 'block';
+                setTimeout(() => { welcome.style.opacity = '1'; }, 50);
+            }, 1000);
+            
+            if (tg.HapticFeedback) {
+                tg.HapticFeedback.impactOccurred('medium');
+            }
         }
     </script>
 </body>
 </html>
- 
-       
+           
+        
+
+    
+          
+
       
             
  
+
