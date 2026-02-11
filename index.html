@@ -1,13 +1,12 @@
 
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club - Jazz Era</title>
+    <title>GY-GY Club Jazz</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Special+Elite&display=swap');
-
         body { 
             margin: 0; 
             background: #0d0d0d; 
@@ -18,7 +17,7 @@
             width: 100vw; 
             overflow: hidden; 
             color: #d4af37; 
-            font-family: 'Special Elite', serif; 
+            font-family: 'Times New Roman', serif; 
             cursor: pointer; 
         }
 
@@ -28,86 +27,82 @@
             width: 100%; 
             position: absolute; 
             transition: all 1.5s ease-in-out; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         /* Дверь */
         .door-img { 
             width: 90%; 
             max-width: 450px; 
-            border: 3px solid #d4af37; 
+            border: 2px solid #d4af37; 
             padding: 5px; 
             background: #000;
-            box-shadow: 0 0 50px rgba(212, 175, 55, 0.3);
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.3);
+            border-radius: 5px;
         }
 
         .label { 
-            font-family: 'Playfair Display', serif;
-            font-size: 28px; 
-            letter-spacing: 6px; 
+            font-size: 26px; 
+            letter-spacing: 5px; 
             margin-bottom: 20px; 
-            text-shadow: 2px 2px 4px #000;
+            text-transform: uppercase;
         }
 
-        .fade-out { transform: scale(1.2) translateY(-100px); opacity: 0; }
+        .fade-out { transform: scale(1.5); opacity: 0; pointer-events: none; }
 
         /* Фойе в ретро стиле */
         .retro-card {
             width: 85%;
             max-width: 350px;
-            margin: 0 auto;
             padding: 40px 20px;
-            background: radial-gradient(circle, #2a0a0a 0%, #050505 100%);
-            border: 2px solid #d4af37;
-            border-radius: 5px;
-            box-shadow: inset 0 0 20px #000, 0 0 30px rgba(212, 175, 55, 0.2);
+            background: linear-gradient(135deg, #1a0505 0%, #000000 100%);
+            border: 1px solid #d4af37;
+            border-radius: 2px;
+            box-shadow: 0 0 30px rgba(0,0,0,1), 0 0 15px rgba(212,175,55,0.1);
             position: relative;
         }
 
-        .retro-card::before {
-            content: "";
-            position: absolute;
-            top: 5px; left: 5px; right: 5px; bottom: 5px;
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            pointer-events: none;
-        }
-
         .member-name {
-            font-family: 'Playfair Display', serif;
             font-size: 32px;
-            color: #e5c100;
+            color: #d4af37;
             margin: 15px 0;
             text-transform: uppercase;
+            border-bottom: 1px double #d4af37;
+            padding-bottom: 10px;
         }
 
         .serial-number {
-            font-size: 12px;
-            letter-spacing: 2px;
+            font-family: monospace;
+            font-size: 14px;
             color: #8a7a5a;
-            border-top: 1px solid #d4af37;
-            padding-top: 10px;
+            margin-top: 15px;
         }
 
         .jazz-btn {
             display: inline-block;
             margin-top: 30px;
-            padding: 10px 20px;
-            border: 2px solid #d4af37;
+            padding: 12px 24px;
+            border: 1px solid #d4af37;
             color: #d4af37;
             text-decoration: none;
-            font-size: 14px;
+            font-size: 12px;
+            letter-spacing: 2px;
             transition: 0.3s;
             background: transparent;
+            text-transform: uppercase;
         }
 
         .jazz-btn:hover { background: #d4af37; color: #000; }
 
-        h1 { font-family: 'Playfair Display', serif; font-size: 50px; letter-spacing: 15px; }
+        h1 { font-size: clamp(40px, 12vw, 60px); letter-spacing: 10px; font-weight: normal; }
     </style>
 </head>
 <body onclick="handleEnter()">
 
-    <audio id="bg-music" loop>
-        <source src="https://www.mfiles.co.uk/mp3-downloads/bobby-shafter.mp3" type="audio/mpeg">
+    <audio id="bg-music" loop preload="auto">
+        <source src="https://www.mfiles.co.uk/mp3-downloads/jazz-piano-bar.mp3" type="audio/mpeg">
     </audio>
 
     <div id="door-screen">
@@ -121,13 +116,13 @@
 
     <div id="foyer-screen" style="display:none; opacity:0;">
         <div class="retro-card">
-            <div style="font-size: 10px; color: #d4af37; opacity: 0.6;">AUTHENTICATED MEMBER</div>
+            <div style="font-size: 10px; color: #d4af37; opacity: 0.6; letter-spacing: 3px;">PRIVATE MEMBERSHIP</div>
             <div class="member-name" id="user-nick">Loading...</div>
             <div class="serial-number" id="user-id">TRACE NO. 000000</div>
-            <p style="font-size: 13px; margin-top: 20px; color: #bba37e;">
-                <i>"In a world of noise, we appreciate the melody."</i>
+            <p style="font-size: 13px; margin-top: 20px; color: #bba37e; font-style: italic; line-height: 1.5;">
+                "Where intelligence meets irony under the sound of jazz."
             </p>
-            <a href="https://t.me/your_bot" class="jazz-btn">TELEGRAM LINE</a>
+            <a href="https://t.me/твой_бот" target="_blank" class="jazz-btn">TELEGRAM LINE</a>
         </div>
     </div>
 
@@ -137,9 +132,11 @@
         tg.expand();
 
         let step = 0;
+        
+        // Получаем или создаем данные пользователя
         let userData = JSON.parse(localStorage.getItem('gygy_member')) || {
-            id: '№ ' + Math.floor(Math.random() * 99999),
-            nick: ['GENTLEMAN JAKE', 'SILENT LEO', 'DUKE OF IRONY', 'NOBLE GUEST'][Math.floor(Math.random() * 4)]
+            id: '№' + Math.floor(10000 + Math.random() * 90000),
+            nick: ['DUKE OF JAZZ', 'SILENT LION', 'IRONIC GUEST', 'SECRET MEMBER'][Math.floor(Math.random() * 4)]
         };
         localStorage.setItem('gygy_member', JSON.stringify(userData));
 
@@ -147,10 +144,11 @@
             if (step !== 0) return;
             step = 1;
 
-            // Музыка
-            const music = document.getElementById('bg-music');
-            music.volume = 0.5;
-            music.play();
+            // Попытка запустить музыку
+            const audio = document.getElementById('bg-music');
+            audio.play().catch(function(error) {
+                console.log("Browser blocked autoplay. Audio will try to start on next interaction.");
+            });
 
             // Анимация Двери
             document.getElementById('door-screen').classList.add('fade-out');
@@ -158,10 +156,10 @@
             setTimeout(() => {
                 document.getElementById('door-screen').style.display = 'none';
                 const welcome = document.getElementById('welcome-screen');
-                welcome.style.display = 'block';
+                welcome.style.display = 'flex';
                 setTimeout(() => { welcome.style.opacity = '1'; }, 100);
 
-                // Переход в Фойе через 2.5 сек
+                // Через 2 секунды после WELCOME переходим в Фойе
                 setTimeout(showFoyer, 2500);
             }, 1200);
 
@@ -175,16 +173,14 @@
             welcome.style.opacity = '0';
             setTimeout(() => {
                 welcome.style.display = 'none';
-                foyer.style.display = 'block';
+                foyer.style.display = 'flex';
+                
                 document.getElementById('user-nick').innerText = userData.nick;
-                document.getElementById('user-id').innerText = 'SERIAL ' + userData.id;
+                document.getElementById('user-id').innerText = 'DIGITAL TRACE: ' + userData.id;
+                
                 setTimeout(() => { foyer.style.opacity = '1'; }, 100);
             }, 1000);
         }
     </script>
 </body>
 </html>
-
-
-
-      
