@@ -4,54 +4,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club Jazz</title>
+    <title>GY-GY Jazz Club</title>
     <style>
         body { 
-            margin: 0; background: #000; display: flex; justify-content: center; align-items: center; 
+            margin: 0; background: #050505; display: flex; justify-content: center; align-items: center; 
             height: 100vh; width: 100vw; overflow: hidden; color: #d4af37; font-family: 'Georgia', serif; 
             cursor: pointer; -webkit-tap-highlight-color: transparent;
         }
         #door-screen, #welcome-screen, #foyer-screen { 
-            text-align: center; width: 100%; position: absolute; transition: all 1.2s ease-in-out; 
+            text-align: center; width: 100%; position: absolute; transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1); 
             display: flex; flex-direction: column; align-items: center;
         }
-        .door-img { width: 90%; max-width: 450px; border: 1px solid #d4af37; border-radius: 5px; box-shadow: 0 0 30px rgba(212, 175, 55, 0.2); }
-        .label { font-size: 24px; letter-spacing: 5px; margin-bottom: 20px; text-transform: uppercase; }
-        .fade-out { transform: scale(1.5); opacity: 0; pointer-events: none; }
+        .door-img { width: 92%; max-width: 450px; border: 1px solid #d4af37; border-radius: 4px; box-shadow: 0 0 50px rgba(0,0,0,1), 0 0 20px rgba(212, 175, 55, 0.2); }
+        .label { font-size: 22px; letter-spacing: 6px; margin-bottom: 25px; text-transform: uppercase; opacity: 0.8; }
+        .fade-out { transform: scale(1.8); opacity: 0; pointer-events: none; }
         
         /* Ретро-карта Фойе */
         .retro-card {
-            width: 85%; max-width: 350px; padding: 40px 20px; background: #0a0a0a;
-            border: 1px solid #d4af37; border-radius: 2px; box-shadow: 0 0 20px rgba(0,0,0,1);
+            width: 80%; max-width: 320px; padding: 50px 20px; background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
+            border: 1px solid #d4af37; position: relative; box-shadow: 0 0 30px #000;
         }
-        .member-name { font-size: 28px; color: #d4af37; margin: 15px 0; border-bottom: 1px solid #d4af37; padding-bottom: 5px; }
+        .retro-card::after { content: ''; position: absolute; top: 5px; left: 5px; right: 5px; bottom: 5px; border: 1px solid rgba(212,175,55,0.1); pointer-events: none; }
+        
+        .member-name { font-size: 26px; color: #d4af37; margin: 20px 0; letter-spacing: 2px; text-transform: uppercase; }
         .jazz-btn {
-            display: inline-block; margin-top: 30px; padding: 12px 24px; border: 1px solid #d4af37;
-            color: #000; background: #d4af37; text-decoration: none; font-size: 12px; font-weight: bold;
+            display: inline-block; margin-top: 40px; padding: 15px 30px; border: 1px solid #d4af37;
+            color: #d4af37; background: transparent; text-decoration: none; font-size: 12px; letter-spacing: 2px;
+            text-transform: uppercase; transition: 0.3s;
         }
+        .jazz-btn:active { background: #d4af37; color: #000; }
+        h1 { font-size: 45px; letter-spacing: 15px; font-weight: normal; opacity: 0.9; }
     </style>
 </head>
-<body onclick="handleInteraction()">
+<body onclick="handleStart()">
 
     <audio id="bg-music" loop preload="auto">
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mpeg">
+        <source src="https://www.mfiles.co.uk/mp3-downloads/bobby-shafter.mp3" type="audio/mpeg">
     </audio>
 
     <div id="door-screen">
         <div class="label">ENTER THE CLUB</div>
         <img src="door_1.jpg" class="door-img" alt="Door">
+        <div style="margin-top: 30px; font-size: 10px; color: #444; letter-spacing: 3px;">[ TOUCH TO OPEN ]</div>
     </div>
 
     <div id="welcome-screen" style="display:none; opacity:0;">
-        <h1 style="font-size: 50px; letter-spacing: 10px;">WELCOME</h1>
+        <h1>WELCOME</h1>
     </div>
 
     <div id="foyer-screen" style="display:none; opacity:0;">
         <div class="retro-card">
-            <div style="font-size: 10px; opacity: 0.6; letter-spacing: 2px;">PRIVATE MEMBER</div>
+            <div style="font-size: 9px; opacity: 0.5; letter-spacing: 4px;">ESTABLISHED 2026</div>
             <div class="member-name" id="user-nick">...</div>
-            <div style="font-family: monospace; font-size: 12px; color: #8a7a5a;" id="user-id">TRACE NO. 000000</div>
-            <div class="jazz-btn" onclick="openContact(event)">TELEGRAM LINE</div>
+            <div style="font-family: monospace; font-size: 11px; color: #555;" id="user-id">ID: 000-000</div>
+            <div class="jazz-btn" onclick="closeClub(event)">Back to Telegram</div>
         </div>
     </div>
 
@@ -59,7 +65,6 @@
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
-        tg.ready();
 
         let step = 0;
         let userData = JSON.parse(localStorage.getItem('gygy_member')) || {
@@ -68,13 +73,14 @@
         };
         localStorage.setItem('gygy_member', JSON.stringify(userData));
 
-        function handleInteraction() {
+        function handleStart() {
             if (step !== 0) return;
             step = 1;
 
-            // ГАРАНТИРОВАННЫЙ ЗАПУСК МУЗЫКИ
+            // Звук
             const audio = document.getElementById('bg-music');
-            audio.play().catch(e => console.log("Audio play failed"));
+            audio.volume = 0.6;
+            audio.play();
 
             // Переход
             document.getElementById('door-screen').classList.add('fade-out');
@@ -102,13 +108,10 @@
             }, 1000);
         }
 
-        // БЕЗОПАСНОЕ ОТКРЫТИЕ ССЫЛКИ
-        function openContact(e) {
-            e.stopPropagation(); // Чтобы не срабатывал клик по body
-            // ЗАМЕНИ НА СВОЙ ЛИНК НИЖЕ
-            tg.openTelegramLink('https://t.me/твой_логин_бота_или_канала');
+        function closeClub(e) {
+            e.stopPropagation();
+            tg.close(); // Самый надежный способ вернуться в чат
         }
     </script>
 </body>
 </html>
-
