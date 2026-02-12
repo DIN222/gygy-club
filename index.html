@@ -15,38 +15,38 @@
         .label-top { font-size: 16px; letter-spacing: 12px; margin-bottom: 30px; text-transform: uppercase; transition: transform 2.2s ease, opacity 1.8s ease; }
         .label-up { transform: translateY(-80px); opacity: 0; }
         
-        .door-container { border: 1.5px solid #d4af37; padding: 12px; background: #050505; transition: transform 2.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.8s ease-in; cursor: pointer; }
+        .door-container { border: 2px solid #d4af37; padding: 12px; background: #050505; transition: transform 2.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.8s ease-in; cursor: pointer; }
         .door-img { width: 80vw; max-width: 380px; display: block; }
         .door-open { transform: scale(3.8); opacity: 0; }
 
         #screen-welcome { transition: opacity 3.5s ease-in-out; }
         h1 { font-size: 45px; letter-spacing: 18px; font-weight: normal; }
 
-        /* ЕДИНЫЙ СТАНДАРТ РАМОК (1.5px) */
-        .card { width: 85%; max-width: 330px; padding: 50px 25px; border: 1.5px solid #d4af37; background: #0a0a0a; }
+        /* ЖЕСТКАЯ ФИКСАЦИЯ РАМОК — 2px ВЕЗДЕ */
+        .card { width: 85%; max-width: 330px; padding: 50px 25px; border: 2px solid #d4af37; background: #0a0a0a; }
         
         .btn { 
             display: block; width: 100%; margin-top: 20px; padding: 16px; 
             background: none; 
-            border: 1.5px solid #d4af37; /* Толщина как у карточки */
+            border: 2px solid #d4af37; /* Строго 2px */
             color: #d4af37; 
             text-transform: uppercase; font-size: 11px; letter-spacing: 3px; 
             cursor: pointer; transition: all 0.3s ease; 
+            outline: none;
         }
         .btn:active { background: #d4af37; color: #000; }
         
         .exit { 
-            border: 1.5px solid #d4af37; /* Исправил толщину здесь */
+            border: 2px solid #d4af37; /* Строго 2px */
             margin-top: 35px; 
             font-weight: bold;
-            opacity: 0.7; /* Оставил легкую прозрачность для стиля, но рамка та же */
+            opacity: 0.7;
         }
     </style>
 </head>
 <body>
 
-    <audio id="bar-sound" preload="auto" crossorigin="anonymous">
-        <source src="https://actions.google.com/sounds/v1/water/pouring_water_into_glass.ogg" type="audio/ogg">
+    <audio id="bar-sound" preload="auto">
         <source src="https://www.soundjay.com/misc/sounds/pour-liquid-1.mp3" type="audio/mpeg">
     </audio>
 
@@ -64,8 +64,8 @@
 
     <div id="screen-foyer" class="screen">
         <div class="card">
-            <div id="user-nick" style="font-size: 26px; margin-bottom: 8px;">GUEST</div>
-            <div id="user-id" style="font-family: monospace; font-size: 10px; color: #444; margin-bottom: 30px;">SERIAL: GY-0000</div>
+            <div id="user-nick" style="font-size: 24px; margin-bottom: 8px; text-transform: uppercase;">LOADING...</div>
+            <div id="user-id" style="font-family: monospace; font-size: 10px; color: #444; margin-bottom: 30px;">SERIAL: GY-XXXX</div>
             
             <button class="btn" onclick="enterBar()">Enter the Bar</button>
             <button class="btn exit" onclick="closeClub()">Return to Chat</button>
@@ -78,12 +78,24 @@
         const barSound = document.getElementById('bar-sound');
         tg.expand();
 
+        // Функция определения никнейма (Cookie-style/ID)
+        function getIdentity() {
+            let id = localStorage.getItem('gygy_id');
+            let nick = localStorage.getItem('gygy_nick');
+            
+            if (!id) {
+                id = Math.floor(1000 + Math.random() * 9000);
+                // Если зашел с телефона (Night Owl), если с ноута (Undefined)
+                nick = window.innerWidth < 600 ? 'NIGHT OWL' : 'UNDEFINED';
+                localStorage.setItem('gygy_id', id);
+                localStorage.setItem('gygy_nick', nick);
+            }
+            return { id, nick };
+        }
+
         function processEntry() {
-            // Активация аудио при входе
-            barSound.play().then(() => {
-                barSound.pause();
-                barSound.currentTime = 0;
-            }).catch(e => {});
+            // Активация аудио
+            barSound.play().then(() => { barSound.pause(); barSound.currentTime = 0; }).catch(() => {});
 
             document.getElementById('text-top').classList.add('label-up');
             document.getElementById('text-bottom').style.opacity = '0';
@@ -110,29 +122,18 @@
             const foyer = document.getElementById('screen-foyer');
             foyer.classList.add('active');
             
-            let data = JSON.parse(localStorage.getItem('gygy_member')) || {
-                id: Math.floor(1000 + Math.random() * 9000),
-                nick: 'SILENT LION'
-            };
-            document.getElementById('user-nick').innerText = data.nick;
-            document.getElementById('user-id').innerText = 'SERIAL: GY-' + data.id;
+            const user = getIdentity();
+            document.getElementById('user-nick').innerText = user.nick;
+            document.getElementById('user-id').innerText = 'SERIAL: GY-' + user.id;
         }
 
         function enterBar() {
-            // Принудительная попытка проиграть звук
-            barSound.currentTime = 0;
-            barSound.play().catch(e => {
-                console.log("Audio failed to play");
-            });
-
+            barSound.play();
             if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-            
-            // Здесь будет логика перехода к карте
         }
 
         function closeClub() {
             tg.close();
-            setTimeout(() => { window.location.href = "https://t.me/your_bot_name"; }, 250);
         }
     </script>
 </body>
