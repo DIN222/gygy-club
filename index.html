@@ -6,51 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GY-GY Club</title>
     <style>
+        /* Весь твой стиль остается без изменений для стабильности */
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         body { margin: 0; background: #000; color: #d4af37; font-family: 'Georgia', serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-
-        /* Экраны */
         .screen { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; z-index: 5; }
         .active { opacity: 1; visibility: visible; transition: opacity 1.5s ease; }
-
-        /* Первый экран: Дверь */
         .label-top { font-size: 16px; letter-spacing: 12px; margin-bottom: 30px; text-transform: uppercase; transition: transform 2s ease, opacity 1.5s ease; }
         .label-up { transform: translateY(-80px); opacity: 0; }
-        
         .door-container { border: 2px solid #d4af37; padding: 12px; background: #050505; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .door-img { width: 80vw; max-width: 380px; display: block; height: auto; }
         .door-open { transform: scale(3.5); opacity: 0; }
-
-        /* Экран 2: Welcome */
         #screen-welcome { transition: opacity 3s ease; }
         h1 { font-size: 40px; letter-spacing: 15px; font-weight: normal; margin: 0; }
-
-        /* Экран 3: Фойе */
         .card { width: 85%; max-width: 320px; padding: 40px 20px; border: 2px solid #d4af37; background: #0a0a0a; }
-        
-        .btn-gold { 
-            display: block; width: 100%; margin-top: 20px; padding: 16px; 
-            background: transparent; 
-            border: 2px solid #d4af37; 
-            color: #d4af37; 
-            text-transform: uppercase; font-size: 11px; letter-spacing: 3px; 
-            cursor: pointer; font-family: 'Georgia', serif;
-            outline: none;
-        }
+        .btn-gold { display: block; width: 100%; margin-top: 20px; padding: 16px; background: transparent; border: 2px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 11px; letter-spacing: 3px; cursor: pointer; font-family: 'Georgia', serif; outline: none; }
         .btn-gold:active { background: #d4af37; color: #000; }
-        .btn-exit { margin-top: 35px; }
-
         .user-label { font-size: 24px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; }
         .id-label { font-family: monospace; font-size: 10px; color: #444; margin-bottom: 25px; }
     </style>
 </head>
-<body>
-
-    <audio id="door-sound" preload="auto">
+<body onclick="unlockAudioContext()"> <audio id="door-sound" preload="auto">
         <source src="door_open.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="bar-ambient" loop>
-        <source src="bar_ambient.mp3" type="audio/mpeg">
     </audio>
 
     <div id="screen-door" class="screen active">
@@ -69,9 +45,8 @@
         <div class="card">
             <div id="user-nick" class="user-label">GUEST</div>
             <div id="user-id" class="id-label">SERIAL: GY-0001</div>
-            
             <button class="btn-gold" onclick="enterBar()">Enter the Bar</button>
-            <button class="btn-gold btn-exit" onclick="closeClub()">Return to Chat</button>
+            <button class="btn-gold" style="margin-top:35px;" onclick="tg.close()">Return to Chat</button>
         </div>
     </div>
 
@@ -79,48 +54,46 @@
     <script>
         const tg = window.Telegram.WebApp;
         const doorSound = document.getElementById('door-sound');
-        const barAmbient = document.getElementById('bar-ambient');
-        
+        let audioUnlocked = false;
+
         tg.expand();
 
-        // 1. Идентификация (Cookie / ID)
-        function setIdentity() {
-            let id = localStorage.getItem('gy_id');
-            if (!id) {
-                id = Math.floor(1000 + Math.random() * 9000);
-                localStorage.setItem('gy_id', id);
+        // Функция разблокировки звука для мобильных устройств
+        function unlockAudioContext() {
+            if (!audioUnlocked) {
+                doorSound.play().then(() => {
+                    doorSound.pause();
+                    doorSound.currentTime = 0;
+                    audioUnlocked = true;
+                    console.log("Audio Unlocked");
+                }).catch(e => console.log("Waiting for user..."));
             }
-            document.getElementById('user-id').innerText = 'SERIAL: GY-' + id;
-            
-            // Ник в зависимости от устройства
-            const nick = window.innerWidth < 600 ? 'NIGHT OWL' : 'ELITE GUEST';
-            document.getElementById('user-nick').innerText = nick;
         }
 
-        // 2. Логика входа
-        function processEntry() {
-            // Мгновенный запуск звука двери
-            doorSound.currentTime = 0;
-            doorSound.play().catch(err => console.log("Audio block:", err));
+        function setIdentity() {
+            let id = localStorage.getItem('gy_id') || Math.floor(1000 + Math.random() * 9000);
+            localStorage.setItem('gy_id', id);
+            document.getElementById('user-id').innerText = 'SERIAL: GY-' + id;
+            document.getElementById('user-nick').innerText = window.innerWidth < 600 ? 'NIGHT OWL' : 'ELITE GUEST';
+        }
 
-            // Анимация двери
+        function processEntry() {
+            // Принудительный запуск звука
+            doorSound.currentTime = 0;
+            doorSound.play().catch(err => {
+                console.log("Audio failed. Check filename 'door_open.mp3'");
+            });
+
+            // Анимация
             document.getElementById('text-top').classList.add('label-up');
             document.getElementById('door-frame').classList.add('door-open');
-
             if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('heavy');
 
-            // Переход к Welcome
             setTimeout(() => {
                 document.getElementById('screen-door').classList.remove('active');
                 const welcomeScreen = document.getElementById('screen-welcome');
                 welcomeScreen.classList.add('active');
 
-                // Начинаем тихо подмешивать фон бара
-                barAmbient.volume = 0;
-                barAmbient.play().catch(() => {});
-                fadeAudio(barAmbient, 0.2);
-
-                // Переход к Фойе
                 setTimeout(() => {
                     welcomeScreen.style.opacity = "0"; 
                     setTimeout(() => {
@@ -132,30 +105,10 @@
             }, 1200);
         }
 
-        // Плавное нарастание звука
-        function fadeAudio(audio, targetVolume) {
-            let currentVol = 0;
-            let interval = setInterval(() => {
-                if (currentVol < targetVolume) {
-                    currentVol += 0.02;
-                    audio.volume = currentVol;
-                } else {
-                    clearInterval(interval);
-                }
-            }, 200);
-        }
-
         function enterBar() {
-            barAmbient.volume = 1.0; // Делаем шум бара громким
-            if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-            alert("Кх-кх... Проходите, в баре уже наливают.");
+            alert("Проходите, в баре уже наливают.");
         }
 
-        function closeClub() {
-            tg.close();
-        }
-
-        // Инициализация при старте
         window.onload = setIdentity;
     </script>
 </body>
