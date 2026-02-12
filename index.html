@@ -8,35 +8,19 @@
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         body { margin: 0; background: #000; color: #d4af37; font-family: 'Georgia', serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-
         .screen { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; z-index: 5; }
         .active { opacity: 1; visibility: visible; transition: opacity 1.5s ease; }
-
         .label-top { font-size: 16px; letter-spacing: 12px; margin-bottom: 30px; text-transform: uppercase; transition: transform 2s ease, opacity 1.5s ease; }
         .label-up { transform: translateY(-80px); opacity: 0; }
-        
         .door-container { border: 2px solid #d4af37; padding: 12px; background: #050505; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .door-img { width: 80vw; max-width: 380px; display: block; height: auto; }
         .door-open { transform: scale(3.5); opacity: 0; }
-
         #screen-welcome { transition: opacity 3s ease; }
         h1 { font-size: 40px; letter-spacing: 15px; font-weight: normal; margin: 0; }
-
         .card { width: 85%; max-width: 320px; padding: 40px 20px; border: 2px solid #d4af37; background: #0a0a0a; }
-        
-        .btn-gold { 
-            display: block; width: 100%; margin-top: 20px; padding: 16px; 
-            background: transparent; 
-            border: 2px solid #d4af37; 
-            color: #d4af37; 
-            text-transform: uppercase; font-size: 11px; letter-spacing: 3px; 
-            cursor: pointer; font-family: 'Georgia', serif;
-            outline: none;
-        }
-
+        .btn-gold { display: block; width: 100%; margin-top: 20px; padding: 16px; background: transparent; border: 2px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 11px; letter-spacing: 3px; cursor: pointer; font-family: 'Georgia', serif; outline: none; }
         .btn-gold:active { background: #d4af37; color: #000; }
         .btn-exit { margin-top: 35px; }
-
         .user-label { font-size: 24px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; }
         .id-label { font-family: monospace; font-size: 10px; color: #444; margin-bottom: 25px; }
     </style>
@@ -46,7 +30,7 @@
     <audio id="door-sound">
         <source src="door_open.mp3" type="audio/mpeg">
     </audio>
-    <audio id="bar-sound">
+    <audio id="bar-sound" loop>
         <source src="bar_ambient.mp3" type="audio/mpeg">
     </audio>
 
@@ -75,8 +59,8 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
         const tg = window.Telegram.WebApp;
-        const doorSound = document.getElementById('door-sound');
-        const barSound = document.getElementById('bar-sound');
+        const doorSnd = document.getElementById('door-sound');
+        const barSnd = document.getElementById('bar-sound');
         tg.expand();
 
         function setIdentity() {
@@ -87,13 +71,17 @@
         }
 
         function processEntry() {
-            // МГНОВЕННЫЙ ЗАПУСК ЗВУКА
-            try {
-                doorSound.currentTime = 0;
-                doorSound.play();
-            } catch(e) { console.log("Audio error"); }
+            // ЗАПУСКАЕМ ОБА ЗВУКА СРАЗУ ПО КЛИКУ
+            
+            // 1. Звук двери (громко)
+            doorSnd.volume = 1.0;
+            doorSnd.play().catch(e => console.log("Door sound blocked"));
 
-            // Анимация
+            // 2. Звук бара (очень тихо, фоном)
+            barSnd.volume = 0.1; 
+            barSnd.play().catch(e => console.log("Bar sound blocked"));
+
+            // Визуальная часть
             document.getElementById('text-top').classList.add('label-up');
             document.getElementById('door-frame').classList.add('door-open');
 
@@ -116,10 +104,8 @@
         }
 
         function enterBar() {
-            // Звук бара при входе
-            try {
-                barSound.play();
-            } catch(e) {}
+            // Просто прибавляем громкость уже играющего фона
+            barSnd.volume = 1.0;
             if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
             alert("Кх-кх... Проходите, в баре уже наливают.");
         }
