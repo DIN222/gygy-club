@@ -1,24 +1,121 @@
 
 <!DOCTYPE html>
-<html>
-<body>
-    <h1>ПРОВЕРКА СИСТЕМЫ</h1>
-    <p>Если ты это видишь, значит экран работает.</p>
-    <div id="trace">Ищу твой ID...</div>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GY-GY Club</title>
+    <style>
+        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+        body { margin: 0; background: #000; color: #d4af37; font-family: 'Georgia', serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
-    <script>
-        // Самая простая логика идентификации, которая была в начале
-        var userTrace = localStorage.getItem('digital_trace_id');
+        .screen { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; z-index: 5; }
+        .active { opacity: 1; visibility: visible; transition: opacity 1.5s ease; }
+
+        .label-top { font-size: 16px; letter-spacing: 12px; margin-bottom: 30px; text-transform: uppercase; transition: transform 2s ease, opacity 1.5s ease; }
+        .label-up { transform: translateY(-80px); opacity: 0; }
         
-        if (userTrace) {
-            document.getElementById('trace').innerHTML = "ТВОЙ ID НАЙДЕН: " + userTrace;
-        } else {
-            var newID = "USER-" + Math.floor(Math.random() * 10000);
-            localStorage.setItem('digital_trace_id', newID);
-            document.getElementById('trace').innerHTML = "СОЗДАН НОВЫЙ ID: " + newID;
+        .door-container { border: 2px solid #d4af37; padding: 12px; background: #050505; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s; cursor: pointer; }
+        .door-img { width: 80vw; max-width: 380px; display: block; }
+        .door-open { transform: scale(3.5); opacity: 0; }
+
+        #screen-welcome { transition: opacity 3s ease; }
+        h1 { font-size: 40px; letter-spacing: 15px; }
+
+        .card { width: 85%; max-width: 320px; padding: 40px 20px; border: 2px solid #d4af37; background: #0a0a0a; }
+        
+        .btn-gold { 
+            display: block; width: 100%; margin-top: 20px; padding: 16px; 
+            background: transparent; 
+            border: 2px solid #d4af37; 
+            color: #d4af37; 
+            text-transform: uppercase; font-size: 11px; letter-spacing: 3px; 
+            cursor: pointer; font-family: 'Georgia', serif;
         }
-        
-        console.log("Система опознавания активна");
+        .btn-gold:active { background: #d4af37; color: #000; }
+        .btn-exit { margin-top: 30px; }
+    </style>
+</head>
+<body>
+
+    <audio id="bar-sound" preload="auto">
+        <source src="https://www.soundjay.com/human/man-cough-03.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="screen-door" class="screen active">
+        <div id="text-top" class="label-top">GY-GY PRIVATE</div>
+        <div id="door-frame" class="door-container" onclick="processEntry()">
+            <img src="door_1.jpg" class="door-img">
+        </div>
+        <div style="margin-top:25px; font-size:10px; color:#555; letter-spacing:4px;">BEYOND THE IRONIC BARRICADE</div>
+    </div>
+
+    <div id="screen-welcome" class="screen">
+        <h1>WELCOME</h1>
+    </div>
+
+    <div id="screen-foyer" class="screen">
+        <div class="card">
+            <div id="user-nick" style="font-size: 24px; margin-bottom: 10px; text-transform: uppercase;">GUEST</div>
+            <div id="user-id" style="font-family: monospace; font-size: 10px; color: #444; margin-bottom: 25px;">SERIAL: GY-0001</div>
+            
+            <button class="btn-gold" onclick="enterBar()">Enter the Bar</button>
+            <button class="btn-gold btn-exit" onclick="closeClub()">Return to Chat</button>
+        </div>
+    </div>
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+        const tg = window.Telegram.WebApp;
+        const barSound = document.getElementById('bar-sound');
+        tg.expand();
+
+        function setIdentity() {
+            const nick = window.innerWidth < 600 ? 'NIGHT OWL' : 'UNDEFINED';
+            document.getElementById('user-nick').innerText = nick;
+            let id = localStorage.getItem('gy_id') || Math.floor(1000 + Math.random() * 9000);
+            localStorage.setItem('gy_id', id);
+            document.getElementById('user-id').innerText = 'SERIAL: GY-' + id;
+        }
+
+        function processEntry() {
+            // "Прогрев" звука при первом клике на дверь
+            barSound.play().then(() => { barSound.pause(); }).catch(() => {});
+
+            document.getElementById('text-top').classList.add('label-up');
+            document.getElementById('door-frame').classList.add('door-open');
+
+            setTimeout(() => {
+                document.getElementById('screen-door').classList.remove('active');
+                const welcomeScreen = document.getElementById('screen-welcome');
+                welcomeScreen.classList.add('active');
+
+                setTimeout(() => {
+                    welcomeScreen.style.opacity = "0"; 
+                    setTimeout(() => {
+                        welcomeScreen.classList.remove('active');
+                        setIdentity();
+                        document.getElementById('screen-foyer').classList.add('active');
+                    }, 3000); 
+                }, 4000); 
+            }, 1200);
+        }
+
+        function enterBar() {
+            // Сначала играем звук, потом всё остальное
+            barSound.currentTime = 0;
+            barSound.play();
+            
+            if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+            
+            // Вместо алерта теперь просто логика (позже здесь будет переход к меню)
+            console.log("Sound played, entering...");
+        }
+
+        function closeClub() {
+            tg.close();
+            setTimeout(() => { window.location.href = "https://t.me/твой_бот"; }, 200);
+        }
     </script>
 </body>
 </html>
