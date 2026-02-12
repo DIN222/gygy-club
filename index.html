@@ -7,69 +7,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GY-GY Club</title>
     <style>
-        /* Убираем все системные блики и выделения */
-        * { -webkit-tap-highlight-color: transparent; outline: none; }
+        /* Полная блокировка системных выделений */
+        * { 
+            -webkit-tap-highlight-color: transparent !important; 
+            -webkit-touch-callout: none !important; 
+            user-select: none !important; 
+        }
 
         body { 
             margin: 0; background: #000; color: #d4af37; 
             font-family: 'Georgia', serif; text-align: center;
-            height: 100vh; overflow: hidden;
+            height: 100vh; width: 100vw; overflow: hidden;
             display: flex; justify-content: center; align-items: center;
         }
         
         .screen { 
             position: absolute; width: 100%; height: 100%; 
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1); 
+            transition: all 1s ease-in-out; 
         }
 
-        .hidden { opacity: 0; pointer-events: none; visibility: hidden; }
+        .hidden { opacity: 0; pointer-events: none; display: none !important; }
         
-        /* АНИМАЦИЯ ДВЕРИ */
+        /* Анимация двери */
         .door-img { 
-            width: 85%; max-width: 400px; 
-            border: 1px solid #d4af37; border-radius: 4px; 
-            cursor: pointer; 
-            transition: transform 2s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s ease-in;
-            will-change: transform, opacity; /* Оптимизация для плавности */
+            width: 85%; max-width: 400px; border: 1px solid #d4af37; border-radius: 4px; 
+            cursor: pointer; transition: transform 2s, opacity 1.5s;
         }
-        .door-open-effect { 
-            transform: scale(3) !important; 
-            opacity: 0 !important;
-        }
+        .door-open-effect { transform: scale(3); opacity: 0; }
 
-        /* КАРТОЧКА ФОЙЕ */
+        /* Карточка Фойе */
         .card { 
             width: 80%; max-width: 320px; padding: 40px 20px; 
-            border: 1px solid #d4af37; 
-            background: radial-gradient(circle, #151515 0%, #000 100%);
-            box-shadow: 0 0 50px rgba(0,0,0,1);
+            border: 1px solid #d4af37; background: #0a0a0a;
+            box-shadow: 0 0 30px #000;
         }
 
         .btn { 
             display: block; width: 100%; margin-top: 15px; padding: 14px;
             background: none; border: 1px solid #333; color: #d4af37;
             text-transform: uppercase; font-size: 11px; letter-spacing: 2px;
-            cursor: pointer; transition: 0.3s;
+            cursor: pointer; 
         }
         .btn:active { background: #d4af37; color: #000; }
         
         .exit { border-color: #d4af37; margin-top: 30px; font-weight: bold; }
 
-        h1 { font-size: 45px; letter-spacing: 15px; font-weight: normal; }
-        #user-nick { font-size: 26px; margin-bottom: 5px; text-transform: uppercase; }
+        h1 { font-size: 40px; letter-spacing: 10px; font-weight: normal; }
     </style>
 </head>
 <body>
 
-    <audio id="main-jazz" crossorigin="anonymous">
-        <source src="https://stream.radioretronomoderna.com/retro.mp3" type="audio/mpeg">
+    <audio id="main-jazz" preload="auto">
+        <source src="https://www.mfiles.co.uk/mp3-downloads/bobby-shafter.mp3" type="audio/mpeg">
     </audio>
 
     <div id="screen-door" class="screen">
-        <div style="margin-bottom: 25px; letter-spacing: 5px; font-size: 12px; opacity: 0.5;">GY-GY PRIVATE CLUB</div>
         <img src="door_1.jpg" id="door-element" class="door-img" onclick="processEntry()">
-        <div style="margin-top: 30px; font-size: 10px; color: #444; letter-spacing: 3px;">[ TOUCH TO OPEN ]</div>
+        <div style="margin-top: 20px; font-size: 10px; opacity: 0.4;">[ CLICK TO OPEN ]</div>
     </div>
 
     <div id="screen-welcome" class="screen hidden">
@@ -78,12 +73,12 @@
 
     <div id="screen-foyer" class="screen hidden">
         <div class="card">
-            <div id="user-nick">...</div>
-            <div id="user-id" style="font-family: monospace; font-size: 10px; color: #555; margin-bottom: 25px;">SERIAL: ---</div>
+            <div id="user-nick" style="font-size: 24px; text-transform: uppercase; margin-bottom: 10px;">...</div>
+            <div id="user-id" style="font-family: monospace; font-size: 10px; color: #555; margin-bottom: 25px;">...</div>
             
-            <button class="btn" onclick="toggleMusic()" id="music-btn">Music Box: OFF</button>
-            <button class="btn" onclick="alert('Бар скоро откроется...')">Bar Menu</button>
-            <button class="btn exit" onclick="closeClub()">Back to Chat</button>
+            <button class="btn" onclick="toggleMusic(this)">Music Box: OFF</button>
+            <button class="btn" onclick="alert('Bar Menu Coming Soon')">Bar Menu</button>
+            <button class="btn exit" onclick="closeClub()">Return to Chat</button>
         </div>
     </div>
 
@@ -93,26 +88,21 @@
         tg.expand();
 
         let userData = JSON.parse(localStorage.getItem('gygy_member')) || {
-            id: Math.floor(10000 + Math.random() * 89999),
-            nick: ['DUKE OF JAZZ', 'SILENT LION', 'MYSTIC GUEST', 'NIGHT OWL'][Math.floor(Math.random() * 4)]
+            id: 'GY-' + Math.floor(10000 + Math.random() * 89999),
+            nick: ['DUKE OF JAZZ', 'SILENT LION', 'NIGHT OWL'][Math.floor(Math.random() * 3)]
         };
         localStorage.setItem('gygy_member', JSON.stringify(userData));
 
         const music = document.getElementById('main-jazz');
 
         function processEntry() {
-            // Мгновенная анимация двери
-            const door = document.getElementById('door-element');
-            door.classList.add('door-open-effect');
-            
-            // "Будим" аудиосистему
-            music.play().then(() => {
-                music.pause(); // Только для получения разрешения от браузера
-            }).catch(e => console.log("Audio prep"));
-
+            // Анимация
+            document.getElementById('door-element').classList.add('door-open-effect');
             if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('heavy');
 
-            // Цепочка экранов
+            // Попытка "разбудить" аудио
+            music.play().then(() => { music.pause(); }).catch(e => {});
+
             setTimeout(() => {
                 document.getElementById('screen-door').classList.add('hidden');
                 const welcome = document.getElementById('screen-welcome');
@@ -123,17 +113,16 @@
                     setTimeout(() => {
                         const foyer = document.getElementById('screen-foyer');
                         document.getElementById('user-nick').innerText = userData.nick;
-                        document.getElementById('user-id').innerText = 'SERIAL: GY-' + userData.id;
+                        document.getElementById('user-id').innerText = userData.id;
                         foyer.classList.remove('hidden');
-                    }, 800);
-                }, 2200);
-            }, 800);
+                    }, 500);
+                }, 2000);
+            }, 1000);
         }
 
-        function toggleMusic() {
-            const btn = document.getElementById('music-btn');
+        function toggleMusic(btn) {
             if (music.paused) {
-                music.play();
+                music.play().catch(e => alert("Ошибка звука. Проверьте интернет."));
                 btn.innerText = "Music Box: ON";
             } else {
                 music.pause();
@@ -142,7 +131,12 @@
         }
 
         function closeClub() {
-            tg.close();
+            // Самый надежный способ закрытия в TG
+            try {
+                tg.close();
+            } catch (e) {
+                window.location.href = "https://t.me/your_bot_link"; // Резервный вариант (замени на свою ссылку)
+            }
         }
     </script>
 </body>
