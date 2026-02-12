@@ -9,30 +9,24 @@
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         body { margin: 0; background: #000; color: #d4af37; font-family: 'Georgia', serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
-        /* Экраны */
-        .screen { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 1; transition: opacity 1.5s ease-in-out; z-index: 5; }
-        .hidden { opacity: 0; pointer-events: none; visibility: hidden; }
+        /* Система экранов */
+        .screen { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 1.5s ease-in-out; z-index: 5; }
+        .active { opacity: 1; visibility: visible; }
 
-        /* Отдельная анимация надписи */
-        .label-top { 
-            font-size: 16px; letter-spacing: 10px; margin-bottom: 30px; text-transform: uppercase; 
-            transition: transform 2s ease, opacity 1.5s ease;
-        }
-        .label-up { transform: translateY(-100px); opacity: 0; }
+        /* Входная группа */
+        .label-top { font-size: 16px; letter-spacing: 10px; margin-bottom: 30px; text-transform: uppercase; transition: transform 2s ease, opacity 1.5s ease; }
+        .label-up { transform: translateY(-80px); opacity: 0; }
         
-        /* Анимация двери */
-        .door-container { border: 2px solid #d4af37; padding: 10px; background: #050505; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s; cursor: pointer; }
+        .door-container { border: 2px solid #d4af37; padding: 10px; background: #050505; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s ease-in; cursor: pointer; }
         .door-img { width: 80vw; max-width: 380px; display: block; }
         .door-open { transform: scale(3.5); opacity: 0; }
 
-        .label-bottom { margin-top: 25px; font-size: 10px; color: #555; letter-spacing: 3px; text-transform: uppercase; transition: opacity 1s; }
-
         /* Welcome */
-        #screen-welcome h1 { font-size: 45px; letter-spacing: 15px; font-weight: normal; }
+        h1 { font-size: 45px; letter-spacing: 15px; font-weight: normal; }
 
         /* Фойе */
-        .card { width: 80%; max-width: 320px; padding: 45px 20px; border: 1px solid #d4af37; background: #0a0a0a; box-shadow: 0 0 40px #000; }
-        .btn { display: block; width: 100%; margin-top: 15px; padding: 14px; background: none; border: 1px solid #333; color: #d4af37; text-transform: uppercase; font-size: 11px; letter-spacing: 2px; cursor: pointer; transition: 0.3s; }
+        .card { width: 80%; max-width: 320px; padding: 45px 20px; border: 1px solid #d4af37; background: #0a0a0a; }
+        .btn { display: block; width: 100%; margin-top: 15px; padding: 14px; background: none; border: 1px solid #333; color: #d4af37; text-transform: uppercase; font-size: 11px; letter-spacing: 2px; cursor: pointer; }
         .btn:active { background: #d4af37; color: #000; }
         .exit { border-color: #d4af37; margin-top: 30px; font-weight: bold; }
     </style>
@@ -40,22 +34,22 @@
 <body>
 
     <audio id="sound-cough" preload="auto">
-        <source src="https://www.soundjay.com/human/man-coughing-01.mp3" type="audio/mpeg">
+        <source src="https://assets.mixkit.co/active_storage/sfx/2215/2215-preview.mp3" type="audio/mpeg">
     </audio>
 
-    <div id="screen-door" class="screen">
+    <div id="screen-door" class="screen active">
         <div id="text-top" class="label-top">GY-GY PRIVATE</div>
         <div class="door-container" id="door-frame" onclick="processEntry()">
             <img src="door_1.jpg" class="door-img">
         </div>
-        <div id="text-bottom" class="label-bottom">BEYOND THE IRONIC BARRICADE</div>
+        <div id="text-bottom" style="margin-top:25px; font-size:10px; color:#555; letter-spacing:3px; transition: opacity 1s;">BEYOND THE IRONIC BARRICADE</div>
     </div>
 
-    <div id="screen-welcome" class="screen hidden">
+    <div id="screen-welcome" class="screen">
         <h1>WELCOME</h1>
     </div>
 
-    <div id="screen-foyer" class="screen hidden">
+    <div id="screen-foyer" class="screen">
         <div class="card">
             <div id="user-nick" style="font-size: 26px; margin-bottom: 5px;">GUEST</div>
             <div id="user-id" style="font-family: monospace; font-size: 10px; color: #444; margin-bottom: 25px;">SERIAL: GY-0000</div>
@@ -68,36 +62,42 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
         const tg = window.Telegram.WebApp;
+        const coughSound = document.getElementById('sound-cough');
         tg.expand();
 
         function processEntry() {
-            // Анимация в разные стороны
+            // КРИТИЧНО: Разблокируем аудио-движок первым же касанием
+            coughSound.play().then(() => {
+                coughSound.pause();
+                coughSound.currentTime = 0;
+            }).catch(e => console.log("Audio unlock attempted"));
+
+            // Анимации ухода двери
             document.getElementById('text-top').classList.add('label-up');
             document.getElementById('text-bottom').style.opacity = '0';
             document.getElementById('door-frame').classList.add('door-open');
 
             if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('heavy');
 
+            // Появление Welcome
             setTimeout(() => {
-                document.getElementById('screen-door').classList.add('hidden');
-                
-                // Плавный Welcome
-                const welcome = document.getElementById('screen-welcome');
-                welcome.classList.remove('hidden');
+                document.getElementById('screen-door').classList.remove('active');
+                const welcomeScreen = document.getElementById('screen-welcome');
+                welcomeScreen.classList.add('active');
 
+                // Плавное исчезновение Welcome
                 setTimeout(() => {
-                    welcome.classList.add('hidden'); // Fade-out
+                    welcomeScreen.classList.remove('active');
                     
-                    setTimeout(() => {
-                        showFoyer();
-                    }, 1500); // Пауза на исчезновение
-                }, 2500); 
-            }, 1500);
+                    // Появление Фойе
+                    setTimeout(showFoyer, 1500);
+                }, 2000); 
+            }, 1300);
         }
 
         function showFoyer() {
             const foyer = document.getElementById('screen-foyer');
-            foyer.classList.remove('hidden');
+            foyer.classList.add('active');
             
             let data = JSON.parse(localStorage.getItem('gygy_member')) || {
                 id: Math.floor(1000 + Math.random() * 9000),
@@ -108,22 +108,20 @@
         }
 
         function enterBar() {
-            const cough = document.getElementById('sound-cough');
-            cough.play().catch(e => console.log("Sound error"));
+            // Воспроизводим звук КХ-КХ
+            coughSound.play();
             
             if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
             
             setTimeout(() => {
-                alert("Кх-кх... Проходите, в баре уже наливают.");
-                // Здесь будет переход к Карте (следующий этап)
-            }, 500);
+                // Здесь будет переход к Карте Бара
+                console.log("Переход в бар выполнен после КХ-КХ");
+            }, 800);
         }
 
         function closeClub() {
             tg.close();
-            setTimeout(() => {
-                window.location.href = "https://t.me/твой_бот"; // Подставь ник бота
-            }, 250);
+            setTimeout(() => { window.location.href = "https://t.me/твой_бот"; }, 250);
         }
     </script>
 </body>
