@@ -9,41 +9,44 @@
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         body { margin: 0; background: #000; color: #d4af37; font-family: 'Georgia', serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
-        /* Экраны */
         .screen { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; z-index: 5; }
         .active { opacity: 1; visibility: visible; transition: opacity 1.8s ease-in-out; }
 
-        /* Дверь и Надписи */
         .label-top { font-size: 16px; letter-spacing: 12px; margin-bottom: 30px; text-transform: uppercase; transition: transform 2.2s ease, opacity 1.8s ease; }
         .label-up { transform: translateY(-80px); opacity: 0; }
         
-        .door-container { border: 2px solid #d4af37; padding: 12px; background: #050505; transition: transform 2.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.8s ease-in; cursor: pointer; }
+        .door-container { border: 1.5px solid #d4af37; padding: 12px; background: #050505; transition: transform 2.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.8s ease-in; cursor: pointer; }
         .door-img { width: 80vw; max-width: 380px; display: block; }
         .door-open { transform: scale(3.8); opacity: 0; }
 
-        /* Welcome */
         #screen-welcome { transition: opacity 3.5s ease-in-out; }
         h1 { font-size: 45px; letter-spacing: 18px; font-weight: normal; }
 
-        /* Карточка Фойе и Кнопки */
-        .card { width: 85%; max-width: 330px; padding: 50px 25px; border: 1px solid #d4af37; background: #0a0a0a; box-shadow: 0 0 30px rgba(212, 175, 55, 0.1); }
+        /* ЕДИНЫЙ СТАНДАРТ РАМОК (1.5px) */
+        .card { width: 85%; max-width: 330px; padding: 50px 25px; border: 1.5px solid #d4af37; background: #0a0a0a; }
         
         .btn { 
             display: block; width: 100%; margin-top: 20px; padding: 16px; 
             background: none; 
-            border: 1px solid #d4af37; /* ВЕРНУЛ РАМКУ */
+            border: 1.5px solid #d4af37; /* Толщина как у карточки */
             color: #d4af37; 
             text-transform: uppercase; font-size: 11px; letter-spacing: 3px; 
             cursor: pointer; transition: all 0.3s ease; 
         }
         .btn:active { background: #d4af37; color: #000; }
         
-        .exit { border-color: rgba(212, 175, 55, 0.5); margin-top: 35px; font-weight: bold; }
+        .exit { 
+            border: 1.5px solid #d4af37; /* Исправил толщину здесь */
+            margin-top: 35px; 
+            font-weight: bold;
+            opacity: 0.7; /* Оставил легкую прозрачность для стиля, но рамка та же */
+        }
     </style>
 </head>
 <body>
 
-    <audio id="bar-sound" preload="auto">
+    <audio id="bar-sound" preload="auto" crossorigin="anonymous">
+        <source src="https://actions.google.com/sounds/v1/water/pouring_water_into_glass.ogg" type="audio/ogg">
         <source src="https://www.soundjay.com/misc/sounds/pour-liquid-1.mp3" type="audio/mpeg">
     </audio>
 
@@ -76,11 +79,11 @@
         tg.expand();
 
         function processEntry() {
-            // "Будим" звук сразу при входе
+            // Активация аудио при входе
             barSound.play().then(() => {
                 barSound.pause();
                 barSound.currentTime = 0;
-            }).catch(e => console.log("Audio prep..."));
+            }).catch(e => {});
 
             document.getElementById('text-top').classList.add('label-up');
             document.getElementById('text-bottom').style.opacity = '0';
@@ -116,18 +119,20 @@
         }
 
         function enterBar() {
-            // Играем звук
+            // Принудительная попытка проиграть звук
+            barSound.currentTime = 0;
             barSound.play().catch(e => {
-                // Если не сработало, пробуем еще раз
-                barSound.load();
-                barSound.play();
+                console.log("Audio failed to play");
             });
 
             if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+            
+            // Здесь будет логика перехода к карте
         }
 
         function closeClub() {
             tg.close();
+            setTimeout(() => { window.location.href = "https://t.me/your_bot_name"; }, 250);
         }
     </script>
 </body>
