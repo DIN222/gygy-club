@@ -6,45 +6,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GY-GY Club</title>
     <style>
-        body { margin: 0; background: #000; color: #d4af37; font-family: 'Georgia', serif; text-align: center; height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; }
-        .screen { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s; }
-        .door-img { width: 80%; max-width: 350px; border: 1px solid #d4af37; cursor: pointer; filter: sepia(0.5); }
-        .hidden { display: none !important; opacity: 0; }
+        body { 
+            margin: 0; background: #000; color: #d4af37; 
+            font-family: 'Georgia', serif; text-align: center;
+            height: 100vh; overflow: hidden;
+            display: flex; justify-content: center; align-items: center;
+        }
         
-        .card { width: 85%; max-width: 320px; padding: 30px 15px; border: 1px solid #d4af37; background: #0a0a0a; position: relative; }
-        .nick { font-size: 24px; text-transform: uppercase; margin: 10px 0; letter-spacing: 2px; }
-        .id-badge { font-family: monospace; font-size: 10px; color: #666; }
+        .screen { 
+            position: absolute; width: 100%; height: 100%; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 1.5s ease, transform 1.2s ease; 
+        }
+
+        .hidden { opacity: 0; pointer-events: none; visibility: hidden; }
         
-        /* Кнопки меню */
-        .menu-btn { 
+        /* Эффект для двери */
+        .door-img { 
+            width: 85%; max-width: 400px; border: 1px solid #d4af37; 
+            border-radius: 4px; cursor: pointer; transition: transform 2s;
+        }
+        .door-open { transform: scale(1.5); opacity: 0; }
+
+        /* Карточка в фойе */
+        .card { 
+            width: 80%; max-width: 320px; padding: 40px 20px; 
+            border: 1px solid #d4af37; background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
+            box-shadow: 0 0 30px rgba(0,0,0,1);
+        }
+
+        .btn { 
             display: block; width: 100%; margin-top: 15px; padding: 12px;
             background: none; border: 1px solid #444; color: #d4af37;
-            text-transform: uppercase; font-size: 11px; cursor: pointer;
-            transition: 0.3s;
+            text-transform: uppercase; font-size: 11px; cursor: pointer; transition: 0.3s;
         }
-        .menu-btn:active { background: #d4af37; color: #000; border-color: #d4af37; }
-        .exit-btn { border-color: #d4af37; margin-top: 30px; font-weight: bold; }
+        .btn:active { background: #d4af37; color: #000; }
+        .exit { border-color: #d4af37; margin-top: 25px; font-weight: bold; }
+
+        h1 { font-size: 45px; letter-spacing: 12px; font-weight: normal; }
     </style>
 </head>
 <body>
 
-    <div id="door-screen" class="screen">
-        <div style="margin-bottom: 20px; letter-spacing: 4px; font-size: 14px;">PRIVATE ENTRANCE</div>
-        <img src="door_1.jpg" class="door-img" onclick="enterClub()">
+    <audio id="main-jazz" loop>
+        <source src="https://www.mfiles.co.uk/mp3-downloads/bobby-shafter.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="screen-door" class="screen">
+        <div style="margin-bottom: 25px; letter-spacing: 5px;">GY-GY CLUB</div>
+        <img src="door_1.jpg" class="door-img" onclick="processEntry()">
     </div>
 
-    <div id="foyer-screen" class="screen hidden">
+    <div id="screen-welcome" class="screen hidden">
+        <h1>WELCOME</h1>
+    </div>
+
+    <div id="screen-foyer" class="screen hidden">
         <div class="card">
-            <div style="font-size: 9px; opacity: 0.5;">MEMBERSHIP CARD</div>
-            <div id="user-nick" class="nick">LOADING...</div>
-            <div id="user-id" class="id-badge">SERIAL: 00-000</div>
+            <div id="user-nick" style="font-size: 26px; margin-bottom: 5px;">...</div>
+            <div id="user-id" style="font-family: monospace; font-size: 10px; color: #666;">ID: ---</div>
             
-            <hr style="border: 0; border-top: 1px solid #222; margin: 20px 0;">
+            <hr style="border: 0; border-top: 1px solid #222; margin: 25px 0;">
             
-            <button class="menu-btn" onclick="alert('Скоро: Карта напитков')">Bar Menu</button>
-            <button class="menu-btn" onclick="alert('Скоро: Живая музыка')">Events</button>
-            
-            <button class="menu-btn exit-btn" onclick="closeApp()">Return to Chat</button>
+            <button class="btn" onclick="toggleMusic()">Music Box (On/Off)</button>
+            <button class="btn" onclick="alert('Карта бара в разработке...')">Bar Menu</button>
+            <button class="btn exit" onclick="closeClub()">Return to Chat</button>
         </div>
     </div>
 
@@ -53,26 +79,51 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        // Генерация или получение данных
+        // Логика Регистрации (Digital Trace)
         let userData = JSON.parse(localStorage.getItem('gygy_member')) || {
-            id: Math.floor(1000 + Math.random() * 9000),
-            nick: ['JAZZ DUKE', 'NIGHT OWL', 'MYSTIC GUEST'][Math.floor(Math.random() * 3)]
+            id: Math.floor(10000 + Math.random() * 89999),
+            nick: ['DUKE OF JAZZ', 'NIGHT LION', 'MYSTIC GUEST', 'IRONIC DUKE'][Math.floor(Math.random() * 4)]
         };
         localStorage.setItem('gygy_member', JSON.stringify(userData));
 
-        function enterClub() {
-            // Визуальный переход без ожидания звука
-            document.getElementById('door-screen').classList.add('hidden');
-            document.getElementById('foyer-screen').classList.remove('hidden');
-            
-            document.getElementById('user-nick').innerText = userData.nick;
-            document.getElementById('user-id').innerText = 'SERIAL: GY-' + userData.id;
+        function processEntry() {
+            // Анимация ухода двери
+            document.getElementById('screen-door').classList.add('hidden');
+            document.getElementById('screen-door').style.transform = "scale(1.2)";
 
-            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+            setTimeout(() => {
+                // Появление Welcome
+                const welcome = document.getElementById('screen-welcome');
+                welcome.classList.remove('hidden');
+
+                setTimeout(() => {
+                    // Уход Welcome
+                    welcome.classList.add('hidden');
+                    
+                    setTimeout(() => {
+                        // Появление Фойе
+                        const foyer = document.getElementById('screen-foyer');
+                        document.getElementById('user-nick').innerText = userData.nick;
+                        document.getElementById('user-id').innerText = 'SERIAL: GY-' + userData.id;
+                        foyer.classList.remove('hidden');
+                    }, 1000);
+                }, 2500); // Сколько висит Welcome
+            }, 1000);
+
+            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('heavy');
         }
 
-        function closeApp() {
-            tg.close(); // Официальная команда закрытия
+        function toggleMusic() {
+            const music = document.getElementById('main-jazz');
+            if (music.paused) {
+                music.play();
+            } else {
+                music.pause();
+            }
+        }
+
+        function closeClub() {
+            tg.close();
         }
     </script>
 </body>
