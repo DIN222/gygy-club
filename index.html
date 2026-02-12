@@ -10,38 +10,37 @@
         body { margin: 0; background: #000; color: #d4af37; font-family: 'Georgia', serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
         .screen { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; z-index: 5; }
-        .active { opacity: 1; visibility: visible; transition: opacity 1.8s ease-in-out; }
+        .active { opacity: 1; visibility: visible; transition: opacity 1.5s ease; }
 
-        .label-top { font-size: 16px; letter-spacing: 12px; margin-bottom: 30px; text-transform: uppercase; transition: transform 2.2s ease, opacity 1.8s ease; }
+        .label-top { font-size: 16px; letter-spacing: 12px; margin-bottom: 30px; text-transform: uppercase; transition: transform 2s ease, opacity 1.5s ease; }
         .label-up { transform: translateY(-80px); opacity: 0; }
         
-        .door-container { border: 2px solid #d4af37; padding: 12px; background: #050505; transition: transform 2.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.8s ease-in; cursor: pointer; }
+        /* Дверь */
+        .door-container { border: 2px solid #d4af37; padding: 12px; background: #050505; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s; cursor: pointer; }
         .door-img { width: 80vw; max-width: 380px; display: block; }
-        .door-open { transform: scale(3.8); opacity: 0; }
+        .door-open { transform: scale(3.5); opacity: 0; }
 
-        #screen-welcome { transition: opacity 3.5s ease-in-out; }
-        h1 { font-size: 45px; letter-spacing: 18px; font-weight: normal; }
+        #screen-welcome { transition: opacity 3s ease; }
+        h1 { font-size: 40px; letter-spacing: 15px; }
 
-        /* ЖЕСТКАЯ ФИКСАЦИЯ РАМОК — 2px ВЕЗДЕ */
-        .card { width: 85%; max-width: 330px; padding: 50px 25px; border: 2px solid #d4af37; background: #0a0a0a; }
+        /* КАРТОЧКА И КНОПКИ — ЖЕСТКИЙ СТАНДАРТ 2px */
+        .card { width: 85%; max-width: 320px; padding: 40px 20px; border: 2px solid #d4af37; background: #0a0a0a; }
         
-        .btn { 
-            display: block; width: 100%; margin-top: 20px; padding: 16px; 
-            background: none; 
-            border: 2px solid #d4af37; /* Строго 2px */
+        .btn-box { display: block; width: 100%; margin-top: 20px; padding: 16px; 
+            background: transparent; 
+            border: 2px solid #d4af37; /* Рамка входа */
             color: #d4af37; 
             text-transform: uppercase; font-size: 11px; letter-spacing: 3px; 
-            cursor: pointer; transition: all 0.3s ease; 
-            outline: none;
+            cursor: pointer; font-family: 'Georgia', serif;
         }
-        .btn:active { background: #d4af37; color: #000; }
-        
-        .exit { 
-            border: 2px solid #d4af37; /* Строго 2px */
-            margin-top: 35px; 
-            font-weight: bold;
-            opacity: 0.7;
+
+        .btn-box.exit {
+            border: 2px solid #d4af37; /* Рамка выхода — ТЕПЕРЬ ТАКАЯ ЖЕ */
+            margin-top: 30px;
+            opacity: 0.8;
         }
+
+        .btn-box:active { background: #d4af37; color: #000; }
     </style>
 </head>
 <body>
@@ -52,10 +51,10 @@
 
     <div id="screen-door" class="screen active">
         <div id="text-top" class="label-top">GY-GY PRIVATE</div>
-        <div class="door-container" id="door-frame" onclick="processEntry()">
+        <div id="door-frame" class="door-container" onclick="processEntry()">
             <img src="door_1.jpg" class="door-img">
         </div>
-        <div id="text-bottom" style="margin-top:25px; font-size:10px; color:#555; letter-spacing:4px; text-transform: uppercase;">Beyond The Ironic Barricade</div>
+        <div id="text-bottom" style="margin-top:25px; font-size:10px; color:#555; letter-spacing:4px;">BEYOND THE IRONIC BARRICADE</div>
     </div>
 
     <div id="screen-welcome" class="screen">
@@ -64,11 +63,11 @@
 
     <div id="screen-foyer" class="screen">
         <div class="card">
-            <div id="user-nick" style="font-size: 24px; margin-bottom: 8px; text-transform: uppercase;">LOADING...</div>
-            <div id="user-id" style="font-family: monospace; font-size: 10px; color: #444; margin-bottom: 30px;">SERIAL: GY-XXXX</div>
+            <div id="user-nick" style="font-size: 24px; margin-bottom: 10px; text-transform: uppercase;">GUEST</div>
+            <div id="user-id" style="font-family: monospace; font-size: 10px; color: #444; margin-bottom: 25px;">SERIAL: GY-0001</div>
             
-            <button class="btn" onclick="enterBar()">Enter the Bar</button>
-            <button class="btn exit" onclick="closeClub()">Return to Chat</button>
+            <button class="btn-box" onclick="enterBar()">Enter the Bar</button>
+            <button class="btn-box exit" onclick="closeClub()">Return to Chat</button>
         </div>
     </div>
 
@@ -78,30 +77,12 @@
         const barSound = document.getElementById('bar-sound');
         tg.expand();
 
-        // Функция определения никнейма (Cookie-style/ID)
-        function getIdentity() {
-            let id = localStorage.getItem('gygy_id');
-            let nick = localStorage.getItem('gygy_nick');
-            
-            if (!id) {
-                id = Math.floor(1000 + Math.random() * 9000);
-                // Если зашел с телефона (Night Owl), если с ноута (Undefined)
-                nick = window.innerWidth < 600 ? 'NIGHT OWL' : 'UNDEFINED';
-                localStorage.setItem('gygy_id', id);
-                localStorage.setItem('gygy_nick', nick);
-            }
-            return { id, nick };
-        }
-
         function processEntry() {
-            // Активация аудио
-            barSound.play().then(() => { barSound.pause(); barSound.currentTime = 0; }).catch(() => {});
+            // Разблокировка звука
+            barSound.play().then(() => { barSound.pause(); }).catch(e => {});
 
             document.getElementById('text-top').classList.add('label-up');
-            document.getElementById('text-bottom').style.opacity = '0';
             document.getElementById('door-frame').classList.add('door-open');
-
-            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('heavy');
 
             setTimeout(() => {
                 document.getElementById('screen-door').classList.remove('active');
@@ -112,24 +93,16 @@
                     welcomeScreen.style.opacity = "0"; 
                     setTimeout(() => {
                         welcomeScreen.classList.remove('active');
-                        showFoyer();
-                    }, 3500); 
+                        document.getElementById('screen-foyer').classList.add('active');
+                    }, 3000); 
                 }, 4000); 
-            }, 1400);
-        }
-
-        function showFoyer() {
-            const foyer = document.getElementById('screen-foyer');
-            foyer.classList.add('active');
-            
-            const user = getIdentity();
-            document.getElementById('user-nick').innerText = user.nick;
-            document.getElementById('user-id').innerText = 'SERIAL: GY-' + user.id;
+            }, 1200);
         }
 
         function enterBar() {
-            barSound.play();
+            barSound.play().catch(e => console.log("Sound error"));
             if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+            alert("Вы входите в бар...");
         }
 
         function closeClub() {
