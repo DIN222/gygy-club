@@ -9,38 +9,42 @@
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         body { margin: 0; background: #000; color: #d4af37; font-family: 'Georgia', serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
+        /* Экраны */
         .screen { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; z-index: 5; }
         .active { opacity: 1; visibility: visible; transition: opacity 1.5s ease; }
 
+        /* Вход */
         .label-top { font-size: 16px; letter-spacing: 12px; margin-bottom: 30px; text-transform: uppercase; transition: transform 2s ease, opacity 1.5s ease; }
         .label-up { transform: translateY(-80px); opacity: 0; }
         
-        /* Дверь */
         .door-container { border: 2px solid #d4af37; padding: 12px; background: #050505; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s; cursor: pointer; }
         .door-img { width: 80vw; max-width: 380px; display: block; }
         .door-open { transform: scale(3.5); opacity: 0; }
 
+        /* Welcome */
         #screen-welcome { transition: opacity 3s ease; }
         h1 { font-size: 40px; letter-spacing: 15px; }
 
-        /* КАРТОЧКА И КНОПКИ — ЖЕСТКИЙ СТАНДАРТ 2px */
+        /* Фойе — ЖЕСТКИЙ СТАНДАРТ ЗОЛОТА */
         .card { width: 85%; max-width: 320px; padding: 40px 20px; border: 2px solid #d4af37; background: #0a0a0a; }
         
-        .btn-box { display: block; width: 100%; margin-top: 20px; padding: 16px; 
+        .btn-box { 
+            display: block; width: 100%; margin-top: 20px; padding: 16px; 
             background: transparent; 
-            border: 2px solid #d4af37; /* Рамка входа */
+            border: 2px solid #d4af37; /* Яркое золото */
             color: #d4af37; 
             text-transform: uppercase; font-size: 11px; letter-spacing: 3px; 
             cursor: pointer; font-family: 'Georgia', serif;
-        }
-
-        .btn-box.exit {
-            border: 2px solid #d4af37; /* Рамка выхода — ТЕПЕРЬ ТАКАЯ ЖЕ */
-            margin-top: 30px;
-            opacity: 0.8;
+            opacity: 1; /* Убрал прозрачность */
         }
 
         .btn-box:active { background: #d4af37; color: #000; }
+
+        /* Отдельно для кнопки выхода, чтобы была такой же яркой */
+        .btn-box.exit {
+            border: 2px solid #d4af37; 
+            margin-top: 30px;
+        }
     </style>
 </head>
 <body>
@@ -54,7 +58,7 @@
         <div id="door-frame" class="door-container" onclick="processEntry()">
             <img src="door_1.jpg" class="door-img">
         </div>
-        <div id="text-bottom" style="margin-top:25px; font-size:10px; color:#555; letter-spacing:4px;">BEYOND THE IRONIC BARRICADE</div>
+        <div style="margin-top:25px; font-size:10px; color:#555; letter-spacing:4px; text-transform:uppercase;">Beyond The Ironic Barricade</div>
     </div>
 
     <div id="screen-welcome" class="screen">
@@ -63,8 +67,8 @@
 
     <div id="screen-foyer" class="screen">
         <div class="card">
-            <div id="user-nick" style="font-size: 24px; margin-bottom: 10px; text-transform: uppercase;">GUEST</div>
-            <div id="user-id" style="font-family: monospace; font-size: 10px; color: #444; margin-bottom: 25px;">SERIAL: GY-0001</div>
+            <div style="font-size: 24px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px;">GUEST</div>
+            <div style="font-family: monospace; font-size: 10px; color: #444; margin-bottom: 25px;">SERIAL: GY-0001</div>
             
             <button class="btn-box" onclick="enterBar()">Enter the Bar</button>
             <button class="btn-box exit" onclick="closeClub()">Return to Chat</button>
@@ -78,7 +82,6 @@
         tg.expand();
 
         function processEntry() {
-            // Разблокировка звука
             barSound.play().then(() => { barSound.pause(); }).catch(e => {});
 
             document.getElementById('text-top').classList.add('label-up');
@@ -100,13 +103,18 @@
         }
 
         function enterBar() {
-            barSound.play().catch(e => console.log("Sound error"));
+            barSound.currentTime = 0;
+            barSound.play().catch(e => {});
             if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-            alert("Вы входите в бар...");
+            alert("Кх-кх... Проходите, в баре уже наливают.");
         }
 
         function closeClub() {
             tg.close();
+            // Запасной вариант для ПК
+            setTimeout(() => {
+                window.location.href = "https://t.me/твой_бот"; // ЗАМЕНИ НА СВОЕГО БОТА
+            }, 200);
         }
     </script>
 </body>
