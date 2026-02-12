@@ -6,121 +6,91 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GY-GY Club</title>
     <style>
-        * { -webkit-tap-highlight-color: transparent; outline: none; }
-        body { margin: 0; background: #000; color: #d4af37; font-family: 'Georgia', serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         
-        /* Общие настройки экранов */
-        .screen { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 1; transition: opacity 1.2s ease, transform 1.2s ease; z-index: 5; }
-        .hidden { opacity: 0; pointer-events: none; visibility: hidden; transform: scale(0.95); }
+        body { 
+            margin: 0; background: #000; color: #d4af37; 
+            font-family: 'Georgia', serif; text-align: center;
+            height: 100vh; width: 100vw; overflow: hidden;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
 
-        /* Анимация двери */
-        .door-img { width: 85%; max-width: 400px; border: 1px solid #d4af37; border-radius: 4px; cursor: pointer; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s; }
-        .door-open-effect { transform: scale(3.5); opacity: 0; }
+        /* Экран */
+        .screen { 
+            position: absolute; width: 100%; height: 100%; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 1.2s ease;
+        }
 
-        /* Ретро-текст */
-        .label-top { font-size: 14px; letter-spacing: 8px; margin-bottom: 20px; opacity: 0.7; text-transform: uppercase; }
-        .label-bottom { margin-top: 25px; font-size: 10px; color: #555; letter-spacing: 3px; font-style: italic; }
+        /* НАДПИСЬ НАД РАМКОЙ */
+        .label-top { 
+            font-size: 16px; 
+            letter-spacing: 10px; 
+            margin-bottom: 30px; /* Отступ от рамки двери */
+            text-transform: uppercase;
+            opacity: 0.8;
+            font-weight: normal;
+        }
 
-        /* Карточка Фойе */
-        .card { width: 80%; max-width: 320px; padding: 45px 20px; border: 1px solid #d4af37; background: #0a0a0a; box-shadow: 0 0 40px #000; }
-        .btn { display: block; width: 100%; margin-top: 15px; padding: 14px; background: none; border: 1px solid #333; color: #d4af37; text-transform: uppercase; font-size: 11px; letter-spacing: 2px; cursor: pointer; transition: 0.3s; }
-        .btn:active { background: #d4af37; color: #000; }
-        .exit { border-color: #d4af37; margin-top: 30px; font-weight: bold; }
+        /* КОНТЕЙНЕР ДВЕРИ (РАМКА) */
+        .door-container {
+            border: 2px solid #d4af37; /* Та самая рамка */
+            padding: 10px;
+            background: #050505;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.1);
+            transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s;
+            cursor: pointer;
+        }
 
-        /* Welcome Animation */
-        #screen-welcome h1 { font-size: 45px; letter-spacing: 15px; font-weight: normal; transition: all 1.5s; }
+        .door-img { 
+            width: 80vw; 
+            max-width: 380px; 
+            display: block;
+        }
+
+        /* Эффект открытия всей рамки */
+        .open-animation {
+            transform: scale(3.5);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .label-bottom { 
+            margin-top: 25px; 
+            font-size: 10px; 
+            color: #555; 
+            letter-spacing: 3px; 
+            text-transform: uppercase;
+        }
+
+        .hidden { display: none !important; opacity: 0; }
     </style>
 </head>
 <body>
 
-    <audio id="main-jazz" loop preload="auto">
-        <source src="https://www.mfiles.co.uk/mp3-downloads/jazz-piano-bar.mp3" type="audio/mpeg">
-    </audio>
-
     <div id="screen-door" class="screen">
         <div class="label-top">GY-GY PRIVATE</div>
-        <img src="door_1.jpg" id="door-element" class="door-img" onclick="processEntry()">
+
+        <div class="door-container" id="door-frame" onclick="processEntry()">
+            <img src="door_1.jpg" class="door-img">
+        </div>
+
         <div class="label-bottom">BEYOND THE IRONIC BARRICADE</div>
     </div>
 
     <div id="screen-welcome" class="screen hidden">
-        <h1>WELCOME</h1>
+        <h1 style="font-size: 40px; letter-spacing: 12px;">WELCOME</h1>
     </div>
 
-    <div id="screen-foyer" class="screen hidden">
-        <div class="card">
-            <div id="user-nick" style="font-size: 26px; letter-spacing: 2px; margin-bottom: 5px;">...</div>
-            <div id="user-id" style="font-family: monospace; font-size: 10px; color: #555; margin-bottom: 25px;">...</div>
-            
-            <button class="btn" onclick="toggleMusic(this)">Music Box: OFF</button>
-            <button class="btn" onclick="alert('Bar Menu Coming Soon')">Bar Menu</button>
-            <button class="btn exit" onclick="closeClub()">Return to Chat</button>
-        </div>
-    </div>
-
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand();
-
-        // Идентификация
-        let userData = JSON.parse(localStorage.getItem('gygy_member')) || {
-            id: '№' + Math.floor(10000 + Math.random() * 89999),
-            nick: ['DUKE OF JAZZ', 'SILENT LION', 'NIGHT OWL', 'IRONIC GUEST'][Math.floor(Math.random() * 4)]
-        };
-        localStorage.setItem('gygy_member', JSON.stringify(userData));
-
-        const music = document.getElementById('main-jazz');
-
         function processEntry() {
-            // Анимация двери
-            document.getElementById('door-element').classList.add('door-open-effect');
-            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('heavy');
-
-            // Попытка разбудить аудио
-            music.play().then(() => { music.pause(); }).catch(e => {});
-
+            const frame = document.getElementById('door-frame');
+            frame.classList.add('open-animation');
+            
             setTimeout(() => {
                 document.getElementById('screen-door').classList.add('hidden');
-                
-                // Показываем Welcome
-                const welcome = document.getElementById('screen-welcome');
-                welcome.classList.remove('hidden');
-
-                setTimeout(() => {
-                    // Скрываем Welcome
-                    welcome.classList.add('hidden');
-                    
-                    setTimeout(() => {
-                        // Показываем Фойе
-                        const foyer = document.getElementById('screen-foyer');
-                        document.getElementById('user-nick').innerText = userData.nick;
-                        document.getElementById('user-id').innerText = 'SERIAL: ' + userData.id;
-                        foyer.classList.remove('hidden');
-                    }, 1200);
-                }, 2500);
+                document.getElementById('screen-welcome').classList.remove('hidden');
             }, 1200);
-        }
-
-        function toggleMusic(btn) {
-            if (music.paused) {
-                music.play().catch(e => alert("Please check your volume or connection"));
-                btn.innerText = "Music Box: ON";
-                btn.style.borderColor = "#d4af37";
-            } else {
-                music.pause();
-                btn.innerText = "Music Box: OFF";
-                btn.style.borderColor = "#333";
-            }
-        }
-
-        function closeClub() {
-            // Универсальный выход (Телефон + Ноутбук)
-            tg.close();
-            setTimeout(() => {
-                // Если tg.close не сработал на ноуте, перенаправляем в чат
-                window.location.href = "https://t.me/твой_бот"; 
-            }, 300);
         }
     </script>
 </body>
