@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -6,6 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GY-GY Club</title>
     <style>
+        /* Убираем все системные блики и выделения */
+        * { -webkit-tap-highlight-color: transparent; outline: none; }
+
         body { 
             margin: 0; background: #000; color: #d4af37; 
             font-family: 'Georgia', serif; text-align: center;
@@ -16,55 +20,54 @@
         .screen { 
             position: absolute; width: 100%; height: 100%; 
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: all 1.5s cubic-bezier(0.4, 0, 0.2, 1); 
+            transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1); 
         }
 
         .hidden { opacity: 0; pointer-events: none; visibility: hidden; }
         
-        /* КРАСИВАЯ АНИМАЦИЯ ДВЕРИ */
+        /* АНИМАЦИЯ ДВЕРИ */
         .door-img { 
             width: 85%; max-width: 400px; 
             border: 1px solid #d4af37; border-radius: 4px; 
             cursor: pointer; 
-            transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), filter 2s, opacity 2s;
+            transition: transform 2s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s ease-in;
+            will-change: transform, opacity; /* Оптимизация для плавности */
         }
         .door-open-effect { 
-            transform: scale(2.5) !important; 
-            filter: brightness(2) blur(10px);
-            opacity: 0;
+            transform: scale(3) !important; 
+            opacity: 0 !important;
         }
 
         /* КАРТОЧКА ФОЙЕ */
         .card { 
-            width: 80%; max-width: 320px; padding: 45px 20px; 
+            width: 80%; max-width: 320px; padding: 40px 20px; 
             border: 1px solid #d4af37; 
             background: radial-gradient(circle, #151515 0%, #000 100%);
-            box-shadow: 0 0 40px rgba(0,0,0,1), 0 0 15px rgba(212, 175, 55, 0.1);
+            box-shadow: 0 0 50px rgba(0,0,0,1);
         }
 
         .btn { 
             display: block; width: 100%; margin-top: 15px; padding: 14px;
             background: none; border: 1px solid #333; color: #d4af37;
             text-transform: uppercase; font-size: 11px; letter-spacing: 2px;
-            cursor: pointer; transition: 0.4s;
+            cursor: pointer; transition: 0.3s;
         }
-        .btn:active { background: #d4af37; color: #000; border-color: #d4af37; }
+        .btn:active { background: #d4af37; color: #000; }
         
         .exit { border-color: #d4af37; margin-top: 30px; font-weight: bold; }
 
-        h1 { font-size: 45px; letter-spacing: 15px; font-weight: normal; opacity: 0.8; }
-        
-        #user-nick { font-size: 28px; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 3px; }
+        h1 { font-size: 45px; letter-spacing: 15px; font-weight: normal; }
+        #user-nick { font-size: 26px; margin-bottom: 5px; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
-    <audio id="main-jazz" loop preload="auto">
-        <source src="https://www.mfiles.co.uk/mp3-downloads/bobby-shafter.mp3" type="audio/mpeg">
+    <audio id="main-jazz" crossorigin="anonymous">
+        <source src="https://stream.radioretronomoderna.com/retro.mp3" type="audio/mpeg">
     </audio>
 
     <div id="screen-door" class="screen">
-        <div style="margin-bottom: 25px; letter-spacing: 8px; font-size: 12px; opacity: 0.6;">GY-GY PRIVATE CLUB</div>
+        <div style="margin-bottom: 25px; letter-spacing: 5px; font-size: 12px; opacity: 0.5;">GY-GY PRIVATE CLUB</div>
         <img src="door_1.jpg" id="door-element" class="door-img" onclick="processEntry()">
         <div style="margin-top: 30px; font-size: 10px; color: #444; letter-spacing: 3px;">[ TOUCH TO OPEN ]</div>
     </div>
@@ -76,7 +79,7 @@
     <div id="screen-foyer" class="screen hidden">
         <div class="card">
             <div id="user-nick">...</div>
-            <div id="user-id" style="font-family: monospace; font-size: 10px; color: #555; margin-bottom: 20px;">SERIAL: ---</div>
+            <div id="user-id" style="font-family: monospace; font-size: 10px; color: #555; margin-bottom: 25px;">SERIAL: ---</div>
             
             <button class="btn" onclick="toggleMusic()" id="music-btn">Music Box: OFF</button>
             <button class="btn" onclick="alert('Бар скоро откроется...')">Bar Menu</button>
@@ -89,7 +92,6 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        // Система идентификации (Digital Trace)
         let userData = JSON.parse(localStorage.getItem('gygy_member')) || {
             id: Math.floor(10000 + Math.random() * 89999),
             nick: ['DUKE OF JAZZ', 'SILENT LION', 'MYSTIC GUEST', 'NIGHT OWL'][Math.floor(Math.random() * 4)]
@@ -99,37 +101,33 @@
         const music = document.getElementById('main-jazz');
 
         function processEntry() {
-            // Эффект открытия двери
+            // Мгновенная анимация двери
             const door = document.getElementById('door-element');
             door.classList.add('door-open-effect');
             
-            // "Разогреваем" аудио для обхода блокировок
+            // "Будим" аудиосистему
             music.play().then(() => {
-                music.pause(); // Сразу на паузу, чтобы включить кнопкой в фойе
-            }).catch(e => console.log("Audio prep skipped"));
+                music.pause(); // Только для получения разрешения от браузера
+            }).catch(e => console.log("Audio prep"));
 
-            // Убираем первый экран
+            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('heavy');
+
+            // Цепочка экранов
             setTimeout(() => {
                 document.getElementById('screen-door').classList.add('hidden');
-                
-                // Показываем WELCOME
                 const welcome = document.getElementById('screen-welcome');
                 welcome.classList.remove('hidden');
 
                 setTimeout(() => {
                     welcome.classList.add('hidden');
-                    
-                    // Показываем ФОЙЕ
                     setTimeout(() => {
                         const foyer = document.getElementById('screen-foyer');
                         document.getElementById('user-nick').innerText = userData.nick;
                         document.getElementById('user-id').innerText = 'SERIAL: GY-' + userData.id;
                         foyer.classList.remove('hidden');
-                    }, 1000);
-                }, 2500);
-            }, 1200);
-
-            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('heavy');
+                    }, 800);
+                }, 2200);
+            }, 800);
         }
 
         function toggleMusic() {
@@ -137,11 +135,9 @@
             if (music.paused) {
                 music.play();
                 btn.innerText = "Music Box: ON";
-                btn.style.borderColor = "#d4af37";
             } else {
                 music.pause();
                 btn.innerText = "Music Box: OFF";
-                btn.style.borderColor = "#333";
             }
         }
 
