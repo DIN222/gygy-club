@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GY-GY Club</title>
     <style>
-        /* Весь твой стиль остается без изменений для стабильности */
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         body { margin: 0; background: #000; color: #d4af37; font-family: 'Georgia', serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .screen { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; z-index: 5; }
@@ -25,7 +24,9 @@
         .id-label { font-family: monospace; font-size: 10px; color: #444; margin-bottom: 25px; }
     </style>
 </head>
-<body onclick="unlockAudioContext()"> <audio id="door-sound" preload="auto">
+<body>
+
+    <audio id="door-sound">
         <source src="door_open.mp3" type="audio/mpeg">
     </audio>
 
@@ -45,8 +46,7 @@
         <div class="card">
             <div id="user-nick" class="user-label">GUEST</div>
             <div id="user-id" class="id-label">SERIAL: GY-0001</div>
-            <button class="btn-gold" onclick="enterBar()">Enter the Bar</button>
-            <button class="btn-gold" style="margin-top:35px;" onclick="tg.close()">Return to Chat</button>
+            <button class="btn-gold" onclick="tg.close()">Return to Chat</button>
         </div>
     </div>
 
@@ -54,21 +54,7 @@
     <script>
         const tg = window.Telegram.WebApp;
         const doorSound = document.getElementById('door-sound');
-        let audioUnlocked = false;
-
         tg.expand();
-
-        // Функция разблокировки звука для мобильных устройств
-        function unlockAudioContext() {
-            if (!audioUnlocked) {
-                doorSound.play().then(() => {
-                    doorSound.pause();
-                    doorSound.currentTime = 0;
-                    audioUnlocked = true;
-                    console.log("Audio Unlocked");
-                }).catch(e => console.log("Waiting for user..."));
-            }
-        }
 
         function setIdentity() {
             let id = localStorage.getItem('gy_id') || Math.floor(1000 + Math.random() * 9000);
@@ -78,15 +64,21 @@
         }
 
         function processEntry() {
-            // Принудительный запуск звука
+            // ПРЯМОЙ ЗАПУСК ЗВУКА
+            // Мы вызываем его ДО анимации, чтобы браузер не считал это фоновым процессом
             doorSound.currentTime = 0;
-            doorSound.play().catch(err => {
-                console.log("Audio failed. Check filename 'door_open.mp3'");
+            doorSound.play().then(() => {
+                console.log("Звук пошел!");
+            }).catch(e => {
+                console.error("Ошибка звука:", e);
+                // Если не сработало, пробуем еще раз через полсекунды
+                setTimeout(() => { doorSound.play(); }, 100);
             });
 
-            // Анимация
+            // Анимация двери
             document.getElementById('text-top').classList.add('label-up');
             document.getElementById('door-frame').classList.add('door-open');
+
             if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('heavy');
 
             setTimeout(() => {
@@ -103,10 +95,6 @@
                     }, 3000); 
                 }, 4000); 
             }, 1200);
-        }
-
-        function enterBar() {
-            alert("Проходите, в баре уже наливают.");
         }
 
         window.onload = setIdentity;
