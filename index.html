@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -9,29 +10,32 @@
         body { margin: 0; background: #000; color: #d4af37; font-family: 'Georgia', serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
         .screen { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; z-index: 5; }
-        .active { opacity: 1; visibility: visible; transition: opacity 1.5s ease-in-out; }
+        .active { opacity: 1; visibility: visible; transition: opacity 1.8s ease-in-out; }
 
-        .label-top { font-size: 16px; letter-spacing: 10px; margin-bottom: 30px; text-transform: uppercase; transition: transform 2s ease, opacity 1.5s ease; }
+        .label-top { font-size: 16px; letter-spacing: 12px; margin-bottom: 30px; text-transform: uppercase; transition: transform 2.2s ease, opacity 1.8s ease; font-weight: 300; }
         .label-up { transform: translateY(-80px); opacity: 0; }
         
-        .door-container { border: 2px solid #d4af37; padding: 10px; background: #050505; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s ease-in; cursor: pointer; }
-        .door-img { width: 80vw; max-width: 380px; display: block; }
-        .door-open { transform: scale(3.5); opacity: 0; }
+        .door-container { border: 1.5px solid #d4af37; padding: 12px; background: #050505; transition: transform 2.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.8s ease-in; cursor: pointer; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        .door-img { width: 82vw; max-width: 390px; display: block; filter: grayscale(20%); }
+        .door-open { transform: scale(3.8); opacity: 0; }
 
-        /* WELCOME: Глубокое и долгое растворение */
-        #screen-welcome { transition: opacity 3.5s cubic-bezier(0.4, 0, 0.2, 1); }
-        h1 { font-size: 45px; letter-spacing: 15px; font-weight: normal; }
+        /* WELCOME: Монументальный стиль */
+        #screen-welcome { transition: opacity 3.8s cubic-bezier(0.4, 0, 0.2, 1); }
+        h1 { font-size: 48px; letter-spacing: 20px; font-weight: 300; text-shadow: 0 0 15px rgba(212, 175, 55, 0.3); }
 
-        .card { width: 80%; max-width: 320px; padding: 45px 20px; border: 1px solid #d4af37; background: #0a0a0a; }
-        .btn { display: block; width: 100%; margin-top: 15px; padding: 14px; background: none; border: 1px solid #333; color: #d4af37; text-transform: uppercase; font-size: 11px; letter-spacing: 2px; cursor: pointer; }
-        .btn:active { background: #d4af37; color: #000; }
-        .exit { border-color: #d4af37; margin-top: 30px; font-weight: bold; }
+        .card { width: 85%; max-width: 330px; padding: 50px 25px; border: 1px solid rgba(212, 175, 55, 0.6); background: radial-gradient(circle, #0f0f0f 0%, #050505 100%); position: relative; }
+        
+        .btn { display: block; width: 100%; margin-top: 18px; padding: 16px; background: none; border: 1px solid #222; color: #d4af37; text-transform: uppercase; font-size: 10px; letter-spacing: 3px; cursor: pointer; transition: all 0.4s ease; }
+        .btn:hover { border-color: #d4af37; letter-spacing: 4px; }
+        .btn:active { background: #d4af37; color: #000; transition: 0.1s; }
+        
+        .exit { border-color: #d4af37; margin-top: 35px; font-weight: bold; opacity: 0.8; }
     </style>
 </head>
 <body>
 
-    <audio id="bar-sound" preload="auto">
-        <source src="https://assets.mixkit.co/active_storage/sfx/732/732-preview.mp3" type="audio/mpeg">
+    <audio id="bar-sound" preload="auto" crossorigin="anonymous">
+        <source src="https://www.zapsplat.com/wp-content/uploads/2015/sound-effects-one/bottle_pour_liquid_into_glass_002.mp3" type="audio/mpeg">
     </audio>
 
     <div id="screen-door" class="screen active">
@@ -39,7 +43,7 @@
         <div class="door-container" id="door-frame" onclick="processEntry()">
             <img src="door_1.jpg" class="door-img">
         </div>
-        <div id="text-bottom" style="margin-top:25px; font-size:10px; color:#555; letter-spacing:3px; transition: opacity 1s;">BEYOND THE IRONIC BARRICADE</div>
+        <div id="text-bottom" style="margin-top:28px; font-size:9px; color:#444; letter-spacing:4px; transition: opacity 1.2s; text-transform: uppercase;">Beyond The Ironic Barricade</div>
     </div>
 
     <div id="screen-welcome" class="screen">
@@ -48,8 +52,8 @@
 
     <div id="screen-foyer" class="screen">
         <div class="card">
-            <div id="user-nick" style="font-size: 26px; margin-bottom: 5px;">GUEST</div>
-            <div id="user-id" style="font-family: monospace; font-size: 10px; color: #444; margin-bottom: 25px;">SERIAL: GY-0000</div>
+            <div id="user-nick" style="font-size: 24px; letter-spacing: 2px; margin-bottom: 8px; font-weight: 300;">GUEST</div>
+            <div id="user-id" style="font-family: monospace; font-size: 9px; color: #333; margin-bottom: 30px; letter-spacing: 1px;">SERIAL: GY-0000</div>
             
             <button class="btn" onclick="enterBar()">Enter the Bar</button>
             <button class="btn exit" onclick="closeClub()">Return to Chat</button>
@@ -60,10 +64,15 @@
     <script>
         const tg = window.Telegram.WebApp;
         const barSound = document.getElementById('bar-sound');
-        barSound.playbackRate = 0.8; // Замедляем звук для солидности
+        
+        // Настройка чистоты звука
+        barSound.volume = 0.9;
+        barSound.playbackRate = 0.95; 
+
         tg.expand();
 
         function processEntry() {
+            // Мягкий прогрев аудио-движка
             barSound.play().then(() => {
                 barSound.pause();
                 barSound.currentTime = 0;
@@ -80,16 +89,16 @@
                 const welcomeScreen = document.getElementById('screen-welcome');
                 welcomeScreen.classList.add('active');
 
-                // ПАУЗА НА МАКСИМУМЕ (4 секунды наслаждения надписью)
+                // Монументальная пауза: 4.5 секунды на пике
                 setTimeout(() => {
                     welcomeScreen.style.opacity = "0"; 
                     
                     setTimeout(() => {
                         welcomeScreen.classList.remove('active');
                         showFoyer();
-                    }, 3500); 
-                }, 4000); 
-            }, 1300);
+                    }, 3800); 
+                }, 4500); 
+            }, 1400);
         }
 
         function showFoyer() {
@@ -107,11 +116,13 @@
         function enterBar() {
             barSound.play();
             if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+            
+            // Здесь будет логика открытия Карты Бара
         }
 
         function closeClub() {
             tg.close();
-            setTimeout(() => { window.location.href = "https://t.me/твой_бот"; }, 250);
+            setTimeout(() => { window.location.href = "https://t.me/your_bot_username"; }, 250);
         }
     </script>
 </body>
