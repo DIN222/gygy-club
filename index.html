@@ -9,11 +9,11 @@
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         body { margin: 0; background: #000; color: #d4af37; font-family: 'Georgia', serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
-        /* Система экранов */
-        .screen { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 1.5s ease-in-out; z-index: 5; }
+        /* Экраны */
+        .screen { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 1.8s ease-in-out; z-index: 5; }
         .active { opacity: 1; visibility: visible; }
 
-        /* Входная группа */
+        /* Вход */
         .label-top { font-size: 16px; letter-spacing: 10px; margin-bottom: 30px; text-transform: uppercase; transition: transform 2s ease, opacity 1.5s ease; }
         .label-up { transform: translateY(-80px); opacity: 0; }
         
@@ -26,15 +26,15 @@
 
         /* Фойе */
         .card { width: 80%; max-width: 320px; padding: 45px 20px; border: 1px solid #d4af37; background: #0a0a0a; }
-        .btn { display: block; width: 100%; margin-top: 15px; padding: 14px; background: none; border: 1px solid #333; color: #d4af37; text-transform: uppercase; font-size: 11px; letter-spacing: 2px; cursor: pointer; }
+        .btn { display: block; width: 100%; margin-top: 15px; padding: 14px; background: none; border: 1px solid #333; color: #d4af37; text-transform: uppercase; font-size: 11px; letter-spacing: 2px; cursor: pointer; transition: 0.3s; }
         .btn:active { background: #d4af37; color: #000; }
         .exit { border-color: #d4af37; margin-top: 30px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <audio id="sound-cough" preload="auto">
-        <source src="https://assets.mixkit.co/active_storage/sfx/2215/2215-preview.mp3" type="audio/mpeg">
+    <audio id="bar-sound" preload="auto">
+        <source src="https://assets.mixkit.co/active_storage/sfx/730/730-preview.mp3" type="audio/mpeg">
     </audio>
 
     <div id="screen-door" class="screen active">
@@ -62,17 +62,16 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
         const tg = window.Telegram.WebApp;
-        const coughSound = document.getElementById('sound-cough');
+        const barSound = document.getElementById('bar-sound');
         tg.expand();
 
         function processEntry() {
-            // КРИТИЧНО: Разблокируем аудио-движок первым же касанием
-            coughSound.play().then(() => {
-                coughSound.pause();
-                coughSound.currentTime = 0;
-            }).catch(e => console.log("Audio unlock attempted"));
+            // Разблокировка звука при первом касании
+            barSound.play().then(() => {
+                barSound.pause();
+                barSound.currentTime = 0;
+            }).catch(e => console.log("Audio ready"));
 
-            // Анимации ухода двери
             document.getElementById('text-top').classList.add('label-up');
             document.getElementById('text-bottom').style.opacity = '0';
             document.getElementById('door-frame').classList.add('door-open');
@@ -85,13 +84,13 @@
                 const welcomeScreen = document.getElementById('screen-welcome');
                 welcomeScreen.classList.add('active');
 
-                // Плавное исчезновение Welcome
+                // Плавное (1.8с) исчезновение Welcome
                 setTimeout(() => {
                     welcomeScreen.classList.remove('active');
                     
-                    // Появление Фойе
-                    setTimeout(showFoyer, 1500);
-                }, 2000); 
+                    // Переход в Фойе
+                    setTimeout(showFoyer, 1800);
+                }, 2200); 
             }, 1300);
         }
 
@@ -108,15 +107,15 @@
         }
 
         function enterBar() {
-            // Воспроизводим звук КХ-КХ
-            coughSound.play();
+            // Звук виски со льдом
+            barSound.play();
             
             if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
             
             setTimeout(() => {
-                // Здесь будет переход к Карте Бара
-                console.log("Переход в бар выполнен после КХ-КХ");
-            }, 800);
+                console.log("Переход к карте...");
+                // Здесь будет следующая страница
+            }, 1000);
         }
 
         function closeClub() {
