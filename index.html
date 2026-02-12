@@ -8,13 +8,9 @@
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         body { margin: 0; background: #000; color: #d4af37; font-family: 'Georgia', serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
-        /* Экраны */
         .screen { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; z-index: 5; }
-        
-        /* Плавность появления */
         .active { opacity: 1; visibility: visible; transition: opacity 1.5s ease-in-out; }
 
-        /* Вход */
         .label-top { font-size: 16px; letter-spacing: 10px; margin-bottom: 30px; text-transform: uppercase; transition: transform 2s ease, opacity 1.5s ease; }
         .label-up { transform: translateY(-80px); opacity: 0; }
         
@@ -22,13 +18,12 @@
         .door-img { width: 80vw; max-width: 380px; display: block; }
         .door-open { transform: scale(3.5); opacity: 0; }
 
-        /* Welcome: ЭКСТРЕМАЛЬНО ПЛАВНОЕ ИСЧЕЗНОВЕНИЕ */
-        #screen-welcome { transition: opacity 3s ease-in-out; }
+        /* WELCOME: Глубокое и долгое растворение */
+        #screen-welcome { transition: opacity 3.5s cubic-bezier(0.4, 0, 0.2, 1); }
         h1 { font-size: 45px; letter-spacing: 15px; font-weight: normal; }
 
-        /* Фойе */
         .card { width: 80%; max-width: 320px; padding: 45px 20px; border: 1px solid #d4af37; background: #0a0a0a; }
-        .btn { display: block; width: 100%; margin-top: 15px; padding: 14px; background: none; border: 1px solid #333; color: #d4af37; text-transform: uppercase; font-size: 11px; letter-spacing: 2px; cursor: pointer; transition: 0.3s; }
+        .btn { display: block; width: 100%; margin-top: 15px; padding: 14px; background: none; border: 1px solid #333; color: #d4af37; text-transform: uppercase; font-size: 11px; letter-spacing: 2px; cursor: pointer; }
         .btn:active { background: #d4af37; color: #000; }
         .exit { border-color: #d4af37; margin-top: 30px; font-weight: bold; }
     </style>
@@ -36,7 +31,7 @@
 <body>
 
     <audio id="bar-sound" preload="auto">
-        <source src="https://assets.mixkit.co/active_storage/sfx/733/733-preview.mp3" type="audio/mpeg">
+        <source src="https://assets.mixkit.co/active_storage/sfx/732/732-preview.mp3" type="audio/mpeg">
     </audio>
 
     <div id="screen-door" class="screen active">
@@ -65,14 +60,14 @@
     <script>
         const tg = window.Telegram.WebApp;
         const barSound = document.getElementById('bar-sound');
+        barSound.playbackRate = 0.8; // Замедляем звук для солидности
         tg.expand();
 
         function processEntry() {
-            // Активация аудио-движка (необходимо для iOS/Desktop)
             barSound.play().then(() => {
                 barSound.pause();
                 barSound.currentTime = 0;
-            }).catch(e => console.log("Audio ready"));
+            }).catch(e => {});
 
             document.getElementById('text-top').classList.add('label-up');
             document.getElementById('text-bottom').style.opacity = '0';
@@ -85,15 +80,15 @@
                 const welcomeScreen = document.getElementById('screen-welcome');
                 welcomeScreen.classList.add('active');
 
-                // Плавное 3-секундное исчезновение
+                // ПАУЗА НА МАКСИМУМЕ (4 секунды наслаждения надписью)
                 setTimeout(() => {
                     welcomeScreen.style.opacity = "0"; 
                     
                     setTimeout(() => {
                         welcomeScreen.classList.remove('active');
                         showFoyer();
-                    }, 3000); 
-                }, 2000); 
+                    }, 3500); 
+                }, 4000); 
             }, 1300);
         }
 
@@ -110,14 +105,8 @@
         }
 
         function enterBar() {
-            // Воспроизведение длинного звука наливания
             barSound.play();
             if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-            
-            setTimeout(() => {
-                // Переход к Карте Бара будет здесь
-                console.log("Pouring finished, opening map...");
-            }, 1500);
         }
 
         function closeClub() {
