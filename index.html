@@ -9,33 +9,42 @@
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         body { margin: 0; background: #000; color: #d4af37; font-family: 'Georgia', serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
+        /* Экраны */
         .screen { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; z-index: 5; }
         .active { opacity: 1; visibility: visible; transition: opacity 1.8s ease-in-out; }
 
-        .label-top { font-size: 16px; letter-spacing: 12px; margin-bottom: 30px; text-transform: uppercase; transition: transform 2.2s ease, opacity 1.8s ease; font-weight: 300; }
+        /* Дверь и Надписи */
+        .label-top { font-size: 16px; letter-spacing: 12px; margin-bottom: 30px; text-transform: uppercase; transition: transform 2.2s ease, opacity 1.8s ease; }
         .label-up { transform: translateY(-80px); opacity: 0; }
         
-        .door-container { border: 1.5px solid #d4af37; padding: 12px; background: #050505; transition: transform 2.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.8s ease-in; cursor: pointer; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
-        .door-img { width: 82vw; max-width: 390px; display: block; filter: grayscale(20%); }
+        .door-container { border: 2px solid #d4af37; padding: 12px; background: #050505; transition: transform 2.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.8s ease-in; cursor: pointer; }
+        .door-img { width: 80vw; max-width: 380px; display: block; }
         .door-open { transform: scale(3.8); opacity: 0; }
 
-        /* WELCOME: Монументальный стиль */
-        #screen-welcome { transition: opacity 3.8s cubic-bezier(0.4, 0, 0.2, 1); }
-        h1 { font-size: 48px; letter-spacing: 20px; font-weight: 300; text-shadow: 0 0 15px rgba(212, 175, 55, 0.3); }
+        /* Welcome */
+        #screen-welcome { transition: opacity 3.5s ease-in-out; }
+        h1 { font-size: 45px; letter-spacing: 18px; font-weight: normal; }
 
-        .card { width: 85%; max-width: 330px; padding: 50px 25px; border: 1px solid rgba(212, 175, 55, 0.6); background: radial-gradient(circle, #0f0f0f 0%, #050505 100%); position: relative; }
+        /* Карточка Фойе и Кнопки */
+        .card { width: 85%; max-width: 330px; padding: 50px 25px; border: 1px solid #d4af37; background: #0a0a0a; box-shadow: 0 0 30px rgba(212, 175, 55, 0.1); }
         
-        .btn { display: block; width: 100%; margin-top: 18px; padding: 16px; background: none; border: 1px solid #222; color: #d4af37; text-transform: uppercase; font-size: 10px; letter-spacing: 3px; cursor: pointer; transition: all 0.4s ease; }
-        .btn:hover { border-color: #d4af37; letter-spacing: 4px; }
-        .btn:active { background: #d4af37; color: #000; transition: 0.1s; }
+        .btn { 
+            display: block; width: 100%; margin-top: 20px; padding: 16px; 
+            background: none; 
+            border: 1px solid #d4af37; /* ВЕРНУЛ РАМКУ */
+            color: #d4af37; 
+            text-transform: uppercase; font-size: 11px; letter-spacing: 3px; 
+            cursor: pointer; transition: all 0.3s ease; 
+        }
+        .btn:active { background: #d4af37; color: #000; }
         
-        .exit { border-color: #d4af37; margin-top: 35px; font-weight: bold; opacity: 0.8; }
+        .exit { border-color: rgba(212, 175, 55, 0.5); margin-top: 35px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <audio id="bar-sound" preload="auto" crossorigin="anonymous">
-        <source src="https://www.zapsplat.com/wp-content/uploads/2015/sound-effects-one/bottle_pour_liquid_into_glass_002.mp3" type="audio/mpeg">
+    <audio id="bar-sound" preload="auto">
+        <source src="https://www.soundjay.com/misc/sounds/pour-liquid-1.mp3" type="audio/mpeg">
     </audio>
 
     <div id="screen-door" class="screen active">
@@ -43,7 +52,7 @@
         <div class="door-container" id="door-frame" onclick="processEntry()">
             <img src="door_1.jpg" class="door-img">
         </div>
-        <div id="text-bottom" style="margin-top:28px; font-size:9px; color:#444; letter-spacing:4px; transition: opacity 1.2s; text-transform: uppercase;">Beyond The Ironic Barricade</div>
+        <div id="text-bottom" style="margin-top:25px; font-size:10px; color:#555; letter-spacing:4px; text-transform: uppercase;">Beyond The Ironic Barricade</div>
     </div>
 
     <div id="screen-welcome" class="screen">
@@ -52,8 +61,8 @@
 
     <div id="screen-foyer" class="screen">
         <div class="card">
-            <div id="user-nick" style="font-size: 24px; letter-spacing: 2px; margin-bottom: 8px; font-weight: 300;">GUEST</div>
-            <div id="user-id" style="font-family: monospace; font-size: 9px; color: #333; margin-bottom: 30px; letter-spacing: 1px;">SERIAL: GY-0000</div>
+            <div id="user-nick" style="font-size: 26px; margin-bottom: 8px;">GUEST</div>
+            <div id="user-id" style="font-family: monospace; font-size: 10px; color: #444; margin-bottom: 30px;">SERIAL: GY-0000</div>
             
             <button class="btn" onclick="enterBar()">Enter the Bar</button>
             <button class="btn exit" onclick="closeClub()">Return to Chat</button>
@@ -64,19 +73,14 @@
     <script>
         const tg = window.Telegram.WebApp;
         const barSound = document.getElementById('bar-sound');
-        
-        // Настройка чистоты звука
-        barSound.volume = 0.9;
-        barSound.playbackRate = 0.95; 
-
         tg.expand();
 
         function processEntry() {
-            // Мягкий прогрев аудио-движка
+            // "Будим" звук сразу при входе
             barSound.play().then(() => {
                 barSound.pause();
                 barSound.currentTime = 0;
-            }).catch(e => {});
+            }).catch(e => console.log("Audio prep..."));
 
             document.getElementById('text-top').classList.add('label-up');
             document.getElementById('text-bottom').style.opacity = '0';
@@ -89,15 +93,13 @@
                 const welcomeScreen = document.getElementById('screen-welcome');
                 welcomeScreen.classList.add('active');
 
-                // Монументальная пауза: 4.5 секунды на пике
                 setTimeout(() => {
                     welcomeScreen.style.opacity = "0"; 
-                    
                     setTimeout(() => {
                         welcomeScreen.classList.remove('active');
                         showFoyer();
-                    }, 3800); 
-                }, 4500); 
+                    }, 3500); 
+                }, 4000); 
             }, 1400);
         }
 
@@ -114,15 +116,18 @@
         }
 
         function enterBar() {
-            barSound.play();
+            // Играем звук
+            barSound.play().catch(e => {
+                // Если не сработало, пробуем еще раз
+                barSound.load();
+                barSound.play();
+            });
+
             if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-            
-            // Здесь будет логика открытия Карты Бара
         }
 
         function closeClub() {
             tg.close();
-            setTimeout(() => { window.location.href = "https://t.me/your_bot_username"; }, 250);
         }
     </script>
 </body>
