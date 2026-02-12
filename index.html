@@ -7,90 +7,110 @@
     <title>GY-GY Club</title>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+        body { margin: 0; background: #000; color: #d4af37; font-family: 'Georgia', serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+        .screen { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 1.2s ease; z-index: 5; }
+        .hidden { opacity: 0; pointer-events: none; visibility: hidden; }
+
+        .label-top { font-size: 16px; letter-spacing: 10px; margin-bottom: 30px; text-transform: uppercase; opacity: 0.8; }
         
-        body { 
-            margin: 0; background: #000; color: #d4af37; 
-            font-family: 'Georgia', serif; text-align: center;
-            height: 100vh; width: 100vw; overflow: hidden;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-        }
+        .door-container { border: 2px solid #d4af37; padding: 10px; background: #050505; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s; cursor: pointer; }
+        .door-img { width: 80vw; max-width: 380px; display: block; }
+        .open-animation { transform: scale(3.5); opacity: 0; pointer-events: none; }
 
-        /* Экран */
-        .screen { 
-            position: absolute; width: 100%; height: 100%; 
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: opacity 1.2s ease;
-        }
+        .label-bottom { margin-top: 25px; font-size: 10px; color: #555; letter-spacing: 3px; text-transform: uppercase; }
 
-        /* НАДПИСЬ НАД РАМКОЙ */
-        .label-top { 
-            font-size: 16px; 
-            letter-spacing: 10px; 
-            margin-bottom: 30px; /* Отступ от рамки двери */
-            text-transform: uppercase;
-            opacity: 0.8;
-            font-weight: normal;
-        }
-
-        /* КОНТЕЙНЕР ДВЕРИ (РАМКА) */
-        .door-container {
-            border: 2px solid #d4af37; /* Та самая рамка */
-            padding: 10px;
-            background: #050505;
-            box-shadow: 0 0 30px rgba(212, 175, 55, 0.1);
-            transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s;
-            cursor: pointer;
-        }
-
-        .door-img { 
-            width: 80vw; 
-            max-width: 380px; 
-            display: block;
-        }
-
-        /* Эффект открытия всей рамки */
-        .open-animation {
-            transform: scale(3.5);
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .label-bottom { 
-            margin-top: 25px; 
-            font-size: 10px; 
-            color: #555; 
-            letter-spacing: 3px; 
-            text-transform: uppercase;
-        }
-
-        .hidden { display: none !important; opacity: 0; }
+        /* Фойе */
+        .card { width: 80%; max-width: 320px; padding: 40px 20px; border: 1px solid #d4af37; background: #0a0a0a; }
+        .btn { display: block; width: 100%; margin-top: 15px; padding: 14px; background: none; border: 1px solid #333; color: #d4af37; text-transform: uppercase; font-size: 11px; cursor: pointer; }
+        .btn:active { background: #d4af37; color: #000; }
+        .exit { border-color: #d4af37; margin-top: 25px; font-weight: bold; }
     </style>
 </head>
 <body>
 
+    <audio id="main-jazz" loop preload="auto">
+        <source src="https://www.mfiles.co.uk/mp3-downloads/jazz-piano-bar.mp3" type="audio/mpeg">
+    </audio>
+
     <div id="screen-door" class="screen">
         <div class="label-top">GY-GY PRIVATE</div>
-
         <div class="door-container" id="door-frame" onclick="processEntry()">
             <img src="door_1.jpg" class="door-img">
         </div>
-
         <div class="label-bottom">BEYOND THE IRONIC BARRICADE</div>
     </div>
 
     <div id="screen-welcome" class="screen hidden">
-        <h1 style="font-size: 40px; letter-spacing: 12px;">WELCOME</h1>
+        <h1 style="font-size: 45px; letter-spacing: 15px;">WELCOME</h1>
     </div>
 
+    <div id="screen-foyer" class="screen hidden">
+        <div class="card">
+            <div id="user-nick" style="font-size: 24px; margin-bottom: 10px;">GUEST</div>
+            <div id="user-id" style="font-family: monospace; font-size: 10px; color: #444; margin-bottom: 25px;">GY-0000</div>
+            <button class="btn" onclick="toggleMusic(this)" id="music-btn">Music Box: OFF</button>
+            <button class="btn exit" onclick="closeClub()">Return to Chat</button>
+        </div>
+    </div>
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
+        const tg = window.Telegram.WebApp;
+        const music = document.getElementById('main-jazz');
+        tg.expand();
+
         function processEntry() {
-            const frame = document.getElementById('door-frame');
-            frame.classList.add('open-animation');
-            
+            // 1. СРАЗУ ПЫТАЕМСЯ ВКЛЮЧИТЬ МУЗЫКУ (это критично для мобильных устройств)
+            music.play().then(() => {
+                // Если заиграло сразу — отлично, ставим на паузу до Фойе
+                music.pause();
+                console.log("Audio allowed");
+            }).catch(e => console.log("Audio blocked by system"));
+
+            // 2. АНИМАЦИЯ
+            document.getElementById('door-frame').classList.add('open-animation');
+            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('heavy');
+
             setTimeout(() => {
                 document.getElementById('screen-door').classList.add('hidden');
                 document.getElementById('screen-welcome').classList.remove('hidden');
+
+                setTimeout(() => {
+                    document.getElementById('screen-welcome').classList.add('hidden');
+                    setTimeout(() => {
+                        showFoyer();
+                    }, 800);
+                }, 2000);
             }, 1200);
+        }
+
+        function showFoyer() {
+            const foyer = document.getElementById('screen-foyer');
+            foyer.classList.remove('hidden');
+            
+            let data = JSON.parse(localStorage.getItem('gygy_member')) || {
+                id: Math.floor(1000 + Math.random() * 9000),
+                nick: 'SILENT LION'
+            };
+            document.getElementById('user-nick').innerText = data.nick;
+            document.getElementById('user-id').innerText = 'SERIAL: GY-' + data.id;
+        }
+
+        function toggleMusic(btn) {
+            if (music.paused) {
+                music.play().catch(e => {
+                    alert("Музыка еще грузится или заблокирована в настройках телефона.");
+                });
+                btn.innerText = "Music Box: ON";
+            } else {
+                music.pause();
+                btn.innerText = "Music Box: OFF";
+            }
+        }
+
+        function closeClub() {
+            tg.close();
         }
     </script>
 </body>
