@@ -1,83 +1,24 @@
 
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        /* Сброс всего, что могло «сломаться» */
-        html, body {
-            background: #000000 !important;
-            color: #00FF00 !important; /* Ярко-зеленый для диагностики */
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            display: block !important;
-        }
-
-        #recovery-root {
-            padding: 20px;
-            font-family: monospace;
-            display: block !important;
-        }
-
-        .trace-id-box {
-            border: 1px solid #00FF00;
-            padding: 15px;
-            margin-top: 20px;
-        }
-
-        .btn-emergency {
-            background: #222;
-            color: #fff;
-            padding: 15px;
-            border: 1px solid #444;
-            display: inline-block;
-            margin-top: 20px;
-            text-decoration: none;
-        }
-    </style>
-</head>
 <body>
+    <h1>ПРОВЕРКА СИСТЕМЫ</h1>
+    <p>Если ты это видишь, значит экран работает.</p>
+    <div id="trace">Ищу твой ID...</div>
 
-<div id="recovery-root">
-    <h1>[ EMERGENCY RECOVERY MODE ]</h1>
-    <p>Если ты видишь этот текст, значит ядро системы работает.</p>
-    
-    <div class="trace-id-box">
-        <strong>Твой статус:</strong> <span id="stat">Инициализация...</span><br>
-        <strong>Digital ID:</strong> <span id="id-val">checking...</span>
-    </div>
-
-    <a href="#" class="btn-emergency" onclick="resetSystem()">СБРОС COOKIE (Hard Reset)</a>
-</div>
-
-<script>
-    function recover() {
-        try {
-            let id = localStorage.getItem('digital_trace_id');
-            if (!id) {
-                id = 'TEMP_USER_' + Date.now();
-                localStorage.setItem('digital_trace_id', id);
-                document.getElementById('stat').innerText = 'Создан новый след';
-            } else {
-                document.getElementById('stat').innerText = 'ID найден в системе';
-            }
-            document.getElementById('id-val').innerText = id;
-        } catch (e) {
-            document.body.innerHTML = '<h1 style="color:red">Ошибка доступа к LocalStorage!</h1>';
+    <script>
+        // Самая простая логика идентификации, которая была в начале
+        var userTrace = localStorage.getItem('digital_trace_id');
+        
+        if (userTrace) {
+            document.getElementById('trace').innerHTML = "ТВОЙ ID НАЙДЕН: " + userTrace;
+        } else {
+            var newID = "USER-" + Math.floor(Math.random() * 10000);
+            localStorage.setItem('digital_trace_id', newID);
+            document.getElementById('trace').innerHTML = "СОЗДАН НОВЫЙ ID: " + newID;
         }
-    }
-
-    function resetSystem() {
-        localStorage.clear();
-        location.reload();
-    }
-
-    // Запуск через минимальную задержку
-    setTimeout(recover, 100);
-</script>
-
+        
+        console.log("Система опознавания активна");
+    </script>
 </body>
 </html>
