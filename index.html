@@ -5,130 +5,114 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GY-GY Club</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" async></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-        body { margin: 0; background: #000; color: #d4af37; font-family: 'Georgia', serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; }
+        body { margin: 0; background: #000; color: #d4af37; font-family: 'Georgia', serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         
-        .screen { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; z-index: 5; transition: opacity 1s ease; }
+        .screen { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; z-index: 5; transition: opacity 1.2s ease; }
         .active { opacity: 1; visibility: visible; }
 
-        .door-container { border: 2px solid #d4af37; padding: 10px; cursor: pointer; transition: transform 2s, opacity 1.5s; background: #050505; }
+        /* Входная дверь */
+        .label-top { font-size: 16px; letter-spacing: 12px; margin-bottom: 30px; text-transform: uppercase; transition: transform 2s ease, opacity 1.5s ease; }
+        .label-up { transform: translateY(-80px); opacity: 0; }
+        .door-container { border: 2px solid #d4af37; padding: 12px; background: #050505; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s; cursor: pointer; }
+        .door-img { width: 80vw; max-width: 380px; display: block; height: auto; }
         .door-open { transform: scale(3.5); opacity: 0; }
+
+        /* Карточка Identity */
+        .card { width: 85%; max-width: 320px; padding: 30px 20px; border: 2px solid #d4af37; background: #0a0a0a; box-shadow: 0 0 30px rgba(212, 175, 55, 0.1); }
+        .avatar-box { font-size: 50px; margin-bottom: 10px; }
+        #qrcode { background: #fff; padding: 8px; border: 2px solid #d4af37; margin: 15px auto; width: 116px; height: 116px; display: flex; justify-content: center; align-items: center; }
         
-        .card { width: 85%; max-width: 320px; padding: 25px; border: 2px solid #d4af37; background: #0a0a0a; }
-        #qrcode { background: #fff; padding: 5px; margin: 15px auto; width: 110px; height: 110px; display: flex; justify-content: center; align-items: center; border: 2px solid #d4af37; }
-
-        .gallery-mini { display: flex; gap: 10px; margin-bottom: 20px; }
-        .art-frame { width: 80px; height: 110px; border: 2px solid #d4af37; background: #050505; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 24px; position: relative; }
-        .art-label { font-size: 7px; letter-spacing: 1px; margin-top: 5px; color: #888; text-transform: uppercase; }
-
-        .arch-container { 
-            position: relative; width: 220px; height: 300px; 
-            border: 3px solid #d4af37; border-bottom: none; border-radius: 110px 110px 0 0;
-            overflow: hidden; cursor: pointer; background: #050505;
-        }
-        
-        .beads-curtain { position: absolute; top: 0; width: 100%; height: 100%; display: flex; justify-content: space-around; z-index: 10; }
-        .bead-thread { width: 2px; height: 100%; background: repeating-linear-gradient(to bottom, #5d4037 0px, #5d4037 12px, #d4af37 12px, #d4af37 14px); transition: transform 1.2s ease, opacity 0.8s; }
-
-        .curtains-open .bead-thread:nth-child(n+11) { transform: translateX(160%) rotate(15deg); opacity: 0; }
-        .curtains-open .bead-thread:nth-child(-n+10) { transform: translateX(-160%) rotate(-15deg); opacity: 0; }
-
-        .btn-gold { width: 100%; padding: 12px; background: transparent; border: 2px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 10px; letter-spacing: 2px; cursor: pointer; margin-top: 15px; font-family: 'Georgia', serif; }
+        /* Кнопки (Синхронизированные) */
+        .btn-gold { display: block; width: 100%; margin-top: 15px; padding: 14px; background: transparent; border: 2px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 10px; letter-spacing: 2px; cursor: pointer; outline: none; font-family: 'Georgia', serif; opacity: 1 !important; }
+        .btn-gold:active { background: #d4af37; color: #000; }
+        .btn-exit { margin-top: 25px; border: 2px solid #d4af37; color: #d4af37; }
     </style>
 </head>
 <body>
 
-    <audio id="door-snd"><source src="door_open.mp3" type="audio/mpeg"></audio>
-    <audio id="bar-snd" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
-    <audio id="beads-snd"><source src="https://assets.mixkit.co/active_storage/sfx/1070/1070-preview.mp3" type="audio/mpeg"></audio>
+    <audio id="door-sound"><source src="door_open.mp3" type="audio/mpeg"></audio>
 
     <div id="screen-door" class="screen active">
-        <div style="letter-spacing: 10px; margin-bottom: 30px;">GY-GY PRIVATE</div>
-        <div class="door-container" onclick="openMainDoor()"><img src="door_1.jpg" style="width: 70vw; max-width: 300px;"></div>
+        <div id="text-top" class="label-top">GY-GY PRIVATE</div>
+        <div id="door-frame" class="door-container" onclick="processEntry()">
+            <img src="door_1.jpg" class="door-img">
+        </div>
     </div>
 
     <div id="screen-welcome" class="screen">
         <h1>WELCOME</h1>
-        <p style="font-size:10px; color:#666; letter-spacing:5px;">CHARLIE IS WAITING</p>
-        <button class="btn-gold" style="width: 200px; margin-top: 30px;" onclick="showFoyer()">Continue</button>
+        <p style="font-size: 10px; letter-spacing: 5px; margin-top: 15px; color: #666;">CHARLIE IS WAITING</p>
     </div>
 
     <div id="screen-foyer" class="screen">
         <div class="card">
-            <div id="user-avatar" style="font-size:50px;">👤</div>
-            <div id="user-nick" style="font-size:20px; margin: 10px 0;">GUEST</div>
-            <div id="user-id" style="font-size:10px; color:#555;">SERIAL: GY-0000</div>
+            <div id="user-avatar" class="avatar-box">👤</div>
+            <div id="user-nick" style="font-size:22px; text-transform:uppercase;">GUEST</div>
+            <div id="user-id" style="font-size:10px; color:#555; margin-bottom:15px;">SERIAL: GY-0000</div>
             <div id="qrcode"></div>
-            <button class="btn-gold" onclick="goToHall()">Grand Hall</button>
+            <button class="btn-gold" onclick="alert('Вы входите в клуб...')">Enter the Bar</button>
+            <button class="btn-gold btn-exit" onclick="closeClub()">Return to Chat</button>
         </div>
-    </div>
-
-    <div id="screen-hall" class="screen">
-        <div class="gallery-mini">
-            <div class="art-frame">📸<div class="art-label">Studio</div></div>
-            <div class="art-frame">🎙️<div class="art-label">Stage</div></div>
-            <div class="art-frame">🃏<div class="art-label">Archive</div></div>
-        </div>
-        <div id="beads-wrapper" class="arch-container" onclick="openBeads()">
-            <div style="position:absolute; width:100%; top:45%; color:#222; font-size:10px; letter-spacing: 2px;">BAR ENTRANCE</div>
-            <div class="beads-curtain" id="curtain-threads"></div>
-        </div>
-        <div id="bar-status" style="margin-top:20px; opacity:0; transition: 1s; font-style:italic; font-size:12px;">Вы в баре. Налито.</div>
     </div>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
         const tg = window.Telegram.WebApp;
+        const doorSnd = document.getElementById('door-sound');
         if(tg) { tg.expand(); tg.ready(); }
 
-        const curtain = document.getElementById('curtain-threads');
-        for(let i=0; i<20; i++) {
-            const thread = document.createElement('div');
-            thread.className = 'bead-thread';
-            thread.style.transitionDelay = (i * 0.02) + 's';
-            curtain.appendChild(thread);
+        function setupIdentity() {
+            let id = localStorage.getItem('gy_id');
+            if (!id) {
+                id = Math.floor(1000 + Math.random() * 9000);
+                localStorage.setItem('gy_id', id);
+            }
+            document.getElementById('user-id').innerText = 'SERIAL: GY-' + id;
+            
+            const avs = ['🥃','🎩','🍸','🚬','🎷','🎲','🃏','💎','🔑','🕯️'];
+            document.getElementById('user-avatar').innerText = avs[id % 10];
+            
+            // Генерация QR
+            setTimeout(() => {
+                if (typeof QRCode !== "undefined") {
+                    document.getElementById("qrcode").innerHTML = "";
+                    new QRCode(document.getElementById("qrcode"), {
+                        text: "GY-ID:" + id,
+                        width: 100,
+                        height: 100
+                    });
+                }
+            }, 300);
         }
 
-        function openMainDoor() {
-            document.getElementById('door-snd').play();
-            document.querySelector('.door-container').classList.add('door-open');
+        function processEntry() {
+            try { doorSnd.play(); } catch(e){}
+            document.getElementById('text-top').classList.add('label-up');
+            document.getElementById('door-frame').classList.add('door-open');
+            if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('heavy');
+
             setTimeout(() => {
                 document.getElementById('screen-door').classList.remove('active');
                 document.getElementById('screen-welcome').classList.add('active');
+                
+                setTimeout(() => {
+                    document.getElementById('screen-welcome').classList.remove('active');
+                    setupIdentity();
+                    document.getElementById('screen-foyer').classList.add('active');
+                }, 2000);
             }, 1200);
         }
 
-        function showFoyer() {
-            document.getElementById('screen-welcome').classList.remove('active');
-            setupIdentity();
-            document.getElementById('screen-foyer').classList.add('active');
-        }
-
-        function setupIdentity() {
-            let id = localStorage.getItem('gy_id') || Math.floor(1000 + Math.random() * 9000);
-            localStorage.setItem('gy_id', id);
-            document.getElementById('user-id').innerText = 'SERIAL: GY-' + id;
-            const avs = ['🥃','🎩','🍸','🚬','🎷','🎲','🃏','💎','🔑','🕯️'];
-            document.getElementById('user-avatar').innerText = avs[id % 10];
-            if (typeof QRCode !== "undefined") {
-                document.getElementById("qrcode").innerHTML = "";
-                new QRCode(document.getElementById("qrcode"), { text: "GY-ID:"+id, width: 100, height: 100 });
+        function closeClub() {
+            if (tg && tg.close) {
+                tg.close();
             }
-        }
-
-        function goToHall() {
-            document.getElementById('screen-foyer').classList.remove('active');
-            document.getElementById('screen-hall').classList.add('active');
-        }
-
-        function openBeads() {
-            document.getElementById('beads-snd').play();
-            document.getElementById('bar-snd').volume = 0.5;
-            document.getElementById('bar-snd').play();
-            document.getElementById('beads-wrapper').classList.add('curtains-open');
-            document.getElementById('bar-status').style.opacity = "1";
+            setTimeout(() => {
+                window.location.href = "https://t.me/твой_бот"; // Замени на ник своего бота
+            }, 200);
         }
     </script>
 </body>
