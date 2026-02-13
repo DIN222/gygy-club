@@ -8,114 +8,130 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" async></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-        body { margin: 0; background: #000; color: #d4af37; font-family: 'Georgia', serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .screen { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; z-index: 5; }
-        .active { opacity: 1; visibility: visible; transition: opacity 1.5s ease; }
-        .label-top { font-size: 16px; letter-spacing: 12px; margin-bottom: 30px; text-transform: uppercase; transition: transform 2s ease, opacity 1.5s ease; }
-        .label-up { transform: translateY(-80px); opacity: 0; }
-        .door-container { border: 2px solid #d4af37; padding: 12px; background: #050505; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .door-img { width: 80vw; max-width: 380px; display: block; height: auto; }
-        .door-open { transform: scale(3.5); opacity: 0; }
-        h1 { font-size: 40px; letter-spacing: 15px; font-weight: normal; margin: 0; }
-        .card { width: 85%; max-width: 320px; padding: 30px 20px; border: 2px solid #d4af37; background: #0a0a0a; }
-        .avatar-box { font-size: 50px; margin-bottom: 10px; }
-        #qrcode { background: #fff; padding: 8px; border: 2px solid #d4af37; margin: 15px auto; width: 116px; height: 116px; display: flex; justify-content: center; align-items: center; }
-        #qrcode img { width: 100px; height: 100px; }
-        .btn-gold { display: block; width: 100%; margin-top: 15px; padding: 14px; background: transparent; border: 2px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 10px; letter-spacing: 2px; cursor: pointer; outline: none; font-family: 'Georgia', serif; }
-        .btn-gold:active { background: #d4af37; color: #000; }
-        .btn-exit { margin-top: 25px; border: 2px solid #d4af37; opacity: 0.8; font-size: 9px; }
+        body { margin: 0; background: #000; color: #d4af37; font-family: 'Georgia', serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; }
+        
+        .screen { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; z-index: 5; transition: opacity 1s ease; }
+        .active { opacity: 1; visibility: visible; }
+
+        /* Фойе и Галерея */
+        .hall-bg { width: 100%; height: 100%; background: radial-gradient(circle at center, #151515 0%, #000 100%); display: flex; flex-direction: column; align-items: center; }
+        
+        .gallery-mini { display: flex; gap: 15px; margin-top: 20px; overflow-x: auto; width: 100%; padding: 10px 20px; scrollbar-width: none; }
+        .art-frame { flex: 0 0 100px; height: 140px; border: 3px solid #d4af37; background: #050505; display: flex; align-items: center; justify-content: center; font-size: 30px; position: relative; }
+        .art-label { position: absolute; bottom: 5px; font-size: 8px; letter-spacing: 1px; width: 100%; }
+
+        /* АРКА И ШТОРЫ */
+        .arch-container { 
+            position: relative; width: 260px; height: 350px; margin-top: 30px;
+            border: 4px solid #d4af37; border-bottom: none; border-radius: 130px 130px 0 0;
+            overflow: hidden; cursor: pointer; background: #050505;
+        }
+        
+        /* Вид за шторами (Бар и Сцена) */
+        .bar-preview {
+            position: absolute; width: 100%; height: 100%; background: #000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            opacity: 0.3; transition: opacity 1s;
+        }
+        .mic-light { width: 2px; height: 40px; background: #d4af37; box-shadow: 0 0 15px gold; margin-top: 40px; }
+
+        .beads-curtain {
+            position: absolute; top: 0; width: 100%; height: 100%;
+            display: flex; justify-content: space-around; z-index: 10; padding: 0 5px;
+        }
+        .bead-thread {
+            width: 3px; height: 100%;
+            background: repeating-linear-gradient(to bottom, #5d4037 0px, #5d4037 15px, #d4af37 15px, #d4af37 18px);
+            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s;
+        }
+
+        .curtains-open .bead-thread:nth-child(n+11) { transform: translateX(150%) rotate(10deg); opacity: 0; }
+        .curtains-open .bead-thread:nth-child(-n+10) { transform: translateX(-150%) rotate(-10deg); opacity: 0; }
+        .curtains-open .bar-preview { opacity: 1; }
+
+        /* Кнопки */
+        .btn-gold { padding: 12px 25px; background: transparent; border: 2px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 10px; letter-spacing: 2px; cursor: pointer; margin-top: 20px; }
+        
+        /* Сцена Бара */
+        .inside-bar { position: absolute; bottom: 50px; width: 100%; opacity: 0; transition: opacity 2s; }
+        .curtains-open .inside-bar { opacity: 1; }
     </style>
 </head>
 <body>
+
     <audio id="door-sound"><source src="door_open.mp3" type="audio/mpeg"></audio>
     <audio id="bar-sound" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
+    <audio id="beads-sound"><source src="https://assets.mixkit.co/active_storage/sfx/1070/1070-preview.mp3" type="audio/mpeg"></audio>
 
-    <div id="screen-door" class="screen active">
-        <div id="text-top" class="label-top">GY-GY PRIVATE</div>
-        <div id="door-frame" class="door-container" onclick="processEntry()">
-            <img src="door_1.jpg" class="door-img">
-        </div>
-        <div style="margin-top:25px; font-size:10px; color:#555; letter-spacing:4px;">Beyond The Ironic Barricade</div>
+    <div id="screen-door" class="screen active" onclick="processEntry()">
+        <div id="text-top" class="label-top" style="letter-spacing: 10px; margin-bottom: 20px;">GY-GY PRIVATE</div>
+        <div id="door-frame" style="border: 2px solid #d4af37; padding: 10px;"><img src="door_1.jpg" style="width: 70vw; max-width: 300px;"></div>
     </div>
 
-    <div id="screen-welcome" class="screen">
-        <h1>WELCOME</h1>
-        <p style="font-size: 10px; letter-spacing: 5px; margin-top: 15px; color: #666;">CHARLIE IS WAITING</p>
-    </div>
+    <div id="screen-hall" class="screen">
+        <div class="hall-bg">
+            <div class="gallery-mini">
+                <div class="art-frame">📸<div class="art-label">STUDIO</div></div>
+                <div class="art-frame">🎙️<div class="art-label">HALL</div></div>
+                <div class="art-frame">🃏<div class="art-label">ARCHIVE</div></div>
+            </div>
 
-    <div id="screen-foyer" class="screen">
-        <div class="card">
-            <div id="user-avatar" class="avatar-box">👤</div>
-            <div id="user-nick" style="font-size:22px; text-transform:uppercase;">GUEST</div>
-            <div id="user-id" style="font-size:10px; color:#555; margin-bottom:15px;">SERIAL: GY-0000</div>
-            <div id="qrcode"></div>
-            <button class="btn-gold" onclick="enterBar()">Enter the Bar</button>
-            <button class="btn-gold btn-exit" onclick="closeClub()">Return to Chat</button>
+            <div id="beads-wrapper" class="arch-container" onclick="openBar()">
+                <div class="bar-preview">
+                    <div style="font-size: 10px; color: #444;">THE COUNTER</div>
+                    <div class="mic-light"></div>
+                    <div style="font-size: 8px; color: #d4af37; margin-top: 5px;">STAGE</div>
+                </div>
+                <div class="beads-curtain" id="curtain-threads">
+                    </div>
+            </div>
+
+            <div class="inside-bar">
+                <div style="font-style: italic; font-size: 12px; color: #d4af37;">"Проходите к стойке, Чарли уже на месте..."</div>
+                <button class="btn-gold" onclick="window.location.reload()">Return to Entrance</button>
+            </div>
         </div>
     </div>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
         const tg = window.Telegram.WebApp;
-        const doorSnd = document.getElementById('door-sound');
+        const beadsSnd = document.getElementById('beads-sound');
         const barSnd = document.getElementById('bar-sound');
-        if(tg) { tg.expand(); tg.ready(); }
-
-        function setIdentity() {
-            let id = localStorage.getItem('gy_id') || Math.floor(1000 + Math.random() * 9000);
-            localStorage.setItem('gy_id', id);
-            document.getElementById('user-id').innerText = 'SERIAL: GY-' + id;
-            
-            const avs = ['🥃','🎩','🍸','🚬','🎷','🎲','🃏','💎','🔑','🕯️'];
-            document.getElementById('user-avatar').innerText = avs[id % 10];
-            
-            // Генерируем QR только если библиотека подгрузилась
-            setTimeout(() => {
-                if (typeof QRCode !== "undefined") {
-                    document.getElementById("qrcode").innerHTML = "";
-                    new QRCode(document.getElementById("qrcode"), { text: "GY-ID:"+id, width: 100, height: 100 });
-                } else {
-                    document.getElementById("qrcode").innerText = "KEY READY";
-                }
-            }, 500);
-
-            document.getElementById('user-nick').innerText = window.innerWidth < 600 ? 'NIGHT OWL' : 'ELITE GUEST';
+        
+        // Генерация нитей шторы
+        const curtain = document.getElementById('curtain-threads');
+        for(let i=0; i<20; i++) {
+            const thread = document.createElement('div');
+            thread.className = 'bead-thread';
+            thread.style.transitionDelay = (i * 0.03) + 's';
+            curtain.appendChild(thread);
         }
 
         function processEntry() {
-            // Мгновенный отклик для тестера
-            try { doorSnd.play(); barSnd.volume = 0.1; barSnd.play(); } catch(e){}
-            
-            document.getElementById('text-top').classList.add('label-up');
-            document.getElementById('door-frame').classList.add('door-open');
-            
-            if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('heavy');
-
-            setTimeout(() => {
-                document.getElementById('screen-door').classList.remove('active');
-                const ws = document.getElementById('screen-welcome');
-                ws.classList.add('active');
-                
-                setTimeout(() => {
-                    ws.style.opacity = "0"; 
-                    setTimeout(() => {
-                        ws.classList.remove('active');
-                        setIdentity(); 
-                        document.getElementById('screen-foyer').classList.add('active');
-                    }, 1000); 
-                }, 2000); 
-            }, 1200);
+            document.getElementById('screen-door').classList.remove('active');
+            // Здесь можно добавить экран Welcome, но для теста идем сразу в Холл
+            document.getElementById('screen-hall').classList.add('active');
+            if(tg) tg.expand();
         }
 
-        function enterBar() {
-            barSnd.volume = 1.0;
-            if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-            alert("Кх-кх... Проходите, в баре уже наливают.");
-        }
+        function openBar() {
+            // Звук висюлек
+            try { beadsSnd.currentTime = 0; beadsSnd.play(); } catch(e){}
+            
+            // Раздвигаем
+            document.getElementById('beads-wrapper').classList.add('curtains-open');
+            
+            // Нарастание звука бара
+            barSnd.volume = 0.1;
+            barSnd.play();
+            let vol = 0.1;
+            const interval = setInterval(() => {
+                if (vol < 0.7) { vol += 0.05; barSnd.volume = vol; }
+                else { clearInterval(interval); }
+            }, 100);
 
-        function closeClub() {
-            if (tg && tg.close) { tg.close(); }
-            setTimeout(() => { window.location.href = "https://t.me/твой_бот"; }, 100);
+            if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
         }
     </script>
 </body>
