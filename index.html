@@ -5,41 +5,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GY-GY Club</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" async></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         body { margin: 0; background: #000; color: #d4af37; font-family: 'Georgia', serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        
-        .screen { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; z-index: 5; transition: opacity 1.2s ease; }
-        .active { opacity: 1; visibility: visible; }
-
-        /* Входная дверь */
+        .screen { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; z-index: 5; }
+        .active { opacity: 1; visibility: visible; transition: opacity 1.5s ease; }
         .label-top { font-size: 16px; letter-spacing: 12px; margin-bottom: 30px; text-transform: uppercase; transition: transform 2s ease, opacity 1.5s ease; }
         .label-up { transform: translateY(-80px); opacity: 0; }
-        .door-container { border: 2px solid #d4af37; padding: 12px; background: #050505; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s; cursor: pointer; }
+        .door-container { border: 2px solid #d4af37; padding: 12px; background: #050505; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .door-img { width: 80vw; max-width: 380px; display: block; height: auto; }
         .door-open { transform: scale(3.5); opacity: 0; }
-
-        /* Карточка Identity */
-        .card { width: 85%; max-width: 320px; padding: 30px 20px; border: 2px solid #d4af37; background: #0a0a0a; box-shadow: 0 0 30px rgba(212, 175, 55, 0.1); }
+        h1 { font-size: 40px; letter-spacing: 15px; font-weight: normal; margin: 0; }
+        .card { width: 85%; max-width: 320px; padding: 30px 20px; border: 2px solid #d4af37; background: #0a0a0a; }
         .avatar-box { font-size: 50px; margin-bottom: 10px; }
         #qrcode { background: #fff; padding: 8px; border: 2px solid #d4af37; margin: 15px auto; width: 116px; height: 116px; display: flex; justify-content: center; align-items: center; }
-        
-        /* Кнопки (Синхронизированные) */
-        .btn-gold { display: block; width: 100%; margin-top: 15px; padding: 14px; background: transparent; border: 2px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 10px; letter-spacing: 2px; cursor: pointer; outline: none; font-family: 'Georgia', serif; opacity: 1 !important; }
+        #qrcode img { width: 100px; height: 100px; }
+        .btn-gold { display: block; width: 100%; margin-top: 15px; padding: 14px; background: transparent; border: 2px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 10px; letter-spacing: 2px; cursor: pointer; outline: none; font-family: 'Georgia', serif; }
         .btn-gold:active { background: #d4af37; color: #000; }
-        .btn-exit { margin-top: 25px; border: 2px solid #d4af37; color: #d4af37; }
+        .btn-exit { margin-top: 25px; border: 2px solid #d4af37; opacity: 0.8; font-size: 9px; }
     </style>
 </head>
 <body>
-
     <audio id="door-sound"><source src="door_open.mp3" type="audio/mpeg"></audio>
+    <audio id="bar-sound" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
 
     <div id="screen-door" class="screen active">
         <div id="text-top" class="label-top">GY-GY PRIVATE</div>
         <div id="door-frame" class="door-container" onclick="processEntry()">
             <img src="door_1.jpg" class="door-img">
         </div>
+        <div style="margin-top:25px; font-size:10px; color:#555; letter-spacing:4px;">Beyond The Ironic Barricade</div>
     </div>
 
     <div id="screen-welcome" class="screen">
@@ -53,7 +49,7 @@
             <div id="user-nick" style="font-size:22px; text-transform:uppercase;">GUEST</div>
             <div id="user-id" style="font-size:10px; color:#555; margin-bottom:15px;">SERIAL: GY-0000</div>
             <div id="qrcode"></div>
-            <button class="btn-gold" onclick="alert('Вы входите в клуб...')">Enter the Bar</button>
+            <button class="btn-gold" onclick="enterBar()">Enter the Bar</button>
             <button class="btn-gold btn-exit" onclick="closeClub()">Return to Chat</button>
         </div>
     </div>
@@ -62,57 +58,64 @@
     <script>
         const tg = window.Telegram.WebApp;
         const doorSnd = document.getElementById('door-sound');
+        const barSnd = document.getElementById('bar-sound');
         if(tg) { tg.expand(); tg.ready(); }
 
-        function setupIdentity() {
-            let id = localStorage.getItem('gy_id');
-            if (!id) {
-                id = Math.floor(1000 + Math.random() * 9000);
-                localStorage.setItem('gy_id', id);
-            }
+        function setIdentity() {
+            let id = localStorage.getItem('gy_id') || Math.floor(1000 + Math.random() * 9000);
+            localStorage.setItem('gy_id', id);
             document.getElementById('user-id').innerText = 'SERIAL: GY-' + id;
             
             const avs = ['🥃','🎩','🍸','🚬','🎷','🎲','🃏','💎','🔑','🕯️'];
             document.getElementById('user-avatar').innerText = avs[id % 10];
             
-            // Генерация QR
+            // Генерируем QR только если библиотека подгрузилась
             setTimeout(() => {
                 if (typeof QRCode !== "undefined") {
                     document.getElementById("qrcode").innerHTML = "";
-                    new QRCode(document.getElementById("qrcode"), {
-                        text: "GY-ID:" + id,
-                        width: 100,
-                        height: 100
-                    });
+                    new QRCode(document.getElementById("qrcode"), { text: "GY-ID:"+id, width: 100, height: 100 });
+                } else {
+                    document.getElementById("qrcode").innerText = "KEY READY";
                 }
-            }, 300);
+            }, 500);
+
+            document.getElementById('user-nick').innerText = window.innerWidth < 600 ? 'NIGHT OWL' : 'ELITE GUEST';
         }
 
         function processEntry() {
-            try { doorSnd.play(); } catch(e){}
+            // Мгновенный отклик для тестера
+            try { doorSnd.play(); barSnd.volume = 0.1; barSnd.play(); } catch(e){}
+            
             document.getElementById('text-top').classList.add('label-up');
             document.getElementById('door-frame').classList.add('door-open');
+            
             if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('heavy');
 
             setTimeout(() => {
                 document.getElementById('screen-door').classList.remove('active');
-                document.getElementById('screen-welcome').classList.add('active');
+                const ws = document.getElementById('screen-welcome');
+                ws.classList.add('active');
                 
                 setTimeout(() => {
-                    document.getElementById('screen-welcome').classList.remove('active');
-                    setupIdentity();
-                    document.getElementById('screen-foyer').classList.add('active');
-                }, 2000);
+                    ws.style.opacity = "0"; 
+                    setTimeout(() => {
+                        ws.classList.remove('active');
+                        setIdentity(); 
+                        document.getElementById('screen-foyer').classList.add('active');
+                    }, 1000); 
+                }, 2000); 
             }, 1200);
         }
 
+        function enterBar() {
+            barSnd.volume = 1.0;
+            if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+            alert("Кх-кх... Проходите, в баре уже наливают.");
+        }
+
         function closeClub() {
-            if (tg && tg.close) {
-                tg.close();
-            }
-            setTimeout(() => {
-                window.location.href = "https://t.me/твой_бот"; // Замени на ник своего бота
-            }, 200);
+            if (tg && tg.close) { tg.close(); }
+            setTimeout(() => { window.location.href = "https://t.me/твой_бот"; }, 100);
         }
     </script>
 </body>
