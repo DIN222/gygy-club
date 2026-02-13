@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -109,7 +110,7 @@
             alert("Кх-кх... Проходите, в баре уже наливают.");
         }
 
-       function closeClub() {
+        function closeClub() {
     // 1. Пытаемся закрыть через интерфейс Telegram (для телефонов)
     if (window.Telegram && window.Telegram.WebApp) {
         tg.close();
@@ -120,11 +121,11 @@
     setTimeout(() => {
         window.location.href = "https://t.me/твой_бот"; 
     }, 100);
-}
+} {
+            tg.close();
         }
 
         window.onload = setIdentity;
     </script>
 </body>
 </html>
-
