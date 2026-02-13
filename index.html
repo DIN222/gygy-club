@@ -109,11 +109,22 @@
             alert("Кх-кх... Проходите, в баре уже наливают.");
         }
 
-        function closeClub() {
-            tg.close();
+       function closeClub() {
+    // 1. Пытаемся закрыть через интерфейс Telegram (для телефонов)
+    if (window.Telegram && window.Telegram.WebApp) {
+        tg.close();
+    }
+
+    // 2. Запасной вариант для ПК (если закрыть окно нельзя)
+    // Замени ссылку ниже на адрес своего бота или канала
+    setTimeout(() => {
+        window.location.href = "https://t.me/твой_бот"; 
+    }, 100);
+}
         }
 
         window.onload = setIdentity;
     </script>
 </body>
 </html>
+
