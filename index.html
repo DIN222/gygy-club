@@ -4,186 +4,130 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club - Grand Hall</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GY-GY Private Club</title>
     <style>
-        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-        body { margin: 0; background: #000; color: #d4af37; font-family: 'Georgia', serif; text-align: center; height: 100vh; overflow: hidden; }
-        
-        .block { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.8s; z-index: 5; }
-        .block.active { opacity: 1; visibility: visible; }
-
-        /* ИНТЕРЬЕР ГРАНД-ХОЛЛА */
-        .hall-bg { 
-            width: 100%; height: 100%; 
-            background: 
-                radial-gradient(circle at 50% -10%, rgba(212, 175, 55, 0.4) 0%, transparent 60%), /* Свет люстры */
-                linear-gradient(180deg, #1a120b 0%, #050505 100%); /* Панели */
-            display: flex; flex-direction: column; align-items: center; position: relative;
+        :root {
+            --gold: #d4af37;
+            --gold-light: #f2d472;
+            --dark: #0d0d0d;
         }
 
-        /* Тот самый паркет */
-        .parquet { 
-            position: absolute; bottom: 0; width: 100%; height: 25%; 
-            background: repeating-linear-gradient(45deg, #140d07 0, #140d07 20px, #1a120b 20px, #1a120b 40px);
-            border-top: 2px solid #2a1e12; box-shadow: inset 0 20px 50px rgba(0,0,0,0.9); z-index: 1; 
-        }
-
-        .hall-main-view { display: flex; align-items: flex-end; justify-content: center; gap: 20px; margin-top: auto; margin-bottom: 8vh; z-index: 2; width: 95%; }
-        
-        /* Колонны и стены */
-        .art-side { display: flex; flex-direction: column; gap: 25px; margin-bottom: 50px; }
-        
-        /* Рамки с эффектом лепнины */
-        .frame { 
-            width: 75px; height: 100px; 
-            border: 4px solid #d4af37; border-image: linear-gradient(to bottom, #d4af37, #8a6d3b) 1;
-            background: #000; box-shadow: 0 10px 20px rgba(0,0,0,0.8), 0 0 15px rgba(212,175,55,0.2);
-            display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;
-        }
-        .frame::before { content: ''; position: absolute; top: -5px; left: 10%; width: 80%; height: 2px; background: gold; box-shadow: 0 0 10px gold; } /* Светильник над картиной */
-
-        /* Арка BAR */
-        .arch-bar { 
-            width: 150px; height: 260px; 
-            border: 8px solid #d4af37; border-bottom: none; border-radius: 75px 75px 0 0; 
-            position: relative; background: #050505;
-            box-shadow: 0 0 40px rgba(212,175,55,0.3), inset 0 20px 40px rgba(0,0,0,1);
+        body, html {
+            margin: 0; padding: 0; height: 100%;
+            background-color: var(--dark);
+            color: white; font-family: 'Cinzel', serif;
             overflow: hidden;
         }
-        .arch-label { 
-            position: absolute; top: 20px; width: 100%; font-size: 14px; 
-            letter-spacing: 6px; color: #d4af37; font-weight: bold; text-shadow: 0 0 10px rgba(212,175,55,0.8);
+
+        /* ЭКРАН 1: ДВЕРИ */
+        #entrance-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000 url('door_1.jpg') no-repeat center center;
+            background-size: cover;
+            display: flex; justify-content: center; align-items: center;
+            z-index: 1000;
+            transition: opacity 0.8s ease;
         }
 
-        /* Висюльки (заготовка) */
-        .beads-container {
-            display: flex; justify-content: space-around; width: 100%; height: 100%; padding-top: 50px;
+        /* ЭКРАН 2: ХОЛЛ */
+        #hall-screen {
+            position: relative;
+            width: 100%; height: 100%;
+            display: flex; justify-content: center; align-items: center;
+            background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
+            z-index: 10;
         }
-        .bead-line { width: 2px; height: 100%; background: linear-gradient(to bottom, #d4af37 0%, transparent 100%); opacity: 0.4; }
 
-        /* Ломберные столики */
-        .table-mini { 
-            width: 50px; height: 4px; background: #d4af37; margin: 0 auto; position: relative;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        .block {
+            background: rgba(15, 15, 15, 0.98);
+            border: 1px solid var(--gold);
+            padding: 30px; text-align: center;
+            border-radius: 10px; width: 280px;
+            box-shadow: 0 0 50px rgba(0,0,0,1);
         }
-        .table-mini::after { content: '🍯'; position: absolute; top: -16px; left: 15px; font-size: 12px; }
 
-        .btn-gold { display: block; width: 100%; max-width: 260px; margin: 15px auto; padding: 14px; background: transparent; border: 2px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 10px; letter-spacing: 2px; cursor: pointer; z-index: 10; font-family: 'Georgia', serif; }
-        .btn-gold:active { background: #d4af37; color: #000; }
+        /* ИСПРАВЛЕНИЕ: ЧИСТЫЙ ЧАРЛИ */
+        .charlie-frame {
+            width: 180px; height: 180px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            border: 2px solid var(--gold); 
+            overflow: hidden; /* Обрезает белое кольцо */
+            background: #000;
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        .charlie-frame img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            transform: scale(1.08); /* Прячет края старой рамы */
+        }
+
+        .btn-gold {
+            background: linear-gradient(145deg, var(--gold), var(--gold-light));
+            color: #000 !important;
+            border: none; padding: 12px 20px;
+            font-weight: bold; text-transform: uppercase;
+            border-radius: 25px; cursor: pointer;
+            width: 100%; display: block;
+            text-decoration: none; margin-top: 10px;
+            box-sizing: border-box;
+        }
+
+        .btn-outline {
+            background: transparent; color: var(--gold);
+            border: 1px solid var(--gold);
+            padding: 10px; border-radius: 25px;
+            cursor: pointer; width: 100%; margin-top: 15px;
+        }
     </style>
 </head>
 <body>
 
-    <audio id="door-sound" preload="auto"><source src="door_open.mp3" type="audio/mpeg"></audio>
-    <audio id="bar-sound" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
+    <div id="entrance-screen">
+        <button class="btn-gold" style="width: auto; padding: 15px 40px; margin-top: 300px;" onclick="enter()">ENTER</button>
+    </div>
 
-    <div id="block-entrance" class="block active">
-        <div style="letter-spacing: 12px; margin-bottom: 30px;">GY-GY PRIVATE</div>
-        <div id="door-frame" style="border:2px solid #d4af37; padding:10px; background:#050505; cursor:pointer;" onclick="handleDoor()">
-            <img src="door_1.jpg" style="width: 75vw; max-width: 320px; display: block;">
+    <div id="hall-screen">
+        <div id="welcome" class="block">
+            <div class="charlie-frame"><img src="charlie.png" alt="Charlie"></div>
+            <h2 style="letter-spacing: 4px; color: var(--gold); margin-top: 0;">WELCOME</h2>
+            <button class="btn-gold" onclick="nav('card')">Identify Myself</button>
         </div>
-    </div>
 
-    <div id="block-welcome" class="block">
-        <img src="charlie.png" style="width: 180px; height: 180px; border-radius: 50%; border: 3px solid #d4af37; object-fit: cover; margin-bottom: 20px;">
-        <h1 style="letter-spacing: 5px;">GY-GY CLUB</h1>
-        <button class="btn-gold" onclick="showIdentity()">Identify Myself</button>
-    </div>
-
-    <div id="block-identity" class="block">
-        <div style="border: 2px solid #d4af37; padding: 25px; background: #0a0a0a; width: 85%; max-width: 320px;">
-            <div id="user-avatar" style="font-size:55px;">👤</div>
-            <div id="user-nick" style="font-size:20px; margin-top:10px;">ELITE GUEST</div>
-            <div id="qrcode"></div>
-            <button class="btn-gold" onclick="enterHall()">Grand Hall</button>
-            <button class="btn-gold" onclick="closeClub()">Exit</button>
-        </div>
-    </div>
-
-    <div id="block-hall" class="block">
-        <div class="hall-bg">
-            <div style="font-size: 40px; margin-top: 10px; color: rgba(212,175,55,0.4); text-shadow: 0 0 20px gold;">🕯️</div>
-            
-            <div class="hall-main-view">
-                <div class="art-side">
-                    <div class="frame"><img src="masks.png" style="width:100%; height:100%; object-fit:cover;"></div>
-                    <div class="table-mini"></div>
-                    <div class="frame">🎩</div>
-                </div>
-
-                <div class="arch-bar">
-                    <div class="arch-label">BAR</div>
-                    <div class="beads-container">
-                        <div class="bead-line"></div><div class="bead-line"></div><div class="bead-line"></div>
-                        <div class="bead-line"></div><div class="bead-line"></div><div class="bead-line"></div>
-                    </div>
-                </div>
-
-                <div class="art-side">
-                    <div class="frame">🎙️</div>
-                    <div class="table-mini"></div>
-                    <div class="frame">⌨️</div>
+        <div id="card" class="block" style="display:none;">
+            <div style="display:flex; align-items:center; gap:12px; text-align:left; margin-bottom:20px;">
+                <img src="avatar_placeholder.png" style="width:45px; border-radius:50%; border:1px solid var(--gold);">
+                <div>
+                    <div style="font-weight:bold; color:var(--gold);">GUEST #777</div>
+                    <div style="font-size:0.7rem; color:#888;">ELITE MEMBER</div>
                 </div>
             </div>
-            
-            <div class="parquet"></div>
-            <button class="btn-gold" style="margin-bottom: 20px; position: relative; z-index: 10;" onclick="exitHall()">Back to Card</button>
+            <button class="btn-gold" onclick="alert('Grand Hall Opening Soon')">Enter Grand Hall</button>
+            <button class="btn-outline" onclick="nav('key')">Magic Key</button>
+        </div>
+
+        <div id="key" class="block" style="display:none;">
+            <div class="charlie-frame"><img src="charlie.png" alt="Charlie"></div>
+            <div style="background: #1a1a1a; padding: 15px; border-radius: 10px; margin: 15px 0;">
+                <img src="qr_sample.png" style="width:120px; border:2px solid white; border-radius:4px;">
+            </div>
+            <a href="https://t.me/your_bot_link" class="btn-gold">Exit to Bot</a>
+            <button class="btn-outline" onclick="nav('card')">Back</button>
         </div>
     </div>
 
     <script>
-        const doorSnd = document.getElementById('door-sound');
-        const barSnd = document.getElementById('bar-sound');
-
-        function switchTo(id) {
-            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
+        function enter() {
+            const door = document.getElementById('entrance-screen');
+            door.style.opacity = '0';
+            setTimeout(() => { door.style.display = 'none'; }, 800);
         }
-
-        function handleDoor() {
-            try { doorSnd.play(); } catch(e){}
-            document.getElementById('door-frame').style.transform = "scale(3.5)";
-            document.getElementById('door-frame').style.opacity = "0";
-            setTimeout(() => switchTo('block-welcome'), 1200);
-        }
-
-        function showIdentity() {
-            let id = localStorage.getItem('gy_id') || Math.floor(1000 + Math.random() * 9000);
-            localStorage.setItem('gy_id', id);
-            document.getElementById('user-avatar').innerText = ['🥃','🎩','🍸','🚬','🎷'][id % 5];
-            if (typeof QRCode !== "undefined") {
-                document.getElementById("qrcode").innerHTML = "";
-                new QRCode(document.getElementById("qrcode"), { text: "GY-ID:"+id, width: 100, height: 100 });
-            }
-            switchTo('block-identity');
-        }
-
-        function enterHall() {
-            barSnd.volume = 0;
-            barSnd.play().catch(e => {});
-            let vol = 0;
-            const fadeIn = setInterval(() => {
-                if (vol < 0.3) { vol += 0.05; barSnd.volume = vol; }
-                else { clearInterval(fadeIn); }
-            }, 150);
-            switchTo('block-hall');
-        }
-
-        function exitHall() {
-            let vol = barSnd.volume;
-            const fadeOut = setInterval(() => {
-                if (vol > 0.05) { vol -= 0.05; barSnd.volume = vol; }
-                else { barSnd.pause(); clearInterval(fadeOut); }
-            }, 100);
-            switchTo('block-identity');
-        }
-
-        function closeClub() {
-            const botURL = "https://t.me/твой_бот"; // ЗАМЕНИ НА НИК БОТА
-            if (window.Telegram && window.Telegram.WebApp) window.Telegram.WebApp.close();
-            setTimeout(() => { window.location.href = botURL; }, 100);
+        function nav(id) {
+            document.querySelectorAll('.block').forEach(b => b.style.display = 'none');
+            document.getElementById(id).style.display = 'block';
         }
     </script>
 </body>
