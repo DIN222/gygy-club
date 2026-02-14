@@ -33,6 +33,7 @@
 <body>
 
     <audio id="door-sound" preload="auto"><source src="door_open.mp3" type="audio/mpeg"></audio>
+    <audio id="bar-sound" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active">
         <div class="label-top">GY-GY PRIVATE</div>
@@ -52,7 +53,7 @@
             <div id="user-avatar" style="font-size:50px;">👤</div>
             <div id="user-nick" style="font-size:20px; margin:10px 0;">ELITE GUEST</div>
             <div id="qrcode" style="background:#fff; padding:5px; width:110px; margin:10px auto;"></div>
-            <button class="btn-gold" onclick="switchTo('block-hall')">Grand Hall</button>
+            <button class="btn-gold" onclick="enterHall()">Grand Hall</button>
             <button class="btn-gold" onclick="closeClub()">Exit</button>
         </div>
     </div>
@@ -74,19 +75,21 @@
                 </div>
             </div>
             <div class="parquet"></div>
-            <button class="btn-gold" style="margin-bottom: 20px; z-index:10;" onclick="switchTo('block-identity')">My Card</button>
+            <button class="btn-gold" style="margin-bottom: 20px; z-index:10;" onclick="exitHall()">My Card</button>
         </div>
     </div>
 
     <script>
+        const doorSnd = document.getElementById('door-sound');
+        const barSnd = document.getElementById('bar-sound');
+
         function switchTo(id) {
             document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
             document.getElementById(id).classList.add('active');
         }
 
         function handleDoor() {
-            const snd = document.getElementById('door-sound');
-            snd.play().catch(() => {}); // Игнорируем ошибку, если браузер блокирует звук
+            doorSnd.play().catch(() => {});
             document.getElementById('door-frame').classList.add('door-open');
             setTimeout(() => switchTo('block-welcome'), 1200);
         }
@@ -102,12 +105,29 @@
             switchTo('block-identity');
         }
 
+        function enterHall() {
+            barSnd.volume = 0;
+            barSnd.play().catch(() => {});
+            let vol = 0;
+            let fadeIn = setInterval(() => {
+                if (vol < 0.3) { vol += 0.05; barSnd.volume = vol; }
+                else { clearInterval(fadeIn); }
+            }, 100);
+            switchTo('block-hall');
+        }
+
+        function exitHall() {
+            let vol = barSnd.volume;
+            let fadeOut = setInterval(() => {
+                if (vol > 0.05) { vol -= 0.05; barSnd.volume = vol; }
+                else { barSnd.pause(); clearInterval(fadeOut); }
+            }, 100);
+            switchTo('block-identity');
+        }
+
         function closeClub() {
-            const botURL = "https://t.me/Sklad_Potok_Bot";
-            if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.close) {
-                window.Telegram.WebApp.close();
-            }
-            setTimeout(() => { window.location.href = botURL; }, 100);
+            if (window.Telegram && window.Telegram.WebApp) window.Telegram.WebApp.close();
+            window.location.href = "https://t.me/Sklad_Potok_Bot";
         }
     </script>
 </body>
