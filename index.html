@@ -20,30 +20,17 @@
             background-color: var(--dark);
             color: white;
             font-family: 'Cinzel', serif;
-            overflow: hidden;
-        }
-
-        .screen {
-            position: absolute;
-            width: 100%;
-            height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: opacity 0.8s ease;
         }
 
-        #entrance-screen {
-            background: url('door_1.jpg') no-repeat center center;
-            background-size: cover;
-            z-index: 10;
-        }
-
-        #hall-screen {
-            background-color: var(--dark);
-            opacity: 0;
-            z-index: 5;
+        /* Основной контейнер блоков */
+        .hall-container {
+            display: flex;
             flex-direction: column;
+            align-items: center;
+            z-index: 15;
         }
 
         .block {
@@ -57,7 +44,7 @@
             box-shadow: 0 0 30px rgba(0,0,0,0.8);
         }
 
-        /* МАНИПУЛЯЦИЯ: Идеальное золотое кольцо без белых следов */
+        /* Чарли: Золотое кольцо и обрезка белых краев */
         .charlie-container {
             width: 200px;
             height: 200px;
@@ -65,12 +52,11 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            position: relative;
             
-            border-radius: 50%;       /* Делаем контейнер круглым */
-            overflow: hidden;         /* Обрезаем всё лишнее (белые края картинки) */
-            background-color: #000;   /* Черный фон подложкой */
-            border: 2px solid var(--gold); /* То самое тонкое золотое кольцо */
+            border-radius: 50%;       
+            overflow: hidden;         /* Срезает белый след от рамы */
+            background-color: #000;   
+            border: 2px solid var(--gold); 
             box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
         }
 
@@ -78,13 +64,13 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transform: scale(1.05);   /* Легкий зум, чтобы скрыть артефакты по краям */
+            transform: scale(1.02);   /* Минимальный зум для чистоты краев */
         }
 
-        /* Кнопки */
+        /* Золотая кнопка */
         .btn-gold {
             background: linear-gradient(145deg, var(--gold), var(--gold-light));
-            color: #1a1a1a;
+            color: #1a1a1a !important;
             border: none;
             padding: 12px 25px;
             font-size: 0.9rem;
@@ -147,17 +133,13 @@
 </head>
 <body>
 
-    <div id="entrance-screen" class="screen">
-        <button class="btn-gold" style="margin-top: 300px;" onclick="enterClub()">Enter the Club</button>
-    </div>
-
-    <div id="hall-screen" class="screen">
+    <div class="hall-container">
         
         <div id="block-welcome" class="block">
             <div class="charlie-container">
                 <img src="charlie.png" alt="Charlie">
             </div>
-            <h1 style="letter-spacing: 5px; color: var(--gold);">WELCOME</h1>
+            <h1 style="letter-spacing: 5px; color: var(--gold); margin: 0 0 20px 0;">WELCOME</h1>
             <button class="btn-gold" onclick="showBlock('block-card')">Identify Myself</button>
         </div>
 
@@ -165,11 +147,11 @@
             <div class="user-info">
                 <img src="avatar_placeholder.png" class="mini-avatar">
                 <div>
-                    <div style="font-weight:bold; color:var(--gold);">GUEST #777</div>
+                    <div id="display-nick" style="font-weight:bold; color:var(--gold);">GUEST</div>
                     <div style="font-size:0.7rem; color:#888;">STATUS: ELITE</div>
                 </div>
             </div>
-            <button class="btn-gold" style="width:100%;" onclick="enterGrandHall()">Enter Grand Hall</button>
+            <button class="btn-gold" style="width:100%;" onclick="alert('Entering Hall...')">Enter Grand Hall</button>
             <button class="btn-outline" onclick="showBlock('block-identity')">Magic Key (ID)</button>
         </div>
 
@@ -181,7 +163,7 @@
                 <div id="qrcode-container">
                     <img src="qr_sample.png" alt="QR Code">
                 </div>
-                <p style="font-size:0.8rem; color:#aaa;">Your Magic Key</p>
+                <p style="font-size:0.8rem; color:#aaa; margin: 10px 0;">Your Magic Key</p>
                 <a href="https://t.me/your_bot_link" class="btn-gold" style="font-size:0.8rem;">Exit to Bot</a>
             </div>
             <button class="btn-outline" onclick="showBlock('block-card')">Back</button>
@@ -190,22 +172,9 @@
     </div>
 
     <script>
-        function enterClub() {
-            document.getElementById('entrance-screen').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('entrance-screen').style.display = 'none';
-                document.getElementById('hall-screen').style.opacity = '1';
-                document.getElementById('hall-screen').style.zIndex = '15';
-            }, 800);
-        }
-
         function showBlock(blockId) {
             document.querySelectorAll('.block').forEach(b => b.style.display = 'none');
             document.getElementById(blockId).style.display = 'block';
-        }
-
-        function enterGrandHall() {
-            alert("Entering Grand Hall...");
         }
     </script>
 </body>
