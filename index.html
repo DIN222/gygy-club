@@ -4,118 +4,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" async></script>
+    <title>GY-GY Club Index_0</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-        body { margin: 0; background: #000; color: #d4af37; font-family: 'Georgia', serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .screen { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; z-index: 5; }
-        .active { opacity: 1; visibility: visible; transition: opacity 1.5s ease; }
-        .label-top { font-size: 16px; letter-spacing: 12px; margin-bottom: 30px; text-transform: uppercase; transition: transform 2s ease, opacity 1.5s ease; }
-        .label-up { transform: translateY(-80px); opacity: 0; }
-        .door-container { border: 2px solid #d4af37; padding: 12px; background: #050505; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .door-img { width: 80vw; max-width: 380px; display: block; height: auto; }
+        body { margin: 0; background: #000; color: #d4af37; font-family: 'Georgia', serif; text-align: center; height: 100vh; overflow: hidden; }
+        
+        /* СИСТЕМА ПЕРЕКЛЮЧЕНИЯ БЛОКОВ */
+        .block { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.8s; z-index: 5; }
+        .block.active { opacity: 1; visibility: visible; }
+
+        /* --- БЛОК 0: ФУНДАМЕНТ (ВХОД) --- */
+        .door-container { border: 2px solid #d4af37; padding: 12px; background: #050505; cursor: pointer; transition: transform 2s, opacity 1s; }
         .door-open { transform: scale(3.5); opacity: 0; }
-        h1 { font-size: 40px; letter-spacing: 15px; font-weight: normal; margin: 0; }
-        .card { width: 85%; max-width: 320px; padding: 30px 20px; border: 2px solid #d4af37; background: #0a0a0a; }
-        .avatar-box { font-size: 50px; margin-bottom: 10px; }
-        #qrcode { background: #fff; padding: 8px; border: 2px solid #d4af37; margin: 15px auto; width: 116px; height: 116px; display: flex; justify-content: center; align-items: center; }
-        #qrcode img { width: 100px; height: 100px; }
-        .btn-gold { display: block; width: 100%; margin-top: 15px; padding: 14px; background: transparent; border: 2px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 10px; letter-spacing: 2px; cursor: pointer; outline: none; font-family: 'Georgia', serif; }
+        .card { width: 85%; max-width: 320px; padding: 25px; border: 2px solid #d4af37; background: #0a0a0a; }
+        #qrcode { background: #fff; padding: 5px; margin: 15px auto; width: 110px; height: 110px; display: flex; justify-content: center; align-items: center; border: 2px solid #d4af37; }
+
+        /* --- БЛОК 1: ХОЛЛ (ЗАГОТОВКА) --- */
+        .hall-content { width: 100%; height: 100%; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+
+        /* ОБЩИЕ КНОПКИ */
+        .btn-gold { display: block; width: 100%; max-width: 280px; margin-top: 15px; padding: 14px; background: transparent; border: 2px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 10px; letter-spacing: 2px; cursor: pointer; font-family: 'Georgia', serif; }
         .btn-gold:active { background: #d4af37; color: #000; }
-        .btn-exit { margin-top: 25px; border: 2px solid #d4af37; opacity: 0.8; font-size: 9px; }
     </style>
 </head>
 <body>
+
     <audio id="door-sound"><source src="door_open.mp3" type="audio/mpeg"></audio>
-    <audio id="bar-sound" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
 
-    <div id="screen-door" class="screen active">
-        <div id="text-top" class="label-top">GY-GY PRIVATE</div>
-        <div id="door-frame" class="door-container" onclick="processEntry()">
-            <img src="door_1.jpg" class="door-img">
+    <div id="block-entrance" class="block active">
+        <div id="door-frame" class="door-container" onclick="handleDoor()">
+            <img src="door_1.jpg" style="width: 75vw; max-width: 320px;">
         </div>
-        <div style="margin-top:25px; font-size:10px; color:#555; letter-spacing:4px;">Beyond The Ironic Barricade</div>
     </div>
 
-    <div id="screen-welcome" class="screen">
+    <div id="block-welcome" class="block">
         <h1>WELCOME</h1>
-        <p style="font-size: 10px; letter-spacing: 5px; margin-top: 15px; color: #666;">CHARLIE IS WAITING</p>
+        <button class="btn-gold" onclick="showIdentity()">Identify Myself</button>
     </div>
 
-    <div id="screen-foyer" class="screen">
+    <div id="block-identity" class="block">
         <div class="card">
-            <div id="user-avatar" class="avatar-box">👤</div>
-            <div id="user-nick" style="font-size:22px; text-transform:uppercase;">GUEST</div>
-            <div id="user-id" style="font-size:10px; color:#555; margin-bottom:15px;">SERIAL: GY-0000</div>
+            <div id="user-avatar" style="font-size:50px;">👤</div>
+            <div id="user-nick" style="font-size:20px;">GUEST</div>
+            <div id="user-id" style="font-size:10px; color:#555;">SERIAL: GY-0000</div>
             <div id="qrcode"></div>
-            <button class="btn-gold" onclick="enterBar()">Enter the Bar</button>
-            <button class="btn-gold btn-exit" onclick="closeClub()">Return to Chat</button>
+            <button class="btn-gold" onclick="switchTo('block-hall')">Grand Hall</button>
+            <button class="btn-gold" style="color:#666; border-color:#666;" onclick="window.Telegram.WebApp.close()">Exit</button>
+        </div>
+    </div>
+
+    <div id="block-hall" class="block">
+        <div class="hall-content">
+            <h2 style="margin-top:40px;">THE GRAND HALL</h2>
+            <p style="font-size: 12px; color:#666;">[Место для галереи и арки]</p>
+            <button class="btn-gold" onclick="switchTo('block-identity')">Back to Identity</button>
         </div>
     </div>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
         const tg = window.Telegram.WebApp;
-        const doorSnd = document.getElementById('door-sound');
-        const barSnd = document.getElementById('bar-sound');
         if(tg) { tg.expand(); tg.ready(); }
 
-        function setIdentity() {
+        // Универсальный тумблер
+        function switchTo(blockId) {
+            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
+            document.getElementById(blockId).classList.add('active');
+        }
+
+        function handleDoor() {
+            document.getElementById('door-sound').play();
+            document.getElementById('door-frame').classList.add('door-open');
+            setTimeout(() => switchTo('block-welcome'), 1500);
+        }
+
+        function showIdentity() {
+            setupIdentity();
+            switchTo('block-identity');
+        }
+
+        function setupIdentity() {
             let id = localStorage.getItem('gy_id') || Math.floor(1000 + Math.random() * 9000);
             localStorage.setItem('gy_id', id);
             document.getElementById('user-id').innerText = 'SERIAL: GY-' + id;
-            
             const avs = ['🥃','🎩','🍸','🚬','🎷','🎲','🃏','💎','🔑','🕯️'];
             document.getElementById('user-avatar').innerText = avs[id % 10];
-            
-            // Генерируем QR только если библиотека подгрузилась
-            setTimeout(() => {
-                if (typeof QRCode !== "undefined") {
-                    document.getElementById("qrcode").innerHTML = "";
-                    new QRCode(document.getElementById("qrcode"), { text: "GY-ID:"+id, width: 100, height: 100 });
-                } else {
-                    document.getElementById("qrcode").innerText = "KEY READY";
-                }
-            }, 500);
-
-            document.getElementById('user-nick').innerText = window.innerWidth < 600 ? 'NIGHT OWL' : 'ELITE GUEST';
-        }
-
-        function processEntry() {
-            // Мгновенный отклик для тестера
-            try { doorSnd.play(); barSnd.volume = 0.1; barSnd.play(); } catch(e){}
-            
-            document.getElementById('text-top').classList.add('label-up');
-            document.getElementById('door-frame').classList.add('door-open');
-            
-            if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('heavy');
-
-            setTimeout(() => {
-                document.getElementById('screen-door').classList.remove('active');
-                const ws = document.getElementById('screen-welcome');
-                ws.classList.add('active');
-                
-                setTimeout(() => {
-                    ws.style.opacity = "0"; 
-                    setTimeout(() => {
-                        ws.classList.remove('active');
-                        setIdentity(); 
-                        document.getElementById('screen-foyer').classList.add('active');
-                    }, 1000); 
-                }, 2000); 
-            }, 1200);
-        }
-
-        function enterBar() {
-            barSnd.volume = 1.0;
-            if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-            alert("Кх-кх... Проходите, в баре уже наливают.");
-        }
-
-        function closeClub() {
-            if (tg && tg.close) { tg.close(); }
-            setTimeout(() => { window.location.href = "https://t.me/твой_бот"; }, 100);
+            if (typeof QRCode !== "undefined") {
+                document.getElementById("qrcode").innerHTML = "";
+                new QRCode(document.getElementById("qrcode"), { text: "GY-ID:"+id, width: 100, height: 100 });
+            }
         }
     </script>
 </body>
