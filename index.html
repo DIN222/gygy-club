@@ -1,5 +1,6 @@
 
 
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -10,7 +11,7 @@
         :root {
             --gold: #d4af37;
             --gold-light: #f2d472;
-            --dark: #121212;
+            --dark: #0a0a0a;
         }
 
         body, html {
@@ -20,123 +21,128 @@
             overflow: hidden;
         }
 
-        /* 1. ЭКРАН С ДВЕРЯМИ (ГЛАВНЫЙ НА СТАРТЕ) */
+        /* ЭКРАН 1: ДВЕРИ (ЗАНАВЕС) */
         #entrance-screen {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: url('door_1.jpg') no-repeat center center;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000 url('door_1.jpg') no-repeat center center;
             background-size: cover;
             display: flex; justify-content: center; align-items: center;
-            z-index: 999; /* Самый высокий слой */
-            transition: opacity 0.8s ease, visibility 0.8s;
+            z-index: 9999; /* Поверх всего */
+            transition: opacity 1s ease-in-out;
         }
 
-        /* 2. ЭКРАН ХОЛЛА (СПРЯТАН ПОД ДВЕРЯМИ) */
+        /* ЭКРАН 2: ХОЛЛ */
         #hall-screen {
             position: relative;
             width: 100%; height: 100%;
             display: flex; justify-content: center; align-items: center;
-            background-color: var(--dark);
+            background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
             z-index: 10;
         }
 
         .block {
-            background: rgba(18, 18, 18, 0.98);
+            background: rgba(20, 20, 20, 0.95);
             border: 1px solid var(--gold);
             padding: 30px; text-align: center;
-            border-radius: 8px; width: 280px;
-            box-shadow: 0 0 40px rgba(0,0,0,0.9);
+            border-radius: 10px; width: 290px;
+            box-shadow: 0 0 50px rgba(0,0,0,1);
         }
 
-        /* ЧАРЛИ: ДВОЙНОЕ ЗОЛОТО + ЖЕСТКАЯ ОБРЕЗКА БЕЛОГО */
-        .charlie-frame {
+        /* ЧАРЛИ В ДВОЙНОМ ЗОЛОТЕ */
+        .charlie-container {
             width: 190px; height: 190px;
-            margin: 0 auto 20px;
+            margin: 0 auto 25px;
             border-radius: 50%;
-            overflow: hidden; /* Срезает белое кольцо картинки */
-            border: 2px solid var(--gold); /* Внешнее кольцо кодом */
+            overflow: hidden; /* ГЛАВНОЕ: обрезает белые края */
+            border: 3px solid var(--gold); /* Внешнее золотое кольцо */
             background: #000;
             display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
         }
 
-        .charlie-frame img {
+        .charlie-container img {
             width: 100%; height: 100%;
             object-fit: cover;
-            transform: scale(1.05); /* Прячет артефакты под рамку */
+            transform: scale(1.05); /* Зум, чтобы спрятать артефакты старой рамы */
         }
 
         /* КНОПКИ */
         .btn-gold {
-            background: linear-gradient(145deg, var(--gold), var(--gold-light));
-            color: #1a1a1a !important;
-            border: none; padding: 12px 25px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            color: #000 !important;
+            border: none; padding: 14px 20px;
             font-weight: bold; text-transform: uppercase;
-            border-radius: 25px; cursor: pointer;
-            text-decoration: none; display: inline-block;
+            border-radius: 30px; cursor: pointer;
+            width: 100%; display: block;
+            text-decoration: none; margin-top: 10px;
             box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
-            width: 100%; box-sizing: border-box;
         }
 
         .btn-outline {
             background: transparent; color: var(--gold);
             border: 1px solid var(--gold);
-            padding: 10px; border-radius: 25px;
-            cursor: pointer; width: 100%; margin-top: 15px;
+            padding: 10px; border-radius: 30px;
+            cursor: pointer; width: 100%; margin-top: 20px;
+            font-size: 0.8rem;
+        }
+
+        .qr-card {
+            background: #151515; padding: 20px;
+            border-radius: 12px; margin: 15px 0;
+            border: 1px solid #333;
         }
     </style>
 </head>
 <body>
 
     <div id="entrance-screen">
-        <button class="btn-gold" style="width: auto; padding: 15px 40px; margin-top: 300px;" onclick="enterClub()">ENTER</button>
+        <button class="btn-gold" style="width: auto; padding: 15px 50px; margin-top: 350px;" onclick="openDoors()">ENTER</button>
     </div>
 
     <div id="hall-screen">
         
-        <div id="block-welcome" class="block">
-            <div class="charlie-frame"><img src="charlie.png" alt="Charlie"></div>
-            <h2 style="letter-spacing: 5px; color: var(--gold); margin: 0 0 20px 0;">WELCOME</h2>
-            <button class="btn-gold" onclick="showBlock('block-card')">Identify Myself</button>
+        <div id="welcome" class="block">
+            <div class="charlie-container"><img src="charlie.png" alt="Charlie"></div>
+            <h1 style="letter-spacing: 6px; color: var(--gold); margin: 0 0 25px 0; font-size: 1.5rem;">WELCOME</h1>
+            <button class="btn-gold" onclick="nav('card')">Identify Myself</button>
         </div>
 
-        <div id="block-card" class="block" style="display:none;">
-            <div style="display:flex; align-items:center; gap:12px; text-align:left; margin-bottom:20px;">
-                <img src="avatar_placeholder.png" style="width:45px; border-radius:50%; border:1px solid var(--gold);">
+        <div id="card" class="block" style="display:none;">
+            <div style="display:flex; align-items:center; gap:15px; text-align:left; margin-bottom:25px;">
+                <img src="avatar_placeholder.png" style="width:50px; border-radius:50%; border:1px solid var(--gold);">
                 <div>
                     <div style="font-weight:bold; color:var(--gold);">GUEST #777</div>
-                    <div style="font-size:0.7rem; color:#888;">STATUS: ELITE</div>
+                    <div style="font-size:0.7rem; color:#888; letter-spacing: 1px;">STATUS: ELITE</div>
                 </div>
             </div>
-            <button class="btn-gold" onclick="alert('Grand Hall Coming Soon...')">Enter Grand Hall</button>
-            <button class="btn-outline" onclick="showBlock('block-identity')">Magic Key</button>
+            <button class="btn-gold" onclick="alert('Grand Hall is coming soon...')">Enter Grand Hall</button>
+            <button class="btn-outline" onclick="nav('key')">Magic Key (ID)</button>
         </div>
 
-        <div id="block-identity" class="block" style="display:none;">
-            <div class="charlie-frame"><img src="charlie.png" alt="Charlie"></div>
-            <div style="background:#222; padding:15px; border-radius:10px; margin:15px 0; border:1px solid #333;">
-                <img src="qr_sample.png" style="width:120px; border:2px solid white;">
+        <div id="key" class="block" style="display:none;">
+            <div class="charlie-container"><img src="charlie.png" alt="Charlie"></div>
+            <div class="qr-card">
+                <img src="qr_sample.png" style="width:130px; border:4px solid white; border-radius: 4px;">
             </div>
             <a href="https://t.me/your_bot_link" class="btn-gold">Exit to Bot</a>
-            <button class="btn-outline" onclick="showBlock('block-card')">Back</button>
+            <button class="btn-outline" onclick="nav('card')">Back</button>
         </div>
 
     </div>
 
     <script>
-        // Функция входа: плавно убираем двери
-        function enterClub() {
-            const screen = document.getElementById('entrance-screen');
-            screen.style.opacity = '0';
+        function openDoors() {
+            const door = document.getElementById('entrance-screen');
+            door.style.opacity = '0';
             setTimeout(() => {
-                screen.style.visibility = 'hidden';
-            }, 800);
+                door.style.display = 'none';
+            }, 1000);
         }
 
-        // Переключение между блоками внутри Холла
-        function showBlock(blockId) {
+        function nav(id) {
             document.querySelectorAll('.block').forEach(b => b.style.display = 'none');
-            document.getElementById(blockId).style.display = 'block';
+            document.getElementById(id).style.display = 'block';
         }
     </script>
 </body>
