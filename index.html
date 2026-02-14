@@ -28,6 +28,9 @@
         /* КНОПКИ */
         .btn-gold { display: block; width: 80%; max-width: 260px; margin: 15px auto; padding: 14px; background: transparent; border: 2px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 10px; letter-spacing: 2px; cursor: pointer; font-family: 'Georgia', serif; }
         .btn-gold:active { background: #d4af37; color: #000; }
+        
+        /* Исправление аватара */
+        .charlie-circle { width: 200px; height: 200px; border-radius: 50%; border: 3px solid #d4af37; object-fit: cover; margin-bottom: 20px; background: transparent; }
     </style>
 </head>
 <body>
@@ -43,7 +46,7 @@
     </div>
 
     <div id="block-welcome" class="block">
-        <img src="charlie.png" style="width: 200px; height: 200px; border-radius: 50%; border: 3px solid #d4af37; object-fit: cover; margin-bottom: 20px;">
+        <img src="charlie.png" class="charlie-circle">
         <h1 style="letter-spacing: 5px;">WELCOME</h1>
         <button class="btn-gold" onclick="showIdentity()">Identify Myself</button>
     </div>
@@ -66,16 +69,14 @@
                     <div class="frame"><img src="masks.png"></div>
                     <div class="frame">🎩</div>
                 </div>
-                <div class="arch">
-                    <div style="margin-top:20px; font-size:12px; letter-spacing:4px;">BAR</div>
-                </div>
+                <div class="arch"><div style="margin-top:20px; font-size:12px; letter-spacing:4px;">BAR</div></div>
                 <div style="display:flex; flex-direction:column; gap:15px; margin-bottom:30px;">
                     <div class="frame">🎙️</div>
                     <div class="frame">⌨️</div>
                 </div>
             </div>
             <div class="parquet"></div>
-            <button class="btn-gold" style="margin-bottom: 20px; z-index:10;" onclick="exitHall()">My Card</button>
+            <button class="btn-gold" style="margin-bottom: 20px; z-index:10;" onclick="switchTo('block-identity'); adjustVolume(0.1);">My Card</button>
         </div>
     </div>
 
@@ -95,6 +96,10 @@
         }
 
         function showIdentity() {
+            // Начинаем играть бар ТИХО уже здесь
+            barSnd.volume = 0.1;
+            barSnd.play().catch(() => {});
+            
             let id = localStorage.getItem('gy_id') || Math.floor(1000 + Math.random() * 9000);
             localStorage.setItem('gy_id', id);
             document.getElementById('user-avatar').innerText = ['🥃','🎩','🍸','🚬','🎷'][id % 5];
@@ -105,29 +110,34 @@
             switchTo('block-identity');
         }
 
-        function enterHall() {
-            barSnd.volume = 0;
-            barSnd.play().catch(() => {});
-            let vol = 0;
-            let fadeIn = setInterval(() => {
-                if (vol < 0.3) { vol += 0.05; barSnd.volume = vol; }
-                else { clearInterval(fadeIn); }
+        function adjustVolume(target) {
+            let current = barSnd.volume;
+            let step = target > current ? 0.05 : -0.05;
+            let interval = setInterval(() => {
+                current += step;
+                if ((step > 0 && current >= target) || (step < 0 && current <= target)) {
+                    barSnd.volume = target;
+                    clearInterval(interval);
+                } else {
+                    barSnd.volume = current;
+                }
             }, 100);
+        }
+
+        function enterHall() {
+            adjustVolume(0.4); // Усиливаем шум при входе в холл
             switchTo('block-hall');
         }
 
-        function exitHall() {
-            let vol = barSnd.volume;
-            let fadeOut = setInterval(() => {
-                if (vol > 0.05) { vol -= 0.05; barSnd.volume = vol; }
-                else { barSnd.pause(); clearInterval(fadeOut); }
-            }, 100);
-            switchTo('block-identity');
-        }
-
         function closeClub() {
-            if (window.Telegram && window.Telegram.WebApp) window.Telegram.WebApp.close();
-            window.location.href = "https://t.me/Sklad_Potok_Bot";
+            // Попытка №1: закрыть приложение
+            if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.close) {
+                window.Telegram.WebApp.close();
+            }
+            // Попытка №2: редирект по протоколу Telegram
+            setTimeout(() => {
+                window.location.href = "tg://resolve?domain=Sklad_Potok_Bot";
+            }, 200);
         }
     </script>
 </body>
