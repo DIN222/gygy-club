@@ -10,40 +10,25 @@
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         body { margin: 0; background: #000; color: #d4af37; font-family: 'Georgia', serif; text-align: center; height: 100vh; overflow: hidden; }
         
-        /* СИСТЕМА ПЕРЕКЛЮЧЕНИЯ БЛОКОВ (КОМНАТ) */
         .block { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.8s; z-index: 5; }
         .block.active { opacity: 1; visibility: visible; }
 
-        /* БЛОК 0: ВХОДНАЯ ДВЕРЬ */
+        /* ВХОД */
         .door-container { border: 2px solid #d4af37; padding: 12px; background: #050505; cursor: pointer; transition: transform 2s, opacity 1s; }
         .door-open { transform: scale(3.5); opacity: 0; }
         .label-top { font-size: 16px; letter-spacing: 12px; margin-bottom: 30px; text-transform: uppercase; }
 
-        /* БЛОК 2: КАРТОЧКА IDENTITY */
-        .card { width: 85%; max-width: 320px; padding: 30px 20px; border: 2px solid #d4af37; background: #0a0a0a; box-shadow: 0 0 30px rgba(212, 175, 55, 0.1); }
+        /* КАРТОЧКА */
+        .card { width: 85%; max-width: 320px; padding: 30px 20px; border: 2px solid #d4af37; background: #0a0a0a; box-shadow: 0 0 30px rgba(212,175,55,0.1); }
         #qrcode { background: #fff; padding: 8px; border: 2px solid #d4af37; margin: 15px auto; width: 116px; height: 116px; display: flex; justify-content: center; align-items: center; }
         
-        /* ЕДИНЫЙ СТИЛЬ ЗОЛОТЫХ КНОПОК */
-        .btn-gold { 
-            display: block; 
-            width: 100%; 
-            max-width: 280px; 
-            margin: 15px auto 0 auto; 
-            padding: 14px; 
-            background: transparent; 
-            border: 2px solid #d4af37; 
-            color: #d4af37; 
-            text-transform: uppercase; 
-            font-size: 10px; 
-            letter-spacing: 2px; 
-            cursor: pointer; 
-            font-family: 'Georgia', serif;
-            opacity: 1; 
-        }
+        /* КНОПКИ */
+        .btn-gold { display: block; width: 100%; max-width: 280px; margin: 15px auto 0 auto; padding: 14px; background: transparent; border: 2px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 10px; letter-spacing: 2px; cursor: pointer; font-family: 'Georgia', serif; }
         .btn-gold:active { background: #d4af37; color: #000; }
 
-        /* БЛОК 3: ХОЛЛ (ЗАГОТОВКА) */
-        .hall-interior { width: 100%; height: 100%; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        /* ГАЛЕРЕЯ (Предварительная разметка) */
+        .hall-gallery { display: flex; gap: 10px; margin-bottom: 30px; }
+        .art-frame-placeholder { width: 70px; height: 100px; border: 1px dashed #444; color: #444; display: flex; align-items: center; justify-content: center; font-size: 10px; }
     </style>
 </head>
 <body>
@@ -74,13 +59,13 @@
     </div>
 
     <div id="block-hall" class="block">
-        <div class="hall-interior">
-            <h2 style="letter-spacing: 5px; color: #d4af37;">GRAND HALL</h2>
-            <div style="border: 1px dashed #444; padding: 40px; color: #444; font-size: 12px; margin-bottom: 20px;">
-                Здесь мы смонтируем Галерею и Арку
-            </div>
-            <button class="btn-gold" onclick="switchTo('block-identity')">Back to Card</button>
+        <div class="hall-gallery">
+            <div class="art-frame-placeholder">Frame 1</div>
+            <div class="art-frame-placeholder">Frame 2</div>
+            <div class="art-frame-placeholder">Frame 3</div>
         </div>
+        <h2 style="letter-spacing: 5px; color: #d4af37;">GRAND HALL</h2>
+        <button class="btn-gold" onclick="switchTo('block-identity')">Back to Card</button>
     </div>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -88,7 +73,6 @@
         const tg = window.Telegram.WebApp;
         if(tg) { tg.expand(); tg.ready(); }
 
-        // Тумблер переключения комнат
         function switchTo(blockId) {
             document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
             document.getElementById(blockId).classList.add('active');
@@ -111,7 +95,6 @@
             document.getElementById('user-id').innerText = 'SERIAL: GY-' + id;
             const avs = ['🥃','🎩','🍸','🚬','🎷','🎲','🃏','💎','🔑','🕯️'];
             document.getElementById('user-avatar').innerText = avs[id % 10];
-            
             if (typeof QRCode !== "undefined") {
                 document.getElementById("qrcode").innerHTML = "";
                 new QRCode(document.getElementById("qrcode"), { text: "GY-ID:"+id, width: 100, height: 100 });
@@ -119,13 +102,12 @@
         }
 
         function closeClub() {
+            // Пытаемся закрыть TG приложение
             if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.close) {
                 window.Telegram.WebApp.close();
-            } else {
-                if(confirm("Вернуться к дверям клуба?")) {
-                    window.location.reload();
-                }
-            }
+            } 
+            // Принудительный сброс для ПК: перезагружаем страницу и уходим в начало
+            window.location.href = window.location.pathname;
         }
     </script>
 </body>
