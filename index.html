@@ -5,183 +5,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY Private Club</title>
+    <title>GY-GY Private</title>
     <style>
-        :root {
-            --gold: #d4af37;
-            --gold-light: #f2d472;
-            --dark: #121212;
-            --card-bg: #1e1e1e;
-        }
-
+        :root { --gold: #d4af37; --dark: #121212; }
+        
         body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
+            margin: 0; padding: 0; height: 100%;
             background-color: var(--dark);
-            color: white;
-            font-family: 'Cinzel', serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
+            color: white; font-family: 'Cinzel', serif;
+            display: flex; justify-content: center; align-items: center;
         }
 
-        /* Контейнер для блоков */
-        .content-wrapper {
-            position: relative;
-            z-index: 10;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-        }
+        /* Центрирующий контейнер */
+        .main-stage { width: 100%; display: flex; justify-content: center; }
 
         .block {
-            background: rgba(20, 20, 20, 0.98);
+            background: #1a1a1a;
             border: 1px solid var(--gold);
-            padding: 30px;
-            text-align: center;
-            border-radius: 8px;
-            max-width: 300px;
-            width: 85%;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.9);
+            padding: 30px; text-align: center;
+            border-radius: 8px; width: 280px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
         }
 
-        /* Чарли: Золотое кольцо и жесткая обрезка краев */
-        .charlie-container {
-            width: 180px;
-            height: 180px;
+        /* Чарли БЕЗ белого кольца */
+        .charlie-circle {
+            width: 180px; height: 180px;
             margin: 0 auto 20px;
             border-radius: 50%;
-            overflow: hidden;         /* Это убирает белый след рамы */
+            overflow: hidden; /* Обрезает белые края картинки */
             border: 2px solid var(--gold);
-            background-color: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background: black;
         }
 
-        .charlie-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;        /* Растягивает фото до краев круга */
-            transform: scale(1.05);   /* Зум 5%, чтобы спрятать границы рамы внутри */
+        .charlie-circle img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            transform: scale(1.05); /* Прячет остатки рамы под золотой ободок */
         }
 
-        /* Золотая кнопка */
         .btn-gold {
-            background: linear-gradient(145deg, var(--gold), var(--gold-light));
+            background: linear-gradient(145deg, #d4af37, #f2d472);
             color: #1a1a1a !important;
-            border: none;
-            padding: 12px 20px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            border-radius: 25px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
-            transition: 0.3s;
-            text-decoration: none;
-            display: inline-block;
-            width: 100%;
+            border: none; padding: 12px;
+            font-weight: bold; text-transform: uppercase;
+            border-radius: 25px; cursor: pointer;
+            width: 100%; display: block;
+            text-decoration: none; margin-top: 10px;
             box-sizing: border-box;
         }
 
-        .btn-gold:hover {
-            filter: brightness(1.1);
-            transform: translateY(-1px);
-        }
-
         .btn-outline {
-            background: transparent;
-            color: var(--gold);
+            background: transparent; color: var(--gold);
             border: 1px solid var(--gold);
-            padding: 10px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-            margin-top: 15px;
-            font-size: 0.8rem;
-            width: 100%;
+            padding: 10px; border-radius: 25px;
+            cursor: pointer; width: 100%; margin-top: 15px;
         }
 
-        /* Карточка внутри Identity */
-        .card-identity {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 15px;
-            margin: 15px 0;
-            border: 1px solid #333;
+        .card-inner {
+            background: #252525; border-radius: 10px;
+            padding: 15px; margin: 15px 0; border: 1px solid #333;
         }
 
-        #qrcode-container img {
-            width: 130px;
-            height: 130px;
-            border: 4px solid white;
-            border-radius: 4px;
-        }
-
-        .user-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-align: left;
-            margin-bottom: 15px;
-        }
-
-        .mini-avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            border: 1px solid var(--gold);
-        }
+        #qr-box img { width: 130px; border: 4px solid white; border-radius: 4px; }
     </style>
 </head>
 <body>
 
-    <div class="content-wrapper">
+    <div class="main-stage">
         
-        <div id="block-welcome" class="block">
-            <div class="charlie-container">
-                <img src="charlie.png" alt="Charlie">
-            </div>
-            <h2 style="letter-spacing: 4px; color: var(--gold); margin-bottom: 25px;">WELCOME</h2>
-            <button class="btn-gold" onclick="showBlock('block-card')">Identify Myself</button>
+        <div id="welcome" class="block">
+            <div class="charlie-circle"><img src="charlie.png" alt="Charlie"></div>
+            <h2 style="letter-spacing: 3px; color: var(--gold);">WELCOME</h2>
+            <button class="btn-gold" onclick="swap('card')">Identify Myself</button>
         </div>
 
-        <div id="block-card" class="block" style="display:none;">
-            <div class="user-row">
-                <img src="avatar_placeholder.png" class="mini-avatar">
+        <div id="card" class="block" style="display:none;">
+            <div style="display: flex; align-items: center; gap: 10px; text-align: left; margin-bottom: 20px;">
+                <img src="avatar_placeholder.png" style="width:45px; border-radius:50%; border:1px solid var(--gold);">
                 <div>
-                    <div style="font-weight:bold; color:var(--gold); font-size: 0.9rem;">GUEST #777</div>
-                    <div style="font-size:0.65rem; color:#888;">STATUS: ELITE</div>
+                    <div style="font-weight:bold; color:var(--gold);">GUEST #777</div>
+                    <div style="font-size:0.7rem; color:#888;">ELITE GUEST</div>
                 </div>
             </div>
-            <button class="btn-gold" onclick="alert('Grand Hall Coming Soon...')">Enter Grand Hall</button>
-            <button class="btn-outline" onclick="showBlock('block-identity')">Magic Key (ID)</button>
+            <button class="btn-gold" onclick="alert('Grand Hall is closed today')">Enter Grand Hall</button>
+            <button class="btn-outline" onclick="swap('id-key')">Magic Key</button>
         </div>
 
-        <div id="block-identity" class="block" style="display:none;">
-            <div class="charlie-container">
-                <img src="charlie.png" alt="Charlie">
-            </div>
-            <div class="card-identity">
-                <div id="qrcode-container">
-                    <img src="qr_sample.png" alt="QR Code">
-                </div>
-                <p style="font-size:0.75rem; color:#aaa; margin-top: 10px;">Your Magic Key</p>
+        <div id="id-key" class="block" style="display:none;">
+            <div class="charlie-circle"><img src="charlie.png" alt="Charlie"></div>
+            <div class="card-inner">
+                <div id="qr-box"><img src="qr_sample.png"></div>
+                <p style="font-size:0.8rem; color:#888;">Your personal ID</p>
             </div>
             <a href="https://t.me/your_bot_link" class="btn-gold">Exit to Bot</a>
-            <button class="btn-outline" onclick="showBlock('block-card')">Back to Card</button>
+            <button class="btn-outline" onclick="swap('card')">Back</button>
         </div>
 
     </div>
 
     <script>
-        function showBlock(blockId) {
-            // Прячем все блоки
+        function swap(id) {
             document.querySelectorAll('.block').forEach(b => b.style.display = 'none');
-            // Показываем нужный
-            document.getElementById(blockId).style.display = 'block';
+            document.getElementById(id).style.display = 'block';
         }
     </script>
 </body>
