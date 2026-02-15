@@ -235,7 +235,11 @@ document.getElementById('user-avatar').innerText = localStorage.getItem('club_av
 applyL();
 }
 
-window.addEventListener('load', startClub);
+function startClub() {
+let id = localStorage.getItem('club_id');
+let av = localStorage.getItem('club_av');
+
+}
     </script>
 </body>
 </html>
