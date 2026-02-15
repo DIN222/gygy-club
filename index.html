@@ -10,8 +10,46 @@
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         body { margin: 0; background: #000; color: #d4af37; font-family: 'Georgia', serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; }
         
-        .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 5; }
+      .block { 
+            /* Теперь карточка будет по центру, а не на весь экран */
+            position: fixed; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            
+            background: rgba(10, 10, 10, 0.98); /* Глубокий черный */
+            border: 1px solid #d4af37;
+            padding: 30px; 
+            text-align: center;
+            border-radius: 10px; 
+            
+            width: 90%;          
+            max-width: 320px;    /* Ограничиваем ширину на ПК */
+            max-height: 85vh;    /* Ограничиваем высоту, чтобы рамка была видна полностью */
+            overflow-y: auto;    /* Прокрутка внутри, если экран совсем маленький */
+            
+            display: none; 
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            box-sizing: border-box;
+        }
+
         .block.active { display: flex; }
+        /* Делаем кнопку внутри карточки золотой */
+        .block .btn-outline, .block button {
+            background: linear-gradient(145deg, #d4af37, #f2d472) !important;
+            color: #000 !important;
+            border: none !important;
+            padding: 12px 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 25px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+        }
 
         /* ДВЕРЬ */
         .door-container { border: 2px solid #d4af37; padding: 12px; background: #050505; cursor: pointer; transition: transform 2s, opacity 1s; }
