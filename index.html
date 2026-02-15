@@ -239,19 +239,6 @@ function startClub() {
 let id = localStorage.getItem('club_id');
 let av = localStorage.getItem('club_av');
 
-if (!id) {
-id = Math.floor(1000 + Math.random() * 9000);
-const avs = ['🎩','🎭','🕶️','🥃','🃏','🕵️'];
-av = avs[Math.floor(Math.random() * avs.length)];
-localStorage.setItem('club_id', id);
-localStorage.setItem('club_av', av);
-}
-
-document.getElementById('user-nick').innerText = "УЧАСТНИК #" + id;
-document.getElementById('user-avatar').innerText = av;
-}
-
-window.onload = startClub;
 }
     </script>
 </body>
