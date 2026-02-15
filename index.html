@@ -111,14 +111,14 @@
 
 <div id="block-identity" class="block">
 <div style="padding: 25px; width: 90%; max-width: 340px; text-align: center; border: none; background: transparent;">
-
 <div id="user-avatar" style="font-size:55px; margin-bottom: 10px;">👤</div>
-<div id="user-nick" style="font-size:22px; margin-bottom: 20px; letter-spacing: 2px; color: #d4af37; font-family: 'Georgia', serif;">ELITE GUEST</div>
-
+<div id="user-nick" style="font-size:18px; margin-bottom: 20px; letter-spacing: 2px; color: #d4af37; font-family: 'Georgia', serif;">LOADING...</div>
 <div id="qrcode" style="background:#fff; padding:8px; width:116px; margin:0 auto 25px auto; border-radius: 4px;"></div>
-
-<button class="btn-gold" onclick="enterHall()" style="background: transparent !important; border: 2px solid #d4af37 !important; color: #d4af37 !important; width: 100%; padding: 15px; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; border-radius: 0 !important; font-weight: bold; font-family: 'Georgia', serif;">Grand Hall</button>
-
+<button id="btn-hall" class="btn-gold" onclick="enterHall()" style="background: transparent !important; border: 2px solid #d4af37 !important; color: #d4af37 !important; width: 100%; padding: 15px; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; border-radius: 0 !important; font-weight: bold;">GRAND HALL</button>
+<div style="margin-top: 25px; font-size: 10px; color: #d4af37; opacity: 0.6;">
+<span id="lang-en" style="cursor:pointer" onclick="setLang('en')">EN</span> |
+<span id="lang-ru" style="cursor:pointer" onclick="setLang('ru')">RU</span>
+</div>
 </div>
 </div>
     
@@ -207,6 +207,35 @@
                 window.open("tg://resolve?domain=Sklad_Potok_Bot", "_self");
             }, 600);
         }
+        const voc = {
+en: { btn: "Grand Hall", member: "MEMBER" },
+ru: { btn: "Главный Холл", member: "УЧАСТНИК" }
+};
+
+let L = localStorage.getItem('club_l') || 'ru';
+
+function applyL() {
+const id = localStorage.getItem('club_id');
+const t = voc[L];
+document.getElementById('user-nick').innerText = t.member + ' #' + id;
+document.getElementById('btn-hall').innerText = t.btn;
+document.getElementById('lang-en').style.fontWeight = L === 'en' ? 'bold' : 'underline';
+document.getElementById('lang-ru').style.fontWeight = L === 'ru' ? 'bold' : 'underline';
+}
+
+function setLang(x) { L = x; localStorage.setItem('club_l', x); applyL(); }
+
+function startClub() {
+if (!localStorage.getItem('club_id')) {
+const avs = ['🎩','🎭','🕶️','🥃','🃏','🕵️'];
+localStorage.setItem('club_id', Math.floor(1000 + Math.random() * 9000));
+localStorage.setItem('club_av', avs[Math.floor(Math.random() * avs.length)]);
+}
+document.getElementById('user-avatar').innerText = localStorage.getItem('club_av');
+applyL();
+}
+
+window.addEventListener('load', startClub);
     </script>
 </body>
 </html>
