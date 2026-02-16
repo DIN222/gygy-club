@@ -116,20 +116,27 @@
         
         <div id="user-avatar" onclick="document.getElementById('photo-upload').click()" style="font-size:55px; margin-bottom: 10px; cursor: pointer;">👤</div>
 
-        <div id="user-nick" style="font-size:18px; margin-bottom: 5px; color: #d4af37; font-family: 'Georgia', serif;">LOADING...</div>
+        <div id="user-nick" style="font-size:18px; margin-bottom: 5px; color: #d4af37; font-family: 'Georgia', serif; letter-spacing: 2px;">LOADING...</div>
         
-        <div id="club-slogan" style="font-size:12px; margin-bottom: 15px; font-style: italic; color: #d4af37; opacity: 0.8;"></div>
+        <div id="club-slogan" style="font-size:12px; margin-bottom: 15px; font-style: italic; color: #d4af37; opacity: 0.8; font-family: 'Georgia', serif;"></div>
 
-        <div id="btn-redo" onclick="redoIdentity()" style="cursor:pointer; font-size:10px; color:#d4af37; text-decoration:underline; margin-bottom: 20px; opacity: 0.6; text-transform: uppercase; letter-spacing: 1px;">
-        </div>
+        <div id="btn-redo" onclick="redoIdentity()" style="cursor:pointer; font-size:10px; color:#d4af37; text-decoration:underline; margin-bottom: 20px; opacity: 0.6; text-transform: uppercase; letter-spacing: 1px;"></div>
 
-        <div id="qrcode" style="background:#fff; padding:8px; width:116px; margin:0 auto 25px auto; border-radius: 4px;"></div>
+        <div id="qrcode" style="background:#fff; padding:8px; width:116px; margin:0 auto 25px auto; border-radius: 4px; cursor: pointer;"></div>
 
-        <button id="btn-hall" class="btn-gold" onclick="enterHall()" style="background: transparent !important; border: 2px solid #d4af37 !important; color: #d4af37 !important; width: 100%; padding: 15px; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; font-weight: bold;">
+        <button id="btn-hall" class="btn-gold" onclick="enterHall()" style="background: transparent !important; border: 2px solid #d4af37 !important; color: #d4af37 !important; width: 100%; padding: 15px; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; border-radius: 0 !important;">
         </button>
 
         <div style="margin-top: 30px; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;">
-            </div>
+            <span onclick="setLang('en')" style="cursor:pointer; padding: 8px 12px; border: 1px solid rgba(212,175,55,0.3); font-size: 11px; color: #d4af37; border-radius: 0;">EN</span>
+            <span onclick="setLang('fr')" style="cursor:pointer; padding: 8px 12px; border: 1px solid rgba(212,175,55,0.3); font-size: 11px; color: #d4af37; border-radius: 0;">FR</span>
+            <span onclick="setLang('es')" style="cursor:pointer; padding: 8px 12px; border: 1px solid rgba(212,175,55,0.3); font-size: 11px; color: #d4af37; border-radius: 0;">ES</span>
+            <span onclick="setLang('it')" style="cursor:pointer; padding: 8px 12px; border: 1px solid rgba(212,175,55,0.3); font-size: 11px; color: #d4af37; border-radius: 0;">IT</span>
+            <span onclick="setLang('de')" style="cursor:pointer; padding: 8px 12px; border: 1px solid rgba(212,175,55,0.3); font-size: 11px; color: #d4af37; border-radius: 0;">DE</span>
+            <span onclick="setLang('pl')" style="cursor:pointer; padding: 8px 12px; border: 1px solid rgba(212,175,55,0.3); font-size: 11px; color: #d4af37; border-radius: 0;">PL</span>
+            <span onclick="setLang('uk')" style="cursor:pointer; padding: 8px 12px; border: 1px solid rgba(212,175,55,0.3); font-size: 11px; color: #d4af37; border-radius: 0;">UK</span>
+            <span onclick="setLang('ru')" style="cursor:pointer; padding: 8px 12px; border: 1px solid rgba(212,175,55,0.3); font-size: 11px; color: #d4af37; border-radius: 0;">RU</span>
+        </div>
     </div>
 </div>
     
