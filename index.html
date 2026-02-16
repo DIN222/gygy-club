@@ -243,24 +243,23 @@ function applyL() {
     const t = voc[L] || voc.en;
     const id = localStorage.getItem('club_id') || "----";
 
-    const update = (id, text) => {
+    // Функция-помощник: если элемента нет, она просто идет дальше и не ломает код
+    const safeUpdate = (id, text) => {
         const el = document.getElementById(id);
         if (el) el.innerText = text;
     };
 
-    update('user-nick', (t.member || 'Member') + ' #' + id);
-    update('club-slogan', t.slogan || '');
-    update('btn-redo', t.redo || 'REDO');
-    update('btn-hall', t.btn || 'ENTER');
+    safeUpdate('user-nick', (t.member || 'ID') + ' #' + id);
+    safeUpdate('club-slogan', t.slogan || '');
+    safeUpdate('btn-redo', t.redo || 'REDO'); // Твоя новая кнопка
+    safeUpdate('btn-hall', t.btn || 'ENTER'); // Твоя главная кнопка
 
-    // Восстановление фото (отдельно, чтобы не сломать текст)
-    try {
-        const savedPhoto = localStorage.getItem('club_photo');
-        const avatarDiv = document.getElementById('user-avatar');
-        if (savedPhoto && avatarDiv) {
-            avatarDiv.innerHTML = `<img src="${savedPhoto}" style="width:70px; height:70px; border-radius:50%; object-fit:cover; border: 2px solid #d4af37;">`;
-        }
-    } catch(e) {}
+    // Проверка фото
+    const savedPhoto = localStorage.getItem('club_photo');
+    const avatarDiv = document.getElementById('user-avatar');
+    if (savedPhoto && avatarDiv) {
+        avatarDiv.innerHTML = `<img src="${savedPhoto}" style="width:70px; height:70px; border-radius:50%; object-fit:cover; border: 2px solid #d4af37;">`;
+    }
 }
 }
 
