@@ -207,10 +207,16 @@
                 window.open("tg://resolve?domain=Sklad_Potok_Bot", "_self");
             }, 600);
         }
-        const voc = {
-en: { btn: "Grand Hall", member: "MEMBER" },
-ru: { btn: "Главный Холл", member: "УЧАСТНИК" }
-};
+      const voc = {
+    en: { btn: "Grand Hall", member: "MEMBER", whiskey: "The whiskey is already on the table, sir." },
+    fr: { btn: "Grand Hall", member: "MEMBRE", whiskey: "Le whisky est déjà sur la table, monsieur." },
+    es: { btn: "Gran Salón", member: "MIEMBRO", whiskey: "El whisky ya está en la mesa, señor." },
+    it: { btn: "Gran Sala", member: "MEMBRO", whiskey: "Il whisky è già sul tavolo, signore." },
+    pl: { btn: "Wielki Hol", member: "CZŁONEK", whiskey: "Whisky jest już na stole, panie." },
+    de: { btn: "Große Halle", member: "MITGLIED", whiskey: "Der Whiskey steht bereits auf dem Tisch, mein Herr." },
+    uk: { btn: "Головний Хол", member: "УЧАСНИК", whiskey: "Віскі вже на столі, пане." },
+    ru: { btn: "Главный Холл", member: "УЧАСТНИК", whiskey: "Виски уже на столе, сэр." }
+}; 
 
 let L = localStorage.getItem('club_l') || 'ru';
 
