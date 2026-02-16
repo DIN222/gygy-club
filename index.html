@@ -226,20 +226,30 @@ document.getElementById('lang-ru').style.fontWeight = L === 'ru' ? 'bold' : 'und
 function setLang(x) { L = x; localStorage.setItem('club_l', x); applyL(); }
 
 function startClub() {
-if (!localStorage.getItem('club_id')) {
-const avs = ['🎩','🎭','🕶️','🥃','🃏','🕵️'];
-localStorage.setItem('club_id', Math.floor(1000 + Math.random() * 9000));
-localStorage.setItem('club_av', avs[Math.floor(Math.random() * avs.length)]);
-}
-document.getElementById('user-avatar').innerText = localStorage.getItem('club_av');
-applyL();
+    let id = localStorage.getItem('club_id');
+    let av = localStorage.getItem('club_av');
+
+    // Если гость зашел впервые, генерируем и сохраняем данные
+    if (!id || id === null) {
+        id = Math.floor(1000 + Math.random() * 9000);
+        const avs = ['🎩','🎭','🕶️','🥃','🃏','🕵️'];
+        av = avs[Math.floor(Math.random() * avs.length)];
+        localStorage.setItem('club_id', id);
+        localStorage.setItem('club_av', av);
+    }
+
+    // Находим элементы на странице
+    const avElem = document.getElementById('user-avatar');
+    
+    // Заполняем аватар
+    if (avElem) avElem.innerText = av;
+    
+    // Вызываем твою функцию перевода, которая впишет номер вместо Loading
+    applyL(); 
 }
 
-function startClub() {
-let id = localStorage.getItem('club_id');
-let av = localStorage.getItem('club_av');
-
-}
+// Запускаем всё при загрузке страницы
+window.onload = startClub;
     </script>
 </body>
 </html>
