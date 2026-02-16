@@ -112,32 +112,24 @@
 <div id="block-identity" class="block">
     <input type="file" id="photo-upload" style="display:none;" accept="image/*" onchange="handlePhoto(this)">
 
-    <div style="padding: 25px; width: 90%; max-width: 340px; text-align: center; border: none; background: transparent; margin: 0 auto;">
+    <div style="padding: 25px; width: 90%; max-width: 340px; text-align: center; margin: 0 auto;">
         
-        <div id="user-avatar" onclick="document.getElementById('photo-upload').click()" style="font-size:55px; margin-bottom: 10px; cursor: pointer; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">👤</div>
+        <div id="user-avatar" onclick="document.getElementById('photo-upload').click()" style="font-size:55px; margin-bottom: 10px; cursor: pointer;">👤</div>
 
-        <div id="user-nick" style="font-size:18px; margin-bottom: 5px; letter-spacing: 2px; color: #d4af37; font-family: 'Georgia', serif; font-weight: bold;">LOADING...</div>
+        <div id="user-nick" style="font-size:18px; margin-bottom: 5px; color: #d4af37; font-family: 'Georgia', serif;">LOADING...</div>
         
-        <div id="club-slogan" style="font-size:12px; margin-bottom: 20px; font-style: italic; color: #d4af37; opacity: 0.8; font-family: 'Georgia', serif;"></div>
+        <div id="club-slogan" style="font-size:12px; margin-bottom: 15px; font-style: italic; color: #d4af37; opacity: 0.8;"></div>
 
-        <div onclick="redoIdentity()" style="cursor:pointer; font-size:10px; color:#d4af37; text-decoration:underline; margin-bottom: 15px; opacity: 0.6; text-transform: uppercase; letter-spacing: 1px;">
-            Get another number / Сменить номер
+        <div id="btn-redo" onclick="redoIdentity()" style="cursor:pointer; font-size:10px; color:#d4af37; text-decoration:underline; margin-bottom: 20px; opacity: 0.6; text-transform: uppercase; letter-spacing: 1px;">
         </div>
 
-        <div id="qrcode" style="background:#fff; padding:8px; width:116px; margin:0 auto 25px auto; border-radius: 4px; cursor: pointer;" onclick="downloadKey()"></div>
+        <div id="qrcode" style="background:#fff; padding:8px; width:116px; margin:0 auto 25px auto; border-radius: 4px;"></div>
 
-        <button id="btn-hall" class="btn-gold" onclick="enterHall()" style="background: transparent !important; border: 2px solid #d4af37 !important; color: #d4af37 !important; width: 100%; padding: 15px; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; border-radius: 0 !important; font-weight: bold;">GRAND HALL</button>
+        <button id="btn-hall" class="btn-gold" onclick="enterHall()" style="background: transparent !important; border: 2px solid #d4af37 !important; color: #d4af37 !important; width: 100%; padding: 15px; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; font-weight: bold;">
+        </button>
 
         <div style="margin-top: 30px; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;">
-            <span onclick="setLang('en')" style="cursor:pointer; padding: 6px 10px; border: 1px solid rgba(212,175,55,0.3); font-size: 11px; color: #d4af37; border-radius: 4px;">EN</span>
-            <span onclick="setLang('fr')" style="cursor:pointer; padding: 6px 10px; border: 1px solid rgba(212,175,55,0.3); font-size: 11px; color: #d4af37; border-radius: 4px;">FR</span>
-            <span onclick="setLang('es')" style="cursor:pointer; padding: 6px 10px; border: 1px solid rgba(212,175,55,0.3); font-size: 11px; color: #d4af37; border-radius: 4px;">ES</span>
-            <span onclick="setLang('it')" style="cursor:pointer; padding: 6px 10px; border: 1px solid rgba(212,175,55,0.3); font-size: 11px; color: #d4af37; border-radius: 4px;">IT</span>
-            <span onclick="setLang('de')" style="cursor:pointer; padding: 6px 10px; border: 1px solid rgba(212,175,55,0.3); font-size: 11px; color: #d4af37; border-radius: 4px;">DE</span>
-            <span onclick="setLang('pl')" style="cursor:pointer; padding: 6px 10px; border: 1px solid rgba(212,175,55,0.3); font-size: 11px; color: #d4af37; border-radius: 4px;">PL</span>
-            <span onclick="setLang('uk')" style="cursor:pointer; padding: 6px 10px; border: 1px solid rgba(212,175,55,0.3); font-size: 11px; color: #d4af37; border-radius: 4px;">UK</span>
-            <span onclick="setLang('ru')" style="cursor:pointer; padding: 6px 10px; border: 1px solid rgba(212,175,55,0.3); font-size: 11px; color: #d4af37; border-radius: 4px;">RU</span>
-        </div>
+            </div>
     </div>
 </div>
     
@@ -226,15 +218,15 @@
                 window.open("tg://resolve?domain=Sklad_Potok_Bot", "_self");
             }, 600);
         }
-     const voc = {
-    en: { btn: "Grand Hall", member: "MEMBER", whiskey: "The bar is digital. The whiskey is yours — pour it!", slogan: "Every joke has a share of whiskey.", cheers: "Cheers" },
-    fr: { btn: "Grand Hall", member: "MEMBRE", whiskey: "Le bar est numérique. Le whisky est à vous — servez-vous !", slogan: "Chaque plaisanterie contient une part de whisky.", cheers: "Santé" },
-    es: { btn: "Gran Salón", member: "MIEMBRO", whiskey: "El bar es digital. El whisky es tuyo — ¡sírvelo!", slogan: "Cada broma tiene una parte de whisky.", cheers: "¡Salud!" },
-    it: { btn: "Gran Sala", member: "MEMBRO", whiskey: "Il bar è digitale. Il whisky è tuo — versa!", slogan: "In ogni scherzo c'è una parte di whisky.", cheers: "Salute" },
-    de: { btn: "Große Halle", member: "MITGLIED", whiskey: "Die Bar is digital. Der Whiskey gehört dir — schenk ein!", slogan: "In jedem Witz steckt ein Teil Whiskey.", cheers: "Prost" },
-    pl: { btn: "Wielki Hol", member: "CZŁONEK", whiskey: "Bar jest cyfrowy. Whisky jest Twoja — polewaj!", slogan: "W każdym żarcie jest kropla whisky.", cheers: "Na zdrowie" },
-    uk: { btn: "Головний Хол", member: "УЧАСНИК", whiskey: "Бар цифровий. Віскі твої — наливай!", slogan: "У кожному жарті є частка віскі.", cheers: "Будьмо" },
-    ru: { btn: "Главный Холл", member: "УЧАСТНИК", whiskey: "Бар цифровой. Виски твои — наливай!", slogan: "В каждой шутке есть доля виски.", cheers: "Будем" }
+    const voc = {
+    en: { member: "Member", slogan: "In every joke there is a drop of whiskey", btn: "GRAND HALL", redo: "GET ANOTHER NUMBER" },
+    ru: { member: "Участник", slogan: "В каждой шутке есть доля виски", btn: "ГРАНД ХОЛЛ", redo: "СМЕНИТЬ НОМЕР" },
+    uk: { member: "Учасник", slogan: "У кожному жарті є доля віскі", btn: "ГРАНД ХОЛЛ", redo: "ЗМІНИТИ НОМЕР" },
+    pl: { member: "Członek", slogan: "W każdym żarcie jest kropla whisky", btn: "WIELKA SALA", redo: "ZMIEŃ NUMER" },
+    fr: { member: "Membre", slogan: "Dans chaque blague il y a une goutte de whisky", btn: "GRANDE SALLE", redo: "CHANGER DE NUMÉRO" },
+    de: { member: "Mitglied", slogan: "In jedem Witz steckt ein Tropfen Whiskey", btn: "GROSSE HALLE", redo: "NUMMER ÄNDERN" },
+    es: { member: "Miembro", slogan: "En cada broma hay una gota de whisky", btn: "GRAN SALÓN", redo: "CAMBIAR NÚMERO" },
+    it: { member: "Membro", slogan: "In ogni scherzo c'è una goccia di whisky", btn: "GRAN SALONE", redo: "CAMBIA NUMERO" }
 };
 
 let L = localStorage.getItem('club_l') || 'ru';
@@ -250,6 +242,7 @@ function applyL() {
     // Новые строчки для девиза и кнопки чоканья:
     if (document.getElementById('club-slogan')) document.getElementById('club-slogan').innerText = t.slogan;
     if (document.getElementById('btn-cheers')) document.getElementById('btn-cheers').innerText = t.cheers;
+    
 }
 
 function setLang(x) { L = x; localStorage.setItem('club_l', x); applyL(); }
@@ -317,6 +310,27 @@ function applyL() {
     // 3. ВСТАВЛЯЕМ ДЕВИЗ (та самая строчка)
     if (document.getElementById('club-slogan')) {
         document.getElementById('club-slogan').innerText = t.slogan;
+       function applyL() {
+    const t = voc[L] || voc.en;
+    
+    // ... (тут твой старый код для ника, девиза и главной кнопки) ...
+
+    // Обновляем текст кнопки смены номера
+    const redoBtn = document.getElementById('btn-redo');
+    if (redoBtn) {
+        redoBtn.innerText = t.redo;
+    }
+} function applyL() {
+    const t = voc[L] || voc.en;
+    
+    // ... (тут твой старый код для ника, девиза и главной кнопки) ...
+
+    // Обновляем текст кнопки смены номера
+    const redoBtn = document.getElementById('btn-redo');
+    if (redoBtn) {
+        redoBtn.innerText = t.redo;
+    }
+}
     }
     
     // 4. ПРОВЕРЯЕМ ФОТО: если человек уже загружал фото, показываем его вместо иконки
