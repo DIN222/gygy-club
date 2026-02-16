@@ -241,7 +241,11 @@ let L = localStorage.getItem('club_l') || 'ru';
 function applyL() {
     const t = voc[L] || voc.en;
     const id = localStorage.getItem('club_id') || "----";
-
+    
+const redoBtn = document.getElementById('btn-redo');
+    if (redoBtn) {
+        redoBtn.innerText = t.redo; 
+    }
     if (document.getElementById('user-nick')) document.getElementById('user-nick').innerText = t.member + ' #' + id;
     if (document.getElementById('btn-hall')) document.getElementById('btn-hall').innerText = t.btn;
     if (document.getElementById('whiskey-phrase')) document.getElementById('whiskey-phrase').innerText = t.whiskey;
