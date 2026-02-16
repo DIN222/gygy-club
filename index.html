@@ -221,12 +221,16 @@
 let L = localStorage.getItem('club_l') || 'ru';
 
 function applyL() {
-const id = localStorage.getItem('club_id');
-const t = voc[L];
-document.getElementById('user-nick').innerText = t.member + ' #' + id;
-document.getElementById('btn-hall').innerText = t.btn;
-document.getElementById('lang-en').style.fontWeight = L === 'en' ? 'bold' : 'underline';
-document.getElementById('lang-ru').style.fontWeight = L === 'ru' ? 'bold' : 'underline';
+    const t = voc[L] || voc.en;
+    const id = localStorage.getItem('club_id') || "----";
+
+    if (document.getElementById('user-nick')) document.getElementById('user-nick').innerText = t.member + ' #' + id;
+    if (document.getElementById('btn-hall')) document.getElementById('btn-hall').innerText = t.btn;
+    if (document.getElementById('whiskey-phrase')) document.getElementById('whiskey-phrase').innerText = t.whiskey;
+    
+    // Новые строчки для девиза и кнопки чоканья:
+    if (document.getElementById('club-slogan')) document.getElementById('club-slogan').innerText = t.slogan;
+    if (document.getElementById('btn-cheers')) document.getElementById('btn-cheers').innerText = t.cheers;
 }
 
 function setLang(x) { L = x; localStorage.setItem('club_l', x); applyL(); }
