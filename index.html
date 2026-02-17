@@ -112,7 +112,7 @@
     <div id="block-identity" class="block">
         <input type="file" id="photo-upload" style="display:none;" accept="image/*" onchange="handlePhoto(this)">
 
-       <div style="padding: 10px 20px; width: 95%; max-width: 340px; text-align: center; margin: 0 auto; display: flex; flex-direction: column; justify-content: center; min-height: 80vh;">
+       <div style="padding: 10px; width: 90%; max-width: 320px; text-align: center; margin: 0 auto; display: flex; flex-direction: column; justify-content: center; min-height: 100vh; scale: 0.9;">
             
             <div id="user-avatar" onclick="document.getElementById('photo-upload').click()" style="font-size:55px; margin-bottom: 10px; cursor: pointer;">👤</div>
 
@@ -126,8 +126,8 @@
 
           <div id="qrcode" style="background:#fff; padding:8px; width:116px; margin:0 auto 25px auto; border-radius: 4px;"></div>
 
-<button id="btn-save" class="btn-gold" onclick="becomeMember()" style="margin-bottom: 20px;">
-    SAVE ID
+<button id="btn-save" onclick="becomeMember()" style="background: #d4af37 !important; border: 2px solid #d4af37 !important; color: #000 !important; width: 100%; padding: 10px; margin-bottom: 15px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; border-radius: 0 !important; box-shadow: none !important;">
+    SAVE ID / СОХРАНИТЬ
 </button>
 
 <button id="btn-hall" class="btn-gold" onclick="enterHall()" style="background: transparent !important; border: 2px solid #d4af37 !important; color: #d4af37 !important; width: 100%; padding: 15px; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; border-radius: 0 !important;">
