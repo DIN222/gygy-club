@@ -243,35 +243,41 @@
 let L = localStorage.getItem('club_l') || 'ru';
 
 function applyL() {
-    // 1. Берем словарь или английский по умолчанию
+    // 1. Определяем язык и ID
     const t = voc[L] || voc.en;
     const id = localStorage.getItem('club_id') || "----";
 
-    // Функция-предохранитель (не дает упасть скрипту, если ID не найден)
-    const set = (id, text) => {
-        const el = document.getElementById(id);
-        if (el) el.innerText = text;
-    };
+    // 2. Обновляем номер участника
+    const userNick = document.getElementById('user-nick');
+    if (userNick) {
+        userNick.innerText = (t.member || 'ID') + ' #' + id;
+    }
 
-    // 2. Раздаем тексты
-    set('user-nick', (t.member || 'Member') + ' #' + id);
-    set('club-slogan', t.slogan || '');
-    set('btn-redo', t.redo || 'CHANGE NUMBER');
-    set('btn-hall', t.btn || 'ENTER');
+    // 3. Обновляем девиз
+    const clubSlogan = document.getElementById('club-slogan');
+    if (clubSlogan) {
+        clubSlogan.innerText = t.slogan || '';
+    }
 
-    // 3. Восстанавливаем аватар (фото или эмодзи)
+    // 4. Обновляем кнопку «Сменить номер»
+    const btnRedo = document.getElementById('btn-redo');
+    if (btnRedo) {
+        btnRedo.innerText = t.redo || 'CHANGE';
+    }
+
+    // 5. Обновляем главную кнопку (Дверь)
+    const btnHall = document.getElementById('btn-hall');
+    if (btnHall) {
+        btnHall.innerText = t.btn || 'ENTER';
+    }
+
+    // 6. Проверяем и ставим фото
     const savedPhoto = localStorage.getItem('club_photo');
-    const avatarDiv = document.getElementById('user-avatar');
-    if (avatarDiv) {
-        if (savedPhoto) {
-            avatarDiv.innerHTML = `<img src="${savedPhoto}" style="width:70px; height:70px; border-radius:50%; object-fit:cover; border: 2px solid #d4af37;">`;
-        } else {
-            // Если фото нет, можно оставить старую иконку
-            avatarDiv.innerText = '👤'; 
-        }
+    const avatarBox = document.getElementById('user-avatar');
+    if (avatarBox && savedPhoto) {
+        avatarBox.innerHTML = `<img src="${savedPhoto}" style="width:70px; height:70px; border-radius:50%; object-fit:cover; border: 2px solid #d4af37;">`;
     }
 }
-
 function setLang(x) { L = x; localStorage.setItem('club_l', x); applyL(); }
 
 function startClub() {
