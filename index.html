@@ -88,19 +88,21 @@
         /* ... */
 
         /* ВСТАВЛЯЙ СЮДА (в самый конец списка стилей): */
-        @media (min-width: 600px) {
-            #block-identity {
-                justify-content: center !important;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-            }
-            #block-identity > div { 
-                transform: scale(0.85); /* Сжимаем карточку для мониторов */
-                transform-origin: center;
-            }
-            #qrcode { margin-bottom: 10px !important; }
-        }
+      @media (min-width: 600px) {
+    #block-identity {
+        justify-content: center !important;
+        overflow: hidden; /* Чтобы ничего не вылезало за края */
+    }
+    #block-identity > div { 
+        transform: scale(0.8); /* Еще чуть меньше для запаса */
+        transform-origin: center center;
+        margin-top: -20px; /* Сдвигаем чуть выше к центру */
+    }
+    /* Убираем лишние пустоты между элементами */
+    #qrcode { margin-bottom: 5px !important; }
+    #user-avatar { margin-bottom: 5px !important; }
+    #club-slogan { margin-bottom: 10px !important; }
+}
     </style>
   </head>
 <body>
