@@ -88,24 +88,17 @@
         /* ... */
 
         /* ВСТАВЛЯЙ СЮДА (в самый конец списка стилей): */
-    @media (min-width: 600px) {
-    /* Контейнер, который держит всю карточку */
+  @media (min-width: 600px) {
     #block-identity {
-        height: 100vh !important;
         display: flex !important;
-        flex-direction: column !important;
-        justify-content: center !important;
         align-items: center !important;
-        overflow: hidden !important;
+        justify-content: center !important;
+        height: 100vh !important;
     }
-
-    /* Сама карточка внутри */
-    #block-identity > div:first-of-type {
-        zoom: 0.75 !important; /* Уменьшаем масштаб всей внутренней части */
-        -moz-transform: scale(0.75); /* Для Firefox */
-        -moz-transform-origin: center;
-        max-height: 95vh !important;
-        margin: 0 auto !important;
+    
+    #block-identity > div {
+        transform: scale(0.8) !important; /* Уменьшаем масштаб всей карточки */
+        transform-origin: center center !important;
     }
 }
     </style>
