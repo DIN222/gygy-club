@@ -88,20 +88,25 @@
         /* ... */
 
         /* ВСТАВЛЯЙ СЮДА (в самый конец списка стилей): */
-      @media (min-width: 600px) {
+    @media (min-width: 600px) {
+    /* Контейнер, который держит всю карточку */
     #block-identity {
+        height: 100vh !important;
+        display: flex !important;
+        flex-direction: column !important;
         justify-content: center !important;
-        overflow: hidden; /* Чтобы ничего не вылезало за края */
+        align-items: center !important;
+        overflow: hidden !important;
     }
-    #block-identity > div { 
-        transform: scale(0.75); /* Еще чуть меньше для запаса */
-        transform-origin: center center;
-        margin-top: -20px; /* Сдвигаем чуть выше к центру */
+
+    /* Сама карточка внутри */
+    #block-identity > div:first-of-type {
+        zoom: 0.75 !important; /* Уменьшаем масштаб всей внутренней части */
+        -moz-transform: scale(0.75); /* Для Firefox */
+        -moz-transform-origin: center;
+        max-height: 95vh !important;
+        margin: 0 auto !important;
     }
-    /* Убираем лишние пустоты между элементами */
-    #qrcode { margin-bottom: 5px !important; }
-    #user-avatar { margin-bottom: 5px !important; }
-    #club-slogan { margin-bottom: 10px !important; }
 }
     </style>
   </head>
