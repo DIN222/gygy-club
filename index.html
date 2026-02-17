@@ -209,10 +209,11 @@
             }, 50);
         }
 
-        function enterHall() {
-            adjustVolume(0.5);
-            switchTo('block-hall');
-        }
+      function enterHall() {
+    // Просто переключаем видимость блоков
+    document.getElementById('block-identity').style.display = 'none';
+    document.getElementById('block-hall').style.display = 'block';
+}
 
         function closeClub() {
             // 1. Попытка через официальный API Telegram
