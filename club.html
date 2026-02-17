@@ -3,152 +3,82 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY PRIVATE CLUB</title>
+    <title>FORCE START - DOOR ONLY</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
-        body { margin: 0; background: #000; color: #d4af37; font-family: 'Georgia', serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; }
-        .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 5; background: #000; }
-        .block.active { display: flex !important; }
-        .door-container { cursor: pointer; transition: transform 2s, opacity 1s; }
-        .door-open { transform: scale(3.5); opacity: 0; }
-        .label-top { font-size: 16px; letter-spacing: 12px; margin-bottom: 30px; text-transform: uppercase; }
-        .charlie-frame { width: 220px; height: 220px; border-radius: 50%; border: 2px solid #d4af37; margin-bottom: 20px; overflow: hidden; background: #000; }
-        .charlie-frame img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.2); }
-        .main-card-container { background: rgba(10, 10, 10, 0.95); border: 1px solid rgba(212, 175, 55, 0.3); padding: 25px; width: 85%; max-width: 320px; }
-        .btn-gold { background: #d4af37; color: #000; border: none; padding: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; width: 100%; margin-top: 10px; }
-        .btn-outline { background: transparent; color: #d4af37; border: 2px solid #d4af37; padding: 10px; font-weight: bold; cursor: pointer; text-transform: uppercase; width: 100%; margin-top: 10px; }
-        .btn-tg { background: #24A1DE; color: #fff; border: none; padding: 10px; font-weight: bold; cursor: pointer; text-transform: uppercase; width: 100%; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 12px; }
-        .hall-bg { width: 100%; height: 100%; background: linear-gradient(180deg, #1a120b 0%, #000 100%); position: relative; }
-        .parquet { position: absolute; bottom: 0; width: 100%; height: 20%; background: #2a1e12; border-top: 2px solid #3d2b1f; }
-        .arch { width: 160px; height: 280px; border: 4px solid #d4af37; border-bottom: none; border-radius: 80px 80px 0 0; margin: auto; position: relative; top: 20%; }
-        .lang-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 20px; }
-        .lang-item { cursor: pointer; font-size: 10px; border: 1px solid #333; padding: 5px 8px; }
+        body { margin: 0; background: #000; color: #d4af37; font-family: serif; text-align: center; overflow: hidden; }
+        .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; }
+        /* Только этот блок будет виден при старте - БЕЗ ВАРИАНТОВ */
+        #block-entrance { display: flex !important; background: #000; z-index: 999; } 
+        .door-container { cursor: pointer; transition: 2s; }
+        .door-open { transform: scale(3); opacity: 0; }
+        .main-card-container { background: #0a0a0a; border: 1px solid #d4af37; padding: 20px; width: 300px; }
+        .btn { background: #d4af37; color: #000; border: none; padding: 10px; width: 100%; cursor: pointer; margin-top: 10px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <audio id="door-sound"><source src="door_open.mp3" type="audio/mpeg"></audio>
-    <audio id="bar-sound" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
-
-    <div id="block-entrance" class="block active">
-        <div class="label-top">GY-GY PRIVATE</div>
+    <div id="block-entrance" class="block">
+        <div style="letter-spacing:10px; margin-bottom:20px;">GY-GY PRIVATE</div>
         <div id="door-frame" class="door-container" onclick="handleDoor()">
-            <img src="door_1.jpg" style="width: 280px;">
+            <div style="font-size: 100px;">🚪</div>
+            <p>CLICK TO OPEN DOOR</p>
         </div>
     </div>
 
     <div id="block-welcome" class="block">
-        <div class="charlie-frame"><img src="charlie.png"></div>
-        <h1 style="letter-spacing: 5px;">WELCOME</h1>
-        <button class="btn-outline" style="width: auto; padding: 15px 30px;" onclick="showIdentity()">Identify Myself</button>
+        <h1>WELCOME</h1>
+        <button class="btn" onclick="showIdentity()">IDENTIFY MYSELF</button>
     </div>
 
     <div id="block-identity" class="block">
-        <input type="file" id="photo-upload" style="display:none;" accept="image/*" onchange="handlePhoto(this)">
         <div class="main-card-container">
-            <div id="user-avatar" onclick="document.getElementById('photo-upload').click()" style="font-size:60px; cursor:pointer; margin-bottom:10px;">🎩</div>
-            <div id="user-nick" onclick="redoIdentity()" style="font-weight:bold; font-size:1.2rem; letter-spacing:2px; cursor:pointer;">MEMBER #----</div>
-            <div id="hint-change" style="font-size:10px; opacity:0.5; margin-bottom:15px;">(click to change)</div>
-            <div id="club-slogan" style="font-style:italic; font-size:12px; margin-bottom:20px;">Tradition & Excellence</div>
-            <div id="qrcode" style="background:#fff; padding:5px; width:100px; margin:0 auto 20px auto;"></div>
-
-            <button id="btn-save" class="btn-gold" onclick="becomeMember()">SAVE / СОХРАНИТЬ</button>
-            <button id="btn-hall" class="btn-outline" onclick="enterHall()">ENTER / ВХОД</button>
-            
-            <button class="btn-tg" onclick="window.open('https://t.me/your_bot','_blank')">
-                Telegram Connect
-            </button>
-
-            <div class="lang-grid">
-                <span class="lang-item" onclick="setLang('en')">EN</span>
-                <span class="lang-item" onclick="setLang('fr')">FR</span>
-                <span class="lang-item" onclick="setLang('ru')">RU</span>
-                <span class="lang-item" onclick="setLang('uk')">UK</span>
-                <span class="lang-item" onclick="setLang('de')">DE</span>
-                <span class="lang-item" onclick="setLang('es')">ES</span>
-                <span class="lang-item" onclick="setLang('it')">IT</span>
-                <span class="lang-item" onclick="setLang('pl')">PL</span>
-            </div>
+            <div id="user-avatar" style="font-size:50px;">🎩</div>
+            <div id="user-nick" style="margin:10px 0;">MEMBER #----</div>
+            <div id="qrcode" style="background:#fff; padding:5px; width:100px; margin:0 auto;"></div>
+            <button class="btn" onclick="enterHall()">SAVE & ENTER BAR</button>
         </div>
     </div>
 
     <div id="block-hall" class="block">
-        <div class="hall-bg">
-            <div class="arch"><div style="margin-top:40px; letter-spacing:5px;">BAR</div></div>
-            <div class="parquet"></div>
-            <div onclick="logout()" style="position:absolute; bottom:10px; right:10px; font-size:10px; cursor:pointer; opacity:0.3;">[ Reset System ]</div>
-        </div>
+        <h1 style="color: gold;">YOU ARE IN THE BAR</h1>
+        <button class="btn" style="width:150px;" onclick="location.reload()">RELOAD PAGE</button>
     </div>
 
     <script>
-        const voc = {
-            en: { status: "MEMBER", resident: "RESIDENT", slogan: "Tradition & Excellence", change: "click to change" },
-            fr: { status: "MEMBRE", resident: "RÉSIDENT", slogan: "Tradition et Excellence", change: "cliquer pour changer" },
-            ru: { status: "УЧАСТНИК", resident: "РЕЗИДЕНТ", slogan: "Традиции и Совершенство", change: "нажми, чтобы сменить" },
-            uk: { status: "УЧАСНИК", resident: "РЕЗИДЕНТ", slogan: "Традиції та Досконалість", change: "натисни, щоб змінити" },
-            de: { status: "MITGLIED", resident: "RESIDENT", slogan: "Tradition & Exzellenz", change: "zum Ändern klicken" },
-            es: { status: "MIEMBRO", resident: "RESIDENTE", slogan: "Tradición y Excelencia", change: "clic para cambiar" },
-            it: { status: "MEMBRO", resident: "RESIDENTE", slogan: "Tradizione ed Eccellenza", change: "clicca per cambiare" },
-            pl: { status: "CZŁONEK", resident: "REZYDENT", slogan: "Tradycja i Doskonałość", change: "kliknij, aby zmienić" }
-        };
-        const avs = ['🎩','🎭','🕶️','🥃','🃏','🕵️','🍸','🚬'];
-
-        window.onload = function() {
-            if (!localStorage.getItem('club_id')) redoIdentity();
-            // ТЕПЕРЬ ВСЕГДА ПОКАЗЫВАЕМ ДВЕРЬ ПЕРВОЙ
-            switchTo('block-entrance'); 
-        };
-
+        // Функция принудительного открытия блоков
         function switchTo(id) {
-            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
+            // Скрываем ВСЁ принудительно
+            const blocks = document.getElementsByClassName('block');
+            for (let i = 0; i < blocks.length; i++) {
+                blocks[i].style.display = 'none';
+            }
+            // Показываем нужный
+            document.getElementById(id).style.display = 'flex';
         }
 
         function handleDoor() {
-            document.getElementById('door-sound').play();
             document.getElementById('door-frame').classList.add('door-open');
-            setTimeout(() => switchTo('block-welcome'), 1500);
+            setTimeout(() => { switchTo('block-welcome'); }, 1000);
         }
 
-        function showIdentity() { switchTo('block-identity'); updateUI(); }
-
-        function redoIdentity() {
-            const newId = Math.floor(1000 + Math.random() * 9000);
-            localStorage.setItem('club_id', newId);
-            localStorage.setItem('club_av', avs[newId % avs.length]);
-            localStorage.removeItem('club_photo');
-            updateUI();
+        function showIdentity() {
+            switchTo('block-identity');
+            // Генерим QR
+            const id = Math.floor(1000 + Math.random() * 9000);
+            document.getElementById('user-nick').innerText = "MEMBER #" + id;
+            new QRCode(document.getElementById("qrcode"), { text: "ID:"+id, width: 100, height: 100 });
         }
 
-        function updateUI() {
-            const L = localStorage.getItem('club_l') || 'en';
-            const t = voc[L] || voc.en;
-            const id = localStorage.getItem('club_id') || '----';
-            const isMember = localStorage.getItem('is_member') === 'true';
-            document.getElementById('user-nick').innerText = (isMember ? t.resident : t.status) + ' #' + id;
-            document.getElementById('club-slogan').innerText = t.slogan;
-            document.getElementById('hint-change').innerText = "(" + t.change + ")";
-            const avBox = document.getElementById('user-avatar');
-            const photo = localStorage.getItem('club_photo');
-            if (photo) { avBox.innerHTML = `<img src="${photo}" style="width:60px;height:60px;border-radius:50%;object-fit:cover;">`; } 
-            else { avBox.innerText = localStorage.getItem('club_av') || '🎩'; }
-            const qrEl = document.getElementById("qrcode");
-            qrEl.innerHTML = "";
-            new QRCode(qrEl, { text: "GY-ID:" + id, width: 100, height: 100 });
+        function enterHall() {
+            switchTo('block-hall');
         }
 
-        function setLang(lang) { localStorage.setItem('club_l', lang); updateUI(); }
-        function becomeMember() { localStorage.setItem('is_member', 'true'); updateUI(); setTimeout(enterHall, 1000); }
-        function enterHall() { switchTo('block-hall'); document.getElementById('bar-sound').play(); }
-        function handlePhoto(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = e => { localStorage.setItem('club_photo', e.target.result); updateUI(); };
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-        function logout() { localStorage.clear(); location.reload(); }
+        // ПРИ ЗАГРУЗКЕ - НИКАКИХ ПРОВЕРОК. ТОЛЬКО ДВЕРЬ.
+        window.onload = function() {
+            console.log("Page loaded. Starting from Door.");
+            switchTo('block-entrance');
+        };
     </script>
 </body>
 </html>
