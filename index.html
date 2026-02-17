@@ -274,6 +274,27 @@
 
     // 7. ПЕРЕВОД (Очищенная версия)
     function applyL() {
+        function applyL() {
+    const t = voc[L] || voc.en;
+    const id = localStorage.getItem('club_id') || "----";
+    // Проверяем, нажимал ли пользователь кнопку SAVE
+    const isMember = localStorage.getItem('is_member') === 'true';
+
+    // 1. Меняем статус: если сохранено — Резидент, если нет — Участник
+    const userNick = document.getElementById('user-nick');
+    if (userNick) {
+        let status = isMember ? (L === 'ru' ? 'РЕЗИДЕНТ' : 'RESIDENT') : (t.member || 'Member');
+        userNick.innerText = status + ' #' + id;
+    }
+
+    // 2. Прячем кнопки REDO и SAVE, если выбор уже сделан
+    if (isMember) {
+        if (document.getElementById('btn-redo')) document.getElementById('btn-redo').style.display = 'none';
+        if (document.getElementById('btn-save')) document.getElementById('btn-save').style.display = 'none';
+    }
+
+    // ... дальше весь твой остальной код (слоган, кнопка входа и т.д.) ...
+}
         const t = voc[L] || voc.en;
         const id = localStorage.getItem('club_id') || "----";
 
@@ -309,6 +330,16 @@
     }
 
   function redoIdentity() {
+      function becomeMember() {
+    // Сохраняем флаг постоянного участника
+    localStorage.setItem('is_member', 'true');
+    
+    // Мгновенно обновляем интерфейс через уже существующую функцию
+    applyL();
+    
+    // Небольшой визуальный отклик
+    console.log("Статус изменен на RESIDENT");
+}
     // 1. Генерируем новый ID и аватар
     const newId = Math.floor(1000 + Math.random() * 9000);
     const avs = ['🎩','🎭','🕶️','🥃','🃏','🕵️'];
