@@ -81,8 +81,28 @@
         /* КНОПКИ */
         .btn-gold { display: block; width: 85%; max-width: 260px; margin: 15px auto; padding: 15px; background: transparent; border: 2px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 11px; letter-spacing: 2px; cursor: pointer; font-family: 'Georgia', serif; font-weight: bold; }
         .btn-gold:active { background: #d4af37; color: #000; }
+        <head>
+    <style>
+        /* Тут много твоего старого CSS кода... */
+        /* ... */
+        /* ... */
+
+        /* ВСТАВЛЯЙ СЮДА (в самый конец списка стилей): */
+        @media (min-width: 600px) {
+            #block-identity {
+                justify-content: center !important;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            #block-identity > div { 
+                transform: scale(0.85); /* Сжимаем карточку для мониторов */
+                transform-origin: center;
+            }
+            #qrcode { margin-bottom: 10px !important; }
+        }
     </style>
-</head>
+  </head>
 <body>
 
     <audio id="door-sound" preload="auto"><source src="door_open.mp3" type="audio/mpeg"></audio>
