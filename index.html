@@ -322,28 +322,26 @@
         applyL();
     }
 
-  function redoIdentity() {
-    function becomeMember() {
-    // 1. Фиксируем статус
+ // ПЕРВАЯ ФУНКЦИЯ: Сохранение статуса
+function becomeMember() {
+    console.log("Кнопка Save нажата"); 
     localStorage.setItem('is_member', 'true');
-    
-    // 2. Обновляем экран (кнопки исчезнут, статус сменится на РЕЗИДЕНТ)
-    applyL();
-    
-    // 3. Сообщаем об успехе
-    console.log("Welcome to the Club, Resident.");
+    applyL(); // Обновляем экран, чтобы кнопки исчезли
 }
+
+// ВТОРАЯ ФУНКЦИЯ: Смена номера (ОТДЕЛЬНО)
+function redoIdentity() {
     // 1. Генерируем новый ID и аватар
     const newId = Math.floor(1000 + Math.random() * 9000);
-    const avs = ['🎩','🎭','🕶️','🥃','🃏','🕵️'];
-    const newAv = avs[newId % 6];
+    const avs = ['🎩','🎭','🕶️','🥃','🃏','🕵️','🍸','🚬'];
+    const newAv = avs[newId % avs.length];
 
     // 2. Сохраняем в память
     localStorage.setItem('club_id', newId);
     localStorage.setItem('club_av', newAv);
-    localStorage.removeItem('club_photo'); // Сброс фото
+    localStorage.removeItem('club_photo'); 
 
-    // 3. Обновляем экран (тексты и номер)
+    // 3. Обновляем экран
     applyL(); 
 
     // 4. Обновляем QR-код
@@ -354,7 +352,7 @@
             new QRCode(qrEl, { text: "GY-ID:" + newId, width: 100, height: 100 });
         }
     }
-} // <--- Вот эта скобка закроет твою НОВУЮ функцию
+}
 
     function handlePhoto(input) {
         if (input.files && input.files[0]) {
