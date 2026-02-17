@@ -210,9 +210,21 @@
         }
 
       function enterHall() {
-    // Просто переключаем видимость блоков
-    document.getElementById('block-identity').style.display = 'none';
-    document.getElementById('block-hall').style.display = 'block';
+    // 1. Находим блок, который нужно спрятать (твоя карточка/дверь)
+    const door = document.getElementById('block-identity');
+    
+    // 2. Находим блок, который нужно показать (зал за дверью)
+    const hall = document.getElementById('block-hall');
+
+    // 3. Пытаемся совершить переход
+    if (door && hall) {
+        door.style.display = 'none'; // Закрываем/прячем входную дверь
+        hall.style.display = 'block'; // Оказываемся в холле
+        console.log("Дверь открыта, добро пожаловать!");
+    } else {
+        // Если чего-то не хватает, ты увидишь это сообщение на экране
+        alert("Замок заклинило: не найден блок входа или блок холла!");
+    }
 }
 
         function closeClub() {
