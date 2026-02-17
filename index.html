@@ -175,223 +175,147 @@
         </div>
     </div>
 
-    <script>
-        const doorSnd = document.getElementById('door-sound');
-        const barSnd = document.getElementById('bar-sound');
+ <script>
+    const doorSnd = document.getElementById('door-sound');
+    const barSnd = document.getElementById('bar-sound');
+    let L = localStorage.getItem('club_l') || 'ru';
 
-        function switchTo(id) {
-            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
+    // 1. УНИВЕРСАЛЬНЫЙ ПЕРЕКЛЮЧАТЕЛЬ (Чинит наложение)
+    function switchTo(id) {
+        document.querySelectorAll('.block').forEach(b => {
+            b.classList.remove('active');
+            b.style.display = 'none'; // Гарантируем скрытие
+        });
+        const target = document.getElementById(id);
+        if (target) {
+            target.classList.add('active');
+            target.style.display = 'flex';
         }
+    }
 
-        function handleDoor() {
-            try { doorSnd.play(); } catch(e){}
-            document.getElementById('door-frame').classList.add('door-open');
-            setTimeout(() => switchTo('block-welcome'), 1200);
-        }
+    // 2. ВХОДНАЯ ДВЕРЬ (К Чарли)
+    function handleDoor() {
+        try { if(doorSnd) doorSnd.play(); } catch(e){}
+        const frame = document.getElementById('door-frame');
+        if(frame) frame.classList.add('door-open');
+        setTimeout(() => switchTo('block-welcome'), 1200);
+    }
 
-        function showIdentity() {
-            // Запуск фонового шума (тихо)
+    // 3. ПРЕДСТАВИТЬСЯ (К Карточке)
+    function showIdentity() {
+        if(barSnd) {
             barSnd.volume = 0.15;
             barSnd.play().catch(() => {});
-            
-            let id = localStorage.getItem('gy_id') || Math.floor(1000 + Math.random() * 9000);
-            localStorage.setItem('gy_id', id);
-            document.getElementById('user-avatar').innerText = ['🥃','🎩','🍸','🚬','🎷'][id % 5];
-            
-            if (typeof QRCode !== "undefined") {
-                document.getElementById("qrcode").innerHTML = "";
-                new QRCode(document.getElementById("qrcode"), { text: "GY-ID:"+id, width: 100, height: 100 });
+        }
+        
+        // Генерация ID если нет
+        let id = localStorage.getItem('club_id');
+        if (!id) {
+            id = Math.floor(1000 + Math.random() * 9000);
+            localStorage.setItem('club_id', id);
+        }
+
+        // QR-код
+        if (typeof QRCode !== "undefined") {
+            const qrEl = document.getElementById("qrcode");
+            if(qrEl) {
+                qrEl.innerHTML = "";
+                new QRCode(qrEl, { text: "GY-ID:"+id, width: 100, height: 100 });
             }
-            switchTo('block-identity');
         }
-
-        function adjustVolume(target) {
-            let current = barSnd.volume;
-            let step = target > current ? 0.02 : -0.02;
-            let interval = setInterval(() => {
-                current += step;
-                if ((step > 0 && current >= target) || (step < 0 && current <= target)) {
-                    barSnd.volume = target;
-                    clearInterval(interval);
-                } else {
-                    barSnd.volume = current;
-                }
-            }, 50);
-        }
-
-      function enterHall() {
-    // 1. Находим блок, который нужно спрятать (твоя карточка/дверь)
-    const door = document.getElementById('block-identity');
-    
-    // 2. Находим блок, который нужно показать (зал за дверью)
-    const hall = document.getElementById('block-hall');
-
-    // 3. Пытаемся совершить переход
-    if (door && hall) {
-        door.style.display = 'none'; // Закрываем/прячем входную дверь
-        hall.style.display = 'block'; // Оказываемся в холле
-        console.log("Дверь открыта, добро пожаловать!");
-    } else {
-        // Если чего-то не хватает, ты увидишь это сообщение на экране
-        alert("Замок заклинило: не найден блок входа или блок холла!");
+        
+        applyL();
+        switchTo('block-identity');
     }
-}
 
-        function closeClub() {
-            // 1. Попытка через официальный API Telegram
-            if (window.Telegram && window.Telegram.WebApp) {
-                window.Telegram.WebApp.close();
+    // 4. ВХОД В ЗАЛ (Гранд Холл)
+    function enterHall() {
+        if (typeof adjustVolume === "function") adjustVolume(0.5);
+        switchTo('block-hall');
+        console.log("Welcome to Grand Hall");
+    }
+
+    // 5. ГРОМКОСТЬ
+    function adjustVolume(target) {
+        if(!barSnd) return;
+        let current = barSnd.volume;
+        let step = target > current ? 0.02 : -0.02;
+        let interval = setInterval(() => {
+            current += step;
+            if ((step > 0 && current >= target) || (step < 0 && current <= target)) {
+                barSnd.volume = target;
+                clearInterval(interval);
+            } else {
+                barSnd.volume = current;
             }
-            // 2. Попытка через протокол (для ПК и внешних браузеров)
-            setTimeout(() => {
-                window.location.href = "https://t.me/Sklad_Potok_Bot";
-            }, 300);
-            // 3. Прямой редирект для мобильных
-            setTimeout(() => {
-                window.open("tg://resolve?domain=Sklad_Potok_Bot", "_self");
-            }, 600);
-        }
+        }, 50);
+    }
+
+    // 6. СЛОВАРЬ
     const voc = {
-    en: { member: "Member", slogan: "In every joke there is a drop of whiskey", btn: "GRAND HALL", redo: "GET ANOTHER NUMBER" },
-    ru: { member: "Участник", slogan: "В каждой шутке есть доля виски", btn: "ГРАНД ХОЛЛ", redo: "СМЕНИТЬ НОМЕР" },
-    uk: { member: "Учасник", slogan: "У кожному жарті є доля віскі", btn: "ГРАНД ХОЛЛ", redo: "ЗМІНИТИ НОМЕР" },
-    pl: { member: "Członek", slogan: "W każdym żarcie jest kropla whisky", btn: "WIELKA SALA", redo: "ZMIEŃ NUMER" },
-    fr: { member: "Membre", slogan: "Dans chaque blague il y a une goutte de whisky", btn: "GRANDE SALLE", redo: "CHANGER DE NUMÉRO" },
-    de: { member: "Mitglied", slogan: "In jedem Witz steckt ein Tropfen Whiskey", btn: "GROSSE HALLE", redo: "NUMMER ÄNDERN" },
-    es: { member: "Miembro", slogan: "En cada broma hay una gota de whisky", btn: "GRAN SALÓN", redo: "CAMBIAR NÚMERO" },
-    it: { member: "Membro", slogan: "In ogni scherzo c'è una goccia di whisky", btn: "GRAN SALONE", redo: "CAMBIA NUMERO" }
-};
+        en: { member: "Member", slogan: "In every joke there is a drop of whiskey", btn: "GRAND HALL", redo: "GET ANOTHER NUMBER" },
+        ru: { member: "Участник", slogan: "В каждой шутке есть доля виски", btn: "ГРАНД ХОЛЛ", redo: "СМЕНИТЬ НОМЕР" },
+        uk: { member: "Учасник", slogan: "У кожному жарті є доля віскі", btn: "ГРАНД ХОЛЛ", redo: "ЗМІНИТИ НОМЕР" },
+        pl: { member: "Członek", slogan: "W każdym żarcie jest kropla whisky", btn: "WIELKA SALA", redo: "ZMIEŃ NUMER" },
+        fr: { member: "Membre", slogan: "Dans chaque blague il y a une goutte de whisky", btn: "GRANDE SALLE", redo: "CHANGER DE NUMÉRO" },
+        de: { member: "Mitglied", slogan: "In jedem Witz steckt ein Tropfen Whiskey", btn: "GROSSE HALLE", redo: "NUMMER ÄNDERN" },
+        es: { member: "Miembro", slogan: "En cada broma hay una gota de whisky", btn: "GRAN SALÓN", redo: "CAMBIAR NÚMERO" },
+        it: { member: "Membro", slogan: "In ogni scherzo c'è una goccia di whisky", btn: "GRAN SALONE", redo: "CAMBIA NUMERO" }
+    };
 
-let L = localStorage.getItem('club_l') || 'ru';
+    // 7. ПЕРЕВОД (Очищенная версия)
+    function applyL() {
+        const t = voc[L] || voc.en;
+        const id = localStorage.getItem('club_id') || "----";
 
-function applyL() {
-    // 1. Определяем язык и ID
-    const t = voc[L] || voc.en;
-    const id = localStorage.getItem('club_id') || "----";
+        const set = (id, txt) => { if(document.getElementById(id)) document.getElementById(id).innerText = txt; };
+        
+        set('user-nick', (t.member || 'Member') + ' #' + id);
+        set('club-slogan', t.slogan || '');
+        set('btn-redo', t.redo || 'REDO');
+        set('btn-hall', t.btn || 'ENTER');
 
-    // 2. Обновляем номер участника
-    const userNick = document.getElementById('user-nick');
-    if (userNick) {
-        userNick.innerText = (t.member || 'ID') + ' #' + id;
+        const savedPhoto = localStorage.getItem('club_photo');
+        const avBox = document.getElementById('user-avatar');
+        if (avBox) {
+            if (savedPhoto) {
+                avBox.innerHTML = `<img src="${savedPhoto}" style="width:70px; height:70px; border-radius:50%; object-fit:cover; border: 2px solid #d4af37;">`;
+            } else {
+                avBox.innerText = localStorage.getItem('club_av') || '🎩';
+            }
+        }
     }
 
-    // 3. Обновляем девиз
-    const clubSlogan = document.getElementById('club-slogan');
-    if (clubSlogan) {
-        clubSlogan.innerText = t.slogan || '';
+    function setLang(x) { L = x; localStorage.setItem('club_l', x); applyL(); }
+
+    function startClub() {
+        let id = localStorage.getItem('club_id');
+        if (!id) {
+            id = Math.floor(1000 + Math.random() * 9000);
+            const avs = ['🎩','🎭','🕶️','🥃','🃏','🕵️'];
+            localStorage.setItem('club_id', id);
+            localStorage.setItem('club_av', avs[id % 6]);
+        }
+        applyL();
     }
 
-    // 4. Обновляем кнопку «Сменить номер»
-    const btnRedo = document.getElementById('btn-redo');
-    if (btnRedo) {
-        btnRedo.innerText = t.redo || 'CHANGE';
+    function redoIdentity() {
+        localStorage.clear();
+        location.reload();
     }
 
-    // 5. Обновляем главную кнопку (Дверь)
-    const btnHall = document.getElementById('btn-hall');
-    if (btnHall) {
-        btnHall.innerText = t.btn || 'ENTER';
+    function handlePhoto(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                localStorage.setItem('club_photo', e.target.result);
+                applyL();
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
     }
 
-    // 6. Проверяем и ставим фото
-    const savedPhoto = localStorage.getItem('club_photo');
-    const avatarBox = document.getElementById('user-avatar');
-    if (avatarBox && savedPhoto) {
-        avatarBox.innerHTML = `<img src="${savedPhoto}" style="width:70px; height:70px; border-radius:50%; object-fit:cover; border: 2px solid #d4af37;">`;
-    }
-}
-function setLang(x) { L = x; localStorage.setItem('club_l', x); applyL(); }
-
-function startClub() {
-    let id = localStorage.getItem('club_id');
-    let av = localStorage.getItem('club_av');
-
-    // Если гость зашел впервые, генерируем и сохраняем данные
-    if (!id || id === null) {
-        id = Math.floor(1000 + Math.random() * 9000);
-        const avs = ['🎩','🎭','🕶️','🥃','🃏','🕵️'];
-        av = avs[Math.floor(Math.random() * avs.length)];
-        localStorage.setItem('club_id', id);
-        localStorage.setItem('club_av', av);
-    }
-
-    // Находим элементы на странице
-    const avElem = document.getElementById('user-avatar');
-    
-    // Заполняем аватар
-    if (avElem) avElem.innerText = av;
-    
-    // Вызываем твою функцию перевода, которая впишет номер вместо Loading
-    applyL(); 
-}
-
-// Запускаем всё при загрузке страницы
-        // Функция смены образа (номер и аватар)
-function redoIdentity() {
-    localStorage.removeItem('club_id');
-    localStorage.removeItem('club_avatar');
-    localStorage.removeItem('club_photo'); // Сброс фото, если нужно полное обновление
-    location.reload(); // Самый надежный способ для полной перегенерации
-}
-
-// Обработка загруженного фото
-function handlePhoto(input) {
-    if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const avatarDiv = document.getElementById('user-avatar');
-            avatarDiv.innerHTML = `<img src="${e.target.result}" style="width:70px; height:70px; border-radius:50%; object-fit:cover; border: 2px solid #d4af37;">`;
-            localStorage.setItem('club_photo', e.target.result);
-        };
-        reader.readAsDataURL(input.files[0]);
-    }
-}
-
-// Не забудь обновить свою функцию applyL, чтобы она заполняла девиз
-function applyL() {
-    // 1. Сначала определяем язык (без этого ничего не сработает)
-    const t = voc[L] || voc.en;
-    const id = localStorage.getItem('club_id') || "----";
-
-    // 2. ОБНОВЛЯЕМ ТОЛЬКО ТО, ЧТО ТОЧНО ЕСТЬ (простая проверка)
-    
-    // Номер
-    if (document.getElementById('user-nick')) {
-        document.getElementById('user-nick').innerText = (t.member || 'ID') + ' #' + id;
-    }
-    
-    // Слоган (девиз)
-    if (document.getElementById('club-slogan')) {
-        document.getElementById('club-slogan').innerText = t.slogan || '';
-    }
-
-    // ТВОЯ НОВАЯ КНОПКА (проверяем наличие перед обновлением)
-    if (document.getElementById('btn-redo')) {
-        document.getElementById('btn-redo').innerText = t.redo || 'CHANGE';
-    }
-
-    // ГЛАВНАЯ КНОПКА (Дверь)
-    if (document.getElementById('btn-hall')) {
-        document.getElementById('btn-hall').innerText = t.btn || 'ENTER';
-    }
-
-    // Фото (если есть)
-    const savedPhoto = localStorage.getItem('club_photo');
-    const avatarBox = document.getElementById('user-avatar');
-    if (avatarBox && savedPhoto) {
-        avatarBox.innerHTML = `<img src="${savedPhoto}" style="width:70px; height:70px; border-radius:50%; object-fit:cover; border: 2px solid #d4af37;">`;
-    }
-}
-    }
-    
-    // 4. ПРОВЕРЯЕМ ФОТО: если человек уже загружал фото, показываем его вместо иконки
-    const savedPhoto = localStorage.getItem('club_photo');
-    if (savedPhoto && document.getElementById('user-avatar')) {
-        document.getElementById('user-avatar').innerHTML = `<img src="${savedPhoto}" style="width:70px; height:70px; border-radius:50%; object-fit:cover; border: 2px solid #d4af37;">`;
-    }
-}
-window.onload = startClub;
-    </script>
+    window.onload = startClub;
+</script>
 </body>
 </html>
