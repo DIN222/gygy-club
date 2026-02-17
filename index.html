@@ -320,39 +320,37 @@ function handlePhoto(input) {
 
 // Не забудь обновить свою функцию applyL, чтобы она заполняла девиз
 function applyL() {
-    // Определяем текущий язык
+    // 1. Сначала определяем язык (без этого ничего не сработает)
     const t = voc[L] || voc.en;
     const id = localStorage.getItem('club_id') || "----";
+
+    // 2. ОБНОВЛЯЕМ ТОЛЬКО ТО, ЧТО ТОЧНО ЕСТЬ (простая проверка)
     
-    try {
-        // 1. Обновляем номер
-        if (document.getElementById('user-nick')) {
-            document.getElementById('user-nick').innerText = t.member + ' #' + id;
-        }
-        
-        // 2. Обновляем девиз
-        if (document.getElementById('club-slogan')) {
-            document.getElementById('club-slogan').innerText = t.slogan;
-        }
+    // Номер
+    if (document.getElementById('user-nick')) {
+        document.getElementById('user-nick').innerText = (t.member || 'ID') + ' #' + id;
+    }
+    
+    // Слоган (девиз)
+    if (document.getElementById('club-slogan')) {
+        document.getElementById('club-slogan').innerText = t.slogan || '';
+    }
 
-        // 3. ОБНОВЛЯЕМ НАШУ КНОПКУ (Сменить номер)
-        const redoBtn = document.getElementById('btn-redo');
-        if (redoBtn) {
-            redoBtn.innerText = t.redo;
-        }
+    // ТВОЯ НОВАЯ КНОПКА (проверяем наличие перед обновлением)
+    if (document.getElementById('btn-redo')) {
+        document.getElementById('btn-redo').innerText = t.redo || 'CHANGE';
+    }
 
-        // 4. Обновляем главную кнопку входа
-        if (document.getElementById('btn-hall')) {
-            document.getElementById('btn-hall').innerText = t.btn;
-        }
+    // ГЛАВНАЯ КНОПКА (Дверь)
+    if (document.getElementById('btn-hall')) {
+        document.getElementById('btn-hall').innerText = t.btn || 'ENTER';
+    }
 
-        // 5. Восстанавливаем фото, если оно было
-        const savedPhoto = localStorage.getItem('club_photo');
-        if (savedPhoto && document.getElementById('user-avatar')) {
-            document.getElementById('user-avatar').innerHTML = `<img src="${savedPhoto}" style="width:70px; height:70px; border-radius:50%; object-fit:cover; border: 2px solid #d4af37;">`;
-        }
-    } catch (e) {
-        console.log("Ошибка в applyL: ", e);
+    // Фото (если есть)
+    const savedPhoto = localStorage.getItem('club_photo');
+    const avatarBox = document.getElementById('user-avatar');
+    if (avatarBox && savedPhoto) {
+        avatarBox.innerHTML = `<img src="${savedPhoto}" style="width:70px; height:70px; border-radius:50%; object-fit:cover; border: 2px solid #d4af37;">`;
     }
 }
     }
