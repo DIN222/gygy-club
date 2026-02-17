@@ -133,40 +133,27 @@
         </button>
     </div>
 
-    <div id="block-identity" class="block">
-        <input type="file" id="photo-upload" style="display:none;" accept="image/*" onchange="handlePhoto(this)">
-
-      <div style="padding: 10px; width: 90%; max-width: 320px; text-align: center; margin: 0 auto; display: flex; flex-direction: column; justify-content: center; height: auto; max-height: 550px;">
-            <div id="user-avatar" onclick="document.getElementById('photo-upload').click()" style="font-size:55px; margin-bottom: 10px; cursor: pointer;">👤</div>
-
-            <div id="user-nick" style="font-size:18px; margin-bottom: 5px; color: #d4af37; font-family: 'Georgia', serif; letter-spacing: 2px; font-weight: bold;">LOADING...</div>
-            
-            <div id="club-slogan" style="font-size:12px; margin-bottom: 15px; font-style: italic; color: #d4af37; opacity: 0.8; font-family: 'Georgia', serif;"></div>
-
-            <div id="btn-redo" onclick="redoIdentity()" style="cursor:pointer; font-size:10px; color:#d4af37; text-decoration:underline; margin-bottom: 20px; opacity: 0.6; text-transform: uppercase; letter-spacing: 1px; display: block;">
-                CHANGE NUMBER
-            </div>
-
-        <div id="qrcode" style="background:#fff; padding:8px; width:116px; margin:0 auto 15px auto; border-radius: 4px;"></div>
-
-<div style="width: 100%; margin-top: 10px;">
     <div id="block-identity" class="block active">
-    <div class="main-card-container" style="...">
+    <input type="file" id="photo-upload" style="display:none;" accept="image/*" onchange="handlePhoto(this)">
+
+    <div class="main-card-container" style="padding: 15px; width: 90%; max-width: 320px; text-align: center; margin: 0 auto; display: flex; flex-direction: column; justify-content: center; min-height: auto;">
         
-        <div id="user-avatar" ...>🎩</div>
+        <div id="user-avatar" onclick="document.getElementById('photo-upload').click()" style="font-size:55px; margin-bottom: 10px; cursor: pointer;">🎩</div>
 
-        <div id="user-nick" style="color: #d4af37; font-family: 'Courier New', monospace; font-size: 1.2rem; margin-bottom: 10px; cursor: pointer;" onclick="redoIdentity()">
-    MEMBER #----
-</div>
-<div style="font-size: 0.7rem; color: rgba(212,175,55,0.5); margin-top: -8px; margin-bottom: 15px;">
-    (click to change / сменить номер)
-</div>
+        <div id="user-nick" onclick="redoIdentity()" style="color: #d4af37; font-family: 'Courier New', monospace; font-size: 1.2rem; margin-bottom: 5px; cursor: pointer; font-weight: bold; letter-spacing: 2px;">
+            MEMBER #----
+        </div>
+        <div style="font-size: 0.7rem; color: rgba(212,175,55,0.5); margin-bottom: 15px; text-transform: uppercase;">
+            (click to change / сменить номер)
+        </div>
 
-        <div id="club-slogan" ...>Tradition & Excellence</div>
+        <div id="club-slogan" style="font-size:12px; margin-bottom: 15px; font-style: italic; color: #d4af37; opacity: 0.8; font-family: 'Georgia', serif;">
+            Tradition & Excellence
+        </div>
 
         <div id="qrcode" style="background:#fff; padding:8px; width:116px; margin:0 auto 15px auto; border-radius: 4px;"></div>
 
-        <div style="width: 100%; margin-top: 15px; display: flex; flex-direction: column; gap: 10px;">
+        <div style="width: 100%; margin-top: 5px; display: flex; flex-direction: column; gap: 10px;">
             <button id="btn-save" onclick="becomeMember()" style="background: #d4af37 !important; color: #000 !important; width: 100%; padding: 12px; cursor: pointer; text-transform: uppercase; font-weight: bold; border: none; border-radius: 0 !important; height: 45px; display: block;">
                 SAVE / СОХРАНИТЬ
             </button>
@@ -175,8 +162,25 @@
                 ENTER / ВХОД
             </button>
         </div>
-        </div>
-</div>
+
+    </div> </div> ```
+
+---
+
+### Что я исправил:
+1.  **Убрал дубликаты**: Я удалил второй `id="block-identity"` и второй `id="user-avatar"`, которые были внутри. Теперь ID уникальны, и JS не будет ошибаться.
+2.  **Починил смену номера**: Клик по номеру `MEMBER #----` теперь вызывает `redoIdentity()`, и под ним есть понятная подпись.
+3.  **Кнопки**: Они теперь в одном контейнере, стоят ровно, и «Вход» гарантированно прозрачный.
+4.  **Компактность**: Я немного подправил отступы (`margin`), чтобы на мониторе всё выглядело аккуратнее.
+
+### Как проверить:
+Замени свой блок на этот и **обязательно** сделай очистку памяти (как мы договаривались), чтобы увидеть кнопки:
+1. Вставь в самый низ скрипта `localStorage.clear();`.
+2. Обнови страницу.
+3. Убедись, что кнопки и номер на месте.
+4. **Удали** `localStorage.clear();` из кода.
+
+**Как теперь? Кнопка смены номера вернулась на законное место?** 🥃🎩 Если всё ок, следующим шагом научим Чарли выдавать этот QR-код как картинку для скачивания!
     
 
             <div style="margin-top: 30px; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;">
