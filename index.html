@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -22,53 +21,54 @@
         }
 
         .block.active { display: flex; }
-        /* Делаем кнопку внутри карточки золотой */
-        .block .btn-outline, .block button {
+
+        /* Делаем кнопку SAVE золотой, а ENTER — прозрачной */
+        #btn-save {
             background: linear-gradient(145deg, #d4af37, #f2d472) !important;
             color: #000 !important;
             border: none !important;
             padding: 12px 20px;
             font-weight: bold;
             text-transform: uppercase;
-            border-radius: 25px;
             cursor: pointer;
             width: 100%;
-            margin-top: 20px;
+        }
+
+        #btn-hall {
+            background: transparent !important;
+            color: #d4af37 !important;
+            border: 2px solid #d4af37 !important;
+            padding: 12px 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            width: 100%;
         }
 
         /* ДВЕРЬ */
        .door-container { 
-            border: none; /* Рамка удалена */
             padding: 12px; 
             background: transparent; 
             cursor: pointer; 
             transition: transform 2s, opacity 1s; 
         }
         .door-open { transform: scale(3.5); opacity: 1; }
-        .label-top {transition: opacity 1.5s ease-in-out; font-size: 16px; letter-spacing: 12px; margin-bottom: 30px; text-transform: uppercase; color: #d4af37; }
+        .label-top { transition: opacity 1.5s ease-in-out; font-size: 16px; letter-spacing: 12px; margin-bottom: 30px; text-transform: uppercase; color: #d4af37; }
 
-        /* ЧАРЛИ БЕЗ ОРЕОЛА */
-      /* ЧАРЛИ: РАМКА-КОНТЕЙНЕР (ОКНО) */
+        /* ЧАРЛИ */
         .charlie-frame { 
-            width: 220px; 
-            height: 220px; 
+            width: 220px; height: 220px; 
             border-radius: 50%; 
             border: 2px solid #d4af37; 
             margin: 0 auto 20px;
-            display: block;
             background: black; 
-            overflow: hidden; /* Это "ножницы" — обрезают всё, что выйдет за круг */
+            overflow: hidden;
             position: relative;
         }
-
-        /* ЧАРЛИ: ФОТОГРАФИЯ ВНУТРИ */
         .charlie-frame img { 
-            width: 100%; 
-            height: 100%; 
+            width: 100%; height: 100%; 
             object-fit: cover; 
-            /* Увеличиваем только фото, пока черное кольцо не скроется за рамкой */
             transform: scale(1.5); 
-            display: block;
         }
 
         /* ХОЛЛ */
@@ -78,35 +78,14 @@
         .frame img { width: 100%; height: 100%; object-fit: cover; }
         .arch { width: 150px; height: 250px; border: 6px solid #d4af37; border-bottom: none; border-radius: 75px 75px 0 0; position: relative; background: #0a0a0a; }
 
-        /* КНОПКИ */
-        .btn-gold { display: block; width: 85%; max-width: 260px; margin: 15px auto; padding: 15px; background: transparent; border: 2px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 11px; letter-spacing: 2px; cursor: pointer; font-family: 'Georgia', serif; font-weight: bold; }
-        .btn-gold:active { background: #d4af37; color: #000; }
-        <head>
-        #btn-hall {
-    background: none !important;
-    background-color: transparent !important;
-}
-    <style>
-        /* Тут много твоего старого CSS кода... */
-        /* ... */
-        /* ... */
+        .btn-gold { display: block; width: 85%; max-width: 260px; margin: 15px auto; padding: 15px; background: transparent; border: 2px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 11px; letter-spacing: 2px; cursor: pointer; }
 
-        /* ВСТАВЛЯЙ СЮДА (в самый конец списка стилей): */
-  @media (min-width: 600px) {
-    #block-identity {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        height: 100vh !important;
-    }
-    
-    #block-identity > div {
-        transform: scale(0.8) !important; /* Уменьшаем масштаб всей карточки */
-        transform-origin: center center !important;
-    }
-}
+        @media (min-width: 600px) {
+            #block-identity { display: flex !important; align-items: center !important; justify-content: center !important; }
+            #block-identity > .main-card-container { transform: scale(0.8) !important; transform-origin: center center !important; }
+        }
     </style>
-  </head>
+</head>
 <body>
     <audio id="door-sound" preload="auto"><source src="door_open.mp3" type="audio/mpeg"></audio>
     <audio id="bar-sound" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
@@ -122,8 +101,8 @@
         <div class="charlie-frame">
             <img src="charlie.png" alt="Charlie">
         </div>
-        <h1 style="letter-spacing: 8px; margin-bottom: 30px; font-family: 'Georgia', serif; font-weight: normal; color: #d4af37; text-align: center;">WELCOME</h1>
-        <button class="btn-gold" onclick="showIdentity()" style="background: transparent !important; border: 2px solid #d4af37 !important; color: #d4af37 !important; border-radius: 0 !important; width: 85%; max-width: 260px; display: block; margin: 0 auto;">
+        <h1 style="letter-spacing: 8px; margin-bottom: 30px; color: #d4af37;">WELCOME</h1>
+        <button class="btn-gold" onclick="showIdentity()" style="border-radius: 0 !important;">
             Identify Myself
         </button>
     </div>
@@ -131,7 +110,7 @@
     <div id="block-identity" class="block">
         <input type="file" id="photo-upload" style="display:none;" accept="image/*" onchange="handlePhoto(this)">
 
-        <div class="main-card-container" style="padding: 15px; width: 90%; max-width: 320px; text-align: center; margin: 0 auto; display: flex; flex-direction: column; justify-content: center; min-height: auto; background: rgba(0,0,0,0.9); border: 1px solid rgba(212,175,55,0.2);">
+        <div class="main-card-container" style="padding: 15px; width: 90%; max-width: 320px; text-align: center; margin: 0 auto; display: flex; flex-direction: column; justify-content: center; background: rgba(0,0,0,0.9); border: 1px solid rgba(212,175,55,0.2);">
             
             <div id="user-avatar" onclick="document.getElementById('photo-upload').click()" style="font-size:55px; margin-bottom: 10px; cursor: pointer;">🎩</div>
 
@@ -143,38 +122,21 @@
                 (click to change / сменить номер)
             </div>
 
-            <div id="club-slogan" style="font-size:12px; margin-bottom: 15px; font-style: italic; color: #d4af37; opacity: 0.8; font-family: 'Georgia', serif;">
+            <div id="club-slogan" style="font-size:12px; margin-bottom: 15px; font-style: italic; color: #d4af37; opacity: 0.8;">
                 Tradition & Excellence
             </div>
 
             <div id="qrcode" style="background:#fff; padding:8px; width:116px; margin:0 auto 15px auto; border-radius: 4px;"></div>
 
             <div style="width: 100%; margin-top: 5px; display: flex; flex-direction: column; gap: 10px;">
-                <button id="btn-save" onclick="becomeMember()" style="background: #d4af37 !important; color: #000 !important; width: 100%; padding: 12px; cursor: pointer; text-transform: uppercase; font-weight: bold; border: none; border-radius: 0 !important;">
-                    SAVE / СОХРАНИТЬ
-                </button>
-                <button id="btn-hall" onclick="enterHall()" style="background: transparent !important; border: 2px solid #d4af37 !important; color: #d4af37 !important; width: 100%; padding: 12px; cursor: pointer; text-transform: uppercase; font-weight: bold; border-radius: 0 !important;">
-                    ENTER / ВХОД
-                </button>
+                <button id="btn-save" onclick="becomeMember()">SAVE / СОХРАНИТЬ</button>
+                <button id="btn-hall" onclick="enterHall()">ENTER / ВХОД</button>
             </div>
 
             <div style="margin-top: 25px; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;">
-                <span onclick="setLang('en')" style="cursor:pointer; padding: 5px 8px; border: 1px solid rgba(212,175,55,0.2); font-size: 10px; color: #d4af37;">EN</span>
-                <span onclick="setLang('fr')" style="cursor:pointer; padding: 5px 8px; border: 1px solid rgba(212,175,55,0.2); font-size: 10px; color: #d4af37;">FR</span>
-                <span onclick="setLang('ru')" style="cursor:pointer; padding: 5px 8px; border: 1px solid rgba(212,175,55,0.2); font-size: 10px; color: #d4af37;">RU</span>
-                </div>
-        </div>
-    </div>
-
-            <div style="margin-top: 30px; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;">
-                <span onclick="setLang('en')" style="cursor:pointer; padding: 8px 12px; border: 1px solid rgba(212,175,55,0.3); font-size: 11px; color: #d4af37;">EN</span>
-                <span onclick="setLang('fr')" style="cursor:pointer; padding: 8px 12px; border: 1px solid rgba(212,175,55,0.3); font-size: 11px; color: #d4af37;">FR</span>
-                <span onclick="setLang('es')" style="cursor:pointer; padding: 8px 12px; border: 1px solid rgba(212,175,55,0.3); font-size: 11px; color: #d4af37;">ES</span>
-                <span onclick="setLang('it')" style="cursor:pointer; padding: 8px 12px; border: 1px solid rgba(212,175,55,0.3); font-size: 11px; color: #d4af37;">IT</span>
-                <span onclick="setLang('de')" style="cursor:pointer; padding: 8px 12px; border: 1px solid rgba(212,175,55,0.3); font-size: 11px; color: #d4af37;">DE</span>
-                <span onclick="setLang('pl')" style="cursor:pointer; padding: 8px 12px; border: 1px solid rgba(212,175,55,0.3); font-size: 11px; color: #d4af37;">PL</span>
-                <span onclick="setLang('uk')" style="cursor:pointer; padding: 8px 12px; border: 1px solid rgba(212,175,55,0.3); font-size: 11px; color: #d4af37;">UK</span>
-                <span onclick="setLang('ru')" style="cursor:pointer; padding: 8px 12px; border: 1px solid rgba(212,175,55,0.3); font-size: 11px; color: #d4af37;">RU</span>
+                <span onclick="setLang('en')" style="cursor:pointer; padding: 5px 8px; border: 1px solid rgba(212,175,55,0.2); font-size: 10px;">EN</span>
+                <span onclick="setLang('ru')" style="cursor:pointer; padding: 5px 8px; border: 1px solid rgba(212,175,55,0.2); font-size: 10px;">RU</span>
+                <span onclick="setLang('fr')" style="cursor:pointer; padding: 5px 8px; border: 1px solid rgba(212,175,55,0.2); font-size: 10px;">FR</span>
             </div>
         </div>
     </div>
@@ -184,7 +146,6 @@
             <div style="font-size: 35px; margin-top: 25px; color: gold; opacity: 0.6;">🕯️</div>
             
             <div style="display: flex; align-items: flex-end; justify-content: center; gap: 20px; margin-top: auto; margin-bottom: 7vh; z-index: 2; width: 98%;">
-                
                 <div style="display:flex; flex-direction:column; gap:20px; margin-bottom:40px;">
                     <div class="frame"><img src="masks.png"></div>
                     <div class="frame" style="display:flex; align-items:center; justify-content:center; font-size:40px;">🎩</div>
@@ -198,13 +159,13 @@
                     <div class="frame" style="display:flex; align-items:center; justify-content:center; font-size:40px;">🎙️</div>
                     <div class="frame" style="display:flex; align-items:center; justify-content:center; font-size:40px;">⌨️</div>
                 </div>
-
             </div>
-
             <div class="parquet"></div>
-
-                </div>
+        </div>
     </div>
+
+    <script>
+    // Твои скрипты начинаются здесь...
 
  <script>
     const doorSnd = document.getElementById('door-sound');
