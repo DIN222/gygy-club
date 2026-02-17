@@ -108,63 +108,63 @@
     </style>
   </head>
 <body>
-
     <audio id="door-sound" preload="auto"><source src="door_open.mp3" type="audio/mpeg"></audio>
     <audio id="bar-sound" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active">
         <div class="label-top">GY-GY PRIVATE</div>
         <div id="door-frame" class="door-container" onclick="handleDoor()">
-            <img src="door_1.jpg" style="width: 70vw; max-width: 300px; display: block;">
+            <img src="door_1.jpg" style="width: 70vw; max-width: 300px; display: block; margin: 0 auto;">
         </div>
     </div>
 
- <div id="block-welcome" class="block">
+    <div id="block-welcome" class="block">
         <div class="charlie-frame">
             <img src="charlie.png" alt="Charlie">
         </div>
-
-        <h1 style="letter-spacing: 8px; margin-bottom: 30px; font-family: 'Georgia', serif; font-weight: normal; color: #d4af37;">WELCOME</h1>
-
-        <button class="btn-gold" 
-                onclick="showIdentity()" 
-                style="background: transparent !important; border: 2px solid #d4af37 !important; color: #d4af37 !important; border-radius: 0 !important; box-shadow: none !important; width: 85%; max-width: 260px;">
+        <h1 style="letter-spacing: 8px; margin-bottom: 30px; font-family: 'Georgia', serif; font-weight: normal; color: #d4af37; text-align: center;">WELCOME</h1>
+        <button class="btn-gold" onclick="showIdentity()" style="background: transparent !important; border: 2px solid #d4af37 !important; color: #d4af37 !important; border-radius: 0 !important; width: 85%; max-width: 260px; display: block; margin: 0 auto;">
             Identify Myself
         </button>
     </div>
-<div id="block-identity" class="block active">
-    <input type="file" id="photo-upload" style="display:none;" accept="image/*" onchange="handlePhoto(this)">
 
-    <div class="main-card-container" style="padding: 15px; width: 90%; max-width: 320px; text-align: center; margin: 0 auto; display: flex; flex-direction: column; justify-content: center; min-height: auto;">
-        
-        <div id="user-avatar" onclick="document.getElementById('photo-upload').click()" style="font-size:55px; margin-bottom: 10px; cursor: pointer;">🎩</div>
+    <div id="block-identity" class="block">
+        <input type="file" id="photo-upload" style="display:none;" accept="image/*" onchange="handlePhoto(this)">
 
-        <div id="user-nick" onclick="redoIdentity()" style="color: #d4af37; font-family: 'Courier New', monospace; font-size: 1.2rem; margin-bottom: 5px; cursor: pointer; font-weight: bold; letter-spacing: 2px;">
-            MEMBER #----
+        <div class="main-card-container" style="padding: 15px; width: 90%; max-width: 320px; text-align: center; margin: 0 auto; display: flex; flex-direction: column; justify-content: center; min-height: auto; background: rgba(0,0,0,0.9); border: 1px solid rgba(212,175,55,0.2);">
+            
+            <div id="user-avatar" onclick="document.getElementById('photo-upload').click()" style="font-size:55px; margin-bottom: 10px; cursor: pointer;">🎩</div>
+
+            <div id="user-nick" onclick="redoIdentity()" style="color: #d4af37; font-family: 'Courier New', monospace; font-size: 1.2rem; margin-bottom: 5px; cursor: pointer; font-weight: bold; letter-spacing: 2px;">
+                MEMBER #----
+            </div>
+            
+            <div style="font-size: 0.7rem; color: rgba(212,175,55,0.5); margin-bottom: 15px; text-transform: uppercase;">
+                (click to change / сменить номер)
+            </div>
+
+            <div id="club-slogan" style="font-size:12px; margin-bottom: 15px; font-style: italic; color: #d4af37; opacity: 0.8; font-family: 'Georgia', serif;">
+                Tradition & Excellence
+            </div>
+
+            <div id="qrcode" style="background:#fff; padding:8px; width:116px; margin:0 auto 15px auto; border-radius: 4px;"></div>
+
+            <div style="width: 100%; margin-top: 5px; display: flex; flex-direction: column; gap: 10px;">
+                <button id="btn-save" onclick="becomeMember()" style="background: #d4af37 !important; color: #000 !important; width: 100%; padding: 12px; cursor: pointer; text-transform: uppercase; font-weight: bold; border: none; border-radius: 0 !important;">
+                    SAVE / СОХРАНИТЬ
+                </button>
+                <button id="btn-hall" onclick="enterHall()" style="background: transparent !important; border: 2px solid #d4af37 !important; color: #d4af37 !important; width: 100%; padding: 12px; cursor: pointer; text-transform: uppercase; font-weight: bold; border-radius: 0 !important;">
+                    ENTER / ВХОД
+                </button>
+            </div>
+
+            <div style="margin-top: 25px; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;">
+                <span onclick="setLang('en')" style="cursor:pointer; padding: 5px 8px; border: 1px solid rgba(212,175,55,0.2); font-size: 10px; color: #d4af37;">EN</span>
+                <span onclick="setLang('fr')" style="cursor:pointer; padding: 5px 8px; border: 1px solid rgba(212,175,55,0.2); font-size: 10px; color: #d4af37;">FR</span>
+                <span onclick="setLang('ru')" style="cursor:pointer; padding: 5px 8px; border: 1px solid rgba(212,175,55,0.2); font-size: 10px; color: #d4af37;">RU</span>
+                </div>
         </div>
-        
-        <div style="font-size: 0.7rem; color: rgba(212,175,55,0.5); margin-bottom: 15px; text-transform: uppercase;">
-            (click to change / сменить номер)
-        </div>
-
-        <div id="club-slogan" style="font-size:12px; margin-bottom: 15px; font-style: italic; color: #d4af37; opacity: 0.8; font-family: 'Georgia', serif;">
-            Tradition & Excellence
-        </div>
-
-        <div id="qrcode" style="background:#fff; padding:8px; width:116px; margin:0 auto 15px auto; border-radius: 4px;"></div>
-
-        <div style="width: 100%; margin-top: 5px; display: flex; flex-direction: column; gap: 10px;">
-            <button id="btn-save" onclick="becomeMember()" style="background: #d4af37 !important; color: #000 !important; width: 100%; padding: 12px; cursor: pointer; text-transform: uppercase; font-weight: bold; border: none; border-radius: 0 !important; height: 45px; display: block;">
-                SAVE / СОХРАНИТЬ
-            </button>
-
-            <button id="btn-hall" onclick="enterHall()" style="background: transparent !important; border: 2px solid #d4af37 !important; color: #d4af37 !important; width: 100%; padding: 12px; cursor: pointer; text-transform: uppercase; font-weight: bold; border-radius: 0 !important; height: 45px; display: block;">
-                ENTER / ВХОД
-            </button>
-        </div>
-
     </div>
-</div>
 
             <div style="margin-top: 30px; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;">
                 <span onclick="setLang('en')" style="cursor:pointer; padding: 8px 12px; border: 1px solid rgba(212,175,55,0.3); font-size: 11px; color: #d4af37;">EN</span>
