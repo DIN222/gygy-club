@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GY-GY Club</title>
     <style>
-        /* (6) ВИЗУАЛЬНЫЙ КОД И ЧИСТКА МОБИЛЬНОГО "ШУМА" */
+        /* (6) УДАЛЕНИЕ МОБИЛЬНОГО МУСОРА И ОРЕОЛОВ */
         * {
             -webkit-tap-highlight-color: transparent;
             -webkit-touch-callout: none;
@@ -22,21 +22,24 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            width: 100vw;
             overflow: hidden;
         }
 
-        /* УПРАВЛЕНИЕ ЗОНАМИ */
+        /* ЗОНЫ (1A, 1B, 1C) */
         .zone { 
             display: none; 
             text-align: center; 
             width: 100%; 
+            height: 100%;
             flex-direction: column; 
             justify-content: center; 
             align-items: center; 
+            position: absolute;
         }
         .active { display: flex !important; }
 
-        /* (5.3) СЕЛЕКТОР ЯЗЫКОВ (8 ЯЗЫКОВ) */
+        /* (5.3) СЕЛЕКТОР ЯЗЫКОВ */
         .lang-switcher {
             position: absolute;
             top: 20px;
@@ -46,21 +49,20 @@
             letter-spacing: 1px;
             opacity: 0.4;
             transition: 0.8s;
-            z-index: 100;
-            flex-wrap: wrap;
-            justify-content: center;
+            z-index: 1000;
         }
         .lang-switcher:hover { opacity: 1; }
         .lang-item { cursor: pointer; color: #d4af37; transition: 0.3s; }
         .active-lang { color: #fff !important; text-shadow: 0 0 8px #d4af37; font-weight: bold; }
 
-        /* (1A) БЛОК ДВЕРЬ */
+        /* (1A) ДВЕРЬ - КРУПНЫЙ ШРИФТ */
         #door-sign {
-            font-size: clamp(3.5rem, 12vw, 5.5rem);
-            letter-spacing: 15px;
-            margin-bottom: 50px;
+            font-size: clamp(3.5rem, 15vw, 6rem);
+            letter-spacing: 18px;
+            margin-bottom: 40px;
             transition: opacity 3s ease, filter 3s ease;
             text-transform: uppercase;
+            font-weight: normal;
         }
 
         .door-frame {
@@ -76,17 +78,17 @@
         .door-fade { opacity: 0; transform: scale(1.15); }
         .sign-fade { opacity: 0; filter: blur(30px); }
 
-        /* (1B) ЧАРЛИ И WELCOME */
+        /* (1B) ЧАРЛИ - ОДНО КОЛЬЦО */
         .charlie-ring {
-            width: 115px;
-            height: 115px;
+            width: 120px;
+            height: 120px;
             border: 1px solid #d4af37;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-bottom: 15px;
-            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-size: 2.8rem;
         }
 
         .welcome-label {
@@ -94,7 +96,7 @@
             font-size: 1.1rem;
             letter-spacing: 6px;
             margin-top: 5px;
-            opacity: 0.7;
+            opacity: 0.8;
             text-transform: uppercase;
         }
 
@@ -114,7 +116,13 @@
         }
         .btn-frame:hover { background: rgba(212, 175, 55, 0.1); }
 
-        .id-card { border: 1px double #d4af37; padding: 50px; min-width: 300px; }
+        /* (1C) КАРТОЧКА */
+        .id-card { 
+            border: 1px double #d4af37; 
+            padding: 50px; 
+            min-width: 300px;
+            background: rgba(10, 10, 10, 0.8);
+        }
     </style>
 </head>
 <body>
@@ -133,23 +141,23 @@
     <section id="zone-1a" class="zone active">
         <h1 id="door-sign">GY-GY</h1>
         <div id="door-object" class="door-frame">
-            <button class="btn-frame" id="btn-enter" onclick="processEntrance()"></button>
+            <button class="btn-frame" id="btn-enter" onclick="processEntrance()">ВОЙТИ</button>
         </div>
     </section>
 
     <section id="zone-1b" class="zone">
         <div class="charlie-ring">🎩</div>
-        <h2 style="letter-spacing: 10px; font-weight: normal; margin: 0;">ЧАРЛИ</h2>
+        <h2 style="letter-spacing: 12px; font-weight: normal; margin: 0; font-size: 2rem;">ЧАРЛИ</h2>
         <div class="welcome-label">WELCOME</div>
-        <p id="charlie-text" style="margin-top: 40px; max-width: 320px; font-style: italic; line-height: 1.7;"></p>
-        <button class="btn-frame" id="btn-who" onclick="showIdentity()"></button>
+        <p id="charlie-text" style="margin-top: 40px; max-width: 320px; font-style: italic; line-height: 1.7; font-size: 1.1rem;"></p>
+        <button class="btn-frame" id="btn-who" onclick="showIdentity()">ПРЕДЪЯВИТЬ</button>
     </section>
 
     <section id="zone-1c" class="zone">
         <div class="id-card">
-            <div id="card-label" style="font-size: 0.7rem; opacity: 0.5; letter-spacing: 2px;"></div>
-            <div style="font-size: 1.8rem; margin: 30px 0; letter-spacing: 4px;" id="user-id-val">---</div>
-            <button class="btn-frame" id="btn-next" onclick="alert('Entering the Hall...')"></button>
+            <div id="card-label" style="font-size: 0.8rem; opacity: 0.5; letter-spacing: 3px; margin-bottom: 20px;"></div>
+            <div style="font-size: 2rem; margin: 20px 0; letter-spacing: 5px; color: #fff;" id="user-id-val">---</div>
+            <button class="btn-frame" id="btn-next" onclick="alert('Entering Hall...')"></button>
         </div>
     </section>
 
@@ -208,7 +216,7 @@
             document.getElementById('zone-1c').classList.add('active');
         }
 
-        // Инициализация при запуске
+        // Запуск
         updateTexts();
     </script>
 </body>
