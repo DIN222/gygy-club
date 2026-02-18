@@ -3,58 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v1.9.2</title>
+    <title>GY-GY Club v1.9.3</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-        body { margin: 0; background: #000; color: #d4af37; font-family: 'Georgia', serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; }
+        body { margin: 0; background: #000; color: #d4af37; font-family: 'Times New Roman', Times, serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; }
         
-        .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 5; }
+        .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
         .block.active { display: flex; }
 
-        /* ДВЕРЬ (Без рамки) */
-        .door-container { padding: 0; background: transparent; cursor: pointer; transition: transform 2s, opacity 1s; border: none; }
+        /* ДВЕРЬ */
+        .door-container { cursor: pointer; transition: transform 2s, opacity 1s; }
         .door-open { transform: scale(3.5); opacity: 0; }
-        .label-top { font-size: 16px; letter-spacing: 12px; margin-bottom: 30px; text-transform: uppercase; color: #d4af37; }
+        .label-top { font-size: 14px; letter-spacing: 10px; margin-bottom: 20px; text-transform: uppercase; }
 
-        /* ЧАРЛИ - ОДНО ЧИСТОЕ ЗОЛОТОЕ КОЛЬЦО */
+        /* ЧАРЛИ - ОДНО КОЛЬЦО */
         .charlie-ring {
-            width: 220px;
-            height: 220px;
+            width: 180px; height: 180px; /* Уменьшил, чтобы влезло в экран */
             border-radius: 50%;
-            border: 2px solid #d4af37; /* ТО САМОЕ ОДНО КОЛЬЦО */
-            padding: 5px; /* Небольшой отступ между кольцом и фото */
-            margin-bottom: 25px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: transparent;
+            border: 1.5px solid #d4af37; 
+            padding: 4px;
+            margin-bottom: 15px;
+            display: flex; justify-content: center; align-items: center;
         }
+        .charlie-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
 
-        .charlie-img { 
-            width: 100%; 
-            height: 100%; 
-            border-radius: 50%; 
-            object-fit: cover; 
-            display: block;
-            background: #000;
+        /* WELCOME - ТОТ САМЫЙ ШРИФТ И ЦВЕТ */
+        .welcome-title { 
+            font-size: 3.5rem; 
+            color: #d4af37; 
+            margin: 0; 
+            letter-spacing: 4px; 
+            font-weight: normal;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
         }
-
-        /* ТЕКСТЫ */
-        .welcome-title { letter-spacing: 8px; font-weight: normal; color: #fff; margin: 0 0 10px 0; }
-        .welcome-sub { font-family: 'Courier New', monospace; font-size: 1rem; letter-spacing: 4px; opacity: 0.6; margin-bottom: 30px; }
-        .status-text { font-style: italic; margin-bottom: 30px; line-height: 1.6; font-size: 1.1rem; max-width: 320px; }
-
-        /* ХОЛЛ */
-        .hall-bg { width: 100%; height: 100%; background: radial-gradient(circle at 50% 20%, rgba(255, 230, 150, 0.2) 0%, transparent 70%), linear-gradient(180deg, #2a1e12 0%, #1a120b 100%); display: flex; flex-direction: column; align-items: center; position: relative; }
-        .parquet { position: absolute; bottom: 0; width: 100%; height: 25%; background: #3d2b1f; border-top: 2px solid #5d4634; z-index: 1; }
-        .frame { width: 75px; height: 100px; border: 3px solid #d4af37; background: #000; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-        .frame img { width: 100%; height: 100%; object-fit: cover; }
-        .arch { width: 150px; height: 250px; border: 6px solid #d4af37; border-bottom: none; border-radius: 75px 75px 0 0; position: relative; background: #0a0a0a; }
+        
+        .status-text { 
+            font-style: italic; 
+            margin: 15px 0 20px 0; 
+            line-height: 1.4; 
+            font-size: 1rem; 
+            max-width: 280px; 
+        }
 
         /* КНОПКИ */
-        .btn-gold { display: block; width: 85%; max-width: 260px; margin: 15px auto; padding: 15px; background: transparent; border: 2px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 11px; letter-spacing: 2px; cursor: pointer; font-family: 'Georgia', serif; font-weight: bold; }
-        .btn-gold:active { background: #d4af37; color: #000; }
+        .btn-gold { 
+            display: block; width: 100%; max-width: 240px; 
+            padding: 12px; background: transparent; 
+            border: 1px solid #d4af37; color: #d4af37; 
+            text-transform: uppercase; font-size: 10px; 
+            letter-spacing: 2px; cursor: pointer; font-family: inherit;
+        }
+
+        /* КАРТА РЕЗИДЕНТА */
+        .id-box { border: 1px solid #d4af37; padding: 20px; background: #050505; width: 100%; max-width: 300px; }
     </style>
 </head>
 <body>
@@ -65,7 +67,7 @@
     <div id="block-entrance" class="block active">
         <div class="label-top">GY-GY PRIVATE</div>
         <div id="door-frame" class="door-container" onclick="handleDoor()">
-            <img src="door_1.jpg" style="width: 70vw; max-width: 300px; display: block;">
+            <img src="door_1.jpg" style="width: 65vw; max-width: 260px; display: block;">
         </div>
     </div>
 
@@ -73,40 +75,18 @@
         <div class="charlie-ring">
             <img src="charlie.png" class="charlie-img">
         </div>
-        <h2 class="welcome-title">WELCOME</h2>
-        <div class="welcome-sub">CHARLIE</div>
+        <h1 class="welcome-title">WELCOME</h1>
         <p class="status-text">Ваш след считан.<br>Поздравляю, вы участник клуба.</p>
         <button class="btn-gold" onclick="showIdentity()">Предъявить ID</button>
     </div>
 
     <div id="block-identity" class="block">
-        <div style="border: 2px solid #d4af37; padding: 25px; background: #0a0a0a; width: 90%; max-width: 340px;">
-            <div id="user-avatar" style="font-size:55px;">👤</div>
-            <div id="user-nick" style="font-size:22px; margin:10px 0; letter-spacing: 2px;">RESIDENT</div>
-            <div id="qrcode" style="background:#fff; padding:8px; width:116px; margin:15px auto; border-radius: 4px;"></div>
-            <button class="btn-gold" onclick="enterHall()">В ХОЛЛ</button>
-            <button class="btn-gold" onclick="closeClub()" style="border-color: #444; color: #666; margin-top: 20px;">Выход</button>
-        </div>
-    </div>
-
-    <div id="block-hall" class="block">
-        <div class="hall-bg">
-            <div style="font-size: 35px; margin-top: 25px; color: gold; opacity: 0.6;">🕯️</div>
-            <div style="display: flex; align-items: flex-end; justify-content: center; gap: 20px; margin-top: auto; margin-bottom: 7vh; z-index: 2; width: 98%;">
-                <div style="display:flex; flex-direction:column; gap:20px; margin-bottom:40px;">
-                    <div class="frame"><img src="masks.png"></div>
-                    <div class="frame">🎩</div>
-                </div>
-                <div class="arch">
-                    <div style="margin-top:25px; font-size:14px; letter-spacing:5px; font-weight: bold;">BAR</div>
-                </div>
-                <div style="display:flex; flex-direction:column; gap:20px; margin-bottom:40px;">
-                    <div class="frame">🎙️</div>
-                    <div class="frame">⌨️</div>
-                </div>
-            </div>
-            <div class="parquet"></div>
-            <button class="btn-gold" style="margin-bottom: 30px; z-index:10;" onclick="switchTo('block-identity'); adjustVolume(0.15);">Карта</button>
+        <div class="id-box">
+            <div id="user-avatar" style="font-size:50px;">👤</div>
+            <div style="font-size:18px; margin:10px 0; letter-spacing: 3px;">RESIDENT</div>
+            <div id="qrcode" style="background:#fff; padding:6px; width:112px; margin:15px auto; border-radius: 4px;"></div>
+            <button class="btn-gold" style="margin: 0 auto 10px;" onclick="enterHall()">В ХОЛЛ</button>
+            <button class="btn-gold" onclick="closeClub()" style="border-color: #333; color: #555; margin: 0 auto;">Выход</button>
         </div>
     </div>
 
@@ -126,11 +106,10 @@
         }
 
         function showIdentity() {
-            barSnd.volume = 0.15;
-            barSnd.play().catch(() => {});
+            try { barSnd.volume = 0.15; barSnd.play(); } catch(e){}
             let id = localStorage.getItem('gy_id') || Math.floor(1000 + Math.random() * 9000);
             localStorage.setItem('gy_id', id);
-            const avatars = ['🥃','🎩','🍸','🚬','🎷','🎭','👔','💍'];
+            const avatars = ['🥃','🎩','🍸','🚬','🎷','🎭'];
             document.getElementById('user-avatar').innerText = avatars[id % avatars.length];
             if (typeof QRCode !== "undefined") {
                 document.getElementById("qrcode").innerHTML = "";
@@ -139,25 +118,11 @@
             switchTo('block-identity');
         }
 
-        function adjustVolume(target) {
-            let current = barSnd.volume;
-            let step = target > current ? 0.02 : -0.02;
-            let interval = setInterval(() => {
-                current += step;
-                if ((step > 0 && current >= target) || (step < 0 && current <= target)) {
-                    barSnd.volume = target;
-                    clearInterval(interval);
-                } else {
-                    barSnd.volume = Math.max(0, Math.min(1, current));
-                }
-            }, 50);
-        }
-
-        function enterHall() { adjustVolume(0.4); switchTo('block-hall'); }
-
+        function enterHall() { switchTo('block-hall'); } // Холл оставляем в памяти
+        
         function closeClub() {
             if (window.Telegram && window.Telegram.WebApp) window.Telegram.WebApp.close();
-            setTimeout(() => { window.location.href = "https://t.me/Sklad_Potok_Bot"; }, 300);
+            window.location.href = "https://t.me/Sklad_Potok_Bot";
         }
     </script>
 </body>
