@@ -7,152 +7,100 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-        body { margin: 0; background: #000; color: #d4af37; font-family: 'Georgia', serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; }
-        
-        .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 5; }
-        .block.active { display: flex; }
-
-        /* ДВЕРЬ */
-        .door-container { border: 2px solid #d4af37; padding: 12px; background: #050505; cursor: pointer; transition: transform 2s, opacity 1s; }
+        body { margin: 0; background: #000; color: #d4af37; font-family: 'Georgia', serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .screen { position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; z-index: 5; }
+        .active { opacity: 1; visibility: visible; transition: opacity 1.5s ease; }
+        .label-top { font-size: 16px; letter-spacing: 12px; margin-bottom: 30px; text-transform: uppercase; transition: transform 2s ease, opacity 1.5s ease; }
+        .label-up { transform: translateY(-80px); opacity: 0; }
+        .door-container { border: 2px solid #d4af37; padding: 12px; background: #050505; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .door-img { width: 80vw; max-width: 380px; display: block; height: auto; }
         .door-open { transform: scale(3.5); opacity: 0; }
-        .label-top { font-size: 16px; letter-spacing: 12px; margin-bottom: 30px; text-transform: uppercase; color: #d4af37; }
-
-        /* ЧАРЛИ БЕЗ ОРЕОЛА */
-        .charlie-img { 
-            width: 220px; height: 220px; 
-            border-radius: 50%; 
-            border: 2px solid #d4af37; 
-            object-fit: cover; 
-            margin-bottom: 20px;
-            display: block;
-            background: black; /* Чтобы не просвечивал фон */
-        }
-
-        /* ХОЛЛ */
-        .hall-bg { width: 100%; height: 100%; background: radial-gradient(circle at 50% 20%, rgba(255, 230, 150, 0.2) 0%, transparent 70%), linear-gradient(180deg, #2a1e12 0%, #1a120b 100%); display: flex; flex-direction: column; align-items: center; position: relative; }
-        .parquet { position: absolute; bottom: 0; width: 100%; height: 25%; background: #3d2b1f; border-top: 2px solid #5d4634; z-index: 1; }
-        .frame { width: 75px; height: 100px; border: 3px solid #d4af37; background: #000; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-        .frame img { width: 100%; height: 100%; object-fit: cover; }
-        .arch { width: 150px; height: 250px; border: 6px solid #d4af37; border-bottom: none; border-radius: 75px 75px 0 0; position: relative; background: #0a0a0a; }
-
-        /* КНОПКИ */
-        .btn-gold { display: block; width: 85%; max-width: 260px; margin: 15px auto; padding: 15px; background: transparent; border: 2px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 11px; letter-spacing: 2px; cursor: pointer; font-family: 'Georgia', serif; font-weight: bold; }
+        h1 { font-size: 40px; letter-spacing: 15px; font-weight: normal; margin: 0; }
+        .card { width: 85%; max-width: 320px; padding: 30px 20px; border: 2px solid #d4af37; background: #0a0a0a; }
+        .avatar-box { font-size: 50px; margin-bottom: 10px; }
+        .user-label { font-size: 22px; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 2px; }
+        .id-label { font-family: monospace; font-size: 10px; color: #555; margin-bottom: 15px; }
+        #qrcode { background: #fff; padding: 8px; border: 2px solid #d4af37; margin: 15px auto; width: 116px; height: 116px; }
+        .btn-gold { display: block; width: 100%; margin-top: 15px; padding: 14px; background: transparent; border: 2px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 10px; letter-spacing: 2px; cursor: pointer; outline: none; }
         .btn-gold:active { background: #d4af37; color: #000; }
+        .btn-exit { margin-top: 25px; border-color: #444; color: #666; font-size: 9px; }
     </style>
 </head>
 <body>
+    <audio id="door-sound"><source src="door_open.mp3" type="audio/mpeg"></audio>
+    <audio id="bar-sound" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
 
-    <audio id="door-sound" preload="auto"><source src="door_open.mp3" type="audio/mpeg"></audio>
-    <audio id="bar-sound" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
+    <div id="screen-door" class="screen active">
+        <div id="text-top" class="label-top">GY-GY PRIVATE</div>
+        <div id="door-frame" class="door-container" onclick="processEntry()">
+            <img src="door_1.jpg" class="door-img">
+        </div>
+        <div style="margin-top:25px; font-size:10px; color:#555; letter-spacing:4px;">Beyond The Ironic Barricade</div>
+    </div>
 
-    <div id="block-entrance" class="block active">
-        <div class="label-top">GY-GY PRIVATE</div>
-        <div id="door-frame" class="door-container" onclick="handleDoor()">
-            <img src="door_1.jpg" style="width: 70vw; max-width: 300px; display: block;">
+    <div id="screen-welcome" class="screen"><h1>WELCOME</h1></div>
+
+    <div id="screen-foyer" class="screen">
+        <div class="card">
+            <div id="user-avatar" class="avatar-box">👤</div>
+            <div id="user-nick" class="user-label">GUEST</div>
+            <div id="user-id" class="id-label">SERIAL: GY-0000</div>
+            <div id="qrcode"></div>
+            <button class="btn-gold" onclick="enterBar()">Enter the Bar</button>
+            <button class="btn-gold btn-exit" onclick="closeClub()">Return to Chat</button>
         </div>
     </div>
 
-    <div id="block-welcome" class="block">
-        <img src="charlie.png" class="charlie-img">
-        <h1 style="letter-spacing: 5px; margin-bottom: 20px;">WELCOME</h1>
-        <button class="btn-gold" onclick="showIdentity()">Identify Myself</button>
-    </div>
-
-    <div id="block-identity" class="block">
-        <div style="border: 2px solid #d4af37; padding: 25px; background: #0a0a0a; width: 90%; max-width: 340px;">
-            <div id="user-avatar" style="font-size:55px;">👤</div>
-            <div id="user-nick" style="font-size:22px; margin:10px 0; letter-spacing: 2px;">ELITE GUEST</div>
-            <div id="qrcode" style="background:#fff; padding:8px; width:116px; margin:15px auto; border-radius: 4px;"></div>
-            <button class="btn-gold" onclick="enterHall()">Grand Hall</button>
-            <button class="btn-gold" onclick="closeClub()" style="border-color: #444; color: #666; margin-top: 20px;">Exit</button>
-        </div>
-    </div>
-
-    <div id="block-hall" class="block">
-        <div class="hall-bg">
-            <div style="font-size: 35px; margin-top: 25px; color: gold; opacity: 0.6;">🕯️</div>
-            <div style="display: flex; align-items: flex-end; justify-content: center; gap: 20px; margin-top: auto; margin-bottom: 7vh; z-index: 2; width: 98%;">
-                <div style="display:flex; flex-direction:column; gap:20px; margin-bottom:40px;">
-                    <div class="frame"><img src="masks.png"></div>
-                    <div class="frame">🎩</div>
-                </div>
-                <div class="arch">
-                    <div style="margin-top:25px; font-size:14px; letter-spacing:5px; font-weight: bold;">BAR</div>
-                </div>
-                <div style="display:flex; flex-direction:column; gap:20px; margin-bottom:40px;">
-                    <div class="frame">🎙️</div>
-                    <div class="frame">⌨️</div>
-                </div>
-            </div>
-            <div class="parquet"></div>
-            <button class="btn-gold" style="margin-bottom: 30px; z-index:10;" onclick="switchTo('block-identity'); adjustVolume(0.15);">Back to Card</button>
-        </div>
-    </div>
-
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
+        const tg = window.Telegram.WebApp;
         const doorSnd = document.getElementById('door-sound');
         const barSnd = document.getElementById('bar-sound');
+        tg.expand();
 
-        function switchTo(id) {
-            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-        }
-
-        function handleDoor() {
-            try { doorSnd.play(); } catch(e){}
-            document.getElementById('door-frame').classList.add('door-open');
-            setTimeout(() => switchTo('block-welcome'), 1200);
-        }
-
-        function showIdentity() {
-            // Запуск фонового шума (тихо)
-            barSnd.volume = 0.15;
-            barSnd.play().catch(() => {});
-            
+        function setIdentity() {
             let id = localStorage.getItem('gy_id') || Math.floor(1000 + Math.random() * 9000);
             localStorage.setItem('gy_id', id);
-            document.getElementById('user-avatar').innerText = ['🥃','🎩','🍸','🚬','🎷'][id % 5];
-            
-            if (typeof QRCode !== "undefined") {
-                document.getElementById("qrcode").innerHTML = "";
-                new QRCode(document.getElementById("qrcode"), { text: "GY-ID:"+id, width: 100, height: 100 });
-            }
-            switchTo('block-identity');
+            document.getElementById('user-id').innerText = 'SERIAL: GY-' + id;
+            const avatars = ['🥃','🎩','🍸','🚬','🎷','🎲','🃏','💎','🔑','🕯️'];
+            document.getElementById('user-avatar').innerText = avatars[id % 10];
+            document.getElementById("qrcode").innerHTML = "";
+            new QRCode(document.getElementById("qrcode"), { text: "GY-ID:"+id, width: 100, height: 100 });
+            document.getElementById('user-nick').innerText = window.innerWidth < 600 ? 'NIGHT OWL' : 'ELITE GUEST';
         }
 
-        function adjustVolume(target) {
-            let current = barSnd.volume;
-            let step = target > current ? 0.02 : -0.02;
-            let interval = setInterval(() => {
-                current += step;
-                if ((step > 0 && current >= target) || (step < 0 && current <= target)) {
-                    barSnd.volume = target;
-                    clearInterval(interval);
-                } else {
-                    barSnd.volume = current;
-                }
-            }, 50);
+        function processEntry() {
+            try { doorSnd.currentTime = 0; doorSnd.play(); } catch(e){}
+            try { barSnd.volume = 0.1; barSnd.play(); } catch(e){}
+            document.getElementById('text-top').classList.add('label-up');
+            document.getElementById('door-frame').classList.add('door-open');
+            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('heavy');
+            setTimeout(() => {
+                document.getElementById('screen-door').classList.remove('active');
+                const welcomeScreen = document.getElementById('screen-welcome');
+                welcomeScreen.classList.add('active');
+                setTimeout(() => {
+                    welcomeScreen.style.opacity = "0"; 
+                    setTimeout(() => {
+                        welcomeScreen.classList.remove('active');
+                        setIdentity(); 
+                        document.getElementById('screen-foyer').classList.add('active');
+                    }, 3000); 
+                }, 4000); 
+            }, 1200);
         }
 
-        function enterHall() {
-            adjustVolume(0.5);
-            switchTo('block-hall');
+        function enterBar() {
+            barSnd.volume = 1.0;
+            if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+            alert("Кх-кх... Проходите, в баре уже наливают.");
         }
 
         function closeClub() {
-            // 1. Попытка через официальный API Telegram
-            if (window.Telegram && window.Telegram.WebApp) {
-                window.Telegram.WebApp.close();
-            }
-            // 2. Попытка через протокол (для ПК и внешних браузеров)
-            setTimeout(() => {
-                window.location.href = "https://t.me/Sklad_Potok_Bot";
-            }, 300);
-            // 3. Прямой редирект для мобильных
-            setTimeout(() => {
-                window.open("tg://resolve?domain=Sklad_Potok_Bot", "_self");
-            }, 600);
+            if (window.Telegram && tg.close) { tg.close(); }
+            setTimeout(() => { window.location.href = "https://t.me/твой_бот"; }, 100);
         }
+        window.onload = setIdentity;
     </script>
 </body>
 </html>
