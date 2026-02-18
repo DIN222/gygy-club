@@ -3,248 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club | Private Entrance</title>
+    <title>GY-GY Club</title>
     <style>
-        /* ПОЛНЫЙ ВИЗУАЛЬНЫЙ КОНТЕКСТ ПРОЕКТА */
-        * {
-            -webkit-tap-highlight-color: transparent;
-            -webkit-touch-callout: none;
-            user-select: none;
-            box-sizing: border-box;
-            outline: none;
-        }
-
-        body {
-            background-color: #000;
-            color: #d4af37;
-            font-family: 'Times New Roman', Times, serif;
-            margin: 0;
-            height: 100vh;
-            width: 100vw;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-
-        /* КОНТЕЙНЕРЫ ЗОН */
-        .zone {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            width: 100%;
-            position: absolute;
-            transition: opacity 2s ease;
-        }
-
+        /* Тот самый строгий CSS без лишних градиентов */
+        * { -webkit-tap-highlight-color: transparent; outline: none; box-sizing: border-box; }
+        body { background: #000; color: #d4af37; font-family: 'Times New Roman', serif; margin: 0; overflow: hidden; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        
+        .zone { display: none; flex-direction: column; align-items: center; width: 100%; position: absolute; }
         .active { display: flex !important; }
 
-        /* (1A) ДВЕРЬ - ВЕРНУЛ МАСШТАБ */
-        .door-header {
-            font-size: clamp(4rem, 18vw, 7rem);
-            letter-spacing: 20px;
-            margin-bottom: 60px;
-            text-transform: uppercase;
-            font-weight: 300;
-            transition: opacity 4s cubic-bezier(0.4, 0, 0.2, 1), filter 4s ease;
-        }
+        /* ЯЗЫКИ */
+        .lang-panel { position: absolute; top: 20px; display: flex; gap: 15px; opacity: 0.5; z-index: 1000; }
+        .lang-node { cursor: pointer; font-size: 0.7rem; letter-spacing: 1px; }
+        .active-ln { color: #fff; text-shadow: 0 0 5px #d4af37; }
 
-        .door-container {
-            width: 180px;
-            height: 280px;
-            border: 1px solid rgba(212, 175, 55, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            transition: opacity 1.5s ease, transform 2s ease, box-shadow 2s ease;
-        }
+        /* ВХОДНАЯ ГРУППА */
+        .door-title { font-size: clamp(3.5rem, 15vw, 6rem); letter-spacing: 20px; margin-bottom: 50px; transition: 4s ease; }
+        .door-frame { width: 180px; height: 280px; border: 1px solid #d4af37; display: flex; justify-content: center; align-items: center; transition: 1.5s ease; }
 
-        /* (1B) ЧАРЛИ - ОДНО КОЛЬЦО ИЗ СТАРОЙ ВЕРСИИ */
-        .charlie-ring {
-            width: 130px;
-            height: 130px;
-            border: 1px solid #d4af37;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 20px;
-            font-size: 3rem;
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
-        }
+        /* ЧАРЛИ */
+        .charlie-ring { width: 120px; height: 120px; border: 1px solid #d4af37; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-bottom: 10px; font-size: 2.5rem; }
+        .welcome-label { font-family: 'Courier New', Courier, monospace; font-size: 1.1rem; letter-spacing: 6px; opacity: 0.7; }
 
-        .welcome-text {
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 1.2rem;
-            letter-spacing: 8px;
-            margin-top: 10px;
-            opacity: 0.6;
-        }
+        /* КНОПКА-РАМКА */
+        .btn-frame { border: 1px solid #d4af37; background: transparent; color: #d4af37; padding: 12px 40px; cursor: pointer; letter-spacing: 3px; font-size: 0.8rem; margin-top: 50px; text-transform: uppercase; font-family: inherit; }
 
-        /* КНОПКИ-РАМКИ */
-        .club-btn {
-            background: transparent;
-            border: 1px solid #d4af37;
-            color: #d4af37;
-            padding: 15px 45px;
-            font-family: inherit;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: 0.5s;
-            margin-top: 50px;
-            font-size: 0.9rem;
-        }
+        /* КАРТА */
+        .id-card { border: 1px double #d4af37; padding: 50px; min-width: 300px; background: rgba(5,5,5,0.9); }
 
-        .club-btn:hover {
-            background: rgba(212, 175, 55, 0.1);
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.1);
-        }
-
-        /* ЯЗЫКОВАЯ ПАНЕЛЬ */
-        .lang-panel {
-            position: absolute;
-            top: 30px;
-            display: flex;
-            gap: 15px;
-            z-index: 9999;
-            opacity: 0.5;
-            transition: 1s;
-        }
-        .lang-panel:hover { opacity: 1; }
-        .lang-node { cursor: pointer; font-size: 0.75rem; letter-spacing: 1px; }
-        .lang-node.active-ln { color: #fff; text-shadow: 0 0 5px #d4af37; }
-
-        /* ЭФФЕКТЫ ИСЧЕЗНОВЕНИЯ */
-        .door-vanish { opacity: 0; transform: scale(1.05); pointer-events: none; }
-        .sign-blur { opacity: 0; filter: blur(40px); }
-
-        /* (1C) КАРТА РЕЗИДЕНТА */
-        .resident-card {
-            border: 1px double #d4af37;
-            padding: 60px 40px;
-            background: rgba(5, 5, 5, 0.9);
-            box-shadow: 0 0 40px rgba(0,0,0,1);
-        }
+        /* ЭФФЕКТЫ */
+        .vanish-frame { opacity: 0; transform: scale(1.1); }
+        .vanish-sign { opacity: 0; filter: blur(30px); }
     </style>
 </head>
 <body>
 
-    <nav class="lang-panel" id="ln-ctrl">
-        <span class="lang-node active-ln" onclick="switchL('RU', this)">RU</span>
-        <span class="lang-node" onclick="switchL('UA', this)">UA</span>
-        <span class="lang-node" onclick="switchL('EN', this)">EN</span>
-        <span class="lang-node" onclick="switchL('ES', this)">ES</span>
-        <span class="lang-node" onclick="switchL('FR', this)">FR</span>
-        <span class="lang-node" onclick="switchL('DE', this)">DE</span>
-        <span class="lang-node" onclick="switchL('IT', this)">IT</span>
-        <span class="lang-node" onclick="switchL('PT', this)">PT</span>
-    </nav>
+    <div class="lang-panel" id="ln-bar">
+        <span class="lang-node active-ln" onclick="setL('RU', this)">RU</span>
+        <span class="lang-node" onclick="setL('UA', this)">UA</span>
+        <span class="lang-node" onclick="setL('EN', this)">EN</span>
+        <span class="lang-node" onclick="setL('ES', this)">ES</span>
+        <span class="lang-node" onclick="setL('FR', this)">FR</span>
+        <span class="lang-node" onclick="setL('DE', this)">DE</span>
+        <span class="lang-node" onclick="setL('IT', this)">IT</span>
+        <span class="lang-node" onclick="setL('PT', this)">PT</span>
+    </div>
 
-    <section id="entry-gate" class="zone active">
-        <h1 class="door-header" id="main-title">GY-GY</h1>
-        <div class="door-container" id="gate-frame">
-            <button class="club-btn" id="trigger-entrance" onclick="initiateSequence()"></button>
+    <section id="z1a" class="zone active">
+        <h1 class="door-title" id="t1">GY-GY</h1>
+        <div class="door-frame" id="f1">
+            <button class="btn-frame" id="b1" onclick="run()"></button>
         </div>
     </section>
 
-    <section id="charlie-void" class="zone">
+    <section id="z1b" class="zone">
         <div class="charlie-ring">🎩</div>
-        <h2 style="letter-spacing: 15px; font-weight: normal; margin: 0; font-size: 2.2rem;">ЧАРЛИ</h2>
-        <div class="welcome-text">WELCOME</div>
-        <p id="charlie-speech" style="margin-top: 45px; max-width: 350px; font-style: italic; line-height: 1.8; font-size: 1.1rem;"></p>
-        <button class="club-btn" id="btn-present" onclick="revealIdentity()"></button>
+        <h2 style="letter-spacing: 12px; font-weight: normal; margin: 0;">ЧАРЛИ</h2>
+        <div class="welcome-label">WELCOME</div>
+        <p id="speech" style="margin-top: 40px; max-width: 320px; font-style: italic; line-height: 1.7;"></p>
+        <button class="btn-frame" id="b2" onclick="identify()"></button>
     </section>
 
-    <section id="identity-card" class="zone">
-        <div class="resident-card">
-            <div id="card-header-txt" style="font-size: 0.75rem; opacity: 0.5; letter-spacing: 3px; margin-bottom: 30px;"></div>
-            <div id="display-id" style="font-size: 2.2rem; color: #fff; letter-spacing: 6px; font-family: 'Courier New', Courier, monospace;"></div>
-            <button class="club-btn" id="btn-hall-pass"></button>
+    <section id="z1c" class="zone">
+        <div class="id-card">
+            <div id="card-h" style="font-size: 0.7rem; opacity: 0.5; letter-spacing: 2px;"></div>
+            <div id="user-id" style="font-size: 2rem; margin: 30px 0; letter-spacing: 5px;">---</div>
+            <button class="btn-frame" id="b3"></button>
         </div>
     </section>
 
     <script>
-        /* (5.1) СКРИПТОВАЯ ЧАСТЬ - ВОЗВРАЩАЕМ ЛОГИКУ */
-        
-        const dictionary = {
-            RU: { btn1: "ВОЙТИ", speech: "Ваш след считан. <br>Поздравляю, вы участник клуба.", btn2: "ПРЕДЪЯВИТЬ", label: "КАРТА РЕЗИДЕНТА", btn3: "ДАЛЕЕ" },
-            UA: { btn1: "УВІЙТИ", speech: "Ваш слід зчитано. <br>Вітаю, ви учасник клубу.", btn2: "ПРЕД'ЯВИТИ", label: "КАРТА РЕЗИДЕНТА", btn3: "ДАЛІ" },
-            EN: { btn1: "ENTER", speech: "Digital trace identified. <br>Congratulations, you are a club participant.", btn2: "PRESENT ID", label: "RESIDENT CARD", btn3: "CONTINUE" },
-            ES: { btn1: "ENTRAR", speech: "Rastro identificado. <br>Felicidades, eres participante del club.", btn2: "PRESENTAR", label: "TARJETA DE RESIDENTE", btn3: "SIGUIENTE" },
-            FR: { btn1: "ENTRER", speech: "Trace identifiée. <br>Félicitations, vous êtes participant du club.", btn2: "PRÉSENTER", label: "CARTE DE RÉSIDENT", btn3: "SUIVANT" },
-            DE: { btn1: "EINTRETEN", speech: "Spur identifiziert. <br>Glückwunsch, Sie sind Club-Teilnehmer.", btn2: "VORWEISEN", label: "RESIDENTENKARTE", btn3: "WEITER" },
-            IT: { btn1: "ENTRARE", speech: "Traccia identificata. <br>Congratulazioni, sei un partecipante al club.", btn2: "PRESENTARE", label: "CARTA RESIDENTE", btn3: "AVANTI" },
-            PT: { btn1: "ENTRAR", speech: "Rastro identificado. <br>Parabéns, você é participante do clube.", btn2: "APRESENTAR", label: "CARTÃO RESIDENTE", btn3: "PRÓXIMO" }
+        /* ТОТ САМЫЙ СКРИПТ С ПРАВИЛЬНОЙ ЛОГИКОЙ */
+        const i18n = {
+            RU: { b1: "ВОЙТИ", speech: "Ваш след считан. <br>Поздравляю, вы участник клуба.", b2: "ПРЕДЪЯВИТЬ", card: "КАРТА РЕЗИДЕНТА", b3: "ДАЛЕЕ" },
+            UA: { b1: "УВІЙТИ", speech: "Ваш слід зчитано. <br>Вітаю, ви учасник клубу.", b2: "ПРЕД'ЯВИТИ", card: "КАРТА РЕЗИДЕНТА", b3: "ДАЛІ" },
+            EN: { b1: "ENTER", speech: "Trace identified. <br>Congratulations, you are a participant.", b2: "PRESENT ID", card: "RESIDENT CARD", b3: "NEXT" }
+            // Другие языки добавляются сюда...
         };
 
-        let activeLang = 'RU';
+        let currentL = 'RU';
 
-        function switchL(lang, element) {
-            activeLang = lang;
+        function setL(l, el) {
+            currentL = l;
             document.querySelectorAll('.lang-node').forEach(n => n.classList.remove('active-ln'));
-            element.classList.add('active-ln');
-            applyText();
+            el.classList.add('active-ln');
+            update();
         }
 
-        function applyText() {
-            const data = dictionary[activeLang];
-            document.getElementById('trigger-entrance').innerText = data.btn1;
-            document.getElementById('charlie-speech').innerHTML = data.speech;
-            document.getElementById('btn-present').innerText = data.btn2;
-            document.getElementById('card-header-txt').innerText = data.label;
-            document.getElementById('btn-hall-pass').innerText = data.btn3;
+        function update() {
+            const d = i18n[currentL] || i18n.RU;
+            document.getElementById('b1').innerText = d.b1;
+            document.getElementById('speech').innerHTML = d.speech;
+            document.getElementById('b2').innerText = d.b2;
+            document.getElementById('card-h').innerText = d.card;
+            document.getElementById('b3').innerText = d.b3;
         }
 
-        // (1A -> 1B) ПОЛНАЯ СЕКВЕНЦИЯ ПЕРЕХОДА
-        function initiateSequence() {
-            // Скрываем языки
-            document.getElementById('ln-ctrl').style.opacity = '0';
-            
-            // Этап 1: Исчезает рама двери
-            const frame = document.getElementById('gate-frame');
-            frame.classList.add('door-vanish');
-
-            // Этап 2: Через задержку плавится заголовок GY-GY
+        function run() {
+            document.getElementById('ln-bar').style.opacity = '0';
+            document.getElementById('f1').classList.add('vanish-frame');
+            setTimeout(() => { document.getElementById('t1').classList.add('vanish-sign'); }, 1000);
             setTimeout(() => {
-                document.getElementById('main-title').classList.add('sign-blur');
-            }, 1200);
-
-            // Этап 3: Полная смена мерности (переход к Чарли)
-            setTimeout(() => {
-                document.getElementById('entry-gate').classList.remove('active');
-                document.getElementById('charlie-void').classList.add('active');
-                // Плавное появление Чарли
-                document.getElementById('charlie-void').style.opacity = '0';
-                setTimeout(() => { document.getElementById('charlie-void').style.opacity = '1'; }, 50);
+                document.getElementById('z1a').classList.remove('active');
+                document.getElementById('z1b').classList.add('active');
             }, 4500);
         }
 
-        // (1B -> 1C) ЛОГИКА ИДЕНТИФИКАЦИИ (COOKIE-TRACE)
-        function revealIdentity() {
-            // Имитация считывания уникального следа из localStorage (наш ID-Cookie)
-            let clubID = localStorage.getItem('_gy_resident_id');
-            
-            if (!clubID) {
-                // Если следа нет - создаем новый (первый вход)
-                clubID = 'GY-' + Math.random().toString(36).substr(2, 4).toUpperCase() + '-' + Math.floor(1000 + Math.random() * 9000);
-                localStorage.setItem('_gy_resident_id', clubID);
+        function identify() {
+            // COOKIE-RECOGNITION LOGIC
+            let trace = localStorage.getItem('gy_trace');
+            if (!trace) {
+                trace = 'GY-' + Math.random().toString(36).substr(2, 4).toUpperCase() + '-' + Math.floor(1000 + Math.random() * 9000);
+                localStorage.setItem('gy_trace', trace);
             }
-
-            document.getElementById('display-id').innerText = clubID;
-            
-            // Переход к карте
-            document.getElementById('charlie-void').classList.remove('active');
-            document.getElementById('identity-card').classList.add('active');
+            document.getElementById('user-id').innerText = trace;
+            document.getElementById('z1b').classList.remove('active');
+            document.getElementById('z1c').classList.add('active');
         }
 
-        // Инициализация системы при загрузке
-        window.onload = () => {
-            applyText();
-            console.log("GY-GY System: Trace listener active.");
-        };
+        window.onload = update;
     </script>
 </body>
 </html>
