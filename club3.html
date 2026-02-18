@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v1.9.5</title>
+    <title>GY-GY Club v1.9.6</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
@@ -12,41 +12,48 @@
         .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 10px; }
         .block.active { display: flex; }
 
-        /* ДВЕРЬ */
+        /* 1A: ДВЕРЬ */
         .door-container { cursor: pointer; transition: transform 2s, opacity 1s; }
         .door-open { transform: scale(3.5); opacity: 0; }
         .label-top { font-size: 13px; letter-spacing: 8px; margin-bottom: 20px; text-transform: uppercase; opacity: 0.8; }
 
-        /* ЧАРЛИ - СТРОГО ОДНО КОЛЬЦО */
-        .charlie-ring {
-            width: 170px; height: 170px; 
+        /* 1B: ЧАРЛИ - ТЕПЕРЬ СТРОГО ОДНО КОЛЬЦО */
+        .charlie-frame {
+            width: 170px; 
+            height: 170px; 
+            border: 1px solid #d4af37; /* Единственная граница */
             border-radius: 50%;
-            border: 1px solid #d4af37;
-            display: flex; justify-content: center; align-items: center;
+            overflow: hidden; /* Чтобы фото не вылезало за границы круга */
             margin-bottom: 15px;
+            display: block;
         }
-        .charlie-img { width: 94%; height: 94%; border-radius: 50%; object-fit: cover; }
+        .charlie-img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            display: block;
+        }
 
         /* ТЕКСТЫ */
-        .private-tag { font-size: 10px; letter-spacing: 5px; text-transform: uppercase; margin-bottom: 5px; opacity: 0.6; }
+        .private-tag { font-size: 10px; letter-spacing: 5px; text-transform: uppercase; margin-bottom: 10px; opacity: 0.6; }
         .welcome-title { 
-            font-size: 3.2rem; 
+            font-size: 3.5rem; 
             color: #d4af37; 
-            margin: 0 0 30px 0; /* Увеличил отступ снизу, так как текста больше нет */
-            letter-spacing: 3px; 
+            margin: 0 0 35px 0; 
+            letter-spacing: 4px; 
             font-weight: normal;
         }
 
-        /* КНОПКИ */
+        /* КНОПКА */
         .btn-gold { 
             display: block; width: 100%; max-width: 220px; 
-            padding: 14px; background: transparent; 
+            padding: 15px; background: transparent; 
             border: 1px solid #d4af37; color: #d4af37; 
-            text-transform: uppercase; font-size: 10px; 
+            text-transform: uppercase; font-size: 11px; 
             letter-spacing: 3px; cursor: pointer; font-family: inherit;
         }
         
-        /* КАРТА */
+        /* 1C: КАРТА РЕЗИДЕНТА */
         .id-box { border: 1px solid #d4af37; padding: 25px; background: #050505; width: 90%; max-width: 300px; }
     </style>
 </head>
@@ -64,20 +71,20 @@
 
     <div id="block-welcome" class="block">
         <div class="private-tag">PRIVATE ENTRANCE</div>
-        <div class="charlie-ring">
+        <div class="charlie-frame">
             <img src="charlie.png" class="charlie-img">
         </div>
         <h1 class="welcome-title">WELCOME</h1>
-        <button class="btn-gold" onclick="showIdentity()">ПРОХОДИТЕ</button>
+        <button class="btn-gold" onclick="showIdentity()">PROCEED</button>
     </div>
 
     <div id="block-identity" class="block">
         <div class="id-box">
-            <div id="user-avatar" style="font-size:50px;">👤</div>
+            <div id="user-avatar" style="font-size:55px;">🥃</div>
             <div style="font-size:18px; margin:10px 0; letter-spacing: 3px;">RESIDENT</div>
             <div id="qrcode" style="background:#fff; padding:6px; width:112px; margin:15px auto; border-radius: 4px;"></div>
-            <button class="btn-gold" style="margin-bottom: 10px;" onclick="enterHall()">В ХОЛЛ</button>
-            <button class="btn-gold" onclick="closeClub()" style="border-color: #333; color: #555;">Выход</button>
+            <button class="btn-gold" style="margin-bottom: 10px;" onclick="enterHall()">ENTER HALL</button>
+            <button class="btn-gold" onclick="closeClub()" style="border-color: #333; color: #555;">EXIT</button>
         </div>
     </div>
 
@@ -100,8 +107,10 @@
             try { barSnd.volume = 0.15; barSnd.play(); } catch(e){}
             let id = localStorage.getItem('gy_id') || Math.floor(1000 + Math.random() * 9000);
             localStorage.setItem('gy_id', id);
+            
             const avatars = ['🥃','🎩','🍸','🚬','🎷','🎭'];
             document.getElementById('user-avatar').innerText = avatars[id % avatars.length];
+            
             if (typeof QRCode !== "undefined") {
                 document.getElementById("qrcode").innerHTML = "";
                 new QRCode(document.getElementById("qrcode"), { text: "GY-ID:"+id, width: 100, height: 100 });
@@ -110,8 +119,8 @@
         }
 
         function enterHall() { 
-            // Здесь будет логика перехода в Холл
-            alert("Входим в Холл..."); 
+            // Здесь будет переход в финальный холл
+            console.log("Entering Hall...");
         }
         
         function closeClub() {
