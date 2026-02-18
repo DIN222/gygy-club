@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GY-GY Club</title>
     <style>
-        /* (6) УДАЛЕНИЕ МОБИЛЬНОГО МУСОРА И ОРЕОЛОВ */
+        /* (6) УДАЛЕНИЕ СИСТЕМНОГО ШУМА */
         * {
             -webkit-tap-highlight-color: transparent;
             -webkit-touch-callout: none;
@@ -35,8 +35,9 @@
             flex-direction: column; 
             justify-content: center; 
             align-items: center; 
-            position: absolute;
         }
+        
+        /* КРИТИЧЕСКИЙ КЛАСС ДЛЯ ОТОБРАЖЕНИЯ */
         .active { display: flex !important; }
 
         /* (5.3) СЕЛЕКТОР ЯЗЫКОВ */
@@ -55,7 +56,7 @@
         .lang-item { cursor: pointer; color: #d4af37; transition: 0.3s; }
         .active-lang { color: #fff !important; text-shadow: 0 0 8px #d4af37; font-weight: bold; }
 
-        /* (1A) ДВЕРЬ - КРУПНЫЙ ШРИФТ */
+        /* (1A) ДВЕРЬ */
         #door-sign {
             font-size: clamp(3.5rem, 15vw, 6rem);
             letter-spacing: 18px;
@@ -75,10 +76,11 @@
             transition: opacity 1.2s ease, transform 1.5s ease;
         }
 
+        /* АНИМАЦИИ */
         .door-fade { opacity: 0; transform: scale(1.15); }
         .sign-fade { opacity: 0; filter: blur(30px); }
 
-        /* (1B) ЧАРЛИ - ОДНО КОЛЬЦО */
+        /* (1B) ЧАРЛИ */
         .charlie-ring {
             width: 120px;
             height: 120px;
@@ -150,14 +152,14 @@
         <h2 style="letter-spacing: 12px; font-weight: normal; margin: 0; font-size: 2rem;">ЧАРЛИ</h2>
         <div class="welcome-label">WELCOME</div>
         <p id="charlie-text" style="margin-top: 40px; max-width: 320px; font-style: italic; line-height: 1.7; font-size: 1.1rem;"></p>
-        <button class="btn-frame" id="btn-who" onclick="showIdentity()">ПРЕДЪЯВИТЬ</button>
+        <button class="btn-frame" id="btn-who" onclick="showIdentity()"></button>
     </section>
 
     <section id="zone-1c" class="zone">
         <div class="id-card">
             <div id="card-label" style="font-size: 0.8rem; opacity: 0.5; letter-spacing: 3px; margin-bottom: 20px;"></div>
             <div style="font-size: 2rem; margin: 20px 0; letter-spacing: 5px; color: #fff;" id="user-id-val">---</div>
-            <button class="btn-frame" id="btn-next" onclick="alert('Entering Hall...')"></button>
+            <button class="btn-frame" id="btn-next" onclick="alert('Proceeding to Hall...')"></button>
         </div>
     </section>
 
@@ -165,12 +167,12 @@
         const i18n = {
             RU: { enter: "ВОЙТИ", charlie: "Ваш след считан. <br>Поздравляю, вы участник клуба.", who: "ПРЕДЪЯВИТЬ", card: "КАРТА РЕЗИДЕНТА", next: "ДАЛЕЕ" },
             UA: { enter: "УВІЙТИ", charlie: "Ваш слід зчитано. <br>Вітаю, ви учасник клубу.", who: "ПРЕД'ЯВИТИ", card: "КАРТА РЕЗИДЕНТА", next: "ДАЛІ" },
-            EN: { enter: "ENTER", charlie: "Your trace is read. <br>Congratulations, you are a participant of the club.", who: "PRESENT ID", card: "RESIDENT CARD", next: "NEXT" },
-            ES: { enter: "ENTRAR", charlie: "Rastro leído. <br>Felicidades, eres participante del club.", who: "PRESENTAR", card: "TARJETA RESIDENTE", next: "SIGUIENTE" },
-            FR: { enter: "ENTRER", charlie: "Trace lue. <br>Félicitations, vous êtes participant du club.", who: "PRÉSENTER", card: "CARTE RÉSIDENT", next: "SUIVANT" },
-            DE: { enter: "EINTRETEN", charlie: "Spur gelesen. <br>Glückwunsch, Sie sind Teilnehmer am Club.", who: "VORWEISEN", card: "RESIDENTENKARTE", next: "WEITER" },
-            IT: { enter: "ENTRARE", charlie: "Traccia letta. <br>Congratulazioni, sei un partecipante del club.", who: "PRESENTARE", card: "CARTA RESIDENTE", next: "AVANTI" },
-            PT: { enter: "ENTRAR", charlie: "Rastro lido. <br>Parabéns, você é participante do clube.", who: "APRESENTAR", card: "CARTÃO RESIDENTE", next: "PRÓXIMO" }
+            EN: { enter: "ENTER", charlie: "Your trace is read. <br>Congratulations, you are a participant.", who: "PRESENT ID", card: "RESIDENT CARD", next: "NEXT" },
+            ES: { enter: "ENTRAR", charlie: "Rastro leído. <br>Felicidades, eres participante.", who: "PRESENTAR", card: "TARJETA RESIDENTE", next: "SIGUIENTE" },
+            FR: { enter: "ENTRER", charlie: "Trace lue. <br>Félicitations, vous êtes participant.", who: "PRÉSENTER", card: "CARTE RÉSIDENT", next: "SUIVANT" },
+            DE: { enter: "EINTRETEN", charlie: "Spur gelesen. <br>Glückwunsch, Sie sind Teilnehmer.", who: "VORWEISEN", card: "RESIDENTENKARTE", next: "WEITER" },
+            IT: { enter: "ENTRARE", charlie: "Traccia letta. <br>Congratulazioni, sei un partecipante.", who: "PRESENTARE", card: "CARTA RESIDENTE", next: "AVANTI" },
+            PT: { enter: "ENTRAR", charlie: "Rastro lido. <br>Parabéns, você é participante.", who: "APRESENTAR", card: "CARTÃO RESIDENTE", next: "PRÓXIMO" }
         };
 
         let currentLang = 'RU';
@@ -216,8 +218,8 @@
             document.getElementById('zone-1c').classList.add('active');
         }
 
-        // Запуск
-        updateTexts();
+        // ПРИНУДИТЕЛЬНЫЙ ЗАПУСК
+        window.onload = updateTexts;
     </script>
 </body>
 </html>
