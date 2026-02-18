@@ -4,124 +4,155 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GY-GY Club</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
-        /* Тот самый строгий CSS без лишних градиентов */
-        * { -webkit-tap-highlight-color: transparent; outline: none; box-sizing: border-box; }
-        body { background: #000; color: #d4af37; font-family: 'Times New Roman', serif; margin: 0; overflow: hidden; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+        body { margin: 0; background: #000; color: #d4af37; font-family: 'Georgia', serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; }
         
-        .zone { display: none; flex-direction: column; align-items: center; width: 100%; position: absolute; }
-        .active { display: flex !important; }
+        .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 5; }
+        .block.active { display: flex; }
 
-        /* ЯЗЫКИ */
-        .lang-panel { position: absolute; top: 20px; display: flex; gap: 15px; opacity: 0.5; z-index: 1000; }
-        .lang-node { cursor: pointer; font-size: 0.7rem; letter-spacing: 1px; }
-        .active-ln { color: #fff; text-shadow: 0 0 5px #d4af37; }
+        /* ДВЕРЬ */
+        .door-container { border: 2px solid #d4af37; padding: 12px; background: #050505; cursor: pointer; transition: transform 2s, opacity 1s; }
+        .door-open { transform: scale(3.5); opacity: 0; }
+        .label-top { font-size: 16px; letter-spacing: 12px; margin-bottom: 30px; text-transform: uppercase; color: #d4af37; }
 
-        /* ВХОДНАЯ ГРУППА */
-        .door-title { font-size: clamp(3.5rem, 15vw, 6rem); letter-spacing: 20px; margin-bottom: 50px; transition: 4s ease; }
-        .door-frame { width: 180px; height: 280px; border: 1px solid #d4af37; display: flex; justify-content: center; align-items: center; transition: 1.5s ease; }
+        /* ЧАРЛИ БЕЗ ОРЕОЛА */
+        .charlie-img { 
+            width: 220px; height: 220px; 
+            border-radius: 50%; 
+            border: 2px solid #d4af37; 
+            object-fit: cover; 
+            margin-bottom: 20px;
+            display: block;
+            background: black; /* Чтобы не просвечивал фон */
+        }
 
-        /* ЧАРЛИ */
-        .charlie-ring { width: 120px; height: 120px; border: 1px solid #d4af37; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-bottom: 10px; font-size: 2.5rem; }
-        .welcome-label { font-family: 'Courier New', Courier, monospace; font-size: 1.1rem; letter-spacing: 6px; opacity: 0.7; }
+        /* ХОЛЛ */
+        .hall-bg { width: 100%; height: 100%; background: radial-gradient(circle at 50% 20%, rgba(255, 230, 150, 0.2) 0%, transparent 70%), linear-gradient(180deg, #2a1e12 0%, #1a120b 100%); display: flex; flex-direction: column; align-items: center; position: relative; }
+        .parquet { position: absolute; bottom: 0; width: 100%; height: 25%; background: #3d2b1f; border-top: 2px solid #5d4634; z-index: 1; }
+        .frame { width: 75px; height: 100px; border: 3px solid #d4af37; background: #000; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        .frame img { width: 100%; height: 100%; object-fit: cover; }
+        .arch { width: 150px; height: 250px; border: 6px solid #d4af37; border-bottom: none; border-radius: 75px 75px 0 0; position: relative; background: #0a0a0a; }
 
-        /* КНОПКА-РАМКА */
-        .btn-frame { border: 1px solid #d4af37; background: transparent; color: #d4af37; padding: 12px 40px; cursor: pointer; letter-spacing: 3px; font-size: 0.8rem; margin-top: 50px; text-transform: uppercase; font-family: inherit; }
-
-        /* КАРТА */
-        .id-card { border: 1px double #d4af37; padding: 50px; min-width: 300px; background: rgba(5,5,5,0.9); }
-
-        /* ЭФФЕКТЫ */
-        .vanish-frame { opacity: 0; transform: scale(1.1); }
-        .vanish-sign { opacity: 0; filter: blur(30px); }
+        /* КНОПКИ */
+        .btn-gold { display: block; width: 85%; max-width: 260px; margin: 15px auto; padding: 15px; background: transparent; border: 2px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 11px; letter-spacing: 2px; cursor: pointer; font-family: 'Georgia', serif; font-weight: bold; }
+        .btn-gold:active { background: #d4af37; color: #000; }
     </style>
 </head>
 <body>
 
-    <div class="lang-panel" id="ln-bar">
-        <span class="lang-node active-ln" onclick="setL('RU', this)">RU</span>
-        <span class="lang-node" onclick="setL('UA', this)">UA</span>
-        <span class="lang-node" onclick="setL('EN', this)">EN</span>
-        <span class="lang-node" onclick="setL('ES', this)">ES</span>
-        <span class="lang-node" onclick="setL('FR', this)">FR</span>
-        <span class="lang-node" onclick="setL('DE', this)">DE</span>
-        <span class="lang-node" onclick="setL('IT', this)">IT</span>
-        <span class="lang-node" onclick="setL('PT', this)">PT</span>
+    <audio id="door-sound" preload="auto"><source src="door_open.mp3" type="audio/mpeg"></audio>
+    <audio id="bar-sound" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
+
+    <div id="block-entrance" class="block active">
+        <div class="label-top">GY-GY PRIVATE</div>
+        <div id="door-frame" class="door-container" onclick="handleDoor()">
+            <img src="door_1.jpg" style="width: 70vw; max-width: 300px; display: block;">
+        </div>
     </div>
 
-    <section id="z1a" class="zone active">
-        <h1 class="door-title" id="t1">GY-GY</h1>
-        <div class="door-frame" id="f1">
-            <button class="btn-frame" id="b1" onclick="run()"></button>
-        </div>
-    </section>
+    <div id="block-welcome" class="block">
+        <img src="charlie.png" class="charlie-img">
+        <h1 style="letter-spacing: 5px; margin-bottom: 20px;">WELCOME</h1>
+        <button class="btn-gold" onclick="showIdentity()">Identify Myself</button>
+    </div>
 
-    <section id="z1b" class="zone">
-        <div class="charlie-ring">🎩</div>
-        <h2 style="letter-spacing: 12px; font-weight: normal; margin: 0;">ЧАРЛИ</h2>
-        <div class="welcome-label">WELCOME</div>
-        <p id="speech" style="margin-top: 40px; max-width: 320px; font-style: italic; line-height: 1.7;"></p>
-        <button class="btn-frame" id="b2" onclick="identify()"></button>
-    </section>
-
-    <section id="z1c" class="zone">
-        <div class="id-card">
-            <div id="card-h" style="font-size: 0.7rem; opacity: 0.5; letter-spacing: 2px;"></div>
-            <div id="user-id" style="font-size: 2rem; margin: 30px 0; letter-spacing: 5px;">---</div>
-            <button class="btn-frame" id="b3"></button>
+    <div id="block-identity" class="block">
+        <div style="border: 2px solid #d4af37; padding: 25px; background: #0a0a0a; width: 90%; max-width: 340px;">
+            <div id="user-avatar" style="font-size:55px;">👤</div>
+            <div id="user-nick" style="font-size:22px; margin:10px 0; letter-spacing: 2px;">ELITE GUEST</div>
+            <div id="qrcode" style="background:#fff; padding:8px; width:116px; margin:15px auto; border-radius: 4px;"></div>
+            <button class="btn-gold" onclick="enterHall()">Grand Hall</button>
+            <button class="btn-gold" onclick="closeClub()" style="border-color: #444; color: #666; margin-top: 20px;">Exit</button>
         </div>
-    </section>
+    </div>
+
+    <div id="block-hall" class="block">
+        <div class="hall-bg">
+            <div style="font-size: 35px; margin-top: 25px; color: gold; opacity: 0.6;">🕯️</div>
+            <div style="display: flex; align-items: flex-end; justify-content: center; gap: 20px; margin-top: auto; margin-bottom: 7vh; z-index: 2; width: 98%;">
+                <div style="display:flex; flex-direction:column; gap:20px; margin-bottom:40px;">
+                    <div class="frame"><img src="masks.png"></div>
+                    <div class="frame">🎩</div>
+                </div>
+                <div class="arch">
+                    <div style="margin-top:25px; font-size:14px; letter-spacing:5px; font-weight: bold;">BAR</div>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:20px; margin-bottom:40px;">
+                    <div class="frame">🎙️</div>
+                    <div class="frame">⌨️</div>
+                </div>
+            </div>
+            <div class="parquet"></div>
+            <button class="btn-gold" style="margin-bottom: 30px; z-index:10;" onclick="switchTo('block-identity'); adjustVolume(0.15);">Back to Card</button>
+        </div>
+    </div>
 
     <script>
-        /* ТОТ САМЫЙ СКРИПТ С ПРАВИЛЬНОЙ ЛОГИКОЙ */
-        const i18n = {
-            RU: { b1: "ВОЙТИ", speech: "Ваш след считан. <br>Поздравляю, вы участник клуба.", b2: "ПРЕДЪЯВИТЬ", card: "КАРТА РЕЗИДЕНТА", b3: "ДАЛЕЕ" },
-            UA: { b1: "УВІЙТИ", speech: "Ваш слід зчитано. <br>Вітаю, ви учасник клубу.", b2: "ПРЕД'ЯВИТИ", card: "КАРТА РЕЗИДЕНТА", b3: "ДАЛІ" },
-            EN: { b1: "ENTER", speech: "Trace identified. <br>Congratulations, you are a participant.", b2: "PRESENT ID", card: "RESIDENT CARD", b3: "NEXT" }
-            // Другие языки добавляются сюда...
-        };
+        const doorSnd = document.getElementById('door-sound');
+        const barSnd = document.getElementById('bar-sound');
 
-        let currentL = 'RU';
-
-        function setL(l, el) {
-            currentL = l;
-            document.querySelectorAll('.lang-node').forEach(n => n.classList.remove('active-ln'));
-            el.classList.add('active-ln');
-            update();
+        function switchTo(id) {
+            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
         }
 
-        function update() {
-            const d = i18n[currentL] || i18n.RU;
-            document.getElementById('b1').innerText = d.b1;
-            document.getElementById('speech').innerHTML = d.speech;
-            document.getElementById('b2').innerText = d.b2;
-            document.getElementById('card-h').innerText = d.card;
-            document.getElementById('b3').innerText = d.b3;
+        function handleDoor() {
+            try { doorSnd.play(); } catch(e){}
+            document.getElementById('door-frame').classList.add('door-open');
+            setTimeout(() => switchTo('block-welcome'), 1200);
         }
 
-        function run() {
-            document.getElementById('ln-bar').style.opacity = '0';
-            document.getElementById('f1').classList.add('vanish-frame');
-            setTimeout(() => { document.getElementById('t1').classList.add('vanish-sign'); }, 1000);
-            setTimeout(() => {
-                document.getElementById('z1a').classList.remove('active');
-                document.getElementById('z1b').classList.add('active');
-            }, 4500);
-        }
-
-        function identify() {
-            // COOKIE-RECOGNITION LOGIC
-            let trace = localStorage.getItem('gy_trace');
-            if (!trace) {
-                trace = 'GY-' + Math.random().toString(36).substr(2, 4).toUpperCase() + '-' + Math.floor(1000 + Math.random() * 9000);
-                localStorage.setItem('gy_trace', trace);
+        function showIdentity() {
+            // Запуск фонового шума (тихо)
+            barSnd.volume = 0.15;
+            barSnd.play().catch(() => {});
+            
+            let id = localStorage.getItem('gy_id') || Math.floor(1000 + Math.random() * 9000);
+            localStorage.setItem('gy_id', id);
+            document.getElementById('user-avatar').innerText = ['🥃','🎩','🍸','🚬','🎷'][id % 5];
+            
+            if (typeof QRCode !== "undefined") {
+                document.getElementById("qrcode").innerHTML = "";
+                new QRCode(document.getElementById("qrcode"), { text: "GY-ID:"+id, width: 100, height: 100 });
             }
-            document.getElementById('user-id').innerText = trace;
-            document.getElementById('z1b').classList.remove('active');
-            document.getElementById('z1c').classList.add('active');
+            switchTo('block-identity');
         }
 
-        window.onload = update;
+        function adjustVolume(target) {
+            let current = barSnd.volume;
+            let step = target > current ? 0.02 : -0.02;
+            let interval = setInterval(() => {
+                current += step;
+                if ((step > 0 && current >= target) || (step < 0 && current <= target)) {
+                    barSnd.volume = target;
+                    clearInterval(interval);
+                } else {
+                    barSnd.volume = current;
+                }
+            }, 50);
+        }
+
+        function enterHall() {
+            adjustVolume(0.5);
+            switchTo('block-hall');
+        }
+
+        function closeClub() {
+            // 1. Попытка через официальный API Telegram
+            if (window.Telegram && window.Telegram.WebApp) {
+                window.Telegram.WebApp.close();
+            }
+            // 2. Попытка через протокол (для ПК и внешних браузеров)
+            setTimeout(() => {
+                window.location.href = "https://t.me/Sklad_Potok_Bot";
+            }, 300);
+            // 3. Прямой редирект для мобильных
+            setTimeout(() => {
+                window.open("tg://resolve?domain=Sklad_Potok_Bot", "_self");
+            }, 600);
+        }
     </script>
 </body>
 </html>
