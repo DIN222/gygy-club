@@ -96,4 +96,59 @@
     <script>
         const texts = {
             en: { nick: "MEMBER", res: "RESIDENT", slogan: "Tradition & Excellence" },
-            ru: { nick: "УЧАСТНИК", res: "РЕЗИДЕНТ",
+            ru: { nick: "УЧАСТНИК", res: "РЕЗИДЕНТ", slogan: "Традиции и Совершенство" },
+            uk: { nick: "УЧАСНИК", res: "РЕЗИДЕНТ", slogan: "Традиції та Досконалість" },
+            fr: { nick: "MEMBRE", res: "RÉSIDENT", slogan: "Tradition et Excellence" },
+            de: { nick: "MITGLIED", res: "RESIDENT", slogan: "Tradition & Exzellenz" },
+            es: { nick: "MIEMBRO", res: "RESIDENTE", slogan: "Tradición y Excelencia" },
+            it: { nick: "MEMBRO", res: "RESIDENTE", slogan: "Tradizione ed Eccellenza" },
+            pl: { nick: "CZŁONEK", res: "REZYDENT", slogan: "Tradycja i Doskonałość" }
+        };
+        const emojis = ['🎩','🎭','🕶️','🥃','🃏','🕵️','🍸','🚬'];
+
+        function go(id) {
+            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            if(id === 'b3') update();
+        }
+
+        function openDoor(el) {
+            document.getElementById('door-sound').play().catch(e => console.log("Audio waiting for click"));
+            el.classList.add('door-open');
+            setTimeout(() => go('b2'), 1200);
+        }
+
+        function update() {
+            let id = localStorage.getItem('gy_id') || Math.floor(1000 + Math.random()*9000);
+            let lang = localStorage.getItem('gy_l') || 'en';
+            let av = emojis[id % emojis.length];
+            
+            localStorage.setItem('gy_id', id);
+            const isOk = localStorage.getItem('gy_ok');
+            document.getElementById('nick').innerText = (isOk ? texts[lang].res : texts[lang].nick) + " #" + id;
+            document.getElementById('slogan').innerText = texts[lang].slogan;
+            document.getElementById('av').innerText = av;
+            
+            document.getElementById('qr').innerHTML = "";
+            new QRCode(document.getElementById("qr"), { text: "GY-ID:"+id, width: 100, height: 100 });
+        }
+
+        function enterHall() {
+            document.getElementById('bar-sound').play().catch(e => console.log("Audio waiting for interaction"));
+            go('b4');
+        }
+
+        function L(l) { localStorage.setItem('gy_l', l); update(); }
+        
+        function save() { 
+            localStorage.setItem('gy_ok', '1'); 
+            update(); 
+            setTimeout(enterHall, 800); 
+        }
+
+        function reset() { localStorage.clear(); location.reload(); }
+        
+        window.onload = () => { if(localStorage.getItem('gy_id')) update(); };
+    </script>
+</body>
+</html>
