@@ -1,208 +1,44 @@
 
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v2.2.4</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <style>
-        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-        body { margin: 0; background: #000; color: #d4af37; font-family: 'Times New Roman', Times, serif; text-align: center; min-height: 100vh; width: 100vw; overflow-x: hidden; }
-        
-        .block { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 15px; z-index: 1; }
-        .block.active { display: flex !important; z-index: 10; }
+<style>
+    /* Обновленная сетка языков для удобного нажатия */
+    .lang-grid { 
+        display: grid; 
+        grid-template-columns: repeat(4, 1fr); 
+        gap: 18px; /* Увеличенный разрыв */
+        margin-top: 25px; 
+        width: 100%;
+        max-width: 320px; /* Немного расширил контейнер */
+    }
+    
+    .lang-item { 
+        font-size: 13px; /* Чуть крупнее */
+        opacity: 0.7; 
+        cursor: pointer; 
+        padding: 8px 5px; /* Увеличенная область нажатия */
+        font-weight: bold; 
+        transition: all 0.2s ease;
+        border-bottom: 2px solid transparent;
+    }
+    
+    .lang-item.active { 
+        border-bottom: 2px solid #d4af37; 
+        opacity: 1; 
+        color: #fff; /* Выделение активного языка белым */
+    }
 
-        /* DOOR & LOGO ANIMATION */
-        .entrance-logo { opacity: 0.8; letter-spacing: 10px; margin-bottom: 30px; font-size: 16px; transition: opacity 1.2s ease, transform 1.2s ease; }
-        .door-container { cursor: pointer; transition: transform 2s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s; z-index: 20; position: relative; }
-        .door-img { width: 75vw; max-width: 350px; height: auto; display: block; pointer-events: none; border: 1px solid rgba(212, 175, 55, 0.2); }
-        
-        /* Состояние при открытии */
-        .door-opening .entrance-logo { opacity: 0; transform: scale(0.8); }
-        .door-opening .door-container { transform: scale(4); opacity: 0; pointer-events: none; }
+    /* Дополнительный отступ для ссылки выхода */
+    .exit-link { 
+        font-size: 11px; 
+        opacity: 0.5; 
+        cursor: pointer; 
+        text-transform: uppercase; 
+        margin-top: 25px; 
+        letter-spacing: 2px;
+        display: inline-block;
+        padding: 10px;
+    }
 
-        /* CHARLIE & WELCOME */
-        .charlie-portrait { width: 280px; height: 280px; margin-bottom: 20px; overflow: hidden; border-radius: 4px; }
-        .charlie-portrait img { width: 100%; height: 100%; object-fit: cover; }
-        .welcome-text { font-size: 3rem; letter-spacing: 10px; margin: 0 0 25px 0; font-weight: normal; opacity: 0.9; }
-
-        /* TERMINAL */
-        .terminal-grid { display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 20px; width: 100%; max-width: 850px; }
-        .panel { flex: 1; min-width: 280px; display: flex; flex-direction: column; align-items: center; padding: 15px; }
-        .panel-setup { border-right: 1px solid rgba(212, 175, 55, 0.3); }
-
-        /* PHOTO SLOT - БЕЛЫЙ ФОН */
-        .photo-slot { 
-            width: 130px; height: 130px; border: 2px solid #d4af37; 
-            margin-top: 15px; position: relative; cursor: pointer;
-            background: #ffffff; /* Теперь белый для контраста */
-            display: flex; align-items: center; justify-content: center;
-            overflow: hidden;
-        }
-        .photo-slot img { width: 100%; height: 100%; object-fit: cover; position: absolute; z-index: 2; }
-        /* Текст внутри слота теперь темный, чтобы читаться на белом */
-        .photo-slot span { font-size: 10px; padding: 5px; text-transform: uppercase; color: #333; font-weight: bold; line-height: 1.4; z-index: 1; }
-
-        .btn-gold { 
-            width: 100%; max-width: 220px; padding: 14px; background: transparent; 
-            border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; 
-            font-size: 13px; letter-spacing: 2px; cursor: pointer; font-family: inherit; margin: 8px 0;
-        }
-        .btn-reset { border: none; opacity: 0.6; font-size: 11px; text-decoration: underline; }
-        
-        .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 20px; }
-        .lang-item { font-size: 12px; opacity: 0.7; cursor: pointer; padding: 5px; font-weight: bold; }
-        .lang-item.active { border-bottom: 2px solid #d4af37; opacity: 1; }
-
-        @media (max-width: 650px) { 
-            .terminal-grid { flex-direction: column; } 
-            .panel-setup { border-right: none; border-bottom: 1px solid rgba(212, 175, 55, 0.3); } 
-            .charlie-portrait { width: 240px; height: 240px; }
-            .welcome-text { font-size: 2.2rem; }
-        }
-    </style>
-</head>
-<body>
-
-    <audio id="door-sound" preload="auto"><source src="door_open.mp3" type="audio/mpeg"></audio>
-    <audio id="bar-sound" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
-
-    <div id="block-entrance" class="block active">
-        <div class="entrance-logo">GY-GY PRIVATE</div>
-        <div class="door-container" onclick="handleDoor()">
-            <img src="door_1.jpg" class="door-img">
-        </div>
-    </div>
-
-    <div id="block-welcome" class="block">
-        <div class="charlie-portrait">
-            <img src="charlie.png">
-        </div>
-        <h1 class="welcome-text">WELCOME</h1>
-        <button class="btn-gold" onclick="startTerminal()">PROCEED</button>
-    </div>
-
-    <div id="block-identity" class="block">
-        <div class="terminal-grid">
-            <div class="panel panel-setup">
-                <div style="font-size: 14px; letter-spacing: 3px; margin-bottom: 15px; font-weight: bold;">ВАШ ВЫБОР</div>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <div onclick="changeAvatar(-1)" style="cursor:pointer; font-size:28px; padding:10px;">&#10094;</div>
-                    <div id="user-avatar" style="font-size:50px;">🥃</div>
-                    <div onclick="changeAvatar(1)" style="cursor:pointer; font-size:28px; padding:10px;">&#10095;</div>
-                </div>
-                <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
-                    <div onclick="changeID(-1)" style="cursor:pointer; font-size:28px; padding:10px;">&#10094;</div>
-                    <div id="label-res" style="font-size:22px; letter-spacing:3px;">№ 1000</div>
-                    <div onclick="changeID(1)" style="cursor:pointer; font-size:28px; padding:10px;">&#10095;</div>
-                </div>
-                <button class="btn-gold" onclick="saveChanges()">СОХРАНИТЬ</button>
-                <button class="btn-gold btn-reset" onclick="resetIdentity()">СБРОСИТЬ ВСЁ</button>
-            </div>
-
-            <div class="panel">
-                <div style="font-size: 14px; letter-spacing: 3px; margin-bottom: 15px; font-weight: bold;">КАРТА УЧАСТНИКА</div>
-                <div style="background:#fff; padding:8px; border-radius:4px;">
-                    <div id="qrcode"></div>
-                </div>
-                
-                <input type="file" id="file-input" style="display:none" accept="image/*" onchange="previewFile()">
-                <div class="photo-slot" onclick="document.getElementById('file-input').click()">
-                    <span id="t-photo-text">ЗАГРУЗИТЬ<br>ФОТОГРАФИЮ</span>
-                    <img id="photo-preview" src="" style="display:none">
-                </div>
-
-                <div id="hall-btn-box" style="display:none; width:100%; margin-top:15px;">
-                    <button class="btn-gold" style="background: rgba(212, 175, 55, 0.2) !important;" onclick="enterHall()">ВХОД В ХОЛЛ</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="lang-grid">
-            <div class="lang-item active">RU</div>
-            <div class="lang-item">EN</div>
-            <div class="lang-item">UA</div>
-            <div class="lang-item">FR</div>
-            <div class="lang-item">DE</div>
-            <div class="lang-item">PL</div>
-            <div class="lang-item">ES</div>
-            <div class="lang-item">IT</div>
-        </div>
-    </div>
-
-    <div id="block-hall" class="block">
-        <h1 style="font-size: 3.5rem; letter-spacing: 15px;">THE HALL</h1>
-        <p style="letter-spacing: 6px; opacity: 0.8; font-size: 14px;">PRIVATE MEMBER AREA</p>
-        <button class="btn-gold" style="margin-top:50px; border-style:double; width:260px;">ПРОЙТИ В БАР</button>
-    </div>
-
-    <script>
-        const barSnd = document.getElementById('bar-sound');
-        const doorSnd = document.getElementById('door-sound');
-        let currentID = 1000;
-        let currentAvIdx = 0;
-        const avatars = ['🥃','🎩','🍸','🚬','🎷','🎭','👔','💼','💎'];
-
-        function switchTo(id) {
-            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-        }
-
-        function handleDoor() {
-            doorSnd.play().catch(() => {});
-            // Активируем класс для синхронной анимации двери и логотипа
-            document.getElementById('block-entrance').classList.add('door-opening');
-            setTimeout(() => switchTo('block-welcome'), 1200);
-        }
-
-        function startTerminal() {
-            barSnd.volume = 0.2; barSnd.play().catch(() => {});
-            switchTo('block-identity');
-            updateDisplay();
-        }
-
-        function previewFile() {
-            const preview = document.getElementById('photo-preview');
-            const file = document.getElementById('file-input').files[0];
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                preview.src = reader.result;
-                preview.style.display = "block";
-                document.getElementById('t-photo-text').style.display = "none";
-            }
-            if (file) reader.readAsDataURL(file);
-        }
-
-        function updateDisplay() {
-            document.getElementById('user-avatar').innerText = avatars[currentAvIdx];
-            document.getElementById('label-res').innerText = "№ " + currentID;
-            const qrBox = document.getElementById("qrcode");
-            qrBox.innerHTML = "";
-            new QRCode(qrBox, { text: "GY-ID:"+currentID, width: 100, height: 100 });
-        }
-
-        function resetIdentity() {
-            currentID = 1000; currentAvIdx = 0;
-            updateDisplay();
-            const preview = document.getElementById('photo-preview');
-            const fileInput = document.getElementById('file-input');
-            const photoText = document.getElementById('t-photo-text');
-            preview.src = ""; preview.style.display = "none";
-            fileInput.value = ""; photoText.style.display = "block";
-            document.getElementById('hall-btn-box').style.display = 'none';
-        }
-
-        function saveChanges() { document.getElementById('hall-btn-box').style.display = 'block'; }
-        
-        function enterHall() { 
-            let vol = 0.2;
-            const fade = setInterval(() => { if (vol < 0.6) { vol += 0.02; barSnd.volume = vol; } else { clearInterval(fade); } }, 50);
-            switchTo('block-hall'); 
-        }
-
-        function changeAvatar(dir) { currentAvIdx = (currentAvIdx + dir + avatars.length) % avatars.length; updateDisplay(); }
-        function changeID(dir) { currentID = (currentID + (dir * 9) + 9000) % 9000 + 1000; updateDisplay(); }
-    </script>
-</body>
-</html>
+    @media (max-width: 650px) {
+        .lang-grid { gap: 20px; } /* Еще больше пространства на узких экранах */
+    }
+</style>
