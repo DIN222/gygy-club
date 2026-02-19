@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v2.2.3</title>
+    <title>GY-GY Club v2.2.4</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
@@ -13,51 +13,53 @@
         .block { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 15px; z-index: 1; }
         .block.active { display: flex !important; z-index: 10; }
 
-        /* DOOR */
+        /* DOOR & LOGO ANIMATION */
+        .entrance-logo { opacity: 0.8; letter-spacing: 10px; margin-bottom: 30px; font-size: 16px; transition: opacity 1.2s ease, transform 1.2s ease; }
         .door-container { cursor: pointer; transition: transform 2s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s; z-index: 20; position: relative; }
         .door-img { width: 75vw; max-width: 350px; height: auto; display: block; pointer-events: none; border: 1px solid rgba(212, 175, 55, 0.2); }
-        .door-open { transform: scale(4); opacity: 0; pointer-events: none; }
+        
+        /* Состояние при открытии */
+        .door-opening .entrance-logo { opacity: 0; transform: scale(0.8); }
+        .door-opening .door-container { transform: scale(4); opacity: 0; pointer-events: none; }
 
-        /* CHARLIE - ВЕРХНЕЕ РАСПОЛОЖЕНИЕ */
+        /* CHARLIE & WELCOME */
         .charlie-portrait { width: 280px; height: 280px; margin-bottom: 20px; overflow: hidden; border-radius: 4px; }
         .charlie-portrait img { width: 100%; height: 100%; object-fit: cover; }
+        .welcome-text { font-size: 3rem; letter-spacing: 10px; margin: 0 0 25px 0; font-weight: normal; opacity: 0.9; }
 
-        /* TERMINAL GRID */
+        /* TERMINAL */
         .terminal-grid { display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 20px; width: 100%; max-width: 850px; }
         .panel { flex: 1; min-width: 280px; display: flex; flex-direction: column; align-items: center; padding: 15px; }
         .panel-setup { border-right: 1px solid rgba(212, 175, 55, 0.3); }
 
-        .section-title { font-size: 14px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 15px; font-weight: bold; }
-        
+        /* PHOTO SLOT - БЕЛЫЙ ФОН */
         .photo-slot { 
-            width: 120px; height: 120px; border: 1px solid #d4af37; 
+            width: 130px; height: 130px; border: 2px solid #d4af37; 
             margin-top: 15px; position: relative; cursor: pointer;
-            background: rgba(212, 175, 55, 0.05);
+            background: #ffffff; /* Теперь белый для контраста */
             display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
         }
-        .photo-slot img { width: 100%; height: 100%; object-fit: cover; position: absolute; }
-        .photo-slot span { font-size: 10px; padding: 5px; text-transform: uppercase; opacity: 0.9; line-height: 1.4; }
+        .photo-slot img { width: 100%; height: 100%; object-fit: cover; position: absolute; z-index: 2; }
+        /* Текст внутри слота теперь темный, чтобы читаться на белом */
+        .photo-slot span { font-size: 10px; padding: 5px; text-transform: uppercase; color: #333; font-weight: bold; line-height: 1.4; z-index: 1; }
 
         .btn-gold { 
             width: 100%; max-width: 220px; padding: 14px; background: transparent; 
             border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; 
             font-size: 13px; letter-spacing: 2px; cursor: pointer; font-family: inherit; margin: 8px 0;
         }
-        .btn-reset { border: none; opacity: 0.6; font-size: 11px; text-decoration: underline; margin-top: 5px; }
-        .glow-btn { background: rgba(212, 175, 55, 0.2) !important; animation: pulse 2s infinite; font-weight: bold; }
+        .btn-reset { border: none; opacity: 0.6; font-size: 11px; text-decoration: underline; }
         
-        @keyframes pulse { 0% { box-shadow: 0 0 5px rgba(212,175,55,0.2); } 50% { box-shadow: 0 0 20px rgba(212,175,55,0.5); } 100% { box-shadow: 0 0 5px rgba(212,175,55,0.2); } }
-
         .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 20px; }
         .lang-item { font-size: 12px; opacity: 0.7; cursor: pointer; padding: 5px; font-weight: bold; }
         .lang-item.active { border-bottom: 2px solid #d4af37; opacity: 1; }
-
-        .exit-link { font-size: 11px; opacity: 0.5; cursor: pointer; text-transform: uppercase; margin-top: 20px; letter-spacing: 1px; }
 
         @media (max-width: 650px) { 
             .terminal-grid { flex-direction: column; } 
             .panel-setup { border-right: none; border-bottom: 1px solid rgba(212, 175, 55, 0.3); } 
             .charlie-portrait { width: 240px; height: 240px; }
+            .welcome-text { font-size: 2.2rem; }
         }
     </style>
 </head>
@@ -67,7 +69,7 @@
     <audio id="bar-sound" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active">
-        <div style="opacity: 0.8; letter-spacing: 10px; margin-bottom: 30px; font-size: 16px;">GY-GY PRIVATE</div>
+        <div class="entrance-logo">GY-GY PRIVATE</div>
         <div class="door-container" onclick="handleDoor()">
             <img src="door_1.jpg" class="door-img">
         </div>
@@ -77,14 +79,14 @@
         <div class="charlie-portrait">
             <img src="charlie.png">
         </div>
-        <h1 style="font-size: 2rem; letter-spacing: 6px; margin: 0 0 25px 0; font-weight: normal; opacity: 0.9;">WELCOME</h1>
+        <h1 class="welcome-text">WELCOME</h1>
         <button class="btn-gold" onclick="startTerminal()">PROCEED</button>
     </div>
 
     <div id="block-identity" class="block">
         <div class="terminal-grid">
             <div class="panel panel-setup">
-                <div class="section-title">ВАШ ВЫБОР</div>
+                <div style="font-size: 14px; letter-spacing: 3px; margin-bottom: 15px; font-weight: bold;">ВАШ ВЫБОР</div>
                 <div style="display:flex; align-items:center; gap:10px;">
                     <div onclick="changeAvatar(-1)" style="cursor:pointer; font-size:28px; padding:10px;">&#10094;</div>
                     <div id="user-avatar" style="font-size:50px;">🥃</div>
@@ -100,19 +102,19 @@
             </div>
 
             <div class="panel">
-                <div class="section-title">КАРТА УЧАСТНИКА</div>
+                <div style="font-size: 14px; letter-spacing: 3px; margin-bottom: 15px; font-weight: bold;">КАРТА УЧАСТНИКА</div>
                 <div style="background:#fff; padding:8px; border-radius:4px;">
                     <div id="qrcode"></div>
                 </div>
                 
                 <input type="file" id="file-input" style="display:none" accept="image/*" onchange="previewFile()">
                 <div class="photo-slot" onclick="document.getElementById('file-input').click()">
-                    <span id="t-photo-text">ЗАГРУЗИТЬ<br>ЛИЧНОЕ ФОТО</span>
+                    <span id="t-photo-text">ЗАГРУЗИТЬ<br>ФОТОГРАФИЮ</span>
                     <img id="photo-preview" src="" style="display:none">
                 </div>
 
                 <div id="hall-btn-box" style="display:none; width:100%; margin-top:15px;">
-                    <button class="btn-gold glow-btn" onclick="enterHall()">ВХОД В ХОЛЛ</button>
+                    <button class="btn-gold" style="background: rgba(212, 175, 55, 0.2) !important;" onclick="enterHall()">ВХОД В ХОЛЛ</button>
                 </div>
             </div>
         </div>
@@ -127,7 +129,6 @@
             <div class="lang-item">ES</div>
             <div class="lang-item">IT</div>
         </div>
-        <div class="exit-link" onclick="location.reload()">ВЫХОД ИЗ КЛУБА</div>
     </div>
 
     <div id="block-hall" class="block">
@@ -150,7 +151,8 @@
 
         function handleDoor() {
             doorSnd.play().catch(() => {});
-            document.querySelector('.door-container').classList.add('door-open');
+            // Активируем класс для синхронной анимации двери и логотипа
+            document.getElementById('block-entrance').classList.add('door-opening');
             setTimeout(() => switchTo('block-welcome'), 1200);
         }
 
@@ -192,6 +194,7 @@
         }
 
         function saveChanges() { document.getElementById('hall-btn-box').style.display = 'block'; }
+        
         function enterHall() { 
             let vol = 0.2;
             const fade = setInterval(() => { if (vol < 0.6) { vol += 0.02; barSnd.volume = vol; } else { clearInterval(fade); } }, 50);
