@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v2.0.8</title>
+    <title>GY-GY Club v2.0.9</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
@@ -13,119 +12,143 @@
         .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 10px; }
         .block.active { display: flex; }
 
-        /* ID CONTENT */
-        .id-content { width: 100%; max-width: 320px; display: flex; flex-direction: column; align-items: center; }
+        /* ГОРИЗОНТАЛЬНЫЙ КОНТЕЙНЕР */
+        .terminal-grid { 
+            display: flex; 
+            flex-direction: row; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+            gap: 20px; 
+            width: 100%; 
+            max-width: 800px;
+        }
+
+        /* ЛЕВАЯ ПАНЕЛЬ: ВЫБОР */
+        .panel-setup { flex: 1; min-width: 280px; display: flex; flex-direction: column; align-items: center; border-right: 1px solid rgba(212, 175, 55, 0.2); padding-right: 20px; }
         
-        .rotator-row { display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 5px; }
-        .arrow { font-size: 24px; cursor: pointer; padding: 10px; opacity: 0.8; user-select: none; color: #d4af37; }
-        #user-avatar { font-size: 55px; }
-        .reg-number { font-size: 18px; letter-spacing: 3px; margin-bottom: 5px; }
+        /* ПРАВАЯ ПАНЕЛЬ: КАРТА */
+        .panel-preview { flex: 1; min-width: 280px; display: flex; flex-direction: column; align-items: center; }
 
-        .quote-text { font-style: italic; font-size: 13px; margin: 10px 0 20px; line-height: 1.3; min-height: 32px; opacity: 0.9; }
+        .section-title { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 15px; opacity: 0.6; }
 
-        /* QR С АВАТАРОМ */
-        .qr-wrapper { position: relative; background: #fff; padding: 6px; border-radius: 4px; margin-bottom: 20px; transition: transform 0.3s; }
-        #qr-inner-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 18px; background: white; padding: 2px; line-height: 1; }
+        .rotator-row { display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 10px; }
+        .arrow { font-size: 20px; cursor: pointer; padding: 10px; color: #d4af37; transition: 0.2s; }
+        .arrow:active { transform: scale(1.3); }
+
+        #user-avatar { font-size: 50px; }
+        .reg-number { font-size: 18px; letter-spacing: 2px; }
+
+        /* QR И РАМКА ДЛЯ ФОТО */
+        .visual-block { position: relative; width: 110px; height: 110px; margin-bottom: 15px; }
+        .qr-wrapper { background: #fff; padding: 5px; border-radius: 4px; display: inline-block; position: relative; }
+        #qr-inner-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 16px; background: white; padding: 2px; }
+
+        .photo-frame { 
+            width: 100px; height: 100px; border: 1px dashed rgba(212, 175, 55, 0.4); 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 9px; padding: 10px; margin-top: 10px; cursor: pointer;
+        }
 
         /* КНОПКИ */
         .btn-gold { 
-            display: block; width: 100%; max-width: 220px; 
-            padding: 14px; background: transparent; 
-            border: 1px solid #d4af37; color: #d4af37; 
-            text-transform: uppercase; font-size: 11px; letter-spacing: 3px; cursor: pointer; font-family: inherit; margin: 5px auto;
-            transition: all 0.5s ease;
+            width: 100%; max-width: 200px; padding: 12px; background: transparent; 
+            border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; 
+            font-size: 10px; letter-spacing: 2px; cursor: pointer; font-family: inherit; margin: 8px 0;
         }
-        .btn-save { border-color: #d4af37; background: rgba(212, 175, 55, 0.1); }
         
-        /* Всплывающая кнопка Холла */
+        /* АНИМАЦИЯ ВХОДА */
         #btn-hall-container { 
-            height: 0; opacity: 0; overflow: hidden; transition: all 0.6s ease; width: 100%; 
+            display: none; width: 100%; justify-content: center;
+            animation: slideIn 0.8s ease forwards;
         }
-        #btn-hall-container.show { height: 60px; opacity: 1; margin-top: 10px; }
-
-        /* Языки и Выход */
-        .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; width: 100%; max-width: 240px; margin-top: 20px; }
-        .lang-item { font-size: 9px; cursor: pointer; opacity: 0.55; padding: 4px; }
-        .lang-item.active { opacity: 1; border-bottom: 1px solid #d4af37; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         
-        .btn-exit { font-size: 10px; letter-spacing: 2px; margin-top: 25px; opacity: 0.5; cursor: pointer; border: none; background: none; color: #d4af37; font-family: inherit; text-transform: uppercase; }
+        .glow-btn { 
+            background: rgba(212, 175, 55, 0.1) !important; 
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0% { box-shadow: 0 0 5px rgba(212,175,55,0.4); } 50% { box-shadow: 0 0 20px rgba(212,175,55,0.7); } 100% { box-shadow: 0 0 5px rgba(212,175,55,0.4); } }
+
+        .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-top: 15px; width: 220px; }
+        .lang-item { font-size: 9px; cursor: pointer; opacity: 0.55; padding: 5px; }
+        .lang-item.active { opacity: 1; border-bottom: 1px solid #d4af37; }
+
+        @media (max-width: 600px) { .terminal-grid { flex-direction: column; } .panel-setup { border-right: none; border-bottom: 1px solid rgba(212, 175, 55, 0.2); padding-bottom: 20px; padding-right: 0; } }
     </style>
 </head>
 <body>
 
-    <div id="block-welcome" class="block active">
-        <div style="width:170px; height:170px; border-radius:50%; border:1px solid #d4af37; overflow:hidden; margin-bottom:20px;">
-            <img src="charlie.png" style="width:100%; height:100%; object-fit:cover;">
-        </div>
-        <h1 style="font-size: 3.5rem; margin-bottom: 30px; letter-spacing: 5px;">WELCOME</h1>
-        <button class="btn-gold" onclick="showIdentity()">PROCEED</button>
-    </div>
-
-    <div id="block-identity" class="block">
-        <div class="id-content">
+    <div id="block-identity" class="block active">
+        <div class="terminal-grid">
             
-            <div class="rotator-row">
-                <div class="arrow" onclick="changeAvatar(-1)">&#10094;</div>
-                <div id="user-avatar">🥃</div>
-                <div class="arrow" onclick="changeAvatar(1)">&#10095;</div>
-            </div>
-
-            <div class="rotator-row">
-                <div class="arrow" onclick="changeID(-1)">&#10094;</div>
-                <div id="label-res" class="reg-number">№ 0000</div>
-                <div class="arrow" onclick="changeID(1)">&#10095;</div>
-            </div>
-
-            <div id="quote" class="quote-text">В каждой шутке есть доля виски</div>
-            
-            <div class="qr-wrapper">
-                <div id="qrcode"></div>
-                <div id="qr-inner-icon">🥃</div>
-            </div>
-            
-            <div id="ui-controls" style="width:100%;">
-                <div id="ui-edit-buttons">
-                    <button class="btn-gold btn-save" onclick="saveChanges()">CONFIRM & SAVE</button>
-                    <button class="btn-gold" onclick="cancelChanges()" style="border-color:#444; color:#666; font-size: 9px;">RESET</button>
-                </div>
+            <div class="panel-setup">
+                <div class="section-title" id="t-your-choice">ВАШ ВЫБОР</div>
                 
+                <div class="rotator-row">
+                    <div class="arrow" onclick="changeAvatar(-1)">&#10094;</div>
+                    <div id="user-avatar">🥃</div>
+                    <div class="arrow" onclick="changeAvatar(1)">&#10095;</div>
+                </div>
+
+                <div class="rotator-row">
+                    <div class="arrow" onclick="changeID(-1)">&#10094;</div>
+                    <div id="label-res" class="reg-number">№ 1000</div>
+                    <div class="arrow" onclick="changeID(1)">&#10095;</div>
+                </div>
+
+                <button class="btn-gold" id="btn-save" onclick="saveChanges()">СОХРАНИТЬ</button>
+                <button class="btn-gold" id="btn-reset" onclick="cancelChanges()" style="border:none; opacity:0.5; font-size:8px;">СБРОСИТЬ</button>
+            </div>
+
+            <div class="panel-preview">
+                <div class="section-title" id="t-resident-card">КАРТА РЕЗИДЕНТА</div>
+                
+                <div class="qr-wrapper">
+                    <div id="qrcode"></div>
+                    <div id="qr-inner-icon">🥃</div>
+                </div>
+
+                <div class="photo-frame" id="t-photo-frame">
+                    ПО ЖЕЛАНИЮ ВАШЕ ФОТО ИЛИ АВАТАР
+                </div>
+
                 <div id="btn-hall-container">
-                    <button id="btn-hall" class="btn-gold" style="background: #d4af37; color: #000; font-weight: bold;" onclick="enterHall()">ENTER HALL</button>
+                    <button id="btn-hall" class="btn-gold glow-btn" onclick="enterHall()">В ХОЛЛ</button>
                 </div>
             </div>
 
-            <div class="lang-grid">
-                <div class="lang-item active" onclick="setLang('ru')">RU</div>
-                <div class="lang-item" onclick="setLang('en')">EN</div>
-                <div class="lang-item" onclick="setLang('fr')">FR</div>
-                <div class="lang-item" onclick="setLang('de')">DE</div>
-                <div class="lang-item" onclick="setLang('pl')">PL</div>
-                <div class="lang-item" onclick="setLang('es')">ES</div>
-                <div class="lang-item" onclick="setLang('it')">IT</div>
-                <div class="lang-item" onclick="setLang('ua')">UA</div>
-            </div>
-
-            <button class="btn-exit" onclick="location.reload()">EXIT CLUB</button>
         </div>
+
+        <div class="lang-grid">
+            <div class="lang-item active" onclick="setLang('ru')">RU</div>
+            <div class="lang-item" onclick="setLang('en')">EN</div>
+            <div class="lang-item" onclick="setLang('fr')">FR</div>
+            <div class="lang-item" onclick="setLang('de')">DE</div>
+            <div class="lang-item" onclick="setLang('pl')">PL</div>
+            <div class="lang-item" onclick="setLang('es')">ES</div>
+            <div class="lang-item" onclick="setLang('it')">IT</div>
+            <div class="lang-item" onclick="setLang('ua')">UA</div>
+        </div>
+        
+        <div style="font-size:9px; opacity:0.4; margin-top:15px; cursor:pointer;" onclick="location.reload()" id="t-exit">ВЫХОД ИЗ КЛУБА</div>
     </div>
 
     <script>
         let currentID = 1000;
         let currentAvIdx = 0;
-        const avatars = ['🥃','🎩','🍸','🚬','🎷','🎭','👔','💼','💎','🍾'];
+        const avatars = ['🥃','🎩','🍸','🚬','🎷','🎭','👔','💼','💎','🍾','🎙️','🎲'];
         
         const translations = {
-            ru: { quote: "В каждой шутке есть доля виски", hall: "В ХОЛЛ", save: "СОХРАНИТЬ", reset: "СБРОСИТЬ", exit: "ВЫХОД" },
-            en: { quote: "In every joke there is a drop of whiskey", hall: "ENTER HALL", save: "CONFIRM & SAVE", reset: "RESET", exit: "EXIT" }
-            /* ... другие языки добавляются по аналогии ... */
+            ru: { choice: "ВАШ ВЫБОР", card: "КАРТА РЕЗИДЕНТА", save: "СОХРАНИТЬ", reset: "СБРОСИТЬ", hall: "В ХОЛЛ", photo: "ПО ЖЕЛАНИЮ ВАШЕ ФОТО ИЛИ АВАТАР", exit: "ВЫХОД ИЗ КЛУБА" },
+            en: { choice: "YOUR CHOICE", card: "RESIDENT CARD", save: "SAVE CHANGES", reset: "RESET", hall: "ENTER HALL", photo: "OPTIONAL: YOUR PHOTO OR AVATAR", exit: "EXIT CLUB" },
+            ua: { choice: "ВАШ ВИБІР", card: "КАРТА РЕЗИДЕНТА", save: "ЗБЕРЕГТИ", reset: "Скинути", hall: "В ХОЛ", photo: "ЗА БАЖАННЯМ ВАШЕ ФОТО АБО АВАТАР", exit: "ВИХІД З КЛУБУ" },
+            fr: { choice: "VOTRE CHOIX", card: "CARTE DE RÉSIDENT", save: "ENREGISTRER", reset: "RÉINITIALISER", hall: "AU SALON", photo: "OPTIONNEL: VOTRE PHOTO OU AVATAR", exit: "QUITTER LE CLUB" },
+            de: { choice: "IHRE WAHL", card: "RESIDENT-KARTE", save: "SPEICHERN", reset: "ZURÜCKSETZEN", hall: "ZUR HALLE", photo: "OPTIONAL: IHR FOTO ODER AVATAR", exit: "CLUB VERLASSEN" },
+            pl: { choice: "TWÓJ WYBÓR", card: "KARTA REZYDENTA", save: "ZAPISZ", reset: "RESET", hall: "DO HOLU", photo: "OPCJONALNIE: TWOJE ZDJĘCIE LUB AWATAR", exit: "WYJŚCIE Z KLUBU" },
+            es: { choice: "SU ELECCIÓN", card: "TARJETA DE RESIDENTE", save: "GUARDAR", reset: "REINICIAR", hall: "AL VESTÍBULO", photo: "OPCIONAL: SU FOTO O AVATAR", exit: "SALIR DEL CLUB" },
+            it: { choice: "LA TUA SCELTA", card: "CARTA RESIDENTE", save: "SALVA", reset: "RESET", hall: "AL SALONE", photo: "OPZIONALE: LA TUA FOTO O AVATAR", exit: "ESCI DAL CLUB" }
         };
-
-        function showIdentity() {
-            currentID = parseInt(localStorage.getItem('gy_id')) || Math.floor(1000 + Math.random() * 8999);
-            currentAvIdx = parseInt(localStorage.getItem('gy_av_idx')) || 0;
-            updateDisplay();
-            switchTo('block-identity');
-        }
 
         function updateDisplay() {
             document.getElementById('user-avatar').innerText = avatars[currentAvIdx];
@@ -134,11 +157,9 @@
             
             const qrBox = document.getElementById("qrcode");
             qrBox.innerHTML = "";
-            new QRCode(qrBox, { text: "GY-ID:"+currentID, width: 90, height: 90 });
+            new QRCode(qrBox, { text: "GY-ID:"+currentID, width: 100, height: 100 });
             
-            // Прячем вход в холл при любых изменениях, пока не нажато Save
-            document.getElementById('btn-hall-container').classList.remove('show');
-            document.getElementById('ui-edit-buttons').style.display = 'block';
+            document.getElementById('btn-hall-container').style.display = 'none';
         }
 
         function changeAvatar(dir) {
@@ -147,38 +168,35 @@
         }
 
         function changeID(dir) {
-            currentID = (currentID + (dir * 7) + 9000) % 9000 + 1000;
+            currentID = (currentID + (dir * 13) + 9000) % 9000 + 1000;
             updateDisplay();
         }
 
         function saveChanges() {
             localStorage.setItem('gy_id', currentID);
             localStorage.setItem('gy_av_idx', currentAvIdx);
-            
-            // Показываем кнопку входа
-            document.getElementById('ui-edit-buttons').style.display = 'none';
-            document.getElementById('btn-hall-container').classList.add('show');
+            document.getElementById('btn-hall-container').style.display = 'flex';
         }
 
         function cancelChanges() {
-            showIdentity();
+            currentID = 1000; currentAvIdx = 0;
+            updateDisplay();
         }
 
         function setLang(lang) {
             document.querySelectorAll('.lang-item').forEach(el => el.classList.toggle('active', el.innerText.toLowerCase() === lang));
             const t = translations[lang] || translations['en'];
-            document.getElementById('quote').innerText = t.quote;
+            document.getElementById('t-your-choice').innerText = t.choice;
+            document.getElementById('t-resident-card').innerText = t.card;
+            document.getElementById('btn-save').innerText = t.save;
+            document.getElementById('btn-reset').innerText = t.reset;
             document.getElementById('btn-hall').innerText = t.hall;
+            document.getElementById('t-photo-frame').innerText = t.photo;
+            document.getElementById('t-exit').innerText = t.exit;
         }
 
-        function switchTo(id) {
-            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-        }
-
-        function enterHall() { 
-            alert("Welcome to the Hall, Resident №" + currentID); 
-        }
+        // Инициализация
+        updateDisplay();
     </script>
 </body>
 </html>
