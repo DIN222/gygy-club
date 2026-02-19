@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v2.4.7</title>
+    <title>GY-GY Club v2.4.8</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
@@ -37,7 +37,7 @@
         }
         .btn-mini { padding: 4px; font-size: 8px; max-width: 90px; margin-top: 5px; opacity: 0.8; }
         
-        /* Кнопка ВХОД — лаконично и под Сохранить */
+        /* Кнопка ВХОД — теперь только в левой панели */
         #btn-to-hall { background: rgba(212, 175, 55, 0.15) !important; font-weight: bold; display: none; }
 
         #dynamic-quote { font-style: italic; font-size: 14px; opacity: 0.9; margin: 15px 0; min-height: 1.5em; max-width: 85%; }
@@ -45,13 +45,7 @@
         .lang-item { font-size: 11px; opacity: 0.5; cursor: pointer; padding: 5px; font-weight: bold; border-bottom: 2px solid transparent; }
         .lang-item.active { border-bottom: 2px solid #d4af37; opacity: 1; color: #fff; }
 
-        /* ПОКИНУТЬ КЛУБ */
-        .reset-key { 
-            font-size: 11px; color: #d4af37; opacity: 0.6; cursor: pointer; 
-            text-transform: uppercase; margin-top: 30px; text-decoration: underline; 
-            letter-spacing: 1px; pointer-events: auto;
-        }
-        .reset-key:hover { opacity: 1; }
+        .reset-key { font-size: 11px; color: #d4af37; opacity: 0.6; cursor: pointer; text-transform: uppercase; margin-top: 30px; text-decoration: underline; letter-spacing: 1px; pointer-events: auto; }
 
         @media (max-width: 600px) { 
             .terminal-grid { flex-direction: column; } 
@@ -139,8 +133,8 @@
             const saved = localStorage.getItem('gy_member_data');
             if(saved) {
                 const data = JSON.parse(saved);
-                currentID = parseInt(data.id);
-                currentAvIdx = parseInt(data.avIdx);
+                currentID = parseInt(data.id) || 1000;
+                currentAvIdx = parseInt(data.avIdx) || 0;
                 if(data.photo) {
                     const img = document.getElementById('photo-preview');
                     img.src = data.photo; img.style.display = "block";
@@ -159,6 +153,7 @@
         function startTerminal() {
             barSnd.volume = 0.2; barSnd.play().catch(() => {});
             switchTo('block-identity');
+            document.getElementById('btn-to-hall').style.display = 'none'; // Скрываем при входе
         }
 
         function saveChanges() {
@@ -169,7 +164,7 @@
                 photo: photoData.startsWith('data') ? photoData : null 
             };
             localStorage.setItem('gy_member_data', JSON.stringify(memberData));
-            // Просто показываем кнопку без анимаций
+            // Показываем кнопку "ВХОД", но не переключаем экран!
             document.getElementById('btn-to-hall').style.display = 'block';
         }
 
