@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v2.2.0</title>
+    <title>GY-GY Club v2.2.1</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
@@ -13,29 +13,26 @@
         .block { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 10px; z-index: 1; }
         .block.active { display: flex !important; z-index: 10; }
 
-        /* ВХОДНАЯ ГРУППА */
+        /* ВХОДНАЯ ДВЕРЬ */
         .door-container { cursor: pointer; transition: transform 2s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s; z-index: 20; position: relative; }
         .door-img { width: 75vw; max-width: 350px; height: auto; display: block; pointer-events: none; border: 1px solid rgba(212, 175, 55, 0.2); }
         .door-open { transform: scale(4); opacity: 0; pointer-events: none; }
 
-        /* ПРИВЕТСТВИЕ - БЕЗ КОЛЕЦ */
-        .charlie-portrait { width: 150px; height: 150px; margin-bottom: 20px; overflow: hidden; }
+        /* ПРИВЕТСТВИЕ - МАСШТАБИРОВАННЫЙ ЧАРЛИ */
+        .charlie-portrait { 
+            width: 280px; /* Увеличено с 150px */
+            height: 280px; 
+            margin-bottom: 25px; 
+            overflow: hidden;
+            border-radius: 4px; /* Легкое скругление для стиля */
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.05);
+        }
         .charlie-portrait img { width: 100%; height: 100%; object-fit: cover; }
 
         /* ТЕРМИНАЛ */
         .terminal-grid { display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 15px; width: 100%; max-width: 800px; }
         .panel { flex: 1; min-width: 250px; display: flex; flex-direction: column; align-items: center; padding: 10px; }
         .panel-setup { border-right: 1px solid rgba(212, 175, 55, 0.3); }
-
-        /* ФОТО */
-        .photo-slot { 
-            width: 105px; height: 105px; border: 1px solid #d4af37; 
-            margin-top: 10px; position: relative; cursor: pointer;
-            background: rgba(212, 175, 55, 0.05);
-            display: flex; align-items: center; justify-content: center;
-        }
-        .photo-slot img { width: 100%; height: 100%; object-fit: cover; position: absolute; }
-        .photo-slot span { font-size: 8px; padding: 5px; text-transform: uppercase; opacity: 0.9; }
 
         .btn-gold { 
             width: 100%; max-width: 180px; padding: 10px; background: transparent; 
@@ -51,7 +48,11 @@
         .lang-item { font-size: 9px; opacity: 0.7; cursor: pointer; padding: 3px; }
         .lang-item.active { border-bottom: 1px solid #d4af37; opacity: 1; }
 
-        @media (max-width: 650px) { .terminal-grid { flex-direction: column; } .panel-setup { border-right: none; border-bottom: 1px solid rgba(212, 175, 55, 0.3); } }
+        @media (max-width: 650px) { 
+            .terminal-grid { flex-direction: column; } 
+            .panel-setup { border-right: none; border-bottom: 1px solid rgba(212, 175, 55, 0.3); } 
+            .charlie-portrait { width: 220px; height: 220px; } /* Чуть меньше для мобильных */
+        }
     </style>
 </head>
 <body>
@@ -67,10 +68,10 @@
     </div>
 
     <div id="block-welcome" class="block">
+        <h1 style="font-size: 2.2rem; letter-spacing: 8px; margin: 0 0 20px 0; font-weight: normal;">WELCOME</h1>
         <div class="charlie-portrait">
             <img src="charlie.png">
         </div>
-        <h1 style="font-size: 2.8rem; letter-spacing: 5px; margin: 0 0 25px 0;">WELCOME</h1>
         <button class="btn-gold" onclick="startTerminal()">PROCEED</button>
     </div>
 
@@ -126,7 +127,7 @@
     <div id="block-hall" class="block">
         <h1 style="font-size: 3rem; letter-spacing: 15px;">THE HALL</h1>
         <p style="letter-spacing: 5px; opacity: 0.8; font-size: 12px;">PRIVATE MEMBER AREA</p>
-        <button class="btn-gold" style="margin-top:40px; border-style:double; width:220px;" onclick="alert('Proceeding...')">ПРОЙТИ В БАР</button>
+        <button class="btn-gold" style="margin-top:40px; border-style:double; width:220px;">ПРОЙТИ В БАР</button>
     </div>
 
     <script>
@@ -171,7 +172,6 @@
             document.getElementById('label-res').innerText = "№ " + currentID;
             const qrBox = document.getElementById("qrcode");
             qrBox.innerHTML = "";
-            // Генерируем только код, без вставки иконки поверх
             new QRCode(qrBox, { text: "GY-ID:"+currentID, width: 85, height: 85 });
         }
 
