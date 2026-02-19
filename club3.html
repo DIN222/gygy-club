@@ -1,80 +1,78 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v2.2.7</title>
+    <title>GY-GY Club v2.2.8</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-        body { margin: 0; background: #000; color: #d4af37; font-family: 'Times New Roman', Times, serif; text-align: center; min-height: 100vh; width: 100vw; overflow-x: hidden; }
+        body { margin: 0; background: #000; color: #d4af37; font-family: 'Times New Roman', Times, serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; }
         
-        /* Добавили гибкие отступы для блоков */
+        /* Блоки теперь занимают ровно высоту экрана и центрируют контент */
         .block { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
             display: none; flex-direction: column; align-items: center; 
-            justify-content: center; 
-            padding: 40px 20px; /* Увеличенные отступы сверху/снизу для ПК */
-            z-index: 1; 
+            justify-content: center; padding: 10px; z-index: 1; 
         }
         .block.active { display: flex !important; z-index: 10; }
 
         /* DOOR */
-        .entrance-logo { opacity: 0.8; letter-spacing: 10px; margin-bottom: 30px; font-size: 16px; transition: all 1.2s; }
-        .door-container { cursor: pointer; transition: transform 2s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s; z-index: 20; position: relative; }
-        .door-img { width: 75vw; max-width: 350px; height: auto; display: block; border: 1px solid rgba(212, 175, 55, 0.2); }
+        .entrance-logo { opacity: 0.8; letter-spacing: 10px; margin-bottom: 20px; font-size: 16px; transition: 1.2s; }
+        .door-container { cursor: pointer; transition: transform 2s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s; z-index: 20; }
+        .door-img { width: 70vw; max-width: 320px; height: auto; border: 1px solid rgba(212, 175, 55, 0.2); }
         .door-opening .entrance-logo { opacity: 0; transform: scale(0.8); }
         .door-opening .door-container { transform: scale(4); opacity: 0; }
 
-        /* CHARLIE */
-        .charlie-portrait { width: 280px; height: 280px; margin-bottom: 20px; border-radius: 4px; overflow: hidden; }
+        /* WELCOME SECTION - Сжато по вертикали */
+        .charlie-portrait { width: 250px; height: 250px; margin-bottom: 15px; border-radius: 4px; overflow: hidden; }
         .charlie-portrait img { width: 100%; height: 100%; object-fit: cover; }
-        .welcome-text { font-size: 2.2rem; letter-spacing: 8px; margin: 0 0 25px 0; font-weight: normal; opacity: 0.9; }
+        .welcome-text { font-size: 2rem; letter-spacing: 8px; margin: 0 0 15px 0; font-weight: normal; }
 
-        /* TERMINAL GRID */
+        /* TERMINAL GRID - Компактная структура */
         .terminal-grid { 
             display: flex; flex-direction: row; flex-wrap: wrap; 
-            justify-content: center; gap: 30px; /* Увеличил разрыв между панелями */
-            width: 100%; max-width: 900px; 
-            margin: 20px 0; /* Дополнительный отступ самой сетки */
+            justify-content: center; gap: 20px; 
+            width: 100%; max-width: 850px; 
         }
-        .panel { flex: 1; min-width: 300px; display: flex; flex-direction: column; align-items: center; padding: 15px; }
+        .panel { flex: 1; min-width: 260px; display: flex; flex-direction: column; align-items: center; padding: 5px; }
         .panel-setup { border-right: 1px solid rgba(212, 175, 55, 0.2); }
 
-        /* Зарезервированное место под кнопку (чуть компактнее) */
-        .action-area { height: 60px; width: 100%; display: flex; align-items: center; justify-content: center; margin-top: 5px; }
+        /* Компактное место под кнопку */
+        .action-area { height: 55px; width: 100%; display: flex; align-items: center; justify-content: center; margin-top: 5px; }
 
         .photo-slot { 
-            width: 130px; height: 130px; border: 2px solid #d4af37; 
-            margin-top: 15px; position: relative; cursor: pointer;
+            width: 110px; height: 110px; border: 2px solid #d4af37; 
+            margin-top: 10px; position: relative; cursor: pointer;
             background: #ffffff; display: flex; align-items: center; justify-content: center; overflow: hidden;
         }
         .photo-slot img { width: 100%; height: 100%; object-fit: cover; position: absolute; z-index: 2; }
-        .photo-slot span { font-size: 10px; padding: 5px; text-transform: uppercase; color: #333; font-weight: bold; z-index: 1; }
+        .photo-slot span { font-size: 9px; padding: 5px; text-transform: uppercase; color: #333; font-weight: bold; }
 
         .btn-gold { 
-            width: 100%; max-width: 220px; padding: 14px; background: transparent; 
+            width: 100%; max-width: 200px; padding: 12px; background: transparent; 
             border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; 
-            font-size: 13px; letter-spacing: 2px; cursor: pointer; font-family: inherit; margin: 8px 0;
-            transition: 0.3s;
+            font-size: 12px; letter-spacing: 2px; cursor: pointer; font-family: inherit; margin: 5px 0;
         }
-        .btn-gold:hover { background: rgba(212, 175, 55, 0.1); }
-        .btn-reset { border: none; opacity: 0.5; font-size: 11px; text-decoration: underline; margin: 0; }
-        .glow-btn { background: rgba(212, 175, 55, 0.25) !important; animation: pulse 2s infinite; font-weight: bold; }
+        .btn-reset { border: none; opacity: 0.5; font-size: 10px; text-decoration: underline; margin: 0; }
+        .glow-btn { background: rgba(212, 175, 55, 0.2) !important; animation: pulse 2s infinite; font-weight: bold; }
         
-        @keyframes pulse { 0% { box-shadow: 0 0 5px rgba(212,175,55,0.2); } 50% { box-shadow: 0 0 20px rgba(212,175,55,0.5); } 100% { box-shadow: 0 0 5px rgba(212,175,55,0.2); } }
+        @keyframes pulse { 0% { box-shadow: 0 0 5px rgba(212,175,55,0.2); } 50% { box-shadow: 0 0 15px rgba(212,175,55,0.4); } 100% { box-shadow: 0 0 5px rgba(212,175,55,0.2); } }
 
-        /* LANGUAGES */
-        .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 30px; width: 100%; max-width: 340px; }
-        .lang-item { font-size: 13px; opacity: 0.6; cursor: pointer; padding: 10px 5px; font-weight: bold; transition: 0.2s; border-bottom: 2px solid transparent; }
+        /* LANGUAGES - Подтянуты выше */
+        .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 15px; width: 100%; max-width: 300px; }
+        .lang-item { font-size: 12px; opacity: 0.6; cursor: pointer; padding: 6px 4px; font-weight: bold; transition: 0.2s; border-bottom: 2px solid transparent; }
         .lang-item.active { border-bottom: 2px solid #d4af37; opacity: 1; color: #fff; }
 
         @media (max-width: 650px) { 
-            .block { padding: 15px 10px; } /* Возвращаем компактность на мобилках */
-            .terminal-grid { flex-direction: column; gap: 15px; margin: 10px 0; } 
-            .panel-setup { border-right: none; border-bottom: 1px solid rgba(212, 175, 55, 0.2); padding-bottom: 20px; } 
-            .charlie-portrait { width: 240px; height: 240px; }
-            .lang-grid { margin-top: 15px; gap: 15px; }
+            .terminal-grid { flex-direction: column; gap: 10px; } 
+            .panel-setup { border-right: none; border-bottom: 1px solid rgba(212, 175, 55, 0.2); padding-bottom: 10px; } 
+            .charlie-portrait { width: 200px; height: 200px; }
+            .welcome-text { font-size: 1.8rem; }
+            .lang-grid { gap: 10px; margin-top: 10px; }
+            .photo-slot { width: 90px; height: 90px; }
+            #qrcode canvas, #qrcode img { width: 80px !important; height: 80px !important; }
         }
     </style>
 </head>
@@ -99,34 +97,32 @@
     <div id="block-identity" class="block">
         <div class="terminal-grid">
             <div class="panel panel-setup">
-                <div style="font-size: 14px; letter-spacing: 3px; margin-bottom: 15px; font-weight: bold;">ВАШ ВЫБОР</div>
-                <div style="display:flex; align-items:center; gap:12px;">
-                    <div onclick="changeAvatar(-1)" style="cursor:pointer; font-size:28px; padding:10px;">&#10094;</div>
-                    <div id="user-avatar" style="font-size:55px;">🥃</div>
-                    <div onclick="changeAvatar(1)" style="cursor:pointer; font-size:28px; padding:10px;">&#10095;</div>
+                <div style="font-size: 12px; letter-spacing: 2px; margin-bottom: 10px; font-weight: bold;">ВАШ ВЫБОР</div>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <div onclick="changeAvatar(-1)" style="cursor:pointer; font-size:24px; padding:5px;">&#10094;</div>
+                    <div id="user-avatar" style="font-size:45px;">🥃</div>
+                    <div onclick="changeAvatar(1)" style="cursor:pointer; font-size:24px; padding:5px;">&#10095;</div>
                 </div>
-                <div style="display:flex; align-items:center; gap:12px; margin-bottom:10px;">
-                    <div onclick="changeID(-1)" style="cursor:pointer; font-size:28px; padding:10px;">&#10094;</div>
-                    <div id="label-res" style="font-size:24px; letter-spacing:3px;">№ 1000</div>
-                    <div onclick="changeID(1)" style="cursor:pointer; font-size:28px; padding:10px;">&#10095;</div>
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:5px;">
+                    <div onclick="changeID(-1)" style="cursor:pointer; font-size:24px; padding:5px;">&#10094;</div>
+                    <div id="label-res" style="font-size:20px; letter-spacing:2px;">№ 1000</div>
+                    <div onclick="changeID(1)" style="cursor:pointer; font-size:24px; padding:5px;">&#10095;</div>
                 </div>
                 <button class="btn-gold" onclick="saveChanges()">СОХРАНИТЬ</button>
                 <button class="btn-gold btn-reset" onclick="resetIdentity()">СБРОСИТЬ ВСЁ</button>
-                
                 <div class="action-area" id="action-area-left">
                     <button id="btn-to-hall" class="btn-gold glow-btn" style="display:none;" onclick="enterHall()">ВХОД В ХОЛЛ</button>
                 </div>
             </div>
 
             <div class="panel">
-                <div style="font-size: 14px; letter-spacing: 3px; margin-bottom: 15px; font-weight: bold;">КАРТА УЧАСТНИКА</div>
-                <div style="background:#fff; padding:10px; border-radius:4px; box-shadow: 0 0 20px rgba(212,175,55,0.1);">
+                <div style="font-size: 12px; letter-spacing: 2px; margin-bottom: 10px; font-weight: bold;">КАРТА УЧАСТНИКА</div>
+                <div style="background:#fff; padding:8px; border-radius:4px;">
                     <div id="qrcode"></div>
                 </div>
-                
                 <input type="file" id="file-input" style="display:none" accept="image/*" onchange="previewFile()">
                 <div class="photo-slot" onclick="document.getElementById('file-input').click()">
-                    <span id="t-photo-text">ЗАГРУЗИТЬ<br>ФОТОГРАФИЮ</span>
+                    <span id="t-photo-text">ЗАГРУЗИТЬ<br>ФОТО</span>
                     <img id="photo-preview" src="" style="display:none">
                 </div>
             </div>
@@ -145,9 +141,9 @@
     </div>
 
     <div id="block-hall" class="block">
-        <h1 style="font-size: 3.5rem; letter-spacing: 15px;">THE HALL</h1>
-        <p style="letter-spacing: 6px; opacity: 0.8; font-size: 14px;">PRIVATE MEMBER AREA</p>
-        <button class="btn-gold" style="margin-top:50px; border-style:double; width:260px;" onclick="alert('Proceeding to Bar...')">ПРОЙТИ В БАР</button>
+        <h1 style="font-size: 3rem; letter-spacing: 12px;">THE HALL</h1>
+        <p style="letter-spacing: 5px; opacity: 0.8; font-size: 14px;">PRIVATE MEMBER AREA</p>
+        <button class="btn-gold" style="margin-top:30px; border-style:double; width:240px;">ПРОЙТИ В БАР</button>
     </div>
 
     <script>
@@ -191,7 +187,7 @@
             document.getElementById('label-res').innerText = "№ " + currentID;
             const qrBox = document.getElementById("qrcode");
             qrBox.innerHTML = "";
-            new QRCode(qrBox, { text: "GY-ID:"+currentID, width: 110, height: 110 });
+            new QRCode(qrBox, { text: "GY-ID:"+currentID, width: 90, height: 90 });
         }
 
         function resetIdentity() {
@@ -205,9 +201,7 @@
             document.getElementById('btn-to-hall').style.display = 'none';
         }
 
-        function saveChanges() { 
-            document.getElementById('btn-to-hall').style.display = 'block'; 
-        }
+        function saveChanges() { document.getElementById('btn-to-hall').style.display = 'block'; }
         
         function enterHall() { 
             let vol = 0.2;
@@ -220,5 +214,3 @@
     </script>
 </body>
 </html>
-
- 
