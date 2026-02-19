@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v2.5.2</title>
+    <title>GY-GY Club v2.5.3</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
@@ -40,14 +40,10 @@
         }
     </style>
 </head>
-<body>
+<body onload="initClub()">
 
-    <audio id="door-sound" preload="auto">
-        <source src="door_open.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="bar-sound" loop preload="auto">
-        <source src="bar_ambient.mp3" type="audio/mpeg">
-    </audio>
+    <audio id="door-sound" preload="auto"><source src="door_open.mp3" type="audio/mpeg"></audio>
+    <audio id="bar-sound" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active">
         <div style="letter-spacing: 10px; margin-bottom: 20px; font-size: 18px;">GY-GY PRIVATE</div>
@@ -57,151 +53,4 @@
     </div>
 
     <div id="block-welcome" class="block">
-        <div style="width: 220px; height: 220px; margin-bottom: 15px;"><img src="charlie.png" style="width:100%"></div>
-        <h1 style="letter-spacing: 8px;">WELCOME</h1>
-        <button class="btn-gold" onclick="startTerminal()">PROCEED</button>
-    </div>
-
-    <div id="block-identity" class="block">
-        <div class="terminal-grid">
-            <div class="panel panel-left">
-                <div style="font-size: 10px; letter-spacing: 2px; margin-bottom: 8px;">ВЫБРАТЬ</div>
-                <div style="display:flex; align-items:center; gap:20px; margin-bottom: 10px;">
-                    <div onclick="changeAvatar(-1)" style="cursor:pointer; font-size:26px;">&#10094;</div>
-                    <div id="user-avatar" style="font-size:45px;">🥃</div>
-                    <div onclick="changeAvatar(1)" style="cursor:pointer; font-size:26px;">&#10095;</div>
-                </div>
-                <div style="display:flex; align-items:center; gap:20px; margin-bottom: 15px;">
-                    <div onclick="changeID(-1)" style="cursor:pointer; font-size:22px;">&#10094;</div>
-                    <div id="label-res" style="font-size:18px; letter-spacing:2px;">№ 1000</div>
-                    <div onclick="changeID(1)" style="cursor:pointer; font-size:22px;">&#10095;</div>
-                </div>
-                
-                <button class="btn-gold" onclick="saveChanges()">СОХРАНИТЬ</button>
-                <button id="btn-to-hall" class="btn-gold" onclick="enterHall()">ВХОД</button>
-            </div>
-
-            <div class="panel">
-                <div style="font-size: 10px; letter-spacing: 2px; margin-bottom: 8px;">УЧАСТНИК КЛУБА</div>
-                <div style="background:#fff; padding:6px; border-radius:2px;"><div id="qrcode"></div></div>
-                <input type="file" id="file-input" style="display:none" accept="image/*" onchange="previewFile()">
-                <div class="photo-slot">
-                    <span id="t-photo-text">ФОТО</span>
-                    <img id="photo-preview" src="" style="display:none">
-                </div>
-                <button class="btn-gold btn-mini" onclick="document.getElementById('file-input').click()">ИЗМЕНИТЬ</button>
-            </div>
-        </div>
-
-        <div id="dynamic-quote">«В каждой шутке есть доля виски...»</div>
-
-        <div class="lang-grid">
-            <div class="lang-item active">RU</div>
-            <div class="lang-item">EN</div>
-            <div class="lang-item">UA</div>
-            <div class="lang-item">FR</div>
-            <div class="lang-item">DE</div>
-            <div class="lang-item">PL</div>
-            <div class="lang-item">ES</div>
-            <div class="lang-item">IT</div>
-        </div>
-        
-        <div class="reset-key" onclick="clearMagicKey()">ПОКИНУТЬ КЛУБ</div>
-    </div>
-
-    <div id="block-hall" class="block">
-        <h1 style="font-size: 2.5rem; letter-spacing: 10px;">THE HALL</h1>
-        <div id="hall-user-info" style="margin-top: 20px; font-size: 1.5rem; letter-spacing: 3px;"></div>
-        <button class="btn-gold" style="margin-top: 40px;" onclick="location.reload()">EXIT</button>
-    </div>
-
-    <script>
-        const avatars = ['🥃','🎩','🍸','🚬','🎷','🎭','👔','💼','💎'];
-        let currentID = 1000;
-        let currentAvIdx = 0;
-
-        window.onload = function() {
-            const saved = localStorage.getItem('gy_member_key_v2');
-            if (saved) {
-                const data = JSON.parse(saved);
-                currentID = parseInt(data.id) || 1000;
-                currentAvIdx = parseInt(data.avIdx) || 0;
-                if (data.photo) {
-                    const img = document.getElementById('photo-preview');
-                    img.src = data.photo; img.style.display = "block";
-                    document.getElementById('t-photo-text').style.display = "none";
-                }
-            }
-            updateDisplay();
-        };
-
-        function handleDoor() {
-            const sound = document.getElementById('door-sound');
-            if (sound) sound.play().catch(e => console.log("Sound block: " + e));
-            
-            document.getElementById('door-box').classList.add('door-opening');
-            setTimeout(() => switchTo('block-welcome'), 1500);
-        }
-
-        function startTerminal() {
-            const bar = document.getElementById('bar-sound');
-            if (bar) {
-                bar.volume = 0.2;
-                bar.play().catch(e => console.log("Ambient block: " + e));
-            }
-            switchTo('block-identity');
-            document.getElementById('btn-to-hall').style.display = 'none';
-        }
-
-        function saveChanges() {
-            const photoData = document.getElementById('photo-preview').src;
-            const finalData = {
-                id: currentID,
-                avIdx: currentAvIdx,
-                photo: photoData.startsWith('data') ? photoData : null
-            };
-            localStorage.setItem('gy_member_key_v2', JSON.stringify(finalData));
-            document.getElementById('btn-to-hall').style.display = 'block';
-        }
-
-        function enterHall() {
-            switchTo('block-hall');
-            document.getElementById('hall-user-info').innerText = avatars[currentAvIdx] + " №" + currentID;
-        }
-
-        function updateDisplay() {
-            document.getElementById('user-avatar').innerText = avatars[currentAvIdx];
-            document.getElementById('label-res').innerText = "№ " + currentID;
-            const qrContainer = document.getElementById("qrcode");
-            qrContainer.innerHTML = "";
-            if(window.QRCode) {
-                new QRCode(qrContainer, { text: "GY-" + currentID, width: 80, height: 80 });
-            }
-        }
-
-        function changeAvatar(dir) { currentAvIdx = (currentAvIdx + dir + avatars.length) % avatars.length; updateDisplay(); }
-        function changeID(dir) { currentID = (currentID + (dir * 9) + 9000) % 9000 + 1000; updateDisplay(); }
-
-        function switchTo(id) {
-            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-        }
-
-        function previewFile() {
-            const file = document.getElementById('file-input').files[0];
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                const img = document.getElementById('photo-preview');
-                img.src = reader.result; img.style.display = "block";
-                document.getElementById('t-photo-text').style.display = "none";
-            };
-            if (file) reader.readAsDataURL(file);
-        }
-
-        function clearMagicKey() {
-            localStorage.removeItem('gy_member_key_v2');
-            location.reload();
-        }
-    </script>
-</body>
-</html>
+        <div style="width: 220px; height: 220px; margin-bottom: 15px;"><img src="charlie.png" style="width:100%">
