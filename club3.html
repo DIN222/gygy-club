@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v2.0.4</title>
+    <title>GY-GY Club v2.0.5</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
@@ -12,33 +12,29 @@
         .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 10px; }
         .block.active { display: flex; }
 
-        /* 1A: ENTRANCE */
+        /* 1A: ENTRANCE - АНИМАЦИЯ ДВЕРИ */
         .door-container { cursor: pointer; transition: transform 2s, opacity 1s; }
         .door-open { transform: scale(3.5); opacity: 0; }
         .label-top { font-size: 13px; letter-spacing: 8px; margin-bottom: 20px; text-transform: uppercase; opacity: 0.8; }
 
-        /* 1C: ID CARD - INTERNATIONAL */
+        /* 1B: CHARLIE */
+        .charlie-wrapper { position: relative; width: 190px; height: 190px; margin-bottom: 25px; border-radius: 50%; overflow: hidden; border: 1.2px solid #d4af37; }
+        .charlie-img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.1); }
+        .welcome-title { font-size: 3.8rem; color: #d4af37; margin: 0 0 35px 0; letter-spacing: 6px; font-weight: normal; }
+
+        /* 1C: ID CARD */
         .id-content { width: 95%; max-width: 360px; display: flex; flex-direction: column; align-items: center; }
         
-        /* Языковая панель - 8 языков */
         .lang-grid { 
-            display: grid; 
-            grid-template-columns: repeat(4, 1fr); 
-            gap: 10px; 
-            margin-bottom: 20px; 
-            width: 100%; 
-            max-width: 280px;
+            display: grid; grid-template-columns: repeat(4, 1fr); 
+            gap: 10px; margin-bottom: 20px; width: 100%; max-width: 280px;
         }
-        .lang-item { font-size: 10px; letter-spacing: 1px; cursor: pointer; opacity: 0.4; transition: 0.3s; padding: 5px; }
+        .lang-item { font-size: 10px; letter-spacing: 1px; cursor: pointer; opacity: 0.4; transition: 0.3s; padding: 5px; border: 1px solid transparent; }
         .lang-item.active { opacity: 1; border: 1px solid #d4af37; border-radius: 4px; }
 
         #user-avatar { font-size: 60px; margin-bottom: 5px; }
         .resident-label { font-size: 16px; letter-spacing: 4px; margin-bottom: 10px; text-transform: uppercase; }
-        
-        .quote-text { 
-            font-style: italic; font-size: 14px; margin-bottom: 20px; 
-            line-height: 1.4; min-height: 42px; max-width: 280px; opacity: 0.9;
-        }
+        .quote-text { font-style: italic; font-size: 14px; margin-bottom: 20px; line-height: 1.4; min-height: 42px; max-width: 280px; opacity: 0.9; }
 
         .btn-gold { 
             display: block; width: 100%; max-width: 240px; 
@@ -52,6 +48,9 @@
 </head>
 <body>
 
+    <audio id="door-sound" preload="auto"><source src="door_open.mp3" type="audio/mpeg"></audio>
+    <audio id="bar-sound" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
+
     <div id="block-entrance" class="block active">
         <div class="label-top">GY-GY PRIVATE</div>
         <div id="door-frame" class="door-container" onclick="handleDoor()">
@@ -60,10 +59,10 @@
     </div>
 
     <div id="block-welcome" class="block">
-        <div class="charlie-wrapper" style="width:180px; height:180px; border-radius:50%; border:1px solid #d4af37; overflow:hidden; margin-bottom:20px;">
-            <img src="charlie.png" style="width:100%; height:100%; object-fit:cover;">
+        <div class="charlie-wrapper">
+            <img src="charlie.png" class="charlie-img">
         </div>
-        <h1 style="font-size: 3.5rem; margin: 0 0 30px 0; letter-spacing: 5px;">WELCOME</h1>
+        <h1 class="welcome-title">WELCOME</h1>
         <button class="btn-gold" onclick="showIdentity()">PROCEED</button>
     </div>
 
@@ -92,7 +91,9 @@
     </div>
 
     <script>
-        let currentLang = 'ru';
+        const doorSnd = document.getElementById('door-sound');
+        const barSnd = document.getElementById('bar-sound');
+
         const translations = {
             ru: { res: "RESIDENT", quote: "В каждой шутке есть доля виски", hall: "В ХОЛЛ", exit: "ВЫХОД" },
             en: { res: "RESIDENT", quote: "In every joke there is a drop of whiskey", hall: "ENTER HALL", exit: "EXIT" },
@@ -105,7 +106,6 @@
         };
 
         function setLang(lang) {
-            currentLang = lang;
             document.querySelectorAll('.lang-item').forEach(el => {
                 el.classList.toggle('active', el.innerText.toLowerCase() === lang);
             });
@@ -121,10 +121,13 @@
         }
 
         function handleDoor() {
+            try { doorSnd.play(); } catch(e){}
+            document.getElementById('door-frame').classList.add('door-open');
             setTimeout(() => switchTo('block-welcome'), 1200);
         }
 
         function showIdentity() {
+            try { barSnd.volume = 0.15; barSnd.play(); } catch(e){}
             let id = localStorage.getItem('gy_id') || Math.floor(1000 + Math.random() * 9000);
             localStorage.setItem('gy_id', id);
             const avatars = ['🥃','🎩','🍸','🚬','🎷','🎭','👔'];
@@ -135,6 +138,8 @@
             }
             switchTo('block-identity');
         }
+
+        function enterHall() { console.log("Entering Hall..."); }
 
         function closeClub() {
             if (window.Telegram && window.Telegram.WebApp) window.Telegram.WebApp.close();
