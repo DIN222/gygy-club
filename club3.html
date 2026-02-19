@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v2.3.6</title>
+    <title>GY-GY Club v2.3.7</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
@@ -17,41 +17,41 @@
         .door-img { width: 70vw; max-width: 300px; border: 1px solid rgba(212, 175, 55, 0.2); }
         .door-opening .door-container { transform: scale(4); opacity: 0; pointer-events: none; }
 
-        /* ПРИВЕТСТВИЕ */
-        .charlie-portrait { width: 200px; height: 200px; margin-bottom: 10px; border: 1px solid #d4af37; border-radius: 4px; overflow: hidden; }
-        .charlie-portrait img { width: 100%; height: 100%; object-fit: cover; }
-
         /* ТЕРМИНАЛ */
         .terminal-grid { display: flex; flex-direction: row; justify-content: center; gap: 5px; width: 100%; max-width: 650px; }
         .panel { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 10px; }
         .panel-left { border-right: 1px solid rgba(212, 175, 55, 0.2); }
 
         .photo-slot { 
-            width: 85px; height: 85px; border: 1px solid #d4af37; 
+            width: 90px; height: 90px; border: 1px solid #d4af37; 
             margin-top: 5px; position: relative; background: #fff; 
             display: flex; align-items: center; justify-content: center; overflow: hidden;
         }
         .photo-slot img { width: 100%; height: 100%; object-fit: cover; position: absolute; z-index: 2; }
-        .photo-slot span { font-size: 8px; color: #333; font-weight: bold; }
+        .photo-slot span { font-size: 9px; color: #333; font-weight: bold; }
 
         .btn-gold { 
             width: 100%; max-width: 160px; padding: 10px; background: transparent; 
             border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; 
             font-size: 10px; letter-spacing: 1px; cursor: pointer; margin: 5px 0; font-family: inherit;
         }
-        .btn-mini { padding: 4px; font-size: 8px; max-width: 85px; margin-top: 5px; opacity: 0.8; }
+        .btn-mini { padding: 4px; font-size: 8px; max-width: 90px; margin-top: 5px; opacity: 0.8; }
         .glow-btn { background: rgba(212, 175, 55, 0.2) !important; animation: pulse 2s infinite; font-weight: bold; }
+        
         @keyframes pulse { 0% { box-shadow: 0 0 5px rgba(212,175,55,0.2); } 50% { box-shadow: 0 0 15px rgba(212,175,55,0.4); } 100% { box-shadow: 0 0 5px rgba(212,175,55,0.2); } }
 
-        #dynamic-quote { font-style: italic; font-size: 13px; opacity: 0.8; margin: 10px 0; min-height: 1.5em; max-width: 90%; }
-        .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 5px; }
-        .lang-item { font-size: 10px; opacity: 0.5; cursor: pointer; padding: 3px; font-weight: bold; border-bottom: 2px solid transparent; }
+        /* ПАНЕЛЬ ЯЗЫКОВ (Улучшенная дистанция) */
+        #dynamic-quote { font-style: italic; font-size: 14px; opacity: 0.9; margin: 20px 0 15px 0; min-height: 1.5em; max-width: 85%; line-height: 1.3; }
+        .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px 20px; margin: 10px 0; }
+        .lang-item { font-size: 12px; opacity: 0.5; cursor: pointer; padding: 5px 10px; font-weight: bold; border-bottom: 2px solid transparent; transition: 0.3s; }
         .lang-item.active { border-bottom: 2px solid #d4af37; opacity: 1; color: #fff; }
-        .exit-club { font-size: 10px; opacity: 0.4; cursor: pointer; text-transform: uppercase; margin-top: 15px; text-decoration: underline; }
+
+        .exit-club { font-size: 11px; opacity: 0.4; cursor: pointer; text-transform: uppercase; margin-top: 25px; text-decoration: underline; letter-spacing: 1px; }
 
         @media (max-width: 600px) { 
             .terminal-grid { flex-direction: column; } 
-            .panel-left { border-right: none; border-bottom: 1px solid rgba(212, 175, 55, 0.1); }
+            .panel-left { border-right: none; border-bottom: 1px solid rgba(212, 175, 55, 0.1); padding-bottom: 15px; }
+            .lang-grid { gap: 10px 15px; }
         }
     </style>
 </head>
@@ -61,12 +61,14 @@
     <audio id="bar-sound" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active">
-        <div style="letter-spacing: 10px; margin-bottom: 20px;">GY-GY PRIVATE</div>
+        <div style="letter-spacing: 10px; margin-bottom: 20px; font-size: 18px;">GY-GY PRIVATE</div>
         <div class="door-container" onclick="handleDoor()"><img src="door_1.jpg" class="door-img"></div>
     </div>
 
     <div id="block-welcome" class="block">
-        <div class="charlie-portrait"><img src="charlie.png"></div>
+        <div style="width: 200px; height: 200px; margin-bottom: 10px; border: 1px solid #d4af37; overflow: hidden;">
+            <img src="charlie.png" style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
         <h1 style="letter-spacing: 8px;">WELCOME</h1>
         <button id="btn-proceed" class="btn-gold" onclick="startTerminal()">PROCEED</button>
     </div>
@@ -74,26 +76,26 @@
     <div id="block-identity" class="block">
         <div class="terminal-grid">
             <div class="panel panel-left">
-                <div id="h-select" style="font-size: 10px; letter-spacing: 2px; margin-bottom: 5px;">ВЫБРАТЬ</div>
-                <div style="display:flex; align-items:center; gap:15px; margin-bottom: 5px;">
-                    <div onclick="changeAvatar(-1)" style="cursor:pointer; font-size:24px;">&#10094;</div>
+                <div id="h-select" style="font-size: 10px; letter-spacing: 2px; margin-bottom: 8px;">ВЫБРАТЬ</div>
+                <div style="display:flex; align-items:center; gap:20px; margin-bottom: 10px;">
+                    <div onclick="changeAvatar(-1)" style="cursor:pointer; font-size:26px;">&#10094;</div>
                     <div id="user-avatar" style="font-size:45px;">🥃</div>
-                    <div onclick="changeAvatar(1)" style="cursor:pointer; font-size:24px;">&#10095;</div>
+                    <div onclick="changeAvatar(1)" style="cursor:pointer; font-size:26px;">&#10095;</div>
                 </div>
-                <div style="display:flex; align-items:center; gap:15px;">
-                    <div onclick="changeID(-1)" style="cursor:pointer; font-size:20px;">&#10094;</div>
+                <div style="display:flex; align-items:center; gap:20px;">
+                    <div onclick="changeID(-1)" style="cursor:pointer; font-size:22px;">&#10094;</div>
                     <div id="label-res" style="font-size:18px; letter-spacing:2px;">№ 1000</div>
-                    <div onclick="changeID(1)" style="cursor:pointer; font-size:20px;">&#10095;</div>
+                    <div onclick="changeID(1)" style="cursor:pointer; font-size:22px;">&#10095;</div>
                 </div>
-                <button id="btn-save" class="btn-gold" style="margin-top:15px;" onclick="saveChanges()">СОХРАНИТЬ</button>
+                <button id="btn-save" class="btn-gold" style="margin-top:20px;" onclick="saveChanges()">СОХРАНИТЬ</button>
             </div>
 
             <div class="panel">
-                <div id="h-member" style="font-size: 10px; letter-spacing: 2px; margin-bottom: 5px;">УЧАСТНИК КЛУБА</div>
-                <div style="background:#fff; padding:5px; border-radius:2px;"><div id="qrcode"></div></div>
+                <div id="h-member" style="font-size: 10px; letter-spacing: 2px; margin-bottom: 8px;">УЧАСТНИК КЛУБА</div>
+                <div style="background:#fff; padding:6px; border-radius:2px;"><div id="qrcode"></div></div>
                 
                 <input type="file" id="file-input" style="display:none" accept="image/*" onchange="previewFile()">
-                <div class="photo-slot" id="photo-box">
+                <div class="photo-slot">
                     <span id="t-photo-text">ФОТО</span>
                     <img id="photo-preview" src="" style="display:none">
                 </div>
@@ -114,7 +116,7 @@
             <div class="lang-item" onclick="setLang(this, 'it')">IT</div>
         </div>
         
-        <button id="btn-to-hall" class="btn-gold glow-btn" style="display:none; margin-top:10px;" onclick="switchTo('block-hall')">ВХОД В ХОЛЛ</button>
+        <button id="btn-to-hall" class="btn-gold glow-btn" style="display:none; margin-top:15px;" onclick="switchTo('block-hall')">ВХОД В ХОЛЛ</button>
         <div id="btn-exit" class="exit-club" onclick="location.reload()">ПОКИНУТЬ КЛУБ</div>
     </div>
 
