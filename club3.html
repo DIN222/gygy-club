@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v2.6.5</title>
+    <title>GY-GY Club v2.6.6</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
@@ -22,8 +22,9 @@
         .photo-slot { width: 90px; height: 90px; border: 1px solid #d4af37; margin-top: 5px; position: relative; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .photo-slot img { width: 100%; height: 100%; object-fit: cover; position: absolute; z-index: 2; }
 
-        .btn-gold { width: 100%; max-width: 160px; padding: 10px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 10px; letter-spacing: 1px; cursor: pointer; margin: 5px 0; font-family: inherit; }
+        .btn-gold { width: 100%; max-width: 160px; padding: 10px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 10px; letter-spacing: 1px; cursor: pointer; margin: 5px 0; font-family: inherit; transition: 0.2s; }
         #btn-to-hall { background: rgba(212, 175, 55, 0.3) !important; font-weight: bold; display: none; border: 2px solid #d4af37; }
+        .btn-saved { background: #d4af37 !important; color: #000 !important; }
 
         #dynamic-quote { font-style: italic; font-size: 13px; opacity: 0.9; margin: 10px 0; min-height: 1.2em; color: #d4af37; }
         
@@ -60,173 +61,4 @@
                     <div onclick="changeAvatar(1)" style="cursor:pointer; font-size:26px; padding:5px;">&#10095;</div>
                 </div>
                 <div style="display:flex; align-items:center; gap:20px; margin-bottom: 15px;">
-                    <div onclick="changeID(-1)" style="cursor:pointer; font-size:22px; padding:5px;">&#10094;</div>
-                    <div id="label-res" style="font-size:18px; letter-spacing:2px;">№ 1000</div>
-                    <div onclick="changeID(1)" style="cursor:pointer; font-size:22px; padding:5px;">&#10095;</div>
-                </div>
-                <button id="btn-save" class="btn-gold" onclick="saveChanges()">СОХРАНИТЬ</button>
-                <button id="btn-to-hall" class="btn-gold" onclick="enterHall()">ВХОД</button>
-            </div>
-            <div class="panel">
-                <div id="t-member" style="font-size: 10px; letter-spacing: 2px; margin-bottom: 8px;">УЧАСТНИК КЛУБА</div>
-                <div id="qrcode-container" style="background:#fff; padding:6px; border-radius:2px; margin-bottom: 10px;"></div>
-                <input type="file" id="file-input" style="display:none" accept="image/*" onchange="previewFile()">
-                <div class="photo-slot">
-                    <span id="t-photo-label" style="font-size:9px; color:#333; font-weight:bold;">ФОТО</span>
-                    <img id="photo-preview" src="" style="display:none">
-                </div>
-                <button id="btn-upload" class="btn-gold" style="font-size:8px; width:90px; padding:5px; margin-top:10px;" onclick="document.getElementById('file-input').click()">ИЗМЕНИТЬ</button>
-            </div>
-        </div>
-
-        <div id="dynamic-quote">«В каждой шутке есть доля виски...»</div>
-
-        <div class="lang-grid">
-            <div class="lang-item" onclick="updateLang('RU')">RU</div>
-            <div class="lang-item" onclick="updateLang('EN')">EN</div>
-            <div class="lang-item" onclick="updateLang('UA')">UA</div>
-            <div class="lang-item" onclick="updateLang('FR')">FR</div>
-            <div class="lang-item" onclick="updateLang('DE')">DE</div>
-            <div class="lang-item" onclick="updateLang('PL')">PL</div>
-            <div class="lang-item" onclick="updateLang('ES')">ES</div>
-            <div class="lang-item" onclick="updateLang('IT')">IT</div>
-        </div>
-        <div id="t-reset" style="margin-top:25px; opacity:0.3; font-size:9px; cursor:pointer;" onclick="clearMagicKey()">СБРОСИТЬ КЛЮЧ</div>
-    </div>
-
-    <div id="block-hall" class="block">
-        <h1 id="t-hall-title" style="font-size: 2.5rem; letter-spacing: 10px;">THE HALL</h1>
-        <div id="hall-user-info" style="font-size: 1.5rem; margin-top: 20px;"></div>
-        <button id="btn-exit" class="btn-gold" style="margin-top: 40px;" onclick="softExit()">EXIT</button>
-    </div>
-
-    <script>
-        const avatars = ['🥃','🎩','🍸','🚬','🎷','🎭','👔','💼','💎'];
-        let currentID = 1000;
-        let currentAvIdx = 0;
-        let currentLang = 'RU';
-
-        const i18n = {
-            RU: { choose: "ВЫБРАТЬ", save: "СОХРАНИТЬ", enter: "ВХОД", member: "УЧАСТНИК КЛУБА", photo: "ФОТО", change: "ИЗМЕНИТЬ", reset: "СБРОСИТЬ КЛЮЧ", hall: "ЗАЛ", exit: "ВЫХОД", quote: "«В каждой шутке есть доля виски...»" },
-            EN: { choose: "CHOOSE", save: "SAVE", enter: "ENTER", member: "CLUB MEMBER", photo: "PHOTO", change: "CHANGE", reset: "RESET KEY", hall: "THE HALL", exit: "EXIT", quote: "«In every joke there is a drop of whiskey...»" },
-            UA: { choose: "ОБРАТИ", save: "ЗБЕРЕГТИ", enter: "ВХІД", member: "УЧАСНИК КЛУБУ", photo: "ФОТО", change: "ЗМІНИТИ", reset: "СКИНУТИ КЛЮЧ", hall: "ЗАЛ", exit: "ВИХІД", quote: "«У кожному жарті є частка віскі...»" }
-        };
-
-        function initClub() {
-            const saved = localStorage.getItem('gy_v265');
-            if(saved) {
-                const data = JSON.parse(saved);
-                currentID = data.id || 1000;
-                currentAvIdx = data.avIdx || 0;
-                currentLang = data.lang || 'RU';
-                if(data.photo) {
-                    const img = document.getElementById('photo-preview');
-                    img.src = data.photo; img.style.display = "block";
-                    document.getElementById('t-photo-label').style.display = "none";
-                }
-                document.getElementById('btn-to-hall').style.display = 'block';
-            }
-            updateLang(currentLang);
-            updateDisplay();
-        }
-
-        function updateLang(lang) {
-            currentLang = lang;
-            const dict = i18n[lang] || i18n.EN;
-            document.getElementById('t-choose').innerText = dict.choose;
-            document.getElementById('btn-save').innerText = dict.save;
-            document.getElementById('btn-to-hall').innerText = dict.enter;
-            document.getElementById('t-member').innerText = dict.member;
-            document.getElementById('t-photo-label').innerText = dict.photo;
-            document.getElementById('btn-upload').innerText = dict.change;
-            document.getElementById('t-reset').innerText = dict.reset;
-            document.getElementById('t-hall-title').innerText = dict.hall;
-            document.getElementById('btn-exit').innerText = dict.exit;
-            document.getElementById('dynamic-quote').innerText = dict.quote;
-
-            document.querySelectorAll('.lang-item').forEach(el => {
-                el.classList.toggle('active', el.innerText === lang);
-            });
-        }
-
-        function saveChanges() {
-            const photoSrc = document.getElementById('photo-preview').src;
-            localStorage.setItem('gy_v265', JSON.stringify({
-                id: currentID,
-                avIdx: currentAvIdx,
-                lang: currentLang,
-                photo: photoSrc.startsWith('data:') ? photoSrc : null
-            }));
-            document.getElementById('btn-to-hall').style.display = 'block';
-        }
-
-        function handleDoor() {
-            document.getElementById('door-sound').play().catch(()=>{});
-            document.getElementById('door-img').classList.add('door-opening');
-            setTimeout(() => switchTo('block-welcome'), 1000);
-        }
-
-        function startTerminal() {
-            document.getElementById('bar-sound').volume = 0.2;
-            document.getElementById('bar-sound').play().catch(()=>{});
-            switchTo('block-identity');
-        }
-
-        function updateDisplay() {
-            document.getElementById('user-avatar').innerText = avatars[currentAvIdx];
-            document.getElementById('label-res').innerText = "№ " + currentID;
-            const qrBox = document.getElementById("qrcode-container");
-            qrBox.innerHTML = "";
-            new QRCode(qrBox, { text: "GY-"+currentID, width: 80, height: 80 });
-        }
-
-        function changeAvatar(dir) { 
-            currentAvIdx = (currentAvIdx + dir + avatars.length) % avatars.length; 
-            updateDisplay(); 
-            document.getElementById('btn-to-hall').style.display = 'none';
-        }
-
-        function changeID(dir) { 
-            currentID = (currentID + (dir * 9) + 9000) % 9000 + 1000; 
-            updateDisplay(); 
-            document.getElementById('btn-to-hall').style.display = 'none';
-        }
-
-        function enterHall() {
-            document.getElementById('hall-user-info').innerText = avatars[currentAvIdx] + " №" + currentID;
-            switchTo('block-hall');
-        }
-
-        function softExit() {
-            const bar = document.getElementById('bar-sound');
-            bar.pause(); bar.currentTime = 0;
-            const door = document.getElementById('door-img');
-            door.classList.remove('door-opening');
-            switchTo('block-entrance');
-        }
-
-        function switchTo(id) {
-            document.querySelectorAll('.block').forEach(b => { b.style.display = 'none'; b.classList.remove('active'); });
-            const target = document.getElementById(id);
-            target.style.display = 'flex'; target.classList.add('active');
-        }
-
-        function previewFile() {
-            const file = document.getElementById('file-input').files[0];
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                const img = document.getElementById('photo-preview');
-                img.src = reader.result; img.style.display = "block";
-                document.getElementById('t-photo-label').style.display = "none";
-                document.getElementById('btn-to-hall').style.display = 'none';
-            }
-            if(file) reader.readAsDataURL(file);
-        }
-
-        function clearMagicKey() {
-            localStorage.removeItem('gy_v265');
-            location.reload();
-        }
-    </script>
-</body>
-</html>
+                    <div onclick="changeID(-1)" style="cursor:pointer; font-size:22px; padding
