@@ -164,4 +164,136 @@
             },
             ua: {
                 quote: "«У кожному жарті є доля віскі...»",
-                identity: "
+                identity: "ОСОБИСТІСТЬ",
+                card: "КАРТКА КЛУБУ",
+                save: "ЗБЕРЕГТИ",
+                photo: "ФОТО",
+                exit: "ЗАЛИШИТИ КЛУБ",
+                hall_entry: "ВХІД У ХОЛ",
+                proceed: "ПРОДОВЖИТИ",
+                hall: "ХОЛ",
+                final_exit: "ВИХІД"
+            },
+            fr: {
+                quote: "«Chaque blague a une part de whisky...»",
+                identity: "IDENTITÉ",
+                card: "CARTE DE MEMBRE",
+                save: "SAUVEGARDER",
+                photo: "PHOTO",
+                exit: "QUITTER LE CLUB",
+                hall_entry: "ENTRER DANS LE HALL",
+                proceed: "CONTINUER",
+                hall: "LE HALL",
+                final_exit: "SORTIE"
+            },
+            de: {
+                quote: "«Jeder Witz hat einen Anteil Whiskey...»",
+                identity: "IDENTITÄT",
+                card: "MITGLIEDSKARTE",
+                save: "SPEICHERN",
+                photo: "FOTO",
+                exit: "CLUB VERLASSEN",
+                hall_entry: "HALLE BETRETEN",
+                proceed: "FORTFAHREN",
+                hall: "DIE HALLE",
+                final_exit: "BEENDEN"
+            },
+            pl: {
+                quote: "«W każdym żarcie jest kropla whiskey...»",
+                identity: "TOŻSAMOŚĆ",
+                card: "KARTA CZŁONKOWSKA",
+                save: "ZAPISZ",
+                photo: "FOTO",
+                exit: "OPUŚĆ KLUB",
+                hall_entry: "WEJDŹ DO HALLU",
+                proceed: "KONTYNUUJ",
+                hall: "HALL",
+                final_exit: "WYJŚCIE"
+            },
+            es: {
+                quote: "«Cada broma tiene una parte de whisky...»",
+                identity: "IDENTIDAD",
+                card: "TARJETA DE SOCIO",
+                save: "GUARDAR",
+                photo: "FOTO",
+                exit: "SALIR DEL CLUB",
+                hall_entry: "ENTRAR AL HALL",
+                proceed: "CONTINUAR",
+                hall: "EL HALL",
+                final_exit: "SALIDA"
+            },
+            it: {
+                quote: "«Ogni scherzo ha una parte di whiskey...»",
+                identity: "IDENTITÀ",
+                card: "CARTA SOCIO",
+                save: "SALVA",
+                photo: "FOTO",
+                exit: "ESCI DAL CLUB",
+                hall_entry: "ENTRA NEL HALL",
+                proceed: "PROCEDI",
+                hall: "IL HALL",
+                final_exit: "USCITA"
+            }
+        };
+
+        function setLang(el, lang) {
+            document.querySelectorAll('.lang-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+            
+            const d = langData[lang];
+            document.getElementById('dynamic-quote').innerText = d.quote;
+            document.getElementById('h-identity').innerText = d.identity;
+            document.getElementById('h-card').innerText = d.card;
+            document.getElementById('btn-save').innerText = d.save;
+            document.getElementById('t-photo-text').innerText = d.photo;
+            document.getElementById('btn-exit').innerText = d.exit;
+            document.getElementById('btn-to-hall').innerText = d.hall_entry;
+            document.getElementById('btn-proceed').innerText = d.proceed;
+            document.getElementById('h-the-hall').innerText = d.hall;
+            document.getElementById('btn-final-exit').innerText = d.final_exit;
+        }
+
+        function switchTo(id) {
+            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function handleDoor() {
+            doorSnd.play().catch(() => {});
+            document.getElementById('block-entrance').classList.add('door-opening');
+            setTimeout(() => switchTo('block-welcome'), 1300);
+        }
+
+        function startTerminal() {
+            barSnd.volume = 0.2; barSnd.play().catch(() => {});
+            switchTo('block-identity');
+            updateDisplay();
+        }
+
+        function previewFile() {
+            const preview = document.getElementById('photo-preview');
+            const file = document.getElementById('file-input').files[0];
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                preview.src = reader.result;
+                preview.style.display = "block";
+                document.getElementById('t-photo-text').style.display = "none";
+            }
+            if (file) reader.readAsDataURL(file);
+        }
+
+        function updateDisplay() {
+            document.getElementById('user-avatar').innerText = avatars[currentAvIdx];
+            document.getElementById('label-res').innerText = "№ " + currentID;
+            const qrBox = document.getElementById("qrcode");
+            qrBox.innerHTML = "";
+            new QRCode(qrBox, { text: "GY-ID:"+currentID, width: 80, height: 80 });
+        }
+
+        function saveChanges() { document.getElementById('btn-to-hall').style.display = 'block'; }
+        function enterHall() { switchTo('block-hall'); }
+        function changeAvatar(dir) { currentAvIdx = (currentAvIdx + dir + avatars.length) % avatars.length; updateDisplay(); }
+        function changeID(dir) { currentID = (currentID + (dir * 9) + 9000) % 9000 + 1000; updateDisplay(); }
+    </script>
+</body>
+</html>
