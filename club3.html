@@ -3,158 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v2.5.5</title>
+    <title>GY-GY Club v2.5.7</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         body { margin: 0; background: #000; color: #d4af37; font-family: 'Times New Roman', serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; }
         
-        .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 15px; }
+        .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 10px; z-index: 10; }
         .block.active { display: flex !important; }
 
-        /* ДВЕРЬ - Максимально просто */
-        #door-box { cursor: pointer; border: 1px solid rgba(212, 175, 55, 0.3); width: 70vw; max-width: 280px; transition: 2s; }
+        #door-img { width: 70vw; max-width: 280px; border: 1px solid rgba(212, 175, 55, 0.2); cursor: pointer; transition: 2s; }
         .door-opening { transform: scale(5); opacity: 0; pointer-events: none; }
 
-        .terminal-grid { display: flex; flex-direction: row; justify-content: center; gap: 10px; width: 100%; max-width: 600px; background: rgba(15,15,15,0.9); padding: 15px; border: 1px solid rgba(212,175,55,0.2); }
-        .panel { flex: 1; display: flex; flex-direction: column; align-items: center; }
-        .panel-left { border-right: 1px solid rgba(212, 175, 55, 0.2); padding-right: 10px; }
+        .terminal-grid { display: flex; flex-direction: row; justify-content: center; gap: 5px; width: 100%; max-width: 650px; background: rgba(15,15,15,0.95); padding: 20px; border: 1px solid rgba(212,175,55,0.1); }
+        .panel { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 10px; }
+        .panel-left { border-right: 1px solid rgba(212, 175, 55, 0.2); }
 
         .photo-slot { width: 90px; height: 90px; border: 1px solid #d4af37; margin-top: 5px; position: relative; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .photo-slot img { width: 100%; height: 100%; object-fit: cover; position: absolute; }
+        .photo-slot img { width: 100%; height: 100%; object-fit: cover; position: absolute; z-index: 2; }
+        .photo-slot span { font-size: 9px; color: #333; font-weight: bold; }
 
-        .btn-gold { width: 100%; max-width: 150px; padding: 10px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 10px; cursor: pointer; margin: 5px 0; font-family: inherit; }
-        #btn-to-hall { background: rgba(212, 175, 55, 0.2) !important; font-weight: bold; display: none; }
+        .btn-gold { width: 100%; max-width: 160px; padding: 10px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 10px; letter-spacing: 1px; cursor: pointer; margin: 5px 0; font-family: inherit; }
+        .btn-mini { padding: 4px; font-size: 8px; max-width: 90px; margin-top: 5px; opacity: 0.8; }
+        #btn-to-hall { background: rgba(212, 175, 55, 0.2) !important; font-weight: bold; display: none; border: 2px solid #d4af37; }
 
-        .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px; }
-        .lang-item { font-size: 11px; opacity: 0.4; cursor: pointer; font-weight: bold; padding: 4px; }
-        .lang-item.active { opacity: 1; border-bottom: 1px solid #d4af37; }
+        #dynamic-quote { font-style: italic; font-size: 14px; opacity: 0.9; margin: 15px 0; min-height: 1.5em; max-width: 85%; }
+        .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px 15px; }
+        .lang-item { font-size: 11px; opacity: 0.5; cursor: pointer; padding: 5px; font-weight: bold; }
+        .lang-item.active { border-bottom: 2px solid #d4af37; opacity: 1; color: #fff; }
 
-        @media (max-width: 600px) { .terminal-grid { flex-direction: column; } .panel-left { border-right: none; border-bottom: 1px solid rgba(212, 175, 55, 0.1); padding-bottom: 15px; } }
-    </style>
-</head>
-<body onload="initApp()">
+        .reset-key { font-size: 11px; color: #d4af37; opacity: 0.4; cursor: pointer; text-transform: uppercase; margin-top: 30px; text-decoration: underline; }
 
-    <audio id="door-sound"><source src="door_open.mp3" type="audio/mpeg"></audio>
-    <audio id="bar-sound" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
-
-    <div id="block-entrance" class="block active">
-        <div style="letter-spacing: 10px; margin-bottom: 30px; font-size: 18px;">GY-GY PRIVATE</div>
-        <img src="door_1.jpg" id="door-box" onclick="openDoor()" alt="Door">
-    </div>
-
-    <div id="block-welcome" class="block">
-        <img src="charlie.png" style="width: 220px; margin-bottom: 20px;">
-        <h1 style="letter-spacing: 8px;">WELCOME</h1>
-        <button class="btn-gold" onclick="goToTerminal()">PROCEED</button>
-    </div>
-
-    <div id="block-identity" class="block">
-        <div class="terminal-grid">
-            <div class="panel panel-left">
-                <div style="font-size: 10px; margin-bottom: 10px;">IDENTITY</div>
-                <div style="display:flex; align-items:center; gap:15px; margin-bottom: 10px;">
-                    <button onclick="changeAvatar(-1)" style="background:none; border:none; color:#d4af37; font-size:24px; cursor:pointer;">&#10094;</button>
-                    <div id="user-avatar" style="font-size:45px;">🥃</div>
-                    <button onclick="changeAvatar(1)" style="background:none; border:none; color:#d4af37; font-size:24px; cursor:pointer;">&#10095;</button>
-                </div>
-                <div style="display:flex; align-items:center; gap:15px; margin-bottom: 15px;">
-                    <button onclick="changeID(-1)" style="background:none; border:none; color:#d4af37; font-size:20px; cursor:pointer;">&#10094;</button>
-                    <div id="label-res" style="font-size:18px;">№ 1000</div>
-                    <button onclick="changeID(1)" style="background:none; border:none; color:#d4af37; font-size:20px; cursor:pointer;">&#10095;</button>
-                </div>
-                <button class="btn-gold" onclick="pressSave()">СОХРАНИТЬ</button>
-                <button id="btn-to-hall" class="btn-gold" onclick="enterHall()">ВХОД</button>
-            </div>
-            <div class="panel">
-                <div id="qrcode-box" style="background:#fff; padding:5px; margin-bottom:10px;"></div>
-                <div class="photo-slot">
-                    <img id="photo-preview" src="" style="display:none">
-                    <span id="photo-placeholder" style="color:#333; font-size:9px;">ФОТО</span>
-                </div>
-                <button class="btn-gold" style="font-size:8px; width:90px;" onclick="document.getElementById('file-input').click()">ИЗМЕНИТЬ</button>
-                <input type="file" id="file-input" style="display:none" onchange="loadPhoto()">
-            </div>
-        </div>
-        <div class="lang-grid">
-            <div class="lang-item active">RU</div><div class="lang-item">EN</div><div class="lang-item">UA</div><div class="lang-item">FR</div>
-        </div>
-        <div style="font-size:10px; margin-top:20px; opacity:0.3; cursor:pointer;" onclick="localStorage.clear(); location.reload();">СБРОСИТЬ КЛЮЧ</div>
-    </div>
-
-    <div id="block-hall" class="block">
-        <h1 style="letter-spacing: 10px;">THE HALL</h1>
-        <div id="hall-info" style="font-size: 24px;"></div>
-        <button class="btn-gold" style="margin-top:30px;" onclick="location.reload()">EXIT</button>
-    </div>
-
-    <script>
-        const avatars = ['🥃','🎩','🍸','🚬','🎷','🎭','👔','💼','💎'];
-        let curID = 1000;
-        let curAvIdx = 0;
-
-        function initApp() {
-            const data = JSON.parse(localStorage.getItem('gy_v55'));
-            if(data) {
-                curID = data.id; curAvIdx = data.avIdx;
-                if(data.photo) {
-                    document.getElementById('photo-preview').src = data.photo;
-                    document.getElementById('photo-preview').style.display = "block";
-                    document.getElementById('photo-placeholder').style.display = "none";
-                }
-            }
-            render();
+        @media (max-width: 600px) { 
+            .terminal-grid { flex-direction: column; } 
+            .panel-left { border-right: none; border-bottom: 1px solid rgba(212, 175, 55, 0.1); padding-bottom: 15px; }
         }
-
-        function openDoor() {
-            document.getElementById('door-sound').play().catch(()=>{});
-            document.getElementById('door-box').classList.add('door-opening');
-            setTimeout(() => {
-                document.getElementById('block-entrance').classList.remove('active');
-                document.getElementById('block-welcome').classList.add('active');
-            }, 1200);
-        }
-
-        function goToTerminal() {
-            document.getElementById('bar-sound').volume = 0.2;
-            document.getElementById('bar-sound').play().catch(()=>{});
-            document.getElementById('block-welcome').classList.remove('active');
-            document.getElementById('block-identity').classList.add('active');
-        }
-
-        function changeAvatar(d) { curAvIdx = (curAvIdx + d + avatars.length) % avatars.length; render(); }
-        function changeID(d) { curID = (curID + (d * 9) + 9000) % 9000 + 1000; render(); }
-
-        function render() {
-            document.getElementById('user-avatar').innerText = avatars[curAvIdx];
-            document.getElementById('label-res').innerText = "№ " + curID;
-            const qrb = document.getElementById("qrcode-box"); qrb.innerHTML = "";
-            new QRCode(qrb, { text: "GY-"+curID, width: 80, height: 80 });
-        }
-
-        function pressSave() {
-            const photo = document.getElementById('photo-preview').src;
-            const saveObj = { id: curID, avIdx: curAvIdx, photo: photo.includes('data:') ? photo : null };
-            localStorage.setItem('gy_v55', JSON.stringify(saveObj));
-            document.getElementById('btn-to-hall').style.display = 'block';
-        }
-
-        function enterHall() {
-            document.getElementById('block-identity').classList.remove('active');
-            document.getElementById('block-hall').classList.add('active');
-            document.getElementById('hall-info').innerText = avatars[curAvIdx] + " №" + curID;
-        }
-
-        function loadPhoto() {
-            const file = document.getElementById('file-input').files[0];
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                const img = document.getElementById('photo-preview');
-                img.src = reader.result; img.style.display = "block";
-                document.getElementById('photo-placeholder').style.display = "none";
-            };
-            if(file) reader.readAsDataURL(file);
-        }
-    </script>
-</body>
-</html>
+    </
