@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v2.2.2</title>
+    <title>GY-GY Club v2.2.3</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
@@ -18,16 +18,15 @@
         .door-img { width: 75vw; max-width: 350px; height: auto; display: block; pointer-events: none; border: 1px solid rgba(212, 175, 55, 0.2); }
         .door-open { transform: scale(4); opacity: 0; pointer-events: none; }
 
-        /* CHARLIE */
-        .charlie-portrait { width: 280px; height: 280px; margin-bottom: 25px; overflow: hidden; border-radius: 4px; }
+        /* CHARLIE - ВЕРХНЕЕ РАСПОЛОЖЕНИЕ */
+        .charlie-portrait { width: 280px; height: 280px; margin-bottom: 20px; overflow: hidden; border-radius: 4px; }
         .charlie-portrait img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* TERMINAL GRID - Увеличенные шрифты */
+        /* TERMINAL GRID */
         .terminal-grid { display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 20px; width: 100%; max-width: 850px; }
         .panel { flex: 1; min-width: 280px; display: flex; flex-direction: column; align-items: center; padding: 15px; }
         .panel-setup { border-right: 1px solid rgba(212, 175, 55, 0.3); }
 
-        /* Увеличенные заголовки секций */
         .section-title { font-size: 14px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 15px; font-weight: bold; }
         
         .photo-slot { 
@@ -39,7 +38,6 @@
         .photo-slot img { width: 100%; height: 100%; object-fit: cover; position: absolute; }
         .photo-slot span { font-size: 10px; padding: 5px; text-transform: uppercase; opacity: 0.9; line-height: 1.4; }
 
-        /* Кнопки с увеличенным текстом */
         .btn-gold { 
             width: 100%; max-width: 220px; padding: 14px; background: transparent; 
             border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; 
@@ -50,7 +48,6 @@
         
         @keyframes pulse { 0% { box-shadow: 0 0 5px rgba(212,175,55,0.2); } 50% { box-shadow: 0 0 20px rgba(212,175,55,0.5); } 100% { box-shadow: 0 0 5px rgba(212,175,55,0.2); } }
 
-        /* Языки - крупнее */
         .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 20px; }
         .lang-item { font-size: 12px; opacity: 0.7; cursor: pointer; padding: 5px; font-weight: bold; }
         .lang-item.active { border-bottom: 2px solid #d4af37; opacity: 1; }
@@ -61,7 +58,6 @@
             .terminal-grid { flex-direction: column; } 
             .panel-setup { border-right: none; border-bottom: 1px solid rgba(212, 175, 55, 0.3); } 
             .charlie-portrait { width: 240px; height: 240px; }
-            .btn-gold { font-size: 12px; }
         }
     </style>
 </head>
@@ -78,10 +74,10 @@
     </div>
 
     <div id="block-welcome" class="block">
-        <h1 style="font-size: 2.5rem; letter-spacing: 8px; margin: 0 0 25px 0; font-weight: normal;">WELCOME</h1>
         <div class="charlie-portrait">
             <img src="charlie.png">
         </div>
+        <h1 style="font-size: 2rem; letter-spacing: 6px; margin: 0 0 25px 0; font-weight: normal; opacity: 0.9;">WELCOME</h1>
         <button class="btn-gold" onclick="startTerminal()">PROCEED</button>
     </div>
 
@@ -159,8 +155,7 @@
         }
 
         function startTerminal() {
-            barSnd.volume = 0.2;
-            barSnd.play().catch(() => {});
+            barSnd.volume = 0.2; barSnd.play().catch(() => {});
             switchTo('block-identity');
             updateDisplay();
         }
@@ -185,36 +180,22 @@
             new QRCode(qrBox, { text: "GY-ID:"+currentID, width: 100, height: 100 });
         }
 
-        // Фикс: Сбрасываем ID, аватар и личное фото
         function resetIdentity() {
-            currentID = 1000; 
-            currentAvIdx = 0;
+            currentID = 1000; currentAvIdx = 0;
             updateDisplay();
-            
-            // Сброс фото
             const preview = document.getElementById('photo-preview');
             const fileInput = document.getElementById('file-input');
             const photoText = document.getElementById('t-photo-text');
-            
-            preview.src = "";
-            preview.style.display = "none";
-            fileInput.value = ""; // Очищаем выбранный файл в input
-            photoText.style.display = "block";
-            
+            preview.src = ""; preview.style.display = "none";
+            fileInput.value = ""; photoText.style.display = "block";
             document.getElementById('hall-btn-box').style.display = 'none';
         }
 
-        function saveChanges() {
-            document.getElementById('hall-btn-box').style.display = 'block';
-        }
-
-        function enterHall() {
+        function saveChanges() { document.getElementById('hall-btn-box').style.display = 'block'; }
+        function enterHall() { 
             let vol = 0.2;
-            const fade = setInterval(() => {
-                if (vol < 0.6) { vol += 0.02; barSnd.volume = vol; }
-                else { clearInterval(fade); }
-            }, 50);
-            switchTo('block-hall');
+            const fade = setInterval(() => { if (vol < 0.6) { vol += 0.02; barSnd.volume = vol; } else { clearInterval(fade); } }, 50);
+            switchTo('block-hall'); 
         }
 
         function changeAvatar(dir) { currentAvIdx = (currentAvIdx + dir + avatars.length) % avatars.length; updateDisplay(); }
