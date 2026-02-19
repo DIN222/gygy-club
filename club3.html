@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v2.0.1</title>
+    <title>GY-GY Club v2.0.4</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
@@ -17,76 +17,40 @@
         .door-open { transform: scale(3.5); opacity: 0; }
         .label-top { font-size: 13px; letter-spacing: 8px; margin-bottom: 20px; text-transform: uppercase; opacity: 0.8; }
 
-        /* 1B: CHARLIE - МЕТОД "ПРИЗРАЧНОГО КОЛЬЦА" */
-        .charlie-wrapper {
-            position: relative;
-            width: 210px;
-            height: 210px;
-            margin-bottom: 25px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        /* 1C: ID CARD - INTERNATIONAL */
+        .id-content { width: 95%; max-width: 360px; display: flex; flex-direction: column; align-items: center; }
+        
+        /* Языковая панель - 8 языков */
+        .lang-grid { 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 10px; 
+            margin-bottom: 20px; 
+            width: 100%; 
+            max-width: 280px;
+        }
+        .lang-item { font-size: 10px; letter-spacing: 1px; cursor: pointer; opacity: 0.4; transition: 0.3s; padding: 5px; }
+        .lang-item.active { opacity: 1; border: 1px solid #d4af37; border-radius: 4px; }
+
+        #user-avatar { font-size: 60px; margin-bottom: 5px; }
+        .resident-label { font-size: 16px; letter-spacing: 4px; margin-bottom: 10px; text-transform: uppercase; }
+        
+        .quote-text { 
+            font-style: italic; font-size: 14px; margin-bottom: 20px; 
+            line-height: 1.4; min-height: 42px; max-width: 280px; opacity: 0.9;
         }
 
-        .charlie-mask {
-            width: 196px;
-            height: 196px;
-            border-radius: 50%;
-            overflow: hidden;
-            position: relative;
-            z-index: 1;
-            /* Убираем любые бордеры здесь */
-            border: none;
-            background: #000;
-        }
-
-        .charlie-img { 
-            width: 102%; /* Перекрываем края */
-            height: 102%; 
-            object-fit: cover;
-            display: block;
-        }
-
-        /* Это наше единственное золото. Оно лежит ПОВЕРХ всего */
-        .charlie-wrapper::after {
-            content: "";
-            position: absolute;
-            top: 50%; left: 50%;
-            width: 200px;
-            height: 200px;
-            transform: translate(-50%, -50%);
-            border-radius: 50%;
-            border: 1.5px solid #d4af37;
-            z-index: 5;
-            pointer-events: none;
-            /* Микро-размытие для слияния слоев */
-            filter: blur(0.2px); 
-        }
-
-        /* ТЕКСТЫ */
-        .private-tag { font-size: 11px; letter-spacing: 5px; text-transform: uppercase; margin-bottom: 8px; opacity: 0.6; }
-        .welcome-title { 
-            font-size: 4rem; 
-            color: #d4af37; 
-            margin: 0 0 35px 0; 
-            letter-spacing: 7px; 
-            font-weight: normal;
-        }
-
-        /* КНОПКА */
         .btn-gold { 
-            display: block; width: 100%; max-width: 220px; 
-            padding: 16px; background: transparent; 
+            display: block; width: 100%; max-width: 240px; 
+            padding: 15px; background: transparent; 
             border: 1px solid #d4af37; color: #d4af37; 
             text-transform: uppercase; font-size: 11px; 
-            letter-spacing: 4px; cursor: pointer; font-family: inherit;
+            letter-spacing: 3px; cursor: pointer; font-family: inherit;
+            margin-bottom: 12px;
         }
     </style>
 </head>
 <body>
-
-    <audio id="door-sound" preload="auto"><source src="door_open.mp3" type="audio/mpeg"></audio>
-    <audio id="bar-sound" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active">
         <div class="label-top">GY-GY PRIVATE</div>
@@ -96,29 +60,60 @@
     </div>
 
     <div id="block-welcome" class="block">
-        <div class="private-tag">PRIVATE ENTRANCE</div>
-        <div class="charlie-wrapper">
-            <div class="charlie-mask">
-                <img src="charlie.png" class="charlie-img">
-            </div>
+        <div class="charlie-wrapper" style="width:180px; height:180px; border-radius:50%; border:1px solid #d4af37; overflow:hidden; margin-bottom:20px;">
+            <img src="charlie.png" style="width:100%; height:100%; object-fit:cover;">
         </div>
-        <h1 class="welcome-title">WELCOME</h1>
+        <h1 style="font-size: 3.5rem; margin: 0 0 30px 0; letter-spacing: 5px;">WELCOME</h1>
         <button class="btn-gold" onclick="showIdentity()">PROCEED</button>
     </div>
 
     <div id="block-identity" class="block">
-        <div style="border: 1px solid #d4af37; padding: 25px; background: #050505; width: 90%; max-width: 300px;">
-            <div id="user-avatar" style="font-size:55px;">🥃</div>
-            <div style="font-size:18px; margin:10px 0; letter-spacing: 3px;">RESIDENT</div>
-            <div id="qrcode" style="background:#fff; padding:6px; width:112px; margin:15px auto; border-radius: 4px;"></div>
-            <button class="btn-gold" style="margin-bottom: 10px;" onclick="location.reload()">REFRESH</button>
-            <button class="btn-gold" onclick="closeClub()" style="border-color: #333; color: #555;">EXIT</button>
+        <div class="id-content">
+            <div class="lang-grid">
+                <div class="lang-item active" onclick="setLang('ru')">RU</div>
+                <div class="lang-item" onclick="setLang('en')">EN</div>
+                <div class="lang-item" onclick="setLang('fr')">FR</div>
+                <div class="lang-item" onclick="setLang('de')">DE</div>
+                <div class="lang-item" onclick="setLang('pl')">PL</div>
+                <div class="lang-item" onclick="setLang('es')">ES</div>
+                <div class="lang-item" onclick="setLang('it')">IT</div>
+                <div class="lang-item" onclick="setLang('ua')">UA</div>
+            </div>
+
+            <div id="user-avatar">🥃</div>
+            <div id="label-res" class="resident-label">RESIDENT</div>
+            <div id="quote" class="quote-text">В каждой шутке есть доля виски</div>
+            
+            <div id="qrcode" style="background:#fff; padding:6px; width:110px; margin:0 auto 25px; border-radius: 4px;"></div>
+            
+            <button id="btn-hall" class="btn-gold" onclick="enterHall()">В ХОЛЛ</button>
+            <button id="btn-exit" class="btn-gold" onclick="closeClub()">ВЫХОД</button>
         </div>
     </div>
 
     <script>
-        const doorSnd = document.getElementById('door-sound');
-        const barSnd = document.getElementById('bar-sound');
+        let currentLang = 'ru';
+        const translations = {
+            ru: { res: "RESIDENT", quote: "В каждой шутке есть доля виски", hall: "В ХОЛЛ", exit: "ВЫХОД" },
+            en: { res: "RESIDENT", quote: "In every joke there is a drop of whiskey", hall: "ENTER HALL", exit: "EXIT" },
+            fr: { res: "RÉSIDENT", quote: "Dans chaque blague, il y a une goutte de whisky", hall: "AU SALON", exit: "SORTIE" },
+            de: { res: "RESIDENT", quote: "In jedem Witz steckt ein Tropfen Whiskey", hall: "ZUR HALLE", exit: "BEENDEN" },
+            pl: { res: "REZYDENT", quote: "W każdym żarcie jest kropla whiskey", hall: "DO HOLU", exit: "WYJŚCIE" },
+            es: { res: "RESIDENTE", quote: "En cada chiste hay una gota de whisky", hall: "AL VESTÍBULO", exit: "SALIR" },
+            it: { res: "RESIDENTE", quote: "In ogni scherzo c'è una goccia di whisky", hall: "AL SALONE", exit: "USCITA" },
+            ua: { res: "РЕЗИДЕНТ", quote: "У кожному жарті є доля віскі", hall: "В ХОЛ", exit: "ВИХІД" }
+        };
+
+        function setLang(lang) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-item').forEach(el => {
+                el.classList.toggle('active', el.innerText.toLowerCase() === lang);
+            });
+            document.getElementById('label-res').innerText = translations[lang].res;
+            document.getElementById('quote').innerText = translations[lang].quote;
+            document.getElementById('btn-hall').innerText = translations[lang].hall;
+            document.getElementById('btn-exit').innerText = translations[lang].exit;
+        }
 
         function switchTo(id) {
             document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
@@ -126,20 +121,17 @@
         }
 
         function handleDoor() {
-            try { doorSnd.play(); } catch(e){}
-            document.getElementById('door-frame').classList.add('door-open');
             setTimeout(() => switchTo('block-welcome'), 1200);
         }
 
         function showIdentity() {
-            try { barSnd.volume = 0.15; barSnd.play(); } catch(e){}
             let id = localStorage.getItem('gy_id') || Math.floor(1000 + Math.random() * 9000);
             localStorage.setItem('gy_id', id);
-            const avatars = ['🥃','🎩','🍸','🚬','🎷','🎭'];
+            const avatars = ['🥃','🎩','🍸','🚬','🎷','🎭','👔'];
             document.getElementById('user-avatar').innerText = avatars[id % avatars.length];
             if (typeof QRCode !== "undefined") {
                 document.getElementById("qrcode").innerHTML = "";
-                new QRCode(document.getElementById("qrcode"), { text: "GY-ID:"+id, width: 100, height: 100 });
+                new QRCode(document.getElementById("qrcode"), { text: "GY-ID:"+id, width: 98, height: 98 });
             }
             switchTo('block-identity');
         }
