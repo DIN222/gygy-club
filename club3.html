@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v2.0.0</title>
+    <title>GY-GY Club v2.0.1</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
@@ -17,36 +17,59 @@
         .door-open { transform: scale(3.5); opacity: 0; }
         .label-top { font-size: 13px; letter-spacing: 8px; margin-bottom: 20px; text-transform: uppercase; opacity: 0.8; }
 
-        /* 1B: CHARLIE - ТОТ САМЫЙ МЕТОД ИЗ ПРОШЛОГО */
-        .charlie-box {
-            width: 200px;
-            height: 200px;
+        /* 1B: CHARLIE - МЕТОД "ПРИЗРАЧНОГО КОЛЬЦА" */
+        .charlie-wrapper {
+            position: relative;
+            width: 210px;
+            height: 210px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .charlie-mask {
+            width: 196px;
+            height: 196px;
             border-radius: 50%;
             overflow: hidden;
-            margin-bottom: 25px;
-            /* ВНИМАНИЕ: Здесь нет border. Кольцо создается через outline */
-            outline: 2px solid #d4af37;
-            outline-offset: -2px; /* Кольцо "вдавливается" внутрь, прижимаясь к фото */
             position: relative;
+            z-index: 1;
+            /* Убираем любые бордеры здесь */
+            border: none;
             background: #000;
         }
 
         .charlie-img { 
-            width: 100%;
-            height: 100%; 
+            width: 102%; /* Перекрываем края */
+            height: 102%; 
             object-fit: cover;
             display: block;
-            /* Увеличиваем фото, чтобы оно "зашло" под линию outline */
-            transform: scale(1.1); 
+        }
+
+        /* Это наше единственное золото. Оно лежит ПОВЕРХ всего */
+        .charlie-wrapper::after {
+            content: "";
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 200px;
+            height: 200px;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            border: 1.5px solid #d4af37;
+            z-index: 5;
+            pointer-events: none;
+            /* Микро-размытие для слияния слоев */
+            filter: blur(0.2px); 
         }
 
         /* ТЕКСТЫ */
         .private-tag { font-size: 11px; letter-spacing: 5px; text-transform: uppercase; margin-bottom: 8px; opacity: 0.6; }
         .welcome-title { 
-            font-size: 3.8rem; 
+            font-size: 4rem; 
             color: #d4af37; 
-            margin: 0 0 40px 0; 
-            letter-spacing: 6px; 
+            margin: 0 0 35px 0; 
+            letter-spacing: 7px; 
             font-weight: normal;
         }
 
@@ -74,8 +97,10 @@
 
     <div id="block-welcome" class="block">
         <div class="private-tag">PRIVATE ENTRANCE</div>
-        <div class="charlie-box">
-            <img src="charlie.png" class="charlie-img">
+        <div class="charlie-wrapper">
+            <div class="charlie-mask">
+                <img src="charlie.png" class="charlie-img">
+            </div>
         </div>
         <h1 class="welcome-title">WELCOME</h1>
         <button class="btn-gold" onclick="showIdentity()">PROCEED</button>
