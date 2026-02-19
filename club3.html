@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v2.5.1</title>
+    <title>GY-GY Club v2.5.2</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
@@ -12,12 +12,10 @@
         .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 15px; z-index: 10; }
         .block.active { display: flex !important; pointer-events: auto; }
 
-        /* Входная анимация */
         .door-container { cursor: pointer; z-index: 20; position: relative; }
         .door-img { width: 70vw; max-width: 280px; border: 1px solid rgba(212, 175, 55, 0.2); }
         .door-opening { transform: scale(4); opacity: 0; pointer-events: none; transition: 2s; }
 
-        /* Сетка терминала */
         .terminal-grid { display: flex; flex-direction: row; justify-content: center; gap: 10px; width: 100%; max-width: 650px; background: rgba(20,20,20,0.8); padding: 15px; border: 1px solid rgba(212,175,55,0.1); }
         .panel { flex: 1; display: flex; flex-direction: column; align-items: center; }
         .panel-left { border-right: 1px solid rgba(212, 175, 55, 0.2); padding-right: 10px; }
@@ -27,11 +25,8 @@
         .photo-slot span { font-size: 9px; color: #333; font-weight: bold; }
 
         .btn-gold { width: 100%; max-width: 160px; padding: 10px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 10px; letter-spacing: 1px; cursor: pointer; margin: 5px 0; font-family: inherit; }
-        .btn-mini { padding: 4px; font-size: 8px; max-width: 90px; margin-top: 5px; opacity: 0.8; }
-        
         #btn-to-hall { background: rgba(212, 175, 55, 0.2) !important; font-weight: bold; display: none; border-width: 2px; }
 
-        /* Цитата и Языки */
         #dynamic-quote { font-style: italic; font-size: 13px; opacity: 0.8; margin: 15px 0; min-height: 1.5em; max-width: 85%; }
         .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px 15px; margin-top: 5px; }
         .lang-item { font-size: 11px; opacity: 0.4; cursor: pointer; padding: 5px; font-weight: bold; }
@@ -47,8 +42,12 @@
 </head>
 <body>
 
-    <audio id="door-sound" preload="auto"><source src="door_open.mp3" type="audio/mpeg"></audio>
-    <audio id="bar-sound" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
+    <audio id="door-sound" preload="auto">
+        <source src="door_open.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="bar-sound" loop preload="auto">
+        <source src="bar_ambient.mp3" type="audio/mpeg">
+    </audio>
 
     <div id="block-entrance" class="block active">
         <div style="letter-spacing: 10px; margin-bottom: 20px; font-size: 18px;">GY-GY PRIVATE</div>
@@ -137,16 +136,19 @@
         };
 
         function handleDoor() {
-            try { document.getElementById('door-sound').play(); } catch(e){}
+            const sound = document.getElementById('door-sound');
+            if (sound) sound.play().catch(e => console.log("Sound block: " + e));
+            
             document.getElementById('door-box').classList.add('door-opening');
             setTimeout(() => switchTo('block-welcome'), 1500);
         }
 
         function startTerminal() {
-            try { 
-                const bar = document.getElementById('bar-sound');
-                bar.volume = 0.2; bar.play(); 
-            } catch(e){}
+            const bar = document.getElementById('bar-sound');
+            if (bar) {
+                bar.volume = 0.2;
+                bar.play().catch(e => console.log("Ambient block: " + e));
+            }
             switchTo('block-identity');
             document.getElementById('btn-to-hall').style.display = 'none';
         }
