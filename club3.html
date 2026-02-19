@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v2.1.8</title>
+    <title>GY-GY Club v2.1.9</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
@@ -12,18 +13,31 @@
         .block { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 10px; z-index: 1; }
         .block.active { display: flex !important; z-index: 10; }
 
-        /* DOOR */
-        .door-container { cursor: pointer; transition: transform 2s, opacity 1s; z-index: 20; position: relative; }
-        .door-open { transform: scale(3); opacity: 0; pointer-events: none; }
+        /* УВЕЛИЧЕННАЯ ДВЕРЬ */
+        .door-container { 
+            cursor: pointer; 
+            transition: transform 2s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s; 
+            z-index: 20; 
+            position: relative;
+            filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.1));
+        }
+        /* Адаптивные размеры двери */
+        .door-img {
+            width: 75vw; 
+            max-width: 350px; /* Было 160-180px */
+            height: auto;
+            display: block;
+            pointer-events: none;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        .door-open { transform: scale(4); opacity: 0; pointer-events: none; }
 
-        /* TERMINAL GRID */
-        .terminal-grid { display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 15px; width: 100%; max-width: 800px; margin-top: 5px; }
+        /* ТЕРМИНАЛ И КАРТА */
+        .terminal-grid { display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 15px; width: 100%; max-width: 800px; }
         .panel { flex: 1; min-width: 250px; display: flex; flex-direction: column; align-items: center; padding: 10px; }
         .panel-setup { border-right: 1px solid rgba(212, 175, 55, 0.3); }
-
         .section-title { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; opacity: 0.8; font-weight: bold; }
         
-        /* PHOTO SLOT (1px border) */
         .photo-slot { 
             width: 105px; height: 105px; border: 1px solid #d4af37; 
             margin-top: 8px; position: relative; cursor: pointer;
@@ -43,9 +57,8 @@
         
         @keyframes pulse { 0% { box-shadow: 0 0 5px rgba(212,175,55,0.2); } 50% { box-shadow: 0 0 15px rgba(212,175,55,0.5); } 100% { box-shadow: 0 0 5px rgba(212,175,55,0.2); } }
 
-        /* LANGUAGE GRID (4 columns) */
         .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 15px; width: 100%; max-width: 280px; }
-        .lang-item { font-size: 9px; opacity: 0.7; cursor: pointer; padding: 3px; transition: 0.3s; }
+        .lang-item { font-size: 9px; opacity: 0.7; cursor: pointer; padding: 3px; }
         .lang-item.active { border-bottom: 1px solid #d4af37; opacity: 1; }
 
         @media (max-width: 650px) { 
@@ -60,17 +73,17 @@
     <audio id="bar-sound" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active">
-        <div style="opacity: 0.8; letter-spacing: 6px; margin-bottom: 10px; font-size: 11px;">GY-GY PRIVATE</div>
+        <div style="opacity: 0.8; letter-spacing: 10px; margin-bottom: 30px; font-size: 14px;">GY-GY PRIVATE</div>
         <div class="door-container" onclick="handleDoor()">
-            <img src="door_1.jpg" style="width: 45vw; max-width: 160px; pointer-events: none;">
+            <img src="door_1.jpg" class="door-img">
         </div>
     </div>
 
     <div id="block-welcome" class="block">
-        <div style="width:130px; height:130px; border-radius:50%; border:1px solid #d4af37; overflow:hidden; margin-bottom:15px;">
+        <div style="width:140px; height:140px; border-radius:50%; border:1px solid #d4af37; overflow:hidden; margin-bottom:15px;">
             <img src="charlie.png" style="width:100%; height:100%; object-fit:cover;">
         </div>
-        <h1 style="font-size: 2.5rem; letter-spacing: 5px; margin: 0 0 20px 0;">WELCOME</h1>
+        <h1 style="font-size: 2.8rem; letter-spacing: 5px; margin: 0 0 20px 0;">WELCOME</h1>
         <button class="btn-gold" onclick="startTerminal()">PROCEED</button>
     </div>
 
@@ -125,9 +138,9 @@
     </div>
 
     <div id="block-hall" class="block">
-        <h1 style="font-size: 2.5rem; letter-spacing: 12px;">THE HALL</h1>
-        <p style="letter-spacing: 4px; opacity: 0.8; font-size: 11px;">PRIVATE MEMBER AREA</p>
-        <button class="btn-gold" style="margin-top:40px; border-style:double; width:220px;" onclick="alert('Success.')">ПРОЙТИ В БАР</button>
+        <h1 style="font-size: 3rem; letter-spacing: 15px;">THE HALL</h1>
+        <p style="letter-spacing: 5px; opacity: 0.8; font-size: 12px;">PRIVATE MEMBER AREA</p>
+        <button class="btn-gold" style="margin-top:40px; border-style:double; width:240px;" onclick="alert('Access Granted.')">ПРОЙТИ В БАР</button>
     </div>
 
     <script>
