@@ -3,66 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v2.3.5</title>
+    <title>GY-GY Club v2.3.6</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         body { margin: 0; background: #000; color: #d4af37; font-family: 'Times New Roman', Times, serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; }
         
-        /* Исправленная логика слоев */
-        .block { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            display: none; flex-direction: column; align-items: center; 
-            justify-content: center; padding: 10px; z-index: 1; pointer-events: none; 
-        }
+        .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 10px; z-index: 1; pointer-events: none; }
         .block.active { display: flex !important; z-index: 10; pointer-events: auto; }
 
         /* ВХОД */
-        .entrance-logo { opacity: 0.8; letter-spacing: 10px; margin-bottom: 20px; font-size: 16px; transition: 1.2s; }
-        .door-container { cursor: pointer; transition: transform 2s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s; z-index: 20; position: relative; }
-        .door-img { width: 70vw; max-width: 320px; height: auto; border: 1px solid rgba(212, 175, 55, 0.2); }
-        .door-opening .entrance-logo { opacity: 0; transform: scale(0.8); }
+        .door-container { cursor: pointer; transition: 2s; z-index: 20; position: relative; }
+        .door-img { width: 70vw; max-width: 300px; border: 1px solid rgba(212, 175, 55, 0.2); }
         .door-opening .door-container { transform: scale(4); opacity: 0; pointer-events: none; }
 
         /* ПРИВЕТСТВИЕ */
-        .charlie-portrait { width: 220px; height: 220px; margin-bottom: 10px; border-radius: 4px; overflow: hidden; }
+        .charlie-portrait { width: 200px; height: 200px; margin-bottom: 10px; border: 1px solid #d4af37; border-radius: 4px; overflow: hidden; }
         .charlie-portrait img { width: 100%; height: 100%; object-fit: cover; }
-        .welcome-text { font-size: 1.8rem; letter-spacing: 8px; margin: 15px 0; font-weight: normal; }
 
-        /* ТЕРМИНАЛ (Сближенные панели) */
-        .terminal-grid { display: flex; flex-direction: row; justify-content: center; gap: 10px; width: 100%; max-width: 700px; }
-        .panel { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 5px; }
-        .panel-setup { border-right: 1px solid rgba(212, 175, 55, 0.15); }
+        /* ТЕРМИНАЛ */
+        .terminal-grid { display: flex; flex-direction: row; justify-content: center; gap: 5px; width: 100%; max-width: 650px; }
+        .panel { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 10px; }
+        .panel-left { border-right: 1px solid rgba(212, 175, 55, 0.2); }
 
-        .action-area { height: 45px; display: flex; align-items: center; justify-content: center; }
         .photo-slot { 
-            width: 90px; height: 90px; border: 1px solid #d4af37; 
-            margin-top: 10px; position: relative; cursor: pointer;
-            background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden;
+            width: 85px; height: 85px; border: 1px solid #d4af37; 
+            margin-top: 5px; position: relative; background: #fff; 
+            display: flex; align-items: center; justify-content: center; overflow: hidden;
         }
         .photo-slot img { width: 100%; height: 100%; object-fit: cover; position: absolute; z-index: 2; }
-        .photo-slot span { font-size: 8px; color: #333; font-weight: bold; text-transform: uppercase; z-index: 1; }
+        .photo-slot span { font-size: 8px; color: #333; font-weight: bold; }
 
         .btn-gold { 
-            width: 100%; max-width: 180px; padding: 10px; background: transparent; 
+            width: 100%; max-width: 160px; padding: 10px; background: transparent; 
             border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; 
-            font-size: 11px; letter-spacing: 2px; cursor: pointer; margin: 4px 0; font-family: inherit;
+            font-size: 10px; letter-spacing: 1px; cursor: pointer; margin: 5px 0; font-family: inherit;
         }
+        .btn-mini { padding: 4px; font-size: 8px; max-width: 85px; margin-top: 5px; opacity: 0.8; }
         .glow-btn { background: rgba(212, 175, 55, 0.2) !important; animation: pulse 2s infinite; font-weight: bold; }
         @keyframes pulse { 0% { box-shadow: 0 0 5px rgba(212,175,55,0.2); } 50% { box-shadow: 0 0 15px rgba(212,175,55,0.4); } 100% { box-shadow: 0 0 5px rgba(212,175,55,0.2); } }
 
-        /* ДЕВИЗ И ЯЗЫКИ */
-        #dynamic-quote { font-style: italic; font-size: 13px; opacity: 0.8; margin: 15px 0 5px 0; min-height: 1.5em; }
-        .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 100%; max-width: 280px; }
-        .lang-item { font-size: 11px; opacity: 0.5; cursor: pointer; padding: 5px; font-weight: bold; border-bottom: 2px solid transparent; transition: 0.3s; }
+        #dynamic-quote { font-style: italic; font-size: 13px; opacity: 0.8; margin: 10px 0; min-height: 1.5em; max-width: 90%; }
+        .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 5px; }
+        .lang-item { font-size: 10px; opacity: 0.5; cursor: pointer; padding: 3px; font-weight: bold; border-bottom: 2px solid transparent; }
         .lang-item.active { border-bottom: 2px solid #d4af37; opacity: 1; color: #fff; }
+        .exit-club { font-size: 10px; opacity: 0.4; cursor: pointer; text-transform: uppercase; margin-top: 15px; text-decoration: underline; }
 
-        .exit-club { font-size: 10px; opacity: 0.4; cursor: pointer; text-transform: uppercase; margin-top: 15px; letter-spacing: 1px; text-decoration: underline; }
-
-        @media (max-width: 650px) { 
-            .terminal-grid { flex-direction: column; gap: 5px; } 
-            .panel-setup { border-right: none; border-bottom: 1px solid rgba(212, 175, 55, 0.1); padding-bottom: 5px; }
-            .charlie-portrait { width: 160px; height: 160px; }
+        @media (max-width: 600px) { 
+            .terminal-grid { flex-direction: column; } 
+            .panel-left { border-right: none; border-bottom: 1px solid rgba(212, 175, 55, 0.1); }
         }
     </style>
 </head>
@@ -72,46 +61,43 @@
     <audio id="bar-sound" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active">
-        <div class="entrance-logo">GY-GY PRIVATE</div>
-        <div class="door-container" onclick="handleDoor()">
-            <img src="door_1.jpg" class="door-img">
-        </div>
+        <div style="letter-spacing: 10px; margin-bottom: 20px;">GY-GY PRIVATE</div>
+        <div class="door-container" onclick="handleDoor()"><img src="door_1.jpg" class="door-img"></div>
     </div>
 
     <div id="block-welcome" class="block">
         <div class="charlie-portrait"><img src="charlie.png"></div>
-        <h1 class="welcome-text">WELCOME</h1>
+        <h1 style="letter-spacing: 8px;">WELCOME</h1>
         <button id="btn-proceed" class="btn-gold" onclick="startTerminal()">PROCEED</button>
     </div>
 
     <div id="block-identity" class="block">
         <div class="terminal-grid">
-            <div class="panel panel-setup">
-                <div id="h-identity" style="font-size: 11px; letter-spacing: 2px; margin-bottom: 8px;">ЛИЧНОСТЬ</div>
-                <div style="display:flex; align-items:center; gap:8px;">
-                    <div onclick="changeAvatar(-1)" style="cursor:pointer; font-size:22px;">&#10094;</div>
-                    <div id="user-avatar" style="font-size:40px;">🥃</div>
-                    <div onclick="changeAvatar(1)" style="cursor:pointer; font-size:22px;">&#10095;</div>
+            <div class="panel panel-left">
+                <div id="h-select" style="font-size: 10px; letter-spacing: 2px; margin-bottom: 5px;">ВЫБРАТЬ</div>
+                <div style="display:flex; align-items:center; gap:15px; margin-bottom: 5px;">
+                    <div onclick="changeAvatar(-1)" style="cursor:pointer; font-size:24px;">&#10094;</div>
+                    <div id="user-avatar" style="font-size:45px;">🥃</div>
+                    <div onclick="changeAvatar(1)" style="cursor:pointer; font-size:24px;">&#10095;</div>
                 </div>
-                <div style="display:flex; align-items:center; gap:8px;">
-                    <div onclick="changeID(-1)" style="cursor:pointer; font-size:22px;">&#10094;</div>
+                <div style="display:flex; align-items:center; gap:15px;">
+                    <div onclick="changeID(-1)" style="cursor:pointer; font-size:20px;">&#10094;</div>
                     <div id="label-res" style="font-size:18px; letter-spacing:2px;">№ 1000</div>
-                    <div onclick="changeID(1)" style="cursor:pointer; font-size:22px;">&#10095;</div>
+                    <div onclick="changeID(1)" style="cursor:pointer; font-size:20px;">&#10095;</div>
                 </div>
-                <button id="btn-save" class="btn-gold" onclick="saveChanges()">СОХРАНИТЬ</button>
-                <div class="action-area">
-                    <button id="btn-to-hall" class="btn-gold glow-btn" style="display:none;" onclick="enterHall()">ВХОД В ХОЛЛ</button>
-                </div>
+                <button id="btn-save" class="btn-gold" style="margin-top:15px;" onclick="saveChanges()">СОХРАНИТЬ</button>
             </div>
 
             <div class="panel">
-                <div id="h-card" style="font-size: 11px; letter-spacing: 2px; margin-bottom: 8px;">КАРТА КЛУБА</div>
-                <div style="background:#fff; padding:6px; border-radius:2px;"><div id="qrcode"></div></div>
+                <div id="h-member" style="font-size: 10px; letter-spacing: 2px; margin-bottom: 5px;">УЧАСТНИК КЛУБА</div>
+                <div style="background:#fff; padding:5px; border-radius:2px;"><div id="qrcode"></div></div>
+                
                 <input type="file" id="file-input" style="display:none" accept="image/*" onchange="previewFile()">
-                <div class="photo-slot" onclick="document.getElementById('file-input').click()">
+                <div class="photo-slot" id="photo-box">
                     <span id="t-photo-text">ФОТО</span>
                     <img id="photo-preview" src="" style="display:none">
                 </div>
+                <button id="btn-change-photo" class="btn-gold btn-mini" onclick="document.getElementById('file-input').click()">ИЗМЕНИТЬ</button>
             </div>
         </div>
 
@@ -127,13 +113,14 @@
             <div class="lang-item" onclick="setLang(this, 'es')">ES</div>
             <div class="lang-item" onclick="setLang(this, 'it')">IT</div>
         </div>
-
+        
+        <button id="btn-to-hall" class="btn-gold glow-btn" style="display:none; margin-top:10px;" onclick="switchTo('block-hall')">ВХОД В ХОЛЛ</button>
         <div id="btn-exit" class="exit-club" onclick="location.reload()">ПОКИНУТЬ КЛУБ</div>
     </div>
 
     <div id="block-hall" class="block">
-        <h1 id="h-the-hall" style="font-size: 3rem; letter-spacing: 12px;">THE HALL</h1>
-        <button id="btn-final-exit" class="btn-gold" style="margin-top:30px;" onclick="location.reload()">ВЫХОД</button>
+        <h1 id="h-the-hall" style="font-size: 2.5rem; letter-spacing: 10px;">THE HALL</h1>
+        <button class="btn-gold" onclick="location.reload()">EXIT</button>
     </div>
 
     <script>
@@ -144,14 +131,14 @@
         const avatars = ['🥃','🎩','🍸','🚬','🎷','🎭','👔','💼','💎'];
         
         const langData = {
-            ru: { quote: "«В каждой шутке есть доля виски...»", identity: "ЛИЧНОСТЬ", card: "КАРТА КЛУБА", save: "СОХРАНИТЬ", photo: "ФОТО", exit: "ПОКИНУТЬ КЛУБ", hall_entry: "ВХОД В ХОЛЛ", proceed: "ПРОДОЛЖИТЬ", hall: "ХОЛЛ", final_exit: "ВЫХОД" },
-            en: { quote: "«Every joke has a share of whiskey...»", identity: "IDENTITY", card: "MEMBER CARD", save: "SAVE", photo: "PHOTO", exit: "EXIT CLUB", hall_entry: "ENTER HALL", proceed: "PROCEED", hall: "THE HALL", final_exit: "EXIT" },
-            ua: { quote: "«У кожному жарті є доля віскі...»", identity: "ОСОБИСТІСТЬ", card: "КАРТКА КЛУБУ", save: "ЗБЕРЕГТИ", photo: "ФОТО", exit: "ЗАЛИШИТИ КЛУБ", hall_entry: "ВХІД У ХОЛ", proceed: "ПРОДОВЖИТИ", hall: "ХОЛ", final_exit: "ВИХІД" },
-            fr: { quote: "«Chaque blague a une part de whisky...»", identity: "IDENTITÉ", card: "CARTE DE MEMBRE", save: "SAUVEGARDER", photo: "PHOTO", exit: "QUITTER LE CLUB", hall_entry: "ENTRER DANS LE HALL", proceed: "CONTINUER", hall: "LE HALL", final_exit: "SORTIE" },
-            de: { quote: "«Jeder Witz hat einen Anteil Whiskey...»", identity: "IDENTITÄT", card: "MITGLIEDSKARTE", save: "SPEICHERN", photo: "FOTO", exit: "CLUB VERLASSEN", hall_entry: "HALLE BETRETEN", proceed: "FORTFAHREN", hall: "DIE HALLE", final_exit: "BEENDEN" },
-            pl: { quote: "«W każdym żarcie jest kropla whiskey...»", identity: "TOŻSAMOŚĆ", card: "KARTA CZŁONKOWSKA", save: "ZAPISZ", photo: "FOTO", exit: "OPUŚĆ KLUB", hall_entry: "WEJDŹ DO HALLU", proceed: "KONTYNUUJ", hall: "HALL", final_exit: "WYJŚCIE" },
-            es: { quote: "«Cada broma tiene una parte de whisky...»", identity: "IDENTIDAD", card: "TARJETA DE SOCIO", save: "GUARDAR", photo: "FOTO", exit: "SALIR DEL CLUB", hall_entry: "ENTRAR AL HALL", proceed: "CONTINUAR", hall: "EL HALL", final_exit: "SALIDA" },
-            it: { quote: "«Ogni scherzo ha una parte di whiskey...»", identity: "IDENTITÀ", card: "CARTA SOCIO", save: "SALVA", photo: "FOTO", exit: "ESCI DAL CLUB", hall_entry: "ENTRA NEL HALL", proceed: "PROCEDI", hall: "IL HALL", final_exit: "USCITA" }
+            ru: { quote: "«В каждой шутке есть доля виски...»", select: "ВЫБРАТЬ", member: "УЧАСТНИК КЛУБА", save: "СОХРАНИТЬ", photo: "ФОТО", change: "ИЗМЕНИТЬ", exit: "ПОКИНУТЬ КЛУБ", hall_entry: "ВХОД В ХОЛЛ", proceed: "ПРОДОЛЖИТЬ" },
+            en: { quote: "«Every joke has a share of whiskey...»", select: "SELECT", member: "CLUB MEMBER", save: "SAVE", photo: "PHOTO", change: "CHANGE", exit: "EXIT CLUB", hall_entry: "ENTER HALL", proceed: "PROCEED" },
+            ua: { quote: "«У кожному жарті є доля віскі...»", select: "ВИБРАТИ", member: "УЧАСНИК КЛУБУ", save: "ЗБЕРЕГТИ", photo: "ФОТО", change: "ЗМІНИТИ", exit: "ЗАЛИШИТИ КЛУБ", hall_entry: "ВХІД У ХОЛ", proceed: "ПРОДОВЖИТИ" },
+            fr: { quote: "«Chaque blague a une part de whisky...»", select: "CHOISIR", member: "MEMBRE DU CLUB", save: "SAUVER", photo: "PHOTO", change: "MODIFIER", exit: "QUITTER LE CLUB", hall_entry: "ENTRER", proceed: "CONTINUER" },
+            de: { quote: "«Jeder Witz hat einen Anteil Whiskey...»", select: "WÄHLEN", member: "CLUB-MITGLIED", save: "SPEICHERN", photo: "FOTO", change: "ÄNDERN", exit: "VERLASSEN", hall_entry: "EINTRETEN", proceed: "FORTFAHREN" },
+            pl: { quote: "«W każdym żarcie jest kropla whiskey...»", select: "WYBIERZ", member: "CZŁONEK KLUBU", save: "ZAPISZ", photo: "FOTO", change: "ZMIEŃ", exit: "OPUŚĆ KLUB", hall_entry: "WEJDŹ", proceed: "KONTYNUUJ" },
+            es: { quote: "«Cada broma tiene una parte de whisky...»", select: "ELEGIR", member: "MIEMBRO DEL CLUB", save: "GUARDAR", photo: "FOTO", change: "CAMBIAR", exit: "SALIR", hall_entry: "ENTRAR", proceed: "CONTINUAR" },
+            it: { quote: "«Ogni scherzo ha una parte di whiskey...»", select: "SCEGLI", member: "MEMBRO DEL CLUB", save: "SALVA", photo: "FOTO", change: "CAMBIA", exit: "ESCI", hall_entry: "ENTRA", proceed: "PROCEDI" }
         };
 
         function setLang(el, lang) {
@@ -159,15 +146,14 @@
             el.classList.add('active');
             const d = langData[lang];
             document.getElementById('dynamic-quote').innerText = d.quote;
-            document.getElementById('h-identity').innerText = d.identity;
-            document.getElementById('h-card').innerText = d.card;
+            document.getElementById('h-select').innerText = d.select;
+            document.getElementById('h-member').innerText = d.member;
             document.getElementById('btn-save').innerText = d.save;
             document.getElementById('t-photo-text').innerText = d.photo;
+            document.getElementById('btn-change-photo').innerText = d.change;
             document.getElementById('btn-exit').innerText = d.exit;
             document.getElementById('btn-to-hall').innerText = d.hall_entry;
             document.getElementById('btn-proceed').innerText = d.proceed;
-            document.getElementById('h-the-hall').innerText = d.hall;
-            document.getElementById('btn-final-exit').innerText = d.final_exit;
         }
 
         function switchTo(id) {
@@ -208,7 +194,6 @@
         }
 
         function saveChanges() { document.getElementById('btn-to-hall').style.display = 'block'; }
-        function enterHall() { switchTo('block-hall'); }
         function changeAvatar(dir) { currentAvIdx = (currentAvIdx + dir + avatars.length) % avatars.length; updateDisplay(); }
         function changeID(dir) { currentID = (currentID + (dir * 9) + 9000) % 9000 + 1000; updateDisplay(); }
     </script>
