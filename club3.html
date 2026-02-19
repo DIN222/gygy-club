@@ -1,31 +1,35 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v2.3.1</title>
+    <title>GY-GY Club v2.3.5</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         body { margin: 0; background: #000; color: #d4af37; font-family: 'Times New Roman', Times, serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; }
         
-        .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 10px; z-index: 1; }
-        .block.active { display: flex !important; z-index: 10; }
+        /* Исправленная логика слоев */
+        .block { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            display: none; flex-direction: column; align-items: center; 
+            justify-content: center; padding: 10px; z-index: 1; pointer-events: none; 
+        }
+        .block.active { display: flex !important; z-index: 10; pointer-events: auto; }
 
         /* ВХОД */
         .entrance-logo { opacity: 0.8; letter-spacing: 10px; margin-bottom: 20px; font-size: 16px; transition: 1.2s; }
-        .door-container { cursor: pointer; transition: transform 2s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s; }
+        .door-container { cursor: pointer; transition: transform 2s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s; z-index: 20; position: relative; }
         .door-img { width: 70vw; max-width: 320px; height: auto; border: 1px solid rgba(212, 175, 55, 0.2); }
         .door-opening .entrance-logo { opacity: 0; transform: scale(0.8); }
-        .door-opening .door-container { transform: scale(4); opacity: 0; }
+        .door-opening .door-container { transform: scale(4); opacity: 0; pointer-events: none; }
 
         /* ПРИВЕТСТВИЕ */
         .charlie-portrait { width: 220px; height: 220px; margin-bottom: 10px; border-radius: 4px; overflow: hidden; }
         .charlie-portrait img { width: 100%; height: 100%; object-fit: cover; }
         .welcome-text { font-size: 1.8rem; letter-spacing: 8px; margin: 15px 0; font-weight: normal; }
 
-        /* ТЕРМИНАЛ */
+        /* ТЕРМИНАЛ (Сближенные панели) */
         .terminal-grid { display: flex; flex-direction: row; justify-content: center; gap: 10px; width: 100%; max-width: 700px; }
         .panel { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 5px; }
         .panel-setup { border-right: 1px solid rgba(212, 175, 55, 0.15); }
@@ -42,15 +46,15 @@
         .btn-gold { 
             width: 100%; max-width: 180px; padding: 10px; background: transparent; 
             border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; 
-            font-size: 11px; letter-spacing: 2px; cursor: pointer; margin: 4px 0;
+            font-size: 11px; letter-spacing: 2px; cursor: pointer; margin: 4px 0; font-family: inherit;
         }
-        .glow-btn { background: rgba(212, 175, 55, 0.2) !important; animation: pulse 2s infinite; }
+        .glow-btn { background: rgba(212, 175, 55, 0.2) !important; animation: pulse 2s infinite; font-weight: bold; }
         @keyframes pulse { 0% { box-shadow: 0 0 5px rgba(212,175,55,0.2); } 50% { box-shadow: 0 0 15px rgba(212,175,55,0.4); } 100% { box-shadow: 0 0 5px rgba(212,175,55,0.2); } }
 
         /* ДЕВИЗ И ЯЗЫКИ */
-        #dynamic-quote { font-style: italic; font-size: 13px; opacity: 0.8; margin: 15px 0 5px 0; min-height: 1.2em; }
+        #dynamic-quote { font-style: italic; font-size: 13px; opacity: 0.8; margin: 15px 0 5px 0; min-height: 1.5em; }
         .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 100%; max-width: 280px; }
-        .lang-item { font-size: 11px; opacity: 0.5; cursor: pointer; padding: 5px; font-weight: bold; border-bottom: 2px solid transparent; }
+        .lang-item { font-size: 11px; opacity: 0.5; cursor: pointer; padding: 5px; font-weight: bold; border-bottom: 2px solid transparent; transition: 0.3s; }
         .lang-item.active { border-bottom: 2px solid #d4af37; opacity: 1; color: #fff; }
 
         .exit-club { font-size: 10px; opacity: 0.4; cursor: pointer; text-transform: uppercase; margin-top: 15px; letter-spacing: 1px; text-decoration: underline; }
@@ -69,7 +73,9 @@
 
     <div id="block-entrance" class="block active">
         <div class="entrance-logo">GY-GY PRIVATE</div>
-        <div class="door-container" onclick="handleDoor()"><img src="door_1.jpg" class="door-img"></div>
+        <div class="door-container" onclick="handleDoor()">
+            <img src="door_1.jpg" class="door-img">
+        </div>
     </div>
 
     <div id="block-welcome" class="block">
@@ -81,16 +87,16 @@
     <div id="block-identity" class="block">
         <div class="terminal-grid">
             <div class="panel panel-setup">
-                <div id="h-identity" style="font-size: 11px; letter-spacing: 2px; margin-bottom: 8px;">IDENTITY</div>
+                <div id="h-identity" style="font-size: 11px; letter-spacing: 2px; margin-bottom: 8px;">ЛИЧНОСТЬ</div>
                 <div style="display:flex; align-items:center; gap:8px;">
-                    <div onclick="changeAvatar(-1)" style="cursor:pointer; font-size:22px; padding:5px;">&#10094;</div>
+                    <div onclick="changeAvatar(-1)" style="cursor:pointer; font-size:22px;">&#10094;</div>
                     <div id="user-avatar" style="font-size:40px;">🥃</div>
-                    <div onclick="changeAvatar(1)" style="cursor:pointer; font-size:22px; padding:5px;">&#10095;</div>
+                    <div onclick="changeAvatar(1)" style="cursor:pointer; font-size:22px;">&#10095;</div>
                 </div>
                 <div style="display:flex; align-items:center; gap:8px;">
-                    <div onclick="changeID(-1)" style="cursor:pointer; font-size:22px; padding:5px;">&#10094;</div>
+                    <div onclick="changeID(-1)" style="cursor:pointer; font-size:22px;">&#10094;</div>
                     <div id="label-res" style="font-size:18px; letter-spacing:2px;">№ 1000</div>
-                    <div onclick="changeID(1)" style="cursor:pointer; font-size:22px; padding:5px;">&#10095;</div>
+                    <div onclick="changeID(1)" style="cursor:pointer; font-size:22px;">&#10095;</div>
                 </div>
                 <button id="btn-save" class="btn-gold" onclick="saveChanges()">СОХРАНИТЬ</button>
                 <div class="action-area">
@@ -99,11 +105,11 @@
             </div>
 
             <div class="panel">
-                <div id="h-card" style="font-size: 11px; letter-spacing: 2px; margin-bottom: 8px;">MEMBER CARD</div>
+                <div id="h-card" style="font-size: 11px; letter-spacing: 2px; margin-bottom: 8px;">КАРТА КЛУБА</div>
                 <div style="background:#fff; padding:6px; border-radius:2px;"><div id="qrcode"></div></div>
                 <input type="file" id="file-input" style="display:none" accept="image/*" onchange="previewFile()">
                 <div class="photo-slot" onclick="document.getElementById('file-input').click()">
-                    <span id="t-photo-text">PHOTO</span>
+                    <span id="t-photo-text">ФОТО</span>
                     <img id="photo-preview" src="" style="display:none">
                 </div>
             </div>
@@ -127,7 +133,7 @@
 
     <div id="block-hall" class="block">
         <h1 id="h-the-hall" style="font-size: 3rem; letter-spacing: 12px;">THE HALL</h1>
-        <button id="btn-final-exit" class="btn-gold" style="margin-top:30px; border-style:double;" onclick="location.reload()">ВЫХОД</button>
+        <button id="btn-final-exit" class="btn-gold" style="margin-top:30px;" onclick="location.reload()">ВЫХОД</button>
     </div>
 
     <script>
@@ -138,108 +144,19 @@
         const avatars = ['🥃','🎩','🍸','🚬','🎷','🎭','👔','💼','💎'];
         
         const langData = {
-            ru: {
-                quote: "«В каждой шутке есть доля виски...»",
-                identity: "ЛИЧНОСТЬ",
-                card: "КАРТА КЛУБА",
-                save: "СОХРАНИТЬ",
-                photo: "ФОТО",
-                exit: "ПОКИНУТЬ КЛУБ",
-                hall_entry: "ВХОД В ХОЛЛ",
-                proceed: "ПРОДОЛЖИТЬ",
-                hall: "ХОЛЛ",
-                final_exit: "ВЫХОД"
-            },
-            en: {
-                quote: "«Every joke has a share of whiskey...»",
-                identity: "IDENTITY",
-                card: "MEMBER CARD",
-                save: "SAVE",
-                photo: "PHOTO",
-                exit: "EXIT CLUB",
-                hall_entry: "ENTER HALL",
-                proceed: "PROCEED",
-                hall: "THE HALL",
-                final_exit: "EXIT"
-            },
-            ua: {
-                quote: "«У кожному жарті є доля віскі...»",
-                identity: "ОСОБИСТІСТЬ",
-                card: "КАРТКА КЛУБУ",
-                save: "ЗБЕРЕГТИ",
-                photo: "ФОТО",
-                exit: "ЗАЛИШИТИ КЛУБ",
-                hall_entry: "ВХІД У ХОЛ",
-                proceed: "ПРОДОВЖИТИ",
-                hall: "ХОЛ",
-                final_exit: "ВИХІД"
-            },
-            fr: {
-                quote: "«Chaque blague a une part de whisky...»",
-                identity: "IDENTITÉ",
-                card: "CARTE DE MEMBRE",
-                save: "SAUVEGARDER",
-                photo: "PHOTO",
-                exit: "QUITTER LE CLUB",
-                hall_entry: "ENTRER DANS LE HALL",
-                proceed: "CONTINUER",
-                hall: "LE HALL",
-                final_exit: "SORTIE"
-            },
-            de: {
-                quote: "«Jeder Witz hat einen Anteil Whiskey...»",
-                identity: "IDENTITÄT",
-                card: "MITGLIEDSKARTE",
-                save: "SPEICHERN",
-                photo: "FOTO",
-                exit: "CLUB VERLASSEN",
-                hall_entry: "HALLE BETRETEN",
-                proceed: "FORTFAHREN",
-                hall: "DIE HALLE",
-                final_exit: "BEENDEN"
-            },
-            pl: {
-                quote: "«W każdym żarcie jest kropla whiskey...»",
-                identity: "TOŻSAMOŚĆ",
-                card: "KARTA CZŁONKOWSKA",
-                save: "ZAPISZ",
-                photo: "FOTO",
-                exit: "OPUŚĆ KLUB",
-                hall_entry: "WEJDŹ DO HALLU",
-                proceed: "KONTYNUUJ",
-                hall: "HALL",
-                final_exit: "WYJŚCIE"
-            },
-            es: {
-                quote: "«Cada broma tiene una parte de whisky...»",
-                identity: "IDENTIDAD",
-                card: "TARJETA DE SOCIO",
-                save: "GUARDAR",
-                photo: "FOTO",
-                exit: "SALIR DEL CLUB",
-                hall_entry: "ENTRAR AL HALL",
-                proceed: "CONTINUAR",
-                hall: "EL HALL",
-                final_exit: "SALIDA"
-            },
-            it: {
-                quote: "«Ogni scherzo ha una parte di whiskey...»",
-                identity: "IDENTITÀ",
-                card: "CARTA SOCIO",
-                save: "SALVA",
-                photo: "FOTO",
-                exit: "ESCI DAL CLUB",
-                hall_entry: "ENTRA NEL HALL",
-                proceed: "PROCEDI",
-                hall: "IL HALL",
-                final_exit: "USCITA"
-            }
+            ru: { quote: "«В каждой шутке есть доля виски...»", identity: "ЛИЧНОСТЬ", card: "КАРТА КЛУБА", save: "СОХРАНИТЬ", photo: "ФОТО", exit: "ПОКИНУТЬ КЛУБ", hall_entry: "ВХОД В ХОЛЛ", proceed: "ПРОДОЛЖИТЬ", hall: "ХОЛЛ", final_exit: "ВЫХОД" },
+            en: { quote: "«Every joke has a share of whiskey...»", identity: "IDENTITY", card: "MEMBER CARD", save: "SAVE", photo: "PHOTO", exit: "EXIT CLUB", hall_entry: "ENTER HALL", proceed: "PROCEED", hall: "THE HALL", final_exit: "EXIT" },
+            ua: { quote: "«У кожному жарті є доля віскі...»", identity: "ОСОБИСТІСТЬ", card: "КАРТКА КЛУБУ", save: "ЗБЕРЕГТИ", photo: "ФОТО", exit: "ЗАЛИШИТИ КЛУБ", hall_entry: "ВХІД У ХОЛ", proceed: "ПРОДОВЖИТИ", hall: "ХОЛ", final_exit: "ВИХІД" },
+            fr: { quote: "«Chaque blague a une part de whisky...»", identity: "IDENTITÉ", card: "CARTE DE MEMBRE", save: "SAUVEGARDER", photo: "PHOTO", exit: "QUITTER LE CLUB", hall_entry: "ENTRER DANS LE HALL", proceed: "CONTINUER", hall: "LE HALL", final_exit: "SORTIE" },
+            de: { quote: "«Jeder Witz hat einen Anteil Whiskey...»", identity: "IDENTITÄT", card: "MITGLIEDSKARTE", save: "SPEICHERN", photo: "FOTO", exit: "CLUB VERLASSEN", hall_entry: "HALLE BETRETEN", proceed: "FORTFAHREN", hall: "DIE HALLE", final_exit: "BEENDEN" },
+            pl: { quote: "«W każdym żarcie jest kropla whiskey...»", identity: "TOŻSAMOŚĆ", card: "KARTA CZŁONKOWSKA", save: "ZAPISZ", photo: "FOTO", exit: "OPUŚĆ KLUB", hall_entry: "WEJDŹ DO HALLU", proceed: "KONTYNUUJ", hall: "HALL", final_exit: "WYJŚCIE" },
+            es: { quote: "«Cada broma tiene una parte de whisky...»", identity: "IDENTIDAD", card: "TARJETA DE SOCIO", save: "GUARDAR", photo: "FOTO", exit: "SALIR DEL CLUB", hall_entry: "ENTRAR AL HALL", proceed: "CONTINUAR", hall: "EL HALL", final_exit: "SALIDA" },
+            it: { quote: "«Ogni scherzo ha una parte di whiskey...»", identity: "IDENTITÀ", card: "CARTA SOCIO", save: "SALVA", photo: "FOTO", exit: "ESCI DAL CLUB", hall_entry: "ENTRA NEL HALL", proceed: "PROCEDI", hall: "IL HALL", final_exit: "USCITA" }
         };
 
         function setLang(el, lang) {
             document.querySelectorAll('.lang-item').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
-            
             const d = langData[lang];
             document.getElementById('dynamic-quote').innerText = d.quote;
             document.getElementById('h-identity').innerText = d.identity;
