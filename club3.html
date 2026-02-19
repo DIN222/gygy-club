@@ -3,26 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v2.1.6</title>
+    <title>GY-GY Club v2.1.8</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         body { margin: 0; background: #000; color: #d4af37; font-family: 'Times New Roman', Times, serif; text-align: center; min-height: 100vh; width: 100vw; overflow-x: hidden; }
         
-        .block { position: absolute; top: 0; left: 0; width: 100%; min-height: 100vh; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 15px; }
-        .block.active { display: flex !important; }
+        .block { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 10px; z-index: 1; }
+        .block.active { display: flex !important; z-index: 10; }
 
-        /* GRID */
-        .terminal-grid { display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 20px; width: 100%; max-width: 800px; margin-top: 10px; }
-        .panel { flex: 1; min-width: 260px; display: flex; flex-direction: column; align-items: center; padding: 10px; }
+        /* DOOR */
+        .door-container { cursor: pointer; transition: transform 2s, opacity 1s; z-index: 20; position: relative; }
+        .door-open { transform: scale(3); opacity: 0; pointer-events: none; }
+
+        /* TERMINAL GRID */
+        .terminal-grid { display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 15px; width: 100%; max-width: 800px; margin-top: 5px; }
+        .panel { flex: 1; min-width: 250px; display: flex; flex-direction: column; align-items: center; padding: 10px; }
         .panel-setup { border-right: 1px solid rgba(212, 175, 55, 0.3); }
 
-        .section-title { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 15px; opacity: 0.8; font-weight: bold; }
+        .section-title { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; opacity: 0.8; font-weight: bold; }
         
-        /* PHOTO SLOT - Стандартная рамка 1px */
+        /* PHOTO SLOT (1px border) */
         .photo-slot { 
-            width: 110px; height: 110px; border: 1px solid #d4af37; 
-            margin-top: 10px; position: relative; cursor: pointer;
+            width: 105px; height: 105px; border: 1px solid #d4af37; 
+            margin-top: 8px; position: relative; cursor: pointer;
             background: rgba(212, 175, 55, 0.05);
             display: flex; align-items: center; justify-content: center;
         }
@@ -30,24 +34,23 @@
         .photo-slot span { font-size: 8px; padding: 5px; text-transform: uppercase; opacity: 0.9; }
 
         .btn-gold { 
-            width: 100%; max-width: 200px; padding: 11px; background: transparent; 
+            width: 100%; max-width: 180px; padding: 10px; background: transparent; 
             border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; 
             font-size: 10px; letter-spacing: 2px; cursor: pointer; font-family: inherit; margin: 5px 0;
-            transition: 0.3s;
         }
-        .btn-reset { border: none; opacity: 0.6; font-size: 8px; margin-top: 0; }
+        .btn-reset { border: none; opacity: 0.6; font-size: 8px; text-decoration: underline; margin-top: 0; }
         .glow-btn { background: rgba(212, 175, 55, 0.15) !important; animation: pulse 2s infinite; font-weight: bold; }
         
         @keyframes pulse { 0% { box-shadow: 0 0 5px rgba(212,175,55,0.2); } 50% { box-shadow: 0 0 15px rgba(212,175,55,0.5); } 100% { box-shadow: 0 0 5px rgba(212,175,55,0.2); } }
 
-        /* ЯЗЫКИ 4x2 */
-        .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 20px; width: 100%; max-width: 240px; }
-        .lang-item { font-size: 9px; opacity: 0.7; cursor: pointer; padding: 4px; transition: 0.3s; }
+        /* LANGUAGE GRID (4 columns) */
+        .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 15px; width: 100%; max-width: 280px; }
+        .lang-item { font-size: 9px; opacity: 0.7; cursor: pointer; padding: 3px; transition: 0.3s; }
         .lang-item.active { border-bottom: 1px solid #d4af37; opacity: 1; }
 
         @media (max-width: 650px) { 
-            .terminal-grid { flex-direction: column; } 
-            .panel-setup { border-right: none; border-bottom: 1px solid rgba(212, 175, 55, 0.3); padding-bottom: 15px; } 
+            .terminal-grid { flex-direction: column; gap: 5px; } 
+            .panel-setup { border-right: none; border-bottom: 1px solid rgba(212, 175, 55, 0.3); padding-bottom: 10px; } 
         }
     </style>
 </head>
@@ -58,42 +61,42 @@
 
     <div id="block-entrance" class="block active">
         <div style="opacity: 0.8; letter-spacing: 6px; margin-bottom: 10px; font-size: 11px;">GY-GY PRIVATE</div>
-        <div class="door-container" onclick="handleDoor(this)" id="door-frame">
-            <img src="door_1.jpg" style="width: 50vw; max-width: 180px;">
+        <div class="door-container" onclick="handleDoor()">
+            <img src="door_1.jpg" style="width: 45vw; max-width: 160px; pointer-events: none;">
         </div>
     </div>
 
     <div id="block-welcome" class="block">
-        <div style="width:140px; height:140px; border-radius:50%; border:1px solid #d4af37; overflow:hidden; margin-bottom:15px;">
+        <div style="width:130px; height:130px; border-radius:50%; border:1px solid #d4af37; overflow:hidden; margin-bottom:15px;">
             <img src="charlie.png" style="width:100%; height:100%; object-fit:cover;">
         </div>
-        <h1 style="font-size: 2.8rem; letter-spacing: 5px; margin: 0 0 20px 0;">WELCOME</h1>
+        <h1 style="font-size: 2.5rem; letter-spacing: 5px; margin: 0 0 20px 0;">WELCOME</h1>
         <button class="btn-gold" onclick="startTerminal()">PROCEED</button>
     </div>
 
     <div id="block-identity" class="block">
         <div class="terminal-grid">
             <div class="panel panel-setup">
-                <div class="section-title" id="t-choice">ВАШ ВЫБОР</div>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <div onclick="changeAvatar(-1)" style="cursor:pointer; font-size:24px; padding:10px;">&#10094;</div>
-                    <div id="user-avatar" style="font-size:45px;">🥃</div>
-                    <div onclick="changeAvatar(1)" style="cursor:pointer; font-size:24px; padding:10px;">&#10095;</div>
+                <div class="section-title">ВАШ ВЫБОР</div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <div onclick="changeAvatar(-1)" style="cursor:pointer; font-size:24px; padding:8px;">&#10094;</div>
+                    <div id="user-avatar" style="font-size:40px;">🥃</div>
+                    <div onclick="changeAvatar(1)" style="cursor:pointer; font-size:24px; padding:8px;">&#10095;</div>
                 </div>
-                <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
-                    <div onclick="changeID(-1)" style="cursor:pointer; font-size:24px; padding:10px;">&#10094;</div>
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+                    <div onclick="changeID(-1)" style="cursor:pointer; font-size:24px; padding:8px;">&#10094;</div>
                     <div id="label-res" style="font-size:18px; letter-spacing:2px;">№ 1000</div>
-                    <div onclick="changeID(1)" style="cursor:pointer; font-size:24px; padding:10px;">&#10095;</div>
+                    <div onclick="changeID(1)" style="cursor:pointer; font-size:24px; padding:8px;">&#10095;</div>
                 </div>
-                <button class="btn-gold" onclick="saveChanges()" id="btn-save">СОХРАНИТЬ</button>
-                <button class="btn-gold btn-reset" onclick="resetIdentity()" id="btn-reset">СБРОСИТЬ</button>
+                <button class="btn-gold" onclick="saveChanges()">СОХРАНИТЬ</button>
+                <button class="btn-gold btn-reset" onclick="resetIdentity()">СБРОСИТЬ</button>
             </div>
 
             <div class="panel">
-                <div class="section-title" id="t-card">КАРТА УЧАСТНИКА</div>
+                <div class="section-title">КАРТА УЧАСТНИКА</div>
                 <div style="background:#fff; padding:4px; border-radius:4px; position:relative; display:inline-block;">
                     <div id="qrcode"></div>
-                    <div id="qr-inner-icon" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:#fff; font-size:18px;">🥃</div>
+                    <div id="qr-inner-icon" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:#fff; font-size:16px;">🥃</div>
                 </div>
                 
                 <input type="file" id="file-input" style="display:none" accept="image/*" onchange="previewFile()">
@@ -103,9 +106,97 @@
                 </div>
 
                 <div id="hall-btn-box" style="display:none; width:100%; margin-top:10px;">
-                    <button class="btn-gold glow-btn" onclick="enterHall()" id="btn-hall">ВХОД В ХОЛЛ</button>
+                    <button class="btn-gold glow-btn" onclick="enterHall()">ВХОД В ХОЛЛ</button>
                 </div>
             </div>
         </div>
 
         <div class="lang-grid">
+            <div class="lang-item active">RU</div>
+            <div class="lang-item">EN</div>
+            <div class="lang-item">UA</div>
+            <div class="lang-item">FR</div>
+            <div class="lang-item">DE</div>
+            <div class="lang-item">PL</div>
+            <div class="lang-item">ES</div>
+            <div class="lang-item">IT</div>
+        </div>
+        <div style="font-size:8px; opacity:0.5; cursor:pointer; text-transform:uppercase; margin-top:10px;" onclick="location.reload()">ВЫХОД ИЗ КЛУБА</div>
+    </div>
+
+    <div id="block-hall" class="block">
+        <h1 style="font-size: 2.5rem; letter-spacing: 12px;">THE HALL</h1>
+        <p style="letter-spacing: 4px; opacity: 0.8; font-size: 11px;">PRIVATE MEMBER AREA</p>
+        <button class="btn-gold" style="margin-top:40px; border-style:double; width:220px;" onclick="alert('Success.')">ПРОЙТИ В БАР</button>
+    </div>
+
+    <script>
+        const barSnd = document.getElementById('bar-sound');
+        const doorSnd = document.getElementById('door-sound');
+        let currentID = 1000;
+        let currentAvIdx = 0;
+        const avatars = ['🥃','🎩','🍸','🚬','🎷','🎭','👔','💼','💎'];
+
+        function switchTo(id) {
+            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function handleDoor() {
+            doorSnd.play().catch(() => {});
+            document.querySelector('.door-container').classList.add('door-open');
+            setTimeout(() => switchTo('block-welcome'), 1200);
+        }
+
+        function startTerminal() {
+            barSnd.volume = 0.2;
+            barSnd.play().catch(() => {});
+            switchTo('block-identity');
+            updateDisplay();
+        }
+
+        function previewFile() {
+            const preview = document.getElementById('photo-preview');
+            const file = document.getElementById('file-input').files[0];
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                preview.src = reader.result;
+                preview.style.display = "block";
+                document.getElementById('t-photo-text').style.display = "none";
+            }
+            if (file) reader.readAsDataURL(file);
+        }
+
+        function updateDisplay() {
+            document.getElementById('user-avatar').innerText = avatars[currentAvIdx];
+            document.getElementById('qr-inner-icon').innerText = avatars[currentAvIdx];
+            document.getElementById('label-res').innerText = "№ " + currentID;
+            const qrBox = document.getElementById("qrcode");
+            qrBox.innerHTML = "";
+            new QRCode(qrBox, { text: "GY-ID:"+currentID, width: 85, height: 85 });
+        }
+
+        function resetIdentity() {
+            currentID = 1000; currentAvIdx = 0;
+            updateDisplay();
+            document.getElementById('hall-btn-box').style.display = 'none';
+        }
+
+        function saveChanges() {
+            document.getElementById('hall-btn-box').style.display = 'block';
+        }
+
+        function enterHall() {
+            let vol = 0.2;
+            const fade = setInterval(() => {
+                if (vol < 0.5) { vol += 0.02; barSnd.volume = vol; }
+                else { clearInterval(fade); }
+            }, 50);
+            switchTo('block-hall');
+        }
+
+        function changeAvatar(dir) { currentAvIdx = (currentAvIdx + dir + avatars.length) % avatars.length; updateDisplay(); }
+        function changeID(dir) { currentID = (currentID + (dir * 9) + 9000) % 9000 + 1000; updateDisplay(); }
+    </script>
+</body>
+</html>
