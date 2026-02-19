@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v2.6.4</title>
+    <title>GY-GY Club v2.6.5</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
@@ -46,8 +46,8 @@
 
     <div id="block-welcome" class="block">
         <img src="charlie.png" style="width: 200px; margin-bottom: 15px;">
-        <h1 id="t-welcome" style="letter-spacing: 8px;">WELCOME</h1>
-        <button id="btn-proceed" class="btn-gold" onclick="startTerminal()">PROCEED</button>
+        <h1 style="letter-spacing: 8px;">WELCOME</h1>
+        <button class="btn-gold" onclick="startTerminal()">PROCEED</button>
     </div>
 
     <div id="block-identity" class="block">
@@ -82,7 +82,7 @@
         <div id="dynamic-quote">«В каждой шутке есть доля виски...»</div>
 
         <div class="lang-grid">
-            <div class="lang-item active" onclick="updateLang('RU')">RU</div>
+            <div class="lang-item" onclick="updateLang('RU')">RU</div>
             <div class="lang-item" onclick="updateLang('EN')">EN</div>
             <div class="lang-item" onclick="updateLang('UA')">UA</div>
             <div class="lang-item" onclick="updateLang('FR')">FR</div>
@@ -107,13 +107,13 @@
         let currentLang = 'RU';
 
         const i18n = {
-            RU: { welcome: "ДОБРО ПОЖАЛОВАТЬ", proceed: "ПРОДОЛЖИТЬ", choose: "ВЫБРАТЬ", save: "СОХРАНИТЬ", enter: "ВХОД", member: "УЧАСТНИК КЛУБА", photo: "ФОТО", change: "ИЗМЕНИТЬ", reset: "СБРОСИТЬ КЛЮЧ", hall: "ЗАЛ", exit: "ВЫХОД", quote: "«В каждой шутке есть доля виски...»" },
-            EN: { welcome: "WELCOME", proceed: "PROCEED", choose: "CHOOSE", save: "SAVE", enter: "ENTER", member: "CLUB MEMBER", photo: "PHOTO", change: "CHANGE", reset: "RESET KEY", hall: "THE HALL", exit: "EXIT", quote: "«In every joke there is a drop of whiskey...»" },
-            UA: { welcome: "ВІТАЄМО", proceed: "ПРОДОВЖИТИ", choose: "ОБРАТИ", save: "ЗБЕРЕГТИ", enter: "ВХІД", member: "УЧАСНИК КЛУБУ", photo: "ФОТО", change: "ЗМІНИТИ", reset: "СКИНУТИ КЛЮЧ", hall: "ЗАЛ", exit: "ВИХІД", quote: "«У кожному жарті є частка віскі...»" }
+            RU: { choose: "ВЫБРАТЬ", save: "СОХРАНИТЬ", enter: "ВХОД", member: "УЧАСТНИК КЛУБА", photo: "ФОТО", change: "ИЗМЕНИТЬ", reset: "СБРОСИТЬ КЛЮЧ", hall: "ЗАЛ", exit: "ВЫХОД", quote: "«В каждой шутке есть доля виски...»" },
+            EN: { choose: "CHOOSE", save: "SAVE", enter: "ENTER", member: "CLUB MEMBER", photo: "PHOTO", change: "CHANGE", reset: "RESET KEY", hall: "THE HALL", exit: "EXIT", quote: "«In every joke there is a drop of whiskey...»" },
+            UA: { choose: "ОБРАТИ", save: "ЗБЕРЕГТИ", enter: "ВХІД", member: "УЧАСНИК КЛУБУ", photo: "ФОТО", change: "ЗМІНИТИ", reset: "СКИНУТИ КЛЮЧ", hall: "ЗАЛ", exit: "ВИХІД", quote: "«У кожному жарті є частка віскі...»" }
         };
 
         function initClub() {
-            const saved = localStorage.getItem('gy_v264');
+            const saved = localStorage.getItem('gy_v265');
             if(saved) {
                 const data = JSON.parse(saved);
                 currentID = data.id || 1000;
@@ -133,8 +133,6 @@
         function updateLang(lang) {
             currentLang = lang;
             const dict = i18n[lang] || i18n.EN;
-            document.getElementById('t-welcome').innerText = dict.welcome;
-            document.getElementById('btn-proceed').innerText = dict.proceed;
             document.getElementById('t-choose').innerText = dict.choose;
             document.getElementById('btn-save').innerText = dict.save;
             document.getElementById('btn-to-hall').innerText = dict.enter;
@@ -153,15 +151,13 @@
 
         function saveChanges() {
             const photoSrc = document.getElementById('photo-preview').src;
-            const data = {
+            localStorage.setItem('gy_v265', JSON.stringify({
                 id: currentID,
                 avIdx: currentAvIdx,
                 lang: currentLang,
                 photo: photoSrc.startsWith('data:') ? photoSrc : null
-            };
-            localStorage.setItem('gy_v264', JSON.stringify(data));
+            }));
             document.getElementById('btn-to-hall').style.display = 'block';
-            alert(currentLang === 'RU' ? "Сохранено" : "Saved");
         }
 
         function handleDoor() {
@@ -228,7 +224,7 @@
         }
 
         function clearMagicKey() {
-            localStorage.removeItem('gy_v264');
+            localStorage.removeItem('gy_v265');
             location.reload();
         }
     </script>
