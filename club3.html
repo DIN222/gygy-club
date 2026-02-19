@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v2.2.9</title>
+    <title>GY-GY Club v2.3.0</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
@@ -13,55 +13,56 @@
         .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 10px; z-index: 1; }
         .block.active { display: flex !important; z-index: 10; }
 
-        /* DOOR */
+        /* ВХОД */
         .entrance-logo { opacity: 0.8; letter-spacing: 10px; margin-bottom: 20px; font-size: 16px; transition: 1.2s; }
-        .door-container { cursor: pointer; transition: transform 2s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s; z-index: 20; }
+        .door-container { cursor: pointer; transition: transform 2s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s; }
         .door-img { width: 70vw; max-width: 320px; height: auto; border: 1px solid rgba(212, 175, 55, 0.2); }
         .door-opening .entrance-logo { opacity: 0; transform: scale(0.8); }
         .door-opening .door-container { transform: scale(4); opacity: 0; }
 
-        /* WELCOME SECTION */
-        .charlie-portrait { width: 240px; height: 240px; margin-bottom: 10px; border-radius: 4px; overflow: hidden; }
+        /* ПРИВЕТСТВИЕ */
+        .charlie-portrait { width: 220px; height: 220px; margin-bottom: 10px; border-radius: 4px; overflow: hidden; }
         .charlie-portrait img { width: 100%; height: 100%; object-fit: cover; }
-        .quote { font-style: italic; font-size: 14px; opacity: 0.8; margin-bottom: 10px; letter-spacing: 1px; }
-        .welcome-text { font-size: 1.8rem; letter-spacing: 8px; margin: 0 0 15px 0; font-weight: normal; }
+        .welcome-text { font-size: 1.8rem; letter-spacing: 8px; margin: 15px 0; font-weight: normal; }
 
-        /* TERMINAL GRID */
-        .terminal-grid { display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 15px; width: 100%; max-width: 850px; }
-        .panel { flex: 1; min-width: 260px; display: flex; flex-direction: column; align-items: center; padding: 5px; }
-        .panel-setup { border-right: 1px solid rgba(212, 175, 55, 0.2); }
+        /* ТЕРМИНАЛ (Сближенные панели) */
+        .terminal-grid { 
+            display: flex; flex-direction: row; justify-content: center; 
+            gap: 10px; /* Минимальный разрыв */
+            width: 100%; max-width: 700px; 
+        }
+        .panel { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 5px; }
+        .panel-setup { border-right: 1px solid rgba(212, 175, 55, 0.15); }
 
-        .action-area { height: 50px; width: 100%; display: flex; align-items: center; justify-content: center; }
-
+        .action-area { height: 45px; display: flex; align-items: center; justify-content: center; }
         .photo-slot { 
-            width: 100px; height: 100px; border: 2px solid #d4af37; 
+            width: 90px; height: 90px; border: 1px solid #d4af37; 
             margin-top: 10px; position: relative; cursor: pointer;
-            background: #ffffff; display: flex; align-items: center; justify-content: center; overflow: hidden;
+            background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden;
         }
         .photo-slot img { width: 100%; height: 100%; object-fit: cover; position: absolute; z-index: 2; }
-        .photo-slot span { font-size: 9px; padding: 5px; text-transform: uppercase; color: #333; font-weight: bold; }
+        .photo-slot span { font-size: 8px; color: #333; font-weight: bold; text-transform: uppercase; z-index: 1; }
 
         .btn-gold { 
-            width: 100%; max-width: 200px; padding: 12px; background: transparent; 
+            width: 100%; max-width: 180px; padding: 10px; background: transparent; 
             border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; 
-            font-size: 12px; letter-spacing: 2px; cursor: pointer; font-family: inherit; margin: 5px 0;
+            font-size: 11px; letter-spacing: 2px; cursor: pointer; margin: 4px 0;
         }
-        .btn-reset { border: none; opacity: 0.5; font-size: 10px; text-decoration: underline; margin: 0; }
-        .glow-btn { background: rgba(212, 175, 55, 0.2) !important; animation: pulse 2s infinite; font-weight: bold; }
-        
+        .glow-btn { background: rgba(212, 175, 55, 0.2) !important; animation: pulse 2s infinite; }
         @keyframes pulse { 0% { box-shadow: 0 0 5px rgba(212,175,55,0.2); } 50% { box-shadow: 0 0 15px rgba(212,175,55,0.4); } 100% { box-shadow: 0 0 5px rgba(212,175,55,0.2); } }
 
-        /* LANGUAGES */
-        .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 15px; width: 100%; max-width: 300px; }
-        .lang-item { font-size: 12px; opacity: 0.6; cursor: pointer; padding: 6px 4px; font-weight: bold; transition: 0.2s; border-bottom: 2px solid transparent; }
+        /* ДЕВИЗ И ЯЗЫКИ */
+        #dynamic-quote { font-style: italic; font-size: 13px; opacity: 0.8; margin: 15px 0 5px 0; min-height: 1.2em; }
+        .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 100%; max-width: 280px; }
+        .lang-item { font-size: 11px; opacity: 0.5; cursor: pointer; padding: 5px; font-weight: bold; border-bottom: 2px solid transparent; }
         .lang-item.active { border-bottom: 2px solid #d4af37; opacity: 1; color: #fff; }
+
+        .exit-club { font-size: 10px; opacity: 0.4; cursor: pointer; text-transform: uppercase; margin-top: 15px; letter-spacing: 1px; text-decoration: underline; }
 
         @media (max-width: 650px) { 
             .terminal-grid { flex-direction: column; gap: 5px; } 
-            .panel-setup { border-right: none; border-bottom: 1px solid rgba(212, 175, 55, 0.2); padding-bottom: 10px; } 
-            .charlie-portrait { width: 180px; height: 180px; }
-            .welcome-text { font-size: 1.6rem; }
-            .quote { font-size: 12px; }
+            .panel-setup { border-right: none; border-bottom: 1px solid rgba(212, 175, 55, 0.1); padding-bottom: 5px; }
+            .charlie-portrait { width: 160px; height: 160px; }
         }
     </style>
 </head>
@@ -72,14 +73,11 @@
 
     <div id="block-entrance" class="block active">
         <div class="entrance-logo">GY-GY PRIVATE</div>
-        <div class="door-container" onclick="handleDoor()">
-            <img src="door_1.jpg" class="door-img">
-        </div>
+        <div class="door-container" onclick="handleDoor()"><img src="door_1.jpg" class="door-img"></div>
     </div>
 
     <div id="block-welcome" class="block">
         <div class="charlie-portrait"><img src="charlie.png"></div>
-        <div class="quote">«В каждой шутке есть доля виски...»</div>
         <h1 class="welcome-text">WELCOME</h1>
         <button class="btn-gold" onclick="startTerminal()">PROCEED</button>
     </div>
@@ -87,53 +85,53 @@
     <div id="block-identity" class="block">
         <div class="terminal-grid">
             <div class="panel panel-setup">
-                <div style="font-size: 12px; letter-spacing: 2px; margin-bottom: 10px; font-weight: bold;">ВАШ ВЫБОР</div>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <div onclick="changeAvatar(-1)" style="cursor:pointer; font-size:24px; padding:5px;">&#10094;</div>
-                    <div id="user-avatar" style="font-size:45px;">🥃</div>
-                    <div onclick="changeAvatar(1)" style="cursor:pointer; font-size:24px; padding:5px;">&#10095;</div>
+                <div style="font-size: 11px; letter-spacing: 2px; margin-bottom: 8px;">IDENTITY</div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <div onclick="changeAvatar(-1)" style="cursor:pointer; font-size:22px; padding:5px;">&#10094;</div>
+                    <div id="user-avatar" style="font-size:40px;">🥃</div>
+                    <div onclick="changeAvatar(1)" style="cursor:pointer; font-size:22px; padding:5px;">&#10095;</div>
                 </div>
-                <div style="display:flex; align-items:center; gap:10px; margin-bottom:5px;">
-                    <div onclick="changeID(-1)" style="cursor:pointer; font-size:24px; padding:5px;">&#10094;</div>
-                    <div id="label-res" style="font-size:20px; letter-spacing:2px;">№ 1000</div>
-                    <div onclick="changeID(1)" style="cursor:pointer; font-size:24px; padding:5px;">&#10095;</div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <div onclick="changeID(-1)" style="cursor:pointer; font-size:22px; padding:5px;">&#10094;</div>
+                    <div id="label-res" style="font-size:18px; letter-spacing:2px;">№ 1000</div>
+                    <div onclick="changeID(1)" style="cursor:pointer; font-size:22px; padding:5px;">&#10095;</div>
                 </div>
                 <button class="btn-gold" onclick="saveChanges()">СОХРАНИТЬ</button>
-                <button class="btn-gold btn-reset" onclick="resetIdentity()">СБРОСИТЬ ВСЁ</button>
                 <div class="action-area">
                     <button id="btn-to-hall" class="btn-gold glow-btn" style="display:none;" onclick="enterHall()">ВХОД В ХОЛЛ</button>
                 </div>
             </div>
 
             <div class="panel">
-                <div style="font-size: 12px; letter-spacing: 2px; margin-bottom: 10px; font-weight: bold;">КАРТА УЧАСТНИКА</div>
-                <div style="background:#fff; padding:8px; border-radius:4px;">
-                    <div id="qrcode"></div>
-                </div>
+                <div style="font-size: 11px; letter-spacing: 2px; margin-bottom: 8px;">MEMBER CARD</div>
+                <div style="background:#fff; padding:6px; border-radius:2px;"><div id="qrcode"></div></div>
                 <input type="file" id="file-input" style="display:none" accept="image/*" onchange="previewFile()">
                 <div class="photo-slot" onclick="document.getElementById('file-input').click()">
-                    <span id="t-photo-text">ЗАГРУЗИТЬ<br>ФОТО</span>
+                    <span id="t-photo-text">PHOTO</span>
                     <img id="photo-preview" src="" style="display:none">
                 </div>
             </div>
         </div>
 
-        <div class="lang-grid" id="lang-container">
-            <div class="lang-item active" onclick="setLang(this)">RU</div>
-            <div class="lang-item" onclick="setLang(this)">EN</div>
-            <div class="lang-item" onclick="setLang(this)">UA</div>
-            <div class="lang-item" onclick="setLang(this)">FR</div>
-            <div class="lang-item" onclick="setLang(this)">DE</div>
-            <div class="lang-item" onclick="setLang(this)">PL</div>
-            <div class="lang-item" onclick="setLang(this)">ES</div>
-            <div class="lang-item" onclick="setLang(this)">IT</div>
+        <div id="dynamic-quote">«В каждой шутке есть доля виски...»</div>
+
+        <div class="lang-grid">
+            <div class="lang-item active" onclick="setLang(this, 'ru')">RU</div>
+            <div class="lang-item" onclick="setLang(this, 'en')">EN</div>
+            <div class="lang-item" onclick="setLang(this, 'ua')">UA</div>
+            <div class="lang-item" onclick="setLang(this, 'fr')">FR</div>
+            <div class="lang-item" onclick="setLang(this, 'de')">DE</div>
+            <div class="lang-item" onclick="setLang(this, 'pl')">PL</div>
+            <div class="lang-item" onclick="setLang(this, 'es')">ES</div>
+            <div class="lang-item" onclick="setLang(this, 'it')">IT</div>
         </div>
+
+        <div class="exit-club" onclick="location.reload()">ПОКИНУТЬ КЛУБ</div>
     </div>
 
     <div id="block-hall" class="block">
         <h1 style="font-size: 3rem; letter-spacing: 12px;">THE HALL</h1>
-        <p style="letter-spacing: 5px; opacity: 0.8; font-size: 14px;">PRIVATE MEMBER AREA</p>
-        <button class="btn-gold" style="margin-top:30px; border-style:double; width:240px;">ПРОЙТИ В БАР</button>
+        <button class="btn-gold" style="margin-top:30px; border-style:double;" onclick="location.reload()">ВЫХОД</button>
     </div>
 
     <script>
@@ -142,6 +140,17 @@
         let currentID = 1000;
         let currentAvIdx = 0;
         const avatars = ['🥃','🎩','🍸','🚬','🎷','🎭','👔','💼','💎'];
+        
+        const quotes = {
+            ru: "«В каждой шутке есть доля виски...»",
+            en: "«Every joke has a share of whiskey...»",
+            ua: "«У кожному жарті є доля віскі...»",
+            fr: "«Chaque blague a une part de whisky...»",
+            de: "«Jeder Witz hat einen Anteil Whiskey...»",
+            pl: "«W każdym żarcie jest kropla whiskey...»",
+            es: "«Cada broma tiene una parte de whisky...»",
+            it: "«Ogni scherzo ha una parte di whiskey...»"
+        };
 
         function switchTo(id) {
             document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
@@ -160,9 +169,10 @@
             updateDisplay();
         }
 
-        function setLang(el) {
+        function setLang(el, lang) {
             document.querySelectorAll('.lang-item').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
+            document.getElementById('dynamic-quote').innerText = quotes[lang];
         }
 
         function previewFile() {
@@ -182,28 +192,11 @@
             document.getElementById('label-res').innerText = "№ " + currentID;
             const qrBox = document.getElementById("qrcode");
             qrBox.innerHTML = "";
-            new QRCode(qrBox, { text: "GY-ID:"+currentID, width: 85, height: 85 });
-        }
-
-        function resetIdentity() {
-            currentID = 1000; currentAvIdx = 0;
-            updateDisplay();
-            const preview = document.getElementById('photo-preview');
-            const fileInput = document.getElementById('file-input');
-            const photoText = document.getElementById('t-photo-text');
-            preview.src = ""; preview.style.display = "none";
-            fileInput.value = ""; photoText.style.display = "block";
-            document.getElementById('btn-to-hall').style.display = 'none';
+            new QRCode(qrBox, { text: "GY-ID:"+currentID, width: 80, height: 80 });
         }
 
         function saveChanges() { document.getElementById('btn-to-hall').style.display = 'block'; }
-        
-        function enterHall() { 
-            let vol = 0.2;
-            const fade = setInterval(() => { if (vol < 0.6) { vol += 0.02; barSnd.volume = vol; } else { clearInterval(fade); } }, 50);
-            switchTo('block-hall'); 
-        }
-
+        function enterHall() { switchTo('block-hall'); }
         function changeAvatar(dir) { currentAvIdx = (currentAvIdx + dir + avatars.length) % avatars.length; updateDisplay(); }
         function changeID(dir) { currentID = (currentID + (dir * 9) + 9000) % 9000 + 1000; updateDisplay(); }
     </script>
