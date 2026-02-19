@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v2.6.7</title>
+    <title>GY-GY Club v2.6.8</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
@@ -12,7 +12,6 @@
         .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 10px; background: #000; }
         .block.active { display: flex !important; z-index: 50; }
 
-        /* ИСПРАВЛЕННАЯ ДВЕРЬ */
         #door-wrapper { cursor: pointer; padding: 20px; transition: 1.2s; transform: scale(1); opacity: 1; z-index: 100; }
         #door-img { width: 70vw; max-width: 280px; border: 1px solid rgba(212, 175, 55, 0.2); pointer-events: none; }
         .door-opening { transform: scale(5) !important; opacity: 0 !important; pointer-events: none !important; }
@@ -24,9 +23,11 @@
         .photo-slot { width: 90px; height: 90px; border: 1px solid #d4af37; margin-top: 5px; position: relative; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .photo-slot img { width: 100%; height: 100%; object-fit: cover; position: absolute; z-index: 2; }
 
-        .btn-gold { width: 100%; max-width: 160px; padding: 10px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 10px; letter-spacing: 1px; cursor: pointer; margin: 5px 0; font-family: inherit; transition: 0.2s; }
+        .btn-gold { width: 100%; max-width: 180px; padding: 12px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 11px; letter-spacing: 2px; cursor: pointer; margin: 8px 0; font-family: inherit; transition: 0.2s; }
         #btn-to-hall { background: rgba(212, 175, 55, 0.3) !important; font-weight: bold; display: none; border: 2px solid #d4af37; }
         .btn-saved { background: #d4af37 !important; color: #000 !important; }
+
+        #btn-exit { margin-top: 50px; border: 1px solid rgba(212, 175, 55, 0.5); background: rgba(255, 0, 0, 0.05); }
 
         .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px 15px; margin-top: 10px; }
         .lang-item { font-size: 10px; opacity: 0.4; cursor: pointer; padding: 5px; font-weight: bold; border-bottom: 1px solid transparent; }
@@ -96,8 +97,8 @@
 
     <div id="block-hall" class="block">
         <h1 id="t-hall-title" style="font-size: 2.5rem; letter-spacing: 10px;">THE HALL</h1>
-        <div id="hall-user-info" style="font-size: 1.5rem; margin-top: 20px;"></div>
-        <button id="btn-exit" class="btn-gold" style="margin-top: 40px;" onclick="softExit()">EXIT</button>
+        <div id="hall-user-info" style="font-size: 1.8rem; margin: 30px 0; border-top: 1px solid rgba(212,175,55,0.2); border-bottom: 1px solid rgba(212,175,55,0.2); padding: 20px;"></div>
+        <button id="btn-exit" class="btn-gold" onclick="softExit()">EXIT</button>
     </div>
 
     <script>
@@ -107,13 +108,13 @@
         let currentLang = 'RU';
 
         const i18n = {
-            RU: { choose: "ВЫБРАТЬ", save: "СОХРАНИТЬ", enter: "ВХОД", member: "УЧАСТНИК КЛУБА", photo: "ФОТО", change: "ИЗМЕНИТЬ", hall: "ЗАЛ", exit: "ВЫХОД", quote: "«В каждой шутке есть доля виски...»" },
-            EN: { choose: "CHOOSE", save: "SAVE", enter: "ENTER", member: "CLUB MEMBER", photo: "PHOTO", change: "CHANGE", hall: "THE HALL", exit: "EXIT", quote: "«In every joke there is a drop of whiskey...»" },
-            UA: { choose: "ОБРАТИ", save: "ЗБЕРЕГТИ", enter: "ВХІД", member: "УЧАСНИК КЛУБУ", photo: "ФОТО", change: "ЗМІНИТИ", hall: "ЗАЛ", exit: "ВИХІД", quote: "«У кожному жарті є частка віскі...»" }
+            RU: { choose: "ВЫБРАТЬ", save: "СОХРАНИТЬ", enter: "ВХОД", member: "УЧАСТНИК КЛУБА", photo: "ФОТО", change: "ИЗМЕНИТЬ", hall: "ЗАЛ", exit: "ПОКИНУТЬ КЛУБ", quote: "«В каждой шутке есть доля виски...»" },
+            EN: { choose: "CHOOSE", save: "SAVE", enter: "ENTER", member: "CLUB MEMBER", photo: "PHOTO", change: "CHANGE", hall: "THE HALL", exit: "LEAVE CLUB", quote: "«In every joke there is a drop of whiskey...»" },
+            UA: { choose: "ОБРАТИ", save: "ЗБЕРЕГТИ", enter: "ВХІД", member: "УЧАСНИК КЛУБУ", photo: "ФОТО", change: "ЗМІНИТИ", hall: "ЗАЛ", exit: "ПОКИНУТИ КЛУБ", quote: "«У кожному жарті є частка віскі...»" }
         };
 
         function initClub() {
-            const saved = localStorage.getItem('gy_v267');
+            const saved = localStorage.getItem('gy_v268');
             if(saved) {
                 const data = JSON.parse(saved);
                 currentID = parseInt(data.id) || 1000;
@@ -139,23 +140,11 @@
 
         function softExit() {
             document.getElementById('bar-sound').pause();
-            // СБРОС ДВЕРИ
             const wrapper = document.getElementById('door-wrapper');
             wrapper.classList.remove('door-opening');
             wrapper.style.opacity = "1";
             wrapper.style.transform = "scale(1)";
             switchTo('block-entrance');
-        }
-
-        function saveChanges() {
-            const photoSrc = document.getElementById('photo-preview').src;
-            localStorage.setItem('gy_v267', JSON.stringify({
-                id: currentID, avIdx: currentAvIdx, lang: currentLang, photo: photoSrc.startsWith('data:') ? photoSrc : null
-            }));
-            const btn = document.getElementById('btn-save');
-            btn.classList.add('btn-saved');
-            setTimeout(() => btn.classList.remove('btn-saved'), 500);
-            document.getElementById('btn-to-hall').style.display = 'block';
         }
 
         function updateLang(lang) {
@@ -173,10 +162,15 @@
             document.querySelectorAll('.lang-item').forEach(el => el.classList.toggle('active', el.innerText === lang));
         }
 
-        function startTerminal() {
-            document.getElementById('bar-sound').volume = 0.2;
-            document.getElementById('bar-sound').play().catch(()=>{});
-            switchTo('block-identity');
+        function saveChanges() {
+            const photoSrc = document.getElementById('photo-preview').src;
+            localStorage.setItem('gy_v268', JSON.stringify({
+                id: currentID, avIdx: currentAvIdx, lang: currentLang, photo: photoSrc.startsWith('data:') ? photoSrc : null
+            }));
+            const btn = document.getElementById('btn-save');
+            btn.classList.add('btn-saved');
+            setTimeout(() => btn.classList.remove('btn-saved'), 500);
+            document.getElementById('btn-to-hall').style.display = 'block';
         }
 
         function updateDisplay() {
@@ -187,14 +181,33 @@
             new QRCode(qrBox, { text: "GY-"+currentID, width: 80, height: 80 });
         }
 
-        function changeAvatar(dir) { currentAvIdx = (currentAvIdx + dir + avatars.length) % avatars.length; updateDisplay(); document.getElementById('btn-to-hall').style.display = 'none'; }
-        function changeID(dir) { currentID = (currentID + (dir * 9) + 9000) % 9000 + 1000; updateDisplay(); document.getElementById('btn-to-hall').style.display = 'none'; }
-        function enterHall() { document.getElementById('hall-user-info').innerText = avatars[currentAvIdx] + " №" + currentID; switchTo('block-hall'); }
+        function changeAvatar(dir) { 
+            currentAvIdx = (currentAvIdx + dir + avatars.length) % avatars.length; 
+            updateDisplay(); 
+            document.getElementById('btn-to-hall').style.display = 'none'; 
+        }
+
+        function changeID(dir) { 
+            currentID = (currentID + (dir * 9) + 9000) % 9000 + 1000; 
+            updateDisplay(); 
+            document.getElementById('btn-to-hall').style.display = 'none'; 
+        }
+
+        function enterHall() { 
+            document.getElementById('hall-user-info').innerText = avatars[currentAvIdx] + " №" + currentID; 
+            switchTo('block-hall'); 
+        }
 
         function switchTo(id) {
             document.querySelectorAll('.block').forEach(b => { b.style.display = 'none'; b.classList.remove('active'); });
             const target = document.getElementById(id);
             target.style.display = 'flex'; target.classList.add('active');
+        }
+
+        function startTerminal() {
+            document.getElementById('bar-sound').volume = 0.2;
+            document.getElementById('bar-sound').play().catch(()=>{});
+            switchTo('block-identity');
         }
 
         function previewFile() {
