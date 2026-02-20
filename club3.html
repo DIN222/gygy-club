@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v3.0.4.9</title>
+    <title>GY-GY Club v3.0.5.0</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none !important; }
@@ -14,33 +14,33 @@
 
         /* ЭКРАН 1: ДВЕРЬ */
         .door-wrapper { cursor: pointer; transition: 1.2s ease-out; }
-        .door-img { width: 75vw; max-width: 300px; border: 1px solid rgba(212,175,55,0.2); }
+        .door-img { width: 70vw; max-width: 280px; border: 1px solid rgba(212,175,55,0.2); }
 
-        /* ЭКРАН 2: ЧАРЛИ (SVG MASKING) */
-        .charlie-svg-box { width: 250px; height: 250px; margin-bottom: 30px; position: relative; }
-        .charlie-svg-box svg { width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
+        /* ЭКРАН 2: ЧАРЛИ (МАКСИМАЛЬНО ЧИСТО) */
+        .charlie-svg-box { width: 260px; height: 260px; margin-bottom: 30px; }
         
         #t-welcome { font-size: 52px; letter-spacing: 12px; margin: 0 0 30px 0; text-transform: uppercase; font-weight: normal; }
 
-        /* ЭКРАН 3: ТЕРМИНАЛ (ОДИНАКОВЫЕ РАМКИ) */
-        .setup-grid { display: flex; justify-content: center; gap: 20px; width: 100%; max-width: 450px; }
-        .panel { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        /* ЭКРАН 3: ТЕРМИНАЛ */
+        .setup-grid { display: flex; justify-content: center; gap: 15px; width: 100%; margin-bottom: 20px; }
         
-        /* Единый стиль для всех трех боксов */
         .identity-box { 
             width: 110px; height: 110px; 
             border: 1px solid #d4af37; 
-            display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            background: rgba(212,175,55,0.02);
+            display: flex; align-items: center; justify-content: center; 
+            background: #000;
             overflow: hidden;
         }
-        .qr-white { background: #fff !important; } /* QR лучше читается на белом */
+        .qr-white { background: #fff !important; }
 
-        #id-val { font-size: 13px; letter-spacing: 1px; color: #d4af37; font-weight: bold; }
+        #id-val { font-size: 14px; letter-spacing: 1px; color: #d4af37; font-weight: bold; }
         
-        .btn-gold { width: 110px; height: 35px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 9px; letter-spacing: 1px; cursor: pointer; font-family: inherit; }
+        /* КНОПКИ ПО ЦЕНТРУ */
+        .btn-container { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        .btn-gold { width: 160px; height: 40px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 11px; letter-spacing: 1px; cursor: pointer; font-family: inherit; }
         
-        #quote-reg { font-style: italic; font-size: 14px; margin: 30px 0; color: #d4af37; padding: 0 20px; min-height: 40px; }
+        /* УВЕЛИЧЕННЫЙ ДЕВИЗ */
+        #quote-reg { font-style: italic; font-size: 20px; margin: 30px 0; color: #d4af37; padding: 0 10px; min-height: 50px; font-weight: bold; text-shadow: 0 0 10px rgba(212,175,55,0.3); }
 
         .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; width: 240px; }
         .lang-item { font-size: 10px; padding: 6px; border: 1px solid rgba(212, 175, 55, 0.3); cursor: pointer; }
@@ -48,26 +48,27 @@
     </style>
 </head>
 <body>
-    <audio id="door-snd"><source src="door_open.mp3" type="audio/mpeg"></audio>
+    <audio id="door-snd" preload="auto"><source src="door_open.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active">
         <div style="letter-spacing:10px; margin-bottom:30px; opacity:0.8;">GY-GY PRIVATE</div>
         <div class="door-wrapper" onclick="handleDoor()">
             <img src="door_1.jpg" class="door-img" onerror="this.src='https://via.placeholder.com/300x500?text=DOOR'">
         </div>
-        <div style="font-size: 9px; margin-top: 40px; opacity: 0.3;">v3.0.4.9</div>
+        <div style="font-size: 9px; margin-top: 40px; opacity: 0.3;">v3.0.5.0</div>
     </div>
 
     <div id="block-welcome" class="block">
         <div class="charlie-svg-box">
-            <svg viewBox="0 0 100 100">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                 <defs>
-                    <clipPath id="circleView">
-                        <circle cx="50" cy="50" r="48" />
+                    <clipPath id="cp">
+                        <circle cx="50" cy="50" r="49" />
                     </clipPath>
                 </defs>
-                <image xlink:href="charlie.png" width="100" height="100" clip-path="url(#circleView)" preserveAspectRatio="xMidYMid slice" onerror="this.setAttribute('xlink:href','https://via.placeholder.com/250')" />
-                <circle cx="50" cy="50" r="48" fill="none" stroke="#d4af37" stroke-width="1.5" />
+                <circle cx="50" cy="50" r="49" fill="#d4af37" />
+                <image xlink:href="charlie.png" width="96" height="96" x="2" y="2" clip-path="url(#cp)" preserveAspectRatio="xMidYMid slice" />
+                <circle cx="50" cy="50" r="49" fill="none" stroke="#d4af37" stroke-width="1" />
             </svg>
         </div>
         <h1 id="t-welcome">WELCOME</h1>
@@ -76,28 +77,22 @@
 
     <div id="block-identity" class="block">
         <div class="setup-grid">
-            <div class="panel">
-                <div class="identity-box">
-                    <span style="font-size:9px; opacity:0.5; margin-bottom:5px;">ID STATUS</span>
-                    <div id="id-val">#0000-0000</div>
-                </div>
-                <button id="btn-save" class="btn-gold" onclick="save()">СОХРАНИТЬ</button>
-                <button id="btn-to-hall" class="btn-gold" style="visibility:hidden;" onclick="switchTo('block-hall')">ВХОД</button>
+            <div class="identity-box">
+                <div id="id-val">#0000-0000</div>
             </div>
             
-            <div class="panel">
-                <div id="qrcode" class="identity-box qr-white"></div>
-                <div style="font-size:9px; letter-spacing:1px; opacity:0.5;">KEY</div>
-            </div>
+            <div id="qrcode" class="identity-box qr-white"></div>
 
-            <div class="panel">
-                <div class="identity-box" style="cursor:pointer;" onclick="document.getElementById('f').click()">
-                    <span id="t-ph" style="color:#d4af37; font-size:9px;">PHOTO</span>
-                    <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
-                </div>
-                <input type="file" id="f" style="display:none" onchange="preview(this)">
-                <div style="font-size:9px; letter-spacing:1px; opacity:0.5;">MEMBER</div>
+            <div class="identity-box" style="cursor:pointer;" onclick="document.getElementById('f').click()">
+                <span id="t-ph" style="color:#d4af37; font-size:10px;">PHOTO</span>
+                <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
             </div>
+            <input type="file" id="f" style="display:none" onchange="preview(this)">
+        </div>
+
+        <div class="btn-container">
+            <button id="btn-save" class="btn-gold" onclick="save()">СОХРАНИТЬ</button>
+            <button id="btn-to-hall" class="btn-gold" style="visibility:hidden;" onclick="switchTo('block-hall')">ВХОД</button>
         </div>
 
         <div id="quote-reg">«В каждой шутке есть доля виски...»</div>
@@ -123,7 +118,12 @@
         const fullID = `#0042-${Math.floor(1000 + Math.random() * 9000)}`;
 
         function handleDoor() {
-            document.getElementById('door-snd').play().catch(() => {});
+            // Разблокировка звука
+            const snd = document.getElementById('door-snd');
+            snd.play().then(() => {
+                console.log("Audio playing");
+            }).catch(e => console.log("Audio fail:", e));
+
             const w = document.querySelector('.door-wrapper');
             w.style.transform = "scale(5)"; w.style.opacity = "0";
             setTimeout(() => switchTo('block-welcome'), 1000);
@@ -157,7 +157,7 @@
         function updateID() {
             document.getElementById('id-val').innerText = fullID;
             const q = document.getElementById("qrcode"); q.innerHTML = "";
-            new QRCode(q, { text: "GY-ID:" + fullID, width: 110, height: 110 });
+            new QRCode(q, { text: "GY-ID:" + fullID, width: 110, height: 110, colorDark : "#000000", colorLight : "#ffffff" });
         }
 
         function preview(input) {
