@@ -3,73 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v3.0.6.1</title>
+    <title>GY-GY Club v3.0.6.2</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
-        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; border: 0 !important; outline: 0 !important; }
-        body { background: #000; color: #d4af37; font-family: serif; text-align: center; height: 100vh; overflow: hidden; }
+        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #000; color: #d4af37; font-family: 'Times New Roman', Times, serif; text-align: center; height: 100vh; overflow: hidden; }
         
         .block { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
         .block.active { display: flex !important; }
 
-        /* ЭКРАН 1: ДВЕРЬ */
-        .door-img { width: 280px; cursor: pointer; transition: 1s cubic-bezier(0.4, 0, 0.2, 1); background: transparent; }
+        /* ЭКРАН 1: ДВЕРЬ (ВОЗВРАТ КЛИКАБЕЛЬНОСТИ) */
+        .door-container { position: relative; cursor: pointer; display: inline-block; transition: 1s ease-in-out; }
+        .door-img { width: 280px; display: block; pointer-events: none; border: none; }
+        
+        /* ЭКРАН 2: ЧАРЛИ (ВЕКТОРНАЯ ЗАЛИВКА) */
+        .charlie-svg { width: 280px; height: 280px; margin-bottom: 20px; }
 
-        /* ЭКРАН 2: ЧАРЛИ (ВЕКТОРНОЕ КОЛЬЦО) */
-        .charlie-container {
-            width: 280px; height: 280px;
-            margin-bottom: 20px;
-            display: flex; align-items: center; justify-content: center;
-        }
-        /* Золотая линия через SVG — это 100% одна линия */
-        .gold-ring-svg { width: 280px; height: 280px; overflow: visible; }
-
-        #t-welcome { font-size: 50px; letter-spacing: 12px; margin-bottom: 20px; }
-
-        /* ЭКРАН 3: ТЕРМИНАЛ (БЕЛЫЕ КВАДРАТЫ) */
+        /* ЭКРАН 3: ТЕРМИНАЛ */
         .setup-grid { display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; }
         .box { 
             width: 110px; height: 110px; background: #fff; 
-            box-shadow: 0 0 0 2px #d4af37; /* Стабильная рамка */
+            border: 2px solid #d4af37;
             display: flex; align-items: center; justify-content: center; overflow: hidden;
         }
         #id-val { font-size: 14px; color: #000; font-weight: bold; }
-        
-        .btn-gold { 
-            width: 180px; height: 40px; background: transparent; 
-            box-shadow: 0 0 0 1px #d4af37; color: #d4af37; 
-            text-transform: uppercase; font-size: 11px; cursor: pointer; margin-bottom: 10px; 
-        }
-        
+        .btn-gold { width: 180px; height: 40px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 11px; cursor: pointer; margin-bottom: 10px; }
         #quote-reg { font-style: italic; font-size: 24px; margin: 15px 0 5px 0; font-weight: bold; }
         .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; width: 260px; }
-        .lang-item { font-size: 10px; padding: 6px; box-shadow: 0 0 0 1px rgba(212,175,55,0.3); }
-        .lang-item.active { box-shadow: 0 0 0 1px #d4af37; background: rgba(212,175,55,0.1); }
+        .lang-item { font-size: 10px; padding: 6px; border: 1px solid rgba(212,175,55,0.3); }
+        .lang-item.active { border-color: #d4af37; background: rgba(212,175,55,0.1); }
     </style>
 </head>
-<body onclick="forceAudio()">
+<body onclick="unlockAudio()">
 
-    <audio id="audio-door" playsinline><source src="door_open.mp3" type="audio/mpeg"></audio>
-    <audio id="audio-bar" loop playsinline><source src="bar_sounds.mp3" type="audio/mpeg"></audio>
+    <audio id="snd-door" preload="auto"><source src="door_open.mp3" type="audio/mpeg"></audio>
+    <audio id="snd-bar" loop preload="auto"><source src="bar_sounds.mp3" type="audio/mpeg"></audio>
 
     <div id="b1" class="block active">
         <div style="letter-spacing:10px; margin-bottom:30px;">GY-GY PRIVATE</div>
-        <img src="door_1.jpg" class="door-img" onclick="openClub()">
+        <div class="door-container" onclick="openClub(this)">
+            <img src="door_1.jpg" class="door-img">
+        </div>
     </div>
 
     <div id="b2" class="block">
-        <div class="charlie-container">
-            <svg class="gold-ring-svg" viewBox="0 0 100 100">
+        <div class="charlie-svg">
+            <svg viewBox="0 0 100 100" width="100%" height="100%">
                 <defs>
-                    <clipPath id="circleView">
-                        <circle cx="50" cy="50" r="48" />
-                    </clipPath>
+                    <clipPath id="cp"><circle cx="50" cy="50" r="47" /></clipPath>
                 </defs>
-                <circle cx="50" cy="50" r="48.5" fill="none" stroke="#d4af37" stroke-width="0.8" />
-                <image xlink:href="charlie.png" x="2" y="2" width="96" height="96" clip-path="url(#circleView)" />
+                <circle cx="50" cy="50" r="49" fill="#d4af37" />
+                <circle cx="50" cy="50" r="47.5" fill="#000" />
+                <image xlink:href="charlie.png" x="3" y="3" width="94" height="94" clip-path="url(#cp)" onerror="this.setAttribute('xlink:href','https://via.placeholder.com/260')" />
             </svg>
         </div>
-        <h1 id="t-welcome">WELCOME</h1>
+        <h1 style="font-size:50px; letter-spacing:10px;">WELCOME</h1>
         <button class="btn-gold" style="width:240px; height:50px;" onclick="switchTo('b3')">PROCEED</button>
     </div>
 
@@ -77,7 +65,7 @@
         <div class="setup-grid">
             <div class="box"><div id="id-val">#0000-0000</div></div>
             <div id="qrcode" class="box"></div>
-            <div class="box" onclick="document.getElementById('f').click()">
+            <div class="box" onclick="document.getElementById('f').click()" style="cursor:pointer">
                 <span id="tph" style="color:#000; font-size:10px; font-weight:bold;">ФОТО</span>
                 <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
             </div>
@@ -85,4 +73,63 @@
         </div>
         <button class="btn-gold" onclick="document.getElementById('be').style.visibility='visible'">СОХРАНИТЬ</button>
         <button id="be" class="btn-gold" style="visibility:hidden;" onclick="switchTo('b4')">ВХОД</button>
-        <div id
+        <div id="quote-reg">«В каждой шутке есть доля виски...»</div>
+        <div class="lang-grid">
+            <div class="lang-item active">RU</div><div class="lang-item">EN</div>
+            <div class="lang-item">UA</div><div class="lang-item">FR</div>
+            <div class="lang-item">DE</div><div class="lang-item">PL</div>
+            <div class="lang-item">ES</div><div class="lang-item">IT</div>
+        </div>
+    </div>
+
+    <div id="b4" class="block">
+        <h2 style="letter-spacing: 5px;">HALL IS READY</h2>
+        <div class="btn-gold" style="width:200px" onclick="location.reload()">EXIT</div>
+    </div>
+
+    <script>
+        const fullID = `#0042-${Math.floor(1000 + Math.random() * 9000)}`;
+        let audioInit = false;
+
+        function unlockAudio() {
+            if (!audioInit) {
+                const d = document.getElementById('snd-door');
+                const b = document.getElementById('snd-bar');
+                d.play().then(() => { d.pause(); d.currentTime = 0; });
+                b.play().then(() => { b.pause(); b.currentTime = 0; });
+                audioInit = true;
+            }
+        }
+
+        function openClub(el) {
+            document.getElementById('snd-door').play();
+            document.getElementById('snd-bar').play();
+            el.style.transform = "scale(5)";
+            el.style.opacity = "0";
+            setTimeout(() => switchTo('b2'), 1000);
+        }
+
+        function updateID() {
+            document.getElementById('id-val').innerText = fullID;
+            const q = document.getElementById("qrcode"); q.innerHTML = "";
+            new QRCode(q, { text: "GY-ID:" + fullID, width: 100, height: 100 });
+        }
+
+        function preview(input) {
+            const r = new FileReader();
+            r.onload = (e) => { 
+                document.getElementById('pp').src = e.target.result; 
+                document.getElementById('pp').style.display = "block";
+                document.getElementById('tph').style.display = "none";
+            };
+            r.readAsDataURL(input.files[0]);
+        }
+
+        function switchTo(id) {
+            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            if(id === 'b3') updateID();
+        }
+    </script>
+</body>
+</html>
