@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v2.9.6</title>
+    <title>GY-GY Club v2.9.7</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
@@ -12,9 +12,20 @@
         .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 10px; z-index: 1; }
         .block.active { display: flex !important; z-index: 10; }
 
-        /* ФИКСИРОВАННЫЕ КНОПКИ */
+        /* ЧАРЛИ - ВОЗВРАТ К НОРМЕ */
+        .charlie-portrait { 
+            width: 180px; height: 180px; 
+            margin-bottom: 20px; border-radius: 4px; 
+            overflow: hidden; position: relative; 
+            display: flex; align-items: center; justify-content: center; 
+            background: rgba(212, 175, 55, 0.05); 
+        }
+        .charlie-portrait::before { content: "🤵‍♂️"; font-size: 100px; position: absolute; z-index: 1; }
+        .charlie-portrait img { width: 100%; height: 100%; object-fit: cover; position: relative; z-index: 2; background: black; }
+
+        /* КНОПКИ С ЖЕСТКИМ РАЗМЕРОМ */
         .btn-gold { 
-            width: 180px; height: 40px; /* Строгие размеры */
+            width: 180px; height: 40px; 
             padding: 0; background: transparent; border: 1px solid #d4af37; 
             color: #d4af37; text-transform: uppercase; font-size: 11px; 
             letter-spacing: 2px; cursor: pointer; margin: 5px 0; 
@@ -22,22 +33,18 @@
         }
         
         /* РЕГИСТРАЦИЯ */
-        .setup-grid { display: flex; justify-content: center; gap: 20px; margin-bottom: 20px; align-items: flex-start; }
-        .panel { width: 140px; display: flex; flex-direction: column; align-items: center; }
-        .panel-divider { width: 1px; height: 180px; background: rgba(212, 175, 55, 0.2); margin: 0 10px; }
-
+        .setup-grid { display: flex; justify-content: center; gap: 20px; margin-bottom: 10px; align-items: flex-start; }
+        .panel { width: 130px; display: flex; flex-direction: column; align-items: center; }
+        .panel-divider { width: 1px; height: 160px; background: rgba(212, 175, 55, 0.2); margin: 0 5px; }
         .title-label { height: 15px; font-size: 10px; letter-spacing: 2px; margin-bottom: 15px; text-transform: uppercase; }
-
-        /* Мини-кавычки */
         .nav-arrow { cursor: pointer; font-size: 18px; opacity: 0.5; width: 20px; user-select: none; }
-        .nav-arrow:hover { opacity: 1; }
 
         /* Идентичные рамки для фото и QR */
         .square-box { 
-            width: 90px; height: 90px; /* Жесткий размер */
+            width: 90px; height: 90px; 
             border: 1px solid #d4af37; background: #fff; 
-            position: relative; display: flex; align-items: center; 
-            justify-content: center; overflow: hidden; margin-top: 10px;
+            display: flex; align-items: center; justify-content: center; 
+            overflow: hidden; margin-top: 5px;
         }
         .square-box img { width: 90px !important; height: 90px !important; object-fit: cover; }
 
@@ -59,9 +66,9 @@
         .beads-curtain { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: repeating-linear-gradient(90deg, #3d2b1f 0px, #3d2b1f 3px, transparent 3px, transparent 8px); z-index: 10; transition: 0.8s ease-in-out; }
         .bar-arch-wrap:hover .beads-curtain { transform: scaleX(0.2); opacity: 0.3; }
 
-        .exit-link { font-size: 10px; opacity: 0.4; cursor: pointer; text-transform: uppercase; margin: 20px 0; letter-spacing: 1px; text-decoration: underline; height: 12px; }
+        .exit-link { font-size: 10px; opacity: 0.4; cursor: pointer; text-transform: uppercase; margin: 20px 0; letter-spacing: 1px; text-decoration: underline; }
 
-        @media (max-width: 600px) { .setup-grid { gap: 5px; } .panel { width: 125px; } .hall-scene { gap: 10px; } }
+        @media (max-width: 600px) { .setup-grid { gap: 5px; } .panel { width: 120px; } .hall-scene { gap: 10px; } }
     </style>
 </head>
 <body>
@@ -79,7 +86,7 @@
 
     <div id="block-welcome" class="block">
         <div class="charlie-portrait"><img src="charlie.png" onerror="this.style.display='none'"></div>
-        <h1 id="t-welcome" style="letter-spacing:8px; font-weight:normal;">WELCOME</h1>
+        <h1 id="t-welcome" style="letter-spacing:8px; font-weight:normal; margin: 0 0 20px 0;">WELCOME</h1>
         <button id="btn-proceed" class="btn-gold" onclick="startTerminal()">PROCEED</button>
     </div>
 
@@ -98,9 +105,7 @@
                     <div onclick="changeID(1)" class="nav-arrow">›</div>
                 </div>
             </div>
-
             <div class="panel-divider"></div>
-
             <div class="panel">
                 <div id="t-card-title" class="title-label">MEMBER CARD</div>
                 <div id="qrcode" class="square-box"></div>
@@ -139,7 +144,6 @@
             <div class="stat-box">GUESTS ONLINE <span id="stat-online">14</span></div>
             <div class="stat-box">ATMOSPHERE <span id="stat-temp">180°C</span></div>
         </div>
-
         <div class="hall-scene">
             <div class="gallery-section"><div class="painting"></div><div class="lumber-table"></div></div>
             <div class="bar-arch-wrap" onclick="enterBar()">
@@ -148,10 +152,7 @@
             </div>
             <div class="gallery-section"><div class="lumber-table"></div><div class="painting"></div></div>
         </div>
-
-        <div id="quote-hall" style="margin-top:auto; padding:20px 10px; font-style:italic; opacity:0.8;">
-            «Истина не в вине, истина — в тех, кто его пьет.»
-        </div>
+        <div id="quote-hall" style="margin-top:auto; padding:20px 10px; font-style:italic; opacity:0.8;">«Истина не в вине, истина — в тех, кто его пьет.»</div>
         <div class="exit-link" onclick="location.reload()" id="t-exit-hall" style="margin-bottom:20px;">ПОКИНУТЬ КЛУБ</div>
     </div>
 
