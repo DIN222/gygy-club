@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v2.7.9</title>
+    <title>GY-GY Club v2.8.0</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
@@ -17,10 +17,10 @@
         #door-img { width: 70vw; max-width: 280px; border: 1px solid rgba(212, 175, 55, 0.2); }
         .door-opening { transform: scale(5); opacity: 0; pointer-events: none; }
 
-        /* ЧАРЛИ (ФИКС) */
-        .charlie-frame { width: 200px; height: 250px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; position: relative; }
-        .charlie-img { width: 100%; height: auto; z-index: 2; }
-        .charlie-fallback { position: absolute; font-size: 120px; filter: drop-shadow(0 0 15px #d4af37); z-index: 1; }
+        /* ЧАРЛИ v2.8.0 - Гарантированное появление */
+        .charlie-box { width: 220px; height: 260px; margin-bottom: 20px; position: relative; display: flex; align-items: center; justify-content: center; }
+        .charlie-avatar { font-size: 140px; position: absolute; z-index: 1; filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.5)); }
+        .charlie-img { width: 100%; height: 100%; object-fit: contain; position: relative; z-index: 2; }
 
         /* ТЕРМИНАЛ */
         .terminal-grid { display: flex; flex-direction: row; gap: 5px; width: 100%; max-width: 650px; background: rgba(15,15,15,0.95); padding: 20px; border: 1px solid rgba(212,175,55,0.1); margin-bottom: 10px; }
@@ -63,9 +63,9 @@
     </div>
 
     <div id="block-welcome" class="block">
-        <div class="charlie-frame">
-            <div class="charlie-fallback">🤵‍♂️</div>
-            <img src="charlie.png" class="charlie-img" onerror="this.style.opacity='0'">
+        <div class="charlie-box">
+            <span class="charlie-avatar">🤵‍♂️</span>
+            <img src="charlie.png" class="charlie-img" onerror="this.style.display='none'">
         </div>
         <h1 id="t-welcome-title" style="letter-spacing: 8px;">WELCOME</h1>
         <button id="btn-proceed" class="btn-gold" onclick="startTerminal()">PROCEED</button>
@@ -135,6 +135,7 @@
     </div>
 
     <script>
+        // Версия v2.8.0
         const avatars = ['🥃','🎩','🍸','🚬','🎷','🎭','👔','💼','💎'];
         let currentID = 1000, currentAvIdx = 0, currentLang = 'RU';
         const barAudio = document.getElementById('bar-sound');
@@ -172,7 +173,8 @@
         }
 
         function initClub() {
-            const saved = localStorage.getItem('gy_v279');
+            // Ключ сохранения v2.8.0
+            const saved = localStorage.getItem('gy_v280');
             if(saved) {
                 const data = JSON.parse(saved);
                 currentID = data.id; currentAvIdx = data.avIdx; currentLang = data.lang;
@@ -203,7 +205,8 @@
 
         function saveChanges() {
             const photo = document.getElementById('photo-preview').src;
-            localStorage.setItem('gy_v279', JSON.stringify({
+            // Ключ сохранения v2.8.0
+            localStorage.setItem('gy_v280', JSON.stringify({
                 id: currentID, avIdx: currentAvIdx, lang: currentLang, photo: photo.startsWith('data:') ? photo : null
             }));
             document.getElementById('btn-to-hall').style.display = 'block';
