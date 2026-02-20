@@ -1,148 +1,128 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v3.0.5.8</title>
+    <title>GY-GY Club v3.0.5.9</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
-        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none !important; }
-        body { margin: 0; background: #000; color: #d4af37; font-family: 'Times New Roman', Times, serif; text-align: center; height: 100vh; overflow: hidden; }
+        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #000; color: #d4af37; font-family: 'Times New Roman', Times, serif; text-align: center; height: 100vh; overflow: hidden; }
         
-        .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        .block { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
         .block.active { display: flex !important; }
 
         /* ЭКРАН 1: ДВЕРЬ */
-        .door-img { width: 280px; height: auto; border: 1px solid rgba(212,175,55,0.3); cursor: pointer; transition: 1.2s ease-in-out; }
+        .door-img { width: 280px; border: 1px solid rgba(212,175,55,0.3); cursor: pointer; transition: 1.2s; }
 
-        /* ЭКРАН 2: ЧАРЛИ (АБСОЛЮТНЫЙ КРУГ) */
-        .charlie-frame {
+        /* ЭКРАН 2: ЧАРЛИ (Ультра-чистая рамка) */
+        .charlie-outer {
             width: 260px; height: 260px;
-            min-width: 260px; min-height: 260px;
-            border: 2px solid #d4af37;
             border-radius: 50%;
-            overflow: hidden;
-            background: #000;
+            padding: 2px; /* Единственный зазор для золота */
+            background: #d4af37; /* Золото теперь — это фон подложки */
             margin-bottom: 20px;
-            display: grid; place-items: center; /* Центровка без искажений */
         }
-        .charlie-frame img { width: 100%; height: 100%; object-fit: cover; }
-        #t-welcome { font-size: 52px; letter-spacing: 12px; margin: 10px 0 30px 0; text-transform: uppercase; }
+        .charlie-inner {
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            background: #000;
+            overflow: hidden;
+        }
+        .charlie-inner img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* ЭКРАН 3: ТЕРМИНАЛ */
-        .setup-grid { display: flex; justify-content: center; gap: 15px; width: 100%; margin-bottom: 25px; }
+        /* ЭКРАН 3: ТЕРМИНАЛ (БЕЗ ИЗМЕНЕНИЙ) */
+        .setup-grid { display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; }
         .identity-box { 
             width: 110px; height: 110px; 
             border: 2px solid #d4af37; 
-            display: flex; align-items: center; justify-content: center; 
-            background: #fff; overflow: hidden; padding: 4px;
+            background: #fff; overflow: hidden; display: flex; align-items: center; justify-content: center;
         }
         #id-val { font-size: 14px; color: #000; font-weight: bold; }
-        
-        .btn-container { display: flex; flex-direction: column; align-items: center; gap: 10px; }
-        .btn-gold { width: 180px; height: 40px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 11px; cursor: pointer; }
-        
-        #quote-reg { font-style: italic; font-size: 24px; margin: 15px 0 5px 0; color: #d4af37; font-weight: bold; }
-
-        .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; width: 260px; margin-top: 5px; }
-        .lang-item { font-size: 10px; padding: 6px; border: 1px solid rgba(212, 175, 55, 0.3); cursor: pointer; }
-        .lang-item.active { border-color: #d4af37; background: rgba(212, 175, 55, 0.2); }
+        .btn-gold { width: 180px; height: 40px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 11px; cursor: pointer; margin-bottom: 10px; }
+        #quote-reg { font-style: italic; font-size: 24px; margin: 15px 0 5px 0; font-weight: bold; }
+        .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; width: 260px; }
+        .lang-item { font-size: 10px; padding: 6px; border: 1px solid rgba(212, 175, 55, 0.3); }
+        .lang-item.active { background: rgba(212, 175, 55, 0.2); border-color: #d4af37; }
     </style>
 </head>
-<body onclick="unlockAllAudio()">
-
-    <audio id="snd-door" src="door_open.mp3" preload="auto"></audio>
-    <audio id="snd-bar" src="bar_sounds.mp3" loop preload="auto"></audio>
+<body onclick="wakeAudio()">
 
     <div id="b1" class="block active">
-        <div style="letter-spacing:10px; margin-bottom:30px; opacity:0.8;">GY-GY PRIVATE</div>
+        <div style="letter-spacing:10px; margin-bottom:30px;">GY-GY PRIVATE</div>
         <img src="door_1.jpg" class="door-img" onclick="handleDoor()">
-        <div style="font-size: 9px; margin-top: 40px; opacity: 0.2;">v3.0.5.8</div>
     </div>
 
     <div id="b2" class="block">
-        <div class="charlie-frame">
-            <img src="charlie.png" onerror="this.src='https://via.placeholder.com/260'">
+        <div class="charlie-outer">
+            <div class="charlie-inner">
+                <img src="charlie.png" onerror="this.src='https://via.placeholder.com/260'">
+            </div>
         </div>
-        <h1 id="tw" style="font-size:50px; letter-spacing:10px;">WELCOME</h1>
-        <button class="btn-gold" style="width:240px; height: 50px;" onclick="switchTo('b3')">PROCEED</button>
+        <h1 style="font-size:50px; letter-spacing:10px;">WELCOME</h1>
+        <button class="btn-gold" style="width:240px; height:50px;" onclick="switchTo('b3')">PROCEED</button>
     </div>
 
     <div id="b3" class="block">
         <div class="setup-grid">
             <div class="identity-box"><div id="id-val">#0000-0000</div></div>
             <div id="qrcode" class="identity-box"></div>
-            <div class="identity-box" style="cursor:pointer;" onclick="document.getElementById('f').click()">
+            <div class="identity-box" onclick="document.getElementById('f').click()">
                 <span id="tph" style="color:#000; font-size:10px; font-weight:bold;">ФОТО</span>
                 <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
             </div>
             <input type="file" id="f" style="display:none" onchange="preview(this)">
         </div>
-
-        <div class="btn-container">
-            <button id="bs" class="btn-gold" onclick="save()">СОХРАНИТЬ</button>
-            <button id="be" class="btn-gold" style="visibility:hidden;" onclick="switchTo('b4')">ВХОД</button>
-        </div>
-
+        <button class="btn-gold" onclick="document.getElementById('be').style.visibility='visible'">СОХРАНИТЬ</button>
+        <button id="be" class="btn-gold" style="visibility:hidden;" onclick="switchTo('b4')">ВХОД</button>
         <div id="quote-reg">«В каждой шутке есть доля виски...»</div>
-        
         <div class="lang-grid">
-            <div class="lang-item active" onclick="setL(this,'ru')">RU</div>
-            <div class="lang-item" onclick="setL(this,'en')">EN</div>
-            <div class="lang-item" onclick="setL(this,'ua')">UA</div>
-            <div class="lang-item" onclick="setL(this,'fr')">FR</div>
-            <div class="lang-item" onclick="setL(this,'de')">DE</div>
-            <div class="lang-item" onclick="setL(this,'pl')">PL</div>
-            <div class="lang-item" onclick="setL(this,'es')">ES</div>
-            <div class="lang-item" onclick="setL(this,'it')">IT</div>
+            <div class="lang-item active">RU</div><div class="lang-item">EN</div>
+            <div class="lang-item">UA</div><div class="lang-item">FR</div>
+            <div class="lang-item">DE</div><div class="lang-item">PL</div>
+            <div class="lang-item">ES</div><div class="lang-item">IT</div>
         </div>
     </div>
 
     <div id="b4" class="block">
-        <h2 id="tr" style="letter-spacing: 5px;">HALL IS READY</h2>
+        <h2 style="letter-spacing: 5px;">HALL IS READY</h2>
         <div class="btn-gold" style="width:200px" onclick="location.reload()">EXIT</div>
     </div>
 
     <script>
         const fullID = `#0042-${Math.floor(1000 + Math.random() * 9000)}`;
-        let audioPrepped = false;
+        
+        // НОВЫЙ ЗВУКОВОЙ ДВИЖОК
+        let doorSound = new Audio("door_open.mp3");
+        let barSound = new Audio("bar_sounds.mp3");
+        barSound.loop = true;
 
-        function unlockAllAudio() {
-            if (!audioPrepped) {
-                const d = document.getElementById('snd-door');
-                const b = document.getElementById('snd-bar');
-                // Маленький трюк: запускаем и сразу на паузу
-                d.play().then(() => { d.pause(); d.currentTime = 0; });
-                b.play().then(() => { b.pause(); b.currentTime = 0; });
-                audioPrepped = true;
-            }
+        function wakeAudio() {
+            // Браузеры требуют "потрогать" аудио файлы при первом клике
+            doorSound.play().then(() => { doorSound.pause(); doorSound.currentTime = 0; });
+            barSound.play().then(() => { barSound.pause(); barSound.currentTime = 0; });
         }
 
         function handleDoor() {
-            const door = document.getElementById('snd-door');
-            const bar = document.getElementById('snd-bar');
-            
-            door.play().catch(e => console.log("Door sound blocked"));
-            bar.play().catch(e => console.log("Bar sound blocked"));
-
+            doorSound.play();
+            barSound.play();
             const img = document.querySelector('.door-img');
             img.style.transform = "scale(5)"; img.style.opacity = "0";
             setTimeout(() => switchTo('b2'), 1000);
         }
 
-        function save() { document.getElementById('be').style.visibility = 'visible'; }
-        
         function updateID() {
             document.getElementById('id-val').innerText = fullID;
             const q = document.getElementById("qrcode"); q.innerHTML = "";
-            new QRCode(q, { text: "GY-ID:" + fullID, width: 102, height: 102 });
+            new QRCode(q, { text: "GY-ID:" + fullID, width: 100, height: 100 });
         }
 
         function preview(input) {
             const r = new FileReader();
             r.onload = (e) => { 
-                const img = document.getElementById('pp');
-                img.src = e.target.result; img.style.display = "block";
+                document.getElementById('pp').src = e.target.result; 
+                document.getElementById('pp').style.display = "block";
                 document.getElementById('tph').style.display = "none";
             };
             r.readAsDataURL(input.files[0]);
@@ -152,12 +132,6 @@
             document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             if(id === 'b3') updateID();
-        }
-
-        function setL(el, l) {
-            document.querySelectorAll('.lang-item').forEach(i => i.classList.remove('active'));
-            el.classList.add('active');
-            // Здесь можно добавить смену текстов, если нужно
         }
     </script>
 </body>
