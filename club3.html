@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v2.8.0</title>
+    <title>GY-GY Club v2.8.1</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
+        /* База v2.8.1 */
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         body { margin: 0; background: #000; color: #d4af37; font-family: 'Times New Roman', serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; }
         
@@ -17,10 +18,31 @@
         #door-img { width: 70vw; max-width: 280px; border: 1px solid rgba(212, 175, 55, 0.2); }
         .door-opening { transform: scale(5); opacity: 0; pointer-events: none; }
 
-        /* ЧАРЛИ v2.8.0 - Гарантированное появление */
-        .charlie-box { width: 220px; height: 260px; margin-bottom: 20px; position: relative; display: flex; align-items: center; justify-content: center; }
-        .charlie-avatar { font-size: 140px; position: absolute; z-index: 1; filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.5)); }
-        .charlie-img { width: 100%; height: 100%; object-fit: contain; position: relative; z-index: 2; }
+        /* ЧАРЛИ v2.8.1 - Новый метод отображения */
+        .charlie-container {
+            width: 200px;
+            height: 250px;
+            margin-bottom: 20px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px dashed rgba(212, 175, 55, 0.3); /* Рамка для отладки */
+        }
+        .charlie-emoji {
+            font-size: 120px;
+            position: absolute;
+            z-index: 5;
+            display: block !important; /* Гарантируем видимость */
+        }
+        .charlie-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            position: absolute;
+            z-index: 10;
+            background: transparent;
+        }
 
         /* ТЕРМИНАЛ */
         .terminal-grid { display: flex; flex-direction: row; gap: 5px; width: 100%; max-width: 650px; background: rgba(15,15,15,0.95); padding: 20px; border: 1px solid rgba(212,175,55,0.1); margin-bottom: 10px; }
@@ -40,14 +62,13 @@
 
         /* ХОЛЛ */
         .club-dashboard { position: absolute; top: 0; width: 100%; padding: 15px; display: flex; justify-content: space-around; font-size: 10px; letter-spacing: 2px; background: linear-gradient(to bottom, rgba(20,20,20,0.9), transparent); border-bottom: 1px solid rgba(212,175,55,0.1); }
-        .hall-view { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
         .bar-arch { position: relative; width: 200px; height: 300px; border: 4px solid #3d2b1f; border-bottom: none; border-radius: 100px 100px 0 0; cursor: pointer; overflow: hidden; }
         .beads-curtain { position: absolute; top: 80px; width: 100%; height: 100%; background: repeating-linear-gradient(90deg, #3d2b1f 0px, #3d2b1f 2px, transparent 2px, transparent 6px); transition: 0.8s; }
         .bar-arch:hover .beads-curtain { transform: scaleX(0.2); opacity: 0.3; }
-        
         .guest-slip { position: absolute; bottom: 30px; left: 30px; padding: 10px; background: #fff; color: #000; width: 120px; transform: rotate(-3deg); box-shadow: 10px 10px 20px #000; cursor: pointer; text-align: left; font-size: 9px; }
 
-        @media (max-width: 600px) { .terminal-grid { flex-direction: column; } .panel-left { border-right: none; border-bottom: 1px solid rgba(212,175,55,0.1); } }
+        /* Версия в футере */
+        .version-tag { position: absolute; bottom: 5px; right: 10px; font-size: 8px; opacity: 0.3; color: #d4af37; pointer-events: none; }
     </style>
 </head>
 <body onload="initClub()">
@@ -63,9 +84,9 @@
     </div>
 
     <div id="block-welcome" class="block">
-        <div class="charlie-box">
-            <span class="charlie-avatar">🤵‍♂️</span>
-            <img src="charlie.png" class="charlie-img" onerror="this.style.display='none'">
+        <div class="charlie-container">
+            <span class="charlie-emoji">🤵‍♂️</span>
+            <img src="charlie.png" class="charlie-photo" onerror="this.style.display='none'">
         </div>
         <h1 id="t-welcome-title" style="letter-spacing: 8px;">WELCOME</h1>
         <button id="btn-proceed" class="btn-gold" onclick="startTerminal()">PROCEED</button>
@@ -134,8 +155,10 @@
         </div>
     </div>
 
+    <div class="version-tag">Build: v2.8.1</div>
+
     <script>
-        // Версия v2.8.0
+        // Версия v2.8.1
         const avatars = ['🥃','🎩','🍸','🚬','🎷','🎭','👔','💼','💎'];
         let currentID = 1000, currentAvIdx = 0, currentLang = 'RU';
         const barAudio = document.getElementById('bar-sound');
@@ -173,8 +196,8 @@
         }
 
         function initClub() {
-            // Ключ сохранения v2.8.0
-            const saved = localStorage.getItem('gy_v280');
+            // Ключ сохранения v2.8.1
+            const saved = localStorage.getItem('gy_v281');
             if(saved) {
                 const data = JSON.parse(saved);
                 currentID = data.id; currentAvIdx = data.avIdx; currentLang = data.lang;
@@ -205,8 +228,7 @@
 
         function saveChanges() {
             const photo = document.getElementById('photo-preview').src;
-            // Ключ сохранения v2.8.0
-            localStorage.setItem('gy_v280', JSON.stringify({
+            localStorage.setItem('gy_v281', JSON.stringify({
                 id: currentID, avIdx: currentAvIdx, lang: currentLang, photo: photo.startsWith('data:') ? photo : null
             }));
             document.getElementById('btn-to-hall').style.display = 'block';
@@ -218,15 +240,18 @@
 
         function enterHall() { setSoundLevel(2); switchTo('block-hall'); }
         function softExit() { barAudio.pause(); document.getElementById('door-wrapper').classList.remove('door-opening'); switchTo('block-entrance'); }
+        
         function updateDisplay() {
             document.getElementById('user-avatar').innerText = avatars[currentAvIdx];
             document.getElementById('label-res').innerText = "№ " + currentID;
             const qr = document.getElementById("qrcode-container"); qr.innerHTML = "";
             new QRCode(qr, { text: "GY-"+currentID, width: 80, height: 80 });
         }
+
         function changeAvatar(dir) { currentAvIdx = (currentAvIdx+dir+avatars.length)%avatars.length; updateDisplay(); document.getElementById('btn-to-hall').style.display = 'none'; }
         function changeID(dir) { currentID = (currentID+(dir*9)+9000)%9000+1000; updateDisplay(); document.getElementById('btn-to-hall').style.display = 'none'; }
         function switchTo(id) { document.querySelectorAll('.block').forEach(b => b.style.display = 'none'); document.getElementById(id).style.display = 'flex'; }
+        
         function previewFile() {
             const reader = new FileReader();
             reader.onloadend = () => {
