@@ -116,4 +116,125 @@
             <button id="btn-to-hall" class="btn-gold" style="visibility:hidden;" onclick="enterHall()">ВХОД</button>
         </div>
         <div id="quote-reg" style="font-style:italic; font-size:12px; height:30px; display:flex; align-items:center;">«В каждой шутке есть доля виски...»</div>
-        <div class="lang-grid" style="display:grid; grid-
+        <div class="lang-grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:15px;">
+            <div class="lang-item active" onclick="setLang(this,'ru')">RU</div>
+            <div class="lang-item" onclick="setLang(this,'en')">EN</div>
+            <div class="lang-item" onclick="setLang(this,'ua')">UA</div>
+            <div class="lang-item" onclick="setLang(this,'fr')">FR</div>
+            <div class="lang-item" onclick="setLang(this,'de')">DE</div>
+            <div class="lang-item" onclick="setLang(this,'pl')">PL</div>
+            <div class="lang-item" onclick="setLang(this,'es')">ES</div>
+            <div class="lang-item" onclick="setLang(this,'it')">IT</div>
+        </div>
+        <div class="exit-link" onclick="location.reload()" id="t-exit-reg">ПОКИНУТЬ КЛУБ</div>
+    </div>
+
+    <div id="block-hall" class="block">
+        <div class="stats-board">
+            <div class="hall-user-pic" id="hall-pic-box">🥃</div>
+            <div class="stat-box">STATUS <span id="stat-id">№ 1000</span></div>
+            <div class="stat-box">GUESTS ONLINE <span id="stat-online">14</span></div>
+            <div class="stat-box">ATMOSPHERE <span id="stat-temp">180°C</span></div>
+        </div>
+        <div class="hall-scene">
+            <div class="gallery-section"><div class="painting"></div><div class="lumber-table"></div></div>
+            <div class="bar-arch-wrap" onclick="enterBar()">
+                <div class="bar-title" id="t-bar-label">БАР</div>
+                <div class="beads-curtain"></div>
+            </div>
+            <div class="gallery-section"><div class="lumber-table"></div><div class="painting"></div></div>
+        </div>
+        <div id="quote-hall" style="margin-top:auto; padding:20px 10px; font-style:italic; opacity:0.8;">«Истина не в вине, истина — в тех, кто его пьет.»</div>
+        <div class="exit-link" onclick="location.reload()" id="t-exit-hall" style="margin-bottom:20px;">ПОКИНУТЬ КЛУБ</div>
+    </div>
+
+    <script>
+        const barSnd = document.getElementById('bar-sound');
+        const doorSnd = document.getElementById('door-sound');
+        const beadsSnd = document.getElementById('beads-sound');
+        let currentID = 1000, currentAvIdx = 0, userPhotoData = null;
+        const avatars = ['🥃','🎩','🍸','🚬','🎷','🎭','👔','💼','💎'];
+
+        const langData = {
+            ru: { welcome: "ДОБРО ПОЖАЛОВАТЬ", proceed: "ПРОДОЛЖИТЬ", save: "СОХРАНИТЬ", entry: "ВХОД", photo: "ФОТО", id: "ЛИЧНОСТЬ", card: "КАРТА", bar: "БАР", exit: "ПОКИНУТЬ КЛУБ", q_reg: "«В каждой шутке есть доля виски...»", q_hall: "«Истина не в вине, истина — в тех, кто его пьет.»" },
+            en: { welcome: "WELCOME", proceed: "PROCEED", save: "SAVE", entry: "ENTER", photo: "PHOTO", id: "IDENTITY", card: "CARD", bar: "BAR", exit: "LEAVE CLUB", q_reg: "«Every joke has a share of whiskey...»", q_hall: "«The truth is not in the wine, the truth is in those who drink it.»" },
+            ua: { welcome: "ВІТАЄМО", proceed: "ПРОДОВЖИТИ", save: "ЗБЕРЕГТИ", entry: "ВХІД", photo: "ФОТО", id: "ОСОБИСТІСТЬ", card: "КАРТКА", bar: "БАР", exit: "ПОКИНУТИ КЛУБ", q_reg: "«У кожному жарті є доля віскі...»", q_hall: "«Істина не у вині, істина — у тих, хто його п'є.»" },
+            fr: { welcome: "BIENVENUE", proceed: "CONTINUER", save: "SAUVER", entry: "ENTRER", photo: "PHOTO", id: "IDENTITÉ", card: "CARTE", bar: "BAR", exit: "QUITTER", q_reg: "«Dans chaque blague, il y a du whisky...»", q_hall: "«La vérité n'est pas dans le vin, la vérité est dans ceux qui le boivent.»" },
+            de: { welcome: "WILLKOMMEN", proceed: "WEITER", save: "SPEICHERN", entry: "EINTRITT", photo: "FOTO", id: "IDENTITÄT", card: "KARTE", bar: "BAR", exit: "VERLASSEN", q_reg: "«In jedem Witz steckt Whiskey...»", q_hall: "«Die Wahrheit liegt nicht im Wein, die Wahrheit liegt bei denen, die ihn trinken.»" },
+            pl: { welcome: "WITAJ", proceed: "KONTYNUUJ", save: "ZAPISZ", entry: "WEJŚCIE", photo: "FOTO", id: "TOŻSAMOŚĆ", card: "KARTA", bar: "BAR", exit: "OPUŚĆ KLUB", q_reg: "«W każdym żarcie jest kropla whiskey...»", q_hall: "«Prawda nie tkwi w winie, prawda tkwi w tych, którzy je piją.»" },
+            es: { welcome: "BIENVENIDO", proceed: "CONTINUAR", save: "GUARDAR", entry: "ENTRAR", photo: "FOTO", id: "IDENTIDAD", card: "TARJETA", bar: "BAR", exit: "SALIR", q_reg: "«En cada broma hay algo de whisky...»", q_hall: "«La verdad no está en el vino, la verdad está en quienes lo beben.»" },
+            it: { welcome: "BENVENUTO", proceed: "CONTINUA", save: "SALVA", entry: "ENTRA", photo: "FOTO", id: "IDENTITÀ", card: "CARTA", bar: "BAR", exit: "ESCI", q_reg: "«Ogni scherzo ha il suo whisky...»", q_hall: "«La verità non è nel vino, la verità è in chi lo beve.»" }
+        };
+
+        function setLang(el, lang) {
+            document.querySelectorAll('.lang-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+            const d = langData[lang];
+            document.getElementById('t-welcome').innerText = d.welcome;
+            document.getElementById('btn-proceed').innerText = d.proceed;
+            document.getElementById('btn-save').innerText = d.save;
+            document.getElementById('btn-to-hall').innerText = d.entry;
+            document.getElementById('t-photo-text').innerText = d.photo;
+            document.getElementById('t-id-title').innerText = d.id;
+            document.getElementById('t-card-title').innerText = d.card;
+            document.getElementById('t-bar-label').innerText = d.bar;
+            document.getElementById('t-exit-reg').innerText = d.exit;
+            document.getElementById('t-exit-hall').innerText = d.exit;
+            document.getElementById('quote-reg').innerText = d.q_reg;
+            document.getElementById('quote-hall').innerText = d.q_hall;
+        }
+
+        function handleDoor() {
+            doorSnd.play().catch(()=>{});
+            document.getElementById('main-door').style.transform = "scale(4)";
+            document.getElementById('main-door').style.opacity = "0";
+            setTimeout(() => switchTo('block-welcome'), 1200);
+        }
+
+        function startTerminal() {
+            barSnd.volume = 0.1; barSnd.play().catch(()=>{});
+            switchTo('block-identity');
+            updateDisplay();
+        }
+
+        function saveChanges() {
+            document.getElementById('btn-to-hall').style.visibility = 'visible';
+            document.getElementById('stat-id').innerText = "№ " + currentID;
+            const hallBox = document.getElementById('hall-pic-box');
+            if(userPhotoData) hallBox.innerHTML = `<img src="${userPhotoData}">`;
+            else hallBox.innerText = avatars[currentAvIdx];
+        }
+
+        function enterHall() { switchTo('block-hall'); barSnd.volume = 0.3; }
+        function enterBar() { beadsSnd.play().catch(()=>{}); setTimeout(() => alert("Opening the Bar..."), 500); }
+
+        function updateDisplay() {
+            document.getElementById('user-avatar').innerText = avatars[currentAvIdx];
+            document.getElementById('label-res').innerText = "№ " + currentID;
+            const qrBox = document.getElementById("qrcode");
+            qrBox.innerHTML = "";
+            new QRCode(qrBox, { text: "GY-ID:"+currentID, width: 90, height: 90 });
+        }
+
+        function switchTo(id) {
+            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function changeAvatar(dir) { currentAvIdx = (currentAvIdx + dir + avatars.length) % avatars.length; updateDisplay(); }
+        function changeID(dir) { currentID = (currentID + (dir * 9) + 9000) % 9000 + 1000; updateDisplay(); }
+        
+        function previewFile() {
+            const file = document.getElementById('file-input').files[0];
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                userPhotoData = reader.result;
+                const p = document.getElementById('photo-preview');
+                p.src = userPhotoData; p.style.display = "block";
+                document.getElementById('t-photo-text').style.display = "none";
+            }
+            if(file) reader.readAsDataURL(file);
+        }
+    </script>
+</body>
+</html>
