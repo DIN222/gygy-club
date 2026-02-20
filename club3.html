@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v2.8.3</title>
+    <title>GY-GY Club v2.8.4</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
@@ -19,7 +19,7 @@
         .door-opening .entrance-logo { opacity: 0; transform: scale(0.8); }
         .door-opening .door-container { transform: scale(4); opacity: 0; }
 
-        /* ЧАРЛИ v2.8.3 */
+        /* ЧАРЛИ v2.8.4 */
         .charlie-portrait { 
             width: 200px; height: 200px; margin-bottom: 10px; 
             border-radius: 4px; overflow: hidden; 
@@ -35,15 +35,13 @@
         .terminal-grid { display: flex; flex-direction: row; justify-content: center; gap: 10px; width: 100%; max-width: 700px; }
         .panel { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 5px; }
         .panel-setup { border-right: 1px solid rgba(212, 175, 55, 0.15); }
-        .action-area { height: 45px; display: flex; align-items: center; justify-content: center; }
+        .action-area { height: 45px; display: flex; align-items: center; justify-content: center; width: 100%; }
         .photo-slot { width: 90px; height: 90px; border: 1px solid #d4af37; margin-top: 10px; position: relative; cursor: pointer; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .photo-slot img { width: 100%; height: 100%; object-fit: cover; position: absolute; z-index: 2; }
         .photo-slot span { font-size: 8px; color: #333; font-weight: bold; text-transform: uppercase; z-index: 1; }
 
         .btn-gold { width: 100%; max-width: 180px; padding: 10px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 11px; letter-spacing: 2px; cursor: pointer; margin: 4px 0; font-family: inherit; }
-        .glow-btn { background: rgba(212, 175, 55, 0.2) !important; animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { box-shadow: 0 0 5px rgba(212,175,55,0.2); } 50% { box-shadow: 0 0 15px rgba(212,175,55,0.4); } 100% { box-shadow: 0 0 5px rgba(212,175,55,0.2); } }
-
+        
         /* ДЕВИЗ И ЯЗЫКИ */
         #dynamic-quote { font-style: italic; font-size: 13px; opacity: 0.8; margin: 15px 0 5px 0; min-height: 1.2em; padding: 0 10px; }
         .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 100%; max-width: 280px; margin-top: 10px; }
@@ -86,7 +84,7 @@
                 </div>
                 <button id="btn-save" class="btn-gold" onclick="saveChanges()">СОХРАНИТЬ</button>
                 <div class="action-area">
-                    <button id="btn-to-hall" class="btn-gold glow-btn" style="display:none;" onclick="enterHall()">ВХОД В ХОЛЛ</button>
+                    <button id="btn-to-hall" class="btn-gold" style="display:none;" onclick="enterHall()">ВХОД</button>
                 </div>
             </div>
 
@@ -123,16 +121,16 @@
     </div>
 
     <script>
-        // Версия v2.8.3
+        // JS версия v2.8.4
         const barSnd = document.getElementById('bar-sound');
         const doorSnd = document.getElementById('door-sound');
         let currentID = 1000, currentAvIdx = 0;
         const avatars = ['🥃','🎩','🍸','🚬','🎷','🎭','👔','💼','💎'];
         
         const langData = {
-            ru: { welcome: "ДОБРО ПОЖАЛОВАТЬ", proceed: "ПРОДОЛЖИТЬ", save: "СОХРАНИТЬ", entry: "ВХОД В ХОЛЛ", photo: "ФОТО", exit: "ПОКИНУТЬ КЛУБ", id: "ЛИЧНОСТЬ", card: "КАРТА КЛУБА", quote: "«В каждой шутке есть доля виски...»", hall: "ХОЛЛ", back: "ВЫХОД" },
-            en: { welcome: "WELCOME", proceed: "PROCEED", save: "SAVE", entry: "ENTER HALL", photo: "PHOTO", exit: "LEAVE CLUB", id: "IDENTITY", card: "MEMBER CARD", quote: "«Every joke has a share of whiskey...»", hall: "THE HALL", back: "EXIT" },
-            ua: { welcome: "ВІТАЄМО", proceed: "ПРОДОВЖИТИ", save: "ЗБЕРЕГТИ", entry: "ВХІД У ХОЛ", photo: "ФОТО", exit: "ПОКИНУТИ КЛУБ", id: "ОСОБИСТІСТЬ", card: "КАРТКА КЛУБУ", quote: "«У кожному жарті є доля віскі...»", hall: "ХОЛ", back: "ВИХІД" },
+            ru: { welcome: "ДОБРО ПОЖАЛОВАТЬ", proceed: "ПРОДОЛЖИТЬ", save: "СОХРАНИТЬ", entry: "ВХОД", photo: "ФОТО", exit: "ПОКИНУТЬ КЛУБ", id: "ЛИЧНОСТЬ", card: "КАРТА КЛУБА", quote: "«В каждой шутке есть доля виски...»", hall: "ХОЛЛ", back: "ВЫХОД" },
+            en: { welcome: "WELCOME", proceed: "PROCEED", save: "SAVE", entry: "ENTER", photo: "PHOTO", exit: "LEAVE CLUB", id: "IDENTITY", card: "MEMBER CARD", quote: "«Every joke has a share of whiskey...»", hall: "THE HALL", back: "EXIT" },
+            ua: { welcome: "ВІТАЄМО", proceed: "ПРОДОВЖИТИ", save: "ЗБЕРЕГТИ", entry: "ВХІД", photo: "ФОТО", exit: "ПОКИНУТИ КЛУБ", id: "ОСОБИСТІСТЬ", card: "КАРТКА КЛУБУ", quote: "«У кожному жарті є доля віскі...»", hall: "ХОЛ", back: "ВИХІД" },
             fr: { welcome: "BIENVENUE", proceed: "CONTINUER", save: "SAUVER", entry: "ENTRER", photo: "PHOTO", exit: "QUITTER", id: "IDENTITÉ", card: "CARTE", quote: "«Dans chaque blague, il y a du whisky...»", hall: "LE SALON", back: "RETOUR" },
             de: { welcome: "WILLKOMMEN", proceed: "WEITER", save: "SPEICHERN", entry: "EINTRITT", photo: "FOTO", exit: "VERLASSEN", id: "IDENTITÄT", card: "KARTE", quote: "«In jedem Witz steckt Whiskey...»", hall: "DIE HALLE", back: "ENDE" },
             pl: { welcome: "WITAJ", proceed: "KONTYNUUJ", save: "ZAPISZ", entry: "WEJŚCIE", photo: "FOTO", exit: "OPUŚĆ KLUB", id: "TOŻSAMOŚĆ", card: "KARTA", quote: "«W każdym żarcie jest kropla whiskey...»", hall: "SALON", back: "WYJŚCIE" },
