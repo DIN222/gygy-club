@@ -3,30 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v3.0.6.2</title>
+    <title>GY-GY Club v3.0.6.3</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
-        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: #000; color: #d4af37; font-family: 'Times New Roman', Times, serif; text-align: center; height: 100vh; overflow: hidden; }
+        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; -webkit-appearance: none; }
+        body { background: #000; color: #d4af37; font-family: 'Times New Roman', serif; text-align: center; height: 100vh; overflow: hidden; }
         
-        .block { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        .block { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; z-index: 10; }
         .block.active { display: flex !important; }
 
-        /* ЭКРАН 1: ДВЕРЬ (ВОЗВРАТ КЛИКАБЕЛЬНОСТИ) */
-        .door-container { position: relative; cursor: pointer; display: inline-block; transition: 1s ease-in-out; }
-        .door-img { width: 280px; display: block; pointer-events: none; border: none; }
-        
-        /* ЭКРАН 2: ЧАРЛИ (ВЕКТОРНАЯ ЗАЛИВКА) */
-        .charlie-svg { width: 280px; height: 280px; margin-bottom: 20px; }
+        /* ЭКРАН 1: ДВЕРЬ (Максимальная простота) */
+        .door-btn { 
+            width: 280px; 
+            display: block; 
+            cursor: pointer; 
+            border: 0 !important; 
+            transition: transform 1s, opacity 1s;
+            z-index: 100; /* Поверх всего */
+        }
+
+        /* ЭКРАН 2: ЧАРЛИ (Анти-троение) */
+        .charlie-frame {
+            width: 260px; height: 260px;
+            border-radius: 50%;
+            outline: 2px solid #d4af37; /* Жесткая одинарная линия */
+            outline-offset: -1px;
+            overflow: hidden;
+            background: #000;
+            margin-bottom: 20px;
+        }
+        .charlie-frame img { width: 100%; height: 100%; object-fit: cover; }
 
         /* ЭКРАН 3: ТЕРМИНАЛ */
         .setup-grid { display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; }
-        .box { 
-            width: 110px; height: 110px; background: #fff; 
-            border: 2px solid #d4af37;
-            display: flex; align-items: center; justify-content: center; overflow: hidden;
-        }
-        #id-val { font-size: 14px; color: #000; font-weight: bold; }
+        .box { width: 110px; height: 110px; background: #fff; border: 2px solid #d4af37; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .btn-gold { width: 180px; height: 40px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 11px; cursor: pointer; margin-bottom: 10px; }
         #quote-reg { font-style: italic; font-size: 24px; margin: 15px 0 5px 0; font-weight: bold; }
         .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; width: 260px; }
@@ -34,28 +44,19 @@
         .lang-item.active { border-color: #d4af37; background: rgba(212,175,55,0.1); }
     </style>
 </head>
-<body onclick="unlockAudio()">
+<body onclick="initAudio()">
 
-    <audio id="snd-door" preload="auto"><source src="door_open.mp3" type="audio/mpeg"></audio>
-    <audio id="snd-bar" loop preload="auto"><source src="bar_sounds.mp3" type="audio/mpeg"></audio>
+    <audio id="snd-door" src="door_open.mp3" preload="auto"></audio>
+    <audio id="snd-bar" src="bar_sounds.mp3" loop preload="auto"></audio>
 
     <div id="b1" class="block active">
-        <div style="letter-spacing:10px; margin-bottom:30px;">GY-GY PRIVATE</div>
-        <div class="door-container" onclick="openClub(this)">
-            <img src="door_1.jpg" class="door-img">
-        </div>
+        <div style="letter-spacing:10px; margin-bottom:30px; pointer-events:none;">GY-GY PRIVATE</div>
+        <img src="door_1.jpg" id="main-door" class="door-btn" onclick="openClub()">
     </div>
 
     <div id="b2" class="block">
-        <div class="charlie-svg">
-            <svg viewBox="0 0 100 100" width="100%" height="100%">
-                <defs>
-                    <clipPath id="cp"><circle cx="50" cy="50" r="47" /></clipPath>
-                </defs>
-                <circle cx="50" cy="50" r="49" fill="#d4af37" />
-                <circle cx="50" cy="50" r="47.5" fill="#000" />
-                <image xlink:href="charlie.png" x="3" y="3" width="94" height="94" clip-path="url(#cp)" onerror="this.setAttribute('xlink:href','https://via.placeholder.com/260')" />
-            </svg>
+        <div class="charlie-frame">
+            <img src="charlie.png" onerror="this.src='https://via.placeholder.com/260'">
         </div>
         <h1 style="font-size:50px; letter-spacing:10px;">WELCOME</h1>
         <button class="btn-gold" style="width:240px; height:50px;" onclick="switchTo('b3')">PROCEED</button>
@@ -63,7 +64,7 @@
 
     <div id="b3" class="block">
         <div class="setup-grid">
-            <div class="box"><div id="id-val">#0000-0000</div></div>
+            <div class="box"><div id="id-val" style="color:#000; font-weight:bold;">#0000</div></div>
             <div id="qrcode" class="box"></div>
             <div class="box" onclick="document.getElementById('f').click()" style="cursor:pointer">
                 <span id="tph" style="color:#000; font-size:10px; font-weight:bold;">ФОТО</span>
@@ -89,24 +90,28 @@
 
     <script>
         const fullID = `#0042-${Math.floor(1000 + Math.random() * 9000)}`;
-        let audioInit = false;
+        const dSnd = document.getElementById('snd-door');
+        const bSnd = document.getElementById('snd-bar');
 
-        function unlockAudio() {
-            if (!audioInit) {
-                const d = document.getElementById('snd-door');
-                const b = document.getElementById('snd-bar');
-                d.play().then(() => { d.pause(); d.currentTime = 0; });
-                b.play().then(() => { b.pause(); b.currentTime = 0; });
-                audioInit = true;
-            }
+        function initAudio() {
+            // Принудительный запуск звукового движка
+            dSnd.muted = true; dSnd.play().then(() => { dSnd.pause(); dSnd.muted = false; });
+            bSnd.muted = true; bSnd.play().then(() => { bSnd.pause(); bSnd.muted = false; });
         }
 
-        function openClub(el) {
-            document.getElementById('snd-door').play();
-            document.getElementById('snd-bar').play();
-            el.style.transform = "scale(5)";
-            el.style.opacity = "0";
-            setTimeout(() => switchTo('b2'), 1000);
+        function openClub() {
+            try {
+                dSnd.currentTime = 0;
+                dSnd.play();
+                bSnd.play();
+            } catch(e) { console.log("Audio play failed"); }
+
+            const door = document.getElementById('main-door');
+            door.style.transform = "scale(8)";
+            door.style.opacity = "0";
+            door.style.pointerEvents = "none";
+            
+            setTimeout(() => switchTo('b2'), 800);
         }
 
         function updateID() {
@@ -118,8 +123,8 @@
         function preview(input) {
             const r = new FileReader();
             r.onload = (e) => { 
-                document.getElementById('pp').src = e.target.result; 
-                document.getElementById('pp').style.display = "block";
+                const p = document.getElementById('pp');
+                p.src = e.target.result; p.style.display = "block";
                 document.getElementById('tph').style.display = "none";
             };
             r.readAsDataURL(input.files[0]);
