@@ -1,182 +1,151 @@
-
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v3.0.4.9</title>
+    <title>GY-GY Club v3.0.7.5</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
-        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none !important; }
-        body { margin: 0; background: #000; color: #d4af37; font-family: 'Times New Roman', Times, serif; text-align: center; height: 100vh; overflow: hidden; }
+        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #000; color: #d4af37; font-family: 'Times New Roman', serif; text-align: center; height: 100vh; overflow: hidden; }
         
-        .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        .block { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: #000; }
         .block.active { display: flex !important; }
 
-        /* ЭКРАН 1: ДВЕРЬ */
-        .door-wrapper { cursor: pointer; transition: 1.2s ease-out; }
-        .door-img { width: 75vw; max-width: 300px; border: 1px solid rgba(212,175,55,0.2); }
+        /* ЭКРАН 1 */
+        .header-text { font-size: 16px; letter-spacing: 10px; margin-bottom: 25px; text-transform: uppercase; font-weight: bold; }
+        .door-img { width: 280px; cursor: pointer; transition: 3.5s cubic-bezier(0.1, 0, 0.1, 1); }
 
-        /* ЭКРАН 2: ЧАРЛИ (SVG MASKING) */
-        .charlie-svg-box { width: 250px; height: 250px; margin-bottom: 30px; position: relative; }
-        .charlie-svg-box svg { width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
-        
-        #t-welcome { font-size: 52px; letter-spacing: 12px; margin: 0 0 30px 0; text-transform: uppercase; font-weight: normal; }
-
-        /* ЭКРАН 3: ТЕРМИНАЛ (ОДИНАКОВЫЕ РАМКИ) */
-        .setup-grid { display: flex; justify-content: center; gap: 20px; width: 100%; max-width: 450px; }
-        .panel { display: flex; flex-direction: column; align-items: center; gap: 10px; }
-        
-        /* Единый стиль для всех трех боксов */
-        .identity-box { 
-            width: 110px; height: 110px; 
-            border: 1px solid #d4af37; 
-            display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            background: rgba(212,175,55,0.02);
+        /* ЭКРАН 2: ЧАРЛИ */
+        .charlie-frame {
+            width: 260px; height: 260px;
+            border-radius: 50% !important;
+            box-shadow: 0 0 0 2px #d4af37;
             overflow: hidden;
+            margin-bottom: 30px;
+            display: flex; align-items: center; justify-content: center;
         }
-        .qr-white { background: #fff !important; } /* QR лучше читается на белом */
+        .charlie-frame img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
 
-        #id-val { font-size: 13px; letter-spacing: 1px; color: #d4af37; font-weight: bold; }
-        
-        .btn-gold { width: 110px; height: 35px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 9px; letter-spacing: 1px; cursor: pointer; font-family: inherit; }
-        
-        #quote-reg { font-style: italic; font-size: 14px; margin: 30px 0; color: #d4af37; padding: 0 20px; min-height: 40px; }
+        /* ЭКРАН 3: ТЕРМИНАЛ РЕГИСТРАЦИИ (ВОССТАНОВЛЕН) */
+        .setup-grid { display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; width: 100%; }
+        .box { width: 105px; height: 105px; background: #fff; border: 2px solid #d4af37; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .btn-gold { width: 180px; height: 40px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 11px; cursor: pointer; margin-bottom: 10px; position: relative; z-index: 10; }
+        #quote-reg { font-style: italic; font-size: 20px; margin: 15px 0; font-weight: bold; padding: 0 10px; }
 
-        .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; width: 240px; }
-        .lang-item { font-size: 10px; padding: 6px; border: 1px solid rgba(212, 175, 55, 0.3); cursor: pointer; }
-        .lang-item.active { border-color: #d4af37; background: rgba(212, 175, 55, 0.1); }
+        /* ЯЗЫКИ */
+        .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; width: 280px; margin-top: 10px; position: relative; z-index: 999; }
+        .lang-item { font-size: 10px; padding: 10px 5px; border: 1px solid rgba(212,175,55,0.4); cursor: pointer; background: #000; color: #d4af37; }
+        .lang-item.active { border-color: #d4af37; background: rgba(212,175,55,0.3); color: #fff; }
+
+        /* ЭКРАН 4: ХОЛЛ */
+        .hall-title { font-size: 30px; letter-spacing: 5px; margin-bottom: 20px; }
     </style>
 </head>
-<body>
-    <audio id="door-snd"><source src="door_open.mp3" type="audio/mpeg"></audio>
+<body onclick="unlockAudio()">
 
-    <div id="block-entrance" class="block active">
-        <div style="letter-spacing:10px; margin-bottom:30px; opacity:0.8;">GY-GY PRIVATE</div>
-        <div class="door-wrapper" onclick="handleDoor()">
-            <img src="door_1.jpg" class="door-img" onerror="this.src='https://via.placeholder.com/300x500?text=DOOR'">
-        </div>
-        <div style="font-size: 9px; margin-top: 40px; opacity: 0.3;">v3.0.4.9</div>
+    <audio id="snd-d" src="door_open.mp3" preload="auto"></audio>
+    <audio id="snd-b" src="bar_sounds.mp3" loop preload="auto"></audio>
+
+    <div id="p1" class="block active">
+        <div class="header-text">GY-GY PRIVATE</div>
+        <img src="door_1.jpg" id="dr" class="door-img" onclick="enter()">
+        <div style="letter-spacing:5px; margin-top:30px; opacity:0.3; font-size:10px;">EST. 2026</div>
     </div>
 
-    <div id="block-welcome" class="block">
-        <div class="charlie-svg-box">
-            <svg viewBox="0 0 100 100">
-                <defs>
-                    <clipPath id="circleView">
-                        <circle cx="50" cy="50" r="48" />
-                    </clipPath>
-                </defs>
-                <image xlink:href="charlie.png" width="100" height="100" clip-path="url(#circleView)" preserveAspectRatio="xMidYMid slice" onerror="this.setAttribute('xlink:href','https://via.placeholder.com/250')" />
-                <circle cx="50" cy="50" r="48" fill="none" stroke="#d4af37" stroke-width="1.5" />
-            </svg>
+    <div id="p2" class="block">
+        <div class="charlie-frame">
+            <img src="charlie.png" onerror="this.src='https://via.placeholder.com/260'">
         </div>
-        <h1 id="t-welcome">WELCOME</h1>
-        <button class="btn-gold" style="width:220px; height: 50px; font-size: 14px;" onclick="switchTo('block-identity')">PROCEED</button>
+        <h1 style="font-size:50px; letter-spacing:10px; margin-bottom: 20px;">WELCOME</h1>
+        <button class="btn-gold" style="width:240px; height:50px;" onclick="switchTo('p3')">PROCEED</button>
     </div>
 
-    <div id="block-identity" class="block">
+    <div id="p3" class="block">
         <div class="setup-grid">
-            <div class="panel">
-                <div class="identity-box">
-                    <span style="font-size:9px; opacity:0.5; margin-bottom:5px;">ID STATUS</span>
-                    <div id="id-val">#0000-0000</div>
-                </div>
-                <button id="btn-save" class="btn-gold" onclick="save()">СОХРАНИТЬ</button>
-                <button id="btn-to-hall" class="btn-gold" style="visibility:hidden;" onclick="switchTo('block-hall')">ВХОД</button>
+            <div class="box"><div id="id-val" style="color:#000; font-weight:bold; font-size: 11px;">#0000</div></div>
+            <div id="qrcode" class="box"></div>
+            <div class="box" onclick="document.getElementById('f').click()" style="cursor:pointer">
+                <span id="tph" style="color:#000; font-size:10px; font-weight:bold;">ФОТО</span>
+                <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
             </div>
-            
-            <div class="panel">
-                <div id="qrcode" class="identity-box qr-white"></div>
-                <div style="font-size:9px; letter-spacing:1px; opacity:0.5;">KEY</div>
-            </div>
-
-            <div class="panel">
-                <div class="identity-box" style="cursor:pointer;" onclick="document.getElementById('f').click()">
-                    <span id="t-ph" style="color:#d4af37; font-size:9px;">PHOTO</span>
-                    <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
-                </div>
-                <input type="file" id="f" style="display:none" onchange="preview(this)">
-                <div style="font-size:9px; letter-spacing:1px; opacity:0.5;">MEMBER</div>
-            </div>
+            <input type="file" id="f" style="display:none" onchange="preview(this)">
         </div>
-
-        <div id="quote-reg">«В каждой шутке есть доля виски...»</div>
         
+        <button class="btn-gold" onclick="document.getElementById('be').style.visibility='visible'">СОХРАНИТЬ</button>
+        <button id="be" class="btn-gold" style="visibility:hidden;" onclick="switchTo('p4')">ВХОД</button>
+        
+        <div id="quote-reg">«В каждой шутке есть доля виски...»</div>
+
         <div class="lang-grid">
-            <div class="lang-item active" onclick="setL(this,'ru')">RU</div>
-            <div class="lang-item" onclick="setL(this,'en')">EN</div>
-            <div class="lang-item" onclick="setL(this,'ua')">UA</div>
-            <div class="lang-item" onclick="setL(this,'fr')">FR</div>
-            <div class="lang-item" onclick="setL(this,'de')">DE</div>
-            <div class="lang-item" onclick="setL(this,'pl')">PL</div>
-            <div class="lang-item" onclick="setL(this,'es')">ES</div>
-            <div class="lang-item" onclick="setL(this,'it')">IT</div>
+            <div class="lang-item active" onclick="sel(this)">RU</div>
+            <div class="lang-item" onclick="sel(this)">EN</div>
+            <div class="lang-item" onclick="sel(this)">UA</div>
+            <div class="lang-item" onclick="sel(this)">FR</div>
+            <div class="lang-item" onclick="sel(this)">DE</div>
+            <div class="lang-item" onclick="sel(this)">PL</div>
+            <div class="lang-item" onclick="sel(this)">ES</div>
+            <div class="lang-item" onclick="sel(this)">IT</div>
         </div>
     </div>
 
-    <div id="block-hall" class="block">
-        <h2 id="t-ready" style="letter-spacing: 5px;">HALL IS READY</h2>
-        <div class="btn-gold" style="width:200px" onclick="location.reload()">EXIT</div>
+    <div id="p4" class="block">
+        <div style="opacity: 0.5; letter-spacing: 5px; margin-bottom: 10px;">ALWAYS OPEN</div>
+        <h2 class="hall-title">HALL IS READY</h2>
+        <div style="width: 60px; height: 1px; background: #d4af37; margin-bottom: 30px;"></div>
+        <button class="btn-gold" style="width:200px" onclick="location.reload()">EXIT</button>
     </div>
 
     <script>
+        let aReady = false;
         const fullID = `#0042-${Math.floor(1000 + Math.random() * 9000)}`;
 
-        function handleDoor() {
-            document.getElementById('door-snd').play().catch(() => {});
-            const w = document.querySelector('.door-wrapper');
-            w.style.transform = "scale(5)"; w.style.opacity = "0";
-            setTimeout(() => switchTo('block-welcome'), 1000);
+        function unlockAudio() {
+            if (!aReady) {
+                const d = document.getElementById('snd-d');
+                const b = document.getElementById('snd-b');
+                d.play().then(() => d.pause());
+                b.play().then(() => b.pause());
+                aReady = true;
+            }
         }
 
-        const langData = {
-            ru: { w: "ДОБРО ПОЖАЛОВАТЬ", s: "СОХРАНИТЬ", e: "ВХОД", ph: "ФОТО", q: "«В каждой шутке есть доля виски...»", r: "ХОЛЛ ГОТОВ" },
-            en: { w: "WELCOME", s: "SAVE", e: "ENTER", ph: "PHOTO", q: "«Every joke has a share of whiskey...»", r: "HALL IS READY" },
-            ua: { w: "ВІТАЄМО", s: "ЗБЕРЕГТИ", e: "ВХІД", ph: "ФОТО", q: "«У кожному жарті є доля віскі...»", r: "ХОЛ ГОТОВИЙ" },
-            fr: { w: "BIENVENUE", s: "SAUVER", e: "ENTRER", ph: "PHOTO", q: "«Dans chaque blague, il y a du whisky...»", r: "SALLE PRÊTE" },
-            de: { w: "WILLKOMMEN", s: "SPEICHERN", e: "EINTRITT", ph: "FOTO", q: "«In jedem Witz steckt Whiskey...»", r: "HALLE BEREIT" },
-            pl: { w: "WITAJ", s: "ZAPISZ", e: "WEJŚCIE", ph: "FOTO", q: "«W każdym żarcie jest kropla whiskey...»", r: "HALA GOTOWA" },
-            es: { w: "BIENVENIDO", s: "GUARDAR", e: "ENTRAR", ph: "FOTO", q: "«En cada broma hay algo de whisky...»", r: "SALA LISTA" },
-            it: { w: "BENVENUTO", s: "SALVA", e: "ENTRA", ph: "FOTO", q: "«Ogni scherzo ha il suo whisky...»", r: "SALA PRONTA" }
-        };
-
-        function setL(el, l) {
-            document.querySelectorAll('.lang-item').forEach(i => i.classList.remove('active'));
-            el.classList.add('active');
-            const d = langData[l];
-            document.getElementById('t-welcome').innerText = d.w;
-            document.getElementById('btn-save').innerText = d.s;
-            document.getElementById('btn-to-hall').innerText = d.e;
-            document.getElementById('t-ph').innerText = d.ph;
-            document.getElementById('quote-reg').innerText = d.q;
-            document.getElementById('t-ready').innerText = d.r;
-        }
-
-        function save() { document.getElementById('btn-to-hall').style.visibility = 'visible'; }
-        
-        function updateID() {
-            document.getElementById('id-val').innerText = fullID;
-            const q = document.getElementById("qrcode"); q.innerHTML = "";
-            new QRCode(q, { text: "GY-ID:" + fullID, width: 110, height: 110 });
+        function enter() {
+            document.getElementById('snd-d').play().catch(e => {});
+            document.getElementById('snd-b').play().catch(e => {});
+            const img = document.getElementById('dr');
+            img.style.transform = "scale(18)";
+            img.style.opacity = "0";
+            setTimeout(() => switchTo('p2'), 3000);
         }
 
         function preview(input) {
             const r = new FileReader();
             r.onload = (e) => { 
-                const img = document.getElementById('pp');
-                img.src = e.target.result; img.style.display = "block";
-                document.getElementById('t-ph').style.display = "none";
+                document.getElementById('pp').src = e.target.result; 
+                document.getElementById('pp').style.display = "block";
+                document.getElementById('tph').style.display = "none";
             };
             r.readAsDataURL(input.files[0]);
+        }
+
+        function updateID() {
+            document.getElementById('id-val').innerText = fullID;
+            const q = document.getElementById("qrcode"); q.innerHTML = "";
+            new QRCode(q, { text: "GY-ID:" + fullID, width: 100, height: 100 });
         }
 
         function switchTo(id) {
             document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            if(id === 'block-identity') updateID();
+            if(id === 'p3') updateID();
+        }
+
+        function sel(el) {
+            document.querySelectorAll('.lang-item').forEach(l => l.classList.remove('active'));
+            el.classList.add('active');
         }
     </script>
 </body>
 </html>
+
