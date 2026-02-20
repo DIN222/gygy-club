@@ -2,72 +2,64 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v3.0.6.5</title>
+    <title>GY-GY Club v3.0.6.8</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
-        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; border: none !important; }
+        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #000; color: #d4af37; font-family: 'Times New Roman', serif; text-align: center; height: 100vh; overflow: hidden; }
         
         .block { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
         .block.active { display: flex !important; }
 
-        .neon-text { font-size: 14px; letter-spacing: 5px; margin-bottom: 20px; opacity: 0.6; text-transform: uppercase; }
+        /* НАДПИСЬ НАД ДВЕРЬЮ */
+        .header-text { font-size: 16px; letter-spacing: 10px; margin-bottom: 25px; text-transform: uppercase; font-weight: bold; }
 
-        /* ЗАМЕДЛЕННАЯ АНИМАЦИЯ ДВЕРИ (3 секунды) */
+        /* ДВЕРЬ (Тяжелая и плавная - 3.5 сек) */
         .door-img { 
             width: 280px; 
             cursor: pointer; 
-            transition: transform 3s cubic-bezier(0.2, 0, 0.2, 1), opacity 3s ease-in-out; 
-            will-change: transform, opacity;
+            transition: transform 3.5s cubic-bezier(0.1, 0, 0.1, 1), opacity 3s ease-in-out; 
+            border: none !important;
         }
 
-        /* ЧАРЛИ: МЕТОД КРУГОВОЙ МАСКИ (БЕЗ РАМОК И ТЕНЕЙ) */
-        .charlie-wrap {
-            width: 260px; height: 260px;
-            background: #d4af37; /* Это и есть наше кольцо */
-            padding: 2px; /* Толщина кольца */
-            border-radius: 50% !important;
-            margin-bottom: 25px;
+        /* ЧАРЛИ: ВЕКТОРНОЕ ОДИНОЧНОЕ КОЛЬЦО */
+        .charlie-svg-box {
+            width: 270px; height: 270px;
+            margin-bottom: 30px;
             display: flex; align-items: center; justify-content: center;
         }
-        .charlie-inner {
-            width: 100%; height: 100%;
-            background: #000;
-            border-radius: 50% !important;
-            overflow: hidden;
-            -webkit-clip-path: circle(50% at 50% 50%);
-            clip-path: circle(50% at 50% 50%); /* Жесткая обрезка */
-        }
-        .charlie-inner img { width: 100%; height: 100%; object-fit: cover; }
 
         /* ТЕРМИНАЛ */
         .setup-grid { display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; }
-        .box { width: 110px; height: 110px; background: #fff; box-shadow: 0 0 0 2px #d4af37; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .btn-gold { width: 180px; height: 40px; background: transparent; box-shadow: 0 0 0 1px #d4af37; color: #d4af37; text-transform: uppercase; font-size: 11px; cursor: pointer; margin-bottom: 10px; }
+        .box { width: 110px; height: 110px; background: #fff; border: 2px solid #d4af37; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .btn-gold { width: 180px; height: 40px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 11px; cursor: pointer; margin-bottom: 10px; }
         #quote-reg { font-style: italic; font-size: 24px; margin: 15px 0 5px 0; font-weight: bold; }
-        
-        .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; width: 260px; }
-        .lang-item { font-size: 10px; padding: 6px; box-shadow: 0 0 0 1px rgba(212,175,55,0.3); }
-        .lang-item.active { box-shadow: 0 0 0 1px #d4af37; background: rgba(212,175,55,0.1); }
     </style>
 </head>
-<body onclick="tryUnlockAudio()">
+<body onclick="unlockAudio()">
 
     <audio id="snd-door" src="door_open.mp3" preload="auto"></audio>
     <audio id="snd-bar" src="bar_sounds.mp3" loop preload="auto"></audio>
 
     <div id="b1" class="block active">
-        <div class="neon-text">ОТКРЫТО ВСЕГДА</div>
+        <div class="header-text">GY-GY PRIVATE</div>
         <img src="door_1.jpg" id="door" class="door-img" onclick="openClub()">
-        <div style="letter-spacing:8px; margin-top:30px; opacity:0.3; font-size:10px;">GY-GY PRIVATE</div>
+        <div style="letter-spacing:5px; margin-top:30px; opacity:0.3; font-size:10px;">V. 3.0.6.8</div>
     </div>
 
     <div id="b2" class="block">
-        <div class="charlie-wrap">
-            <div class="charlie-inner">
-                <img src="charlie.png" onerror="this.src='https://via.placeholder.com/260'">
-            </div>
+        <div class="charlie-svg-box">
+            <svg viewBox="0 0 100 100" width="260" height="260">
+                <defs>
+                    <clipPath id="circleClip">
+                        <circle cx="50" cy="50" r="48" />
+                    </clipPath>
+                </defs>
+                <circle cx="50" cy="50" r="49" fill="none" stroke="#d4af37" stroke-width="1" />
+                <image xlink:href="charlie.png" x="2" y="2" width="96" height="96" clip-path="url(#circleClip)" onerror="this.setAttribute('xlink:href','https://via.placeholder.com/260')" />
+            </svg>
         </div>
         <h1 style="font-size:50px; letter-spacing:10px;">WELCOME</h1>
         <button class="btn-gold" style="width:240px; height:50px;" onclick="switchTo('b3')">PROCEED</button>
@@ -86,48 +78,36 @@
         <button class="btn-gold" onclick="document.getElementById('be').style.visibility='visible'">СОХРАНИТЬ</button>
         <button id="be" class="btn-gold" style="visibility:hidden;" onclick="switchTo('b4')">ВХОД</button>
         <div id="quote-reg">«В каждой шутке есть доля виски...»</div>
-        <div class="lang-grid">
-            <div class="lang-item active">RU</div><div class="lang-item">EN</div>
-            <div class="lang-item">UA</div><div class="lang-item">FR</div>
-            <div class="lang-item">DE</div><div class="lang-item">PL</div>
-            <div class="lang-item">ES</div><div class="lang-item">IT</div>
-        </div>
-    </div>
-
-    <div id="b4" class="block">
-        <h2 style="letter-spacing: 5px;">HALL IS READY</h2>
-        <div class="btn-gold" style="width:200px" onclick="location.reload()">EXIT</div>
     </div>
 
     <script>
         const fullID = `#0042-${Math.floor(1000 + Math.random() * 9000)}`;
-        let aUnlocked = false;
+        let audioCtxReady = false;
 
-        function tryUnlockAudio() {
-            if (!aUnlocked) {
+        function unlockAudio() {
+            if (!audioCtxReady) {
                 const d = document.getElementById('snd-door');
                 const b = document.getElementById('snd-bar');
-                // Принудительная активация через mute-unmute
-                d.muted = true; d.play().then(() => { d.pause(); d.muted = false; d.currentTime = 0; });
-                b.muted = true; b.play().then(() => { b.pause(); b.muted = false; b.currentTime = 0; });
-                aUnlocked = true;
-                console.log("Audio Unlocked");
+                d.play().then(() => d.pause());
+                b.play().then(() => b.pause());
+                audioCtxReady = true;
             }
         }
 
         function openClub() {
             const dSnd = document.getElementById('snd-door');
             const bSnd = document.getElementById('snd-bar');
-            
-            dSnd.play().catch(e => console.log("Door sound error"));
-            bSnd.play().catch(e => console.log("Bar sound error"));
 
-            const d = document.getElementById('door');
-            d.style.transform = "scale(12)";
-            d.style.opacity = "0";
+            // Принудительный запуск
+            dSnd.currentTime = 0;
+            dSnd.play().catch(() => console.log("Blocked"));
+            bSnd.play().catch(() => console.log("Blocked"));
+
+            const door = document.getElementById('door');
+            door.style.transform = "scale(15)";
+            door.style.opacity = "0";
             
-            // Переход теперь через 2.5 секунды, чтобы увидеть анимацию
-            setTimeout(() => switchTo('b2'), 2500);
+            setTimeout(() => switchTo('b2'), 3000);
         }
 
         function updateID() {
