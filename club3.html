@@ -3,185 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v2.8.4</title>
+    <title>GY-GY Club v2.9.0</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-        body { margin: 0; background: #000; color: #d4af37; font-family: 'Times New Roman', Times, serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; }
+        body { margin: 0; background: #000; color: #d4af37; font-family: 'Times New Roman', serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; }
         
         .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 10px; z-index: 1; }
         .block.active { display: flex !important; z-index: 10; }
 
-        /* ВХОД */
-        .entrance-logo { opacity: 0.8; letter-spacing: 10px; margin-bottom: 20px; font-size: 16px; transition: 1.2s; }
-        .door-container { cursor: pointer; transition: transform 2s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s; }
-        .door-img { width: 70vw; max-width: 320px; height: auto; border: 1px solid rgba(212, 175, 55, 0.2); }
-        .door-opening .entrance-logo { opacity: 0; transform: scale(0.8); }
-        .door-opening .door-container { transform: scale(4); opacity: 0; }
-
-        /* ЧАРЛИ v2.8.4 */
-        .charlie-portrait { 
-            width: 200px; height: 200px; margin-bottom: 10px; 
-            border-radius: 4px; overflow: hidden; 
-            position: relative; display: flex; align-items: center; justify-content: center;
-            background: rgba(212, 175, 55, 0.05);
-        }
-        .charlie-portrait::before { content: "🤵‍♂️"; font-size: 110px; position: absolute; z-index: 1; }
+        /* ЭЛЕМЕНТЫ ТЕРМИНАЛА */
+        .btn-gold { width: 100%; max-width: 180px; padding: 10px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 11px; letter-spacing: 2px; cursor: pointer; margin: 4px 0; font-family: inherit; }
+        .charlie-portrait { width: 180px; height: 180px; margin-bottom: 10px; border-radius: 4px; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center; background: rgba(212, 175, 55, 0.05); }
+        .charlie-portrait::before { content: "🤵‍♂️"; font-size: 100px; position: absolute; z-index: 1; }
         .charlie-portrait img { width: 100%; height: 100%; object-fit: cover; position: relative; z-index: 2; background: black; }
 
-        .welcome-text { font-size: 1.8rem; letter-spacing: 8px; margin: 15px 0; font-weight: normal; }
-
-        /* ТЕРМИНАЛ */
-        .terminal-grid { display: flex; flex-direction: row; justify-content: center; gap: 10px; width: 100%; max-width: 700px; }
-        .panel { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 5px; }
-        .panel-setup { border-right: 1px solid rgba(212, 175, 55, 0.15); }
-        .action-area { height: 45px; display: flex; align-items: center; justify-content: center; width: 100%; }
-        .photo-slot { width: 90px; height: 90px; border: 1px solid #d4af37; margin-top: 10px; position: relative; cursor: pointer; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .photo-slot img { width: 100%; height: 100%; object-fit: cover; position: absolute; z-index: 2; }
-        .photo-slot span { font-size: 8px; color: #333; font-weight: bold; text-transform: uppercase; z-index: 1; }
-
-        .btn-gold { width: 100%; max-width: 180px; padding: 10px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 11px; letter-spacing: 2px; cursor: pointer; margin: 4px 0; font-family: inherit; }
+        /* ХОЛЛ - СТИЛИСТИКА */
+        #block-hall { background: linear-gradient(180deg, #0a0a0a 0%, #000 100%); overflow-y: auto; justify-content: flex-start; padding-top: 60px; }
         
-        /* ДЕВИЗ И ЯЗЫКИ */
-        #dynamic-quote { font-style: italic; font-size: 13px; opacity: 0.8; margin: 15px 0 5px 0; min-height: 1.2em; padding: 0 10px; }
-        .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 100%; max-width: 280px; margin-top: 10px; }
-        .lang-item { font-size: 11px; opacity: 0.5; cursor: pointer; padding: 5px; font-weight: bold; border-bottom: 2px solid transparent; }
-        .lang-item.active { border-bottom: 2px solid #d4af37; opacity: 1; color: #fff; }
-        .exit-club { font-size: 10px; opacity: 0.4; cursor: pointer; text-transform: uppercase; margin-top: 15px; letter-spacing: 1px; text-decoration: underline; }
+        /* Табло статистики */
+        .stats-board { width: 100%; max-width: 600px; display: flex; justify-content: space-around; padding: 15px; background: rgba(20, 20, 20, 0.8); border: 1px solid rgba(212, 175, 55, 0.2); font-size: 10px; letter-spacing: 2px; margin-bottom: 30px; border-radius: 2px; }
+        .stats-item span { color: #fff; display: block; font-size: 14px; margin-top: 5px; }
 
-        @media (max-width: 650px) { .terminal-grid { flex-direction: column; gap: 5px; } .panel-setup { border-right: none; border-bottom: 1px solid rgba(212, 175, 55, 0.1); padding-bottom: 5px; } }
+        /* Галерея и Бар */
+        .hall-container { display: flex; align-items: flex-end; justify-content: center; gap: 20px; width: 100%; max-width: 900px; padding: 20px; }
+
+        .gallery-wall { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+        .painting { width: 80px; height: 100px; background: #111; border: 3px solid #3d2b1f; box-shadow: 0 5px 15px rgba(0,0,0,0.5); position: relative; }
+        .painting::after { content: "🖼️"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.3; }
+        .table-lumber { width: 60px; height: 40px; background: #2a1b0f; border-radius: 5px 5px 0 0; position: relative; border-bottom: 2px solid #3d2b1f; }
+        .table-lumber::before { content: "🏺"; position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 20px; }
+
+        /* Арка Бара */
+        .bar-arch { 
+            width: 180px; height: 260px; border: 8px solid #3d2b1f; border-bottom: none; 
+            border-radius: 90px 90px 0 0; position: relative; cursor: pointer;
+            overflow: hidden; background: #050505; transition: 0.3s;
+        }
+        .bar-label { position: absolute; top: 40px; width: 100%; text-align: center; letter-spacing: 10px; font-size: 20px; color: #d4af37; z-index: 5; text-shadow: 0 0 10px #000; }
+        
+        /* Штора-висюльки */
+        .beads-curtain {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-linear-gradient(90deg, #3d2b1f 0px, #3d2b1f 3px, transparent 3px, transparent 8px);
+            z-index: 10; transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s;
+            transform-origin: top;
+        }
+        .bar-arch:hover .beads-curtain { transform: scaleX(0.1) skewY(5deg); opacity: 0.4; }
+
+        @media (max-width: 600px) {
+            .hall-container { gap: 10px; }
+            .painting { width: 50px; height: 70px; }
+            .bar-arch { width: 140px; height: 200px; }
+        }
     </style>
 </head>
 <body>
 
-    <audio id="door-sound" preload="auto"><source src="door_open.mp3" type="audio/mpeg"></audio>
-    <audio id="bar-sound" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
+    <audio id="door-sound"><source src="door_open.mp3" type="audio/mpeg"></audio>
+    <audio id="beads-sound"><source src="beads.mp3" type="audio/mpeg"></audio>
+    <audio id="bar-sound" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active">
-        <div class="entrance-logo">GY-GY PRIVATE</div>
-        <div class="door-container" onclick="handleDoor()"><img src="door_1.jpg" class="door-img" onerror="this.parentElement.innerHTML='🚪'"></div>
+        <div style="letter-spacing:10px; margin-bottom:20px; opacity:0.8;">GY-GY PRIVATE</div>
+        <div class="door-container" onclick="handleDoor()" style="cursor:pointer; transition:2s;" id="main-door">
+            <img src="door_1.jpg" style="width:70vw; max-width:320px; border:1px solid rgba(212,175,55,0.2);" onerror="this.parentElement.innerHTML='🚪'">
+        </div>
     </div>
 
     <div id="block-welcome" class="block">
         <div class="charlie-portrait"><img src="charlie.png" onerror="this.style.display='none'"></div>
-        <h1 id="t-welcome" class="welcome-text">WELCOME</h1>
+        <h1 id="t-welcome" style="letter-spacing:8px; font-weight:normal;">WELCOME</h1>
         <button id="btn-proceed" class="btn-gold" onclick="startTerminal()">PROCEED</button>
     </div>
 
     <div id="block-identity" class="block">
-        <div class="terminal-grid">
-            <div class="panel panel-setup">
-                <div id="t-id-title" style="font-size: 11px; letter-spacing: 2px; margin-bottom: 8px;">IDENTITY</div>
-                <div style="display:flex; align-items:center; gap:8px;">
-                    <div onclick="changeAvatar(-1)" style="cursor:pointer; font-size:22px; padding:5px;">&#10094;</div>
-                    <div id="user-avatar" style="font-size:40px;">🥃</div>
-                    <div onclick="changeAvatar(1)" style="cursor:pointer; font-size:22px; padding:5px;">&#10095;</div>
+        <div style="display:flex; gap:20px; margin-bottom:20px;">
+            <div class="panel" style="border-right:1px solid rgba(212,175,55,0.2); padding-right:20px;">
+                <div id="t-id-title" style="font-size:11px; letter-spacing:2px; margin-bottom:15px;">IDENTITY</div>
+                <div style="font-size:45px; margin-bottom:10px;" id="user-avatar">🥃</div>
+                <div style="display:flex; justify-content:center; gap:10px; margin-bottom:15px;">
+                    <button onclick="changeAvatar(-1)" class="btn-gold" style="width:40px;">&lt;</button>
+                    <button onclick="changeAvatar(1)" class="btn-gold" style="width:40px;">&gt;</button>
                 </div>
-                <div style="display:flex; align-items:center; gap:8px;">
-                    <div onclick="changeID(-1)" style="cursor:pointer; font-size:22px; padding:5px;">&#10094;</div>
-                    <div id="label-res" style="font-size:18px; letter-spacing:2px;">№ 1000</div>
-                    <div onclick="changeID(1)" style="cursor:pointer; font-size:22px; padding:5px;">&#10095;</div>
-                </div>
-                <button id="btn-save" class="btn-gold" onclick="saveChanges()">СОХРАНИТЬ</button>
-                <div class="action-area">
-                    <button id="btn-to-hall" class="btn-gold" style="display:none;" onclick="enterHall()">ВХОД</button>
-                </div>
+                <div id="label-res" style="font-size:20px; margin-bottom:15px;">№ 1000</div>
+                <button class="btn-gold" onclick="saveChanges()" id="btn-save">СОХРАНИТЬ</button>
+                <button id="btn-to-hall" class="btn-gold" style="display:none; margin-top:10px;" onclick="enterHall()">ВХОД</button>
             </div>
-
             <div class="panel">
-                <div id="t-card-title" style="font-size: 11px; letter-spacing: 2px; margin-bottom: 8px;">MEMBER CARD</div>
-                <div style="background:#fff; padding:6px; border-radius:2px;"><div id="qrcode"></div></div>
-                <input type="file" id="file-input" style="display:none" accept="image/*" onchange="previewFile()">
-                <div class="photo-slot" onclick="document.getElementById('file-input').click()">
-                    <span id="t-photo-text">PHOTO</span>
-                    <img id="photo-preview" src="" style="display:none">
+                <div id="t-card-title" style="font-size:11px; letter-spacing:2px; margin-bottom:15px;">MEMBER CARD</div>
+                <div id="qrcode" style="background:#fff; padding:5px; margin-bottom:15px;"></div>
+                <div style="width:90px; height:90px; border:1px solid #d4af37; background:#fff; cursor:pointer; overflow:hidden; display:flex; align-items:center; justify-content:center;" onclick="document.getElementById('file-input').click()">
+                    <span id="t-photo-text" style="color:#000; font-size:10px;">PHOTO</span>
+                    <img id="photo-preview" style="width:100%; height:100%; object-fit:cover; display:none;">
                 </div>
+                <input type="file" id="file-input" style="display:none" onchange="previewFile()">
             </div>
         </div>
-
-        <div id="dynamic-quote">«В каждой шутке есть доля виски...»</div>
-
-        <div class="lang-grid">
-            <div class="lang-item active" onclick="setLang(this, 'ru')">RU</div>
-            <div class="lang-item" onclick="setLang(this, 'en')">EN</div>
-            <div class="lang-item" onclick="setLang(this, 'ua')">UA</div>
-            <div class="lang-item" onclick="setLang(this, 'fr')">FR</div>
-            <div class="lang-item" onclick="setLang(this, 'de')">DE</div>
-            <div class="lang-item" onclick="setLang(this, 'pl')">PL</div>
-            <div class="lang-item" onclick="setLang(this, 'es')">ES</div>
-            <div class="lang-item" onclick="setLang(this, 'it')">IT</div>
+        <div class="lang-grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px;">
+            <div class="lang-item active" onclick="setLang(this,'ru')">RU</div>
+            <div class="lang-item" onclick="setLang(this,'en')">EN</div>
+            <div class="lang-item" onclick="setLang(this,'ua')">UA</div>
+            <div class="lang-item" onclick="setLang(this,'fr')">FR</div>
         </div>
-
-        <div id="t-exit" class="exit-club" onclick="location.reload()">ПОКИНУТЬ КЛУБ</div>
     </div>
 
     <div id="block-hall" class="block">
-        <h1 id="t-hall-title" style="font-size: 3rem; letter-spacing: 12px;">THE HALL</h1>
-        <button id="t-hall-exit" class="btn-gold" style="margin-top:30px; border-style:double;" onclick="location.reload()">ВЫХОД</button>
+        <div class="stats-board">
+            <div class="stats-item">STATUS <span id="stat-id">№ 1000</span></div>
+            <div class="stats-item">GUESTS ONLINE <span id="stat-online">12</span></div>
+            <div class="stats-item">ATMOSPHERE <span id="stat-temp">180°C</span></div>
+        </div>
+
+        <div class="hall-container">
+            <div class="gallery-wall">
+                <div class="painting"></div>
+                <div class="table-lumber"></div>
+            </div>
+
+            <div class="bar-arch" onclick="enterBar()">
+                <div class="bar-label" id="t-bar-label">БАР</div>
+                <div class="beads-curtain"></div>
+            </div>
+
+            <div class="gallery-wall">
+                <div class="painting"></div>
+                <div class="table-lumber"></div>
+            </div>
+        </div>
+
+        <div id="dynamic-quote" style="margin-top:40px; font-style:italic; opacity:0.6;">«В каждой шутке есть доля виски...»</div>
+        <div class="btn-gold" style="margin-top:30px; font-size:9px;" onclick="location.reload()">EXIT</div>
     </div>
 
     <script>
-        // JS версия v2.8.4
         const barSnd = document.getElementById('bar-sound');
         const doorSnd = document.getElementById('door-sound');
+        const beadsSnd = document.getElementById('beads-sound');
         let currentID = 1000, currentAvIdx = 0;
         const avatars = ['🥃','🎩','🍸','🚬','🎷','🎭','👔','💼','💎'];
-        
+
         const langData = {
-            ru: { welcome: "ДОБРО ПОЖАЛОВАТЬ", proceed: "ПРОДОЛЖИТЬ", save: "СОХРАНИТЬ", entry: "ВХОД", photo: "ФОТО", exit: "ПОКИНУТЬ КЛУБ", id: "ЛИЧНОСТЬ", card: "КАРТА КЛУБА", quote: "«В каждой шутке есть доля виски...»", hall: "ХОЛЛ", back: "ВЫХОД" },
-            en: { welcome: "WELCOME", proceed: "PROCEED", save: "SAVE", entry: "ENTER", photo: "PHOTO", exit: "LEAVE CLUB", id: "IDENTITY", card: "MEMBER CARD", quote: "«Every joke has a share of whiskey...»", hall: "THE HALL", back: "EXIT" },
-            ua: { welcome: "ВІТАЄМО", proceed: "ПРОДОВЖИТИ", save: "ЗБЕРЕГТИ", entry: "ВХІД", photo: "ФОТО", exit: "ПОКИНУТИ КЛУБ", id: "ОСОБИСТІСТЬ", card: "КАРТКА КЛУБУ", quote: "«У кожному жарті є доля віскі...»", hall: "ХОЛ", back: "ВИХІД" },
-            fr: { welcome: "BIENVENUE", proceed: "CONTINUER", save: "SAUVER", entry: "ENTRER", photo: "PHOTO", exit: "QUITTER", id: "IDENTITÉ", card: "CARTE", quote: "«Dans chaque blague, il y a du whisky...»", hall: "LE SALON", back: "RETOUR" },
-            de: { welcome: "WILLKOMMEN", proceed: "WEITER", save: "SPEICHERN", entry: "EINTRITT", photo: "FOTO", exit: "VERLASSEN", id: "IDENTITÄT", card: "KARTE", quote: "«In jedem Witz steckt Whiskey...»", hall: "DIE HALLE", back: "ENDE" },
-            pl: { welcome: "WITAJ", proceed: "KONTYNUUJ", save: "ZAPISZ", entry: "WEJŚCIE", photo: "FOTO", exit: "OPUŚĆ KLUB", id: "TOŻSAMOŚĆ", card: "KARTA", quote: "«W każdym żarcie jest kropla whiskey...»", hall: "SALON", back: "WYJŚCIE" },
-            es: { welcome: "BIENVENIDO", proceed: "CONTINUAR", save: "GUARDAR", entry: "ENTRAR", photo: "FOTO", exit: "SALIR", id: "IDENTIDAD", card: "TARJETA", quote: "«En cada broma hay algo de whisky...»", hall: "EL SALÓN", back: "SALIR" },
-            it: { welcome: "BENVENUTO", proceed: "CONTINUA", save: "SALVA", entry: "ENTRA", photo: "FOTO", exit: "ESCI", id: "IDENTITÀ", card: "CARTA", quote: "«Ogni scherzo ha il suo whisky...»", hall: "LA SALA", back: "ESCI" }
+            ru: { welcome: "ДОБРО ПОЖАЛОВАТЬ", proceed: "ПРОДОЛЖИТЬ", save: "СОХРАНИТЬ", entry: "ВХОД", photo: "ФОТО", id: "ЛИЧНОСТЬ", card: "КАРТА", bar: "БАР", quote: "«В каждой шутке есть доля виски...»" },
+            en: { welcome: "WELCOME", proceed: "PROCEED", save: "SAVE", entry: "ENTER", photo: "PHOTO", id: "IDENTITY", card: "CARD", bar: "BAR", quote: "«Every joke has a share of whiskey...»" },
+            ua: { welcome: "ВІТАЄМО", proceed: "ПРОДОВЖИТИ", save: "ЗБЕРЕГТИ", entry: "ВХІД", photo: "ФОТО", id: "ОСОБИСТІСТЬ", card: "КАРТКА", bar: "БАР", quote: "«У кожному жарті є доля віскі...»" }
         };
 
         function setLang(el, lang) {
             document.querySelectorAll('.lang-item').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
-            const d = langData[lang];
+            const d = langData[lang] || langData.en;
             document.getElementById('t-welcome').innerText = d.welcome;
             document.getElementById('btn-proceed').innerText = d.proceed;
             document.getElementById('btn-save').innerText = d.save;
             document.getElementById('btn-to-hall').innerText = d.entry;
             document.getElementById('t-photo-text').innerText = d.photo;
-            document.getElementById('t-exit').innerText = d.exit;
             document.getElementById('t-id-title').innerText = d.id;
             document.getElementById('t-card-title').innerText = d.card;
+            document.getElementById('t-bar-label').innerText = d.bar;
             document.getElementById('dynamic-quote').innerText = d.quote;
-            document.getElementById('t-hall-title').innerText = d.hall;
-            document.getElementById('t-hall-exit').innerText = d.back;
-        }
-
-        function switchTo(id) {
-            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
         }
 
         function handleDoor() {
-            doorSnd.play().catch(() => {});
-            document.getElementById('block-entrance').classList.add('door-opening');
+            doorSnd.play().catch(()=>{});
+            document.getElementById('main-door').style.transform = "scale(4)";
+            document.getElementById('main-door').style.opacity = "0";
             setTimeout(() => switchTo('block-welcome'), 1300);
         }
 
         function startTerminal() {
-            barSnd.volume = 0.2; barSnd.play().catch(() => {});
+            barSnd.volume = 0.1; barSnd.play().catch(()=>{});
             switchTo('block-identity');
             updateDisplay();
         }
 
-        function previewFile() {
-            const preview = document.getElementById('photo-preview');
-            const file = document.getElementById('file-input').files[0];
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                preview.src = reader.result;
-                preview.style.display = "block";
-                document.getElementById('t-photo-text').style.display = "none";
-            }
-            if (file) reader.readAsDataURL(file);
+        function saveChanges() {
+            document.getElementById('btn-to-hall').style.display = 'block';
+            document.getElementById('stat-id').innerText = "№ " + currentID;
+        }
+
+        function enterHall() {
+            switchTo('block-hall');
+            barSnd.volume = 0.3; // В холле звук бара слышнее
+        }
+
+        function enterBar() {
+            beadsSnd.play().catch(()=>{});
+            setTimeout(() => alert("Переход в зону Бара... (в разработке)"), 500);
         }
 
         function updateDisplay() {
@@ -192,10 +200,24 @@
             new QRCode(qrBox, { text: "GY-ID:"+currentID, width: 80, height: 80 });
         }
 
-        function saveChanges() { document.getElementById('btn-to-hall').style.display = 'block'; }
-        function enterHall() { switchTo('block-hall'); }
+        function switchTo(id) {
+            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
         function changeAvatar(dir) { currentAvIdx = (currentAvIdx + dir + avatars.length) % avatars.length; updateDisplay(); }
         function changeID(dir) { currentID = (currentID + (dir * 9) + 9000) % 9000 + 1000; updateDisplay(); }
+        
+        function previewFile() {
+            const file = document.getElementById('file-input').files[0];
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const p = document.getElementById('photo-preview');
+                p.src = reader.result; p.style.display = "block";
+                document.getElementById('t-photo-text').style.display = "none";
+            }
+            if(file) reader.readAsDataURL(file);
+        }
     </script>
 </body>
 </html>
