@@ -3,33 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v2.7.7</title>
+    <title>GY-GY Club v2.7.8</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
-        /* Базовые стили сохранены полностью */
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         body { margin: 0; background: #000; color: #d4af37; font-family: 'Times New Roman', serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; }
+        
         .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 10px; background: #000; }
         .block.active { display: flex !important; z-index: 50; }
+
+        /* ВХОД */
         #door-wrapper { cursor: pointer; padding: 20px; transition: 1.2s; z-index: 100; }
         #door-img { width: 70vw; max-width: 280px; border: 1px solid rgba(212, 175, 55, 0.2); }
         .door-opening { transform: scale(5); opacity: 0; pointer-events: none; }
+
+        /* ЧАРЛИ */
+        .charlie-placeholder { font-size: 100px; margin-bottom: 20px; filter: drop-shadow(0 0 10px #d4af37); }
+
+        /* ТЕРМИНАЛ */
         .terminal-grid { display: flex; flex-direction: row; gap: 5px; width: 100%; max-width: 650px; background: rgba(15,15,15,0.95); padding: 20px; border: 1px solid rgba(212,175,55,0.1); margin-bottom: 10px; }
         .panel { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 10px; }
         .panel-left { border-right: 1px solid rgba(212, 175, 55, 0.2); }
-        .photo-slot { width: 90px; height: 90px; border: 1px solid #d4af37; background: #fff; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .photo-slot { width: 90px; height: 90px; border: 1px solid #d4af37; background: #fff; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; cursor: pointer; }
         .photo-slot img { width: 100%; height: 100%; object-fit: cover; position: absolute; }
+
         .btn-gold { width: 100%; max-width: 180px; padding: 12px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 11px; letter-spacing: 2px; cursor: pointer; margin: 8px 0; font-family: inherit; }
         #btn-to-hall { background: rgba(212, 175, 55, 0.3) !important; display: none; border: 2px solid #d4af37; }
         .btn-saved { background: #d4af37 !important; color: #000 !important; }
+
+        /* ЯЗЫКИ */
         .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px 15px; margin-top: 10px; }
         .lang-item { font-size: 10px; opacity: 0.4; cursor: pointer; padding: 5px; font-weight: bold; border-bottom: 1px solid transparent; }
         .lang-item.active { border-bottom: 1px solid #d4af37; opacity: 1; color: #fff; }
+
+        /* ХОЛЛ */
         .club-dashboard { position: absolute; top: 0; width: 100%; padding: 15px; display: flex; justify-content: space-around; font-size: 10px; letter-spacing: 2px; background: linear-gradient(to bottom, rgba(20,20,20,0.9), transparent); border-bottom: 1px solid rgba(212,175,55,0.1); }
+        .hall-view { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
         .bar-arch { position: relative; width: 200px; height: 300px; border: 4px solid #3d2b1f; border-bottom: none; border-radius: 100px 100px 0 0; cursor: pointer; overflow: hidden; }
         .beads-curtain { position: absolute; top: 80px; width: 100%; height: 100%; background: repeating-linear-gradient(90deg, #3d2b1f 0px, #3d2b1f 2px, transparent 2px, transparent 6px); transition: 0.8s; }
         .bar-arch:hover .beads-curtain { transform: scaleX(0.2); opacity: 0.3; }
+        
         .guest-slip { position: absolute; bottom: 30px; left: 30px; padding: 10px; background: #fff; color: #000; width: 120px; transform: rotate(-3deg); box-shadow: 10px 10px 20px #000; cursor: pointer; text-align: left; font-size: 9px; }
+
         @media (max-width: 600px) { .terminal-grid { flex-direction: column; } .panel-left { border-right: none; border-bottom: 1px solid rgba(212,175,55,0.1); } }
     </style>
 </head>
@@ -41,13 +56,16 @@
     <div id="block-entrance" class="block active">
         <div style="letter-spacing: 10px; margin-bottom: 20px; font-size: 18px;">GY-GY PRIVATE</div>
         <div id="door-wrapper" onclick="handleDoor()">
-            <img src="door_1.jpg" id="door-img">
+            <img src="door_1.jpg" id="door-img" onerror="this.style.display='none'; this.parentElement.innerHTML='🚪';">
         </div>
     </div>
 
     <div id="block-welcome" class="block">
-        <img src="charlie.png" style="width: 200px; margin-bottom: 15px;">
-        <h1 style="letter-spacing: 8px;">WELCOME</h1>
+        <div id="charlie-img-container">
+            <img src="charlie.png" style="width: 200px; margin-bottom: 15px;" onerror="this.style.display='none'; document.getElementById('charlie-emoji').style.display='block';">
+            <div id="charlie-emoji" class="charlie-placeholder" style="display:none;">🤵‍♂️</div>
+        </div>
+        <h1 id="t-welcome-title" style="letter-spacing: 8px;">WELCOME</h1>
         <button id="btn-proceed" class="btn-gold" onclick="startTerminal()">PROCEED</button>
     </div>
 
@@ -56,14 +74,14 @@
             <div class="panel panel-left">
                 <div id="t-choose">ВЫБРАТЬ</div>
                 <div style="display:flex; align-items:center; gap:20px; margin: 10px 0;">
-                    <div onclick="changeAvatar(-1)" style="cursor:pointer; font-size:26px;">&#10094;</div>
+                    <div onclick="changeAvatar(-1)" style="cursor:pointer; font-size:26px; padding:5px;">&#10094;</div>
                     <div id="user-avatar" style="font-size:45px;">🥃</div>
-                    <div onclick="changeAvatar(1)" style="cursor:pointer; font-size:26px;">&#10095;</div>
+                    <div onclick="changeAvatar(1)" style="cursor:pointer; font-size:26px; padding:5px;">&#10095;</div>
                 </div>
                 <div style="display:flex; align-items:center; gap:20px; margin-bottom: 15px;">
-                    <div onclick="changeID(-1)" style="cursor:pointer; font-size:22px;">&#10094;</div>
-                    <div id="label-res">№ 1000</div>
-                    <div onclick="changeID(1)" style="cursor:pointer; font-size:22px;">&#10095;</div>
+                    <div onclick="changeID(-1)" style="cursor:pointer; font-size:22px; padding:5px;">&#10094;</div>
+                    <div id="label-res" style="font-size:18px;">№ 1000</div>
+                    <div onclick="changeID(1)" style="cursor:pointer; font-size:22px; padding:5px;">&#10095;</div>
                 </div>
                 <button id="btn-save" class="btn-gold" onclick="saveChanges()">СОХРАНИТЬ</button>
                 <button id="btn-to-hall" class="btn-gold" onclick="enterHall()">ВХОД</button>
@@ -100,7 +118,7 @@
             <div>ATMOSPHERE: <span style="color:#fff">180°C</span></div>
         </div>
         <div class="hall-view">
-            <div class="bar-arch" onclick="alert('Entering Bar...')">
+            <div class="bar-arch" onclick="alert('Входим...')">
                 <div id="t-bar-label" style="margin-top:40px; font-size:24px; letter-spacing:10px;">БАР</div>
                 <div class="beads-curtain"></div>
             </div>
@@ -120,19 +138,18 @@
         const barAudio = document.getElementById('bar-sound');
 
         const i18n = {
-            RU: { choose: "ВЫБРАТЬ", save: "СОХРАНИТЬ", enter: "ВХОД", member: "УЧАСТНИК КЛУБА", photo: "ФОТО", change: "ИЗМЕНИТЬ", exit: "ВЫХОД", quote: "«В каждой шутке есть доля виски...»", bar: "БАР", proceed: "ПРОДОЛЖИТЬ" },
-            EN: { choose: "CHOOSE", save: "SAVE", enter: "ENTER", member: "CLUB MEMBER", photo: "PHOTO", change: "CHANGE", exit: "EXIT", quote: "«In every joke there is a drop of whiskey...»", bar: "BAR", proceed: "PROCEED" },
-            UA: { choose: "ОБРАТИ", save: "ЗБЕРЕГТИ", enter: "ВХІД", member: "УЧАСНИК КЛУБУ", photo: "ФОТО", change: "ЗМІНИТИ", exit: "ВИХІД", quote: "«У кожному жарті є частка віскі...»", bar: "БАР", proceed: "ПРОДОВЖИТИ" },
-            FR: { choose: "CHOISIR", save: "SAUVER", enter: "ENTRER", member: "MEMBRE", photo: "PHOTO", change: "CHANGER", exit: "SORTIE", quote: "«Dans chaque blague, il y a une goutte de whisky...»", bar: "BAR", proceed: "CONTINUER" },
-            DE: { choose: "WÄHLEN", save: "SPEICHERN", enter: "EINTRITT", member: "MITGLIED", photo: "FOTO", change: "ÄNDERN", exit: "BEENDEN", quote: "«In jedem Witz steckt ein Tropfen Whiskey...»", bar: "BAR", proceed: "FORTFAHREN" },
-            PL: { choose: "WYBIERZ", save: "ZAPISZ", enter: "WEJŚCIE", member: "CZŁONEK", photo: "FOTO", change: "ZMIEŃ", exit: "WYJŚCIE", quote: "«W każdym żarcie jest kropla whisky...»", bar: "BAR", proceed: "KONTYNUUJ" },
-            ES: { choose: "ELEGIR", save: "GUARDAR", enter: "ENTRAR", member: "MIEMBRO", photo: "FOTO", change: "CAMBIAR", exit: "SALIR", quote: "«En cada broma hay una gota de whisky...»", bar: "BAR", proceed: "CONTINUAR" },
-            IT: { choose: "SCEGLI", save: "SALVA", enter: "ENTRA", member: "MEMBRO", photo: "FOTO", change: "CAMBIA", exit: "USCITA", quote: "«In ogni scherzo c'è una goccia di whisky...»", bar: "BAR", proceed: "CONTINUA" }
+            RU: { choose: "ВЫБРАТЬ", save: "СОХРАНИТЬ", enter: "ВХОД", member: "УЧАСТНИК КЛУБА", photo: "ФОТО", change: "ИЗМЕНИТЬ", exit: "ВЫХОД", quote: "«В каждой шутке есть доля виски...»", bar: "БАР", proceed: "ПРОДОЛЖИТЬ", welcome: "ДОБРО ПОЖАЛОВАТЬ" },
+            EN: { choose: "CHOOSE", save: "SAVE", enter: "ENTER", member: "CLUB MEMBER", photo: "PHOTO", change: "CHANGE", exit: "EXIT", quote: "«In every joke there is a drop of whiskey...»", bar: "BAR", proceed: "PROCEED", welcome: "WELCOME" },
+            UA: { choose: "ОБРАТИ", save: "ЗБЕРЕГТИ", enter: "ВХІД", member: "УЧАСНИК КЛУБУ", photo: "ФОТО", change: "ЗМІНИТИ", exit: "ВИХІД", quote: "«У кожному жарті є частка віскі...»", bar: "БАР", proceed: "ПРОДОВЖИТИ", welcome: "ВІТАЄМО" },
+            FR: { choose: "CHOISIR", save: "SAUVER", enter: "ENTRER", member: "MEMBRE", photo: "PHOTO", change: "CHANGER", exit: "SORTIE", quote: "«Dans chaque blague, il y a une goutte de whisky...»", bar: "BAR", proceed: "CONTINUER", welcome: "BIENVENUE" },
+            DE: { choose: "WÄHLEN", save: "SPEICHERN", enter: "EINTRITT", member: "MITGLIED", photo: "FOTO", change: "ÄNDERN", exit: "BEENDEN", quote: "«In jedem Witz steckt ein Tropfen Whiskey...»", bar: "BAR", proceed: "FORTFAHREN", welcome: "WILLKOMMEN" },
+            PL: { choose: "WYBIERZ", save: "ZAPISZ", enter: "WEJŚCIE", member: "CZŁONEK", photo: "FOTO", change: "ZMIEŃ", exit: "WYJŚCIE", quote: "«W każdym żarcie jest kropla whisky...»", bar: "BAR", proceed: "KONTYNUUJ", welcome: "WITAJ" },
+            ES: { choose: "ELEGIR", save: "GUARDAR", enter: "ENTRAR", member: "MIEMBRO", photo: "FOTO", change: "CAMBIAR", exit: "SALIR", quote: "«En cada broma hay una gota de whisky...»", bar: "BAR", proceed: "CONTINUAR", welcome: "BIENVENIDO" },
+            IT: { choose: "SCEGLI", save: "SALVA", enter: "ENTRA", member: "MEMBRO", photo: "FOTO", change: "CAMBIA", exit: "USCITA", quote: "«In ogni scherzo c'è una goccia di whisky...»", bar: "BAR", proceed: "CONTINUA", welcome: "BENVENUTO" }
         };
 
         function setSoundLevel(level) {
-            let target = (level === 2) ? 0.4 : 0.1;
-            barAudio.volume = target; 
+            barAudio.volume = (level === 2) ? 0.4 : 0.1; 
         }
 
         function updateLang(l) {
@@ -148,17 +165,18 @@
             document.getElementById('dynamic-quote').innerText = d.quote;
             document.getElementById('t-bar-label').innerText = d.bar;
             document.getElementById('btn-proceed').innerText = d.proceed;
+            document.getElementById('t-welcome-title').innerText = d.welcome;
             document.querySelectorAll('.lang-item').forEach(el => el.classList.toggle('active', el.innerText === l));
         }
 
         function initClub() {
-            const saved = localStorage.getItem('gy_v277');
+            const saved = localStorage.getItem('gy_v278');
             if(saved) {
                 const data = JSON.parse(saved);
                 currentID = data.id; currentAvIdx = data.avIdx; currentLang = data.lang;
                 if(data.photo) {
-                    const img = document.getElementById('photo-preview');
-                    img.src = data.photo; img.style.display = "block";
+                    document.getElementById('photo-preview').src = data.photo;
+                    document.getElementById('photo-preview').style.display = "block";
                     document.getElementById('t-photo-label').style.display = "none";
                     document.getElementById('hall-photo').src = data.photo;
                     document.getElementById('hall-photo').style.display = "block";
@@ -171,19 +189,19 @@
         }
 
         function handleDoor() {
-            document.getElementById('door-sound').play();
+            document.getElementById('door-sound').play().catch(()=>{});
             document.getElementById('door-wrapper').classList.add('door-opening');
             setTimeout(() => switchTo('block-welcome'), 1000);
         }
 
         function startTerminal() {
-            barAudio.volume = 0.1; barAudio.play();
+            barAudio.volume = 0.1; barAudio.play().catch(()=>{});
             switchTo('block-identity');
         }
 
         function saveChanges() {
             const photo = document.getElementById('photo-preview').src;
-            localStorage.setItem('gy_v277', JSON.stringify({
+            localStorage.setItem('gy_v278', JSON.stringify({
                 id: currentID, avIdx: currentAvIdx, lang: currentLang, photo: photo.startsWith('data:') ? photo : null
             }));
             document.getElementById('btn-to-hall').style.display = 'block';
@@ -195,12 +213,14 @@
 
         function enterHall() { setSoundLevel(2); switchTo('block-hall'); }
         function softExit() { barAudio.pause(); document.getElementById('door-wrapper').classList.remove('door-opening'); switchTo('block-entrance'); }
+        
         function updateDisplay() {
             document.getElementById('user-avatar').innerText = avatars[currentAvIdx];
             document.getElementById('label-res').innerText = "№ " + currentID;
             const qr = document.getElementById("qrcode-container"); qr.innerHTML = "";
             new QRCode(qr, { text: "GY-"+currentID, width: 80, height: 80 });
         }
+
         function changeAvatar(dir) { currentAvIdx = (currentAvIdx+dir+avatars.length)%avatars.length; updateDisplay(); document.getElementById('btn-to-hall').style.display = 'none'; }
         function changeID(dir) { currentID = (currentID+(dir*9)+9000)%9000+1000; updateDisplay(); document.getElementById('btn-to-hall').style.display = 'none'; }
         function switchTo(id) { document.querySelectorAll('.block').forEach(b => b.style.display = 'none'); document.getElementById(id).style.display = 'flex'; }
@@ -213,7 +233,7 @@
                 document.getElementById('t-photo-label').style.display = "none";
                 document.getElementById('btn-to-hall').style.display = 'none';
             }
-            reader.readAsDataURL(document.getElementById('file-input').files[0]);
+            if(document.getElementById('file-input').files[0]) reader.readAsDataURL(document.getElementById('file-input').files[0]);
         }
     </script>
 </body>
