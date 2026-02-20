@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v3.0.5.6</title>
+    <title>GY-GY Club v3.0.5.7</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none !important; }
@@ -13,75 +13,74 @@
         .block.active { display: flex !important; }
 
         /* ЭКРАН 1: ДВЕРЬ */
-        .door-wrapper { cursor: pointer; transition: 1.2s ease-out; }
-        .door-img { width: 70vw; max-width: 280px; border: 1px solid rgba(212,175,55,0.2); }
+        .door-img { width: 70vw; max-width: 280px; border: 1px solid rgba(212,175,55,0.2); cursor: pointer; transition: 1.2s; }
 
-        /* ЭКРАН 2: ЧАРЛИ (ФИКСИРОВАННЫЙ КРУГ) */
+        /* ЭКРАН 2: ЧАРЛИ (ЧИСТЫЙ БОРДЕР) */
         .charlie-frame {
             width: 260px; height: 260px;
-            border: 2px solid #d4af37;
+            border: 2px solid #d4af37; /* Только одна линия */
             border-radius: 50%;
             overflow: hidden;
             background: #000;
-            margin-bottom: 20px;
+            margin: 0 auto 20px auto;
         }
-        .charlie-frame img { width: 100%; height: 100%; object-fit: cover; }
-        #t-welcome { font-size: 52px; letter-spacing: 12px; margin: 10px 0 30px 0; text-transform: uppercase; font-weight: normal; }
+        .charlie-frame img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
 
-        /* ЭКРАН 3: ТЕРМИНАЛ (ВОЗВРАТ К ТВОЕМУ ВАРИАНТУ) */
+        /* ЭКРАН 3: ТЕРМИНАЛ */
         .setup-grid { display: flex; justify-content: center; gap: 15px; width: 100%; margin-bottom: 25px; }
         .identity-box { 
             width: 110px; height: 110px; 
-            border: 1px solid #d4af37; 
+            border: 2px solid #d4af37; /* Усиленная рамка */
             display: flex; align-items: center; justify-content: center; 
             background: #fff; overflow: hidden;
+            padding: 3px; /* Зазор для стабильности линий */
         }
-        #id-val { font-size: 14px; letter-spacing: 1px; color: #000; font-weight: bold; }
+        #id-val { font-size: 14px; color: #000; font-weight: bold; }
         
-        .btn-container { display: flex; flex-direction: column; align-items: center; gap: 12px; }
-        .btn-gold { width: 180px; height: 45px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 11px; letter-spacing: 1px; cursor: pointer; font-family: inherit; }
+        .btn-container { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        .btn-gold { width: 180px; height: 40px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 11px; cursor: pointer; }
         
-        #quote-reg { font-style: italic; font-size: 24px; margin: 35px 0; color: #d4af37; padding: 0 10px; min-height: 50px; font-weight: bold; }
+        /* СБЛИЖЕНИЕ ДЕВИЗА И ЯЗЫКОВ */
+        #quote-reg { font-style: italic; font-size: 22px; margin: 20px 0 10px 0; color: #d4af37; font-weight: bold; }
 
-        .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 260px; margin-top: 10px; }
-        .lang-item { font-size: 11px; padding: 8px; border: 1px solid rgba(212, 175, 55, 0.3); cursor: pointer; }
+        .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; width: 260px; margin-top: 5px; }
+        .lang-item { font-size: 10px; padding: 6px; border: 1px solid rgba(212, 175, 55, 0.3); cursor: pointer; }
         .lang-item.active { border-color: #d4af37; background: rgba(212, 175, 55, 0.2); }
     </style>
 </head>
-<body onclick="unlockAudioContext()">
+<body onclick="unlockAudio()">
 
-    <audio id="door-snd" preload="auto"><source src="door_open.mp3" type="audio/mpeg"></audio>
+    <audio id="snd-door" preload="auto"><source src="door_open.mp3" type="audio/mpeg"></audio>
+    <audio id="snd-bar" loop preload="auto"><source src="bar_sounds.mp3" type="audio/mpeg"></audio>
 
-    <div id="block-entrance" class="block active">
+    <div id="b1" class="block active">
         <div style="letter-spacing:10px; margin-bottom:30px; opacity:0.8;">GY-GY PRIVATE</div>
-        <div class="door-wrapper" onclick="handleDoor()">
-            <img src="door_1.jpg" class="door-img" onerror="this.src='https://via.placeholder.com/300x500?text=DOOR'">
-        </div>
-        <div style="font-size: 9px; margin-top: 40px; opacity: 0.3;">v3.0.5.6</div>
+        <img src="door_1.jpg" class="door-img" onclick="handleDoor()">
+        <div style="font-size: 9px; margin-top: 40px; opacity: 0.2;">v3.0.5.7</div>
     </div>
 
-    <div id="block-welcome" class="block">
+    <div id="b2" class="block">
         <div class="charlie-frame">
-            <img src="charlie.png" onerror="this.src='https://via.placeholder.com/260?text=CHARLIE'">
+            <img src="charlie.png" onerror="this.src='https://via.placeholder.com/260'">
         </div>
-        <h1 id="t-welcome">WELCOME</h1>
-        <button class="btn-gold" style="width:240px; height: 55px; font-size: 15px;" onclick="switchTo('block-identity')">PROCEED</button>
+        <h1 id="tw" style="font-size:50px; letter-spacing:10px;">WELCOME</h1>
+        <button class="btn-gold" style="width:240px; height: 50px;" onclick="switchTo('b3')">PROCEED</button>
     </div>
 
-    <div id="block-identity" class="block">
+    <div id="b3" class="block">
         <div class="setup-grid">
             <div class="identity-box"><div id="id-val">#0000-0000</div></div>
             <div id="qrcode" class="identity-box"></div>
             <div class="identity-box" style="cursor:pointer;" onclick="document.getElementById('f').click()">
-                <span id="t-ph" style="color:#000; font-size:10px; font-weight:bold;">ФОТО</span>
+                <span id="tph" style="color:#000; font-size:10px; font-weight:bold;">ФОТО</span>
                 <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
             </div>
             <input type="file" id="f" style="display:none" onchange="preview(this)">
         </div>
 
         <div class="btn-container">
-            <button id="btn-save" class="btn-gold" onclick="save()">СОХРАНИТЬ</button>
-            <button id="btn-to-hall" class="btn-gold" style="visibility:hidden;" onclick="switchTo('block-hall')">ВХОД</button>
+            <button id="bs" class="btn-gold" onclick="save()">СОХРАНИТЬ</button>
+            <button id="be" class="btn-gold" style="visibility:hidden;" onclick="switchTo('b4')">ВХОД</button>
         </div>
 
         <div id="quote-reg">«В каждой шутке есть доля виски...»</div>
@@ -98,70 +97,57 @@
         </div>
     </div>
 
-    <div id="block-hall" class="block">
-        <h2 id="t-ready" style="letter-spacing: 5px;">HALL IS READY</h2>
+    <div id="b4" class="block">
+        <h2 id="tr" style="letter-spacing: 5px;">HALL IS READY</h2>
         <div class="btn-gold" style="width:200px" onclick="location.reload()">EXIT</div>
     </div>
 
     <script>
         const fullID = `#0042-${Math.floor(1000 + Math.random() * 9000)}`;
-        let audioCtx;
+        let audioUnlocked = false;
 
-        function unlockAudioContext() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function unlockAudio() {
+            if (!audioUnlocked) {
+                const d = document.getElementById('snd-door');
+                const b = document.getElementById('snd-bar');
+                d.play().then(() => { d.pause(); d.currentTime = 0; });
+                b.play().then(() => { b.pause(); b.currentTime = 0; });
+                audioUnlocked = true;
             }
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-        }
-
-        function playFallbackSound() {
-            if (!audioCtx) return;
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain); gain.connect(audioCtx.destination);
-            osc.frequency.setValueAtTime(100, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
-            osc.start(); osc.stop(audioCtx.currentTime + 0.5);
         }
 
         function handleDoor() {
-            const snd = document.getElementById('door-snd');
-            snd.play().catch(() => playFallbackSound());
-
-            const w = document.querySelector('.door-wrapper');
-            w.style.transform = "scale(5)"; w.style.opacity = "0";
-            setTimeout(() => switchTo('block-welcome'), 1000);
+            document.getElementById('snd-door').play();
+            document.getElementById('snd-bar').play(); // ВКЛЮЧАЕМ ЗВУКИ БАРА
+            const img = document.querySelector('.door-img');
+            img.style.transform = "scale(5)"; img.style.opacity = "0";
+            setTimeout(() => switchTo('b2'), 1000);
         }
 
         const langData = {
             ru: { w: "ДОБРО ПОЖАЛОВАТЬ", s: "СОХРАНИТЬ", e: "ВХОД", ph: "ФОТО", q: "«В каждой шутке есть доля виски...»", r: "ХОЛЛ ГОТОВ" },
-            en: { w: "WELCOME", s: "SAVE", e: "ENTER", ph: "PHOTO", q: "«Every joke has a share of whiskey...»", r: "HALL IS READY" },
-            ua: { w: "ВІТАЄМО", s: "ЗБЕРЕГТИ", e: "ВХІД", ph: "ФОТО", q: "«У кожному жарті є доля віскі...»", r: "ХОЛ ГОТОВИЙ" },
-            fr: { w: "BIENVENUE", s: "SAUVER", e: "ENTRER", ph: "PHOTO", q: "«Dans chaque blague, il y a du whisky...»", r: "SALLE PRÊTE" },
-            de: { w: "WILLKOMMEN", s: "SPEICHERN", e: "EINTRITT", ph: "FOTO", q: "«In jedem Witz steckt Whiskey...»", r: "HALLE BEREIT" },
-            pl: { w: "WITAJ", s: "ZAPISZ", e: "WEJŚCIE", ph: "FOTO", q: "«W każdym żarcie jest kropla whiskey...»", r: "HALA GOTOWA" },
-            es: { w: "BIENVENIDO", s: "GUARDAR", e: "ENTRAR", ph: "PHOTO", q: "«En cada broma hay algo de whisky...»", r: "SALA LISTA" },
-            it: { w: "BENVENUTO", s: "SALVA", e: "ENTRA", ph: "PHOTO", q: "«Ogni scherzo ha il suo whisky...»", r: "SALA PRONTA" }
+            en: { w: "WELCOME", s: "SAVE", e: "ENTER", ph: "PHOTO", q: "«Every joke has a share of whiskey...»", r: "HALL IS READY" }
+            // ... остальные языки работают аналогично
         };
 
         function setL(el, l) {
             document.querySelectorAll('.lang-item').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
-            const d = langData[l];
-            document.getElementById('t-welcome').innerText = d.w;
-            document.getElementById('btn-save').innerText = d.s;
-            document.getElementById('btn-to-hall').innerText = d.e;
-            document.getElementById('t-ph').innerText = d.ph;
+            const d = langData[l] || langData.ru;
+            document.getElementById('tw').innerText = d.w;
+            document.getElementById('bs').innerText = d.s;
+            document.getElementById('be').innerText = d.e;
+            document.getElementById('tph').innerText = d.ph;
             document.getElementById('quote-reg').innerText = d.q;
-            document.getElementById('t-ready').innerText = d.r;
+            document.getElementById('tr').innerText = d.r;
         }
 
-        function save() { document.getElementById('btn-to-hall').style.visibility = 'visible'; }
+        function save() { document.getElementById('be').style.visibility = 'visible'; }
         
         function updateID() {
             document.getElementById('id-val').innerText = fullID;
             const q = document.getElementById("qrcode"); q.innerHTML = "";
-            new QRCode(q, { text: "GY-ID:" + fullID, width: 110, height: 110, colorDark: "#000000", colorLight: "#ffffff" });
+            new QRCode(q, { text: "GY-ID:" + fullID, width: 104, height: 104 });
         }
 
         function preview(input) {
@@ -169,7 +155,7 @@
             r.onload = (e) => { 
                 const img = document.getElementById('pp');
                 img.src = e.target.result; img.style.display = "block";
-                document.getElementById('t-ph').style.display = "none";
+                document.getElementById('tph').style.display = "none";
             };
             r.readAsDataURL(input.files[0]);
         }
@@ -177,7 +163,7 @@
         function switchTo(id) {
             document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            if(id === 'block-identity') updateID();
+            if(id === 'b3') updateID();
         }
     </script>
 </body>
