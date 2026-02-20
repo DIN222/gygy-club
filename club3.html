@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v2.9.7</title>
+    <title>GY-GY Club v2.9.8</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
@@ -12,23 +12,24 @@
         .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 10px; z-index: 1; }
         .block.active { display: flex !important; z-index: 10; }
 
-        /* ЧАРЛИ - ВОЗВРАТ К НОРМЕ */
+        /* ЧАРЛИ - СГЛАЖИВАНИЕ */
         .charlie-portrait { 
             width: 180px; height: 180px; 
-            margin-bottom: 20px; border-radius: 4px; 
+            margin-bottom: 20px; border-radius: 50%; /* Сделал идеально круглым */
+            border: 1px solid rgba(212, 175, 55, 0.3);
             overflow: hidden; position: relative; 
             display: flex; align-items: center; justify-content: center; 
-            background: rgba(212, 175, 55, 0.05); 
+            background: #000;
+            -webkit-backface-visibility: hidden; /* Сглаживание краев */
+            backface-visibility: hidden;
         }
-        .charlie-portrait::before { content: "🤵‍♂️"; font-size: 100px; position: absolute; z-index: 1; }
-        .charlie-portrait img { width: 100%; height: 100%; object-fit: cover; position: relative; z-index: 2; background: black; }
+        .charlie-portrait img { width: 100%; height: 100%; object-fit: cover; position: relative; z-index: 2; }
 
-        /* КНОПКИ С ЖЕСТКИМ РАЗМЕРОМ */
+        /* КНОПКИ */
         .btn-gold { 
-            width: 180px; height: 40px; 
-            padding: 0; background: transparent; border: 1px solid #d4af37; 
-            color: #d4af37; text-transform: uppercase; font-size: 11px; 
-            letter-spacing: 2px; cursor: pointer; margin: 5px 0; 
+            width: 180px; height: 40px; padding: 0; background: transparent; 
+            border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; 
+            font-size: 11px; letter-spacing: 2px; cursor: pointer; margin: 5px 0; 
             font-family: inherit; display: flex; align-items: center; justify-content: center;
         }
         
@@ -39,14 +40,13 @@
         .title-label { height: 15px; font-size: 10px; letter-spacing: 2px; margin-bottom: 15px; text-transform: uppercase; }
         .nav-arrow { cursor: pointer; font-size: 18px; opacity: 0.5; width: 20px; user-select: none; }
 
-        /* Идентичные рамки для фото и QR */
+        /* Идентичные рамки */
         .square-box { 
-            width: 90px; height: 90px; 
-            border: 1px solid #d4af37; background: #fff; 
+            width: 90px; height: 90px; border: 1px solid #d4af37; background: #fff; 
             display: flex; align-items: center; justify-content: center; 
             overflow: hidden; margin-top: 5px;
         }
-        .square-box img { width: 90px !important; height: 90px !important; object-fit: cover; }
+        .square-box img { width: 90px !important; height: 90px !important; object-fit: cover; border: none; }
 
         .action-zone { height: 100px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
@@ -57,18 +57,16 @@
         .hall-user-pic img { width: 100%; height: 100%; object-fit: cover; }
 
         .hall-scene { display: flex; align-items: flex-end; justify-content: center; gap: 30px; width: 100%; height: 320px; }
-        .painting { width: 70px; height: 90px; border: 4px solid #3d2b1f; background: #111; position: relative; }
+        .painting { width: 70px; height: 90px; border: 4px solid #3d2b1f; background: #111; }
         .lumber-table { width: 45px; height: 35px; background: #2a1b0f; border-radius: 3px 3px 0 0; position: relative; }
         .lumber-table::before { content: "💐"; position: absolute; top: -18px; left: 50%; transform: translateX(-50%); font-size: 18px; }
 
-        .bar-arch-wrap { width: 170px; height: 260px; border: 10px solid #3d2b1f; border-bottom: none; border-radius: 90px 90px 0 0; position: relative; cursor: pointer; overflow: hidden; background: #000; }
-        .bar-title { position: absolute; top: 40px; width: 100%; font-size: 20px; letter-spacing: 8px; z-index: 5; text-shadow: 0 0 15px #000; }
-        .beads-curtain { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: repeating-linear-gradient(90deg, #3d2b1f 0px, #3d2b1f 3px, transparent 3px, transparent 8px); z-index: 10; transition: 0.8s ease-in-out; }
+        .bar-arch-wrap { width: 170px; height: 260px; border: 10px solid #3d2b1f; border-bottom: none; border-radius: 90px 90px 0 0; position: relative; cursor: pointer; overflow: hidden; }
+        .bar-title { position: absolute; top: 40px; width: 100%; font-size: 20px; letter-spacing: 8px; z-index: 5; }
+        .beads-curtain { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: repeating-linear-gradient(90deg, #3d2b1f 0px, #3d2b1f 3px, transparent 3px, transparent 8px); z-index: 10; transition: 0.8s ease; }
         .bar-arch-wrap:hover .beads-curtain { transform: scaleX(0.2); opacity: 0.3; }
 
-        .exit-link { font-size: 10px; opacity: 0.4; cursor: pointer; text-transform: uppercase; margin: 20px 0; letter-spacing: 1px; text-decoration: underline; }
-
-        @media (max-width: 600px) { .setup-grid { gap: 5px; } .panel { width: 120px; } .hall-scene { gap: 10px; } }
+        .exit-link { font-size: 10px; opacity: 0.4; cursor: pointer; text-transform: uppercase; margin: 20px 0; text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -79,14 +77,14 @@
 
     <div id="block-entrance" class="block active">
         <div style="letter-spacing:10px; margin-bottom:20px; opacity:0.8;">GY-GY PRIVATE</div>
-        <div class="door-container" onclick="handleDoor()" id="main-door" style="cursor:pointer; transition:1.5s;">
+        <div onclick="handleDoor()" id="main-door" style="cursor:pointer; transition:1.5s;">
             <img src="door_1.jpg" style="width:70vw; max-width:320px; border:1px solid rgba(212,175,55,0.2);" onerror="this.parentElement.innerHTML='🚪'">
         </div>
     </div>
 
     <div id="block-welcome" class="block">
         <div class="charlie-portrait"><img src="charlie.png" onerror="this.style.display='none'"></div>
-        <h1 id="t-welcome" style="letter-spacing:8px; font-weight:normal; margin: 0 0 20px 0;">WELCOME</h1>
+        <h1 id="t-welcome" style="letter-spacing:8px; font-weight:normal; margin-bottom:20px;">WELCOME</h1>
         <button id="btn-proceed" class="btn-gold" onclick="startTerminal()">PROCEED</button>
     </div>
 
@@ -101,7 +99,7 @@
                 </div>
                 <div style="display:flex; align-items:center; height:40px;">
                     <div onclick="changeID(-1)" class="nav-arrow">‹</div>
-                    <div id="label-res" style="font-size:16px; letter-spacing:1px; width:80px;">№ 1000</div>
+                    <div id="label-res" style="font-size:16px; width:80px;">№ 1000</div>
                     <div onclick="changeID(1)" class="nav-arrow">›</div>
                 </div>
             </div>
@@ -116,14 +114,11 @@
                 <input type="file" id="file-input" style="display:none" onchange="previewFile()">
             </div>
         </div>
-
         <div class="action-zone">
             <button id="btn-save" class="btn-gold" onclick="saveChanges()">СОХРАНИТЬ</button>
             <button id="btn-to-hall" class="btn-gold" style="visibility:hidden;" onclick="enterHall()">ВХОД</button>
         </div>
-
         <div id="quote-reg" style="font-style:italic; font-size:12px; height:30px; display:flex; align-items:center;">«В каждой шутке есть доля виски...»</div>
-        
         <div class="lang-grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:15px;">
             <div class="lang-item active" onclick="setLang(this,'ru')">RU</div>
             <div class="lang-item" onclick="setLang(this,'en')">EN</div>
@@ -213,36 +208,4 @@
             else hallBox.innerText = avatars[currentAvIdx];
         }
 
-        function enterHall() { switchTo('block-hall'); barSnd.volume = 0.3; }
-        function enterBar() { beadsSnd.play().catch(()=>{}); setTimeout(() => alert("Opening the Bar..."), 500); }
-
-        function updateDisplay() {
-            document.getElementById('user-avatar').innerText = avatars[currentAvIdx];
-            document.getElementById('label-res').innerText = "№ " + currentID;
-            const qrBox = document.getElementById("qrcode");
-            qrBox.innerHTML = "";
-            new QRCode(qrBox, { text: "GY-ID:"+currentID, width: 90, height: 90 });
-        }
-
-        function switchTo(id) {
-            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-        }
-
-        function changeAvatar(dir) { currentAvIdx = (currentAvIdx + dir + avatars.length) % avatars.length; updateDisplay(); }
-        function changeID(dir) { currentID = (currentID + (dir * 9) + 9000) % 9000 + 1000; updateDisplay(); }
-        
-        function previewFile() {
-            const file = document.getElementById('file-input').files[0];
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                userPhotoData = reader.result;
-                const p = document.getElementById('photo-preview');
-                p.src = userPhotoData; p.style.display = "block";
-                document.getElementById('t-photo-text').style.display = "none";
-            }
-            if(file) reader.readAsDataURL(file);
-        }
-    </script>
-</body>
-</html>
+        function enterHall
