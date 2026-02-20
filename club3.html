@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v3.0.4.1</title>
+    <title>GY-GY Club v3.0.4.2</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none !important; }
@@ -12,16 +12,29 @@
         .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 10px; }
         .block.active { display: flex !important; }
 
-        /* ЧАРЛИ - УВЕЛИЧЕННЫЙ И ОЧИЩЕННЫЙ */
+        /* ЧАРЛИ - РАДИКАЛЬНОЕ УСТРАНЕНИЕ КОЛЕЦ */
         .charlie-portrait { 
-            width: 240px; height: 240px; margin-bottom: 25px; 
-            border-radius: 50%; border: 1.5px solid #d4af37; 
-            overflow: hidden; background: #000; 
-            box-shadow: none !important; position: relative;
+            width: 250px; height: 250px; margin-bottom: 30px; 
+            border-radius: 50%; 
+            position: relative;
+            background: #000;
+            /* Вместо border используем внутреннюю тень, которая "прижимает" края */
+            box-shadow: 0 0 0 1.5px #d4af37 inset;
+            overflow: hidden;
         }
         .charlie-portrait img { 
-            width: 101%; height: 101%; object-fit: cover; 
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 100%; height: 100%; object-fit: cover; 
+            position: absolute; top: 0; left: 0;
+            z-index: -1; /* Картинка ПОД рамкой-тенью */
+        }
+
+        /* WELCOME ПОБОЛЬШЕ */
+        #t-welcome { 
+            font-size: 48px; 
+            letter-spacing: 15px; 
+            font-weight: normal; 
+            margin: 0 0 30px 0; 
+            text-transform: uppercase;
         }
 
         /* ТЕРМИНАЛ */
@@ -58,122 +71,10 @@
         <div class="door-wrapper" onclick="handleDoor()">
             <img src="door_1.jpg" class="door-img" onerror="this.parentElement.innerHTML='🚪'">
         </div>
-        <div style="font-size: 9px; margin-top: 20px; opacity: 0.3;">v3.0.4.1</div>
+        <div style="font-size: 9px; margin-top: 20px; opacity: 0.3;">v3.0.4.2</div>
     </div>
 
     <div id="block-welcome" class="block">
         <div class="charlie-portrait"><img src="charlie.png" onerror="this.style.display='none'"></div>
-        <h1 id="t-welcome" style="letter-spacing:8px; font-weight:normal;">WELCOME</h1>
-        <button class="btn-gold" style="width:180px" onclick="switchTo('block-identity')">PROCEED</button>
-    </div>
-
-    <div id="block-identity" class="block">
-        <div class="setup-grid">
-            <div class="panel">
-                <div style="font-size:10px; margin-bottom:15px; letter-spacing:1px;" id="t-id">IDENTITY</div>
-                <div style="display:flex; align-items:center; height:50px;">
-                    <div onclick="changeAv(-1)" style="cursor:pointer; padding:10px; font-size: 20px;">‹</div>
-                    <div id="user-avatar" style="font-size:35px; width:50px;">🥃</div>
-                    <div onclick="changeAv(1)" style="cursor:pointer; padding:10px; font-size: 20px;">›</div>
-                </div>
-                <div style="display:flex; align-items:center; height:40px; margin-bottom:10px;">
-                    <div onclick="changeID(-1)" style="cursor:pointer; padding:10px; font-size: 20px;">‹</div>
-                    <div id="label-res" style="font-size:15px; width:70px;">№ 1000</div>
-                    <div onclick="changeID(1)" style="cursor:pointer; padding:10px; font-size: 20px;">›</div>
-                </div>
-                <button id="btn-save" class="btn-gold" onclick="save()">СОХРАНИТЬ</button>
-                <button id="btn-to-hall" class="btn-gold" style="visibility:hidden;" onclick="switchTo('block-hall')">ВХОД</button>
-            </div>
-            <div class="panel-divider"></div>
-            <div class="panel">
-                <div style="font-size:10px; margin-bottom:15px; letter-spacing:1px;" id="t-card">MEMBER CARD</div>
-                <div id="qrcode" class="square-box"></div>
-                <div class="square-box" style="cursor:pointer;" onclick="document.getElementById('f').click()">
-                    <span id="t-ph" style="color:#000; font-size:9px; font-weight:bold;">PHOTO</span>
-                    <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
-                </div>
-                <input type="file" id="f" style="display:none" onchange="preview(this)">
-            </div>
-        </div>
-        <div id="quote-reg">«В каждой шутке есть доля виски...»</div>
-        <div class="lang-grid">
-            <div class="lang-item active" onclick="setL(this,'ru')">RU</div>
-            <div class="lang-item" onclick="setL(this,'en')">EN</div>
-            <div class="lang-item" onclick="setL(this,'ua')">UA</div>
-            <div class="lang-item" onclick="setL(this,'fr')">FR</div>
-            <div class="lang-item" onclick="setL(this,'de')">DE</div>
-            <div class="lang-item" onclick="setL(this,'pl')">PL</div>
-            <div class="lang-item" onclick="setL(this,'es')">ES</div>
-            <div class="lang-item" onclick="setL(this,'it')">IT</div>
-        </div>
-    </div>
-
-    <div id="block-hall" class="block">
-        <h2 id="t-ready">HALL IS READY</h2>
-        <div class="btn-gold" style="width:180px" onclick="location.reload()">EXIT</div>
-    </div>
-
-    <script>
-        let curID = 1000, curAv = 0;
-        const avs = ['🥃','🎩','🍸','🚬','🎷','🎭','👔','💼','💎'];
-        const langData = {
-            ru: { w: "ДОБРО ПОЖАЛОВАТЬ", s: "СОХРАНИТЬ", e: "ВХОД", ph: "ФОТО", id: "ЛИЧНОСТЬ", c: "КАРТА", q: "«В каждой шутке есть доля виски...»", r: "ХОЛЛ ГОТОВ" },
-            en: { w: "WELCOME", s: "SAVE", e: "ENTER", ph: "PHOTO", id: "IDENTITY", c: "CARD", q: "«Every joke has a share of whiskey...»", r: "HALL IS READY" },
-            ua: { w: "ВІТАЄМО", s: "ЗБЕРЕГТИ", e: "ВХІД", ph: "ФОТО", id: "ОСОБИСТІСТЬ", c: "КАРТКА", q: "«У кожному жарті є доля віскі...»", r: "ХОЛ ГОТОВИЙ" },
-            fr: { w: "BIENVENUE", s: "SAUVER", e: "ENTRER", ph: "PHOTO", id: "IDENTITÉ", c: "CARTE", q: "«Dans chaque blague, il y a du whisky...»", r: "SALLE PRÊTE" },
-            de: { w: "WILLKOMMEN", s: "SPEICHERN", e: "EINTRITT", ph: "FOTO", id: "IDENTITÄT", c: "KARTE", q: "«In jedem Witz steckt Whiskey...»", r: "HALLE BEREIT" },
-            pl: { w: "WITAJ", s: "ZAPISZ", e: "WEJŚCIE", ph: "FOTO", id: "TOŻSAMOŚĆ", c: "KARTA", q: "«W każdym żarcie jest kropla whiskey...»", r: "HALA GOTOWA" },
-            es: { w: "BIENVENIDO", s: "GUARDAR", e: "ENTRAR", ph: "FOTO", id: "IDENTIDAD", c: "TARJETA", q: "«En cada broma hay algo de whisky...»", r: "SALA LISTA" },
-            it: { w: "BENVENUTO", s: "SALVA", e: "ENTRA", ph: "FOTO", id: "IDENTÌTA", c: "CARTA", q: "«Ogni scherzo ha il suo whisky...»", r: "SALA PRONTA" }
-        };
-
-        function handleDoor() {
-            document.getElementById('door-snd').play().catch(()=>{});
-            const w = document.querySelector('.door-wrapper');
-            w.style.transform = "scale(4)"; w.style.opacity = "0";
-            setTimeout(() => switchTo('block-welcome'), 1200);
-        }
-
-        function setL(el, l) {
-            document.querySelectorAll('.lang-item').forEach(i => i.classList.remove('active'));
-            el.classList.add('active');
-            const d = langData[l];
-            document.getElementById('t-welcome').innerText = d.w;
-            document.getElementById('btn-save').innerText = d.s;
-            document.getElementById('btn-to-hall').innerText = d.e;
-            document.getElementById('t-ph').innerText = d.ph;
-            document.getElementById('t-id').innerText = d.id;
-            document.getElementById('t-card').innerText = d.c;
-            document.getElementById('quote-reg').innerText = d.q;
-            document.getElementById('t-ready').innerText = d.r;
-        }
-
-        function save() { document.getElementById('btn-to-hall').style.visibility = 'visible'; }
-        function changeAv(n) { curAv = (curAv + n + avs.length) % avs.length; up(); }
-        function changeID(n) { curID = (curID + (n * 9) + 9000) % 9000 + 1000; up(); }
-        
-        function up() {
-            document.getElementById('user-avatar').innerText = avs[curAv];
-            document.getElementById('label-res').innerText = "№ " + curID;
-            const q = document.getElementById("qrcode"); q.innerHTML = "";
-            new QRCode(q, { text: "GY-ID:"+curID, width: 90, height: 90 });
-        }
-
-        function preview(input) {
-            const r = new FileReader();
-            r.onload = (e) => { 
-                document.getElementById('pp').src = e.target.result;
-                document.getElementById('pp').style.display = "block";
-                document.getElementById('t-ph').style.display = "none";
-            };
-            r.readAsDataURL(input.files[0]);
-        }
-
-        function switchTo(id) {
-            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            if(id === 'block-identity') up();
-        }
-    </script>
-</body>
-</html>
+        <h1 id="t-welcome">WELCOME</h1>
+        <button class="btn-gold
