@@ -11,42 +11,47 @@
 
         <h1 class="welcome-text" id="m2-title">WELCOME</h1>
         
-        <button class="btn-gold" id="m2-btn-proceed" onclick="ModuleCharlie.proceed()">
+        <button class="btn-gold-m2" id="m2-btn-proceed" onclick="ModuleCharlie.proceed()">
             PROCEED
         </button>
 
-        <div class="version-tag">BLOCK-02 v.4.2.1</div>
+        <div class="version-tag-m2">BLOCK-02 v.4.2.2</div>
     </div>
 </div>
 
 <style>
-    /* --- Styles for BLOCK-02 --- */
+    /* Стили изоляции для Блока 2 */
     #block-welcome {
         position: fixed;
         inset: 0;
         background: #000;
-        display: none;
+        display: none; /* Скрыт по умолчанию */
         flex-direction: column;
         align-items: center;
         justify-content: center;
         z-index: 900;
-        /* Плавное появление самого блока */
         opacity: 0;
         transition: opacity 2s ease-in-out;
+        color: #d4af37;
+        font-family: 'Times New Roman', serif;
     }
-    #block-welcome.active { display: flex; opacity: 1; }
+
+    /* Класс active делает блок видимым */
+    #block-welcome.active { 
+        display: flex !important; 
+        opacity: 1; 
+    }
 
     .welcome-content {
         display: flex;
         flex-direction: column;
         align-items: center;
         transform: translateY(20px);
-        transition: 1.5s Math.random();
+        transition: 1.5s ease-out;
     }
     
     .active .welcome-content { transform: translateY(0); }
 
-    /* Рамка и Ореол */
     .charlie-frame {
         position: relative;
         width: 220px;
@@ -59,7 +64,7 @@
         inset: -5px;
         border: 1px solid rgba(212, 175, 55, 0.4);
         border-radius: 50%;
-        animation: pulse-ring 4s infinite;
+        animation: m2-pulse 4s infinite;
     }
 
     .portrait-crop {
@@ -80,15 +85,14 @@
     }
 
     .welcome-text {
-        color: #d4af37;
         font-size: 2.2rem;
         letter-spacing: 12px;
         font-weight: normal;
-        margin-bottom: 40px;
+        margin: 0 0 40px 0;
         text-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
     }
 
-    .btn-gold {
+    .btn-gold-m2 {
         background: transparent;
         border: 1px solid #d4af37;
         color: #d4af37;
@@ -97,14 +101,22 @@
         cursor: pointer;
         transition: 0.4s;
         font-family: inherit;
+        text-transform: uppercase;
     }
 
-    .btn-gold:hover {
-        background: rgba(212, 175, 55, 0.1);
-        box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+    .btn-gold-m2:active {
+        background: rgba(212, 175, 55, 0.2);
     }
 
-    @keyframes pulse-ring {
+    .version-tag-m2 {
+        position: absolute;
+        bottom: 20px;
+        font-size: 9px;
+        color: #333;
+        letter-spacing: 2px;
+    }
+
+    @keyframes m2-pulse {
         0% { transform: scale(0.98); opacity: 0.3; }
         50% { transform: scale(1.05); opacity: 0.6; }
         100% { transform: scale(0.98); opacity: 0.3; }
@@ -113,12 +125,11 @@
 
 <script>
     /**
-     * Logic for BLOCK-02
+     * Logic for BLOCK-02-CHARLIE
      */
     const ModuleCharlie = {
         proceed() {
-            console.log("[BLOCK-02] User clicked PROCEED");
-            // Затемняем текущий блок перед переходом
+            console.log("[BLOCK-02] Запуск перехода к Блоку 3...");
             document.getElementById('block-welcome').style.opacity = '0';
             
             setTimeout(() => {
@@ -127,11 +138,21 @@
         },
 
         next() {
-            if (window.Core && Core.switch) {
+            // Ищем глобальное Ядро или переходим по ID
+            if (window.Core && window.Core.switch) {
                 Core.switch('block-terminal');
             } else {
-                console.warn("Core.switch not found. Waiting for BLOCK-03.");
+                alert("Блок 2 завершен. Сигнал для Блока 3 (Регистрация) отправлен.");
             }
         }
     };
+
+    // АВТО-ЗАПУСК (для теста): если блок единственный на странице
+    window.addEventListener('load', () => {
+        if (!document.querySelector('.gy-block.active')) {
+            setTimeout(() => {
+                document.getElementById('block-welcome').classList.add('active');
+            }, 100);
+        }
+    });
 </script>
