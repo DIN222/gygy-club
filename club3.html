@@ -1,50 +1,102 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Gate Module</title>
-    <style>
-        body { margin: 0; background: #000; color: #d4af37; font-family: serif; overflow: hidden; height: 100vh; display: flex; align-items: center; justify-content: center; }
+<div id="block-gate" class="gy-block active">
+    <div class="gate-content">
+        <div class="gate-logo" id="m1-logo">GY-GY PRIVATE</div>
         
-        /* БЛОК 1: СТИЛИ */
-        .entrance-logo { opacity: 0.8; letter-spacing: 10px; margin-bottom: 30px; font-size: 16px; transition: 1s; text-align: center; }
-        .door-wrapper { cursor: pointer; transition: 1.5s cubic-bezier(0.4, 0, 0.2, 1); position: relative; }
-        .door-img { width: 70vw; max-width: 300px; border: 1px solid rgba(212, 175, 55, 0.2); }
-
-        /* Состояние при открытии */
-        .gate-open .door-wrapper { transform: scale(6); opacity: 0; pointer-events: none; }
-        .gate-open .entrance-logo { opacity: 0; transform: translateY(-20px); }
-
-        /* Кнопка сброса (только для теста) */
-        .debug-btn { position: fixed; bottom: 20px; right: 20px; background: none; border: 1px solid #333; color: #333; cursor: pointer; font-size: 10px; }
-    </style>
-</head>
-<body>
-
-    <div id="gate-container">
-        <div class="entrance-logo">GY-GY PRIVATE</div>
-        <div class="door-wrapper" onclick="testOpen()">
-            <img src="door_1.jpg" class="door-img" onerror="this.src='https://via.placeholder.com/300x500/222/d4af37?text=DOOR'">
+        <div class="door-wrapper" onclick="ModuleGate.open()">
+            <img src="door_1.jpg" class="door-img" id="m1-img" 
+                 onerror="this.src='https://via.placeholder.com/300x500/111/d4af37?text=DOOR'">
         </div>
+        
+        <div class="version-tag">BLOCK-01 v.4.1.2</div>
     </div>
+</div>
 
-    <button class="debug-btn" onclick="resetGate()">СБРОСИТЬ АНИМАЦИЮ</button>
+<audio id="snd-door-open" preload="auto">
+    <source src="door_open.mp3" type="audio/mpeg">
+</audio>
 
-    <script>
-        function testOpen() {
-            console.log("Тест: Дверь открывается...");
-            document.body.classList.add('gate-open');
-            
-            // Проверка перехода: через 1.5 сек здесь должен включиться Блок 2
+<style>
+    /* --- Styles for BLOCK-01 --- */
+    #block-gate {
+        position: fixed;
+        inset: 0;
+        background: #000;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+    }
+    #block-gate.active { display: flex; }
+
+    .gate-logo {
+        color: #d4af37;
+        letter-spacing: 12px;
+        margin-bottom: 40px;
+        font-size: 18px;
+        transition: 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        opacity: 0.7;
+    }
+
+    .door-wrapper {
+        cursor: pointer;
+        transition: 1.6s cubic-bezier(0.4, 0, 0.2, 1);
+        will-change: transform, opacity;
+    }
+
+    .door-img {
+        width: 70vw;
+        max-width: 280px;
+        border: 1px solid rgba(212, 175, 55, 0.2);
+    }
+
+    .state-opening .door-wrapper {
+        transform: scale(9);
+        opacity: 0;
+    }
+    .state-opening .gate-logo {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+
+    .version-tag {
+        position: absolute;
+        bottom: 20px;
+        font-size: 9px;
+        color: #333;
+        letter-spacing: 2px;
+    }
+</style>
+
+<script>
+    /**
+     * Logic for BLOCK-01
+     */
+    const ModuleGate = {
+        locked: false,
+
+        open() {
+            if (this.locked) return;
+            this.locked = true;
+
+            const audio = document.getElementById('snd-door-open');
+            audio.play().catch(e => console.log("Audio waiting for interaction"));
+
+            document.getElementById('block-gate').classList.add('state-opening');
+
             setTimeout(() => {
-                alert("Блок 1 отработал. Переход к Блоку 2 (Чарли)");
-            }, 1500);
-        }
+                this.next();
+            }, 1600);
+        },
 
-        function resetGate() {
-            document.body.classList.remove('gate-open');
+        next() {
+            console.log("[BLOCK-01] Finished");
+            // Placeholder for Core switch
+            if (window.Core && Core.switch) {
+                Core.switch('block-welcome');
+            } else {
+                console.warn("Core.switch not found. Waiting for BLOCK-02.");
+            }
         }
-    </script>
-</body>
-</html>
+    };
+</script>
