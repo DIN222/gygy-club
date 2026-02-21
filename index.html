@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v3.0.4.11</title>
+    <title>GY-GY Club v3.0.4.16</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none !important; }
@@ -16,7 +16,8 @@
 
         /* ЭКРАН 1: ДВЕРЬ */
         .door-wrapper { cursor: pointer; transition: 1.2s ease-out; z-index: 100; }
-        .door-img { width: 75vw; max-width: 320px; border: 1px solid rgba(212,175,55,0.3); }
+        /* УБРАНА РАМКА: border: none */
+        .door-img { width: 75vw; max-width: 320px; border: none; display: block; }
 
         /* ЭКРАН 2: ЧАРЛИ */
         .charlie-container { position: relative; width: 250px; height: 250px; margin-bottom: 30px; }
@@ -29,7 +30,7 @@
         .setup-grid { display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 20px; width: 100%; }
         .square-box { width: 90px; height: 90px; border: 1px solid #d4af37; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; color: #000; }
         
-        /* ИСПРАВЛЕНО: Фон теперь БЕЛЫЙ, текст ЧЕРНЫЙ */
+        /* ID Трейс: Белый фон, черный текст */
         #id-box { background: #fff; color: #000; font-size: 11px; letter-spacing: 1px; flex-direction: column; }
         
         .btn-gold { width: 140px; height: 40px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 11px; letter-spacing: 1px; cursor: pointer; margin-top: 15px; font-family: inherit; }
@@ -48,7 +49,7 @@
         <div class="door-wrapper" onclick="handleDoor()">
             <img src="door_1.jpg" class="door-img" onerror="this.src='https://via.placeholder.com/300x500?text=DOOR'">
         </div>
-        <div style="font-size: 10px; margin-top: 40px; opacity: 0.3;">v3.0.4.11</div>
+        <div style="font-size: 10px; margin-top: 40px; opacity: 0.3;">v3.0.4.16</div>
     </div>
 
     <div id="block-welcome" class="block">
@@ -101,7 +102,9 @@
         const fullID = `#${serialNum}-${randomPin}`;
 
         function handleDoor() {
-            document.getElementById('door-snd').play().catch(() => {});
+            const dSnd = document.getElementById('door-snd');
+            if(dSnd) dSnd.play().catch(() => {});
+            
             const w = document.querySelector('.door-wrapper');
             w.style.transform = "scale(5)"; 
             w.style.opacity = "0";
@@ -159,8 +162,10 @@
             if(id === 'block-identity') {
                 updateID();
                 const bgSnd = document.getElementById('club-bg-snd');
-                bgSnd.volume = 0.1; 
-                bgSnd.play().catch(() => {});
+                if(bgSnd) {
+                    bgSnd.volume = 0.1; 
+                    bgSnd.play().catch(() => {});
+                }
             }
         }
     </script>
