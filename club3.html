@@ -1,120 +1,107 @@
 
-<div id="block-welcome" class="v429-root">
-    <div class="v429-content">
-        
-        <div class="v429-portrait-wrap">
-            <div class="v429-ring"></div>
-            <div class="v429-img-hold">
-                <img src="charlie.png" onerror="this.src='https://via.placeholder.com/200/000/d4af37?text=HOST'">
-            </div>
+<div id="block-welcome" class="b430-root">
+    
+    <svg class="b430-svg-ring" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="48" stroke="#d4af37" stroke-width="0.5" fill="none" />
+    </svg>
+
+    <div class="b430-container">
+        <div class="b430-portrait">
+            <img src="charlie.png" onerror="this.src='https://via.placeholder.com/220/000/d4af37?text=HOST'">
         </div>
 
-        <h1 class="v429-text">WELCOME</h1>
+        <h1 class="b430-title">WELCOME</h1>
         
-        <button class="v429-btn-clean" onclick="ModuleCharlie.proceed()">
+        <button class="b430-btn" onclick="ModuleCharlie.proceed()">
             ПРОХОДИТЕ
         </button>
-
-        <div class="v429-ver">BLOCK-02 v.4.2.9</div>
     </div>
+
+    <div class="b430-version">BLOCK-02 v.4.3.0</div>
 </div>
 
 <style>
-    /* Базовая изоляция */
-    .v429-root {
+    /* База */
+    .b430-root {
         position: fixed; inset: 0;
         background: #000 !important;
         display: none; flex-direction: column;
         align-items: center; justify-content: center;
         z-index: 9999; overflow: hidden;
-        margin: 0; padding: 0;
     }
-    .v429-root.active { display: flex !important; }
+    .b430-root.active { display: flex !important; }
 
-    .v429-content {
-        display: flex; flex-direction: column;
-        align-items: center; justify-content: center;
-        width: 100%; height: 100%;
-    }
-
-    /* Геометрия: Уменьшена до 240px для гарантии входа в экран */
-    .v429-portrait-wrap {
-        position: relative;
-        width: 240px; height: 240px;
-        margin-bottom: 30px;
-    }
-
-    /* КОЛЬЦО: Строго 1:1 (круг), пульсация только прозрачностью */
-    .v429-ring {
+    /* SVG Кольцо: Центрирование поверх всего */
+    .b430-svg-ring {
         position: absolute;
-        inset: -10px;
-        border: 1px solid rgba(212, 175, 55, 0.4);
-        border-radius: 50%;
-        animation: v429-fade 3s infinite;
+        width: 300px; height: 300px; /* Размер чуть больше портрета */
+        pointer-events: none;
+        animation: b430-pulse 4s infinite ease-in-out;
     }
 
-    .v429-img-hold {
-        width: 100%; height: 100%;
+    .b430-container {
+        position: relative; z-index: 10;
+        display: flex; flex-direction: column; align-items: center;
+    }
+
+    /* Портрет: Фиксированный круг */
+    .b430-portrait {
+        width: 240px; height: 240px;
         border-radius: 50%;
         border: 2px solid #d4af37;
         overflow: hidden;
+        margin-bottom: 35px;
         background: #000;
     }
-    .v429-img-hold img { width: 100%; height: 100%; object-fit: cover; }
+    .b430-portrait img { width: 100%; height: 100%; object-fit: cover; }
 
-    .v429-text {
-        color: #d4af37;
-        font-family: serif;
-        font-size: 2.5rem;
-        letter-spacing: 12px;
-        margin: 10px 0 40px 0;
-        font-weight: normal;
+    .b430-title {
+        color: #d4af37; font-family: serif;
+        font-size: 3rem; letter-spacing: 15px;
+        margin: 0 0 45px 0; font-weight: normal;
     }
 
-    /* КНОПКА: Только контур, никакой заливки */
-    .v429-btn-clean {
-        background: transparent !important;
+    /* Кнопка: Строгий контур, никакой заливки при клике */
+    .b430-btn {
+        background: none !important;
         border: 1px solid #d4af37 !important;
         color: #d4af37 !important;
-        padding: 14px 50px;
-        letter-spacing: 4px;
+        padding: 15px 55px;
+        letter-spacing: 5px;
         font-family: serif;
-        font-size: 14px;
         cursor: pointer;
         text-transform: uppercase;
-        outline: none;
+        -webkit-appearance: none; /* Убирает системные стили мобилок */
     }
-    .v429-btn-clean:active {
-        opacity: 0.7; /* Легкое мигание вместо заливки */
-    }
+    
+    .b430-btn:active { opacity: 0.6; }
 
-    .v429-ver {
+    .b430-version {
         position: absolute; bottom: 15px;
-        font-size: 9px; color: #222; letter-spacing: 2px;
+        font-size: 10px; color: #222; letter-spacing: 2px;
     }
 
-    @keyframes v429-fade {
-        0%, 100% { opacity: 0.3; }
-        50% { opacity: 0.7; }
+    /* Пульсация только прозрачностью, без изменения масштаба (чтобы не было овала) */
+    @keyframes b430-pulse {
+        0%, 100% { opacity: 0.2; transform: scale(1); }
+        50% { opacity: 0.6; transform: scale(1.02); }
     }
 </style>
 
 <script>
     var ModuleCharlie = {
         proceed: function() {
-            var el = document.getElementById('block-welcome');
-            if(el) el.classList.remove('active');
-            
+            document.getElementById('block-welcome').classList.remove('active');
             if (window.Core && Core.switch) {
                 Core.switch('block-terminal');
             } else {
-                console.log("JUMP_TO_B3");
+                console.log("Next: Terminal");
             }
         }
     };
 
     window.addEventListener('load', function() {
         var b = document.getElementById('block-welcome');
-        if (b && !document.querySelector('.active')) b.classList.add('active');
+        if (b) b.classList.add('active');
     });
 </script>
