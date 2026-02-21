@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>B-02 Final Reset</title>
+    <style>
+        /* 1. ОБНУЛЕНИЕ ВСЕГО (Полная изоляция от внешних стилей) */
+        html, body { 
+            margin: 0; padding: 0; width: 100%; height: 100%; 
+            background: #000 !important; overflow: hidden; 
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        /* 2. КОНТЕЙНЕР БЛОКА */
+        #block-charlie-v5 {
+            position: fixed; inset: 0;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            font-family: 'Times New Roman', serif;
+            color: #d4af37;
+            z-index: 9999;
+        }
+
+        /* 3. ГЕОМЕТРИЯ ПОРТРЕТА */
+        .portrait-frame {
+            position: relative;
+            width: 250px; height: 250px; 
+            margin-bottom: 30px;
+        }
+
+        .main-circle {
+            width: 100%; height: 100%;
+            border-radius: 50% !important; 
+            border: 2px solid #d4af37;
+            overflow: hidden; background: #000;
+        }
+        .main-circle img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* ИДЕАЛЬНО КРУГЛОЕ КОЛЬЦО (SVG) */
+        .single-ring-svg {
+            position: absolute;
+            top: -15px; left: -15px;
+            width: 280px; height: 280px;
+            pointer-events: none;
+            animation: pulse-v5 3s infinite ease-in-out;
+        }
+
+        /* 4. ТЕКСТ И КНОПКА */
+        .welcome-title {
+            font-size: 3rem; letter-spacing: 15px;
+            margin: 10px 0 40px 0; font-weight: normal;
+            text-align: center;
+        }
+
+        .btn-clean {
+            background: none !important;
+            border: 1px solid #d4af37 !important;
+            color: #d4af37 !important;
+            padding: 15px 50px;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            -webkit-appearance: none;
+            transition: 0.2s;
+        }
+        /* Никакой заливки при клике, только прозрачность */
+        .btn-clean:active { opacity: 0.5; }
+
+        .ver-tag { position: absolute; bottom: 15px; font-size: 10px; color: #333; }
+
+        @keyframes pulse-v5 {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.6; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="block-charlie-v5">
+        <div class="portrait-frame">
+            <svg class="single-ring-svg" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="48" fill="none" stroke="#d4af37" stroke-width="0.5" />
+            </svg>
+            <div class="main-circle">
+                <img src="charlie.png" onerror="this.src='https://via.placeholder.com/250/000/d4af37?text=HOST'">
+            </div>
+        </div>
+
+        <h1 class="welcome-title">WELCOME</h1>
+        
+        <button class="btn-clean" onclick="nextStep()">ПРОХОДИТЕ</button>
+
+        <div class="ver-tag">BLOCK-02 v.5.0.0</div>
+    </div>
+
+    <script>
+        function nextStep() {
+            console.log("Переход к Блоку 3...");
+            // Прячем текущий блок
+            document.getElementById('block-charlie-v5').style.display = 'none';
+            
+            // Если Блок 3 уже в коде, запускаем его
+            if (window.ModuleTerminal) {
+                document.getElementById('block-terminal').classList.add('active');
+                ModuleTerminal.init();
+            } else {
+                alert("BLOCK-02 пройден. Жду подключения BLOCK-03.");
+            }
+        }
+    </script>
+</body>
+</html>
