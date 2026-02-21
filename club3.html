@@ -2,7 +2,7 @@
 <div id="block-welcome" class="gy-block">
     <div class="welcome-content">
         
-        <div class="charlie-frame-v3">
+        <div class="charlie-frame-v4">
             <div class="outer-gold-ring"></div>
             <div class="portrait-main">
                 <img src="charlie.png" id="m2-portrait" 
@@ -10,50 +10,61 @@
             </div>
         </div>
 
-        <h1 class="welcome-text-xl" id="m2-title">WELCOME</h1>
+        <h1 class="welcome-text-xl">WELCOME</h1>
         
         <button class="btn-gold-m2" onclick="ModuleCharlie.proceed()">
             ПРОХОДИТЕ
         </button>
 
-        <div class="version-tag-m2">BLOCK-02 v.4.2.3</div>
+        <div class="version-tag-m2">BLOCK-02 v.4.2.4</div>
     </div>
 </div>
 
 <style>
+    /* Глобальный сброс для исключения белого фона */
     #block-welcome {
         position: fixed;
         inset: 0;
-        background: #000;
-        display: none;
+        background: #000 !important; /* Гарантированный черный фон */
+        color: #d4af37;
+        font-family: 'Times New Roman', serif;
+        display: none; /* Скрыт по умолчанию */
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        z-index: 900;
-        color: #d4af37;
-        font-family: 'Times New Roman', serif;
+        z-index: 999;
+        margin: 0;
+        padding: 0;
     }
 
-    #block-welcome.active { display: flex !important; }
+    /* Принудительная видимость при добавлении класса active */
+    #block-welcome.active {
+        display: flex !important;
+    }
 
-    /* Контейнер увеличен до 280px */
-    .charlie-frame-v3 {
+    .welcome-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    /* Контейнер Чарли 280px */
+    .charlie-frame-v4 {
         position: relative;
         width: 280px; 
         height: 280px;
         margin-bottom: 40px;
     }
 
-    /* Внешнее пульсирующее кольцо */
     .outer-gold-ring {
         position: absolute;
-        inset: -8px;
+        inset: -10px;
         border: 2px solid rgba(212, 175, 55, 0.6);
         border-radius: 50%;
-        animation: m2-pulse-v3 3s infinite ease-in-out;
+        animation: m2-pulse-v4 3s infinite ease-in-out;
     }
 
-    /* Портрет теперь занимает все пространство до кольца */
     .portrait-main {
         width: 100%;
         height: 100%;
@@ -71,13 +82,11 @@
         object-fit: cover;
     }
 
-    /* Увеличенный WELCOME */
     .welcome-text-xl {
-        font-size: 3.5rem; /* Значительное увеличение */
-        letter-spacing: 18px;
+        font-size: clamp(2.5rem, 8vw, 3.8rem); /* Адаптивный огромный шрифт */
+        letter-spacing: 15px;
         font-weight: normal;
         margin: 0 0 50px 0;
-        text-align: center;
         text-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
     }
 
@@ -85,44 +94,65 @@
         background: transparent;
         border: 1px solid #d4af37;
         color: #d4af37;
-        padding: 15px 50px;
-        letter-spacing: 5px;
+        padding: 15px 60px;
+        letter-spacing: 6px;
         cursor: pointer;
-        font-family: inherit;
         text-transform: uppercase;
         font-size: 14px;
+        transition: 0.2s;
     }
 
-    .btn-gold-m2:active { background: #d4af37; color: #000; }
+    .btn-gold-m2:active {
+        background: #d4af37;
+        color: #000;
+    }
 
     .version-tag-m2 {
-        position: absolute; bottom: 20px; font-size: 9px; color: #222; letter-spacing: 2px;
+        position: absolute;
+        bottom: 20px;
+        font-size: 9px;
+        color: #222;
+        letter-spacing: 2px;
     }
 
-    @keyframes m2-pulse-v3 {
+    @keyframes m2-pulse-v4 {
         0% { transform: scale(1); opacity: 0.4; }
-        50% { transform: scale(1.04); opacity: 0.8; }
+        50% { transform: scale(1.06); opacity: 0.8; }
         100% { transform: scale(1); opacity: 0.4; }
     }
 </style>
 
 <script>
     /**
-     * Logic for BLOCK-02 (v.4.2.3)
+     * Logic for BLOCK-02 (Anti-Crash)
      */
     const ModuleCharlie = {
         proceed() {
-            console.log("[BLOCK-02] Мгновенный переход к Блоку 3");
-            this.next(); // Без setTimeout и анимаций
+            console.log("[BLOCK-02] Мгновенный выход.");
+            this.next();
         },
 
         next() {
-            if (window.Core && window.Core.switch) {
+            // Пытаемся вызвать переключение через Core, если его нет - через прямую манипуляцию
+            if (window.Core && typeof Core.switch === 'function') {
                 Core.switch('block-terminal');
             } else {
-                // Если ядро еще не подключено, просто имитируем переход
-                alert("Переход в BLOCK-03-TERMINAL");
+                console.warn("Core не найден. Прямое переключение...");
+                document.getElementById('block-welcome').classList.remove('active');
+                const nextBlock = document.getElementById('block-terminal');
+                if (nextBlock) nextBlock.classList.add('active');
             }
+        },
+
+        // Функция самодиагностики
+        init() {
+            console.log("[BLOCK-02] Запуск...");
+            document.getElementById('block-welcome').classList.add('active');
         }
     };
+
+    // Если этот файл открыт отдельно - запускаем его сразу
+    if (!window.Core) {
+        window.addEventListener('load', () => ModuleCharlie.init());
+    }
 </script>
