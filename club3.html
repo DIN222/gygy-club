@@ -3,20 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v3.0.7.6</title>
+    <title>GY-GY Club v3.0.7.8</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #000; color: #d4af37; font-family: 'Times New Roman', serif; text-align: center; height: 100vh; overflow: hidden; }
         
-        .block { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: #000; z-index: 1; }
+        .block { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: #000; }
         .block.active { display: flex !important; }
 
-        /* ЭКРАН 1 */
+        /* ЭКРАН 1: ВХОД */
         .header-text { font-size: 16px; letter-spacing: 10px; margin-bottom: 25px; text-transform: uppercase; font-weight: bold; }
         .door-img { width: 280px; cursor: pointer; transition: 3.5s cubic-bezier(0.1, 0, 0.1, 1); }
+        .version-tag { margin-top: 40px; opacity: 0.3; font-size: 10px; letter-spacing: 5px; }
 
-        /* ЧАРЛИ - ОДНО КОЛЬЦО */
+        /* ЭКРАН 2: ЧАРЛИ */
         .charlie-frame {
             width: 260px; height: 260px;
             border-radius: 50% !important;
@@ -28,26 +29,29 @@
         }
         .charlie-frame img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
 
-        /* ТЕРМИНАЛ */
+        /* ЭКРАН 3: ТЕРМИНАЛ */
         .setup-grid { display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; width: 100%; }
         .box { width: 105px; height: 105px; background: #fff; border: 2px solid #d4af37; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .btn-gold { width: 180px; height: 40px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 11px; cursor: pointer; margin-bottom: 10px; z-index: 100; }
+        .btn-gold { width: 180px; height: 40px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 11px; cursor: pointer; margin-bottom: 10px; position: relative; z-index: 100; }
         
-        /* ЯЗЫКИ - ПРЯМАЯ ДОСЯГАЕМОСТЬ */
+        /* ЯЗЫКИ */
         .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; width: 280px; margin-top: 10px; position: relative; z-index: 200; }
-        .lang-item { font-size: 10px; padding: 10px 5px; border: 1px solid rgba(212,175,55,0.4); cursor: pointer; background: #000; color: #d4af37; pointer-events: auto; }
+        .lang-item { font-size: 10px; padding: 10px 5px; border: 1px solid rgba(212,175,55,0.4); cursor: pointer; background: #000; color: #d4af37; }
         .lang-item.active { border-color: #d4af37; background: rgba(212,175,55,0.4); color: #fff; }
+
+        #snd-stat { position: fixed; bottom: 10px; right: 10px; font-size: 8px; opacity: 0.2; letter-spacing: 1px; }
     </style>
 </head>
-<body onclick="initAudio()">
+<body onclick="unlockAudio()">
 
-    <audio id="snd-d" src="door_open.mp3" preload="auto"></audio>
-    <audio id="snd-b" src="bar_sounds.mp3" loop preload="auto"></audio>
+    <audio id="snd-door" src="door_open.mp3" preload="auto"></audio>
+    <audio id="snd-bar" src="bar_sounds.mp3" loop preload="auto"></audio>
 
     <div id="p1" class="block active">
         <div class="header-text">GY-GY PRIVATE</div>
         <img src="door_1.jpg" id="dr" class="door-img" onclick="handleDoor()">
-        <div style="letter-spacing:5px; margin-top:30px; opacity:0.3; font-size:10px;">V. 3.0.7.6</div>
+        <div class="version-tag">V. 3.0.7.8</div>
+        <div id="snd-stat">SND: STANDBY</div>
     </div>
 
     <div id="p2" class="block">
@@ -60,12 +64,18 @@
         <div class="setup-grid">
             <div class="box"><div id="id-val" style="color:#000; font-weight:bold; font-size: 11px;">#0000</div></div>
             <div id="qrcode" class="box"></div>
-            <div class="box" onclick="document.getElementById('f').click()"><span id="tph" style="color:#000; font-size:10px; font-weight:bold;">ФОТО</span><img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;"></div>
+            <div class="box" onclick="document.getElementById('f').click()" style="cursor:pointer">
+                <span id="tph" style="color:#000; font-size:10px; font-weight:bold;">ФОТО</span>
+                <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
+            </div>
             <input type="file" id="f" style="display:none" onchange="preview(this)">
         </div>
+        
         <button class="btn-gold" onclick="document.getElementById('be').style.visibility='visible'">СОХРАНИТЬ</button>
         <button id="be" class="btn-gold" style="visibility:hidden;" onclick="sw('p4')">ВХОД</button>
+        
         <div style="font-style:italic; font-size:18px; margin:15px 0; font-weight:bold;">«В каждой шутке есть доля виски...»</div>
+
         <div class="lang-grid">
             <div class="lang-item active" onclick="setL(this)">RU</div><div class="lang-item" onclick="setL(this)">EN</div>
             <div class="lang-item" onclick="setL(this)">UA</div><div class="lang-item" onclick="setL(this)">FR</div>
@@ -83,25 +93,25 @@
         let a = false;
         const fid = `#0042-${Math.floor(1000 + Math.random() * 9000)}`;
 
-        function initAudio() {
-            if (!a) {
-                const d = document.getElementById('snd-d'), b = document.getElementById('snd-b');
-                d.play().then(() => d.pause()); b.play().then(() => b.pause());
+        function unlockAudio() {
+            if (a) return;
+            const d = document.getElementById('snd-door'), b = document.getElementById('snd-bar');
+            d.muted = true; b.muted = true;
+            Promise.all([d.play(), b.play()]).then(() => {
+                d.pause(); d.muted = false;
+                b.pause(); b.muted = false;
                 a = true;
-            }
+                document.getElementById('snd-stat').innerText = "SND: READY";
+                document.getElementById('snd-stat').style.opacity = "1";
+            });
         }
 
         function handleDoor() {
-            document.getElementById('snd-d').play();
-            document.getElementById('snd-b').play();
+            document.getElementById('snd-door').play();
+            document.getElementById('snd-bar').play();
             const img = document.getElementById('dr');
             img.style.transform = "scale(18)"; img.style.opacity = "0";
             setTimeout(() => sw('p2'), 3000);
-        }
-
-        function setL(el) {
-            document.querySelectorAll('.lang-item').forEach(l => l.classList.remove('active'));
-            el.classList.add('active');
         }
 
         function sw(id) {
@@ -112,6 +122,11 @@
                 const q = document.getElementById("qrcode"); q.innerHTML = "";
                 new QRCode(q, { text: "GY-ID:" + fid, width: 100, height: 100 });
             }
+        }
+
+        function setL(el) {
+            document.querySelectorAll('.lang-item').forEach(l => l.classList.remove('active'));
+            el.classList.add('active');
         }
 
         function preview(i) {
