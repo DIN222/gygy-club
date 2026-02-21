@@ -1,28 +1,28 @@
 
-<div id="block-welcome" class="gy-block">
-    <div class="welcome-layout">
+<div id="block-welcome" class="gy-block-v427">
+    <div class="v427-container">
         
-        <div class="charlie-area">
-            <div class="ring-pulse"></div>
-            <div class="portrait-circle">
+        <div class="v427-portrait-box">
+            <div class="v427-single-ring"></div>
+            <div class="v427-image-wrap">
                 <img src="charlie.png" alt="Host" 
                      onerror="this.src='https://via.placeholder.com/300/000/d4af37?text=HOST'">
             </div>
         </div>
 
-        <h1 class="welcome-title-v5">WELCOME</h1>
+        <h1 class="v427-title">WELCOME</h1>
         
-        <button class="btn-direct" onclick="ModuleCharlie.proceed()">
+        <button class="v427-btn" onclick="ModuleCharlie.proceed()">
             ПРОХОДИТЕ
         </button>
 
+        <div class="v427-version-tag">BLOCK-02 v.4.2.7</div>
     </div>
-    <div class="v-tag">B-02 v.4.2.5</div>
 </div>
 
 <style>
-    /* Базовая изоляция блока */
-    #block-welcome {
+    /* Изолированная область v427 */
+    .gy-block-v427 {
         position: fixed;
         top: 0; left: 0;
         width: 100vw;
@@ -32,115 +32,125 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        overflow: hidden; /* ЗАПРЕТ СКРОЛЛА */
-        z-index: 999;
+        z-index: 9999;
+        overflow: hidden;
     }
 
-    #block-welcome.active { display: flex !important; }
+    /* Активация через Core */
+    .gy-block-v427.active { display: flex !important; }
 
-    /* Контейнер-ограничитель, чтобы элементы не разъезжались */
-    .welcome-layout {
+    .v427-container {
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
         width: 100%;
-        max-height: 100%;
-        padding: 20px;
-        box-sizing: border-box;
+        text-align: center;
     }
 
-    /* Чарли: строго 260px, чтобы влезло на все телефоны */
-    .charlie-area {
+    /* Геометрия портрета */
+    .v427-portrait-box {
         position: relative;
-        width: 260px;
-        height: 260px;
-        margin-bottom: 30px;
-        flex-shrink: 0; /* Запрет сжатия */
+        width: 280px;
+        height: 280px;
+        margin-bottom: 40px;
     }
 
-    .portrait-circle {
+    .v427-image-wrap {
         position: absolute;
         inset: 0;
         border-radius: 50%;
         border: 2px solid #d4af37;
         overflow: hidden;
-        z-index: 5;
+        z-index: 10;
         background: #000;
     }
 
-    .portrait-circle img {
+    .v427-image-wrap img {
         width: 100%;
         height: 100%;
         object-fit: cover;
     }
 
-    /* Единственное пульсирующее кольцо */
-    .ring-pulse {
+    /* ЕДИНСТВЕННОЕ пульсирующее кольцо */
+    .v427-single-ring {
         position: absolute;
-        inset: -5px;
-        border: 1px solid rgba(212, 175, 55, 0.5);
+        inset: -12px;
+        border: 2px solid rgba(212, 175, 55, 0.4);
         border-radius: 50%;
         z-index: 1;
-        animation: pulse-simple 3s infinite ease-in-out;
+        animation: v427-pulse 3.5s infinite ease-in-out;
     }
 
-    /* Адаптивный текст WELCOME */
-    .welcome-title-v5 {
+    .v427-title {
         color: #d4af37;
-        font-size: clamp(2.2rem, 10vw, 3.2rem);
-        letter-spacing: 12px;
-        font-weight: normal;
-        margin: 10px 0 40px 0;
-        text-align: center;
-        white-space: nowrap;
+        font-size: clamp(2.5rem, 12vw, 4rem);
+        letter-spacing: 16px;
+        font-family: 'Times New Roman', serif;
+        margin: 20px 0 50px 0;
+        text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
     }
 
-    .btn-direct {
+    .v427-btn {
         background: transparent;
         border: 1px solid #d4af37;
         color: #d4af37;
-        padding: 15px 50px;
-        letter-spacing: 5px;
-        font-family: inherit;
+        padding: 18px 65px;
+        letter-spacing: 6px;
+        font-family: serif;
         cursor: pointer;
         text-transform: uppercase;
-        transition: 0.2s;
-        flex-shrink: 0;
+        font-size: 16px;
+        transition: 0.1s;
     }
 
-    .btn-direct:active { background: #d4af37; color: #000; }
+    .v427-btn:active {
+        background: #d4af37;
+        color: #000;
+    }
 
-    .v-tag { position: absolute; bottom: 10px; font-size: 8px; color: #222; }
+    /* Метка версии */
+    .v427-version-tag {
+        position: absolute;
+        bottom: 15px;
+        font-size: 10px;
+        color: #222;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
 
-    @keyframes pulse-simple {
-        0% { transform: scale(1); opacity: 0.4; }
-        50% { transform: scale(1.05); opacity: 0.7; }
-        100% { transform: scale(1); opacity: 0.4; }
+    @keyframes v427-pulse {
+        0% { transform: scale(1); opacity: 0.3; }
+        50% { transform: scale(1.04); opacity: 0.6; }
+        100% { transform: scale(1); opacity: 0.3; }
     }
 </style>
 
 <script>
+    /**
+     * MODULE-CHARLIE [v.4.2.7]
+     */
     const ModuleCharlie = {
         proceed() {
-            console.log("[B-02] Мгновенный переход.");
+            console.log("[B-02] v.4.2.7: Мгновенный переход.");
             this.next();
         },
+
         next() {
+            // Прямая команда на скрытие текущего блока
+            document.querySelector('.gy-block-v427').classList.remove('active');
+            
+            // Попытка вызвать Блок 3
             if (window.Core && typeof Core.switch === 'function') {
                 Core.switch('block-terminal');
             } else {
-                // Если ядро не найдено, просто скрываем текущий блок
-                document.getElementById('block-welcome').style.display = 'none';
-                console.log("Сигнал: Активировать Блок 3");
+                console.log("[B-02] Сигнал: Активировать BLOCK-03-TERMINAL");
             }
         }
     };
 
-    // Авто-запуск для тестирования
+    // Авто-запуск при загрузке (для теста)
     window.addEventListener('load', () => {
-        if (!document.querySelector('.gy-block.active')) {
-            document.getElementById('block-welcome').classList.add('active');
-        }
+        const block = document.querySelector('.gy-block-v427');
+        if (block) block.classList.add('active');
     });
 </script>
