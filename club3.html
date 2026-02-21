@@ -1,141 +1,120 @@
 
-<div id="block-welcome" class="final-gate-v428">
-    <div class="v428-inner">
+<div id="block-welcome" class="v429-root">
+    <div class="v429-content">
         
-        <div class="v428-host-circle">
-            <img src="charlie.png" alt="Host" 
-                 onerror="this.src='https://via.placeholder.com/300/000/d4af37?text=HOST'">
+        <div class="v429-portrait-wrap">
+            <div class="v429-ring"></div>
+            <div class="v429-img-hold">
+                <img src="charlie.png" onerror="this.src='https://via.placeholder.com/200/000/d4af37?text=HOST'">
+            </div>
         </div>
 
-        <h1 class="v428-welcome">WELCOME</h1>
+        <h1 class="v429-text">WELCOME</h1>
         
-        <button class="v428-action-btn" onclick="ModuleCharlie.proceed()">
+        <button class="v429-btn-clean" onclick="ModuleCharlie.proceed()">
             ПРОХОДИТЕ
         </button>
 
-        <div class="v428-version">BLOCK-02 v.4.2.8</div>
+        <div class="v429-ver">BLOCK-02 v.4.2.9</div>
     </div>
 </div>
 
 <style>
-    /* ЖЕСТКИЙ СБРОС ДЛЯ БЛОКА 2 */
-    .final-gate-v428 {
-        position: fixed !important;
-        top: 0 !important; left: 0 !important;
-        width: 100vw !important;
-        height: 100vh !important;
+    /* Базовая изоляция */
+    .v429-root {
+        position: fixed; inset: 0;
         background: #000 !important;
-        z-index: 99999 !important;
-        display: none;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden !important; /* УБИРАЕТ СКРОЛЛ */
-        margin: 0 !important;
-        padding: 0 !important;
+        display: none; flex-direction: column;
+        align-items: center; justify-content: center;
+        z-index: 9999; overflow: hidden;
+        margin: 0; padding: 0;
+    }
+    .v429-root.active { display: flex !important; }
+
+    .v429-content {
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        width: 100%; height: 100%;
     }
 
-    .final-gate-v428.active { display: flex !important; }
-
-    .v428-inner {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        max-height: 100vh;
-    }
-
-    /* ПОРТРЕТ: ЧЕТКИЙ РАЗМЕР 280px */
-    .v428-host-circle {
+    /* Геометрия: Уменьшена до 240px для гарантии входа в экран */
+    .v429-portrait-wrap {
         position: relative;
-        width: 280px;
-        height: 280px;
+        width: 240px; height: 240px;
+        margin-bottom: 30px;
+    }
+
+    /* КОЛЬЦО: Строго 1:1 (круг), пульсация только прозрачностью */
+    .v429-ring {
+        position: absolute;
+        inset: -10px;
+        border: 1px solid rgba(212, 175, 55, 0.4);
+        border-radius: 50%;
+        animation: v429-fade 3s infinite;
+    }
+
+    .v429-img-hold {
+        width: 100%; height: 100%;
         border-radius: 50%;
         border: 2px solid #d4af37;
-        background: #000;
         overflow: hidden;
-        /* Кольцо теперь создается через Box-Shadow, оно не может размножиться */
-        box-shadow: 0 0 0 0px rgba(212, 175, 55, 0);
-        animation: v428-aura 3s infinite ease-in-out;
-        margin-bottom: 40px;
+        background: #000;
     }
+    .v429-img-hold img { width: 100%; height: 100%; object-fit: cover; }
 
-    .v428-host-circle img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .v428-welcome {
-        color: #d4af37 !important;
-        font-family: 'Times New Roman', serif !important;
-        font-size: clamp(2.5rem, 12vw, 3.8rem) !important;
-        letter-spacing: 18px !important;
-        margin: 10px 0 50px 0 !important;
-        text-align: center !important;
-        text-transform: uppercase;
+    .v429-text {
+        color: #d4af37;
+        font-family: serif;
+        font-size: 2.5rem;
+        letter-spacing: 12px;
+        margin: 10px 0 40px 0;
         font-weight: normal;
     }
 
-    .v428-action-btn {
+    /* КНОПКА: Только контур, никакой заливки */
+    .v429-btn-clean {
         background: transparent !important;
         border: 1px solid #d4af37 !important;
         color: #d4af37 !important;
-        padding: 16px 60px !important;
-        letter-spacing: 6px !important;
-        font-family: serif !important;
-        font-size: 16px !important;
-        cursor: pointer !important;
+        padding: 14px 50px;
+        letter-spacing: 4px;
+        font-family: serif;
+        font-size: 14px;
+        cursor: pointer;
         text-transform: uppercase;
-        transition: 0.2s !important;
+        outline: none;
+    }
+    .v429-btn-clean:active {
+        opacity: 0.7; /* Легкое мигание вместо заливки */
     }
 
-    .v428-action-btn:active {
-        background: #d4af37 !important;
-        color: #000 !important;
+    .v429-ver {
+        position: absolute; bottom: 15px;
+        font-size: 9px; color: #222; letter-spacing: 2px;
     }
 
-    .v428-version {
-        position: absolute;
-        bottom: 15px;
-        font-size: 10px;
-        color: #333;
-        letter-spacing: 3px;
-    }
-
-    /* АНИМАЦИЯ ПУЛЬСАЦИИ ЧЕРЕЗ ТЕНЬ (Без лишних элементов) */
-    @keyframes v428-aura {
-        0% { box-shadow: 0 0 0 0px rgba(212, 175, 55, 0.4); }
-        50% { box-shadow: 0 0 0 15px rgba(212, 175, 55, 0); }
-        100% { box-shadow: 0 0 0 0px rgba(212, 175, 55, 0); }
+    @keyframes v429-fade {
+        0%, 100% { opacity: 0.3; }
+        50% { opacity: 0.7; }
     }
 </style>
 
 <script>
-    /**
-     * MODULE-CHARLIE [v.4.2.8]
-     */
     var ModuleCharlie = {
         proceed: function() {
-            console.log("[B-02] v.4.2.8 Action: Jump to Terminal.");
-            // Мгновенное скрытие
             var el = document.getElementById('block-welcome');
             if(el) el.classList.remove('active');
             
-            // Вызов следующего шага
-            if (window.Core && typeof Core.switch === 'function') {
+            if (window.Core && Core.switch) {
                 Core.switch('block-terminal');
             } else {
-                console.log("NEXT_BLOCK_TRIGGERED");
+                console.log("JUMP_TO_B3");
             }
         }
     };
 
-    // Принудительный запуск для теста
-    window.onload = function() {
-        if (!document.querySelector('.final-gate-v428.active')) {
-            document.getElementById('block-welcome').classList.add('active');
-        }
-    };
+    window.addEventListener('load', function() {
+        var b = document.getElementById('block-welcome');
+        if (b && !document.querySelector('.active')) b.classList.add('active');
+    });
 </script>
