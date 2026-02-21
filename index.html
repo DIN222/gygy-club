@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v3.0.4.10</title>
+    <title>GY-GY Club v3.0.4.11</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none !important; }
@@ -36,14 +36,14 @@
 </head>
 <body>
     <audio id="door-snd"><source src="door_open.mp3" type="audio/mpeg"></audio>
-    <audio id="club-bg-snd" loop><source src="club_ambient.mp3" type="audio/mpeg"></audio>
+    <audio id="club-bg-snd" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active">
         <div style="letter-spacing:10px; margin-bottom:30px; opacity:0.8;">GY-GY PRIVATE</div>
         <div class="door-wrapper" onclick="handleDoor()">
             <img src="door_1.jpg" class="door-img" onerror="this.src='https://via.placeholder.com/300x500?text=DOOR'">
         </div>
-        <div style="font-size: 10px; margin-top: 40px; opacity: 0.3;">v3.0.4.10</div>
+        <div style="font-size: 10px; margin-top: 40px; opacity: 0.3;">v3.0.4.11</div>
     </div>
 
     <div id="block-welcome" class="block">
@@ -96,9 +96,7 @@
         const fullID = `#${serialNum}-${randomPin}`;
 
         function handleDoor() {
-            // Только звук открытия двери
             document.getElementById('door-snd').play().catch(() => {});
-            
             const w = document.querySelector('.door-wrapper');
             w.style.transform = "scale(5)"; 
             w.style.opacity = "0";
@@ -153,7 +151,7 @@
             document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             
-            // ЕСЛИ ПЕРЕХОДИМ В ТЕРМИНАЛ - ВКЛЮЧАЕМ МУЗЫКУ КЛУБА
+            // ПРИ ПЕРЕХОДЕ К ТЕРМИНАЛУ ВКЛЮЧАЕМ bar_ambient.mp3
             if(id === 'block-identity') {
                 updateID();
                 const bgSnd = document.getElementById('club-bg-snd');
