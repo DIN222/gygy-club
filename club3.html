@@ -1,158 +1,146 @@
 
 <div id="block-welcome" class="gy-block">
-    <div class="welcome-content">
+    <div class="welcome-layout">
         
-        <div class="charlie-frame-v4">
-            <div class="outer-gold-ring"></div>
-            <div class="portrait-main">
-                <img src="charlie.png" id="m2-portrait" 
+        <div class="charlie-area">
+            <div class="ring-pulse"></div>
+            <div class="portrait-circle">
+                <img src="charlie.png" alt="Host" 
                      onerror="this.src='https://via.placeholder.com/300/000/d4af37?text=HOST'">
             </div>
         </div>
 
-        <h1 class="welcome-text-xl">WELCOME</h1>
+        <h1 class="welcome-title-v5">WELCOME</h1>
         
-        <button class="btn-gold-m2" onclick="ModuleCharlie.proceed()">
+        <button class="btn-direct" onclick="ModuleCharlie.proceed()">
             ПРОХОДИТЕ
         </button>
 
-        <div class="version-tag-m2">BLOCK-02 v.4.2.4</div>
     </div>
+    <div class="v-tag">B-02 v.4.2.5</div>
 </div>
 
 <style>
-    /* Глобальный сброс для исключения белого фона */
+    /* Базовая изоляция блока */
     #block-welcome {
         position: fixed;
-        inset: 0;
-        background: #000 !important; /* Гарантированный черный фон */
-        color: #d4af37;
-        font-family: 'Times New Roman', serif;
-        display: none; /* Скрыт по умолчанию */
+        top: 0; left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: #000 !important;
+        display: none;
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        overflow: hidden; /* ЗАПРЕТ СКРОЛЛА */
         z-index: 999;
-        margin: 0;
-        padding: 0;
     }
 
-    /* Принудительная видимость при добавлении класса active */
-    #block-welcome.active {
-        display: flex !important;
-    }
+    #block-welcome.active { display: flex !important; }
 
-    .welcome-content {
+    /* Контейнер-ограничитель, чтобы элементы не разъезжались */
+    .welcome-layout {
         display: flex;
         flex-direction: column;
         align-items: center;
-        text-align: center;
-    }
-
-    /* Контейнер Чарли 280px */
-    .charlie-frame-v4 {
-        position: relative;
-        width: 280px; 
-        height: 280px;
-        margin-bottom: 40px;
-    }
-
-    .outer-gold-ring {
-        position: absolute;
-        inset: -10px;
-        border: 2px solid rgba(212, 175, 55, 0.6);
-        border-radius: 50%;
-        animation: m2-pulse-v4 3s infinite ease-in-out;
-    }
-
-    .portrait-main {
+        justify-content: center;
         width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        border: 3px solid #d4af37;
-        overflow: hidden;
-        background: #000;
-        position: relative;
-        z-index: 2;
+        max-height: 100%;
+        padding: 20px;
+        box-sizing: border-box;
     }
 
-    .portrait-main img {
+    /* Чарли: строго 260px, чтобы влезло на все телефоны */
+    .charlie-area {
+        position: relative;
+        width: 260px;
+        height: 260px;
+        margin-bottom: 30px;
+        flex-shrink: 0; /* Запрет сжатия */
+    }
+
+    .portrait-circle {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        border: 2px solid #d4af37;
+        overflow: hidden;
+        z-index: 5;
+        background: #000;
+    }
+
+    .portrait-circle img {
         width: 100%;
         height: 100%;
         object-fit: cover;
     }
 
-    .welcome-text-xl {
-        font-size: clamp(2.5rem, 8vw, 3.8rem); /* Адаптивный огромный шрифт */
-        letter-spacing: 15px;
-        font-weight: normal;
-        margin: 0 0 50px 0;
-        text-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+    /* Единственное пульсирующее кольцо */
+    .ring-pulse {
+        position: absolute;
+        inset: -5px;
+        border: 1px solid rgba(212, 175, 55, 0.5);
+        border-radius: 50%;
+        z-index: 1;
+        animation: pulse-simple 3s infinite ease-in-out;
     }
 
-    .btn-gold-m2 {
+    /* Адаптивный текст WELCOME */
+    .welcome-title-v5 {
+        color: #d4af37;
+        font-size: clamp(2.2rem, 10vw, 3.2rem);
+        letter-spacing: 12px;
+        font-weight: normal;
+        margin: 10px 0 40px 0;
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    .btn-direct {
         background: transparent;
         border: 1px solid #d4af37;
         color: #d4af37;
-        padding: 15px 60px;
-        letter-spacing: 6px;
+        padding: 15px 50px;
+        letter-spacing: 5px;
+        font-family: inherit;
         cursor: pointer;
         text-transform: uppercase;
-        font-size: 14px;
         transition: 0.2s;
+        flex-shrink: 0;
     }
 
-    .btn-gold-m2:active {
-        background: #d4af37;
-        color: #000;
-    }
+    .btn-direct:active { background: #d4af37; color: #000; }
 
-    .version-tag-m2 {
-        position: absolute;
-        bottom: 20px;
-        font-size: 9px;
-        color: #222;
-        letter-spacing: 2px;
-    }
+    .v-tag { position: absolute; bottom: 10px; font-size: 8px; color: #222; }
 
-    @keyframes m2-pulse-v4 {
+    @keyframes pulse-simple {
         0% { transform: scale(1); opacity: 0.4; }
-        50% { transform: scale(1.06); opacity: 0.8; }
+        50% { transform: scale(1.05); opacity: 0.7; }
         100% { transform: scale(1); opacity: 0.4; }
     }
 </style>
 
 <script>
-    /**
-     * Logic for BLOCK-02 (Anti-Crash)
-     */
     const ModuleCharlie = {
         proceed() {
-            console.log("[BLOCK-02] Мгновенный выход.");
+            console.log("[B-02] Мгновенный переход.");
             this.next();
         },
-
         next() {
-            // Пытаемся вызвать переключение через Core, если его нет - через прямую манипуляцию
             if (window.Core && typeof Core.switch === 'function') {
                 Core.switch('block-terminal');
             } else {
-                console.warn("Core не найден. Прямое переключение...");
-                document.getElementById('block-welcome').classList.remove('active');
-                const nextBlock = document.getElementById('block-terminal');
-                if (nextBlock) nextBlock.classList.add('active');
+                // Если ядро не найдено, просто скрываем текущий блок
+                document.getElementById('block-welcome').style.display = 'none';
+                console.log("Сигнал: Активировать Блок 3");
             }
-        },
-
-        // Функция самодиагностики
-        init() {
-            console.log("[BLOCK-02] Запуск...");
-            document.getElementById('block-welcome').classList.add('active');
         }
     };
 
-    // Если этот файл открыт отдельно - запускаем его сразу
-    if (!window.Core) {
-        window.addEventListener('load', () => ModuleCharlie.init());
-    }
+    // Авто-запуск для тестирования
+    window.addEventListener('load', () => {
+        if (!document.querySelector('.gy-block.active')) {
+            document.getElementById('block-welcome').classList.add('active');
+        }
+    });
 </script>
