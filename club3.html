@@ -7,7 +7,7 @@
                  onerror="this.src='https://via.placeholder.com/300x500/111/d4af37?text=DOOR'">
         </div>
         
-        <div class="version-tag">BLOCK-01 v.4.1.2</div>
+        <div class="version-tag">BLOCK-01 v.4.1.3 (SLOW)</div>
     </div>
 </div>
 
@@ -34,13 +34,15 @@
         letter-spacing: 12px;
         margin-bottom: 40px;
         font-size: 18px;
-        transition: 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        /* Увеличенное время затухания текста */
+        transition: 1.8s ease-in-out; 
         opacity: 0.7;
     }
 
     .door-wrapper {
         cursor: pointer;
-        transition: 1.6s cubic-bezier(0.4, 0, 0.2, 1);
+        /* Увеличенное время анимации двери: 2.5 секунды */
+        transition: 2.5s cubic-bezier(0.45, 0.05, 0.55, 0.95);
         will-change: transform, opacity;
     }
 
@@ -50,13 +52,14 @@
         border: 1px solid rgba(212, 175, 55, 0.2);
     }
 
+    /* Состояние глубокого погружения */
     .state-opening .door-wrapper {
-        transform: scale(9);
+        transform: scale(12); /* Увеличил масштаб для эффекта пролета */
         opacity: 0;
     }
     .state-opening .gate-logo {
         opacity: 0;
-        transform: translateY(-30px);
+        transform: translateY(-20px);
     }
 
     .version-tag {
@@ -84,14 +87,14 @@
 
             document.getElementById('block-gate').classList.add('state-opening');
 
+            // Таймер увеличен до 2.5 секунд, чтобы соответствовать CSS
             setTimeout(() => {
                 this.next();
-            }, 1600);
+            }, 2500);
         },
 
         next() {
             console.log("[BLOCK-01] Finished");
-            // Placeholder for Core switch
             if (window.Core && Core.switch) {
                 Core.switch('block-welcome');
             } else {
