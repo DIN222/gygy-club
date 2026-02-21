@@ -3,140 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v2.8.4</title>
+    <title>GY-GY Club v3.0.8.0</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-        body { margin: 0; background: #000; color: #d4af37; font-family: 'Times New Roman', Times, serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; }
+        body { margin: 0; background: #000; color: #d4af37; font-family: 'Times New Roman', serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; }
         
-        .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 10px; z-index: 1; }
+        .block { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 15px; background: #000; z-index: 1; }
         .block.active { display: flex !important; z-index: 10; }
 
         /* ВХОД */
-        .entrance-logo { opacity: 0.8; letter-spacing: 10px; margin-bottom: 20px; font-size: 16px; transition: 1.2s; }
+        .entrance-logo { opacity: 0.8; letter-spacing: 10px; margin-bottom: 25px; font-size: 16px; transition: 1.2s; }
         .door-container { cursor: pointer; transition: transform 2s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s; }
-        .door-img { width: 70vw; max-width: 320px; height: auto; border: 1px solid rgba(212, 175, 55, 0.2); }
-        .door-opening .entrance-logo { opacity: 0; transform: scale(0.8); }
-        .door-opening .door-container { transform: scale(4); opacity: 0; }
+        .door-img { width: 75vw; max-width: 300px; height: auto; border: 1px solid rgba(212, 175, 55, 0.2); }
+        .door-opening .door-container { transform: scale(5); opacity: 0; }
 
-        /* ЧАРЛИ v2.8.4 */
+        /* ЧАРЛИ - ОДНО КОЛЬЦО */
         .charlie-portrait { 
-            width: 200px; height: 200px; margin-bottom: 10px; 
-            border-radius: 4px; overflow: hidden; 
-            position: relative; display: flex; align-items: center; justify-content: center;
-            background: rgba(212, 175, 55, 0.05);
+            width: 220px; height: 220px; margin-bottom: 15px; 
+            border-radius: 50% !important; 
+            outline: 2px solid #d4af37; outline-offset: -2px;
+            overflow: hidden; display: flex; align-items: center; justify-content: center;
         }
-        .charlie-portrait::before { content: "🤵‍♂️"; font-size: 110px; position: absolute; z-index: 1; }
-        .charlie-portrait img { width: 100%; height: 100%; object-fit: cover; position: relative; z-index: 2; background: black; }
+        .charlie-portrait img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
 
-        .welcome-text { font-size: 1.8rem; letter-spacing: 8px; margin: 15px 0; font-weight: normal; }
-
-        /* ТЕРМИНАЛ */
-        .terminal-grid { display: flex; flex-direction: row; justify-content: center; gap: 10px; width: 100%; max-width: 700px; }
-        .panel { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 5px; }
-        .panel-setup { border-right: 1px solid rgba(212, 175, 55, 0.15); }
-        .action-area { height: 45px; display: flex; align-items: center; justify-content: center; width: 100%; }
-        .photo-slot { width: 90px; height: 90px; border: 1px solid #d4af37; margin-top: 10px; position: relative; cursor: pointer; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .photo-slot img { width: 100%; height: 100%; object-fit: cover; position: absolute; z-index: 2; }
-        .photo-slot span { font-size: 8px; color: #333; font-weight: bold; text-transform: uppercase; z-index: 1; }
-
-        .btn-gold { width: 100%; max-width: 180px; padding: 10px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 11px; letter-spacing: 2px; cursor: pointer; margin: 4px 0; font-family: inherit; }
+        /* ТЕРМИНАЛ РЕГИСТРАЦИИ */
+        .terminal-container { background: rgba(212, 175, 55, 0.03); border: 1px solid rgba(212, 175, 55, 0.1); padding: 15px; border-radius: 4px; width: 100%; max-width: 400px; }
+        .setup-row { display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 20px; }
         
-        /* ДЕВИЗ И ЯЗЫКИ */
-        #dynamic-quote { font-style: italic; font-size: 13px; opacity: 0.8; margin: 15px 0 5px 0; min-height: 1.2em; padding: 0 10px; }
-        .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 100%; max-width: 280px; margin-top: 10px; }
+        .box-unit { width: 95px; height: 95px; background: #fff; border: 1px solid #d4af37; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; position: relative; }
+        .box-label { position: absolute; bottom: 2px; font-size: 7px; color: #000; font-weight: bold; background: rgba(255,255,255,0.8); width: 100%; text-align: center; }
+        
+        #qrcode img { margin: 0 auto; }
+        .photo-slot img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+
+        .controls { display: flex; align-items: center; gap: 10px; margin: 10px 0; justify-content: center; }
+        .arrow { cursor: pointer; font-size: 24px; padding: 5px; user-select: none; }
+        
+        .btn-gold { width: 100%; max-width: 220px; padding: 12px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 11px; letter-spacing: 2px; cursor: pointer; margin: 10px 0; }
+        
+        /* ЯЗЫКИ */
+        .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 280px; margin-top: 15px; }
         .lang-item { font-size: 11px; opacity: 0.5; cursor: pointer; padding: 5px; font-weight: bold; border-bottom: 2px solid transparent; }
         .lang-item.active { border-bottom: 2px solid #d4af37; opacity: 1; color: #fff; }
-        .exit-club { font-size: 10px; opacity: 0.4; cursor: pointer; text-transform: uppercase; margin-top: 15px; letter-spacing: 1px; text-decoration: underline; }
-
-        @media (max-width: 650px) { .terminal-grid { flex-direction: column; gap: 5px; } .panel-setup { border-right: none; border-bottom: 1px solid rgba(212, 175, 55, 0.1); padding-bottom: 5px; } }
     </style>
 </head>
-<body>
+<body onclick="unlockAudio()">
 
-    <audio id="door-sound" preload="auto"><source src="door_open.mp3" type="audio/mpeg"></audio>
-    <audio id="bar-sound" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
+    <audio id="door-snd" preload="auto"><source src="door_open.mp3" type="audio/mpeg"></audio>
+    <audio id="bar-snd" loop preload="auto"><source src="bar_sounds.mp3" type="audio/mpeg"></audio>
 
-    <div id="block-entrance" class="block active">
+    <div id="p-entrance" class="block active">
         <div class="entrance-logo">GY-GY PRIVATE</div>
-        <div class="door-container" onclick="handleDoor()"><img src="door_1.jpg" class="door-img" onerror="this.parentElement.innerHTML='🚪'"></div>
+        <div class="door-container" onclick="openDoor()"><img src="door_1.jpg" class="door-img"></div>
+        <div style="margin-top:20px; opacity:0.2; font-size:10px; letter-spacing:5px;">V. 3.0.8.0</div>
     </div>
 
-    <div id="block-welcome" class="block">
-        <div class="charlie-portrait"><img src="charlie.png" onerror="this.style.display='none'"></div>
-        <h1 id="t-welcome" class="welcome-text">WELCOME</h1>
-        <button id="btn-proceed" class="btn-gold" onclick="startTerminal()">PROCEED</button>
+    <div id="p-welcome" class="block">
+        <div class="charlie-portrait"><img src="charlie.png" onerror="this.src='https://via.placeholder.com/220'"></div>
+        <h1 id="t-welcome" style="font-size: 2.2rem; letter-spacing: 8px;">WELCOME</h1>
+        <button id="btn-proceed" class="btn-gold" onclick="goTerminal()">PROCEED</button>
     </div>
 
-    <div id="block-identity" class="block">
-        <div class="terminal-grid">
-            <div class="panel panel-setup">
-                <div id="t-id-title" style="font-size: 11px; letter-spacing: 2px; margin-bottom: 8px;">IDENTITY</div>
-                <div style="display:flex; align-items:center; gap:8px;">
-                    <div onclick="changeAvatar(-1)" style="cursor:pointer; font-size:22px; padding:5px;">&#10094;</div>
-                    <div id="user-avatar" style="font-size:40px;">🥃</div>
-                    <div onclick="changeAvatar(1)" style="cursor:pointer; font-size:22px; padding:5px;">&#10095;</div>
+    <div id="p-identity" class="block">
+        <div class="terminal-container">
+            <div id="t-id-title" style="font-size: 10px; letter-spacing: 3px; margin-bottom: 15px; opacity: 0.7;">REGISTRATION TERMINAL</div>
+            
+            <div class="setup-row">
+                <div class="panel-mini">
+                    <div class="controls">
+                        <div onclick="changeAv(-1)" class="arrow">&#10094;</div>
+                        <div id="u-av" style="font-size:45px;">🥃</div>
+                        <div onclick="changeAv(1)" class="arrow">&#10095;</div>
+                    </div>
+                    <div id="label-res" style="font-size:18px; letter-spacing:2px; font-weight: bold;">№ 1000</div>
                 </div>
-                <div style="display:flex; align-items:center; gap:8px;">
-                    <div onclick="changeID(-1)" style="cursor:pointer; font-size:22px; padding:5px;">&#10094;</div>
-                    <div id="label-res" style="font-size:18px; letter-spacing:2px;">№ 1000</div>
-                    <div onclick="changeID(1)" style="cursor:pointer; font-size:22px; padding:5px;">&#10095;</div>
+
+                <div class="box-unit">
+                    <div id="qrcode"></div>
+                    <div class="box-label">MEMBER ID</div>
                 </div>
-                <button id="btn-save" class="btn-gold" onclick="saveChanges()">СОХРАНИТЬ</button>
-                <div class="action-area">
-                    <button id="btn-to-hall" class="btn-gold" style="display:none;" onclick="enterHall()">ВХОД</button>
+
+                <div class="box-unit" onclick="document.getElementById('f-in').click()" style="cursor:pointer">
+                    <input type="file" id="f-in" style="display:none" accept="image/*" onchange="preview()">
+                    <span id="t-photo-text" style="font-size: 9px; color:#000; font-weight:bold;">UPLOAD<br>PHOTO</span>
+                    <img id="p-pre" style="display:none">
+                    <div class="box-label">USER PHOTO</div>
                 </div>
             </div>
 
-            <div class="panel">
-                <div id="t-card-title" style="font-size: 11px; letter-spacing: 2px; margin-bottom: 8px;">MEMBER CARD</div>
-                <div style="background:#fff; padding:6px; border-radius:2px;"><div id="qrcode"></div></div>
-                <input type="file" id="file-input" style="display:none" accept="image/*" onchange="previewFile()">
-                <div class="photo-slot" onclick="document.getElementById('file-input').click()">
-                    <span id="t-photo-text">PHOTO</span>
-                    <img id="photo-preview" src="" style="display:none">
-                </div>
-            </div>
+            <button id="btn-save" class="btn-gold" onclick="save()">СОХРАНИТЬ / SAVE</button>
+            <button id="btn-to-hall" class="btn-gold" style="display:none; border-style:double; background: rgba(212,175,55,0.1);" onclick="goHall()">ВХОД / ENTER</button>
         </div>
 
-        <div id="dynamic-quote">«В каждой шутке есть доля виски...»</div>
+        <div id="dynamic-quote" style="font-style:italic; font-size:14px; margin:20px 0; font-weight:bold;">«В каждой шутке есть доля виски...»</div>
 
         <div class="lang-grid">
             <div class="lang-item active" onclick="setLang(this, 'ru')">RU</div>
             <div class="lang-item" onclick="setLang(this, 'en')">EN</div>
             <div class="lang-item" onclick="setLang(this, 'ua')">UA</div>
             <div class="lang-item" onclick="setLang(this, 'fr')">FR</div>
-            <div class="lang-item" onclick="setLang(this, 'de')">DE</div>
-            <div class="lang-item" onclick="setLang(this, 'pl')">PL</div>
-            <div class="lang-item" onclick="setLang(this, 'es')">ES</div>
-            <div class="lang-item" onclick="setLang(this, 'it')">IT</div>
         </div>
-
-        <div id="t-exit" class="exit-club" onclick="location.reload()">ПОКИНУТЬ КЛУБ</div>
+        <div style="font-size: 9px; opacity:0.4; margin-top:15px; text-decoration: underline; cursor:pointer;" onclick="location.reload()">EXIT CLUB</div>
     </div>
 
-    <div id="block-hall" class="block">
+    <div id="p-hall" class="block">
         <h1 id="t-hall-title" style="font-size: 3rem; letter-spacing: 12px;">THE HALL</h1>
-        <button id="t-hall-exit" class="btn-gold" style="margin-top:30px; border-style:double;" onclick="location.reload()">ВЫХОД</button>
+        <button class="btn-gold" onclick="location.reload()">EXIT</button>
     </div>
 
     <script>
-        // JS версия v2.8.4
-        const barSnd = document.getElementById('bar-sound');
-        const doorSnd = document.getElementById('door-sound');
-        let currentID = 1000, currentAvIdx = 0;
-        const avatars = ['🥃','🎩','🍸','🚬','🎷','🎭','👔','💼','💎'];
+        const bSnd = document.getElementById('bar-snd');
+        const dSnd = document.getElementById('door-snd');
+        let curID = 1000 + Math.floor(Math.random()*8999), avIdx = 0, aOk = false;
+        const avs = ['🥃','🎩','🍸','🚬','🎷','🎭','👔','💼','💎','🧥'];
         
         const langData = {
-            ru: { welcome: "ДОБРО ПОЖАЛОВАТЬ", proceed: "ПРОДОЛЖИТЬ", save: "СОХРАНИТЬ", entry: "ВХОД", photo: "ФОТО", exit: "ПОКИНУТЬ КЛУБ", id: "ЛИЧНОСТЬ", card: "КАРТА КЛУБА", quote: "«В каждой шутке есть доля виски...»", hall: "ХОЛЛ", back: "ВЫХОД" },
-            en: { welcome: "WELCOME", proceed: "PROCEED", save: "SAVE", entry: "ENTER", photo: "PHOTO", exit: "LEAVE CLUB", id: "IDENTITY", card: "MEMBER CARD", quote: "«Every joke has a share of whiskey...»", hall: "THE HALL", back: "EXIT" },
-            ua: { welcome: "ВІТАЄМО", proceed: "ПРОДОВЖИТИ", save: "ЗБЕРЕГТИ", entry: "ВХІД", photo: "ФОТО", exit: "ПОКИНУТИ КЛУБ", id: "ОСОБИСТІСТЬ", card: "КАРТКА КЛУБУ", quote: "«У кожному жарті є доля віскі...»", hall: "ХОЛ", back: "ВИХІД" },
-            fr: { welcome: "BIENVENUE", proceed: "CONTINUER", save: "SAUVER", entry: "ENTRER", photo: "PHOTO", exit: "QUITTER", id: "IDENTITÉ", card: "CARTE", quote: "«Dans chaque blague, il y a du whisky...»", hall: "LE SALON", back: "RETOUR" },
-            de: { welcome: "WILLKOMMEN", proceed: "WEITER", save: "SPEICHERN", entry: "EINTRITT", photo: "FOTO", exit: "VERLASSEN", id: "IDENTITÄT", card: "KARTE", quote: "«In jedem Witz steckt Whiskey...»", hall: "DIE HALLE", back: "ENDE" },
-            pl: { welcome: "WITAJ", proceed: "KONTYNUUJ", save: "ZAPISZ", entry: "WEJŚCIE", photo: "FOTO", exit: "OPUŚĆ KLUB", id: "TOŻSAMOŚĆ", card: "KARTA", quote: "«W każdym żarcie jest kropla whiskey...»", hall: "SALON", back: "WYJŚCIE" },
-            es: { welcome: "BIENVENIDO", proceed: "CONTINUAR", save: "GUARDAR", entry: "ENTRAR", photo: "FOTO", exit: "SALIR", id: "IDENTIDAD", card: "TARJETA", quote: "«En cada broma hay algo de whisky...»", hall: "EL SALÓN", back: "SALIR" },
-            it: { welcome: "BENVENUTO", proceed: "CONTINUA", save: "SALVA", entry: "ENTRA", photo: "FOTO", exit: "ESCI", id: "IDENTITÀ", card: "CARTA", quote: "«Ogni scherzo ha il suo whisky...»", hall: "LA SALA", back: "ESCI" }
+            ru: { welcome: "ДОБРО ПОЖАЛОВАТЬ", proceed: "ПРОДОЛЖИТЬ", save: "СОХРАНИТЬ", entry: "ВХОД", photo: "ЗАГРУЗИТЬ", quote: "«В каждой шутке есть доля виски...»", hall: "ХОЛЛ" },
+            en: { welcome: "WELCOME", proceed: "PROCEED", save: "SAVE", entry: "ENTER", photo: "UPLOAD", quote: "«Every joke has a share of whiskey...»", hall: "THE HALL" },
+            ua: { welcome: "ВІТАЄМО", proceed: "ПРОДОВЖИТИ", save: "ЗБЕРЕГТИ", entry: "ВХІД", photo: "ФОТО", quote: "«У кожному жарті є доля віскі...»", hall: "ХОЛ" },
+            fr: { welcome: "BIENVENUE", proceed: "CONTINUER", save: "SAUVER", entry: "ENTRER", photo: "PHOTO", quote: "«Dans chaque blague, il y a du whisky...»", hall: "LE SALON" }
         };
+
+        function unlockAudio() {
+            if (aOk) return;
+            dSnd.muted = bSnd.muted = true;
+            dSnd.play().then(() => { dSnd.pause(); dSnd.muted = false; });
+            bSnd.play().then(() => { bSnd.pause(); bSnd.muted = false; aOk = true; });
+        }
+
+        function openDoor() {
+            dSnd.play().catch(()=>{});
+            document.getElementById('p-entrance').classList.add('door-opening');
+            setTimeout(() => sw('p-welcome'), 1300);
+        }
+
+        function goTerminal() {
+            bSnd.volume = 0.25; bSnd.play().catch(()=>{});
+            sw('p-identity'); 
+            setTimeout(update, 100);
+        }
+
+        function sw(id) {
+            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
 
         function setLang(el, lang) {
             document.querySelectorAll('.lang-item').forEach(i => i.classList.remove('active'));
@@ -146,57 +157,36 @@
             document.getElementById('btn-proceed').innerText = d.proceed;
             document.getElementById('btn-save').innerText = d.save;
             document.getElementById('btn-to-hall').innerText = d.entry;
-            document.getElementById('t-photo-text').innerText = d.photo;
-            document.getElementById('t-exit').innerText = d.exit;
-            document.getElementById('t-id-title').innerText = d.id;
-            document.getElementById('t-card-title').innerText = d.card;
+            document.getElementById('t-photo-text').innerHTML = d.photo + "<br>PHOTO";
             document.getElementById('dynamic-quote').innerText = d.quote;
             document.getElementById('t-hall-title').innerText = d.hall;
-            document.getElementById('t-hall-exit').innerText = d.back;
         }
 
-        function switchTo(id) {
-            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-        }
-
-        function handleDoor() {
-            doorSnd.play().catch(() => {});
-            document.getElementById('block-entrance').classList.add('door-opening');
-            setTimeout(() => switchTo('block-welcome'), 1300);
-        }
-
-        function startTerminal() {
-            barSnd.volume = 0.2; barSnd.play().catch(() => {});
-            switchTo('block-identity');
-            updateDisplay();
-        }
-
-        function previewFile() {
-            const preview = document.getElementById('photo-preview');
-            const file = document.getElementById('file-input').files[0];
+        function preview() {
+            const file = document.getElementById('f-in').files[0];
             const reader = new FileReader();
             reader.onloadend = () => {
-                preview.src = reader.result;
-                preview.style.display = "block";
+                const p = document.getElementById('p-pre');
+                p.src = reader.result; p.style.display = "block";
                 document.getElementById('t-photo-text').style.display = "none";
             }
             if (file) reader.readAsDataURL(file);
         }
 
-        function updateDisplay() {
-            document.getElementById('user-avatar').innerText = avatars[currentAvIdx];
-            document.getElementById('label-res').innerText = "№ " + currentID;
-            const qrBox = document.getElementById("qrcode");
-            qrBox.innerHTML = "";
-            new QRCode(qrBox, { text: "GY-ID:"+currentID, width: 80, height: 80 });
+        function update() {
+            document.getElementById('u-av').innerText = avs[avIdx];
+            document.getElementById('label-res').innerText = "№ " + curID;
+            const q = document.getElementById("qrcode"); q.innerHTML = "";
+            new QRCode(q, { text: "GY-ID:"+curID, width: 85, height: 85 });
         }
 
-        function saveChanges() { document.getElementById('btn-to-hall').style.display = 'block'; }
-        function enterHall() { switchTo('block-hall'); }
-        function changeAvatar(dir) { currentAvIdx = (currentAvIdx + dir + avatars.length) % avatars.length; updateDisplay(); }
-        function changeID(dir) { currentID = (currentID + (dir * 9) + 9000) % 9000 + 1000; updateDisplay(); }
+        function save() { 
+            document.getElementById('btn-to-hall').style.display = 'block'; 
+            document.getElementById('btn-save').style.display = 'none'; 
+        }
+
+        function goHall() { sw('p-hall'); }
+        function changeAv(d) { avIdx = (avIdx + d + avs.length) % avs.length; update(); }
     </script>
 </body>
 </html>
-
