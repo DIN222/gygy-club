@@ -1,1 +1,58 @@
 
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        
+        .gram-container {
+            width: 200px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        /* Твоя картинка граммофона */
+        .gram-image {
+            width: 160px;
+            height: auto;
+            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5));
+            transition: transform 0.3s;
+        }
+
+        .gram-image:hover { transform: scale(1.05); }
+
+        .play-label {
+            color: #d4af37;
+            font-family: serif;
+            margin-top: 10px;
+            letter-spacing: 2px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="gram-container" onclick="toggleMusic()">
+        <img src="unna225med.png" class="gram-image" alt="Граммофон">
+        <div class="play-label" id="status">ВКЛЮЧИТЬ ЗВУК</div>
+    </div>
+
+    <audio id="ambience" loop src="https://www.soundjay.com/ambient/restaurant-ambience-01.mp3"></audio>
+
+    <script>
+        const audio = document.getElementById('ambience');
+        function toggleMusic() {
+            if (audio.paused) {
+                audio.play();
+                document.getElementById('status').innerText = "ЗВУК ИДЕТ";
+                document.getElementById('status').style.color = "#fff";
+            } else {
+                audio.pause();
+                document.getElementById('status').innerText = "ЗВУК ПРИОСТАНОВЛЕН";
+                document.getElementById('status').style.color = "#d4af37";
+            }
+        }
+    </script>
+
+</body>
+</html>
