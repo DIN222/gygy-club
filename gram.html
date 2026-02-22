@@ -1,95 +1,111 @@
 
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <title>GY-GRAM v2.1</title>
     <style>
         body { 
             background: #000; color: #d4af37; 
             display: flex; flex-direction: column;
             justify-content: center; align-items: center; 
-            height: 100vh; margin: 0; font-family: serif; 
+            height: 100vh; margin: 0; font-family: 'Georgia', serif; 
         }
-        .id-board {
+
+        /* ТАБЛО ИДЕНТИФИКАЦИИ (ПУНКТ 1) */
+        .id-card {
             border: 1px solid #d4af37;
-            padding: 10px; margin-bottom: 20px;
-            background: #0a0a0a; text-align: center;
-            min-width: 250px; box-shadow: 0 0 15px rgba(212,175,55,0.2);
+            padding: 15px;
+            margin-bottom: 40px;
+            background: rgba(20, 15, 10, 0.9);
+            text-align: center;
+            min-width: 280px;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
         }
-        .gram-base {
-            border: 2px solid gold; padding: 20px;
-            text-align: center; background: #111;
+
+        #avatar-display { font-size: 30px; margin-bottom: 10px; }
+        #id-display { font-family: monospace; font-size: 14px; letter-spacing: 1px; }
+
+        /* ГРАММОФОН В СТИЛЕ "ЧАРЛИ" (Геометрия) */
+        .gram-wrap { position: relative; width: 160px; height: 160px; cursor: pointer; }
+        
+        /* Золотой рупор */
+        .horn-geo { 
+            position: absolute; top: 10px; left: 20px;
+            width: 100px; height: 100px; 
+            background: linear-gradient(45deg, #d4af37, #f1d592);
+            clip-path: polygon(100% 0, 20% 50%, 100% 100%); 
+            filter: drop-shadow(0 0 10px #d4af37);
         }
-        img { max-width: 200px; height: auto; cursor: pointer; transition: 0.3s; }
-        img:active { transform: scale(0.95); }
-        .btn {
-            margin-top: 15px; padding: 10px;
-            background: #000; color: gold;
-            border: 1px solid gold; cursor: pointer; font-weight: bold;
+
+        /* Корпус */
+        .box-geo { 
+            position: absolute; bottom: 15px; left: 70px;
+            width: 70px; height: 50px; 
+            background: #3d2b1f; border: 2px solid #d4af37; 
         }
-        #avatar-box {
-            width: 40px; height: 40px; 
-            border: 1px solid gold; margin: 5px auto;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 20px; background: #222;
+
+        .status-btn {
+            margin-top: 30px; padding: 12px 25px;
+            background: #000; color: #d4af37;
+            border: 1px solid #d4af37; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 2px;
         }
+        
+        .version-tag { position: fixed; bottom: 5px; right: 10px; font-size: 10px; opacity: 0.5; }
     </style>
 </head>
 <body>
 
-    <div class="id-board">
-        <div id="avatar-box">?</div>
-        <div id="user-id" style="font-size: 12px; font-family: monospace;">ID: RECOGNIZING...</div>
+    <div class="id-card">
+        <div id="avatar-display">?</div>
+        <div id="id-display">ID: RECOGNIZING...</div>
     </div>
 
-    <div class="gram-base">
-        <img src="unna225med.png" onclick="toggle()" alt="ГРАММОФОН">
-        <br>
-        <button class="btn" id="b" onclick="toggle()">ВКЛЮЧИТЬ ЗВУК БАРА</button>
+    <div class="gram-wrap" onclick="togglePlay()">
+        <div class="horn-geo"></div>
+        <div class="box-geo"></div>
     </div>
 
-    <audio id="m" loop src="https://www.soundjay.com/ambient/restaurant-ambience-01.mp3"></audio>
+    <button class="status-btn" id="ctrl" onclick="togglePlay()">Открыть звук</button>
+
+    <div class="version-tag">v2.1-stable</div>
+
+    <audio id="bg-sound" loop src="https://www.soundjay.com/ambient/restaurant-ambience-01.mp3"></audio>
 
     <script>
+        // АЛГОРИТМ ПУНКТА 1: Узнавание и аватар
         window.onload = function() {
-            let savedID = localStorage.getItem('gy_member_id');
-            let savedAvatar = localStorage.getItem('gy_member_avatar');
-
-            if (!savedID) {
-                savedID = 'GY-' + Math.random().toString(36).substr(2, 6).toUpperCase();
-                const symbols = ['🥃', '🍷', '🎷', '🎹', '🗝️', '🎩'];
-                savedAvatar = symbols[Math.floor(Math.random() * symbols.length)];
-                localStorage.setItem('gy_member_id', savedID);
-                localStorage.setItem('gy_member_avatar', savedAvatar);
+            let user = localStorage.getItem('gy_user_data');
+            
+            if (!user) {
+                // Если зашел впервые
+                const newID = 'GY-' + Math.random().toString(36).substr(2, 6).toUpperCase();
+                const avatars = ['🎩', '🥃', '🍷', '🎷', '🎹', '🗝️'];
+                const newAv = avatars[Math.floor(Math.random() * avatars.length)];
+                
+                user = JSON.stringify({ id: newID, av: newAv });
+                localStorage.setItem('gy_user_data', user);
             }
 
-            document.getElementById('user-id').innerText = "MEMBER ID: #" + savedID;
-            document.getElementById('avatar-box').innerText = savedAvatar;
+            const data = JSON.parse(user);
+            document.getElementById('id-display').innerText = "MEMBER ID: #" + data.id;
+            document.getElementById('avatar-display').innerText = data.av;
         };
 
-        function toggle() {
-            var a = document.getElementById('m');
-            var b = document.getElementById('b');
-            
-            // ПРИНУДИТЕЛЬНО ВКЛЮЧАЕМ ГРОМКОСТЬ
-            a.volume = 0.5; 
-
-            if (a.paused) {
-                // Маленькая хитрость: перематываем на секунду назад, чтобы "проснулось"
-                if(a.currentTime == 0) a.currentTime = 0.1;
-                
-                a.play().then(() => {
-                    b.innerText = "ЗВУК ИДЕТ";
-                    b.style.background = "#d4af37";
-                    b.style.color = "#000";
-                }).catch(e => {
-                    alert("Браузер просит еще раз нажать на картинку!");
-                });
+        function togglePlay() {
+            const s = document.getElementById('bg-sound');
+            const b = document.getElementById('ctrl');
+            if (s.paused) {
+                s.play();
+                b.innerText = "Звук бара включен";
+                b.style.background = "#d4af37";
+                b.style.color = "#000";
             } else {
-                a.pause();
-                b.innerText = "ВКЛЮЧИТЬ ЗВУК БАРА";
+                s.pause();
+                b.innerText = "Звук на паузе";
                 b.style.background = "#000";
-                b.style.color = "gold";
+                b.style.color = "#d4af37";
             }
         }
     </script>
