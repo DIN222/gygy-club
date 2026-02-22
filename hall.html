@@ -1,161 +1,173 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Hall v1.0</title>
+    <title>GY-GY Hall v1.1</title>
     <style>
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
         body { 
             background: #000; color: #d4af37; 
             font-family: 'Times New Roman', serif; 
             height: 100vh; width: 100vw;
-            overflow: hidden; /* Строго один экран */
+            overflow: hidden;
             display: flex; flex-direction: column; align-items: center;
         }
 
-        /* Общий контейнер Холла */
+        /* АНФИЛАДА С ЭФФЕКТОМ ГЛУБИНЫ */
         .hall-container {
             position: relative;
             width: 100%; height: 100%;
             display: flex; flex-direction: column;
             justify-content: space-between;
-            padding: 15px 5px;
-            background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+            padding: 10vh 5px 5vh 5px;
+            background: 
+                radial-gradient(circle at 50% 40%, rgba(212, 175, 55, 0.15) 0%, transparent 70%),
+                linear-gradient(to bottom, #050505, #000);
         }
 
-        /* ТАБЛО (Верхняя часть) */
+        /* ТАБЛО НАД АРКОЙ */
         .registration-board {
-            width: 90%; max-width: 320px;
-            border: 1px solid rgba(212, 175, 55, 0.4);
-            background: rgba(20, 20, 20, 0.8);
-            padding: 8px; margin: 0 auto;
-            text-align: center;
-            font-family: monospace; font-size: 11px;
-            letter-spacing: 1px;
-            box-shadow: 0 0 10px rgba(212, 175, 55, 0.1);
+            position: absolute; top: 2vh; left: 50%; transform: translateX(-50%);
+            width: 70%; max-width: 280px;
+            border: 1px solid #d4af37;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 5px; text-align: center;
+            font-family: 'Courier New', Courier, monospace; font-size: 10px;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+            z-index: 10;
         }
 
-        /* АНФИЛАДА (Средняя часть) */
         .anfilade {
-            display: flex; justify-content: space-around; align-items: center;
-            flex-grow: 1; width: 100%; padding: 10px 0;
+            display: flex; justify-content: space-between; align-items: center;
+            flex-grow: 1; width: 100%;
         }
 
-        /* КОЛОННЫ С КАРТИНАМИ (СЛЕВА И СПРАВА) */
+        /* ГАЛЕРЕЯ (БОКОВЫЕ СТЕНЫ) */
         .side-gallery {
             display: flex; flex-direction: column;
-            justify-content: space-around; height: 80%;
-            width: 25%;
+            justify-content: space-around; height: 90%;
+            width: 28%;
         }
 
-        /* КАРТИНА-ПОРТАЛ */
-        .portal { display: flex; flex-direction: column; align-items: center; }
+        .portal { display: flex; flex-direction: column; align-items: center; position: relative; }
+        
+        /* Рама картины в стиле входной двери */
         .frame {
-            width: 65px; height: 85px;
-            border: 3px solid #d4af37;
-            background: #111; overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-        }
-        .frame img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
-        .portal-label { font-size: 8px; margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
-
-        /* ЛОМБЕРНЫЙ СТОЛИК (Между картинами) */
-        .table-unit {
-            display: flex; flex-direction: column; align-items: center;
-            margin: 5px 0;
-        }
-        .table-top { width: 35px; height: 2px; background: #d4af37; position: relative; }
-        .table-leg { width: 1px; height: 15px; background: #d4af37; }
-        .vase { 
-            position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%);
-            width: 8px; height: 12px; background: rgba(212, 175, 55, 0.3);
-            border-radius: 1px;
-        }
-        .flower {
-            position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
-            width: 5px; height: 5px; background: #ff3333; border-radius: 50%;
-            box-shadow: 0 0 5px red;
-        }
-
-        /* ЦЕНТР: БАР */
-        .center-bar {
-            width: 40%; height: 75%;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: flex-end;
+            width: 75px; height: 100px;
+            border: 4px solid #d4af37;
+            background: #111;
+            box-shadow: inset 0 0 10px #000, 0 5px 15px rgba(0,0,0,0.7);
             position: relative;
         }
-        .bar-entrance {
-            width: 120px; height: 180px;
-            border: 2px solid #d4af37; border-bottom: none;
+        .frame::after { 
+            content: ''; position: absolute; top: -6px; left: -6px; right: -6px; bottom: -6px;
+            border: 1px solid rgba(212, 175, 55, 0.5); pointer-events: none;
+        }
+        .frame img { width: 100%; height: 100%; object-fit: cover; opacity: 0.5; filter: contrast(1.2); }
+
+        /* ЛОМБЕРНЫЙ СТОЛИК */
+        .table-unit {
+            display: flex; flex-direction: column; align-items: center;
+            filter: drop-shadow(0 5px 5px rgba(0,0,0,1));
+        }
+        .table-top { 
+            width: 45px; height: 3px; background: linear-gradient(to bottom, #d4af37, #aa8803); 
+            position: relative; border-radius: 1px;
+        }
+        .table-leg { 
+            width: 2px; height: 18px; 
+            background: linear-gradient(to right, #aa8803, #d4af37, #aa8803); 
+        }
+        .vase { 
+            position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%);
+            width: 10px; height: 14px; background: rgba(212, 175, 55, 0.4);
+            border: 1px solid rgba(212, 175, 55, 0.6);
+        }
+        .flower {
+            position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+            width: 6px; height: 6px; background: #c00; border-radius: 50%;
+            box-shadow: 0 0 8px #f00;
+        }
+
+        /* ЦЕНТР: АРОЧНЫЙ ВХОД В БАР */
+        .center-bar {
+            width: 44%; height: 100%;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+        }
+        .bar-arch {
+            width: 140px; height: 220px;
+            border: 5px solid #d4af37;
+            border-bottom: none;
+            border-radius: 70px 70px 0 0; /* АРКА */
             position: relative; cursor: pointer;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.2), inset 0 0 20px #000;
+            background: #050505;
             overflow: hidden;
         }
-        /* Деревянные шторы */
-        .wood-beads {
+        /* Деревянные висюльки */
+        .beads-curtain {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: repeating-linear-gradient(90deg, 
-                #4a3424 0px, #4a3424 2px, 
-                transparent 2px, transparent 5px);
+                #2a1b10 0px, #2a1b10 2px, 
+                #4a3424 3px, 
+                transparent 4px, transparent 7px);
         }
-        .bar-name { font-weight: bold; letter-spacing: 5px; margin-top: 15px; font-size: 16px; }
+        .bar-name { 
+            font-weight: bold; letter-spacing: 6px; margin-top: 15px; 
+            font-size: 18px; text-shadow: 0 0 10px rgba(212, 175, 55, 0.5); 
+        }
 
-        /* ВЕРСИЯ */
-        .v-tag { position: absolute; bottom: 5px; right: 5px; font-size: 9px; opacity: 0.2; }
+        .v-tag { position: absolute; bottom: 5px; right: 8px; font-size: 9px; opacity: 0.3; }
     </style>
 </head>
 <body>
 
     <div class="hall-container">
         <div class="registration-board">
-            STATUS: <span style="color:#fff">AUTHORIZED</span><br>
-            ID: <span id="id-val">#0042-8888</span>
+            MEMBERSHIP: <span style="color:#fff">PREMIUM</span><br>
+            TRACE: <span id="id-val">#0042-7777</span>
         </div>
 
         <div class="anfilade">
-            
             <div class="side-gallery">
                 <div class="portal">
-                    <div class="frame"><img src="https://via.placeholder.com/100?text=HALL"></div>
-                    <div class="portal-label">CONCERT</div>
+                    <div class="frame"><img src="https://via.placeholder.com/100?text=TALENT"></div>
                 </div>
                 <div class="table-unit">
                     <div class="table-top"><div class="vase"></div><div class="flower"></div></div>
                     <div class="table-leg"></div>
                 </div>
                 <div class="portal">
-                    <div class="frame"><img src="https://via.placeholder.com/100?text=ART"></div>
-                    <div class="portal-label">GALLERY</div>
+                    <div class="frame"><img src="https://via.placeholder.com/100?text=MUSEUM"></div>
                 </div>
             </div>
 
             <div class="center-bar">
-                <div class="bar-entrance" onclick="alert('Enter Bar...')">
-                    <div class="wood-beads"></div>
+                <div class="bar-arch" onclick="alert('Welcome to the Bar')">
+                    <div class="beads-curtain"></div>
                 </div>
                 <div class="bar-name">BAR</div>
             </div>
 
             <div class="side-gallery">
                 <div class="portal">
-                    <div class="frame"><img src="https://via.placeholder.com/100?text=IDEA"></div>
-                    <div class="portal-label">CREATIVE</div>
+                    <div class="frame"><img src="https://via.placeholder.com/100?text=STORY"></div>
                 </div>
                 <div class="table-unit">
                     <div class="table-top"><div class="vase"></div><div class="flower"></div></div>
                     <div class="table-leg"></div>
                 </div>
                 <div class="portal">
-                    <div class="frame"><img src="https://via.placeholder.com/100?text=FREE"></div>
-                    <div class="portal-label">RESERVE</div>
+                    <div class="frame"><img src="https://via.placeholder.com/100?text=VOID"></div>
                 </div>
             </div>
-
         </div>
 
-        <div class="v-tag">v1.0</div>
+        <div class="v-tag">v1.1</div>
     </div>
 
 </body>
 </html>
+
