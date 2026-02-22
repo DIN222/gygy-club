@@ -3,86 +3,98 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY Club - Hall v2.3</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GY-GY Club - Official Hall</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: #000; color: #d4af37; font-family: 'Garamond', serif; height: 100vh; overflow: hidden; }
+        body { 
+            background: #000; color: #d4af37; 
+            font-family: 'Garamond', serif; 
+            height: 100vh; width: 100vw;
+            overflow: hidden; display: flex; justify-content: center;
+        }
 
         .hall {
-            position: relative; width: 100vw; height: 100vh;
-            background: radial-gradient(circle at 50% 40%, #1a0f05 0%, #000 80%);
+            position: relative; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 45%, #1a0f05 0%, #000 85%);
             perspective: 1200px; display: flex; flex-direction: column; align-items: center;
         }
 
-        /* ТАБЛО ИЗ ВАШЕГО ВИЗУАЛА */
+        /* ТАБЛО (ИНТЕГРАЦИЯ ИЗ ЭСКИЗА) */
         .header-board {
-            margin-top: 20px; width: 450px; border: 2px solid #d4af37;
-            background: rgba(15, 10, 5, 0.95); padding: 15px; text-align: center;
-            box-shadow: 0 0 30px rgba(212,175,55,0.3); z-index: 10;
+            margin-top: 2vh; width: 420px; border: 3px solid #d4af37;
+            background: #0a0a0a; padding: 12px; text-align: center;
+            box-shadow: 0 0 25px rgba(212,175,55,0.4); z-index: 10;
         }
-        .header-id { font-size: 20px; letter-spacing: 3px; font-weight: bold; color: #fff; }
-        .header-slogan { font-style: italic; font-size: 14px; margin-top: 5px; color: #d4af37; }
+        .header-id { font-size: 18px; letter-spacing: 3px; font-weight: bold; color: #fff; }
+        .header-slogan { font-style: italic; font-size: 13px; margin-top: 4px; color: #d4af37; }
 
-        /* ВИНТАЖНЫЙ ШАХМАТНЫЙ ПОЛ (Цвета: Темный шоколад / Гнилая вишня) */
+        /* ПОЛ: ТЕМНАЯ ШАХМАТКА (В ЦВЕТ ФОНА) */
         .floor-checker {
-            position: absolute; bottom: 0; width: 250%; height: 50%;
+            position: absolute; bottom: 0; width: 250%; height: 42vh;
             background-image: 
-                /* Чередование цветов: #120a05 (почти черный) и #2a1b10 (темное дерево) */
-                linear-gradient(45deg, #120a05 25%, transparent 25%), 
-                linear-gradient(-45deg, #120a05 25%, transparent 25%),
-                linear-gradient(45deg, transparent 75%, #120a05 75%),
-                linear-gradient(-45deg, transparent 75%, #120a05 75%);
-            background-size: 100px 100px; background-color: #24180f; /* Фон пола */
-            transform: rotateX(75deg); transform-origin: bottom center;
-            opacity: 0.9; z-index: 1;
-            box-shadow: inset 0 100px 100px #000;
+                linear-gradient(45deg, #0d0804 25%, transparent 25%), 
+                linear-gradient(-45deg, #0d0804 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #0d0804 75%),
+                linear-gradient(-45deg, transparent 75%, #0d0804 75%);
+            background-size: 100px 100px; background-color: #1a110a;
+            transform: rotateX(72deg); transform-origin: bottom center;
+            opacity: 0.95; z-index: 1; box-shadow: inset 0 80px 150px #000;
         }
 
-        /* СТЕНЫ И КАРТИНЫ */
+        /* СТЕНЫ С ФИЛЕНКАМИ И КАРТИНАМИ */
         .wall {
-            position: absolute; top: 10%; width: 33%; height: 75%;
+            position: absolute; top: 10%; width: 30%; height: 75%;
             background: #1a0f05 url('https://www.transparenttextures.com/patterns/dark-wood.png');
-            z-index: 2; border-left: 10px solid #000; border-right: 10px solid #000;
-            display: flex; flex-direction: column; justify-content: space-around; align-items: center;
+            z-index: 2; border: 12px solid #140c03; border-radius: 2px;
         }
-        .left-wall { left: 0; transform: rotateY(40deg); transform-origin: left; box-shadow: 20px 0 50px #000; }
-        .right-wall { right: 0; transform: rotateY(-40deg); transform-origin: right; box-shadow: -20px 0 50px #000; }
+        .left-wall { left: 0; transform: rotateY(38deg); transform-origin: left; box-shadow: 30px 0 60px #000; }
+        .right-wall { right: 0; transform: rotateY(-38deg); transform-origin: right; box-shadow: -30px 0 60px #000; }
 
         .gold-frame {
-            width: 140px; height: 160px; border: 8px solid #d4af37;
-            border-image: linear-gradient(to bottom, #d4af37, #8a6d3b) 1;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.8); background: #000; overflow: hidden;
+            width: 75%; height: 32%; border: 6px solid #d4af37;
+            margin: 12% auto; background: #000; overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.9);
         }
-        .gold-frame img { width: 100%; height: 100%; object-fit: cover; opacity: 0.4; filter: sepia(1); }
+        .gold-frame img { width: 100%; height: 100%; object-fit: cover; opacity: 0.4; filter: sepia(1.2) contrast(1.1); }
 
-        /* ЦЕНТРАЛЬНАЯ АРКА */
-        .center-entrance { position: relative; z-index: 5; margin-top: 50px; text-align: center; }
-        .bar-label { font-size: 40px; font-weight: bold; letter-spacing: 15px; margin-bottom: 10px; text-shadow: 0 0 20px #d4af37; }
-        .arch {
-            width: 220px; height: 320px; border: 10px solid #d4af37; border-bottom: none;
-            border-radius: 110px 110px 0 0; background: #000; position: relative; overflow: hidden;
-        }
-        .beads { width: 100%; height: 100%; background: repeating-linear-gradient(90deg, #3d2b1f 0, #3d2b1f 4px, transparent 5px, transparent 11px); }
-
-        /* СИММЕТРИЧНЫЕ ОБЪЕКТЫ */
-        .object { position: absolute; bottom: -30px; width: 100px; display: flex; flex-direction: column; align-items: center; z-index: 15; }
-        .gramophone { left: -110px; cursor: pointer; }
-        .table { right: -110px; }
-
-        .gram-horn { width: 60px; height: 60px; background: #d4af37; clip-path: polygon(100% 0, 0 50%, 100% 100%); transform: rotate(-25deg); }
-        .gram-box { width: 50px; height: 35px; background: #2a1b10; border: 2px solid #d4af37; margin-top: -15px; }
+        /* ВХОДНАЯ ГРУППА */
+        .center-entrance { position: relative; z-index: 5; margin-top: 6vh; text-align: center; }
+        .bar-neon { font-size: 36px; font-weight: bold; letter-spacing: 12px; margin-bottom: 8px; color: #fff; text-shadow: 0 0 15px #d4af37; }
         
-        .vase { width: 20px; height: 35px; background: #d4af37; border-radius: 50% 50% 10% 10%; position: relative; }
-        .flower { width: 12px; height: 12px; background: #900; border-radius: 50%; position: absolute; top: -10px; left: 4px; box-shadow: 0 0 10px #f00; }
-        .table-top { width: 70px; height: 6px; background: #1a0f05; border: 1px solid #d4af37; }
-
-        /* ЯЗЫКОВАЯ ПАНЕЛЬ */
-        .lang-panel { position: absolute; bottom: 30px; display: flex; gap: 8px; z-index: 20; }
-        .lang-btn {
-            width: 45px; height: 30px; background: rgba(212, 175, 55, 0.2); border: 1px solid #d4af37;
-            color: #d4af37; font-size: 11px; font-weight: bold; cursor: pointer; transition: 0.3s;
+        .arch {
+            width: 200px; height: 300px; border: 8px solid #d4af37; border-bottom: none;
+            border-radius: 100px 100px 0 0; background: #000; position: relative; overflow: hidden;
         }
-        .lang-btn.active, .lang-btn:hover { background: #d4af37; color: #000; }
+        .beads { width: 100%; height: 100%; background: repeating-linear-gradient(90deg, #2a1b10 0, #2a1b10 4px, transparent 5px, transparent 12px); }
+
+        /* ИНТЕГРАЦИЯ ЭЛЕМЕНТОВ С КАРТИНКИ */
+        .asset { position: absolute; bottom: -20px; z-index: 15; transition: 0.3s; }
+        
+        /* Граммофон (слева) */
+        .gram-asset { 
+            left: -130px; width: 110px; height: 140px; cursor: pointer;
+            background: url('https://i.ibb.co/9Nf5VfL/unna225med.png') no-repeat center/contain;
+        }
+        .gram-asset:hover { transform: scale(1.05); }
+        .gram-asset::after {
+            content: 'CLICK TO PLAY'; position: absolute; bottom: -10px; width: 100%;
+            font-size: 8px; color: #d4af37; text-align: center; font-weight: bold;
+        }
+
+        /* Столик (справа) */
+        .table-asset { 
+            right: -130px; width: 110px; height: 140px;
+            background: url('https://i.ibb.co/sW7P5qP/unna63med-1.png') no-repeat center/contain;
+        }
+
+        /* ЯЗЫКОВАЯ ПАНЕЛЬ (ЗОЛОТЫЕ КНОПКИ) */
+        .lang-panel { position: absolute; bottom: 3vh; display: flex; gap: 6px; z-index: 20; }
+        .ln-btn {
+            width: 42px; height: 28px; background: #000; border: 1.5px solid #d4af37;
+            color: #d4af37; font-size: 11px; font-weight: bold; cursor: pointer; transition: 0.2s;
+        }
+        .ln-btn.active, .ln-btn:hover { background: #d4af37; color: #000; box-shadow: 0 0 10px #d4af37; }
     </style>
 </head>
 <body>
@@ -101,20 +113,12 @@
     </div>
 
     <div class="center-entrance">
-        <div class="bar-label" id="bar-title">BAR</div>
+        <div class="bar-neon" id="bar-label">BAR</div>
         <div class="arch"><div class="beads"></div></div>
 
-        <div class="object gramophone" onclick="toggleMusic()">
-            <div class="gram-horn"></div>
-            <div class="gram-box"></div>
-            <div id="m-status" style="font-size: 8px; margin-top: 5px; color: #fff;">CLICK TO PLAY</div>
-        </div>
-
-        <div class="object table">
-            <div class="vase"><div class="flower"></div></div>
-            <div class="table-top"></div>
-            <div style="width:4px; height:40px; background:#d4af37;"></div>
-        </div>
+        <div class="asset gram-asset" onclick="toggleAudio()" title="Включить музыку"></div>
+        
+        <div class="asset table-asset"></div>
     </div>
 
     <div class="wall right-wall">
@@ -123,14 +127,14 @@
     </div>
 
     <div class="lang-panel">
-        <button class="lang-btn active" onclick="setL('RU', this)">RU</button>
-        <button class="lang-btn" onclick="setL('EN', this)">EN</button>
-        <button class="lang-btn" onclick="setL('DE', this)">DE</button>
-        <button class="lang-btn" onclick="setL('FR', this)">FR</button>
-        <button class="lang-btn" onclick="setL('IT', this)">IT</button>
-        <button class="lang-btn" onclick="setL('ES', this)">ES</button>
-        <button class="lang-btn" onclick="setL('PL', this)">PL</button>
-        <button class="lang-btn" onclick="setL('UA', this)">UA</button>
+        <button class="ln-btn active" onclick="setL('RU', this)">RU</button>
+        <button class="ln-btn" onclick="setL('EN', this)">EN</button>
+        <button class="ln-btn" onclick="setL('DE', this)">DE</button>
+        <button class="ln-btn" onclick="setL('FR', this)">FR</button>
+        <button class="ln-btn" onclick="setL('IT', this)">IT</button>
+        <button class="ln-btn" onclick="setL('ES', this)">ES</button>
+        <button class="ln-btn" onclick="setL('PL', this)">PL</button>
+        <button class="ln-btn" onclick="setL('UA', this)">UA</button>
     </div>
 </div>
 
@@ -145,23 +149,20 @@
         PL: "Prawda nie tkwi w winie, lecz w tych, którzy je piją"
     };
 
-    function toggleMusic() {
+    function toggleAudio() {
         if (audio.paused) {
-            audio.volume = 0.3;
+            audio.volume = 0.4;
             audio.play();
-            document.getElementById('m-status').innerText = "PLAYING...";
-            document.getElementById('m-status').style.color = "#0f0";
+            console.log("Music started");
         } else {
             audio.pause();
-            document.getElementById('m-status').innerText = "PAUSED";
-            document.getElementById('m-status').style.color = "#d4af37";
         }
     }
 
     function setL(lang, btn) {
-        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.ln-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        document.getElementById('bar-title').innerText = (lang === 'RU' || lang === 'UA') ? 'БАР' : 'BAR';
+        document.getElementById('bar-label').innerText = (lang === 'RU' || lang === 'UA') ? 'БАР' : 'BAR';
         document.getElementById('slogan-txt').innerText = `"${slogans[lang] || slogans['EN']}"`;
     }
 </script>
