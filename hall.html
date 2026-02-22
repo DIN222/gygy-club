@@ -4,178 +4,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Hall v1.2 - Grand Vintage</title>
+    <title>GY-GY Grand Hall v1.3</title>
     <style>
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         body { 
-            background: #050505; color: #d4af37; 
-            font-family: 'Georgia', serif; 
-            height: 100vh; width: 100vw;
-            overflow: hidden;
-            display: flex; justify-content: center;
+            background: #000; color: #d4af37; 
+            font-family: 'Garamond', serif; 
+            height: 100vh; overflow: hidden;
+            display: flex; justify-content: center; align-items: center;
         }
 
-        /* ОБЩИЙ КОНТЕЙНЕР С ТЕКСТУРОЙ ОБОЕВ */
-        .hall-container {
+        /* ОСНОВНОЙ КОНТЕЙНЕР С ГЛУБИНОЙ */
+        .hall-scene {
             position: relative;
-            width: 100%; height: 100%;
-            background: 
-                radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.1) 0%, transparent 80%),
-                url('https://www.transparenttextures.com/patterns/dark-leather.png'), /* Легкая текстура */
-                linear-gradient(to bottom, #0a0a0a, #000);
-            display: flex; flex-direction: column;
-            perspective: 1000px; /* Глубина для 3D */
-        }
-
-        /* ТАБЛО (ИНФО-ПАНЕЛЬ) */
-        .registration-board {
-            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
-            width: 240px; border: 2px solid #d4af37;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 8px; text-align: center;
-            font-family: 'Courier New', monospace; font-size: 11px;
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
-            z-index: 20; border-radius: 2px;
-        }
-
-        .anfilade {
-            display: flex; justify-content: space-between; align-items: center;
-            height: 100%; width: 100%; padding: 0 20px;
-        }
-
-        /* БОКОВЫЕ ГАЛЕРЕИ С ПЕРСПЕКТИВОЙ */
-        .side-gallery {
-            width: 25%; height: 70%;
-            display: flex; flex-direction: column;
-            justify-content: space-around; align-items: center;
-        }
-
-        .left-gallery { transform: rotateY(25deg); }
-        .right-gallery { transform: rotateY(-25deg); }
-
-        /* КАРТИНЫ (ПОРТАЛЫ) */
-        .portal { position: relative; transition: 0.3s; }
-        .portal:hover { transform: scale(1.05); filter: brightness(1.3); }
-
-        .frame {
-            width: 85px; height: 120px;
-            border: 6px solid;
-            border-image: linear-gradient(to bottom, #d4af37, #8a6d3b, #d4af37) 1;
-            background: #111;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.8);
-            overflow: hidden;
+            width: 100vw; height: 100vh;
+            background: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000 100%);
+            perspective: 1200px; /* Сильная перспектива для объема */
             display: flex; align-items: center; justify-content: center;
         }
 
-        /* СВЕТИЛЬНИК НАД КАРТИНОЙ */
-        .picture-light {
-            width: 40px; height: 4px; background: #d4af37;
-            margin-bottom: 5px; border-radius: 2px;
-            box-shadow: 0 -2px 10px #d4af37;
+        /* ТАБЛО (ИНФО ИЗ РЕГИСТРАЦИИ) */
+        .registration-board {
+            position: absolute; top: 15px; left: 50%; transform: translateX(-50%);
+            width: 280px; padding: 10px;
+            background: rgba(0,0,0,0.85); border: 1px solid #d4af37;
+            box-shadow: 0 0 15px rgba(212,175,55,0.3);
+            text-align: center; font-family: 'Courier New', monospace;
+            z-index: 100; border-radius: 4px;
+        }
+        .board-data { color: #eee; font-size: 11px; margin-top: 4px; text-transform: uppercase; }
+
+        /* ПОЛ (ШАХМАТКА В ПЕРСПЕКТИВЕ) */
+        .floor {
+            position: absolute; bottom: 0; width: 200%; height: 50%;
+            background-image: 
+                linear-gradient(45deg, #0a0a0a 25%, transparent 25%), 
+                linear-gradient(-45deg, #0a0a0a 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #0f0f0f 75%),
+                linear-gradient(-45deg, transparent 75%, #0f0f0f 75%);
+            background-size: 100px 100px;
+            transform: rotateX(75deg); transform-origin: bottom center;
+            opacity: 0.4; z-index: 1;
         }
 
-        /* ЦЕНТРАЛЬНАЯ АРКА (ВХОД В БАР) */
-        .center-bar {
-            width: 40%; display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            z-index: 5;
+        /* ГАЛЕРЕЯ (БОКОВЫЕ СТЕНЫ) */
+        .wall {
+            position: absolute; width: 30%; height: 80%; top: 10%;
+            display: flex; flex-direction: column; justify-content: space-around;
+            align-items: center; z-index: 2;
+        }
+        .left-wall { left: 0; transform: rotateY(40deg); transform-origin: left; }
+        .right-wall { right: 0; transform: rotateY(-40deg); transform-origin: right; }
+
+        /* ПОРТАЛЫ/КАРТИНЫ */
+        .portal {
+            width: 120px; height: 160px;
+            border: 4px solid #d4af37;
+            background: #050505;
+            box-shadow: 0 0 20px rgba(212,175,55,0.2), inset 0 0 30px #000;
+            display: flex; align-items: center; justify-content: center;
+            position: relative; transition: 0.5s;
+        }
+        .portal:hover { transform: scale(1.1); box-shadow: 0 0 40px rgba(212,175,55,0.5); }
+        .portal::before { /* Светильник сверху */
+            content: ''; position: absolute; top: -15px; width: 50px; height: 3px;
+            background: #d4af37; box-shadow: 0 2px 10px #d4af37;
+        }
+
+        /* ЦЕНТРАЛЬНАЯ АРКА */
+        .arch-container {
+            position: relative; z-index: 3;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        .bar-label {
+            font-size: 28px; letter-spacing: 12px; font-weight: bold;
+            color: #d4af37; text-shadow: 0 0 15px rgba(212,175,55,0.8);
+            margin-bottom: 10px;
         }
 
         .bar-arch {
-            width: 160px; height: 260px;
-            border: 8px solid #d4af37;
-            border-bottom: none;
-            border-radius: 80px 80px 0 0;
-            position: relative; cursor: pointer;
-            box-shadow: 0 0 50px rgba(212, 175, 55, 0.3);
-            background: #000;
-            overflow: hidden;
+            width: 180px; height: 300px;
+            border: 6px solid #d4af37; border-bottom: none;
+            border-radius: 90px 90px 0 0;
+            background: #000; position: relative;
+            cursor: pointer; overflow: hidden;
+            box-shadow: 0 0 60px rgba(212,175,55,0.2);
         }
 
-        /* Золотая "пыль" или искры внутри арки */
-        .bar-arch::before {
-            content: ''; position: absolute; width: 200%; height: 200%;
-            background: radial-gradient(circle, rgba(212,175,55,0.1) 1px, transparent 1px);
-            background-size: 10px 10px;
-            animation: moveDust 20s linear infinite;
+        .curtain {
+            width: 100%; height: 100%;
+            background: repeating-linear-gradient(90deg, #221a0f 0px, #221a0f 3px, transparent 4px, transparent 8px);
+            opacity: 0.8;
         }
 
-        @keyframes moveDust { from { transform: translateY(0); } to { transform: translateY(-50%); } }
-
-        .beads-curtain {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: repeating-linear-gradient(90deg, 
-                #1a0f00 0px, #1a0f00 2px, 
-                #d4af37 3px, #d4af37 3px,
-                transparent 4px, transparent 8px);
-            opacity: 0.7;
+        /* ЭФФЕКТ ЗОЛОТОЙ ПЫЛИ */
+        .glitter {
+            position: absolute; width: 100%; height: 100%;
+            pointer-events: none;
+            background-image: radial-gradient(#d4af37 1px, transparent 1px);
+            background-size: 20px 20px;
+            animation: drift 10s linear infinite;
         }
-
-        .bar-name { 
-            font-size: 24px; letter-spacing: 8px; margin-top: 20px;
-            color: #d4af37; text-shadow: 0 0 15px rgba(212,175,55,0.6);
-            font-weight: 300;
-        }
-
-        /* НАПОЛЬНОЕ ПОКРЫТИЕ (Плитка в перспективе) */
-        .floor {
-            position: absolute; bottom: 0; width: 100%; height: 20vh;
-            background: 
-                linear-gradient(45deg, #0a0a0a 25%, transparent 25%),
-                linear-gradient(-45deg, #0a0a0a 25%, transparent 25%),
-                linear-gradient(45deg, transparent 75%, #111 75%),
-                linear-gradient(-45deg, transparent 75%, #111 75%);
-            background-size: 40px 40px;
-            transform: rotateX(60deg); transform-origin: bottom;
-            opacity: 0.3;
-        }
-
-        .v-tag { position: absolute; bottom: 10px; right: 15px; font-size: 10px; opacity: 0.4; }
+        @keyframes drift { from { transform: translateY(0); } to { transform: translateY(-100%); } }
     </style>
 </head>
-<body>
+<body onclick="initAmbience()">
 
-    <div class="hall-container">
+    <div class="hall-scene">
+        <div class="glitter"></div>
         <div class="floor"></div>
-        
+
         <div class="registration-board">
-            ID TRACE: <span id="user-id" style="color:#fff">GY-734-ALPHA</span><br>
-            <span style="font-size: 9px; opacity: 0.7;">STATUS: ONLINE / ROOM: MAIN HALL</span>
-        </div>
-
-        <div class="anfilade">
-            <div class="side-gallery left-gallery">
-                <div class="portal">
-                    <div class="picture-light"></div>
-                    <div class="frame"><img src="https://via.placeholder.com/100/111/d4af37?text=ART" style="width:100%; opacity:0.6;"></div>
-                </div>
-                <div class="portal">
-                    <div class="picture-light"></div>
-                    <div class="frame"><img src="https://via.placeholder.com/100/111/d4af37?text=HISTORY" style="width:100%; opacity:0.6;"></div>
-                </div>
-            </div>
-
-            <div class="center-bar">
-                <div class="bar-arch" onclick="alert('Entering the Bar...')">
-                    <div class="beads-curtain"></div>
-                </div>
-                <div class="bar-name">B A R</div>
-            </div>
-
-            <div class="side-gallery right-gallery">
-                <div class="portal">
-                    <div class="picture-light"></div>
-                    <div class="frame"><img src="https://via.placeholder.com/100/111/d4af37?text=MEMBERS" style="width:100%; opacity:0.6;"></div>
-                </div>
-                <div class="portal">
-                    <div class="picture-light"></div>
-                    <div class="frame"><img src="https://via.placeholder.com/100/111/d4af37?text=VAULT" style="width:100%; opacity:0.6;"></div>
-                </div>
+            <div style="font-size: 9px; opacity: 0.6;">GY-GY PRIVATE CLUB</div>
+            <div class="board-data">
+                ID: <span id="disp-id">LOADING...</span> | 
+                RANK: <span id="disp-rank">GOLD</span>
             </div>
         </div>
 
-        <div class="v-tag">v1.2 "Grand Vintage"</div>
+        <div class="wall left-wall">
+            <div class="portal"><span>ART</span></div>
+            <div class="portal"><span>VAULT</span></div>
+        </div>
+
+        <div class="arch-container">
+            <div class="bar-label">BAR</div>
+            <div class="bar-arch" onclick="location.reload()"> <div class="curtain"></div>
+            </div>
+        </div>
+
+        <div class="wall right-wall">
+            <div class="portal"><span>MEMBERS</span></div>
+            <div class="portal"><span>STORY</span></div>
+        </div>
+
     </div>
 
+    <audio id="barAmbience" loop>
+        <source src="https://www.soundjay.com/ambient/restaurant-ambience-01.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // Инициализация данных из "памяти" (имитация Cookie/ID Trace)
+        document.getElementById('disp-id').innerText = "USER-" + Math.floor(1000 + Math.random() * 9000);
+        document.getElementById('disp-rank').innerText = "PREMIUM";
+
+        // Функция звука (активируется кликом по body, т.к. браузеры блокируют автозвук)
+        function initAmbience() {
+            const audio = document.getElementById('barAmbience');
+            audio.volume = 0.2; // Уровень громкости 2 из 10
+            audio.play();
+        }
+    </script>
 </body>
 </html>
