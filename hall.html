@@ -4,97 +4,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY Club - Official Hall</title>
+    <title>GY-GY Club - Hall v2.7 Master</title>
     <style>
+        /* БАЗОВЫЕ НАСТРОЙКИ */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
             background: #000; color: #d4af37; 
-            font-family: 'Garamond', serif; 
+            font-family: 'Garamond', 'Georgia', serif; 
             height: 100vh; width: 100vw;
             overflow: hidden; display: flex; justify-content: center;
         }
 
+        /* ГЛАВНАЯ СЦЕНА */
         .hall {
             position: relative; width: 100%; height: 100%;
-            background: radial-gradient(circle at 50% 45%, #1a0f05 0%, #000 85%);
-            perspective: 1200px; display: flex; flex-direction: column; align-items: center;
+            background: radial-gradient(circle at 50% 40%, #1a0f05 0%, #000 90%);
+            perspective: 1100px; display: flex; flex-direction: column; align-items: center;
         }
 
-        /* ТАБЛО (ИНТЕГРАЦИЯ ИЗ ЭСКИЗА) */
-        .header-board {
-            margin-top: 2vh; width: 420px; border: 3px solid #d4af37;
-            background: #0a0a0a; padding: 12px; text-align: center;
-            box-shadow: 0 0 25px rgba(212,175,55,0.4); z-index: 10;
-        }
-        .header-id { font-size: 18px; letter-spacing: 3px; font-weight: bold; color: #fff; }
-        .header-slogan { font-style: italic; font-size: 13px; margin-top: 4px; color: #d4af37; }
-
-        /* ПОЛ: ТЕМНАЯ ШАХМАТКА (В ЦВЕТ ФОНА) */
+        /* ШАХМАТНЫЙ ПОЛ В ЦВЕТАХ БАРА */
         .floor-checker {
-            position: absolute; bottom: 0; width: 250%; height: 42vh;
+            position: absolute; bottom: 0; width: 300%; height: 45vh;
             background-image: 
                 linear-gradient(45deg, #0d0804 25%, transparent 25%), 
                 linear-gradient(-45deg, #0d0804 25%, transparent 25%),
                 linear-gradient(45deg, transparent 75%, #0d0804 75%),
                 linear-gradient(-45deg, transparent 75%, #0d0804 75%);
-            background-size: 100px 100px; background-color: #1a110a;
-            transform: rotateX(72deg); transform-origin: bottom center;
-            opacity: 0.95; z-index: 1; box-shadow: inset 0 80px 150px #000;
+            background-size: 100px 100px; background-color: #1e140c;
+            transform: rotateX(75deg); transform-origin: bottom center;
+            opacity: 0.9; z-index: 1; 
+            box-shadow: inset 0 100px 200px #000;
         }
 
-        /* СТЕНЫ С ФИЛЕНКАМИ И КАРТИНАМИ */
+        /* ТАБЛО СВЕРХУ (ИЗ ЭСКИЗА) */
+        .header-board {
+            position: absolute; top: 2vh; width: 450px; 
+            border: 3px solid #d4af37; background: rgba(10, 8, 5, 0.95); 
+            padding: 15px; text-align: center; z-index: 50;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.3), inset 0 0 15px #000;
+        }
+        .header-id { font-size: 20px; letter-spacing: 3px; font-weight: bold; color: #fff; text-shadow: 0 0 5px #d4af37; }
+        .header-slogan { font-style: italic; font-size: 13px; margin-top: 5px; color: #d4af37; opacity: 0.8; }
+
+        /* ВИНТАЖНЫЕ СТЕНЫ */
         .wall {
-            position: absolute; top: 10%; width: 30%; height: 75%;
+            position: absolute; top: 8%; width: 32%; height: 78%;
             background: #1a0f05 url('https://www.transparenttextures.com/patterns/dark-wood.png');
-            z-index: 2; border: 12px solid #140c03; border-radius: 2px;
+            z-index: 5; border: 12px solid #140c03;
+            box-shadow: inset 0 0 100px #000;
         }
-        .left-wall { left: 0; transform: rotateY(38deg); transform-origin: left; box-shadow: 30px 0 60px #000; }
-        .right-wall { right: 0; transform: rotateY(-38deg); transform-origin: right; box-shadow: -30px 0 60px #000; }
+        .left-wall { left: 0; transform: rotateY(40deg); transform-origin: left; border-right: 15px solid #2a1b10; }
+        .right-wall { right: 0; transform: rotateY(-40deg); transform-origin: right; border-left: 15px solid #2a1b10; }
 
+        /* КАРТИНЫ В ЗОЛОТЫХ РАМАХ */
         .gold-frame {
-            width: 75%; height: 32%; border: 6px solid #d4af37;
-            margin: 12% auto; background: #000; overflow: hidden;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.9);
+            width: 150px; height: 180px; border: 8px solid #d4af37;
+            border-image: linear-gradient(to bottom, #d4af37, #8a6d3b, #d4af37) 1;
+            margin: 15% auto; background: #000; overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.9); transition: 0.5s;
         }
-        .gold-frame img { width: 100%; height: 100%; object-fit: cover; opacity: 0.4; filter: sepia(1.2) contrast(1.1); }
+        .gold-frame img { width: 100%; height: 100%; object-fit: cover; opacity: 0.35; filter: sepia(1) contrast(1.2); transition: 0.5s; }
+        .gold-frame:hover img { opacity: 0.7; filter: sepia(0.5); }
 
-        /* ВХОДНАЯ ГРУППА */
-        .center-entrance { position: relative; z-index: 5; margin-top: 6vh; text-align: center; }
-        .bar-neon { font-size: 36px; font-weight: bold; letter-spacing: 12px; margin-bottom: 8px; color: #fff; text-shadow: 0 0 15px #d4af37; }
+        /* ЦЕНТРАЛЬНЫЙ ВХОД (АРКА) */
+        .center-group { position: relative; z-index: 10; margin-top: 10vh; text-align: center; }
+        .bar-neon { 
+            font-size: 45px; font-weight: bold; letter-spacing: 18px; 
+            margin-bottom: 15px; color: #fff; text-shadow: 0 0 20px #d4af37, 0 0 40px rgba(212,175,55,0.5); 
+        }
+        .arch-container {
+            width: 240px; height: 340px; border: 10px solid #d4af37; border-bottom: none;
+            border-radius: 120px 120px 0 0; background: #000; position: relative;
+            box-shadow: 0 0 50px rgba(0,0,0,1); overflow: hidden;
+        }
+        .beads-curtain { 
+            width: 100%; height: 100%; 
+            background: repeating-linear-gradient(90deg, #2a1b10 0, #2a1b10 4px, transparent 6px, transparent 14px); 
+            box-shadow: inset 0 -100px 100px #000;
+        }
+
+        /* ОБЪЕКТЫ У ВХОДА (ТВОИ АССЕТЫ) */
+        .hall-item { 
+            position: absolute; bottom: -30px; width: 150px; height: 180px; 
+            z-index: 20; background-size: contain; background-repeat: no-repeat; 
+            background-position: center bottom; filter: drop-shadow(0 10px 20px #000);
+            transition: transform 0.3s;
+        }
         
-        .arch {
-            width: 200px; height: 300px; border: 8px solid #d4af37; border-bottom: none;
-            border-radius: 100px 100px 0 0; background: #000; position: relative; overflow: hidden;
+        /* СЮДА ВСТАВЛЯЕМ ТВОИ ФАЙЛЫ */
+        .gramophone { 
+            left: -160px; 
+            background-image: url('https://img.icons8.com/color/250/gramophone.png'); /* Замени на unna225med.png */
+            cursor: pointer;
         }
-        .beads { width: 100%; height: 100%; background: repeating-linear-gradient(90deg, #2a1b10 0, #2a1b10 4px, transparent 5px, transparent 12px); }
-
-        /* ИНТЕГРАЦИЯ ЭЛЕМЕНТОВ С КАРТИНКИ */
-        .asset { position: absolute; bottom: -20px; z-index: 15; transition: 0.3s; }
-        
-        /* Граммофон (слева) */
-        .gram-asset { 
-            left: -130px; width: 110px; height: 140px; cursor: pointer;
-            background: url('https://i.ibb.co/9Nf5VfL/unna225med.png') no-repeat center/contain;
-        }
-        .gram-asset:hover { transform: scale(1.05); }
-        .gram-asset::after {
-            content: 'CLICK TO PLAY'; position: absolute; bottom: -10px; width: 100%;
-            font-size: 8px; color: #d4af37; text-align: center; font-weight: bold;
+        .gramophone:hover { transform: scale(1.05) rotate(-2deg); }
+        .gramophone::after {
+            content: 'CLICK TO PLAY'; position: absolute; bottom: 0; width: 100%;
+            font-size: 9px; letter-spacing: 1px; color: #d4af37; font-weight: bold;
         }
 
-        /* Столик (справа) */
-        .table-asset { 
-            right: -130px; width: 110px; height: 140px;
-            background: url('https://i.ibb.co/sW7P5qP/unna63med-1.png') no-repeat center/contain;
+        .lumber-table { 
+            right: -160px; 
+            background-image: url('https://img.icons8.com/color/250/table.png'); /* Замени на unna63med.png */
         }
 
-        /* ЯЗЫКОВАЯ ПАНЕЛЬ (ЗОЛОТЫЕ КНОПКИ) */
-        .lang-panel { position: absolute; bottom: 3vh; display: flex; gap: 6px; z-index: 20; }
+        /* ПАНЕЛЬ ЯЗЫКОВ */
+        .lang-bar { 
+            position: absolute; bottom: 4vh; display: flex; gap: 8px; z-index: 100;
+        }
         .ln-btn {
-            width: 42px; height: 28px; background: #000; border: 1.5px solid #d4af37;
-            color: #d4af37; font-size: 11px; font-weight: bold; cursor: pointer; transition: 0.2s;
+            width: 48px; height: 32px; background: rgba(0,0,0,0.8); border: 2px solid #d4af37;
+            color: #d4af37; font-size: 12px; font-weight: bold; cursor: pointer; transition: 0.3s;
         }
-        .ln-btn.active, .ln-btn:hover { background: #d4af37; color: #000; box-shadow: 0 0 10px #d4af37; }
+        .ln-btn:hover, .ln-btn.active { background: #d4af37; color: #000; box-shadow: 0 0 15px #d4af37; }
     </style>
 </head>
 <body>
@@ -112,13 +134,13 @@
         <div class="gold-frame"><img src="https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=200"></div>
     </div>
 
-    <div class="center-entrance">
+    <div class="center-group">
         <div class="bar-neon" id="bar-label">BAR</div>
-        <div class="arch"><div class="beads"></div></div>
+        <div class="arch-container"><div class="beads-curtain"></div></div>
 
-        <div class="asset gram-asset" onclick="toggleAudio()" title="Включить музыку"></div>
+        <div class="hall-item gramophone" onclick="togglePlay()"></div>
         
-        <div class="asset table-asset"></div>
+        <div class="hall-item lumber-table"></div>
     </div>
 
     <div class="wall right-wall">
@@ -126,40 +148,38 @@
         <div class="gold-frame"><img src="https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?w=200"></div>
     </div>
 
-    <div class="lang-panel">
-        <button class="ln-btn active" onclick="setL('RU', this)">RU</button>
-        <button class="ln-btn" onclick="setL('EN', this)">EN</button>
-        <button class="ln-btn" onclick="setL('DE', this)">DE</button>
-        <button class="ln-btn" onclick="setL('FR', this)">FR</button>
-        <button class="ln-btn" onclick="setL('IT', this)">IT</button>
-        <button class="ln-btn" onclick="setL('ES', this)">ES</button>
-        <button class="ln-btn" onclick="setL('PL', this)">PL</button>
-        <button class="ln-btn" onclick="setL('UA', this)">UA</button>
+    <div class="lang-bar">
+        <button class="ln-btn active" onclick="setLang('RU', this)">RU</button>
+        <button class="ln-btn" onclick="setLang('EN', this)">EN</button>
+        <button class="ln-btn" onclick="setLang('DE', this)">DE</button>
+        <button class="ln-btn" onclick="setLang('FR', this)">FR</button>
+        <button class="ln-btn" onclick="setLang('IT', this)">IT</button>
+        <button class="ln-btn" onclick="setLang('PL', this)">PL</button>
+        <button class="ln-btn" onclick="setLang('UA', this)">UA</button>
     </div>
 </div>
 
-<audio id="ambience" loop src="https://www.soundjay.com/ambient/restaurant-ambience-01.mp3"></audio>
+<audio id="bg-sound" loop src="https://www.soundjay.com/ambient/restaurant-ambience-01.mp3"></audio>
 
 <script>
-    const audio = document.getElementById('ambience');
+    const audio = document.getElementById('bg-sound');
     const slogans = {
         RU: "Истина не в вине, а в тех кто его пьет",
-        EN: "Truth is not in wine, but in the drinkers",
+        EN: "The truth is not in wine, but in the people who drink it",
         UA: "Істина не у вині, а в тих, хто його п'є",
         PL: "Prawda nie tkwi w winie, lecz w tych, którzy je piją"
     };
 
-    function toggleAudio() {
+    function togglePlay() {
         if (audio.paused) {
             audio.volume = 0.4;
             audio.play();
-            console.log("Music started");
         } else {
             audio.pause();
         }
     }
 
-    function setL(lang, btn) {
+    function setLang(lang, btn) {
         document.querySelectorAll('.ln-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         document.getElementById('bar-label').innerText = (lang === 'RU' || lang === 'UA') ? 'БАР' : 'BAR';
