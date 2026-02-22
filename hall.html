@@ -1,173 +1,181 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Hall v1.1</title>
+    <title>GY-GY Hall v1.2 - Grand Vintage</title>
     <style>
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
         body { 
-            background: #000; color: #d4af37; 
-            font-family: 'Times New Roman', serif; 
+            background: #050505; color: #d4af37; 
+            font-family: 'Georgia', serif; 
             height: 100vh; width: 100vw;
             overflow: hidden;
-            display: flex; flex-direction: column; align-items: center;
+            display: flex; justify-content: center;
         }
 
-        /* АНФИЛАДА С ЭФФЕКТОМ ГЛУБИНЫ */
+        /* ОБЩИЙ КОНТЕЙНЕР С ТЕКСТУРОЙ ОБОЕВ */
         .hall-container {
             position: relative;
             width: 100%; height: 100%;
-            display: flex; flex-direction: column;
-            justify-content: space-between;
-            padding: 10vh 5px 5vh 5px;
             background: 
-                radial-gradient(circle at 50% 40%, rgba(212, 175, 55, 0.15) 0%, transparent 70%),
-                linear-gradient(to bottom, #050505, #000);
+                radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.1) 0%, transparent 80%),
+                url('https://www.transparenttextures.com/patterns/dark-leather.png'), /* Легкая текстура */
+                linear-gradient(to bottom, #0a0a0a, #000);
+            display: flex; flex-direction: column;
+            perspective: 1000px; /* Глубина для 3D */
         }
 
-        /* ТАБЛО НАД АРКОЙ */
+        /* ТАБЛО (ИНФО-ПАНЕЛЬ) */
         .registration-board {
-            position: absolute; top: 2vh; left: 50%; transform: translateX(-50%);
-            width: 70%; max-width: 280px;
-            border: 1px solid #d4af37;
-            background: rgba(0, 0, 0, 0.9);
-            padding: 5px; text-align: center;
-            font-family: 'Courier New', Courier, monospace; font-size: 10px;
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
-            z-index: 10;
+            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+            width: 240px; border: 2px solid #d4af37;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 8px; text-align: center;
+            font-family: 'Courier New', monospace; font-size: 11px;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+            z-index: 20; border-radius: 2px;
         }
 
         .anfilade {
             display: flex; justify-content: space-between; align-items: center;
-            flex-grow: 1; width: 100%;
+            height: 100%; width: 100%; padding: 0 20px;
         }
 
-        /* ГАЛЕРЕЯ (БОКОВЫЕ СТЕНЫ) */
+        /* БОКОВЫЕ ГАЛЕРЕИ С ПЕРСПЕКТИВОЙ */
         .side-gallery {
+            width: 25%; height: 70%;
             display: flex; flex-direction: column;
-            justify-content: space-around; height: 90%;
-            width: 28%;
+            justify-content: space-around; align-items: center;
         }
 
-        .portal { display: flex; flex-direction: column; align-items: center; position: relative; }
-        
-        /* Рама картины в стиле входной двери */
+        .left-gallery { transform: rotateY(25deg); }
+        .right-gallery { transform: rotateY(-25deg); }
+
+        /* КАРТИНЫ (ПОРТАЛЫ) */
+        .portal { position: relative; transition: 0.3s; }
+        .portal:hover { transform: scale(1.05); filter: brightness(1.3); }
+
         .frame {
-            width: 75px; height: 100px;
-            border: 4px solid #d4af37;
+            width: 85px; height: 120px;
+            border: 6px solid;
+            border-image: linear-gradient(to bottom, #d4af37, #8a6d3b, #d4af37) 1;
             background: #111;
-            box-shadow: inset 0 0 10px #000, 0 5px 15px rgba(0,0,0,0.7);
-            position: relative;
-        }
-        .frame::after { 
-            content: ''; position: absolute; top: -6px; left: -6px; right: -6px; bottom: -6px;
-            border: 1px solid rgba(212, 175, 55, 0.5); pointer-events: none;
-        }
-        .frame img { width: 100%; height: 100%; object-fit: cover; opacity: 0.5; filter: contrast(1.2); }
-
-        /* ЛОМБЕРНЫЙ СТОЛИК */
-        .table-unit {
-            display: flex; flex-direction: column; align-items: center;
-            filter: drop-shadow(0 5px 5px rgba(0,0,0,1));
-        }
-        .table-top { 
-            width: 45px; height: 3px; background: linear-gradient(to bottom, #d4af37, #aa8803); 
-            position: relative; border-radius: 1px;
-        }
-        .table-leg { 
-            width: 2px; height: 18px; 
-            background: linear-gradient(to right, #aa8803, #d4af37, #aa8803); 
-        }
-        .vase { 
-            position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%);
-            width: 10px; height: 14px; background: rgba(212, 175, 55, 0.4);
-            border: 1px solid rgba(212, 175, 55, 0.6);
-        }
-        .flower {
-            position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
-            width: 6px; height: 6px; background: #c00; border-radius: 50%;
-            box-shadow: 0 0 8px #f00;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.8);
+            overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
         }
 
-        /* ЦЕНТР: АРОЧНЫЙ ВХОД В БАР */
+        /* СВЕТИЛЬНИК НАД КАРТИНОЙ */
+        .picture-light {
+            width: 40px; height: 4px; background: #d4af37;
+            margin-bottom: 5px; border-radius: 2px;
+            box-shadow: 0 -2px 10px #d4af37;
+        }
+
+        /* ЦЕНТРАЛЬНАЯ АРКА (ВХОД В БАР) */
         .center-bar {
-            width: 44%; height: 100%;
-            display: flex; flex-direction: column;
+            width: 40%; display: flex; flex-direction: column;
             align-items: center; justify-content: center;
+            z-index: 5;
         }
+
         .bar-arch {
-            width: 140px; height: 220px;
-            border: 5px solid #d4af37;
+            width: 160px; height: 260px;
+            border: 8px solid #d4af37;
             border-bottom: none;
-            border-radius: 70px 70px 0 0; /* АРКА */
+            border-radius: 80px 80px 0 0;
             position: relative; cursor: pointer;
-            box-shadow: 0 0 30px rgba(212, 175, 55, 0.2), inset 0 0 20px #000;
-            background: #050505;
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.3);
+            background: #000;
             overflow: hidden;
         }
-        /* Деревянные висюльки */
+
+        /* Золотая "пыль" или искры внутри арки */
+        .bar-arch::before {
+            content: ''; position: absolute; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(212,175,55,0.1) 1px, transparent 1px);
+            background-size: 10px 10px;
+            animation: moveDust 20s linear infinite;
+        }
+
+        @keyframes moveDust { from { transform: translateY(0); } to { transform: translateY(-50%); } }
+
         .beads-curtain {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: repeating-linear-gradient(90deg, 
-                #2a1b10 0px, #2a1b10 2px, 
-                #4a3424 3px, 
-                transparent 4px, transparent 7px);
-        }
-        .bar-name { 
-            font-weight: bold; letter-spacing: 6px; margin-top: 15px; 
-            font-size: 18px; text-shadow: 0 0 10px rgba(212, 175, 55, 0.5); 
+                #1a0f00 0px, #1a0f00 2px, 
+                #d4af37 3px, #d4af37 3px,
+                transparent 4px, transparent 8px);
+            opacity: 0.7;
         }
 
-        .v-tag { position: absolute; bottom: 5px; right: 8px; font-size: 9px; opacity: 0.3; }
+        .bar-name { 
+            font-size: 24px; letter-spacing: 8px; margin-top: 20px;
+            color: #d4af37; text-shadow: 0 0 15px rgba(212,175,55,0.6);
+            font-weight: 300;
+        }
+
+        /* НАПОЛЬНОЕ ПОКРЫТИЕ (Плитка в перспективе) */
+        .floor {
+            position: absolute; bottom: 0; width: 100%; height: 20vh;
+            background: 
+                linear-gradient(45deg, #0a0a0a 25%, transparent 25%),
+                linear-gradient(-45deg, #0a0a0a 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #111 75%),
+                linear-gradient(-45deg, transparent 75%, #111 75%);
+            background-size: 40px 40px;
+            transform: rotateX(60deg); transform-origin: bottom;
+            opacity: 0.3;
+        }
+
+        .v-tag { position: absolute; bottom: 10px; right: 15px; font-size: 10px; opacity: 0.4; }
     </style>
 </head>
 <body>
 
     <div class="hall-container">
+        <div class="floor"></div>
+        
         <div class="registration-board">
-            MEMBERSHIP: <span style="color:#fff">PREMIUM</span><br>
-            TRACE: <span id="id-val">#0042-7777</span>
+            ID TRACE: <span id="user-id" style="color:#fff">GY-734-ALPHA</span><br>
+            <span style="font-size: 9px; opacity: 0.7;">STATUS: ONLINE / ROOM: MAIN HALL</span>
         </div>
 
         <div class="anfilade">
-            <div class="side-gallery">
+            <div class="side-gallery left-gallery">
                 <div class="portal">
-                    <div class="frame"><img src="https://via.placeholder.com/100?text=TALENT"></div>
-                </div>
-                <div class="table-unit">
-                    <div class="table-top"><div class="vase"></div><div class="flower"></div></div>
-                    <div class="table-leg"></div>
+                    <div class="picture-light"></div>
+                    <div class="frame"><img src="https://via.placeholder.com/100/111/d4af37?text=ART" style="width:100%; opacity:0.6;"></div>
                 </div>
                 <div class="portal">
-                    <div class="frame"><img src="https://via.placeholder.com/100?text=MUSEUM"></div>
+                    <div class="picture-light"></div>
+                    <div class="frame"><img src="https://via.placeholder.com/100/111/d4af37?text=HISTORY" style="width:100%; opacity:0.6;"></div>
                 </div>
             </div>
 
             <div class="center-bar">
-                <div class="bar-arch" onclick="alert('Welcome to the Bar')">
+                <div class="bar-arch" onclick="alert('Entering the Bar...')">
                     <div class="beads-curtain"></div>
                 </div>
-                <div class="bar-name">BAR</div>
+                <div class="bar-name">B A R</div>
             </div>
 
-            <div class="side-gallery">
+            <div class="side-gallery right-gallery">
                 <div class="portal">
-                    <div class="frame"><img src="https://via.placeholder.com/100?text=STORY"></div>
-                </div>
-                <div class="table-unit">
-                    <div class="table-top"><div class="vase"></div><div class="flower"></div></div>
-                    <div class="table-leg"></div>
+                    <div class="picture-light"></div>
+                    <div class="frame"><img src="https://via.placeholder.com/100/111/d4af37?text=MEMBERS" style="width:100%; opacity:0.6;"></div>
                 </div>
                 <div class="portal">
-                    <div class="frame"><img src="https://via.placeholder.com/100?text=VOID"></div>
+                    <div class="picture-light"></div>
+                    <div class="frame"><img src="https://via.placeholder.com/100/111/d4af37?text=VAULT" style="width:100%; opacity:0.6;"></div>
                 </div>
             </div>
         </div>
 
-        <div class="v-tag">v1.1</div>
+        <div class="v-tag">v1.2 "Grand Vintage"</div>
     </div>
 
 </body>
 </html>
-
