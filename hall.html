@@ -3,178 +3,174 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Hall v2.0 - Grand Entrance</title>
+    <title>GY-GY Club - Version 2.0 Full</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
-            background: #000; color: #d4af37; 
+            background: #000; 
+            color: #d4af37; 
             font-family: 'Georgia', serif; 
-            height: 100vh; overflow: hidden;
-            display: flex; justify-content: center; align-items: center;
+            height: 100vh; 
+            overflow: hidden; 
+            display: flex; 
+            justify-content: center;
         }
 
-        .hall-scene {
-            position: relative; width: 100vw; height: 100vh;
-            background: radial-gradient(circle at 50% 40%, #2a1b10 0%, #000 80%);
-            perspective: 1200px; display: flex; align-items: center; justify-content: center;
+        .hall {
+            position: relative; 
+            width: 100%; 
+            height: 100%;
+            background: radial-gradient(circle at 50% 45%, #1a0f05 0%, #000 85%);
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
         }
 
-        /* ТАБЛО С ФОТО И ИНФО */
-        .registration-board {
-            position: absolute; top: 15px; left: 50%; transform: translateX(-50%);
-            width: 400px; padding: 10px;
-            background: rgba(10, 5, 0, 0.95); border: 2px solid #d4af37;
-            box-shadow: 0 0 25px rgba(212,175,55,0.4);
-            display: flex; align-items: center; z-index: 100;
+        /* ТАБЛО */
+        .header-board {
+            margin-top: 20px; 
+            width: 450px; 
+            border: 2px solid #d4af37;
+            background: rgba(10, 8, 5, 0.95); 
+            padding: 15px; 
+            text-align: center;
+            z-index: 100;
         }
-        .user-photo {
-            width: 60px; height: 60px; border: 1px solid #d4af37;
-            background: #111 url('https://via.placeholder.com/60/000/d4af37?text=AVATAR') center/cover;
-            margin-right: 15px; flex-shrink: 0;
-        }
-        .user-info { flex-grow: 1; text-align: left; overflow: hidden; }
-        #slogan-display { font-style: italic; font-size: 11px; color: #fff; margin-top: 5px; white-space: nowrap; }
 
-        /* ВИНТАЖНЫЕ СТЕНЫ (ДЕРЕВО) */
-        .wall {
-            position: absolute; width: 33%; height: 85%; top: 7.5%;
-            background: #1a0f05 url('https://www.transparenttextures.com/patterns/dark-wood.png');
-            z-index: 2; border: 12px solid #2a1b10;
-            box-shadow: inset 0 0 60px #000, 15px 15px 40px rgba(0,0,0,0.8);
-            display: flex; flex-direction: column; justify-content: space-around; align-items: center;
-        }
-        .left-wall { left: 0; transform: rotateY(35deg); transform-origin: left; }
-        .right-wall { right: 0; transform: rotateY(-35deg); transform-origin: right; }
-
-        /* КАРТИНЫ */
-        .portal {
-            width: 130px; height: 160px; border: 6px solid #d4af37;
-            background-color: #000; overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.9);
-        }
-        .portal img { width: 100%; height: 100%; object-fit: cover; opacity: 0.5; filter: sepia(1); }
-
-        /* ЦЕНТР: АРКА И СИММЕТРИЯ */
-        .center-group { display: flex; flex-direction: column; align-items: center; z-index: 10; position: relative; }
-        .bar-label { font-size: 32px; letter-spacing: 12px; font-weight: bold; text-shadow: 0 0 15px #d4af37; margin-bottom: 10px; }
-        .bar-arch {
-            width: 200px; height: 320px; border: 8px solid #d4af37; border-bottom: none;
-            border-radius: 100px 100px 0 0; position: relative; overflow: hidden; background: #000;
-        }
-        .beads { width: 100%; height: 100%; background: repeating-linear-gradient(90deg, #3d2b1f 0px, #3d2b1f 4px, transparent 5px, transparent 11px); }
-
-        /* ГРАММОФОН (СЛЕВА ОТ ВХОДА) */
-        .entry-object { position: absolute; bottom: 0; width: 60px; height: 100px; z-index: 15; }
-        .gramophone { left: -80px; text-align: center; cursor: pointer; }
-        .horn { width: 50px; height: 50px; background: #d4af37; clip-path: polygon(100% 0, 0 50%, 100% 100%); transform: rotate(-25deg); }
-        .gram-base { width: 50px; height: 30px; background: #3d2b1f; border: 1px solid #d4af37; margin-top: -10px; }
-        .play-btn { background: #000; color: #d4af37; border: 1px solid #d4af37; font-size: 8px; padding: 2px; margin-top: 5px; cursor: pointer; }
-
-        /* ЛОМБЕРНЫЙ СТОЛИК (СПРАВА ОТ ВХОДА) */
-        .table { right: -80px; display: flex; flex-direction: column; align-items: center; }
-        .vase { width: 20px; height: 30px; background: #d4af37; border-radius: 50% 50% 5% 5%; position: relative; }
-        .flower { width: 12px; height: 12px; background: #c00; border-radius: 50%; position: absolute; top: -10px; left: 4px; box-shadow: 0 0 8px #f00; }
-        .table-top { width: 60px; height: 5px; background: #2a1b10; border: 1px solid #d4af37; margin-top: 5px; }
-        .table-leg { width: 4px; height: 45px; background: #d4af37; }
-
-        /* ЯЗЫКИ */
-        .lang-panel { margin-top: 15px; display: grid; grid-template-columns: repeat(4, 45px); gap: 5px; }
-        .ln-btn { background: #000; border: 1px solid #d4af37; color: #d4af37; font-size: 10px; padding: 3px; cursor: pointer; }
-        .ln-btn.active { background: #d4af37; color: #000; }
-
+        /* ПОЛ */
         .floor {
-            position: absolute; bottom: 0; width: 100%; height: 40%;
-            background: linear-gradient(to bottom, transparent, #000), 
-                        repeating-perspective-gradient(0deg, #111 0, #111 2px, transparent 2px, transparent 40px);
-            transform: rotateX(70deg); opacity: 0.4; z-index: 1;
+            position: absolute; 
+            bottom: 0; 
+            width: 200%; 
+            height: 40vh;
+            background-color: #1a110a;
+            background-image: 
+                linear-gradient(45deg, #0d0804 25%, transparent 25%, transparent 75%, #0d0804 75%, #0d0804),
+                linear-gradient(45deg, #0d0804 25%, transparent 25%, transparent 75%, #0d0804 75%, #0d0804);
+            background-size: 80px 80px; 
+            background-position: 0 0, 40px 40px;
+            transform: perspective(500px) rotateX(60deg); 
+            transform-origin: bottom;
+            opacity: 0.8; 
+            z-index: 1;
         }
+
+        /* ЦЕНТР */
+        .entrance { 
+            position: relative; 
+            z-index: 10; 
+            margin-top: 5vh; 
+            text-align: center; 
+        }
+        .arch {
+            width: 200px; 
+            height: 300px; 
+            border: 6px solid #d4af37;
+            border-bottom: none; 
+            border-radius: 100px 100px 0 0; 
+            background: #000;
+        }
+
+        /* КАРТИНКИ (Граммофон и Столик) */
+        .asset {
+            position: absolute; 
+            bottom: -10px; 
+            width: 150px; 
+            height: 180px;
+            background-size: contain; 
+            background-repeat: no-repeat; 
+            background-position: center bottom;
+            z-index: 50;
+        }
+        .gramophone { left: -160px; background-image: url('unna225med.png'); cursor: pointer; }
+        .table { right: -160px; background-image: url('unna63med.png'); }
+
+        /* ПАНЕЛЬ (8 кнопок) */
+        .lang-panel { 
+            position: absolute; 
+            bottom: 30px; 
+            display: flex; 
+            gap: 8px; 
+            z-index: 100; 
+        }
+        .ln-btn {
+            width: 42px; 
+            height: 28px; 
+            background: #000; 
+            border: 1px solid #d4af37;
+            color: #d4af37; 
+            font-size: 10px; 
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .ln-btn:hover, .ln-btn.active { background: #d4af37; color: #000; }
     </style>
 </head>
-<body>
+<body onclick="document.getElementById('m').play()">
 
-    <div class="hall-scene">
-        <div class="floor"></div>
+<div class="hall">
+    <div class="floor"></div>
 
-        <div class="registration-board">
-            <div class="user-photo"></div>
-            <div class="user-info">
-                <div style="font-family: monospace; font-size: 13px;">ID: #GY-734-TRACE</div>
-                <div id="slogan-display">"Истина не в вине, а в тех кто его пьет"</div>
-            </div>
-        </div>
+    <div class="header-board">
+        <div id="uid" style="font-weight:bold; letter-spacing:1px; color:#fff;">MEMBER ID: #TRACING...</div>
+        <div id="slogan" style="font-style:italic; font-size:13px; margin-top:5px; color:#d4af37;">"Истина не в вине, а в тех кто его пьет"</div>
+    </div>
 
-        <div class="wall left-wall">
-            <div class="portal"><img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=200"></div>
-            <div class="portal"><img src="https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?q=80&w=200"></div>
-        </div>
-
-        <div class="center-group">
-            <div class="bar-label" id="bar-title">BAR</div>
-            
-            <div class="bar-arch"><div class="beads"></div></div>
-
-            <div class="entry-object gramophone" onclick="toggleAudio()">
-                <div class="horn"></div>
-                <div class="gram-base"></div>
-                <button class="play-btn" id="s-btn">ВКЛЮЧИТЬ ЗВУК</button>
-            </div>
-            
-            <div class="entry-object table">
-                <div class="vase"><div class="flower"></div></div>
-                <div class="table-top"></div>
-                <div class="table-leg"></div>
-            </div>
-
-            <div class="lang-panel">
-                <button class="ln-btn active" onclick="setL('RU', this)">RU</button>
-                <button class="ln-btn" onclick="setL('EN', this)">EN</button>
-                <button class="ln-btn" onclick="setL('DE', this)">DE</button>
-                <button class="ln-btn" onclick="setL('FR', this)">FR</button>
-                <button class="ln-btn" onclick="setL('IT', this)">IT</button>
-                <button class="ln-btn" onclick="setL('ES', this)">ES</button>
-                <button class="ln-btn" onclick="setL('PL', this)">PL</button>
-                <button class="ln-btn" onclick="setL('UA', this)">UA</button>
-            </div>
-        </div>
-
-        <div class="wall right-wall">
-            <div class="portal"><img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=200"></div>
-            <div class="portal"><img src="https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?q=80&w=200"></div>
+    <div class="entrance">
+        <div id="bar-title" style="font-size:30px; letter-spacing:10px; margin-bottom:10px;">БАР</div>
+        <div class="arch">
+            <div class="asset gramophone" onclick="toggleM()"></div>
+            <div class="asset table"></div>
         </div>
     </div>
 
-    <audio id="ambience" loop src="https://www.soundjay.com/ambient/restaurant-ambience-01.mp3"></audio>
+    <div class="lang-panel">
+        <button class="ln-btn active" onclick="setL('RU', this)">RU</button>
+        <button class="ln-btn" onclick="setL('EN', this)">EN</button>
+        <button class="ln-btn" onclick="setL('DE', this)">DE</button>
+        <button class="ln-btn" onclick="setL('FR', this)">FR</button>
+        <button class="ln-btn" onclick="setL('IT', this)">IT</button>
+        <button class="ln-btn" onclick="setL('ES', this)">ES</button>
+        <button class="ln-btn" onclick="setL('PL', this)">PL</button>
+        <button class="ln-btn" onclick="setL('UA', this)">UA</button>
+    </div>
+</div>
 
-    <script>
-        const audio = document.getElementById('ambience');
-        const slogans = {
-            RU: "Истина не в вине, а в тех кто его пьет",
-            EN: "Truth is not in wine, but in those who drink it",
-            UA: "Істина не у вині, а в тих, хто його п'є",
-            PL: "Prawda nie tkwi w winie, lecz w tych, którzy je piją"
+<audio id="m" loop src="https://www.soundjay.com/ambient/restaurant-ambience-01.mp3"></audio>
+
+<script>
+    const audio = document.getElementById('m');
+    function toggleM() { audio.paused ? audio.play() : audio.pause(); }
+
+    window.onload = function() {
+        let id = localStorage.getItem('gy_trace') || Math.random().toString(36).substr(2, 6).toUpperCase();
+        localStorage.setItem('gy_trace', id);
+        document.getElementById('uid').innerText = "MEMBER ID: #" + id + "-TRACE";
+    };
+
+    function setL(lang, btn) {
+        // Словарь на 8 языков
+        const dict = {
+            'RU': { s: '"Истина не в вине, а в тех кто его пьет"', t: 'БАР' },
+            'EN': { s: '"The truth is not in wine, but in the drinkers"', t: 'BAR' },
+            'DE': { s: '"Die Wahrheit liegt nicht im Wein, sondern in den Trinkern"', t: 'BAR' },
+            'FR': { s: '"La vérité n\'est pas dans le vin, mais dans les buveurs"', t: 'BAR' },
+            'IT': { s: '"La verità non è nel vino, ma in chi lo beve"', t: 'BAR' },
+            'ES': { s: '"La verdad no está en el vino, sino en los bebedores"', t: 'BAR' },
+            'PL': { s: '"Prawda nie tkwi w winie, lecz в tych, którzy piją"', t: 'BAR' },
+            'UA': { s: '"Істина не у вині, а в тих, хто його п\'є"', t: 'БАР' }
         };
 
-        function toggleAudio() {
-            if (audio.paused) {
-                audio.volume = 0.2;
-                audio.play().then(() => {
-                    document.getElementById('s-btn').innerText = "ЗВУК ВКЛ";
-                    document.getElementById('s-btn').style.borderColor = "#0f0";
-                }).catch(e => alert("Нажмите еще раз!"));
-            } else {
-                audio.pause();
-                document.getElementById('s-btn').innerText = "ЗВУК ВЫКЛ";
-                document.getElementById('s-btn').style.borderColor = "#d4af37";
-            }
-        }
+        const data = dict[lang] || dict['EN'];
+        document.getElementById('slogan').innerText = data.s;
+        document.getElementById('bar-title').innerText = data.t;
 
-        function setL(lang, btn) {
-            document.querySelectorAll('.ln-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            document.getElementById('bar-title').innerText = (lang === 'RU' || lang === 'UA') ? 'БАР' : 'BAR';
-            document.getElementById('slogan-display').innerText = `"${slogans[lang] || slogans['EN']}"`;
-        }
-    </script>
+        // Переключаем активную кнопку
+        document.querySelectorAll('.ln-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+</script>
+
 </body>
 </html>
