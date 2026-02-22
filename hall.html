@@ -4,174 +4,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Hall v1.4 - Vintage Wood</title>
+    <title>GY-GY Hall v1.5</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         body { 
-            background: #050505; color: #d4af37; 
-            font-family: 'Georgia', serif; 
+            background: #000; color: #d4af37; 
+            font-family: 'Garamond', serif; 
             height: 100vh; overflow: hidden;
             display: flex; justify-content: center; align-items: center;
         }
 
-        /* КОНТЕЙНЕР С 3D ПЕРСПЕКТИВОЙ */
-        .hall-container {
-            position: relative;
-            width: 100vw; height: 100vh;
-            perspective: 1000px;
-            display: flex; align-items: center; justify-content: center;
-            background: radial-gradient(circle at 50% 40%, #1a140a 0%, #000 80%);
+        .hall-scene {
+            position: relative; width: 100vw; height: 100vh;
+            background: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000 100%);
+            perspective: 1200px; display: flex; align-items: center; justify-content: center;
         }
 
-        /* ТАБЛО ИЗ КАРТОЧКИ РЕГИСТРАЦИИ */
+        /* ТАБЛО СО СЛОГАНАМИ */
         .registration-board {
-            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
-            width: 300px; padding: 12px;
-            background: #000; border: 2px solid #d4af37;
-            box-shadow: 0 0 20px rgba(212,175,55,0.4);
+            position: absolute; top: 15px; left: 50%; transform: translateX(-50%);
+            width: 320px; padding: 10px;
+            background: rgba(0,0,0,0.9); border: 1px solid #d4af37;
+            box-shadow: 0 0 15px rgba(212,175,55,0.3);
             text-align: center; z-index: 100;
         }
-        .board-id { font-family: 'Courier New', monospace; color: #fff; font-size: 14px; letter-spacing: 2px; }
+        #slogan-display { font-style: italic; font-size: 12px; color: #fff; display: block; margin-top: 5px; }
 
-        /* НАСТОЯЩИЙ 3D ПОЛ */
-        .floor-3d {
-            position: absolute; bottom: -50px; width: 200%; height: 500px;
-            background-color: #0a0a0a;
-            background-image: 
-                linear-gradient(45deg, #111 25%, transparent 25%), 
-                linear-gradient(-45deg, #111 25%, transparent 25%),
-                linear-gradient(45deg, transparent 75%, #111 75%),
-                linear-gradient(-45deg, transparent 75%, #111 75%);
-            background-size: 100px 100px;
-            transform: rotateX(65deg);
-            z-index: 1; border-top: 2px solid #d4af37;
-            opacity: 0.6;
+        /* 3D ПОЛ И СТЕНЫ (ИЗ v1.3) */
+        .floor {
+            position: absolute; bottom: 0; width: 200%; height: 50%;
+            background-image: linear-gradient(45deg, #0a0a0a 25%, transparent 25%), linear-gradient(-45deg, #0a0a0a 25%, transparent 25%);
+            background-size: 100px 100px; transform: rotateX(75deg); transform-origin: bottom center;
+            opacity: 0.3; z-index: 1;
         }
 
-        /* СТЕНЫ ИЗ ТЕМНОГО ДЕРЕВА */
         .wall {
-            position: absolute; width: 35%; height: 100%; top: 0;
-            background: linear-gradient(to right, #1a0f05, #0a0500);
-            z-index: 2; display: flex; flex-direction: column; 
-            justify-content: space-around; align-items: center;
-            border: 10px solid #140c03; /* Рама стены */
+            position: absolute; width: 30%; height: 80%; top: 10%;
+            display: flex; flex-direction: column; justify-content: space-around;
+            align-items: center; z-index: 2;
         }
-        .left-wall { left: 0; transform: rotateY(45deg); transform-origin: left; border-right: 2px solid #d4af37; }
-        .right-wall { right: 0; transform: rotateY(-45deg); transform-origin: right; border-left: 2px solid #d4af37; }
+        .left-wall { left: 0; transform: rotateY(40deg); transform-origin: left; }
+        .right-wall { right: 0; transform: rotateY(-40deg); transform-origin: right; }
 
-        /* ВИНТАЖНЫЕ РАМЫ */
         .portal {
-            width: 140px; height: 180px;
-            border: 8px solid;
-            border-image: linear-gradient(to bottom, #8a6d3b, #d4af37, #5c4827) 1;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-            position: relative; overflow: hidden;
-            background: #000;
-        }
-        .portal img { width: 100%; height: 100%; object-fit: cover; opacity: 0.5; filter: sepia(1) contrast(1.2); }
-        
-        /* Светильник над каждой картиной */
-        .lamp {
-            position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
-            width: 60px; height: 5px; background: #d4af37;
-            box-shadow: 0 5px 15px #d4af37; z-index: 5;
+            width: 120px; height: 160px; border: 4px solid #d4af37;
+            background: url('https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=200') center/cover;
+            filter: sepia(0.8) contrast(1.2); box-shadow: 0 0 20px rgba(212,175,55,0.2);
         }
 
-        /* ЦЕНТР: АРКА БАРА */
-        .center-zone {
-            z-index: 10; display: flex; flex-direction: column; align-items: center;
-            transform: translateZ(50px);
-        }
-        .bar-title {
-            font-size: 32px; letter-spacing: 15px; font-weight: bold;
-            color: #d4af37; text-shadow: 0 0 20px rgba(212,175,55,0.7);
-            margin-bottom: 20px;
-        }
+        /* ЦЕНТР */
+        .bar-label { font-size: 28px; letter-spacing: 12px; font-weight: bold; text-shadow: 0 0 15px #d4af37; margin-bottom: 10px; }
         .bar-arch {
-            width: 200px; height: 320px;
-            border: 10px solid #d4af37; border-bottom: none;
-            border-radius: 100px 100px 0 0;
-            background: #000; position: relative; cursor: pointer;
-            box-shadow: inset 0 0 50px #000, 0 0 30px rgba(212,175,55,0.2);
+            width: 180px; height: 300px; border: 6px solid #d4af37; border-bottom: none;
+            border-radius: 90px 90px 0 0; position: relative; cursor: pointer;
         }
-        .beads {
-            width: 100%; height: 100%;
-            background: repeating-linear-gradient(90deg, #2a1b10 0, #2a1b10 4px, transparent 5px, transparent 10px);
+        .curtain { width: 100%; height: 100%; background: repeating-linear-gradient(90deg, #221a0f 0px, #221a0f 3px, transparent 4px, transparent 8px); }
+
+        /* ГРАММОФОН */
+        .gramophone-wrap {
+            position: absolute; bottom: 20px; left: 20px; z-index: 100; text-align: center;
+        }
+        .gramophone {
+            width: 50px; height: 50px; background: #5c4033; border-radius: 5px; position: relative; margin: 0 auto;
+        }
+        .gramophone::after { /* Труба */
+            content: ''; position: absolute; top: -30px; left: 10px;
+            width: 40px; height: 40px; border: 10px solid #d4af37;
+            border-bottom: transparent; border-left: transparent; border-radius: 50%;
+            transform: rotate(-45deg);
+        }
+        .play-btn { 
+            background: none; border: 1px solid #d4af37; color: #d4af37; 
+            font-size: 9px; padding: 5px; cursor: pointer; margin-top: 10px; display: block;
         }
 
-        /* КНОПКА ЗВУКА */
-        #sound-btn {
-            position: absolute; bottom: 20px; left: 20px;
-            padding: 10px; border: 1px solid #d4af37; background: none;
-            color: #d4af37; cursor: pointer; z-index: 200; font-size: 10px;
+        /* ЯЗЫК */
+        .lang-panel {
+            position: absolute; bottom: 20px; right: 20px; z-index: 100;
         }
+        .lang-btn { background: none; border: none; color: #d4af37; cursor: pointer; font-size: 14px; opacity: 0.5; margin-left: 10px; }
+        .lang-btn.active { opacity: 1; font-weight: bold; border-bottom: 1px solid #d4af37; }
     </style>
 </head>
 <body>
 
-    <button id="sound-btn" onclick="toggleSound()">[ ЗАЙТИ И ВКЛЮЧИТЬ ЗВУК ]</button>
-
-    <div class="hall-container">
-        <div class="floor-3d"></div>
+    <div class="hall-scene">
+        <div class="floor"></div>
 
         <div class="registration-board">
-            <div style="font-size: 9px; margin-bottom: 5px;">MEMBER IDENTIFICATION</div>
-            <div class="board-id" id="id-trace">ID: #GY-777-VNTG</div>
-            <div style="font-size: 10px; color: #d4af37; margin-top: 5px;">STATUS: <span style="color: #0f0;">ACTIVE</span></div>
+            <span id="label-membership" style="font-size: 9px; opacity: 0.6;">GY-GY PRIVATE CLUB</span>
+            <div id="slogan-display">"Истина не в вине, а в тех кто его пьет"</div>
         </div>
 
         <div class="wall left-wall">
-            <div style="position:relative">
-                <div class="lamp"></div>
-                <div class="portal"><img src="https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?q=80&w=200" alt="Art"></div>
-            </div>
-            <div style="position:relative">
-                <div class="lamp"></div>
-                <div class="portal"><img src="https://images.unsplash.com/photo-1554941068-a252680d25d9?q=80&w=200" alt="History"></div>
-            </div>
+            <div class="portal"></div>
+            <div class="portal" style="background-image: url('https://images.unsplash.com/photo-1554941068-a252680d25d9?q=80&w=200')"></div>
         </div>
 
-        <div class="center-zone">
-            <div class="bar-title">BAR</div>
-            <div class="bar-arch" onclick="alert('Переход в Бар...')">
-                <div class="beads"></div>
-            </div>
+        <div class="arch-container" style="display:flex; flex-direction:column; align-items:center; z-index:5;">
+            <div class="bar-label" id="bar-text">BAR</div>
+            <div class="bar-arch" onclick="alert('Welcome')"><div class="curtain"></div></div>
         </div>
 
         <div class="wall right-wall">
-            <div style="position:relative">
-                <div class="lamp"></div>
-                <div class="portal"><img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=200" alt="Talents"></div>
-            </div>
-            <div style="position:relative">
-                <div class="lamp"></div>
-                <div class="portal"><img src="https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?q=80&w=200" alt="Vault"></div>
-            </div>
+            <div class="portal" style="background-image: url('https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=200')"></div>
+            <div class="portal" style="background-image: url('https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?q=80&w=200')"></div>
+        </div>
+
+        <div class="gramophone-wrap">
+            <div class="gramophone"></div>
+            <button class="play-btn" onclick="startMusic()">ВКЛЮЧАТЬ ОБЯЗАТЕЛЬНО</button>
+        </div>
+
+        <div class="lang-panel">
+            <button class="lang-btn active" onclick="setLang('RU', this)">RU</button>
+            <button class="lang-btn" onclick="setLang('EN', this)">EN</button>
         </div>
     </div>
 
-    <audio id="ambience" loop>
+    <audio id="bg-audio" loop>
         <source src="https://www.soundjay.com/ambient/restaurant-ambience-01.mp3" type="audio/mpeg">
     </audio>
 
     <script>
-        // Эмуляция данных регистрации из твоих инструкций
-        const userTrace = "ID: " + (localStorage.getItem('gy_id') || "USER-" + Math.floor(Math.random()*999));
-        document.getElementById('id-trace').innerText = userTrace;
+        const slogans = {
+            RU: ["Истина не в вине, а в тех кто его пьет", "Истина не в вине, а в его количестве", "Истина не в вине, а в глубине беседы"],
+            EN: ["Truth is not in wine, but in those who drink it", "Truth is not in wine, but in its quantity", "Truth is not in wine, but in the depth of talk"]
+        };
+        let currentLang = 'RU';
 
-        function toggleSound() {
-            const audio = document.getElementById('ambience');
-            const btn = document.getElementById('sound-btn');
-            if (audio.paused) {
-                audio.volume = 0.2;
-                audio.play();
-                btn.innerText = "[ ЗВУК: ВКЛ ]";
-                btn.style.opacity = "0.5";
-            } else {
-                audio.pause();
-                btn.innerText = "[ ЗВУК: ВЫКЛ ]";
-            }
+        function startMusic() {
+            const a = document.getElementById('bg-audio');
+            a.volume = 0.2;
+            a.play();
         }
+
+        function setLang(lang, btn) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            document.getElementById('bar-text').innerText = lang === 'RU' ? 'БАР' : 'BAR';
+            updateSlogan();
+        }
+
+        function updateSlogan() {
+            const list = slogans[currentLang];
+            document.getElementById('slogan-display').innerText = `"${list[Math.floor(Math.random() * list.length)]}"`;
+        }
+
+        setInterval(updateSlogan, 5000); // Смена слогана каждые 5 сек
     </script>
 </body>
 </html>
