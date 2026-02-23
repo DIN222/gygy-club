@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>gy-gy hall v2.2.9</title>
+    <title>gy-gy hall v2.3.0</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
             background: #000; color: #d4af37; 
             font-family: 'Georgia', serif; 
@@ -16,104 +16,106 @@
 
         .hall-scene {
             position: relative; width: 100vw; height: 100vh;
-            background: radial-gradient(circle at 50% 50%, #2a1b10 0%, #000 90%);
+            background: radial-gradient(circle at 50% 50%, #2a1b10 0%, #000 95%);
             display: flex; justify-content: center; align-items: center;
             perspective: 2500px;
         }
 
-        /* Языковая панель (8 языков) */
-        .lang-panel {
-            position: absolute; top: 30px; right: 40px;
-            display: grid; grid-template-columns: repeat(4, 1fr);
-            gap: 8px; z-index: 110;
+        /* --- ЦЕНТРАЛЬНАЯ ЗОЛОТАЯ АРКА --- */
+        .entrance-group {
+            display: flex; flex-direction: column; align-items: center;
+            height: 75vh; margin-top: 50px; z-index: 10;
         }
-        .lang-btn {
-            background: rgba(10, 5, 0, 0.85); color: #d4af37; 
-            border: 1px solid rgba(214, 175, 55, 0.4);
-            padding: 6px 10px; cursor: pointer; font-size: 11px; transition: 0.3s;
-        }
-        .lang-btn.active { background: #d4af37; color: #000; }
 
-        /* Табло регистрации */
+        .bar-title { 
+            font-size: 45px; letter-spacing: 15px; font-weight: bold; 
+            margin-bottom: 20px; color: #f1d592;
+            text-shadow: 0 0 15px rgba(241, 213, 146, 0.4); 
+        }
+
+        .arch-container {
+            position: relative;
+            width: 440px; height: 100%;
+            padding: 15px; /* Отступ для золотой рамы */
+            background: linear-gradient(90deg, #8b6b23 0%, #d4af37 50%, #8b6b23 100%);
+            border-radius: 220px 220px 0 0;
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.3);
+        }
+
+        .arch-inner {
+            width: 100%; height: 100%;
+            background: #050505;
+            border-radius: 205px 205px 0 0;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid rgba(0,0,0,0.5); /* Глубина */
+            box-shadow: inset 0 0 40px rgba(0,0,0,1);
+        }
+
+        /* Эффект мерцающих золотых нитей (как на фото) */
+        .golden-curtain {
+            width: 100%; height: 100%;
+            background: repeating-linear-gradient(90deg, 
+                #000 0px, 
+                #000 2px, 
+                #d4af37 3px, 
+                #d4af37 4px, 
+                #000 5px,
+                #000 12px);
+            opacity: 0.8;
+            filter: drop-shadow(0 0 2px rgba(212,175,55,0.5));
+        }
+
+        /* Подсветка арки сверху */
+        .arch-glow {
+            position: absolute; top: -10px; width: 100%; height: 100px;
+            background: radial-gradient(ellipse at 50% 0%, rgba(212,175,55,0.4) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        /* --- ОСТАЛЬНЫЕ ЭЛЕМЕНТЫ --- */
         .registration-board {
             position: absolute; top: 30px; left: 40px; width: 450px; padding: 15px;
             background: rgba(10, 5, 0, 0.9); border: 2px solid #d4af37;
             display: flex; align-items: center; z-index: 100;
         }
-        .user-photo { width: 60px; height: 60px; border: 1px solid #d4af37; background: #111; margin-right: 15px; }
-
-        /* Стены и Галерея */
-        .wall {
-            position: absolute; width: 22%; height: 75%; top: 12%;
-            background: #1a0f05 url('https://www.transparenttextures.com/patterns/dark-wood.png');
-            border: 8px solid #2a1b10; box-shadow: inset 0 0 100px #000;
-            display: flex; flex-direction: column; justify-content: space-around; align-items: center;
-        }
-        .left-wall { left: 2%; transform: rotateY(15deg); } 
-        .right-wall { right: 2%; transform: rotateY(-15deg); }
-        .frame { width: 110px; height: 140px; border: 3px solid #d4af37; background: #000; opacity: 0.4; }
-
-        /* ЗОЛОТАЯ АРКА (Как на фото) */
-        .entrance-group {
-            display: flex; flex-direction: column; align-items: center;
-            height: 75vh; margin-top: 120px; z-index: 10;
-        }
-        .bar-title { 
-            font-size: 50px; letter-spacing: 20px; font-weight: bold; 
-            margin-bottom: 25px; color: #f1d592;
-            text-shadow: 0 0 20px rgba(241, 213, 146, 0.5); 
-        }
-        .arch-frame {
-            width: 400px; height: 100%; 
-            border: 12px solid #d4af37; border-bottom: none;
-            border-radius: 200px 200px 0 0;
-            position: relative; overflow: hidden;
-            box-shadow: 0 0 50px rgba(212, 175, 55, 0.3), inset 0 0 30px rgba(0,0,0,1);
-        }
-        /* Внутреннее золотое свечение арки */
-        .arch-frame::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            border: 2px solid rgba(241, 213, 146, 0.4); border-radius: 190px 190px 0 0;
-            pointer-events: none;
-        }
-        /* ЗОЛОТЫЕ БУСЫ */
-        .wooden-beads {
-            width: 100%; height: 100%;
-            background: repeating-linear-gradient(90deg, 
-                #1a1008 0px, 
-                #d4af37 2px, 
-                transparent 4px, 
-                transparent 10px);
-            opacity: 0.9;
+        .user-photo { 
+            width: 60px; height: 60px; border: 1px solid #d4af37; 
+            background: url('https://via.placeholder.com/60') center/cover; /* Место под аватар */
+            margin-right: 15px; 
         }
 
-        /* Мебель */
-        .furniture { position: absolute; bottom: 0; width: 100%; display: flex; justify-content: space-between; padding: 0 24%; z-index: 50; }
+        .furniture { position: absolute; bottom: 0; width: 100%; display: flex; justify-content: space-between; padding: 0 22%; z-index: 50; }
         .table-set { display: flex; flex-direction: column; align-items: center; }
         .table-top { width: 150px; height: 10px; background: #3d2b1f; border: 2px solid #d4af37; border-radius: 2px; }
-        .table-leg { width: 8px; height: 200px; background: #d4af37; }
+        .table-leg { width: 8px; height: 180px; background: #d4af37; }
 
-        /* Предметы */
-        .gramophone { width: 90px; height: 70px; position: relative; cursor: pointer; }
-        .horn { width: 45px; height: 45px; background: #d4af37; clip-path: polygon(100% 0, 0 50%, 100% 100%); transform: rotate(-25deg); position: absolute; left: -20px; top: -5px; }
-        .base { width: 65px; height: 35px; background: #3d2b1f; border: 1px solid #d4af37; margin-top: 25px; }
-        .vase { font-size: 50px; margin-bottom: 10px; }
-
-        /* КНОПКИ (Как на фото - Таблетки) */
+        /* Кнопки-таблетки */
         .control-panel { position: absolute; bottom: 40px; display: flex; gap: 40px; z-index: 110; }
         .gold-button { 
             background: rgba(0, 0, 0, 0.7); color: #fff; border: 2px solid #d4af37; 
-            padding: 12px 35px; font-size: 14px; letter-spacing: 2px; cursor: pointer;
+            padding: 12px 35px; font-size: 14px; cursor: pointer;
             border-radius: 50px; display: flex; align-items: center; gap: 12px;
             text-transform: uppercase; transition: 0.3s;
         }
-        .gold-button::before { content: '▶'; color: #d4af37; font-size: 14px; }
         .gold-button:hover { background: rgba(212, 175, 55, 0.2); box-shadow: 0 0 20px rgba(212,175,55,0.4); }
+
+        .lang-panel { position: absolute; top: 30px; right: 40px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; z-index: 110; }
+        .lang-btn { background: rgba(10, 5, 0, 0.85); color: #d4af37; border: 1px solid rgba(214, 175, 55, 0.4); padding: 6px 10px; cursor: pointer; font-size: 11px; }
+        .lang-btn.active { background: #d4af37; color: #000; }
     </style>
 </head>
 <body>
 
 <div class="hall-scene">
+    <div class="registration-board">
+        <div class="user-photo"></div>
+        <div>
+            <div style="font-family: monospace; font-size: 12px;">id: #gy-734-trace</div>
+            <div id="slogan" style="font-style: italic; font-size: 13px; color: #fff; margin-top: 4px;">"Истина не в вине, а в тех кто его пьет"</div>
+        </div>
+    </div>
+
     <div class="lang-panel">
         <button class="lang-btn active" onclick="setLang('ru')">RU</button>
         <button class="lang-btn" onclick="setLang('en')">EN</button>
@@ -125,16 +127,63 @@
         <button class="lang-btn" onclick="setLang('pl')">PL</button>
     </div>
 
-    <div class="registration-board">
-        <div class="user-photo"></div>
-        <div>
-            <div style="font-family: monospace; font-size: 12px;">id: #gy-734-trace</div>
-            <div id="slogan" style="font-style: italic; font-size: 13px; color: #fff; margin-top: 4px;">"Истина не в вине, а в тех кто его пьет"</div>
+    <div class="entrance-group">
+        <div class="bar-title">БАР</div>
+        <div class="arch-container">
+            <div class="arch-inner">
+                <div class="golden-curtain"></div>
+            </div>
+            <div class="arch-glow"></div>
         </div>
     </div>
 
-    <div class="wall left-wall"><div class="frame"></div><div class="frame"></div></div>
-    <div class="wall right-wall"><div class="frame"></div><div class="frame"></div></div>
+    <div class="furniture">
+        <div class="table-set">
+            <div style="font-size: 40px; cursor: pointer;" onclick="toggleAudio()">📻</div>
+            <div class="table-top"></div><div class="table-leg"></div>
+        </div>
+        <div class="table-set">
+            <div style="font-size: 45px; margin-bottom: 5px;">💐</div>
+            <div class="table-top"></div><div class="table-leg"></div>
+        </div>
+    </div>
 
-    <div class="entrance-group">
-        <div class="bar-title">БАР</div>
+    <div class="control-panel">
+        <button class="gold-button" onclick="toggleAudio()"><span>▶</span> звуки холла</button>
+        <button class="gold-button" onclick="toggleAudio()"><span>▶</span> включить музыку</button>
+    </div>
+</div>
+
+<script>
+    const audio = new Audio('bar_ambient.mp3');
+    audio.loop = true;
+    audio.volume = 0.2;
+
+    function toggleAudio() {
+        audio.paused ? audio.play() : audio.pause();
+    }
+
+    const texts = {
+        ru: { slogan: '"Истина не в вине, а в тех кто его пьет"', bar: 'БАР', hall: 'звуки холла', music: 'включить музыку' },
+        en: { slogan: '"Truth is not in wine, but in those who drink it"', bar: 'BAR', hall: 'hall sounds', music: 'play music' },
+        ua: { slogan: '"Істина не у вині, а в тих, хто його п\'є"', bar: 'БАР', hall: 'звуки холу', music: 'увімкнути музику' },
+        pl: { slogan: '"Prawda nie tkwi w winie"', bar: 'BAR', hall: 'dźwięki holu', music: 'włącz muzykę' }
+        // Добавь остальные 4 языка по аналогии
+    };
+
+    function setLang(lang) {
+        const d = texts[lang];
+        if(!d) return;
+        document.getElementById('slogan').innerText = d.slogan;
+        document.querySelector('.bar-title').innerText = d.bar;
+        const b = document.querySelectorAll('.gold-button');
+        b[0].innerHTML = `<span>▶</span> ${d.hall}`;
+        b[1].innerHTML = `<span>▶</span> ${d.music}`;
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.innerText.toLowerCase() === lang);
+        });
+    }
+</script>
+
+</body>
+</html>
