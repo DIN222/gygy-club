@@ -1,1 +1,155 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>gy-gy hall v3.1 Pro</title>
+    <style>
+        :root {
+            --vintage-gold: #c5a059;
+            --gold-bright: #f1d592;
+            --deep-dark: #080808;
+        }
 
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #000; height: 100vh; display: flex; justify-content: center; align-items: center; font-family: 'Georgia', serif; overflow: hidden; }
+
+        /* Компактный контейнер для ПК (Pro-размер) */
+        .hall-viewport {
+            position: relative;
+            width: 1100px;
+            height: 800px;
+            background: radial-gradient(circle at 50% 30%, #2a1b10 0%, #000 80%);
+            border: 2px solid rgba(197, 160, 89, 0.2);
+            box-shadow: 0 0 150px rgba(0,0,0,1), inset 0 0 100px #000;
+            display: flex; justify-content: center; align-items: center;
+            perspective: 1200px;
+        }
+
+        /* ПОЛ С ЗЕРКАЛЬНЫМ ЭФФЕКТОМ */
+        .floor {
+            position: absolute; bottom: 0; width: 100%; height: 350px;
+            background: linear-gradient(to bottom, #14110e 0%, #000 100%);
+            transform: rotateX(65deg); transform-origin: bottom center;
+            border-top: 1px solid rgba(197, 160, 89, 0.1);
+            z-index: 1;
+        }
+
+        /* АРКА С ЖИВОЙ ЗАНАВЕСКОЙ */
+        .entrance-scene {
+            position: relative; z-index: 10; margin-top: -60px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .bar-label {
+            font-size: 50px; letter-spacing: 20px; color: var(--gold-bright);
+            text-shadow: 0 0 20px rgba(241, 213, 146, 0.4); margin-bottom: 20px;
+        }
+        .pro-arch {
+            width: 360px; height: 460px; border-radius: 180px 180px 0 0;
+            border: 12px solid var(--vintage-gold); border-bottom: none;
+            position: relative; overflow: hidden; background: #000;
+            box-shadow: 0 0 40px rgba(0,0,0,1);
+        }
+        
+        /* Анимация висюлек */
+        .beads-curtain {
+            width: 110%; height: 100%;
+            background: repeating-linear-gradient(90deg, 
+                transparent 0, transparent 5px, 
+                var(--vintage-gold) 6px, 
+                var(--gold-bright) 7px, 
+                transparent 8px, transparent 12px);
+            opacity: 0.8;
+            animation: sway 4s ease-in-out infinite;
+        }
+        @keyframes sway {
+            0%, 100% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+        }
+
+        /* КЛИКАБЕЛЬНЫЕ СТОЛИКИ В УГЛАХ */
+        .corners {
+            position: absolute; bottom: 0; width: 100%; height: 300px;
+            display: flex; justify-content: space-between; padding: 0 40px; z-index: 50;
+        }
+        .table-group { 
+            display: flex; flex-direction: column; align-items: center; 
+            cursor: pointer; transition: 0.3s;
+        }
+        .table-group:hover { transform: translateY(-10px); filter: brightness(1.3); }
+        .table-item { font-size: 50px; margin-bottom: 10px; filter: sepia(0.5); }
+        .table-top { width: 120px; height: 8px; background: var(--vintage-gold); border-radius: 4px; }
+        .table-leg { width: 4px; height: 160px; background: linear-gradient(to bottom, var(--vintage-gold), #000); }
+
+        /* UI ЭЛЕМЕНТЫ (ID / BUTTONS) */
+        .auth-tag {
+            position: absolute; top: 30px; left: 30px;
+            display: flex; align-items: center; gap: 15px; z-index: 100;
+            background: rgba(0,0,0,0.7); padding: 10px; border: 1px solid var(--vintage-gold);
+        }
+        .avatar { width: 45px; height: 45px; background: #111; border: 1px solid var(--vintage-gold); }
+        
+        .nav-pill {
+            position: absolute; bottom: 40px; display: flex; gap: 30px; z-index: 100;
+        }
+        .pill-btn {
+            background: rgba(0,0,0,0.8); color: #fff; border: 1px solid var(--vintage-gold);
+            padding: 12px 35px; border-radius: 50px; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 2px; font-size: 12px; transition: 0.3s;
+        }
+        .pill-btn:hover { background: var(--vintage-gold); color: #000; }
+
+    </style>
+</head>
+<body>
+
+<div class="hall-viewport">
+    <div class="floor"></div>
+
+    <div class="auth-tag">
+        <div class="avatar" id="user-avatar"></div>
+        <div style="font-family: monospace; font-size: 10px; color: var(--vintage-gold);">
+            <div>ID: #GY_PRO_31</div>
+            <div style="color:#fff; opacity:0.6;">VINTAGE_ACCESS</div>
+        </div>
+    </div>
+
+    <div class="entrance-scene">
+        <div class="bar-label">BAR</div>
+        <div class="pro-arch" onclick="location.href='#enter'">
+            <div class="beads-curtain"></div>
+        </div>
+    </div>
+
+    <div class="corners">
+        <div class="table-group" title="Включить музыку">
+            <div class="table-item">📻</div>
+            <div class="table-top"></div><div class="table-leg"></div>
+        </div>
+        <div class="table-group" title="Посмотреть цветы">
+            <div class="table-item">💐</div>
+            <div class="table-top"></div><div class="table-leg"></div>
+        </div>
+    </div>
+
+    <div class="nav-pill">
+        <button class="pill-btn">звуки холла</button>
+        <button class="pill-btn">включить музыка</button>
+    </div>
+</div>
+
+<script>
+    const audio = new Audio('bar_ambient.mp3');
+    audio.loop = true; audio.volume = 0.2;
+    
+    // Pro-логика: Клик на граммофон тоже включает звук
+    document.querySelector('.table-group').addEventListener('click', () => {
+        audio.paused ? audio.play() : audio.pause();
+    });
+
+    document.querySelectorAll('.pill-btn').forEach(btn => {
+        btn.addEventListener('click', () => audio.paused ? audio.play() : audio.pause());
+    });
+</script>
+
+</body>
+</html>
