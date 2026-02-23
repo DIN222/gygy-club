@@ -4,174 +4,149 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v3.0.4.18</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <title>gy-gy hall v3.0.3</title>
     <style>
-        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none !important; }
-        body { margin: 0; background: #000; color: #d4af37; font-family: 'Times New Roman', Times, serif; text-align: center; height: 100vh; overflow: hidden; width: 100vw; }
-        
-        .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-        .block.active { display: flex !important; }
-
-        /* ЭКРАН 1: ДВЕРЬ */
-        .door-wrapper { cursor: pointer; transition: 1.2s ease-out; z-index: 100; }
-        .door-img { width: 75vw; max-width: 320px; border: none; display: block; }
-
-        /* ЭКРАН 2: ЧАРЛИ (ТОЛЬКО ОДНО КОЛЬЦО) */
-        .charlie-container { 
-            position: relative; 
-            width: 250px; 
-            height: 250px; 
-            margin-bottom: 30px; 
-            border-radius: 50%; 
-            border: 2px solid #d4af37; /* Это и есть то самое ОДНО кольцо */
-            overflow: hidden; /* Обрезаем всё, что выходит за кольцо */
-            background: #000;
-        }
-        
-        .charlie-container img { 
-            width: 101%; /* Чуть больше, чтобы убрать микро-щели */
-            height: 101%; 
-            object-fit: cover; 
-            display: block;
+        :root {
+            --vintage-gold: #c5a059;
+            --marble: #111;
         }
 
-        #t-welcome { font-size: 52px; letter-spacing: 12px; font-weight: normal; margin: 0 0 30px 0; text-transform: uppercase; }
+        body, html { margin: 0; padding: 0; background: #000; overflow: hidden; height: 100vh; }
 
-        /* ЭКРАН 3: ТЕРМИНАЛ */
-        .setup-grid { display: grid; grid-template-columns: repeat(3, 90px); gap: 15px; margin-bottom: 20px; justify-content: center; }
-        .square-box { width: 90px; height: 90px; border: 1px solid #d4af37; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; color: #000; }
-        
-        #id-box { flex-direction: column; font-size: 11px; letter-spacing: 1px; }
-        
-        .btn-gold { width: 140px; height: 40px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 11px; letter-spacing: 1px; cursor: pointer; margin-top: 15px; font-family: inherit; }
-        #quote-reg { font-style: italic; font-size: 14px; margin: 20px 0; min-height: 45px; color: #d4af37; padding: 0 20px; }
-        .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; width: 240px; margin-top: 10px; }
-        .lang-item { font-size: 10px; padding: 6px; border: 1px solid rgba(212, 175, 55, 0.3); cursor: pointer; }
-        .lang-item.active { border-color: #d4af37; background: rgba(212, 175, 55, 0.1); }
+        .hall-scene {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Глубокая перспектива для углов */
+            perspective: 1200px;
+        }
+
+        /* ПОЛ С ПЕРСПЕКТИВОЙ В УГЛЫ */
+        .floor {
+            position: absolute;
+            bottom: 0;
+            width: 150%;
+            height: 50vh;
+            background: linear-gradient(to bottom, #1a1510 0%, #000 100%);
+            transform: rotateX(60deg);
+            z-index: 1;
+        }
+
+        /* ЦЕНТРАЛЬНАЯ АРКА */
+        .main-arch {
+            position: relative;
+            z-index: 10;
+            width: 400px;
+            height: 500px;
+            border: 12px solid var(--vintage-gold);
+            border-bottom: none;
+            border-radius: 200px 200px 0 0;
+            box-shadow: 0 0 50px rgba(197, 160, 89, 0.2);
+            display: flex;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .beads {
+            width: 100%; height: 100%;
+            background: repeating-linear-gradient(90deg, transparent 0px, transparent 6px, var(--vintage-gold) 7px, transparent 8px);
+            opacity: 0.7;
+        }
+
+        /* РАССТАНОВКА СТОЛИКОВ ПО УГЛАМ */
+        .corner-furniture {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 40vh;
+            display: flex;
+            justify-content: space-between; /* Это разносит их максимально по краям */
+            padding: 0 5%; /* Небольшой отступ от самих стен */
+            z-index: 20;
+            align-items: flex-end;
+        }
+
+        .vintage-table {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 200px;
+        }
+
+        /* Изящная столешница */
+        .table-top {
+            width: 120px;
+            height: 8px;
+            background: var(--vintage-gold);
+            border-radius: 4px;
+            box-shadow: 0 10px 20px #000;
+        }
+
+        /* Гнутая ножка (винтажный стиль) */
+        .table-leg {
+            width: 4px;
+            height: 180px;
+            background: linear-gradient(to bottom, var(--vintage-gold), #3d2b1f);
+            position: relative;
+        }
+        .table-leg::after {
+            content: ''; position: absolute; bottom: 0; width: 40px; height: 4px; 
+            background: var(--vintage-gold); left: -18px; border-radius: 10px;
+        }
+
+        .prop { font-size: 50px; margin-bottom: 10px; filter: drop-shadow(0 0 10px var(--vintage-gold)); }
+
+        /* КНОПКИ-ТАБЛЕТКИ */
+        .ui-buttons {
+            position: absolute;
+            bottom: 40px;
+            display: flex;
+            gap: 30px;
+            z-index: 100;
+        }
+        .pill {
+            background: rgba(0,0,0,0.8);
+            border: 2px solid var(--vintage-gold);
+            color: #fff;
+            padding: 12px 30px;
+            border-radius: 40px;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-family: serif;
+            letter-spacing: 2px;
+        }
     </style>
 </head>
 <body>
-    <audio id="door-snd"><source src="door_open.mp3" type="audio/mpeg"></audio>
-    <audio id="club-bg-snd" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
 
-    <div id="block-entrance" class="block active">
-        <div style="letter-spacing:10px; margin-bottom:30px; opacity:0.8;">GY-GY PRIVATE</div>
-        <div class="door-wrapper" onclick="handleDoor()">
-            <img src="door_1.jpg" class="door-img" onerror="this.src='https://via.placeholder.com/300x500?text=DOOR'">
-        </div>
-        <div style="font-size: 10px; margin-top: 40px; opacity: 0.3;">v3.0.4.18</div>
+<div class="hall-scene">
+    <div class="floor"></div>
+
+    <div class="main-arch">
+        <div class="beads"></div>
     </div>
 
-    <div id="block-welcome" class="block">
-        <div class="charlie-container">
-            <img src="charlie.png" onerror="this.src='https://via.placeholder.com/250?text=CHARLIE'">
+    <div class="corner-furniture">
+        <div class="vintage-table">
+            <div class="prop">📻</div>
+            <div class="table-top"></div>
+            <div class="table-leg"></div>
         </div>
-        <h1 id="t-welcome">WELCOME</h1>
-        <button class="btn-gold" style="width:220px; height: 50px; font-size: 14px;" onclick="switchTo('block-identity')">PROCEED</button>
+
+        <div class="vintage-table">
+            <div class="prop">💐</div>
+            <div class="table-top"></div>
+            <div class="table-leg"></div>
+        </div>
     </div>
 
-    <div id="block-identity" class="block">
-        <div class="setup-grid">
-            <div id="id-box" class="square-box">
-                <span style="font-size: 8px; margin-bottom: 5px; opacity: 0.6;">ID TRACE</span>
-                <div id="id-display" style="font-size: 10px; font-weight: bold;">#0000-0000</div>
-            </div>
-            <div id="qrcode" class="square-box"></div>
-            <div class="square-box" style="cursor:pointer;" onclick="document.getElementById('f').click()">
-                <span id="t-ph" style="color:#000; font-size:10px; font-weight:bold;">PHOTO</span>
-                <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
-            </div>
-        </div>
-        <button id="btn-save" class="btn-gold" onclick="save()">СОХРАНИТЬ</button>
-        <button id="btn-to-hall" class="btn-gold" style="visibility:hidden;" onclick="switchTo('block-hall')">ВХОД</button>
-        <div id="quote-reg">«В каждой шутке есть доля виски...»</div>
-        <div class="lang-grid">
-            <div class="lang-item active" onclick="setL(this,'ru')">RU</div>
-            <div class="lang-item" onclick="setL(this,'en')">EN</div>
-            <div class="lang-item" onclick="setL(this,'ua')">UA</div>
-            <div class="lang-item" onclick="setL(this,'fr')">FR</div>
-            <div class="lang-item" onclick="setL(this,'de')">DE</div>
-            <div class="lang-item" onclick="setL(this,'pl')">PL</div>
-            <div class="lang-item" onclick="setL(this,'es')">ES</div>
-            <div class="lang-item" onclick="setL(this,'it')">IT</div>
-        </div>
-        <input type="file" id="f" style="display:none" onchange="preview(this)">
+    <div class="ui-buttons">
+        <button class="pill">звуки холла</button>
+        <button class="pill">включить музыка</button>
     </div>
+</div>
 
-    <div id="block-hall" class="block">
-        <h2 id="t-ready" style="letter-spacing: 5px;">HALL IS READY</h2>
-        <div class="btn-gold" style="width:200px" onclick="location.reload()">EXIT</div>
-    </div>
-
-    <script>
-        const serialNum = "0042"; 
-        const randomPin = Math.floor(1000 + Math.random() * 9000);
-        const fullID = `#${serialNum}-${randomPin}`;
-
-        function handleDoor() {
-            const dSnd = document.getElementById('door-snd');
-            if(dSnd) dSnd.play().catch(() => {});
-            const w = document.querySelector('.door-wrapper');
-            w.style.transform = "scale(5)"; 
-            w.style.opacity = "0";
-            w.style.pointerEvents = "none";
-            setTimeout(() => switchTo('block-welcome'), 1000);
-        }
-
-        const langData = {
-            ru: { w: "ДОБРО ПОЖАЛОВАТЬ", s: "СОХРАНИТЬ", e: "ВХОД", ph: "ФОТО", q: "«В каждой шутке есть доля виски...»", r: "ХОЛЛ ГОТОВ" },
-            en: { w: "WELCOME", s: "SAVE", e: "ENTER", ph: "PHOTO", q: "«Every joke has a share of whiskey...»", r: "HALL IS READY" },
-            ua: { w: "ВІТАЄМО", s: "ЗБЕРЕГТИ", e: "ВХІД", ph: "ФОТО", q: "«У кожному жарті є доля віскі...»", r: "ХОЛ ГОТОВИЙ" },
-            fr: { w: "BIENVENUE", s: "SAUVER", e: "ENTRER", ph: "PHOTO", q: "«Dans chaque blague, il y a du whisky...»", r: "SALLE PRÊTE" },
-            de: { w: "WILLKOMMEN", s: "SPEICHERN", e: "EINTRITT", ph: "FOTO", q: "«In jedem Witz steckt Whiskey...»", r: "HALLE BEREIT" },
-            pl: { w: "WITAJ", s: "ZAPISZ", e: "WEJŚCIE", ph: "FOTO", q: "«W каждом żarcie jest kropla whiskey...»", r: "HALA GOTOWA" },
-            es: { w: "BIENVENIDO", s: "GUARDAR", e: "ENTRAR", ph: "FOTO", q: "«En cada broma hay algo de whisky...»", r: "SALA LISTA" },
-            it: { w: "BENVENUTO", s: "SALVA", e: "ENTRA", ph: "FOTO", q: "«Ogni scherzo ha il suo whisky...»", r: "SALA PRONTA" }
-        };
-
-        function setL(el, l) {
-            document.querySelectorAll('.lang-item').forEach(i => i.classList.remove('active'));
-            el.classList.add('active');
-            const d = langData[l];
-            document.getElementById('t-welcome').innerText = d.w;
-            document.getElementById('btn-save').innerText = d.s;
-            document.getElementById('btn-to-hall').innerText = d.e;
-            document.getElementById('t-ph').innerText = d.ph;
-            document.getElementById('quote-reg').innerText = d.q;
-            document.getElementById('t-ready').innerText = d.r;
-        }
-
-        function save() { document.getElementById('btn-to-hall').style.visibility = 'visible'; }
-        
-        function updateID() {
-            document.getElementById('id-display').innerText = fullID;
-            const q = document.getElementById("qrcode"); 
-            q.innerHTML = "";
-            new QRCode(q, { text: "GY-ID:" + fullID, width: 90, height: 90 });
-        }
-
-        function preview(input) {
-            const r = new FileReader();
-            r.onload = (e) => { 
-                const img = document.getElementById('pp');
-                img.src = e.target.result;
-                img.style.display = "block";
-                document.getElementById('t-ph').style.display = "none";
-            };
-            r.readAsDataURL(input.files[0]);
-        }
-
-        function switchTo(id) {
-            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            if(id === 'block-identity') {
-                updateID();
-                const bgSnd = document.getElementById('club-bg-snd');
-                if(bgSnd) { bgSnd.volume = 0.1; bgSnd.play().catch(() => {}); }
-            }
-        }
-    </script>
 </body>
 </html>
