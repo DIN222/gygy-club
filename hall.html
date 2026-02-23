@@ -3,12 +3,12 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>gy-gy hall v3.0.0</title>
+    <title>gy-gy hall v3.0.1</title>
     <style>
         :root {
-            --gold-light: #f1d592;
-            --gold-deep: #d4af37;
-            --wood: #1a0f05;
+            --gold-glow: rgba(241, 213, 146, 0.4);
+            --gold-solid: #d4af37;
+            --marble-dark: #0a0a0a;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -20,205 +20,218 @@
             display: flex; 
             justify-content: center; 
             align-items: center;
+            font-family: 'Georgia', serif;
         }
 
-        /* ОСНОВНОЕ ПРОСТРАНСТВО ХОЛЛА */
-        .hall-viewport {
+        /* ОСНОВНОЙ КОНТЕЙНЕР */
+        .hall-container {
             position: relative;
             width: 100vw;
             height: 100vh;
-            background: #050505;
+            background: radial-gradient(circle at 50% 30%, #2a1b10 0%, #000 80%);
             display: flex;
-            justify-content: center;
-            align-items: flex-end; /* Все стоит на полу */
-            perspective: 1000px;
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden;
         }
 
-        /* ГЛЯНЦЕВЫЙ ПОЛ (КАК НА ФОТО) */
-        .marble-floor {
+        /* ГЛЯНЦЕВЫЙ МРАМОРНЫЙ ПОЛ С ПЕРСПЕКТИВОЙ */
+        .floor {
             position: absolute;
             bottom: 0;
-            width: 150%;
-            height: 45vh;
-            background: linear-gradient(to bottom, #1a1510 0%, #080808 100%);
-            transform: rotateX(60deg);
-            transform-origin: bottom;
-            border-top: 1px solid rgba(212, 175, 55, 0.2);
-            box-shadow: inset 0 50px 100px rgba(0,0,0,0.8);
+            width: 200%;
+            height: 40vh;
+            background: linear-gradient(to bottom, #14110e 0%, #050505 100%);
+            transform: perspective(500px) rotateX(60deg);
+            transform-origin: bottom center;
             z-index: 1;
+            box-shadow: inset 0 100px 150px rgba(0,0,0,0.9);
         }
 
-        /* ОТРАЖЕНИЕ НА ПОЛУ */
+        /* ЗЕРКАЛЬНОЕ ОТРАЖЕНИЕ АРКИ НА ПОЛУ */
         .floor-reflection {
             position: absolute;
             bottom: 0;
-            width: 100%;
-            height: 40vh;
-            background: radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.15) 0%, transparent 70%);
+            width: 400px;
+            height: 35vh;
+            background: linear-gradient(to top, var(--gold-glow) 0%, transparent 80%);
+            filter: blur(30px);
             z-index: 2;
+            opacity: 0.4;
             pointer-events: none;
         }
 
-        /* ЦЕНТРАЛЬНАЯ КОМПОЗИЦИЯ: АРКА И ВХОД */
-        .entrance-zone {
+        /* ЦЕНТРАЛЬНАЯ КОМПОЗИЦИЯ */
+        .entrance-scene {
             position: relative;
+            margin-top: 8vh;
             z-index: 10;
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 20vh; /* Поднимаем над полом */
         }
 
-        .bar-sign {
-            font-family: 'Georgia', serif;
-            font-size: 48px;
-            letter-spacing: 25px;
-            color: var(--gold-light);
-            text-shadow: 0 0 20px rgba(241, 213, 146, 0.4);
-            margin-bottom: 30px;
-            font-weight: bold;
+        /* НАДПИСЬ BAR КАК НА ФОТО */
+        .bar-label {
+            font-size: 60px;
+            letter-spacing: 20px;
+            color: #f1d592;
+            text-shadow: 0 0 30px var(--gold-glow);
+            margin-bottom: 25px;
+            font-weight: 300;
         }
 
-        /* МОНУМЕНТАЛЬНАЯ ЗОЛОТАЯ АРКА */
-        .gold-arch {
+        /* МОНУМЕНТАЛЬНАЯ АРКА */
+        .arch-structure {
+            position: relative;
             width: 420px;
             height: 550px;
-            background: #000;
             border-radius: 210px 210px 0 0;
-            position: relative;
-            /* Внешняя золотая рама с объемом */
-            border: 14px solid var(--gold-deep);
+            background: #000;
+            /* Массивная золотая рама */
+            border: 15px solid var(--gold-solid);
             border-bottom: none;
             box-shadow: 
-                0 0 60px rgba(212, 175, 55, 0.3),
-                inset 0 0 40px rgba(0,0,0,1);
+                0 0 50px rgba(212, 175, 55, 0.4),
+                inset 0 0 40px #000;
         }
 
-        /* СВЕЧЕНИЕ ВНУТРИ АРКИ (КАК НА ФОТО) */
-        .arch-glow-inner {
+        /* СВЕТЯЩИЙСЯ КАНТ ВНУТРИ АРКИ */
+        .arch-inner-glow {
             position: absolute;
-            top: -2px; left: -2px; right: -2px; bottom: 0;
-            border-radius: 208px 208px 0 0;
-            border: 2px solid var(--gold-light);
-            opacity: 0.5;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border: 3px solid #f1d592;
+            border-bottom: none;
+            border-radius: 195px 195px 0 0;
+            opacity: 0.6;
             pointer-events: none;
         }
 
-        /* ЗОЛОТИСТЫЕ ВИСЮЛЬКИ (ЗАНАВЕСКА) */
+        /* ЗОЛОТИСТЫЕ ВИСЮЛЬКИ (ПЛОТНЫЙ ЗАНАВЕС) */
         .beaded-curtain {
             width: 100%;
             height: 100%;
             background: repeating-linear-gradient(90deg, 
                 transparent 0px, 
-                transparent 5px, 
-                var(--gold-deep) 6px, 
-                var(--gold-light) 7px, 
+                transparent 4px, 
+                #d4af37 5px, 
+                #f1d592 6px, 
+                #d4af37 7px, 
                 transparent 8px, 
                 transparent 12px);
-            opacity: 0.85;
-            mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 90%, rgba(0,0,0,0));
+            opacity: 0.9;
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 85%, rgba(0,0,0,0));
         }
 
-        /* КНОПКИ-ТАБЛЕТКИ (ВИНТАЖНЫЙ СТИЛЬ) */
-        .controls {
+        /* ПАНЕЛЬ РЕГИСТРАЦИИ (В ТВОЕМ СТИЛЕ) */
+        .user-auth-block {
             position: absolute;
-            bottom: 60px;
-            display: flex;
-            gap: 40px;
-            z-index: 100;
-        }
-
-        .btn-vintage {
-            background: rgba(10, 5, 0, 0.8);
-            color: #fff;
-            border: 2px solid var(--gold-deep);
-            padding: 14px 45px;
-            border-radius: 60px;
-            font-family: sans-serif;
-            font-size: 15px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            transition: all 0.4s ease;
-        }
-
-        .btn-vintage:hover {
-            box-shadow: 0 0 25px var(--gold-deep);
-            background: rgba(212, 175, 55, 0.15);
-        }
-
-        .icon-circle {
-            width: 24px;
-            height: 24px;
-            border: 1px solid var(--gold-deep);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--gold-deep);
-            font-size: 10px;
-        }
-
-        /* ВЕРХНЯЯ ПАНЕЛЬ РЕГИСТРАЦИИ (В ТВОЕМ СТИЛЕ) */
-        .id-panel {
-            position: absolute;
-            top: 40px;
-            left: 50px;
+            top: 30px;
+            left: 40px;
             display: flex;
             align-items: center;
             gap: 20px;
             z-index: 100;
+            padding: 10px;
+            border-left: 1px solid var(--gold-solid);
         }
 
-        .id-avatar {
-            width: 65px;
-            height: 65px;
-            border: 1px solid var(--gold-deep);
-            background: #111;
-        }
-
-        .id-data {
+        .user-id-box {
             font-family: 'Courier New', monospace;
+            font-size: 11px;
+            color: var(--gold-solid);
+            letter-spacing: 1px;
+        }
+
+        /* КНОПКИ-ТАБЛЕТКИ С ИКОНКАМИ */
+        .action-bar {
+            position: absolute;
+            bottom: 50px;
+            display: flex;
+            gap: 35px;
+            z-index: 100;
+        }
+
+        .pill-button {
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            border: 2px solid var(--gold-solid);
+            padding: 12px 35px;
+            border-radius: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+
+        .pill-button:hover {
+            background: var(--gold-solid);
+            color: #000;
+            box-shadow: 0 0 30px var(--gold-solid);
+        }
+
+        .circle-icon {
+            width: 26px;
+            height: 26px;
+            border: 1px solid var(--gold-solid);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 12px;
-            color: var(--gold-deep);
-            opacity: 0.8;
         }
     </style>
 </head>
 <body>
 
-<div class="hall-viewport">
-    <div class="marble-floor"></div>
+<div class="hall-container">
+    <div class="floor"></div>
     <div class="floor-reflection"></div>
 
-    <div class="id-panel">
-        <div class="id-avatar"></div>
-        <div class="id-data">
-            <div>ID: #TRACE_734_V3</div>
-            <div style="color: #fff; font-style: italic; margin-top: 5px;">"Истина не в вине..."</div>
+    <div class="user-auth-block">
+        <div style="width: 50px; height: 50px; border: 1px solid var(--gold-solid); background: #111;"></div>
+        <div class="user-id-box">
+            <div>USER_ID: #GY-TRACE-2026</div>
+            <div style="color: #fff; opacity: 0.6; margin-top: 4px;">Verified Member</div>
         </div>
     </div>
 
-    <div class="entrance-zone">
-        <div class="bar-sign">BAR</div>
-        <div class="gold-arch">
-            <div class="arch-glow-inner"></div>
+    <div class="entrance-scene">
+        <div class="bar-label">BAR</div>
+        <div class="arch-structure">
+            <div class="arch-inner-glow"></div>
             <div class="beaded-curtain"></div>
         </div>
     </div>
 
-    <div class="controls">
-        <button class="btn-vintage">
-            <div class="icon-circle">♫</div> Звуки холла
+    <div class="action-bar">
+        <button class="pill-button" onclick="handleSound('ambient')">
+            <div class="circle-icon">♫</div> Звуки холла
         </button>
-        <button class="btn-vintage">
-            <div class="icon-circle">▶</div> Включить музыку
+        <button class="pill-button" onclick="handleSound('music')">
+            <div class="circle-icon">▶</div> Включить музыка
         </button>
     </div>
 </div>
+
+<script>
+    // Логика звука остается на уровне 0.2 как договаривались
+    const audio = new Audio('bar_ambient.mp3');
+    audio.loop = true;
+    audio.volume = 0.2;
+
+    function handleSound(type) {
+        if (audio.paused) {
+            audio.play().catch(e => console.log("Необходим клик"));
+        } else {
+            audio.pause();
+        }
+    }
+</script>
 
 </body>
 </html>
