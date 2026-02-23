@@ -1,206 +1,141 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Hall v2.0.1 - Grand Entrance</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GY-GY Hall v2.0.2 - Wide Space</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
-            background: #000; color: #d4af37; 
+            background: #0b0705; color: #d4af37; 
             font-family: 'Georgia', serif; 
             height: 100vh; overflow: hidden;
-            display: flex; justify-content: center; align-items: center;
-        }
-
-        .hall-scene {
-            position: relative; width: 100vw; height: 100vh;
-            background: radial-gradient(circle at 50% 40%, #2a1b10 0%, #000 80%);
-            perspective: 1200px; display: flex; align-items: center; justify-content: center;
-        }
-
-        /* ТАБЛО С ФОТО И ИНФО (ВЕРСИЯ 2.0.1) */
-        .registration-board {
-            position: absolute; top: 15px; left: 50%; transform: translateX(-50%);
-            width: 420px; padding: 10px;
-            background: rgba(10, 5, 0, 0.95); border: 2px solid #d4af37;
-            box-shadow: 0 0 25px rgba(212,175,55,0.4);
-            display: flex; align-items: center; z-index: 100;
-        }
-        .user-photo {
-            width: 60px; height: 60px; border: 1px solid #d4af37;
-            /* Сюда подставится ваше фото-аватар */
-            background: #111 url('your-photo-path.jpg') center/cover; 
-            margin-right: 15px; flex-shrink: 0;
-        }
-        .user-info { flex-grow: 1; text-align: left; overflow: hidden; }
-        #slogan-display { font-style: italic; font-size: 11px; color: #fff; margin-top: 5px; white-space: nowrap; }
-
-        /* ВИНТАЖНЫЕ СТЕНЫ */
-        .wall {
-            position: absolute; width: 33%; height: 85%; top: 7.5%;
-            background: #1a0f05 url('https://www.transparenttextures.com/patterns/dark-wood.png');
-            z-index: 2; border: 12px solid #2a1b10;
-            box-shadow: inset 0 0 60px #000, 15px 15px 40px rgba(0,0,0,0.8);
-            display: flex; flex-direction: column; justify-content: space-around; align-items: center;
-        }
-        .left-wall { left: 0; transform: rotateY(35deg); transform-origin: left; }
-        .right-wall { right: 0; transform: rotateY(-35deg); transform-origin: right; }
-
-        .portal {
-            width: 130px; height: 160px; border: 6px solid #d4af37;
-            background-color: #000; overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.9);
-        }
-        .portal img { width: 100%; height: 100%; object-fit: cover; opacity: 0.5; filter: sepia(1); }
-
-        /* ЦЕНТРАЛЬНАЯ ГРУППА: ГРАММОФОН 2.0.1 */
-        .center-group { display: flex; flex-direction: column; align-items: center; z-index: 10; position: relative; }
-        .bar-label { font-size: 32px; letter-spacing: 12px; font-weight: bold; text-shadow: 0 0 15px #d4af37; margin-bottom: 20px; }
-        
-        .gramophone-container {
-            position: relative; width: 140px; height: 140px; margin-bottom: 20px;
             display: flex; justify-content: center; align-items: flex-end;
         }
-        .gram-base {
-            width: 100px; height: 45px; background: #3d2b1f; border: 2px solid #d4af37;
-            border-radius: 4px; position: relative; z-index: 5;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-        }
-        .vinyl-plate {
-            position: absolute; top: 5px; width: 110px; height: 15px;
-            background: #111; border-radius: 50%; border: 1px solid #333;
-            transform: rotateX(75deg); z-index: 6; transition: 0.5s;
-            background: radial-gradient(circle, #222 10%, #111 11%, #111 100%);
-        }
-        .vinyl-plate.spinning { animation: spin 1.8s linear infinite; }
-        
-        .gram-horn {
-            position: absolute; bottom: 50px; left: -30px;
-            width: 70px; height: 70px; background: #d4af37;
-            clip-path: polygon(100% 10%, 0 50%, 100% 90%);
-            transform: rotate(-20deg); z-index: 4;
-            filter: drop-shadow(0 0 5px rgba(212,175,55,0.3));
-        }
-        .tonearm {
-            position: absolute; right: 15px; top: 10px;
-            width: 50px; height: 5px; background: #888;
-            transform-origin: right center; transform: rotate(-40deg);
-            z-index: 10; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .tonearm.active { transform: rotate(12deg); }
 
-        @keyframes spin { from { transform: rotateX(75deg) rotate(0deg); } to { transform: rotateX(75deg) rotate(360deg); } }
-
-        /* КНОПКА ВКЛЮЧЕНИЯ (ЗВУКИ ХОЛЛА) */
-        .play-btn {
-            background: #000; color: #d4af37; border: 2px solid #d4af37;
-            font-family: 'Georgia', serif; font-size: 13px; padding: 12px 25px;
-            cursor: pointer; transition: 0.3s; letter-spacing: 2px; font-weight: bold;
+        /* ГЛАВНАЯ СЦЕНА — ШИРОКИЙ ХОЛЛ */
+        .hall-scene {
+            position: relative; width: 100vw; height: 100vh;
+            background: radial-gradient(ellipse at 50% 50%, #2a1b10 0%, #050302 90%);
+            display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+            perspective: 1500px; padding-bottom: 50px;
         }
-        .play-btn:hover { background: #d4af37; color: #000; box-shadow: 0 0 20px #d4af37; }
 
-        /* ПАНЕЛЬ ЯЗЫКОВ */
-        .lang-panel { margin-top: 20px; display: grid; grid-template-columns: repeat(4, 50px); gap: 8px; }
-        .ln-btn { background: #000; border: 1px solid #d4af37; color: #d4af37; font-size: 11px; padding: 4px; cursor: pointer; opacity: 0.7; }
-        .ln-btn.active { background: #d4af37; color: #000; opacity: 1; }
+        /* ТАБЛО (ВЕРХНИЙ ЯРУС) */
+        .top-board {
+            width: 80%; max-width: 900px; margin-top: 20px;
+            background: rgba(0,0,0,0.8); border: 2px solid #d4af37;
+            padding: 15px; display: flex; align-items: center; z-index: 20;
+            box-shadow: 0 0 30px rgba(212,175,55,0.2);
+        }
+        .avatar { width: 80px; height: 80px; border: 1px solid #d4af37; background: #111; margin-right: 20px; }
 
-        .floor {
-            position: absolute; bottom: 0; width: 100%; height: 40%;
-            background: linear-gradient(to bottom, transparent, #000), 
-                        repeating-perspective-gradient(0deg, #111 0, #111 2px, transparent 2px, transparent 40px);
-            transform: rotateX(70deg); opacity: 0.4; z-index: 1;
+        /* ГАЛЕРЕЯ НА СТЕНАХ */
+        .gallery {
+            position: absolute; top: 150px; width: 100%;
+            display: flex; justify-content: space-between; padding: 0 5%;
+        }
+        .paint-group { display: flex; gap: 30px; }
+        .frame { width: 140px; height: 180px; border: 5px solid #d4af37; background: #111; opacity: 0.6; box-shadow: 0 10px 20px #000; }
+
+        /* ЦЕНТРАЛЬНЫЙ ВХОД И ЗАНАВЕСКА */
+        .entrance-arch {
+            position: absolute; bottom: 0; width: 450px; height: 75vh;
+            border: 10px solid #d4af37; border-bottom: none; border-radius: 225px 225px 0 0;
+            z-index: 5; background: #000; overflow: hidden;
+        }
+        .beaded-curtain {
+            width: 100%; height: 100%;
+            background: repeating-linear-gradient(90deg, 
+                transparent 0px, transparent 8px, 
+                #5d4037 9px, #d4af37 10px, #5d4037 11px, 
+                transparent 12px);
+            opacity: 0.9;
+            animation: sway 5s ease-in-out infinite;
+        }
+
+        /* ВЫСОКИЕ СТОЛИКИ (ЛОМБЕРНЫЕ) */
+        .furniture {
+            position: absolute; bottom: 0; width: 100%;
+            display: flex; justify-content: space-around; align-items: flex-end;
+            padding: 0 10%; z-index: 15;
+        }
+        .high-table { width: 120px; text-align: center; }
+        .table-top { width: 150px; height: 10px; background: #3d2b1f; border: 2px solid #d4af37; border-radius: 5px; margin-left: -15px;}
+        .table-leg { width: 8px; height: 180px; background: #d4af37; margin: 0 auto; }
+
+        /* ОБЪЕКТЫ НА СТОЛАХ */
+        .gramophone-unit { position: relative; bottom: 10px; cursor: pointer; }
+        .vase-unit { position: relative; bottom: 10px; font-size: 40px; }
+
+        /* КНОПКИ УПРАВЛЕНИЯ */
+        .controls {
+            display: flex; gap: 50px; z-index: 30; margin-bottom: 20px;
+        }
+        .btn-gold {
+            background: rgba(0,0,0,0.8); color: #d4af37; border: 2px solid #d4af37;
+            padding: 15px 30px; border-radius: 50px; cursor: pointer; font-weight: bold;
+            display: flex; align-items: center; gap: 10px; transition: 0.3s;
+        }
+        .btn-gold:hover { background: #d4af37; color: #000; box-shadow: 0 0 20px #d4af37; }
+
+        @keyframes sway {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(5px); }
         }
     </style>
 </head>
 <body>
 
-    <div class="hall-scene">
-        <div class="floor"></div>
-
-        <div class="registration-board">
-            <div class="user-photo"></div>
-            <div class="user-info">
-                <div style="font-family: monospace; font-size: 13px; color: #d4af37;">ID: #GY-734-TRACE</div>
-                <div id="slogan-display">"Истина не в вине, а в тех кто его пьет"</div>
-            </div>
-        </div>
-
-        <div class="wall left-wall">
-            <div class="portal"><img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?q=80&w=200"></div>
-            <div class="portal"><img src="https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?q=80&w=200"></div>
-        </div>
-
-        <div class="center-group">
-            <div class="bar-label" id="bar-title">БАР</div>
-            
-            <div class="gramophone-container">
-                <div class="gram-horn"></div>
-                <div class="tonearm" id="tonearm"></div>
-                <div class="vinyl-plate" id="vinyl"></div>
-                <div class="gram-base"></div>
-            </div>
-
-            <button class="play-btn" onclick="toggleAudio()" id="s-btn">ВКЛЮЧИТЬ ЗВУКИ ХОЛЛА</button>
-            
-            <div class="lang-panel">
-                <button class="ln-btn active" onclick="setL('RU', this)">RU</button>
-                <button class="ln-btn" onclick="setL('EN', this)">EN</button>
-                <button class="ln-btn" onclick="setL('DE', this)">DE</button>
-                <button class="ln-btn" onclick="setL('FR', this)">FR</button>
-                <button class="ln-btn" onclick="setL('IT', this)">IT</button>
-                <button class="ln-btn" onclick="setL('ES', this)">ES</button>
-                <button class="ln-btn" onclick="setL('PL', this)">PL</button>
-                <button class="ln-btn" onclick="setL('UA', this)">UA</button>
-            </div>
-        </div>
-
-        <div class="wall right-wall">
-            <div class="portal"><img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=200"></div>
-            <div class="portal"><img src="https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?q=80&w=200"></div>
+<div class="hall-scene">
+    <div class="top-board">
+        <div class="avatar"></div>
+        <div>
+            <h2 id="trace-id">ID: #GY-734-TRACE</h2>
+            <p style="font-style: italic; font-size: 14px;">"Истина не в вине, а в тех кто его пьет"</p>
         </div>
     </div>
 
-    <audio id="ambience" loop src="hall_sounds.mp3"></audio>
+    <div class="gallery">
+        <div class="paint-group">
+            <div class="frame"></div><div class="frame"></div>
+        </div>
+        <div class="paint-group">
+            <div class="frame"></div><div class="frame"></div>
+        </div>
+    </div>
 
-    <script>
-        // ЛОГИКА ВЕРСИИ 2.0.1
-        const audio = document.getElementById('ambience');
-        const vinyl = document.getElementById('vinyl');
-        const tonearm = document.getElementById('tonearm');
-        const btn = document.getElementById('s-btn');
+    <div class="entrance-arch">
+        <div class="beaded-curtain"></div>
+    </div>
 
-        const slogans = {
-            RU: "Истина не в вине, а в тех кто его пьет",
-            EN: "Truth is not in wine, but in those who drink it",
-            UA: "Істина не у вині, а в тих, хто його п'є",
-            PL: "Prawda nie tkwi w winie, lecz w tych, którzy je piją"
-        };
+    <div class="furniture">
+        <div class="high-table">
+            <div class="gramophone-unit" onclick="togglePlay()">
+                <div style="font-size: 50px;">🎺</div> </div>
+            <div class="table-top"></div>
+            <div class="table-leg"></div>
+        </div>
 
-        function toggleAudio() {
-            if (audio.paused) {
-                audio.volume = 0.5;
-                audio.play().then(() => {
-                    btn.innerText = "ЗВУКИ ВКЛЮЧЕНЫ";
-                    btn.style.borderColor = "#0f0";
-                    vinyl.classList.add('spinning');
-                    tonearm.classList.add('active');
-                }).catch(e => console.log("Кликните для активации звука"));
-            } else {
-                audio.pause();
-                btn.innerText = "ВКЛЮЧИТЬ ЗВУКИ ХОЛЛА";
-                btn.style.borderColor = "#d4af37";
-                vinyl.classList.remove('spinning');
-                tonearm.classList.remove('active');
-            }
-        }
+        <div class="high-table">
+            <div class="vase-unit">💐</div> <div class="table-top"></div>
+            <div class="table-leg"></div>
+        </div>
+    </div>
 
-        function setL(lang, btnElement) {
-            document.querySelectorAll('.ln-btn').forEach(b => b.classList.remove('active'));
-            btnElement.classList.add('active');
-            document.getElementById('bar-title').innerText = (lang === 'RU' || lang === 'UA') ? 'БАР' : 'BAR';
-            document.getElementById('slogan-display').innerText = `"${slogans[lang] || slogans['EN']}"`;
-        }
-    </script>
+    <div class="controls">
+        <button class="btn-gold" onclick="toggleAudio('hall')">🎶 ЗВУКИ ХОЛЛА</button>
+        <button class="btn-gold" onclick="toggleAudio('music')">▶ ВКЛЮЧИТЬ МУЗЫКУ</button>
+    </div>
+</div>
+
+<script>
+    function toggleAudio(type) {
+        alert(type === 'hall' ? "Запуск атмосферы холла..." : "Граммофон начинает играть...");
+        // Здесь твоя логика запуска файлов
+    }
+</script>
+
 </body>
 </html>
