@@ -1,1 +1,229 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GY-GY Club v2.9.1</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+        body { margin: 0; background: #000; color: #d4af37; font-family: 'Times New Roman', Times, serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; }
+        
+        .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 10px; z-index: 1; }
+        .block.active { display: flex !important; z-index: 10; }
 
+        /* ЭЛЕМЕНТЫ РЕГИСТРАЦИИ */
+        .btn-gold { width: 100%; max-width: 180px; padding: 10px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 11px; letter-spacing: 2px; cursor: pointer; margin: 4px 0; font-family: inherit; }
+        .charlie-portrait { width: 180px; height: 180px; margin-bottom: 10px; border-radius: 4px; overflow: hidden; position: relative; display: flex; align-items: center; justify-content: center; background: rgba(212, 175, 55, 0.05); }
+        .charlie-portrait::before { content: "🤵‍♂️"; font-size: 100px; position: absolute; z-index: 1; }
+        .charlie-portrait img { width: 100%; height: 100%; object-fit: cover; position: relative; z-index: 2; background: black; }
+
+        .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 100%; max-width: 280px; margin-top: 15px; }
+        .lang-item { font-size: 11px; opacity: 0.5; cursor: pointer; padding: 5px; font-weight: bold; border-bottom: 2px solid transparent; }
+        .lang-item.active { border-bottom: 2px solid #d4af37; opacity: 1; color: #fff; }
+
+        /* ХОЛЛ v2.9.1 */
+        #block-hall { background: #050505; justify-content: flex-start; padding-top: 20px; }
+        
+        .stats-board { width: 95%; max-width: 700px; display: flex; justify-content: space-around; padding: 15px; border: 1px double rgba(212, 175, 55, 0.3); margin-bottom: 40px; background: rgba(10,10,10,0.9); }
+        .stat-box { font-size: 10px; letter-spacing: 1px; }
+        .stat-box span { display: block; font-size: 16px; color: #fff; margin-top: 4px; }
+
+        .hall-scene { display: flex; align-items: flex-end; justify-content: center; gap: 30px; width: 100%; height: 350px; }
+        
+        /* Галерея */
+        .gallery-section { display: flex; align-items: center; gap: 15px; }
+        .painting { width: 70px; height: 90px; border: 4px solid #3d2b1f; background: #111; position: relative; box-shadow: 0 10px 20px #000; }
+        .painting::after { content: "🖼️"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.2; }
+        .lumber-table { width: 45px; height: 35px; background: #2a1b0f; border-radius: 3px 3px 0 0; position: relative; }
+        .lumber-table::before { content: "💐"; position: absolute; top: -18px; left: 50%; transform: translateX(-50%); font-size: 18px; }
+
+        /* Арочный вход в Бар */
+        .bar-arch-wrap { width: 180px; height: 280px; border: 10px solid #3d2b1f; border-bottom: none; border-radius: 90px 90px 0 0; position: relative; cursor: pointer; overflow: hidden; background: #000; }
+        .bar-title { position: absolute; top: 50px; width: 100%; font-size: 22px; letter-spacing: 8px; z-index: 5; text-shadow: 0 0 15px #000; }
+        .beads-curtain { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: repeating-linear-gradient(90deg, #3d2b1f 0px, #3d2b1f 3px, transparent 3px, transparent 8px); z-index: 10; transition: 0.8s ease-in-out; }
+        .bar-arch-wrap:hover .beads-curtain { transform: scaleX(0.2); opacity: 0.3; }
+
+        @media (max-width: 650px) { .hall-scene { gap: 10px; } .painting { width: 50px; height: 70px; } .bar-arch-wrap { width: 140px; height: 220px; } }
+    </style>
+</head>
+<body>
+
+    <audio id="door-sound"><source src="door_open.mp3" type="audio/mpeg"></audio>
+    <audio id="beads-sound"><source src="beads.mp3" type="audio/mpeg"></audio>
+    <audio id="bar-sound" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
+
+    <div id="block-entrance" class="block active">
+        <div style="letter-spacing:10px; margin-bottom:20px; opacity:0.8;">GY-GY PRIVATE</div>
+        <div class="door-container" onclick="handleDoor()" id="main-door" style="cursor:pointer; transition:1.5s;">
+            <img src="door_1.jpg" style="width:70vw; max-width:320px; border:1px solid rgba(212,175,55,0.2);" onerror="this.parentElement.innerHTML='🚪'">
+        </div>
+    </div>
+
+    <div id="block-welcome" class="block">
+        <div class="charlie-portrait"><img src="charlie.png" onerror="this.style.display='none'"></div>
+        <h1 id="t-welcome" style="letter-spacing:8px; font-weight:normal;">WELCOME</h1>
+        <button id="btn-proceed" class="btn-gold" onclick="startTerminal()">PROCEED</button>
+    </div>
+
+    <div id="block-identity" class="block">
+        <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:20px; margin-bottom:20px;">
+            <div class="panel" style="border-right:1px solid rgba(212,175,55,0.2); padding: 0 20px;">
+                <div id="t-id-title" style="font-size:11px; letter-spacing:2px; margin-bottom:10px;">IDENTITY</div>
+                <div id="user-avatar" style="font-size:45px; margin-bottom:10px;">🥃</div>
+                <div style="display:flex; justify-content:center; gap:10px; margin-bottom:10px;">
+                    <div onclick="changeAvatar(-1)" style="cursor:pointer; font-size:24px;">&#10094;</div>
+                    <div onclick="changeAvatar(1)" style="cursor:pointer; font-size:24px;">&#10095;</div>
+                </div>
+                <div id="label-res" style="font-size:18px; margin-bottom:10px;">№ 1000</div>
+                <div style="display:flex; justify-content:center; gap:10px; margin-bottom:10px;">
+                    <div onclick="changeID(-1)" style="cursor:pointer; font-size:24px;">&#10094;</div>
+                    <div onclick="changeID(1)" style="cursor:pointer; font-size:24px;">&#10095;</div>
+                </div>
+                <button id="btn-save" class="btn-gold" onclick="saveChanges()">СОХРАНИТЬ</button>
+                <div style="height:45px; margin-top:5px;">
+                    <button id="btn-to-hall" class="btn-gold" style="display:none;" onclick="enterHall()">ВХОД</button>
+                </div>
+            </div>
+            <div class="panel" style="padding: 0 20px;">
+                <div id="t-card-title" style="font-size:11px; letter-spacing:2px; margin-bottom:10px;">MEMBER CARD</div>
+                <div id="qrcode" style="background:#fff; padding:5px; margin-bottom:10px; display:inline-block;"></div>
+                <div style="width:90px; height:90px; border:1px solid #d4af37; background:#fff; cursor:pointer; overflow:hidden; display:flex; align-items:center; justify-content:center; margin: 0 auto;" onclick="document.getElementById('file-input').click()">
+                    <span id="t-photo-text" style="color:#000; font-size:9px; font-weight:bold;">PHOTO</span>
+                    <img id="photo-preview" style="width:100%; height:100%; object-fit:cover; display:none;">
+                </div>
+                <input type="file" id="file-input" style="display:none" onchange="previewFile()">
+            </div>
+        </div>
+
+        <div id="dynamic-quote">«В каждой шутке есть доля виски...»</div>
+
+        <div class="lang-grid">
+            <div class="lang-item active" onclick="setLang(this,'ru')">RU</div>
+            <div class="lang-item" onclick="setLang(this,'en')">EN</div>
+            <div class="lang-item" onclick="setLang(this,'ua')">UA</div>
+            <div class="lang-item" onclick="setLang(this,'fr')">FR</div>
+            <div class="lang-item" onclick="setLang(this,'de')">DE</div>
+            <div class="lang-item" onclick="setLang(this,'pl')">PL</div>
+            <div class="lang-item" onclick="setLang(this,'es')">ES</div>
+            <div class="lang-item" onclick="setLang(this,'it')">IT</div>
+        </div>
+    </div>
+
+    <div id="block-hall" class="block">
+        <div class="stats-board">
+            <div class="stat-box">STATUS <span id="stat-id">№ 1000</span></div>
+            <div class="stat-box">GUESTS ONLINE <span id="stat-online">14</span></div>
+            <div class="stat-box">ATMOSPHERE <span id="stat-temp">180°C</span></div>
+        </div>
+
+        <div class="hall-scene">
+            <div class="gallery-section">
+                <div class="painting"></div>
+                <div class="lumber-table"></div>
+            </div>
+
+            <div class="bar-arch-wrap" onclick="enterBar()">
+                <div class="bar-title" id="t-bar-label">БАР</div>
+                <div class="beads-curtain"></div>
+            </div>
+
+            <div class="gallery-section">
+                <div class="lumber-table"></div>
+                <div class="painting"></div>
+            </div>
+        </div>
+
+        <button class="btn-gold" style="margin-top:50px; font-size:9px; opacity:0.5;" onclick="location.reload()">EXIT CLUB</button>
+    </div>
+
+    <script>
+        const barSnd = document.getElementById('bar-sound');
+        const doorSnd = document.getElementById('door-sound');
+        const beadsSnd = document.getElementById('beads-sound');
+        let currentID = 1000, currentAvIdx = 0;
+        const avatars = ['🥃','🎩','🍸','🚬','🎷','🎭','👔','💼','💎'];
+
+        const langData = {
+            ru: { welcome: "ДОБРО ПОЖАЛОВАТЬ", proceed: "ПРОДОЛЖИТЬ", save: "СОХРАНИТЬ", entry: "ВХОД", photo: "ФОТО", id: "ЛИЧНОСТЬ", card: "КАРТА", bar: "БАР", quote: "«В каждой шутке есть доля виски...»" },
+            en: { welcome: "WELCOME", proceed: "PROCEED", save: "SAVE", entry: "ENTER", photo: "PHOTO", id: "IDENTITY", card: "CARD", bar: "BAR", quote: "«Every joke has a share of whiskey...»" },
+            ua: { welcome: "ВІТАЄМО", proceed: "ПРОДОВЖИТИ", save: "ЗБЕРЕГТИ", entry: "ВХІД", photo: "ФОТО", id: "ОСОБИСТІСТЬ", card: "КАРТКА", bar: "БАР", quote: "«У кожному жарті є доля віскі...»" },
+            fr: { welcome: "BIENVENUE", proceed: "CONTINUER", save: "SAUVER", entry: "ENTRER", photo: "PHOTO", id: "IDENTITÉ", card: "CARTE", bar: "BAR", quote: "«Dans chaque blague, il y a du whisky...»" },
+            de: { welcome: "WILLKOMMEN", proceed: "WEITER", save: "SPEICHERN", entry: "EINTRITT", photo: "FOTO", id: "IDENTITÄT", card: "KARTE", bar: "BAR", quote: "«In jedem Witz steckt Whiskey...»" },
+            pl: { welcome: "WITAJ", proceed: "KONTYNUUJ", save: "ZAPISZ", entry: "WEJŚCIE", photo: "FOTO", id: "TOŻSAMOŚĆ", card: "KARTA", bar: "BAR", quote: "«W każdym żarcie jest kropla whiskey...»" },
+            es: { welcome: "BIENVENIDO", proceed: "CONTINUAR", save: "GUARDAR", entry: "ENTRAR", photo: "FOTO", id: "IDENTIDAD", card: "TARJETA", bar: "BAR", quote: "«En cada broma hay algo de whisky...»" },
+            it: { welcome: "BENVENUTO", proceed: "CONTINUA", save: "SALVA", entry: "ENTRA", photo: "FOTO", id: "IDENTITÀ", card: "CARTA", bar: "BAR", quote: "«Ogni scherzo ha il suo whisky...»" }
+        };
+
+        function setLang(el, lang) {
+            document.querySelectorAll('.lang-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+            const d = langData[lang];
+            document.getElementById('t-welcome').innerText = d.welcome;
+            document.getElementById('btn-proceed').innerText = d.proceed;
+            document.getElementById('btn-save').innerText = d.save;
+            document.getElementById('btn-to-hall').innerText = d.entry;
+            document.getElementById('t-photo-text').innerText = d.photo;
+            document.getElementById('t-id-title').innerText = d.id;
+            document.getElementById('t-card-title').innerText = d.card;
+            document.getElementById('t-bar-label').innerText = d.bar;
+            document.getElementById('dynamic-quote').innerText = d.quote;
+        }
+
+        function handleDoor() {
+            doorSnd.play().catch(()=>{});
+            document.getElementById('main-door').style.transform = "scale(4)";
+            document.getElementById('main-door').style.opacity = "0";
+            setTimeout(() => switchTo('block-welcome'), 1200);
+        }
+
+        function startTerminal() {
+            barSnd.volume = 0.1; barSnd.play().catch(()=>{});
+            switchTo('block-identity');
+            updateDisplay();
+        }
+
+        function saveChanges() {
+            document.getElementById('btn-to-hall').style.display = 'block';
+            document.getElementById('stat-id').innerText = "№ " + currentID;
+        }
+
+        function enterHall() {
+            switchTo('block-hall');
+            barSnd.volume = 0.3;
+        }
+
+        function enterBar() {
+            beadsSnd.play().catch(()=>{});
+            setTimeout(() => alert("Opening Bar..."), 500);
+        }
+
+        function updateDisplay() {
+            document.getElementById('user-avatar').innerText = avatars[currentAvIdx];
+            document.getElementById('label-res').innerText = "№ " + currentID;
+            const qrBox = document.getElementById("qrcode");
+            qrBox.innerHTML = "";
+            new QRCode(qrBox, { text: "GY-ID:"+currentID, width: 80, height: 80 });
+        }
+
+        function switchTo(id) {
+            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function changeAvatar(dir) { currentAvIdx = (currentAvIdx + dir + avatars.length) % avatars.length; updateDisplay(); }
+        function changeID(dir) { currentID = (currentID + (dir * 9) + 9000) % 9000 + 1000; updateDisplay(); }
+        
+        function previewFile() {
+            const file = document.getElementById('file-input').files[0];
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const p = document.getElementById('photo-preview');
+                p.src = reader.result; p.style.display = "block";
+                document.getElementById('t-photo-text').style.display = "none";
+            }
+            if(file) reader.readAsDataURL(file);
+        }
+    </script>
+</body>
+</html>
