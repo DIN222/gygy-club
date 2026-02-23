@@ -2,134 +2,156 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>gy-gy hall v3.1.1 Pro</title>
+    <title>gy-gy hall v3.1.2 Pro</title>
     <style>
         :root {
-            --gold: #c5a059; /* Потускневшее золото */
-            --dark-wood: #1a1008;
-            --wallpaper: rgba(43, 29, 14, 0.5);
+            --vintage-gold: #c5a059;
+            --deep-dark: #080808;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: #050505; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+        body { 
+            background: #000; 
+            height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            font-family: 'Georgia', serif;
+            overflow: hidden;
+        }
 
-        /* ОСНОВНАЯ СЦЕНА С ЭФФЕКТОМ ГРИФЕЛЯ И ПЫЛИ */
+        /* КОНТЕЙНЕР-ХОЛЛ (в стиле входной зоны с Чарли) */
         .hall-viewport {
             position: relative;
             width: 1100px;
             height: 800px;
-            /* Текстура обоев и глубокое затемнение по углам (виньетка) */
+            /* Используем атмосферное фоновое изображение вместо простого цвета */
             background: 
-                radial-gradient(circle at 50% 40%, transparent 10%, #000 90%),
-                url('https://www.transparenttextures.com/patterns/damask-wallpaper.png'), 
-                #1a120b;
-            border: 1px solid rgba(197, 160, 89, 0.1);
-            display: flex; justify-content: center; align-items: center;
-            perspective: 1500px;
+                linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+                url('https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=2070&auto=format&fit=crop'); 
+            background-size: cover;
+            background-position: center;
+            border: 3px solid #1a1008;
+            box-shadow: 0 0 100px #000, inset 0 0 150px #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1200px;
         }
 
-        /* ПОЛ С ПАТИНОЙ (НЕ ИДЕАЛЬНО ГЛАДКИЙ) */
-        .floor {
-            position: absolute; bottom: 0; width: 100%; height: 350px;
+        /* ПОЛ С ВИНТАЖНЫМ ГЛЯНЦЕМ */
+        .marble-floor {
+            position: absolute; bottom: 0; width: 150%; height: 380px;
             background: 
-                linear-gradient(to bottom, rgba(20, 17, 14, 0.8) 0%, #000 100%),
-                url('https://www.transparenttextures.com/patterns/dark-leather.png'); /* Текстура дает эффект старого камня */
+                linear-gradient(to bottom, rgba(20, 15, 10, 0.7) 0%, #000 100%),
+                url('https://www.transparenttextures.com/patterns/dark-leather.png');
             transform: rotateX(65deg); transform-origin: bottom center;
-            border-top: 2px solid rgba(197, 160, 89, 0.2);
+            border-top: 1px solid var(--vintage-gold);
             z-index: 1;
         }
 
-        /* АРКА С ЭФФЕКТОМ ЛАТУНИ */
-        .entrance-scene {
-            position: relative; z-index: 10; margin-top: -60px;
+        /* АВТОРИЗАЦИЯ (Твой стандарт) */
+        .auth-panel {
+            position: absolute; top: 30px; left: 40px;
+            display: flex; align-items: center; gap: 15px; z-index: 100;
+            background: rgba(10, 5, 0, 0.9); padding: 10px;
+            border: 1px solid var(--vintage-gold);
+        }
+        .user-id { font-family: monospace; font-size: 10px; color: var(--vintage-gold); }
+
+        /* ЦЕНТРАЛЬНАЯ АРКА С ВИЗУАЛОМ */
+        .entrance-composition {
+            position: relative; z-index: 10; margin-top: -50px;
             display: flex; flex-direction: column; align-items: center;
         }
-        
         .bar-label {
-            font-family: 'Playfair Display', serif; /* Нужен засечный шрифт */
             font-size: 60px; letter-spacing: 25px; color: #f1d592;
-            text-shadow: 2px 2px 5px #000, 0 0 20px rgba(197, 160, 89, 0.5);
-            margin-bottom: 20px; font-weight: 300;
+            text-shadow: 3px 3px 10px #000; margin-bottom: 25px;
         }
 
-        .heavy-arch {
-            width: 380px; height: 480px; border-radius: 190px 190px 0 0;
-            background: #000;
-            /* Многослойная рама: латунь -> тень -> золото */
-            border: 15px solid var(--gold);
+        /* Арка теперь с эффектом золотых нитей из референса */
+        .pro-arch {
+            width: 380px; height: 500px;
+            border-radius: 190px 190px 0 0;
+            border: 15px solid var(--vintage-gold);
             border-bottom: none;
-            outline: 2px solid #3d2b1f;
-            box-shadow: 0 0 50px #000, inset 0 0 40px #000;
-            position: relative; overflow: hidden;
+            position: relative;
+            background: url('https://images.unsplash.com/photo-1551028150-64b9f398f678?q=80&w=1974&auto=format&fit=crop'); /* Текстура занавеса */
+            background-size: cover;
+            box-shadow: 0 0 50px #000;
+            overflow: hidden;
         }
-
-        /* ЗАНАВЕС С ЭФФЕКТОМ МЕТАЛЛИЧЕСКОГО БЛЕСКА */
-        .beads-curtain {
+        .bead-overlay {
             width: 100%; height: 100%;
-            background: repeating-linear-gradient(90deg, 
-                transparent 0, transparent 4px, 
-                #8b6b23 5px, 
-                #f1d592 6px, 
-                #8b6b23 7px, 
-                transparent 11px);
-            opacity: 0.8;
-            mask-image: linear-gradient(to bottom, black 80%, transparent);
+            background: repeating-linear-gradient(90deg, transparent 0, transparent 6px, rgba(197, 160, 89, 0.3) 7px, transparent 8px);
         }
 
-        /* КЛИКАБЕЛЬНЫЕ СТОЛИКИ В УГЛАХ */
-        .corners {
-            position: absolute; bottom: 0; width: 100%; height: 300px;
-            display: flex; justify-content: space-between; padding: 0 40px; z-index: 50;
+        /* СТОЛИКИ ПО УГЛАМ (Интеграция из твоего фото) */
+        .corner-elements {
+            position: absolute; bottom: 0; width: 100%; height: 350px;
+            display: flex; justify-content: space-between; padding: 0 50px; z-index: 50;
         }
-        .table-group { 
+        .table-vintage { 
             display: flex; flex-direction: column; align-items: center; 
-            filter: drop-shadow(0 10px 10px #000);
+            filter: drop-shadow(0 20px 20px #000);
         }
-        .table-item { font-size: 55px; margin-bottom: 5px; filter: sepia(0.5) contrast(1.2); }
-        .table-top { width: 130px; height: 10px; background: #3d2b1f; border: 1px solid var(--gold); border-radius: 50%; }
-        .table-leg { width: 4px; height: 160px; background: var(--gold); position: relative; }
-
-        /* ПАНЕЛЬ РЕГИСТРАЦИИ В СТИЛЕ СТАРОЙ КАРТОТЕКИ */
-        .auth-tag {
-            position: absolute; top: 30px; left: 30px;
-            display: flex; align-items: center; gap: 15px; z-index: 100;
-            background: rgba(10, 5, 0, 0.9); padding: 12px; 
-            border: 1px solid var(--gold);
-            box-shadow: 5px 5px 15px #000;
+        .table-object { 
+            width: 120px; height: 120px; 
+            background-size: contain; background-repeat: no-repeat;
+            margin-bottom: 10px;
         }
-        .avatar { width: 50px; height: 50px; background: #111; border: 1px solid var(--gold); filter: grayscale(1); }
+        /* Используем иконки, но с винтажным фильтром */
+        .gramophone { filter: sepia(1) brightness(0.8); font-size: 70px; }
+        .vase { filter: sepia(0.5) brightness(0.9); font-size: 70px; }
 
+        .table-top { width: 140px; height: 10px; background: #2a1b10; border: 1px solid var(--vintage-gold); border-radius: 50%; }
+        .table-leg { width: 4px; height: 180px; background: var(--vintage-gold); }
+
+        /* КНОПКИ УПРАВЛЕНИЯ */
+        .ui-nav {
+            position: absolute; bottom: 40px; display: flex; gap: 40px; z-index: 110;
+        }
+        .btn-pill {
+            background: rgba(0,0,0,0.8); color: #fff; border: 1px solid var(--vintage-gold);
+            padding: 12px 35px; border-radius: 50px; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 2px; font-size: 12px;
+        }
     </style>
 </head>
 <body>
 
 <div class="hall-viewport">
-    <div class="floor"></div>
+    <div class="marble-floor"></div>
 
-    <div class="auth-tag">
-        <div class="avatar"></div>
-        <div style="font-family: 'Courier New', monospace; font-size: 11px; color: var(--gold);">
-            <div>MEMBER: #900_GY</div>
-            <div style="color:#fff; opacity:0.5;">STATUS: VERIFIED</div>
+    <div class="auth-panel">
+        <div style="width: 45px; height: 45px; background: #111; border: 1px solid var(--vintage-gold);"></div>
+        <div class="user-id">
+            <div>MEMBER_ID: #GY-900</div>
+            <div style="color:#fff; opacity:0.5;">TRACE_ACTIVE</div>
         </div>
     </div>
 
-    <div class="entrance-scene">
+    <div class="entrance-composition">
         <div class="bar-label">BAR</div>
-        <div class="heavy-arch">
-            <div class="beaded-curtain"></div>
+        <div class="pro-arch">
+            <div class="bead-overlay"></div>
         </div>
     </div>
 
-    <div class="corners">
-        <div class="table-group">
-            <div class="table-item">📻</div>
+    <div class="corner-elements">
+        <div class="table-vintage">
+            <div class="table-object gramophone">📻</div>
             <div class="table-top"></div><div class="table-leg"></div>
         </div>
-        <div class="table-group">
-            <div class="table-item">💐</div>
+        <div class="table-vintage">
+            <div class="table-object vase">💐</div>
             <div class="table-top"></div><div class="table-leg"></div>
         </div>
+    </div>
+
+    <div class="ui-nav">
+        <button class="btn-pill">звуки холла</button>
+        <button class="btn-pill">включить музыка</button>
     </div>
 </div>
 
