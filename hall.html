@@ -1,139 +1,143 @@
 
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY Hall v2.0.2 - Wide Space</title>
+    <title>GY-GY Hall v2.2.0 - Grand Space</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         body { 
-            background: #0b0705; color: #d4af37; 
+            background: #000; color: #d4af37; 
             font-family: 'Georgia', serif; 
             height: 100vh; overflow: hidden;
-            display: flex; justify-content: center; align-items: flex-end;
+            display: flex; justify-content: center; align-items: center;
         }
 
-        /* ГЛАВНАЯ СЦЕНА — ШИРОКИЙ ХОЛЛ */
         .hall-scene {
             position: relative; width: 100vw; height: 100vh;
-            background: radial-gradient(ellipse at 50% 50%, #2a1b10 0%, #050302 90%);
-            display: flex; flex-direction: column; align-items: center; justify-content: space-between;
-            perspective: 1500px; padding-bottom: 50px;
+            background: radial-gradient(circle at 50% 50%, #2a1b10 0%, #000 85%);
+            display: flex; justify-content: center; align-items: center;
+            perspective: 2500px;
         }
 
-        /* ТАБЛО (ВЕРХНИЙ ЯРУС) */
-        .top-board {
-            width: 80%; max-width: 900px; margin-top: 20px;
-            background: rgba(0,0,0,0.8); border: 2px solid #d4af37;
-            padding: 15px; display: flex; align-items: center; z-index: 20;
-            box-shadow: 0 0 30px rgba(212,175,55,0.2);
+        /* ТАБЛО (Верхняя панель) */
+        .registration-board {
+            position: absolute; top: 30px; width: 550px; padding: 15px;
+            background: rgba(10, 5, 0, 0.95); border: 2px solid #d4af37;
+            display: flex; align-items: center; z-index: 100;
+            box-shadow: 0 0 30px rgba(212,175,55,0.3);
         }
-        .avatar { width: 80px; height: 80px; border: 1px solid #d4af37; background: #111; margin-right: 20px; }
+        .user-photo { width: 70px; height: 70px; border: 1px solid #d4af37; background: #111; margin-right: 20px; }
+        .id-text { font-family: monospace; font-size: 14px; letter-spacing: 1px; }
 
-        /* ГАЛЕРЕЯ НА СТЕНАХ */
-        .gallery {
-            position: absolute; top: 150px; width: 100%;
-            display: flex; justify-content: space-between; padding: 0 5%;
+        /* ГАЛЕРЕЯ (Стены раздвинуты максимально) */
+        .wall {
+            position: absolute; width: 20%; height: 70%; top: 15%;
+            background: #1a0f05 url('https://www.transparenttextures.com/patterns/dark-wood.png');
+            border: 8px solid #2a1b10; box-shadow: inset 0 0 80px #000;
+            display: flex; flex-direction: column; justify-content: space-around; align-items: center;
         }
-        .paint-group { display: flex; gap: 30px; }
-        .frame { width: 140px; height: 180px; border: 5px solid #d4af37; background: #111; opacity: 0.6; box-shadow: 0 10px 20px #000; }
+        .left-wall { left: 2%; transform: rotateY(10deg); } 
+        .right-wall { right: 2%; transform: rotateY(-10deg); }
+        .frame { width: 130px; height: 160px; border: 4px solid #d4af37; background: #000; opacity: 0.6; }
 
-        /* ЦЕНТРАЛЬНЫЙ ВХОД И ЗАНАВЕСКА */
-        .entrance-arch {
-            position: absolute; bottom: 0; width: 450px; height: 75vh;
-            border: 10px solid #d4af37; border-bottom: none; border-radius: 225px 225px 0 0;
-            z-index: 5; background: #000; overflow: hidden;
+        /* ЦЕНТРАЛЬНАЯ АРКА И ШТОРЫ-ВИСЮЛЬКИ */
+        .entrance-group {
+            display: flex; flex-direction: column; align-items: center;
+            height: 80vh; margin-top: 120px; z-index: 10;
         }
-        .beaded-curtain {
+        .bar-title { font-size: 50px; letter-spacing: 20px; font-weight: bold; margin-bottom: 15px; text-shadow: 0 0 20px #d4af37; }
+        .arch-frame {
+            width: 400px; height: 100%; border: 10px solid #d4af37; border-bottom: none;
+            border-radius: 200px 200px 0 0; position: relative; overflow: hidden; background: #050505;
+        }
+        .wooden-beads {
             width: 100%; height: 100%;
             background: repeating-linear-gradient(90deg, 
-                transparent 0px, transparent 8px, 
-                #5d4037 9px, #d4af37 10px, #5d4037 11px, 
-                transparent 12px);
-            opacity: 0.9;
-            animation: sway 5s ease-in-out infinite;
+                #3d2b1f 0px, #3d2b1f 3px, 
+                transparent 4px, transparent 12px);
+            opacity: 0.8;
         }
 
-        /* ВЫСОКИЕ СТОЛИКИ (ЛОМБЕРНЫЕ) */
-        .furniture {
-            position: absolute; bottom: 0; width: 100%;
-            display: flex; justify-content: space-around; align-items: flex-end;
-            padding: 0 10%; z-index: 15;
-        }
-        .high-table { width: 120px; text-align: center; }
-        .table-top { width: 150px; height: 10px; background: #3d2b1f; border: 2px solid #d4af37; border-radius: 5px; margin-left: -15px;}
-        .table-leg { width: 8px; height: 180px; background: #d4af37; margin: 0 auto; }
+        /* ВЫСОКИЕ ЛОМБЕРНЫЕ СТОЛИКИ (v2.2.0) */
+        .furniture { position: absolute; bottom: 0; width: 100%; display: flex; justify-content: space-between; padding: 0 22%; z-index: 50; }
+        .table-set { display: flex; flex-direction: column; align-items: center; }
+        .table-top { width: 160px; height: 12px; background: #3d2b1f; border: 2px solid #d4af37; border-radius: 3px; }
+        .table-leg { width: 8px; height: 210px; background: #d4af37; box-shadow: 4px 0 10px rgba(0,0,0,0.6); }
 
-        /* ОБЪЕКТЫ НА СТОЛАХ */
-        .gramophone-unit { position: relative; bottom: 10px; cursor: pointer; }
-        .vase-unit { position: relative; bottom: 10px; font-size: 40px; }
+        /* ПРЕДМЕТЫ */
+        .gramophone-v2 { width: 100px; height: 80px; position: relative; cursor: pointer; transform: translateY(-5px); }
+        .horn-part { width: 50px; height: 50px; background: #d4af37; clip-path: polygon(100% 0, 0 50%, 100% 100%); transform: rotate(-25deg); position: absolute; left: -25px; top: -10px; }
+        .base-part { width: 70px; height: 35px; background: #3d2b1f; border: 1px solid #d4af37; margin-top: 25px; }
 
-        /* КНОПКИ УПРАВЛЕНИЯ */
-        .controls {
-            display: flex; gap: 50px; z-index: 30; margin-bottom: 20px;
-        }
-        .btn-gold {
-            background: rgba(0,0,0,0.8); color: #d4af37; border: 2px solid #d4af37;
-            padding: 15px 30px; border-radius: 50px; cursor: pointer; font-weight: bold;
-            display: flex; align-items: center; gap: 10px; transition: 0.3s;
-        }
-        .btn-gold:hover { background: #d4af37; color: #000; box-shadow: 0 0 20px #d4af37; }
+        .vase-v2 { font-size: 55px; margin-bottom: 10px; filter: drop-shadow(0 0 15px rgba(212,175,55,0.4)); }
 
-        @keyframes sway {
-            0%, 100% { transform: translateX(0); }
-            50% { transform: translateX(5px); }
+        /* КНОПКИ */
+        .control-panel { position: absolute; bottom: 40px; display: flex; gap: 50px; z-index: 110; }
+        .gold-button { 
+            background: transparent; color: #d4af37; border: 2px solid #d4af37; 
+            padding: 15px 35px; font-size: 14px; letter-spacing: 3px; cursor: pointer; transition: 0.4s;
         }
+        .gold-button:hover { background: #d4af37; color: #000; box-shadow: 0 0 30px #d4af37; }
     </style>
 </head>
 <body>
 
 <div class="hall-scene">
-    <div class="top-board">
-        <div class="avatar"></div>
-        <div>
-            <h2 id="trace-id">ID: #GY-734-TRACE</h2>
-            <p style="font-style: italic; font-size: 14px;">"Истина не в вине, а в тех кто его пьет"</p>
+    <div class="registration-board">
+        <div class="user-photo"></div>
+        <div class="user-info">
+            <div class="id-text">ID: #GY-734-TRACE</div>
+            <div style="font-style: italic; color: #fff; margin-top: 5px;">"Истина не в вине, а в тех кто его пьет"</div>
         </div>
     </div>
 
-    <div class="gallery">
-        <div class="paint-group">
-            <div class="frame"></div><div class="frame"></div>
-        </div>
-        <div class="paint-group">
-            <div class="frame"></div><div class="frame"></div>
-        </div>
+    <div class="wall left-wall">
+        <div class="frame"></div><div class="frame"></div>
+    </div>
+    <div class="wall right-wall">
+        <div class="frame"></div><div class="frame"></div>
     </div>
 
-    <div class="entrance-arch">
-        <div class="beaded-curtain"></div>
+    <div class="entrance-group">
+        <div class="bar-title">БАР</div>
+        <div class="arch-frame">
+            <div class="wooden-beads"></div>
+        </div>
     </div>
 
     <div class="furniture">
-        <div class="high-table">
-            <div class="gramophone-unit" onclick="togglePlay()">
-                <div style="font-size: 50px;">🎺</div> </div>
+        <div class="table-set">
+            <div class="gramophone-v2" onclick="startMusic()">
+                <div class="horn-part"></div>
+                <div class="base-part"></div>
+            </div>
             <div class="table-top"></div>
             <div class="table-leg"></div>
         </div>
 
-        <div class="high-table">
-            <div class="vase-unit">💐</div> <div class="table-top"></div>
+        <div class="table-set">
+            <div class="vase-v2">💐</div>
+            <div class="table-top"></div>
             <div class="table-leg"></div>
         </div>
     </div>
 
-    <div class="controls">
-        <button class="btn-gold" onclick="toggleAudio('hall')">🎶 ЗВУКИ ХОЛЛА</button>
-        <button class="btn-gold" onclick="toggleAudio('music')">▶ ВКЛЮЧИТЬ МУЗЫКУ</button>
+    <div class="control-panel">
+        <button class="gold-button" onclick="playHallSounds()">ЗВУКИ ХОЛЛА</button>
+        <button class="gold-button" onclick="startMusic()">ВКЛЮЧИТЬ МУЗЫКУ</button>
     </div>
 </div>
 
 <script>
-    function toggleAudio(type) {
-        alert(type === 'hall' ? "Запуск атмосферы холла..." : "Граммофон начинает играть...");
-        // Здесь твоя логика запуска файлов
+    function playHallSounds() {
+        console.log("Версия 2.2.0: Запуск атмосферы...");
+        // Подключение hall_sounds.mp3
+    }
+    function startMusic() {
+        console.log("Граммофон v2.2.0 в работе...");
     }
 </script>
 
