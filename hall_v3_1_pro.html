@@ -2,156 +2,138 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>gy-gy hall v3.1.2 Pro</title>
+    <title>gy-gy hall v3.1.3 — REAL VINTAGE</title>
     <style>
         :root {
-            --vintage-gold: #c5a059;
-            --deep-dark: #080808;
+            --brass: #b5892e;
+            --dark-oak: #130a06;
+            --wallpaper-red: #2b0a0a;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { 
-            background: #000; 
-            height: 100vh; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            font-family: 'Georgia', serif;
-            overflow: hidden;
-        }
+        body { background: #000; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
 
-        /* КОНТЕЙНЕР-ХОЛЛ (в стиле входной зоны с Чарли) */
-        .hall-viewport {
+        /* ОСНОВНОЙ ЗАЛ — ТЕМНЫЙ И ПРОСТОРНЫЙ */
+        .hall-frame {
             position: relative;
-            width: 1100px;
+            width: 1200px;
             height: 800px;
-            /* Используем атмосферное фоновое изображение вместо простого цвета */
+            /* Текстура стен — старые обои с узором, как в лучших клубах 20-х */
             background: 
-                linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
-                url('https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=2070&auto=format&fit=crop'); 
-            background-size: cover;
-            background-position: center;
-            border: 3px solid #1a1008;
-            box-shadow: 0 0 100px #000, inset 0 0 150px #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+                radial-gradient(circle at 50% 30%, transparent 0%, #000 90%),
+                url('https://www.transparenttextures.com/patterns/black-orchid.png'), 
+                #1a100a;
+            border: 5px solid var(--dark-oak);
+            box-shadow: 0 0 100px #000, inset 0 0 200px #000;
+            display: flex; justify-content: center; align-items: flex-end;
             perspective: 1200px;
         }
 
-        /* ПОЛ С ВИНТАЖНЫМ ГЛЯНЦЕМ */
-        .marble-floor {
-            position: absolute; bottom: 0; width: 150%; height: 380px;
+        /* ПОЛ — ТЕМНЫЙ МРАМОР С ОТРАЖЕНИЕМ АРКИ */
+        .floor {
+            position: absolute; bottom: 0; width: 100%; height: 380px;
             background: 
-                linear-gradient(to bottom, rgba(20, 15, 10, 0.7) 0%, #000 100%),
+                linear-gradient(to bottom, #1a1510 0%, #000 100%),
                 url('https://www.transparenttextures.com/patterns/dark-leather.png');
             transform: rotateX(65deg); transform-origin: bottom center;
-            border-top: 1px solid var(--vintage-gold);
+            border-top: 2px solid rgba(181, 137, 46, 0.2);
             z-index: 1;
         }
 
-        /* АВТОРИЗАЦИЯ (Твой стандарт) */
-        .auth-panel {
-            position: absolute; top: 30px; left: 40px;
-            display: flex; align-items: center; gap: 15px; z-index: 100;
-            background: rgba(10, 5, 0, 0.9); padding: 10px;
-            border: 1px solid var(--vintage-gold);
-        }
-        .user-id { font-family: monospace; font-size: 10px; color: var(--vintage-gold); }
-
-        /* ЦЕНТРАЛЬНАЯ АРКА С ВИЗУАЛОМ */
-        .entrance-composition {
-            position: relative; z-index: 10; margin-top: -50px;
+        /* ТА САМАЯ АРКА С ФОТО — МАССИВНАЯ И ЛАТУННАЯ */
+        .center-entrance {
+            position: relative; z-index: 10; margin-bottom: 250px;
             display: flex; flex-direction: column; align-items: center;
         }
-        .bar-label {
-            font-size: 60px; letter-spacing: 25px; color: #f1d592;
-            text-shadow: 3px 3px 10px #000; margin-bottom: 25px;
+
+        .bar-sign-vintage {
+            font-family: 'Times New Roman', serif;
+            font-size: 70px; letter-spacing: 30px; color: var(--brass);
+            text-shadow: 3px 3px 0px #000, 0 0 20px rgba(181, 137, 46, 0.4);
+            margin-bottom: 30px; font-weight: bold;
         }
 
-        /* Арка теперь с эффектом золотых нитей из референса */
-        .pro-arch {
-            width: 380px; height: 500px;
-            border-radius: 190px 190px 0 0;
-            border: 15px solid var(--vintage-gold);
+        .gold-arch {
+            width: 450px; height: 580px;
+            border-radius: 225px 225px 0 0;
+            /* Массивная рама из потемневшего золота */
+            border: 20px solid #8b6b23;
             border-bottom: none;
+            background: #000;
             position: relative;
-            background: url('https://images.unsplash.com/photo-1551028150-64b9f398f678?q=80&w=1974&auto=format&fit=crop'); /* Текстура занавеса */
-            background-size: cover;
-            box-shadow: 0 0 50px #000;
-            overflow: hidden;
+            box-shadow: 0 0 40px #000;
         }
-        .bead-overlay {
+
+        /* ЗАНАВЕСКА-ВИСЮЛЬКИ (КАК НА ФОТО) */
+        .beads-curtain {
             width: 100%; height: 100%;
-            background: repeating-linear-gradient(90deg, transparent 0, transparent 6px, rgba(197, 160, 89, 0.3) 7px, transparent 8px);
+            background: repeating-linear-gradient(90deg, 
+                transparent 0, transparent 6px, 
+                #b5892e 7px, #f1d592 8px, #b5892e 9px, 
+                transparent 10px, transparent 15px);
+            opacity: 0.9;
         }
 
-        /* СТОЛИКИ ПО УГЛАМ (Интеграция из твоего фото) */
-        .corner-elements {
+        /* СТОЛИКИ СТРОГО ПО УГЛАМ (БЕЗ ГЛЮКОВ ГЕНЕРАТОРА) */
+        .corner-furniture {
             position: absolute; bottom: 0; width: 100%; height: 350px;
-            display: flex; justify-content: space-between; padding: 0 50px; z-index: 50;
+            display: flex; justify-content: space-between; padding: 0 60px; z-index: 20;
         }
-        .table-vintage { 
-            display: flex; flex-direction: column; align-items: center; 
-            filter: drop-shadow(0 20px 20px #000);
-        }
-        .table-object { 
-            width: 120px; height: 120px; 
-            background-size: contain; background-repeat: no-repeat;
-            margin-bottom: 10px;
-        }
-        /* Используем иконки, но с винтажным фильтром */
-        .gramophone { filter: sepia(1) brightness(0.8); font-size: 70px; }
-        .vase { filter: sepia(0.5) brightness(0.9); font-size: 70px; }
 
-        .table-top { width: 140px; height: 10px; background: #2a1b10; border: 1px solid var(--vintage-gold); border-radius: 50%; }
-        .table-leg { width: 4px; height: 180px; background: var(--vintage-gold); }
+        .table-unit { display: flex; flex-direction: column; align-items: center; width: 250px; }
+        .prop-item { font-size: 70px; filter: sepia(0.8) contrast(1.2); margin-bottom: 15px; }
+        
+        /* Столешница и гнутая ножка */
+        .table-top { width: 160px; height: 12px; background: #3d2b1f; border: 2px solid var(--brass); border-radius: 50%; }
+        .table-leg { 
+            width: 6px; height: 180px; 
+            background: linear-gradient(to bottom, var(--brass), #000); 
+            position: relative; 
+        }
+        .table-leg::after {
+            content: ''; position: absolute; bottom: 0; width: 60px; height: 6px;
+            background: var(--brass); left: -27px; border-radius: 20px;
+        }
 
-        /* КНОПКИ УПРАВЛЕНИЯ */
-        .ui-nav {
-            position: absolute; bottom: 40px; display: flex; gap: 40px; z-index: 110;
+        /* СТАНДАРТ РЕГИСТРАЦИИ */
+        .id-panel {
+            position: absolute; top: 40px; left: 50px;
+            display: flex; align-items: center; gap: 20px; z-index: 100;
+            background: rgba(0,0,0,0.8); padding: 15px; border: 1px solid var(--brass);
         }
-        .btn-pill {
-            background: rgba(0,0,0,0.8); color: #fff; border: 1px solid var(--vintage-gold);
-            padding: 12px 35px; border-radius: 50px; cursor: pointer;
-            text-transform: uppercase; letter-spacing: 2px; font-size: 12px;
-        }
+        .avatar-frame { width: 60px; height: 60px; border: 1px solid var(--brass); filter: grayscale(1); }
+
     </style>
 </head>
 <body>
 
-<div class="hall-viewport">
-    <div class="marble-floor"></div>
+<div class="hall-frame">
+    <div class="floor"></div>
 
-    <div class="auth-panel">
-        <div style="width: 45px; height: 45px; background: #111; border: 1px solid var(--vintage-gold);"></div>
-        <div class="user-id">
-            <div>MEMBER_ID: #GY-900</div>
-            <div style="color:#fff; opacity:0.5;">TRACE_ACTIVE</div>
+    <div class="id-panel">
+        <div class="avatar-frame"></div>
+        <div style="font-family: monospace; color: var(--brass); font-size: 11px;">
+            <div>TRACE_ID: #GY-PRO-2026</div>
+            <div style="color: #fff; opacity: 0.5;">IDENTITY VERIFIED</div>
         </div>
     </div>
 
-    <div class="entrance-composition">
-        <div class="bar-label">BAR</div>
-        <div class="pro-arch">
-            <div class="bead-overlay"></div>
+    <div class="center-entrance">
+        <div class="bar-sign-vintage">BAR</div>
+        <div class="gold-arch">
+            <div class="beads-curtain"></div>
         </div>
     </div>
 
-    <div class="corner-elements">
-        <div class="table-vintage">
-            <div class="table-object gramophone">📻</div>
+    <div class="corner-furniture">
+        <div class="table-unit">
+            <div class="prop-item">📻</div>
             <div class="table-top"></div><div class="table-leg"></div>
         </div>
-        <div class="table-vintage">
-            <div class="table-object vase">💐</div>
+        <div class="table-unit">
+            <div class="prop-item">💐</div>
             <div class="table-top"></div><div class="table-leg"></div>
         </div>
-    </div>
-
-    <div class="ui-nav">
-        <button class="btn-pill">звуки холла</button>
-        <button class="btn-pill">включить музыка</button>
     </div>
 </div>
 
