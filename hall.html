@@ -3,11 +3,12 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Club Hall v4.3.6 - Final Layout Fix</title>
+    <title>Club Hall v4.3.7 - Projector Focus & Telegram Sync</title>
     <style>
         :root {
             --holo-cyan: rgba(0, 247, 255, 0.7);
             --gold-glow: #ffd700;
+            --tg-blue: #24A1DE;
         }
 
         body, html {
@@ -25,33 +26,39 @@
             display: flex; justify-content: center; align-items: center;
         }
 
-        /* --- ГЛОБАЛЬНЫЙ ПЕРЕКЛЮЧАТЕЛЬ ЯЗЫКА (v4.3.6) --- */
+        /* --- ГЛОБАЛЬНЫЙ ПЕРЕКЛЮЧАТЕЛЬ (ЯЗЫК + TG) --- */
         #global-ui {
             position: fixed;
             top: 25px; right: 25px;
             z-index: 1000;
-            display: flex; gap: 8px;
+            display: flex; flex-direction: column; gap: 10px; align-items: flex-end;
         }
 
-        .lang-btn {
-            background: rgba(0, 0, 0, 0.6);
+        .ui-row { display: flex; gap: 8px; }
+
+        .lang-btn, .tg-btn {
+            background: rgba(0, 0, 0, 0.7);
             border: 1px solid var(--holo-cyan);
             color: var(--holo-cyan);
-            padding: 6px 12px;
+            padding: 6px 15px;
             cursor: pointer;
             font-size: 0.8rem;
             font-weight: bold;
             transition: 0.3s;
         }
 
-        .lang-btn.active { background: var(--holo-cyan); color: #000; box-shadow: 0 0 10px var(--holo-cyan); }
+        .lang-btn.active { background: var(--holo-cyan); color: #000; }
+        .tg-btn { border-color: var(--tg-blue); color: var(--tg-blue); }
+        .tg-btn:hover { background: var(--tg-blue); color: #fff; }
 
-        /* --- ПРОЕКТОР v4.3.6 (ПРИНУДИТЕЛЬНОЕ ПОЗИЦИОНИРОВАНИЕ) --- */
+        /* --- ПРОЕКТОР v4.3.7 (ФОКУСИРОВКА НАД АРКОЙ) --- */
         #projector-wall {
-            position: fixed; /* Вырываем из потока */
-            top: 15%; /* Устанавливаем очень высоко, чтобы точно уйти от арки */
-            left: 0;
+            position: fixed;
+            top: 22%; /* Настройка высоты */
+            left: 50%;
+            transform: translateX(-50%);
             width: 100%;
+            max-width: 500px; /* ОГРАНИЧЕНИЕ ШИРИНЫ, чтобы текст не расползался */
             text-align: center;
             pointer-events: none;
             z-index: 50;
@@ -59,50 +66,48 @@
 
         #slogan-display {
             color: var(--gold-glow);
-            font-size: 1.5rem; /* Чуть крупнее для читаемости */
+            font-size: 1.2rem;
             font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: 12px;
+            letter-spacing: 6px; /* Чуть меньше разрядка для компактности */
             font-family: 'Courier New', monospace;
-            text-shadow: 0 0 20px rgba(255, 215, 0, 1);
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
             opacity: 0;
-            transition: opacity 0.8s ease-in-out;
+            transition: opacity 1s ease-in-out;
+            line-height: 1.4;
         }
 
-        /* --- ГОЛОГРАММА v4.3.6 (ГОРИЗОНТАЛЬНАЯ: АВАТАР + QR) --- */
+        /* --- ГОЛОГРАММА v4.3.7 (ГОРИЗОНТАЛЬНАЯ) --- */
         #hologram-card {
             position: relative;
             width: 480px;
-            padding: 30px;
-            background: rgba(0, 20, 40, 0.4);
+            padding: 25px;
+            background: rgba(0, 20, 40, 0.5);
             border: 1px solid var(--holo-cyan);
-            backdrop-filter: blur(25px);
-            border-radius: 15px;
-            box-shadow: 0 0 50px rgba(0, 247, 255, 0.4);
+            backdrop-filter: blur(20px);
+            border-radius: 12px;
+            box-shadow: 0 0 50px rgba(0, 247, 255, 0.3);
             color: #fff;
             animation: floating 6s ease-in-out infinite;
             z-index: 100;
-            transition: transform 0.8s, opacity 0.8s;
         }
 
-        @keyframes floating { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-25px); } }
+        @keyframes floating { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
 
         .card-content {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-around;
             align-items: center;
             margin: 20px 0;
-            gap: 30px;
         }
 
         .avatar-frame {
             width: 110px; height: 110px;
             border-radius: 50%; border: 2px solid var(--holo-cyan);
-            background: #000; box-shadow: 0 0 20px var(--holo-cyan);
-            overflow: hidden;
+            background: #000; overflow: hidden;
+            box-shadow: 0 0 15px var(--holo-cyan);
         }
 
-        /* Magic Key QR Grid */
         .qr-grid {
             width: 110px; height: 110px;
             border: 1px solid var(--holo-cyan);
@@ -115,28 +120,31 @@
         #id-label {
             font-size: 1.8rem;
             font-family: 'Courier New', monospace;
-            font-weight: bold;
             border-top: 1px solid rgba(0, 255, 255, 0.3);
             padding-top: 15px;
-            letter-spacing: 3px;
         }
 
         .confirm-btn {
             background: transparent; border: 1px solid var(--holo-cyan);
             color: var(--holo-cyan); padding: 12px 50px;
             cursor: pointer; text-transform: uppercase; font-weight: bold;
-            margin-top: 15px; transition: 0.3s;
+            margin-top: 15px;
         }
-        .confirm-btn:hover { background: var(--holo-cyan); color: #000; box-shadow: 0 0 20px var(--holo-cyan); }
+        .confirm-btn:hover { background: var(--holo-cyan); color: #000; }
 
-        .hidden { opacity: 0; pointer-events: none; transform: scale(0.8) translateY(100px) !important; }
+        .hidden { opacity: 0; pointer-events: none; transform: scale(0.9) !important; }
     </style>
 </head>
 <body>
 
 <div id="global-ui">
-    <button class="lang-btn" id="lang-RU" onclick="changeLang('RU')">RU</button>
-    <button class="lang-btn" id="lang-EN" onclick="changeLang('EN')">EN</button>
+    <div class="ui-row">
+        <button class="tg-btn" onclick="checkTelegram()">TELEGRAM SYNC</button>
+    </div>
+    <div class="ui-row">
+        <button class="lang-btn" id="lang-RU" onclick="changeLang('RU')">RU</button>
+        <button class="lang-btn" id="lang-EN" onclick="changeLang('EN')">EN</button>
+    </div>
 </div>
 
 <div id="hall-scene">
@@ -145,24 +153,24 @@
     </div>
 
     <div id="hologram-card">
-        <div id="ui-title" style="font-size: 0.7rem; color: var(--holo-cyan); letter-spacing: 4px;">ACCESS CARD v4.3.6</div>
+        <div id="ui-title" style="font-size: 0.7rem; color: var(--holo-cyan); letter-spacing: 4px;">MEMBER PASS v4.3.7</div>
         
         <div class="card-content">
             <div class="avatar-frame">
-                <img src="https://via.placeholder.com/110/001428/00f7ff?text=GUEST" style="width:100%">
+                <img src="https://via.placeholder.com/110/001428/00f7ff?text=GUEST" id="ui-avatar" style="width:100%">
             </div>
             <div class="qr-grid" id="qr-key"></div>
         </div>
 
-        <div id="id-label">ID: 4.3.6-0000</div>
+        <div id="id-label">ID: 4.3.7-0000</div>
         <button class="confirm-btn" id="ui-btn" onclick="grantAccess()">Подтвердить</button>
     </div>
 </div>
 
 <script>
     const content = {
-        'RU': { title: "КАРТА ДОСТУПА v4.3.6", btn: "ПОДТВЕРДИТЬ", slogans: ["СТАТУС. СТАБИЛЬНОСТЬ. СЕКРЕТНОСТЬ.", "ВАШ ЦИФРОВОЙ СЛЕД — КЛЮЧ"] },
-        'EN': { title: "ACCESS CARD v4.3.6", btn: "CONFIRM STATUS", slogans: ["STATUS. STABILITY. SECRET.", "YOUR DIGITAL TRACE IS THE KEY"] }
+        'RU': { title: "КАРТА ДОСТУПА v4.3.7", btn: "ПОДТВЕРДИТЬ", slogans: ["СТАТУС. СТАБИЛЬНОСТЬ.\nСЕКРЕТНОСТЬ.", "ВАШ ЦИФРОВОЙ СЛЕД —\nВАШ КЛЮЧ"] },
+        'EN': { title: "ACCESS CARD v4.3.7", btn: "CONFIRM STATUS", slogans: ["STATUS. STABILITY.\nSECRET.", "YOUR DIGITAL TRACE IS\nTHE KEY"] }
     };
 
     let currentLang = localStorage.getItem('club_lang') || 'RU';
@@ -172,6 +180,11 @@
         currentLang = l;
         localStorage.setItem('club_lang', l);
         applyLang();
+    }
+
+    function checkTelegram() {
+        // Имитация подключения к Telegram
+        alert("Telegram Auth Engine v4.3.7:\nПоиск активной сессии...\n\nДля полной интеграции необходимо подключить Bot API Token.");
     }
 
     function applyLang() {
@@ -184,7 +197,6 @@
     }
 
     window.onload = () => {
-        // Рендер QR Magic Key
         const qr = document.getElementById('qr-key');
         for(let i=0; i<100; i++) {
             const d = document.createElement('div');
@@ -192,10 +204,9 @@
             qr.appendChild(d);
         }
 
-        document.getElementById('id-label').innerText = `ID: 4.3.6-${Math.floor(1000+Math.random()*9000)}`;
+        document.getElementById('id-label').innerText = `ID: 4.3.7-${Math.floor(1000+Math.random()*9000)}`;
         applyLang();
 
-        // Цикл слоганов
         setInterval(() => {
             const txt = document.getElementById('slogan-display');
             txt.style.opacity = 0;
@@ -210,9 +221,8 @@
 
     function grantAccess() {
         document.getElementById('hologram-card').classList.add('hidden');
-        console.log("Access Granted. Logic version 4.3.6 stable.");
+        console.log("Access Granted. Current State: Stable 4.3.7");
     }
 </script>
 </body>
 </html>
-
