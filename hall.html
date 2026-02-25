@@ -3,13 +3,12 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="version" content="1.2">
-    <title>Hall V1.2 - Digital Oasis</title>
+    <meta name="version" content="4.3">
+    <title>Digital Oasis - Hall V4.3</title>
     <style>
         :root {
             --accent-red: #ff3131;
             --holo-blue: #00f2ff;
-            --gold-oak: #d4a76a;
         }
 
         body, html {
@@ -19,32 +18,32 @@
             height: 100%;
             overflow: hidden;
             background: #000;
-            font-family: 'Segoe UI', sans-serif;
         }
 
         .hall-container {
             position: relative;
             width: 100vw;
             height: 100vh;
-            /* Замените на реальный URL вашего базового фото Gem */
-            background: url('gem_base_photo_v1.jpg') no-repeat center center;
-            background-size: cover;
+            /* ВАЖНО: Фото должно называться hall_bg.jpg */
+            background: url('hall_bg.jpg') no-repeat center center;
+            background-size: contain;
         }
 
-        /* --- 1. ПРОЕКТОР И СТРОКА --- */
+        /* Кликовая зона проектора */
         #projector-unit {
             position: absolute;
             top: 0;
             left: 44%;
             width: 12%;
-            height: 10%;
+            height: 8%;
             cursor: pointer;
             z-index: 10;
         }
 
+        /* Бегущая строка */
         .projection-screen {
             position: absolute;
-            top: 19%; /* Над аркой */
+            top: 23%; 
             width: 100%;
             height: 40px;
             overflow: hidden;
@@ -56,11 +55,11 @@
         .marquee-text {
             display: inline-block;
             font-family: 'Courier New', monospace;
-            font-size: 28px;
+            font-size: 24px;
             font-weight: bold;
             color: var(--accent-red);
             text-shadow: 0 0 10px var(--accent-red);
-            animation: marquee 12s linear infinite;
+            animation: marquee 10s linear infinite;
         }
 
         @keyframes marquee {
@@ -68,119 +67,98 @@
             to { transform: translateX(-100%); }
         }
 
-        /* --- 2. ВХОД В БАР (ВИСЮЛЬКИ) --- */
+        /* Интерактивная штора */
         #bar-entrance {
             position: absolute;
-            top: 41%; /* Ниже надписи БАР */
-            left: 42.5%;
-            width: 15%;
-            height: 31%;
+            top: 41%;
+            left: 42.6%;
+            width: 14.8%;
+            height: 29.5%;
             cursor: pointer;
             z-index: 5;
-            transition: all 0.3s ease;
-        }
-        #bar-entrance:hover {
-            background: rgba(212, 167, 106, 0.1); /* Отблеск дуба */
-            box-shadow: 0 0 20px rgba(212, 167, 106, 0.2);
         }
 
-        /* --- 3. ГОЛОГРАММА ГЕСТЯ --- */
+        /* Голограмма V4.3 */
         .hologram-card {
             position: absolute;
             top: 55%;
             left: 11%;
-            width: 200px;
-            padding: 15px;
-            background: rgba(0, 242, 255, 0.05);
+            width: 180px;
+            padding: 12px;
+            background: rgba(0, 242, 255, 0.07);
             border: 1px solid var(--holo-blue);
-            border-radius: 5px;
             box-shadow: 0 0 15px var(--holo-blue);
             color: var(--holo-blue);
-            backdrop-filter: blur(3px);
+            font-family: sans-serif;
+            font-size: 12px;
+            backdrop-filter: blur(4px);
             z-index: 6;
-            animation: flicker 3s infinite;
-        }
-
-        @keyframes flicker {
-            0% { opacity: 0.9; }
-            50% { opacity: 1; }
-            100% { opacity: 0.9; }
         }
 
         .magic-key-btn {
-            margin-top: 10px;
+            margin-top: 8px;
             width: 100%;
             background: var(--holo-blue);
-            color: #000;
             border: none;
-            padding: 5px;
+            padding: 4px;
             cursor: pointer;
-            font-size: 10px;
             font-weight: bold;
+            font-size: 10px;
         }
     </style>
 </head>
 <body>
 
 <div class="hall-container">
-    <div style="position:absolute; bottom:10px; right:10px; color:rgba(255,255,255,0.3); font-size:10px;">Build V1.2</div>
-
-    <div id="projector-unit" onclick="toggleProjector()" title="Включить проектор"></div>
+    <div id="projector-unit" onclick="toggleProjector()"></div>
+    
     <div id="screen" class="projection-screen">
         <div id="aphorism" class="marquee-text"></div>
     </div>
 
-    <div id="bar-entrance" onclick="enterBar()" title="Раздвинуть висюльки"></div>
+    <div id="bar-entrance" onclick="enterBar()"></div>
 
     <div class="hologram-card">
-        <small>DIGITAL TRACE ID</small>
-        <div id="user-id" style="font-weight:bold; margin-bottom:5px;">#FETCHING...</div>
-        <div id="user-nick" style="font-size:14px; color:#fff;">Assigning Avatar...</div>
-        <button class="magic-key-btn" onclick="saveMagicKey()">DOWNLOAD MAGIC KEY</button>
+        <div style="font-size: 9px; opacity: 0.7;">STABLE BUILD V4.3</div>
+        <div id="user-id" style="margin: 5px 0;">ID: #SYNCING...</div>
+        <div id="user-nick" style="color: #fff;">Identifying...</div>
+        <button class="magic-key-btn" onclick="saveKey()">GET MAGIC KEY</button>
     </div>
 </div>
 
 <script>
-    /* LOGIC V1.2 */
     const aphorisms = [
         "In vino veritas, in aqua sanitas.",
-        "Алкоголь — это анестезия, позволяющая вынести операцию под названием жизнь.",
+        "Алкоголь — это анестезия жизни.",
         "Вино — это свет, запертый в воде.",
-        "Cheers to good times and liquid courage!",
-        "Чтобы знать меру, нужно её хотя бы раз превысить."
+        "Cheers to good times!",
+        "Трезвость — это перерыв между бокалами."
     ];
 
     let currentIdx = 0;
-    let projectorOn = false;
+    let isOn = false;
 
     function toggleProjector() {
-        const screen = document.getElementById('screen');
-        projectorOn = !projectorOn;
-        screen.style.display = projectorOn ? 'block' : 'none';
-        if(projectorOn) cycleText();
+        isOn = !isOn;
+        document.getElementById('screen').style.display = isOn ? 'block' : 'none';
+        if(isOn) nextText();
     }
 
-    function cycleText() {
-        if(!projectorOn) return;
+    function nextText() {
+        if(!isOn) return;
         document.getElementById('aphorism').innerText = aphorisms[currentIdx];
         currentIdx = (currentIdx + 1) % aphorisms.length;
     }
 
-    function enterBar() {
-        console.log("Entering Bar. V1.2 Logic Triggered.");
-        alert("Проходим сквозь дубовые висюльки...");
-    }
+    function enterBar() { alert("Входим в бар (Секция 4.3)..."); }
+    function saveKey() { alert("Magic Key V4.3 сохранен!"); }
 
-    function saveMagicKey() {
-        alert("Магический ключ (аватар-QR) сохранен в память устройства.");
-    }
-
-    // Симуляция Cookie-recognition V1.2
     window.onload = () => {
         setTimeout(() => {
-            document.getElementById('user-id').innerText = "#" + Math.random().toString(36).substr(2, 9).toUpperCase();
-            document.getElementById('user-nick').innerText = "Cyber_Guest_42";
-        }, 1000);
+            // Имитация цифрового следа
+            document.getElementById('user-id').innerText = "ID: #V43-" + Math.floor(Math.random()*9999);
+            document.getElementById('user-nick').innerText = "Neon_Guest";
+        }, 800);
     };
 </script>
 
