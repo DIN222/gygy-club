@@ -3,12 +3,12 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Club Hall v4.3 - Interactive</title>
+    <meta name="version" content="4.1">
+    <title>Digital Oasis - Hall V4.1</title>
     <style>
         :root {
-            --holo-color: rgba(0, 247, 255, 0.6);
-            --gold-neon: #ffd700;
+            --accent-red: #ff3131;
+            --holo-blue: #00f2ff;
         }
 
         body, html {
@@ -18,202 +18,147 @@
             height: 100%;
             overflow: hidden;
             background: #000;
-            font-family: 'Segoe UI', Roboto, sans-serif;
         }
 
-        /* Основной контейнер с твоим фоном */
-        #hall-scene {
+        .hall-container {
             position: relative;
             width: 100vw;
             height: 100vh;
-            background: url('hall_bg.jpg') no-repeat center center;
+            background: url('hall_v4_base.jpg') no-repeat center center;
             background-size: cover;
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
 
-        /* 1. Слоганы над дверью Бара (Проектор) */
-        #projector-area {
+        /* ПРОЕКТОР */
+        #projector-unit {
             position: absolute;
-            top: 42%; /* Позиционирование над центральной аркой v4.3 */
-            width: 300px;
-            text-align: center;
+            top: 0;
+            left: 45%;
+            width: 10%;
+            height: 12%;
+            cursor: pointer;
+            z-index: 100;
+        }
+
+        /* БЕГУЩАЯ СТРОКА - ПЕРЕМЕЩЕНА НАД АРКОЙ */
+        .projection-screen {
+            position: absolute;
+            top: 32%; /* Смещено вниз, чтобы быть ровно над аркой */
+            left: 0;
+            width: 100%;
+            height: 40px;
+            overflow: hidden;
+            display: none;
+            white-space: nowrap;
             pointer-events: none;
-        }
-
-        #slogan-text {
-            color: var(--gold-neon);
-            font-size: 1.2rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-family: 'Courier New', monospace;
-            text-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
-            opacity: 0;
-            transition: opacity 1s ease-in-out;
-        }
-
-        /* 2. Голограмма пропуска */
-        #hologram-pass {
-            position: relative;
-            width: 320px;
-            padding: 25px;
-            background: rgba(0, 40, 60, 0.2);
-            border: 1px solid var(--holo-color);
-            backdrop-filter: blur(12px);
-            border-radius: 15px;
-            box-shadow: 0 0 30px var(--holo-color), inset 0 0 15px var(--holo-color);
-            color: #fff;
-            text-align: center;
-            animation: float 4s ease-in-out infinite;
-            transition: all 0.8s ease-in-out;
             z-index: 10;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotateX(5deg); }
-            50% { transform: translateY(-20px) rotateX(-5deg); }
-        }
-
-        .holo-header {
-            font-size: 0.8rem;
-            color: var(--holo-color);
-            margin-bottom: 15px;
-            letter-spacing: 3px;
-        }
-
-        #guest-avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            border: 2px solid var(--holo-color);
-            margin: 10px auto;
-            display: block;
-            box-shadow: 0 0 15px var(--holo-color);
-            background: #111; /* Заглушка, если нет фото */
-        }
-
-        #guest-id {
-            font-size: 1.5rem;
+        .marquee-text {
+            display: inline-block;
+            font-family: 'Courier New', monospace;
+            font-size: 24px;
             font-weight: bold;
-            margin: 15px 0;
-            text-shadow: 0 0 10px #fff;
+            color: var(--accent-red);
+            text-shadow: 0 0 15px var(--accent-red);
+            animation: marquee 15s linear infinite;
         }
 
-        .confirm-btn {
-            background: transparent;
-            border: 1px solid var(--holo-color);
-            color: var(--holo-color);
-            padding: 10px 25px;
-            cursor: pointer;
-            transition: 0.3s;
-            text-transform: uppercase;
-            font-weight: bold;
+        @keyframes marquee {
+            from { transform: translateX(100%); }
+            to { transform: translateX(-100%); }
         }
 
-        .confirm-btn:hover {
-            background: var(--holo-color);
-            color: #000;
-            box-shadow: 0 0 20px var(--holo-color);
-        }
-
-        /* 3. Хотспот двери Бара */
-        #bar-door-trigger {
+        /* ВИСЮЛЬКИ (ВХОД) */
+        #bar-entrance {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -10%);
-            width: 150px;
-            height: 250px;
+            top: 42%; 
+            left: 42.5%;
+            width: 15%;
+            height: 40%;
             cursor: pointer;
-            /* background: rgba(255,0,0,0.2); */ /* Раскомментируй для отладки зоны клика */
-            z-index: 5;
+            z-index: 50;
         }
 
-        .hidden { opacity: 0 !important; pointer-events: none !important; transform: scale(0.8) !important; }
+        /* ГОЛОГРАММА ГЕСТЯ */
+        .hologram-card {
+            position: absolute;
+            top: 55%;
+            left: 10%;
+            width: 200px;
+            padding: 15px;
+            background: rgba(0, 242, 255, 0.05);
+            border: 1px solid var(--holo-blue);
+            color: var(--holo-blue);
+            backdrop-filter: blur(4px);
+            z-index: 60;
+        }
 
+        .magic-key-btn {
+            margin-top: 10px;
+            width: 100%;
+            background: var(--holo-blue);
+            border: none;
+            padding: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
 
-<div id="hall-scene">
+<div class="hall-container">
+    <div style="position:absolute; bottom:10px; right:10px; color:rgba(255,255,255,0.2); font-size:10px;">BUILD_V4.1</div>
+
+    <div id="projector-unit" onclick="toggleProjector()"></div>
     
-    <div id="projector-area">
-        <div id="slogan-text">STATUS. STABILITY. SECRET.</div>
+    <div id="screen" class="projection-screen">
+        <div id="aphorism" class="marquee-text"></div>
     </div>
 
-    <div id="hologram-pass">
-        <div class="holo-header">OFFICIAL MEMBER CARD</div>
-        <img src="https://via.placeholder.com/120" id="guest-avatar" alt="Avatar">
-        <div id="guest-id">ID: 000-0000</div>
-        <p style="font-size: 0.7rem; color: #888;">Magic Key QR Active</p>
-        <button class="confirm-btn" onclick="confirmHologram()">Подтвердить вход</button>
+    <div id="bar-entrance" onclick="enterBar()"></div>
+
+    <div class="hologram-card">
+        <div style="font-size: 9px;">GUEST_ID</div>
+        <div id="user-id" style="font-weight:bold;">#SYNCING...</div>
+        <div id="user-nick" style="font-size:14px; color:#fff;">...</div>
+        <button class="magic-key-btn" onclick="saveKey()">MAGIC KEY</button>
     </div>
-
-    <div id="bar-door-trigger" onclick="enterBar()"></div>
-
 </div>
 
 <script>
-    // Инициализация данных из твоей логики
-    const guestConfig = {
-        serialNumber: "043", // Версия 4.3
-        randomPin: Math.floor(1000 + Math.random() * 9000),
-        registered: false
-    };
-
-    const slogans = [
-        "STATUS. STABILITY. SECRET.",
-        "WELCOME TO THE CIRCLE",
-        "TIME IS THE ONLY CURRENCY",
-        "STABILITY OVER CHAOS"
+    const aphorisms = [
+        "In vino veritas, in aqua sanitas.",
+        "Вино — это свет, запертый в воде.",
+        "Cheers to good times and liquid courage!",
+        "Трезвость — это временное состояние между двумя бокалами.",
+        "В баре нет незнакомцев, есть только друзья."
     ];
 
-    // При загрузке страницы
-    window.onload = () => {
-        // Установка ID
-        document.getElementById('guest-id').innerText = `ID: ${guestConfig.serialNumber}-${guestConfig.randomPin}`;
-        
-        // Запуск проектора
-        startProjector();
+    let currentIdx = 0;
+    let isOn = false;
 
-        // Лог звука Уровня 2
-        console.log("Audio Engine: Level 2 (Hall Ambient) playing...");
-    };
-
-    function startProjector() {
-        const textElem = document.getElementById('slogan-text');
-        let index = 0;
-
-        setInterval(() => {
-            textElem.style.opacity = 0;
-            setTimeout(() => {
-                index = (index + 1) % slogans.length;
-                textElem.innerText = slogans[index];
-                textElem.style.opacity = 1;
-            }, 1000);
-        }, 5000);
-        
-        // Первый запуск
-        textElem.style.opacity = 1;
-    }
-
-    function confirmHologram() {
-        const holo = document.getElementById('hologram-pass');
-        holo.classList.add('hidden');
-        guestConfig.registered = true;
-        console.log("User Access: Confirmed. Bar entrance unlocked.");
+    function toggleProjector() {
+        const screen = document.getElementById('screen');
+        isOn = !isOn;
+        screen.style.display = isOn ? 'block' : 'none';
+        if(isOn) {
+            document.getElementById('aphorism').innerText = aphorisms[currentIdx];
+            currentIdx = (currentIdx + 1) % aphorisms.length;
+        }
     }
 
     function enterBar() {
-        if (!guestConfig.registered) {
-            alert("Пожалуйста, подтвердите вашу карточку участника (кликните на голограмме).");
-            return;
-        }
-
-        console.log("Audio Engine: Transition to Level 3 (Bar Interior).");
-        alert("ВХОД В БАР\n\nЗвук: Уровень 3\nСтатус: Заглушка v4.4\n\nВы переходите в закрытую зону клуба.");
+        alert("Входим в бар сквозь дубовые висюльки...");
     }
+
+    function saveKey() {
+        alert("Magic Key V4.1 сохранен.");
+    }
+
+    window.onload = () => {
+        document.getElementById('user-id').innerText = "#" + Math.random().toString(36).substr(2, 7).toUpperCase();
+        document.getElementById('user-nick').innerText = "Cyber_Guest_4.1";
+    };
 </script>
 
 </body>
