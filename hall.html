@@ -3,13 +3,13 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="version" content="4.0">
-    <title>Digital Oasis - Hall V4.0</title>
+    <meta name="version" content="1.2">
+    <title>Hall V1.2 - Digital Oasis</title>
     <style>
         :root {
             --accent-red: #ff3131;
             --holo-blue: #00f2ff;
-            --oak-glow: rgba(212, 167, 106, 0.3);
+            --gold-oak: #d4a76a;
         }
 
         body, html {
@@ -19,32 +19,32 @@
             height: 100%;
             overflow: hidden;
             background: #000;
-            font-family: 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
         }
 
         .hall-container {
             position: relative;
             width: 100vw;
             height: 100vh;
-            /* Базовое изображение V4.0 */
-            background: url('gem_hall_base_v4.jpg') no-repeat center center;
+            /* Замените на реальный URL вашего базового фото Gem */
+            background: url('gem_base_photo_v1.jpg') no-repeat center center;
             background-size: cover;
         }
 
-        /* --- V4.0 ИНТЕРАКТИВНЫЙ ПРОЕКТОР --- */
+        /* --- 1. ПРОЕКТОР И СТРОКА --- */
         #projector-unit {
             position: absolute;
             top: 0;
-            left: 45%;
-            width: 10%;
-            height: 12%;
+            left: 44%;
+            width: 12%;
+            height: 10%;
             cursor: pointer;
-            z-index: 100;
+            z-index: 10;
         }
 
         .projection-screen {
             position: absolute;
-            top: 19%; /* Проекция над аркой */
+            top: 19%; /* Над аркой */
             width: 100%;
             height: 40px;
             overflow: hidden;
@@ -59,7 +59,7 @@
             font-size: 28px;
             font-weight: bold;
             color: var(--accent-red);
-            text-shadow: 0 0 10px var(--accent-red), 0 0 5px #000;
+            text-shadow: 0 0 10px var(--accent-red);
             animation: marquee 12s linear infinite;
         }
 
@@ -68,88 +68,86 @@
             to { transform: translateX(-100%); }
         }
 
-        /* --- V4.0 ДУБОВЫЕ ВИСЮЛЬКИ (ВХОД) --- */
+        /* --- 2. ВХОД В БАР (ВИСЮЛЬКИ) --- */
         #bar-entrance {
             position: absolute;
-            top: 41%; /* Начинается ниже надписи BAR */
+            top: 41%; /* Ниже надписи БАР */
             left: 42.5%;
             width: 15%;
             height: 31%;
             cursor: pointer;
-            z-index: 50;
-            transition: all 0.4s ease;
+            z-index: 5;
+            transition: all 0.3s ease;
         }
         #bar-entrance:hover {
-            background: var(--oak-glow);
-            box-shadow: 0 0 25px var(--oak-glow);
+            background: rgba(212, 167, 106, 0.1); /* Отблеск дуба */
+            box-shadow: 0 0 20px rgba(212, 167, 106, 0.2);
         }
 
-        /* --- V4.0 ГОЛОГРАММА ПРОФИЛЯ --- */
+        /* --- 3. ГОЛОГРАММА ГЕСТЯ --- */
         .hologram-card {
             position: absolute;
             top: 55%;
             left: 11%;
-            width: 210px;
+            width: 200px;
             padding: 15px;
-            background: rgba(0, 242, 255, 0.07);
+            background: rgba(0, 242, 255, 0.05);
             border: 1px solid var(--holo-blue);
-            border-radius: 4px;
-            box-shadow: 0 0 20px var(--holo-blue);
+            border-radius: 5px;
+            box-shadow: 0 0 15px var(--holo-blue);
             color: var(--holo-blue);
-            backdrop-filter: blur(4px);
-            z-index: 60;
-            animation: pulse 4s infinite ease-in-out;
+            backdrop-filter: blur(3px);
+            z-index: 6;
+            animation: flicker 3s infinite;
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 0.8; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.02); }
+        @keyframes flicker {
+            0% { opacity: 0.9; }
+            50% { opacity: 1; }
+            100% { opacity: 0.9; }
         }
 
         .magic-key-btn {
-            margin-top: 12px;
+            margin-top: 10px;
             width: 100%;
             background: var(--holo-blue);
             color: #000;
             border: none;
-            padding: 7px;
+            padding: 5px;
             cursor: pointer;
-            font-size: 11px;
-            font-weight: 900;
-            text-transform: uppercase;
+            font-size: 10px;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
 <div class="hall-container">
-    <div style="position:absolute; bottom:15px; left:15px; color:rgba(255,255,255,0.2); font-size:12px; letter-spacing: 2px;">SYSTEM_BUILD: V4.0</div>
+    <div style="position:absolute; bottom:10px; right:10px; color:rgba(255,255,255,0.3); font-size:10px;">Build V1.2</div>
 
-    <div id="projector-unit" onclick="toggleProjector()" title="Click to Project"></div>
-    
+    <div id="projector-unit" onclick="toggleProjector()" title="Включить проектор"></div>
     <div id="screen" class="projection-screen">
         <div id="aphorism" class="marquee-text"></div>
     </div>
 
-    <div id="bar-entrance" onclick="enterBar()" title="Enter Bar"></div>
+    <div id="bar-entrance" onclick="enterBar()" title="Раздвинуть висюльки"></div>
 
     <div class="hologram-card">
-        <div style="font-size: 9px; opacity: 0.7;">AUTH_TRACE_ID</div>
-        <div id="user-id" style="font-weight:bold; letter-spacing: 1px; margin-bottom:8px;">#SYNCING...</div>
-        <div id="user-nick" style="font-size:15px; color:#fff; margin-bottom: 5px;">Awaiting Identity...</div>
-        <div style="font-size: 10px; color: #0f0;">STATUS: ACTIVE</div>
-        <button class="magic-key-btn" onclick="saveMagicKey()">Get Magic Key</button>
+        <small>DIGITAL TRACE ID</small>
+        <div id="user-id" style="font-weight:bold; margin-bottom:5px;">#FETCHING...</div>
+        <div id="user-nick" style="font-size:14px; color:#fff;">Assigning Avatar...</div>
+        <button class="magic-key-btn" onclick="saveMagicKey()">DOWNLOAD MAGIC KEY</button>
     </div>
 </div>
 
 <script>
-    /* LOGIC CORE V4.0 */
+    /* LOGIC V1.2 */
     const aphorisms = [
         "In vino veritas, in aqua sanitas.",
-        "Alcohol is the anesthesia by which we endure the operation of life.",
-        "Wine is sunlight, held together by water.",
+        "Алкоголь — это анестезия, позволяющая вынести операцию под названием жизнь.",
+        "Вино — это свет, запертый в воде.",
         "Cheers to good times and liquid courage!",
-        "To know the limit, you must exceed it at least once."
+        "Чтобы знать меру, нужно её хотя бы раз превысить."
     ];
 
     let currentIdx = 0;
@@ -169,23 +167,20 @@
     }
 
     function enterBar() {
-        console.log("V4.0: Doorway triggered.");
-        alert("Раздвигаем дубовые висюльки... Добро пожаловать в бар!");
+        console.log("Entering Bar. V1.2 Logic Triggered.");
+        alert("Проходим сквозь дубовые висюльки...");
     }
 
     function saveMagicKey() {
-        alert("V4.0: Magic Key (Avatar-QR) has been downloaded to your device.");
+        alert("Магический ключ (аватар-QR) сохранен в память устройства.");
     }
 
-    /* Cookie-Recognition Simulation V4.0 */
+    // Симуляция Cookie-recognition V1.2
     window.onload = () => {
         setTimeout(() => {
-            // Генерация уникального цифрового следа
-            const traceId = "ID-" + Math.random().toString(36).substr(2, 9).toUpperCase();
-            document.getElementById('user-id').innerText = traceId;
-            document.getElementById('user-nick').innerText = "V4_Cyber_Guest";
-            console.log("V4.0: Trace initialized. ID:", traceId);
-        }, 800);
+            document.getElementById('user-id').innerText = "#" + Math.random().toString(36).substr(2, 9).toUpperCase();
+            document.getElementById('user-nick').innerText = "Cyber_Guest_42";
+        }, 1000);
     };
 </script>
 
