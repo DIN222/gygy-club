@@ -3,10 +3,10 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Club Hall v4.3.2 - Magic Key & QR Integration</title>
+    <title>Club Hall v4.3.3 - Layout Optimization</title>
     <style>
         :root {
-            --holo-cyan: rgba(0, 247, 255, 0.6);
+            --holo-cyan: rgba(0, 247, 255, 0.7);
             --gold-glow: #ffd700;
         }
 
@@ -25,43 +25,43 @@
             display: flex; justify-content: center; align-items: center;
         }
 
-        /* --- ПРОЕКТОР v4.3.2 (Строго на стене) --- */
+        /* --- ПРОЕКТОР v4.3.3 (ПОДНЯТ ВЫШЕ АРКИ) --- */
         #projector-wall {
             position: absolute;
-            top: 46%; left: 50%;
+            top: 38%; /* Подняли выше над дверью */
+            left: 50%;
             transform: translateX(-50%);
-            width: 500px; text-align: center;
+            width: 600px; text-align: center;
             pointer-events: none;
             z-index: 2;
         }
 
         #slogan-display {
             color: var(--gold-glow);
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 5px;
+            letter-spacing: 7px;
             font-family: 'Courier New', monospace;
-            text-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
             opacity: 0;
-            transition: opacity 1.2s ease-in-out;
+            transition: opacity 1s ease-in-out;
         }
 
-        /* --- ГОЛОГРАММА v4.3.2 (ID + Avatar + QR) --- */
+        /* --- ГОЛОГРАММА v4.3.3 (Аватар + QR рядом) --- */
         #hologram-card {
             position: relative;
-            width: 320px;
-            padding: 25px;
-            background: rgba(0, 20, 40, 0.25);
+            width: 420px; /* Увеличили ширину для бокового расположения */
+            padding: 20px;
+            background: rgba(0, 25, 45, 0.3);
             border: 1px solid var(--holo-cyan);
-            backdrop-filter: blur(12px);
-            border-radius: 15px;
-            box-shadow: 0 0 35px var(--holo-cyan);
-            text-align: center;
+            backdrop-filter: blur(15px);
+            border-radius: 12px;
+            box-shadow: 0 0 40px var(--holo-cyan);
             color: #fff;
             animation: floating 5s ease-in-out infinite;
             z-index: 10;
-            transition: 0.7s ease-in-out;
+            transition: 0.6s ease-in-out;
         }
 
         @keyframes floating {
@@ -69,57 +69,59 @@
             50% { transform: translateY(-15px); }
         }
 
+        .card-row {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 15px 0;
+        }
+
         #guest-avatar {
-            width: 100px; height: 100px;
+            width: 90px; height: 90px;
             border-radius: 50%; border: 2px solid var(--holo-cyan);
-            margin: 0 auto 10px; background: #050505;
+            background: #000;
             box-shadow: 0 0 15px var(--holo-cyan);
         }
 
+        /* Magic Key QR рядом с аватаром */
+        .qr-side-container {
+            width: 90px; height: 90px;
+            border: 1px solid var(--holo-cyan);
+            padding: 4px;
+            background: rgba(0, 247, 255, 0.05);
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 1px;
+        }
+
+        .qr-pixel { background: var(--holo-cyan); opacity: 0.6; }
+
         #guest-id-display {
-            font-size: 1.4rem; font-weight: bold;
+            font-size: 1.5rem; font-weight: bold;
             font-family: 'Courier New', monospace;
             margin: 10px 0;
-            text-shadow: 0 0 5px #fff;
-        }
-
-        /* ЗОНА QR-КОДА (Magic Key) */
-        .qr-container {
-            width: 85px; height: 85px;
-            margin: 15px auto;
-            border: 1px solid var(--holo-cyan);
-            padding: 5px;
-            background: rgba(0, 247, 255, 0.05);
-            position: relative;
-        }
-
-        .qr-pixel-mockup {
-            width: 100%; height: 100%;
-            background-image: 
-                radial-gradient(var(--holo-cyan) 1px, transparent 1px);
-            background-size: 4px 4px;
-            opacity: 0.7;
+            border-top: 1px solid rgba(0, 247, 255, 0.2);
+            padding-top: 10px;
         }
 
         .confirm-btn {
             background: transparent; border: 1px solid var(--holo-cyan);
-            color: var(--holo-cyan); padding: 10px 25px;
+            color: var(--holo-cyan); padding: 10px 40px;
             cursor: pointer; text-transform: uppercase; font-weight: bold;
-            margin-top: 10px; letter-spacing: 1px;
+            transition: 0.3s;
         }
 
         .confirm-btn:hover { background: var(--holo-cyan); color: #000; }
 
-        /* Вход в БАР */
         #bar-entrance {
             position: absolute;
             top: 50%; left: 50%;
-            transform: translate(-50%, -10%);
-            width: 160px; height: 260px;
+            transform: translate(-50%, 0);
+            width: 200px; height: 300px;
             cursor: pointer; z-index: 5;
         }
 
-        .card-hidden { opacity: 0; pointer-events: none; transform: scale(0.7) translateY(50px) !important; }
+        .card-hidden { opacity: 0; pointer-events: none; transform: scale(0.8) !important; }
     </style>
 </head>
 <body>
@@ -130,39 +132,39 @@
     </div>
 
     <div id="hologram-card">
-        <div style="font-size: 0.7rem; color: var(--holo-cyan); letter-spacing: 2px;">MEMBER CARD v4.3.2</div>
-        <img src="https://via.placeholder.com/100/001428/00f7ff?text=USER" id="guest-avatar" alt="Avatar">
-        <div id="guest-id-display">ID: 4.3.2-0000</div>
+        <div style="font-size: 0.7rem; color: var(--holo-cyan); letter-spacing: 3px; margin-bottom: 10px;">MEMBER PASS v4.3.3</div>
         
-        <div class="qr-container">
-            <div class="qr-pixel-mockup"></div>
-            <div style="position:absolute; top:35%; left:0; width:100%; font-size:8px; color:var(--holo-cyan); font-family:monospace;">MAGIC KEY</div>
+        <div class="card-row">
+            <img src="https://via.placeholder.com/90/001428/00f7ff?text=ID" id="guest-avatar" alt="Avatar">
+            
+            <div class="qr-side-container" id="qr-grid">
+                </div>
         </div>
-        
-        <button class="confirm-btn" onclick="activateAccess()">Подтвердить статус</button>
+
+        <div id="guest-id-display">ID: 4.3.3-0000</div>
+        <button class="confirm-btn" onclick="activateAccess()">Подтвердить</button>
     </div>
 
     <div id="bar-entrance" onclick="tryEnterBar()"></div>
 </div>
 
 <script>
-    const session = { 
-        version: "4.3.2", 
-        pin: Math.floor(1000 + Math.random() * 9000), 
-        ok: false 
-    };
-
-    const clubSlogans = [
-        "STATUS. STABILITY. SECRET.",
-        "TIME IS THE ONLY CURRENCY",
-        "WELCOME TO THE CIRCLE v4.3.2",
-        "STABILITY OVER CHAOS"
-    ];
+    const session = { version: "4.3.3", pin: Math.floor(1000 + Math.random() * 9000), ok: false };
+    const slogans = ["STATUS. STABILITY. SECRET.", "WELCOME TO THE CIRCLE", "TIME IS CURRENCY", "STABILITY OVER CHAOS"];
 
     window.onload = () => {
         document.getElementById('guest-id-display').innerText = `ID: ${session.version}-${session.pin}`;
+        
+        // Генерация пикселей QR
+        const grid = document.getElementById('qr-grid');
+        for(let i=0; i<100; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'qr-pixel';
+            dot.style.opacity = Math.random() > 0.5 ? "0.8" : "0";
+            grid.appendChild(dot);
+        }
+
         initProjector();
-        console.log(`[System]: Hall v${session.version} Active. QR Magic Key ready.`);
     };
 
     function initProjector() {
@@ -171,23 +173,18 @@
         d.style.opacity = 1;
         setInterval(() => {
             d.style.opacity = 0;
-            setTimeout(() => { 
-                c = (c + 1) % clubSlogans.length; 
-                d.innerText = clubSlogans[c]; 
-                d.style.opacity = 1; 
-            }, 1200);
-        }, 7000);
+            setTimeout(() => { c = (c + 1) % slogans.length; d.innerText = slogans[c]; d.style.opacity = 1; }, 1000);
+        }, 6000);
     }
 
     function activateAccess() {
         document.getElementById('hologram-card').classList.add('card-hidden');
         session.ok = true;
-        console.log("[Access]: Confirmed 4.3.2. Entry to Bar unlocked.");
     }
 
     function tryEnterBar() {
-        if (!session.ok) return alert("Подтвердите ID для входа.");
-        alert(`ВХОД В БАР (v4.4 Stub)\n------------------\nВерсия системы: ${session.version}\nЗвук: Уровень 3`);
+        if (!session.ok) return alert("Подтвердите Карточку Участника.");
+        alert("ВХОД В БАР (v4.4)\nЗвук переведен на Уровень 3");
     }
 </script>
 </body>
