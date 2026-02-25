@@ -3,46 +3,34 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Club Hall v4.3.1 - Stable Build</title>
+    <title>Club Hall v4.3.2 - Magic Key & QR Integration</title>
     <style>
         :root {
             --holo-cyan: rgba(0, 247, 255, 0.6);
             --gold-glow: #ffd700;
-            --accent-blue: rgba(0, 100, 200, 0.3);
         }
 
         body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background: #000;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            overflow: hidden; background: #000;
+            font-family: 'Segoe UI', sans-serif;
         }
 
-        /* Основная сцена с фоном v4.3.1 */
         #hall-scene {
             position: relative;
-            width: 100vw;
-            height: 100vh;
+            width: 100vw; height: 100vh;
             background: url('hall_bg.jpg') no-repeat center center;
             background-size: cover;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            perspective: 1000px;
+            display: flex; justify-content: center; align-items: center;
         }
 
-        /* --- БЛОК 2.1: ПРОЕКТОР (Слоганы на стене) --- */
+        /* --- ПРОЕКТОР v4.3.2 (Строго на стене) --- */
         #projector-wall {
             position: absolute;
-            top: 46%; /* Скорректировано под потолок в v4.3.1 */
-            left: 50%;
+            top: 46%; left: 50%;
             transform: translateX(-50%);
-            width: 500px;
-            text-align: center;
+            width: 500px; text-align: center;
             pointer-events: none;
             z-index: 2;
         }
@@ -50,193 +38,157 @@
         #slogan-display {
             color: var(--gold-glow);
             font-size: 1.1rem;
-            font-weight: 700;
+            font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 6px;
-            font-family: 'Courier New', Courier, monospace;
-            text-shadow: 0 0 8px rgba(255, 215, 0, 0.6), 0 0 20px rgba(255, 215, 0, 0.2);
+            letter-spacing: 5px;
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
             opacity: 0;
             transition: opacity 1.2s ease-in-out;
         }
 
-        /* --- БЛОК 2.2: ГОЛОГРАММА (Карточка участника) --- */
+        /* --- ГОЛОГРАММА v4.3.2 (ID + Avatar + QR) --- */
         #hologram-card {
             position: relative;
             width: 320px;
-            padding: 30px;
-            background: rgba(0, 20, 40, 0.3);
+            padding: 25px;
+            background: rgba(0, 20, 40, 0.25);
             border: 1px solid var(--holo-cyan);
-            backdrop-filter: blur(15px);
-            border-radius: 20px;
-            box-shadow: 0 0 40px var(--holo-cyan), inset 0 0 20px var(--holo-cyan);
+            backdrop-filter: blur(12px);
+            border-radius: 15px;
+            box-shadow: 0 0 35px var(--holo-cyan);
             text-align: center;
             color: #fff;
             animation: floating 5s ease-in-out infinite;
             z-index: 10;
-            transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: 0.7s ease-in-out;
         }
 
         @keyframes floating {
-            0%, 100% { transform: translateY(0) rotateY(0deg); }
-            50% { transform: translateY(-20px) rotateY(3deg); }
-        }
-
-        .card-header {
-            font-size: 0.75rem;
-            color: var(--holo-cyan);
-            letter-spacing: 4px;
-            margin-bottom: 20px;
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
         }
 
         #guest-avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            border: 2px solid var(--holo-cyan);
-            margin: 0 auto 15px;
-            display: block;
-            background: #050505;
-            box-shadow: 0 0 20px var(--holo-cyan);
+            width: 100px; height: 100px;
+            border-radius: 50%; border: 2px solid var(--holo-cyan);
+            margin: 0 auto 10px; background: #050505;
+            box-shadow: 0 0 15px var(--holo-cyan);
         }
 
         #guest-id-display {
-            font-size: 1.6rem;
-            font-weight: bold;
-            margin: 10px 0;
+            font-size: 1.4rem; font-weight: bold;
             font-family: 'Courier New', monospace;
-            text-shadow: 0 0 10px #fff;
+            margin: 10px 0;
+            text-shadow: 0 0 5px #fff;
         }
 
-        .magic-key-label {
-            font-size: 0.65rem;
-            color: #888;
-            margin-bottom: 20px;
-            text-transform: uppercase;
+        /* ЗОНА QR-КОДА (Magic Key) */
+        .qr-container {
+            width: 85px; height: 85px;
+            margin: 15px auto;
+            border: 1px solid var(--holo-cyan);
+            padding: 5px;
+            background: rgba(0, 247, 255, 0.05);
+            position: relative;
+        }
+
+        .qr-pixel-mockup {
+            width: 100%; height: 100%;
+            background-image: 
+                radial-gradient(var(--holo-cyan) 1px, transparent 1px);
+            background-size: 4px 4px;
+            opacity: 0.7;
         }
 
         .confirm-btn {
-            background: transparent;
-            border: 1px solid var(--holo-cyan);
-            color: var(--holo-cyan);
-            padding: 12px 30px;
-            font-weight: bold;
-            cursor: pointer;
-            text-transform: uppercase;
-            transition: 0.3s;
-            letter-spacing: 2px;
+            background: transparent; border: 1px solid var(--holo-cyan);
+            color: var(--holo-cyan); padding: 10px 25px;
+            cursor: pointer; text-transform: uppercase; font-weight: bold;
+            margin-top: 10px; letter-spacing: 1px;
         }
 
-        .confirm-btn:hover {
-            background: var(--holo-cyan);
-            color: #000;
-            box-shadow: 0 0 25px var(--holo-cyan);
-        }
+        .confirm-btn:hover { background: var(--holo-cyan); color: #000; }
 
-        /* --- БЛОК 2.3: ТРИГГЕР БАРА (Золотая дверь) --- */
+        /* Вход в БАР */
         #bar-entrance {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -5%);
-            width: 180px;
-            height: 280px;
-            cursor: pointer;
-            z-index: 5;
-            /* background: rgba(255, 255, 255, 0.1); */ /* Для тестов раскомментировать */
+            top: 50%; left: 50%;
+            transform: translate(-50%, -10%);
+            width: 160px; height: 260px;
+            cursor: pointer; z-index: 5;
         }
 
-        /* Состояние скрытия */
-        .card-hidden {
-            opacity: 0;
-            pointer-events: none;
-            transform: scale(0.5) translateY(100px) rotateX(90deg) !important;
-        }
-
+        .card-hidden { opacity: 0; pointer-events: none; transform: scale(0.7) translateY(50px) !important; }
     </style>
 </head>
 <body>
 
 <div id="hall-scene">
-    
     <div id="projector-wall">
         <div id="slogan-display">STATUS. STABILITY. SECRET.</div>
     </div>
 
     <div id="hologram-card">
-        <div class="card-header">MEMBER CARD v4.3.1</div>
-        <img src="https://via.placeholder.com/120/001428/00f7ff?text=AVATAR" id="guest-avatar" alt="Guest">
-        <div id="guest-id-display">ID: 4.3.1-0000</div>
-        <div class="magic-key-label">Digital Trace & Magic Key Active</div>
-        <button class="confirm-btn" onclick="activateAccess()">Подтвердить ID</button>
+        <div style="font-size: 0.7rem; color: var(--holo-cyan); letter-spacing: 2px;">MEMBER CARD v4.3.2</div>
+        <img src="https://via.placeholder.com/100/001428/00f7ff?text=USER" id="guest-avatar" alt="Avatar">
+        <div id="guest-id-display">ID: 4.3.2-0000</div>
+        
+        <div class="qr-container">
+            <div class="qr-pixel-mockup"></div>
+            <div style="position:absolute; top:35%; left:0; width:100%; font-size:8px; color:var(--holo-cyan); font-family:monospace;">MAGIC KEY</div>
+        </div>
+        
+        <button class="confirm-btn" onclick="activateAccess()">Подтвердить статус</button>
     </div>
 
-    <div id="bar-entrance" onclick="tryEnterBar()" title="Войти в БАР"></div>
-
+    <div id="bar-entrance" onclick="tryEnterBar()"></div>
 </div>
 
 <script>
-    // Конфигурация сессии v4.3.1
-    const session = {
-        version: "4.3.1",
-        userNumber: Math.floor(1000 + Math.random() * 9000),
-        accessGranted: false
+    const session = { 
+        version: "4.3.2", 
+        pin: Math.floor(1000 + Math.random() * 9000), 
+        ok: false 
     };
 
     const clubSlogans = [
         "STATUS. STABILITY. SECRET.",
         "TIME IS THE ONLY CURRENCY",
-        "STABILITY OVER CHAOS",
-        "WELCOME TO THE CIRCLE v4.3.1"
+        "WELCOME TO THE CIRCLE v4.3.2",
+        "STABILITY OVER CHAOS"
     ];
 
     window.onload = () => {
-        // 1. Установка ID гостя
-        document.getElementById('guest-id-display').innerText = `ID: ${session.version}-${session.userNumber}`;
-        
-        // 2. Инициализация аудио (Логика уровня 2)
-        console.log(`[System]: Hall v${session.version} loaded.`);
-        console.log("[Audio]: Playing Level 2 Ambient (Bar background sounds).");
-
-        // 3. Запуск цикличных слоганов
+        document.getElementById('guest-id-display').innerText = `ID: ${session.version}-${session.pin}`;
         initProjector();
+        console.log(`[System]: Hall v${session.version} Active. QR Magic Key ready.`);
     };
 
     function initProjector() {
-        const display = document.getElementById('slogan-display');
-        let counter = 0;
-
-        // Показ первого слогана
-        display.style.opacity = 1;
-
+        const d = document.getElementById('slogan-display');
+        let c = 0;
+        d.style.opacity = 1;
         setInterval(() => {
-            display.style.opacity = 0;
-            setTimeout(() => {
-                counter = (counter + 1) % clubSlogans.length;
-                display.innerText = clubSlogans[counter];
-                display.style.opacity = 1;
-            }, 1200); // Плавная смена
+            d.style.opacity = 0;
+            setTimeout(() => { 
+                c = (c + 1) % clubSlogans.length; 
+                d.innerText = clubSlogans[c]; 
+                d.style.opacity = 1; 
+            }, 1200);
         }, 7000);
     }
 
     function activateAccess() {
-        // Скрытие голограммы
         document.getElementById('hologram-card').classList.add('card-hidden');
-        session.accessGranted = true;
-        
-        console.log("[Access]: User confirmed digital trace. Hall services unlocked.");
+        session.ok = true;
+        console.log("[Access]: Confirmed 4.3.2. Entry to Bar unlocked.");
     }
 
     function tryEnterBar() {
-        if (!session.accessGranted) {
-            alert("ВНИМАНИЕ: Для доступа к сервисам клуба необходимо подтвердить Карточку Участника (Голограмму).");
-            return;
-        }
-
-        // Логика перехода в БАР (Блок 3)
-        console.log("[Audio]: Switching to Level 3 (Interior High-Fidelity).");
-        alert(`ПЕРЕХОД В БАР\n------------------\nСтатус: Вход разрешен\nВерсия: v4.4 (В разработке)\nЗвук: Уровень 3 активирован`);
+        if (!session.ok) return alert("Подтвердите ID для входа.");
+        alert(`ВХОД В БАР (v4.4 Stub)\n------------------\nВерсия системы: ${session.version}\nЗвук: Уровень 3`);
     }
 </script>
-
 </body>
 </html>
