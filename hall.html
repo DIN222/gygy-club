@@ -2,118 +2,115 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Bar Project v.4.5.4 - Precision Alignment</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bar Project v.4.5.6 - Clean Interaction</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
             --slogan-color: #5D4037; 
             --hologram-cyan: #00E5FF;
-            --gold-access: rgba(212, 175, 55, 0.6);
         }
 
         body, html {
             margin: 0; padding: 0;
-            width: 100%; height: 100vh;
+            width: 100%; height: 100%;
             overflow: hidden;
             background-color: #000;
         }
 
         .viewport {
             position: relative;
-            width: 100vw; height: 100vh;
+            width: 100vw;
+            height: 100vh;
+            /* Растягиваем фото на весь экран без искажений */
             background: url('hall_bg_jpg.jpg') no-repeat center center;
-            background-size: contain; 
+            background-size: cover; 
             z-index: 1;
         }
 
-        /* 1. НАДПИСЬ: Поднята максимально высоко в простенок (v.4.5.4) */
+        /* 1. НАДПИСЬ: VERSION 4.3.0 (Юстировка по высоте) */
         .projector-layer {
             position: absolute;
-            top: 28%; /* Было 35%, теперь подняли выше к потолку */
+            top: 30%; /* Оптимально: под потолком, но на стене */
             left: 50%;
             transform: translate(-50%, -50%);
-            z-index: 5;
-            text-align: center;
+            z-index: 10;
             width: 100%;
+            text-align: center;
+            pointer-events: none;
         }
 
-        .slogan-v454 {
+        .slogan-v456 {
             font-family: 'Playfair Display', serif;
             color: var(--slogan-color);
-            font-size: 1.7vw; /* Чуть уменьшили для изящности */
-            letter-spacing: 0.7vw;
+            font-size: clamp(14px, 1.8vw, 28px);
+            letter-spacing: 0.6vw;
             text-transform: uppercase;
             font-weight: 900;
-            /* Усиленное свечение, так как на светлом фоне сверху буквы могут теряться */
-            text-shadow: 0 0 15px rgba(255,255,255,0.9), 1px 1px 3px rgba(0,0,0,0.1);
+            text-shadow: 0 0 8px rgba(255,255,255,0.7);
+            opacity: 0.9;
         }
 
-        /* 2. ГОЛОГРАММА: С кнопкой подтверждения */
-        .hologram-v454 {
+        /* 2. ГОЛОГРАММА: Справа, с кнопкой подтверждения */
+        .hologram-v456 {
             position: absolute;
-            right: 17%;
-            bottom: 25%;
-            width: 25vw;
-            min-height: 18vw;
+            right: 8%;
+            bottom: 20%;
+            width: clamp(260px, 22vw, 450px);
             z-index: 50;
-            border: 2px solid var(--hologram-cyan);
-            background: rgba(0, 229, 255, 0.08);
-            backdrop-filter: blur(12px);
-            border-radius: 15px;
-            box-shadow: 0 0 40px rgba(0, 229, 255, 0.4);
+            border: 1px solid var(--hologram-cyan);
+            background: rgba(0, 229, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
             color: var(--hologram-cyan);
-            padding: 2vw;
+            padding: 20px;
             font-family: 'Share Tech Mono', monospace;
-            transform: rotateY(-15deg);
-            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            transition: opacity 0.8s ease, transform 0.8s ease;
         }
 
-        .hologram-v454.faded {
+        .hologram-v456.faded {
             opacity: 0;
             pointer-events: none;
-            transform: rotateY(-40deg) scale(0.7) translateY(50px);
+            transform: translateY(10px);
         }
 
-        /* КНОПКА ПОДТВЕРЖДЕНИЯ */
         .confirm-btn {
-            background: rgba(0, 229, 255, 0.1);
-            border: 2px solid var(--hologram-cyan);
+            background: transparent;
+            border: 1px solid var(--hologram-cyan);
             color: var(--hologram-cyan);
-            padding: 1.2vw;
-            margin-top: 1.5vw;
-            cursor: pointer;
-            font-weight: bold;
-            letter-spacing: 3px;
-            transition: 0.3s;
-            text-align: center;
+            padding: 12px;
+            margin-top: 15px;
+            width: 100%;
+            cursor: pointer; /* Сразу меняет на стрелку/указатель */
             text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: 0.3s;
         }
 
         .confirm-btn:hover {
             background: var(--hologram-cyan);
             color: #000;
-            box-shadow: 0 0 20px var(--hologram-cyan);
         }
 
-        /* 3. ДВЕРЬ (Активная зона) */
+        /* 3. ДВЕРЬ (Только активная зона и курсор) */
         .door-trigger {
             position: absolute;
-            bottom: 34%;
-            left: 49.5%;
+            top: 35%; /* Центр арки по фото */
+            left: 50%;
             transform: translateX(-50%);
-            width: 14%;
-            height: 29%;
-            z-index: 10;
-            cursor: pointer;
-            transition: 0.5s;
+            width: 15vw; 
+            height: 35vh;
+            z-index: 20;
+            /* ГЛАВНОЕ: Курсор меняется на стрелку (pointer) при наведении */
+            cursor: pointer; 
+            background: transparent; /* Никакого визуального шума */
         }
 
-        /* Визуальный эффект готовности двери после регистрации */
-        .door-trigger.ready:hover {
-            background: radial-gradient(circle, var(--gold-access), transparent);
+        /* Адаптация под мобильные устройства (горизонталь) */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .projector-layer { top: 22%; }
+            .hologram-v456 { width: 35vw; bottom: 5%; }
         }
     </style>
 </head>
@@ -121,47 +118,40 @@
 
     <div class="viewport">
         <div class="projector-layer">
-            <div id="slogan-id" class="slogan-v454">VERSION 4.3.0</div>
+            <div class="slogan-v456">VERSION 4.3.0</div>
         </div>
 
-        <div class="hologram-v454" id="reg-hologram">
-            <div>
-                <div style="font-size: 0.7vw; border-bottom: 1px solid; padding-bottom: 5px; margin-bottom: 1.5vw; opacity: 0.7;">BAR LOGISTIC SYSTEM</div>
-                <div id="u-id" style="font-size: 1.3vw; font-weight: bold; text-shadow: 0 0 10px var(--hologram-cyan);">ID: [WAITING]</div>
-                <div id="u-nick" style="font-size: 0.9vw; margin-top: 8px; color: #fff;">TRACE: ACTIVE</div>
-            </div>
+        <div class="hologram-v456" id="auth-panel">
+            <div style="font-size: 12px; border-bottom: 1px solid; padding-bottom: 5px; opacity: 0.8;">BAR SYSTEM v.4.3.0</div>
+            <div id="u-id" style="font-size: 16px; margin-top: 15px; font-weight: bold;">ID: [SCANNING]</div>
+            <div id="u-nick" style="font-size: 12px; margin-top: 5px; color: #fff;">USER: [CONNECTED]</div>
             
-            <div class="confirm-btn" onclick="activateAccess()">ПОДТВЕРДИТЬ</div>
-            
-            <div style="font-size: 0.6vw; opacity: 0.5; margin-top: 1vw; text-align: center;">CONFIRM TO OPEN BAR DOOR</div>
+            <button class="confirm-btn" onclick="confirmIdentity()">ПОДТВЕРДИТЬ</button>
         </div>
 
-        <div class="door-trigger" id="door" onclick="tryEnter()"></div>
+        <div class="door-trigger" id="door-link" onclick="handleEntry()"></div>
     </div>
 
     <script>
-        let isRegistered = false;
+        let isAuth = false;
 
-        function activateAccess() {
-            // Исчезновение голограммы
-            document.getElementById('reg-hologram').classList.add('faded');
-            // Подготовка двери
-            document.getElementById('door').classList.add('ready');
-            isRegistered = true;
-            console.log("Access Granted. Door is now interactive.");
+        function confirmIdentity() {
+            document.getElementById('auth-panel').classList.add('faded');
+            isAuth = true;
+            console.log("Trace confirmed. Access point ready.");
         }
 
-        function tryEnter() {
-            if (!isRegistered) {
-                alert("Сначала подтвердите регистрацию на голограмме!");
+        function handleEntry() {
+            if (isAuth) {
+                alert("Добро пожаловать в Бар 4.3.0");
+                // window.location.href = 'bar_main.html'; // Будущий переход
             } else {
-                alert("Доступ разрешен. Добро пожаловать!");
-                // Здесь можно прописать переход на другую страницу
+                alert("Пожалуйста, подтвердите вашу личность на панели справа.");
             }
         }
 
         window.onload = () => {
-            let id = localStorage.getItem('trace_id') || '4.3.0-' + Math.random().toString(16).slice(2,8).toUpperCase();
+            let id = localStorage.getItem('trace_id') || '4.3.0-' + Math.random().toString(16).slice(2,6).toUpperCase();
             localStorage.setItem('trace_id', id);
             document.getElementById('u-id').innerText = `ID: ${id}`;
         };
