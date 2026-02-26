@@ -2,143 +2,166 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Bar Project - Hall v.4.3.9</title>
+    <title>Bar Hall v.4.4.0 - Final Layout</title>
     <style>
+        /* Переменные версии 4.4.0 */
         :root {
-            --bg-light: #F9F7E8;      /* Светлый тон стен из файла image_7c69c4 */
-            --slogan-brown: #5D4037;  /* Изящный коричневый для проектора */
-            --hologram-cyan: rgba(0, 243, 255, 0.7);
-            --gold-trim: #D4AF37;
+            --bg-hall: #F9F7E8;         /* Светлый тон по вашему запросу */
+            --slogan-brown: #4E342E;    /* Тот самый коричневый для проектора */
+            --gold-ornament: rgba(212, 175, 55, 0.4); /* Изящный и светлый */
+            --hologram-cyan: #00f3ff;
+            --frame-dark: #2a1b15;      /* Винтажный темный для рам */
         }
 
         body {
-            background-color: var(--bg-light);
+            background: var(--bg-hall);
             margin: 0;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            perspective: 1000px;
-            font-family: 'Georgia', serif;
+            perspective: 1500px;
+            overflow: hidden;
+            font-family: 'Playfair Display', serif;
         }
 
-        /* 1. ПРОЕКТОР: ТРАНСЛЯЦИЯ СЛОГАНОВ */
-        .projector-stream {
+        /* 1. ПРОЕКТОР: Центрированный слоган над аркой */
+        .projection-layer {
             position: absolute;
-            top: 25%; /* Над входом в бар */
+            top: 15%;
             width: 100%;
             text-align: center;
-            pointer-events: none;
+            z-index: 5;
         }
 
-        .slogan-text {
+        .centered-slogan {
             color: var(--slogan-brown);
-            font-size: 2.8rem;
+            font-size: 3.5rem;
+            font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 6px;
-            font-weight: bold;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
-            animation: pulse-light 4s infinite;
+            letter-spacing: 15px;
+            opacity: 0.85;
+            text-shadow: 0 0 10px rgba(78, 52, 46, 0.1);
+            animation: projector-flicker 4s infinite alternate;
         }
 
-        /* 2. ГОЛОГРАММА КАРТОЧКИ КЛУБА */
-        #club-hologram {
+        /* 2. ГАЛЕРЕЯ: 6 винтажных картин */
+        .gallery-block {
             position: absolute;
-            bottom: 180px;
-            right: 10%;
-            width: 220px;
-            padding: 15px;
-            background: linear-gradient(135deg, rgba(0,243,255,0.1), transparent);
-            border-left: 3px solid var(--hologram-cyan);
-            color: var(--hologram-cyan);
-            font-family: 'Courier New', monospace;
-            box-shadow: -10px 0 20px rgba(0,243,255,0.2);
-            transform: rotateY(-20deg);
-            cursor: help;
+            left: 5%;
+            display: grid;
+            grid-template-columns: repeat(2, 130px);
+            gap: 25px;
         }
 
-        /* 3. ДВЕРЬ В БАР (ЗАГЛУШКА) */
-        .bar-entrance {
+        .vintage-frame {
+            width: 130px;
+            height: 170px;
+            background: #3d3d3d;
+            border: 12px solid var(--frame-dark); /* Тяжелые рамы из 4.3.8 */
+            box-shadow: 15px 15px 30px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        /* 3. АРКА БАРА (Дверь на заглушке) */
+        .bar-entrance-arch {
             position: absolute;
             bottom: 0;
-            width: 320px;
-            height: 420px;
-            border: 2px solid var(--gold-trim);
-            border-radius: 160px 160px 0 0;
+            width: 400px;
+            height: 550px;
+            border: 1.5px solid var(--gold-ornament); /* Изящно и тонко */
+            border-radius: 200px 200px 0 0;
+            background: linear-gradient(to top, rgba(212, 175, 55, 0.05), transparent);
             cursor: pointer;
-            transition: all 0.3s;
-            background: rgba(212, 175, 55, 0.05);
+            transition: 0.4s;
         }
 
-        .bar-entrance:hover {
-            box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
-            background: rgba(212, 175, 55, 0.1);
+        .bar-entrance-arch:hover {
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.2);
         }
 
-        .bar-entrance::after {
-            content: "LOCKED";
+        /* 4. ГОЛОГРАММА: Карточка клуба (Digital Trace) */
+        .hologram-card {
             position: absolute;
-            bottom: 20px;
-            width: 100%;
-            text-align: center;
-            color: var(--gold-trim);
-            font-size: 0.8rem;
-            letter-spacing: 3px;
+            right: 8%;
+            bottom: 20%;
+            width: 300px;
+            height: 180px;
+            border: 1px solid var(--hologram-cyan);
+            background: rgba(0, 243, 255, 0.05);
+            backdrop-filter: blur(5px);
+            border-radius: 15px;
+            transform: rotateY(-30deg);
+            box-shadow: 0 0 25px var(--hologram-cyan);
+            color: var(--hologram-cyan);
+            padding: 20px;
+            font-family: monospace;
+            animation: float 5s ease-in-out infinite;
         }
 
-        @keyframes pulse-light {
-            0%, 100% { opacity: 0.9; }
-            50% { opacity: 0.6; }
+        /* Анимации */
+        @keyframes projector-flicker {
+            0% { opacity: 0.8; transform: scale(1); }
+            100% { opacity: 0.6; transform: scale(1.02); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotateY(-30deg); }
+            50% { transform: translateY(-20px) rotateY(-25deg); }
         }
     </style>
 </head>
 <body>
 
-    <div class="projector-stream">
-        <div id="active-slogan" class="slogan-text">ИСТИНА В ДЕТАЛЯХ</div>
+    <div class="projection-layer">
+        <div class="centered-slogan" id="slogan-out">PROJECTION 4.4.0</div>
     </div>
 
-    <div class="bar-entrance" onclick="handleDoorClick()"></div>
+    <div class="gallery-block">
+        <div class="vintage-frame"></div><div class="vintage-frame"></div>
+        <div class="vintage-frame"></div><div class="vintage-frame"></div>
+        <div class="vintage-frame"></div><div class="vintage-frame"></div>
+    </div>
 
-    <div id="club-hologram">
-        <div style="font-size: 0.6rem; border-bottom: 1px solid; margin-bottom: 5px;">CLUB CARD VERIFIED</div>
-        <div id="user-trace" style="font-size: 0.8rem;">ID: [INITIALIZING...]</div>
-        <div style="font-size: 0.7rem; margin-top: 10px;">STATUS: MEMBER</div>
+    <div class="bar-entrance-arch" onclick="alert('v.4.4.0: Door is on stub. Access denied.')"></div>
+
+    <div class="hologram-card" id="card">
+        <div style="font-size: 10px; border-bottom: 1px solid; padding-bottom: 5px;">MEMBER IDENTIFICATION</div>
+        <div id="user-id-display" style="margin-top: 15px; font-size: 1.2rem;">ID: [SCANNING]</div>
+        <div id="user-nick" style="margin-top: 10px; color: #fff;">NICK: [PENDING]</div>
+        <div style="position: absolute; bottom: 10px; right: 15px; font-size: 10px; opacity: 0.5;">ARCH_TRACE_4.4.0</div>
     </div>
 
     <script>
-        /**
-         * v.4.3.9 Logic
-         * Архитектурный стандарт: Cookie, Trace ID, Magic Key
-         */
-        const Hall_4_3_9 = {
+        const App_4_4_0 = {
             init() {
-                this.setIdentity();
-                this.startSloganCycle();
+                this.identify();
+                this.cycleSlogans();
             },
 
-            setIdentity() {
-                // Извлекаем цифровой след (Digital Trace)
-                let traceID = localStorage.getItem('unique_digital_trace_id') || 'ID-' + Math.floor(Math.random()*10000);
-                localStorage.setItem('unique_digital_trace_id', traceID);
-                document.getElementById('user-trace').innerText = `TRACE: ${traceID}`;
+            identify() {
+                // Digital Trace согласно архитектурному плану
+                let id = localStorage.getItem('trace_id') || 'TR-' + Math.random().toString(36).substr(2, 7).toUpperCase();
+                let nick = localStorage.getItem('nick') || 'Agent_' + Math.floor(Math.random()*100);
+                
+                localStorage.setItem('trace_id', id);
+                localStorage.setItem('nick', nick);
+
+                document.getElementById('user-id-display').innerText = `ID: ${id}`;
+                document.getElementById('user-nick').innerText = `NICK: ${nick}`;
             },
 
-            startSloganCycle() {
-                const slogans = ["ИСТИНА В ДЕТАЛЯХ", "ВЕРСИЯ 4.3.9", "ДОБРО ПОЖАЛОВАТЬ"];
-                let i = 0;
+            cycleSlogans() {
+                const list = ["ВЕРСИЯ 4.4.0", "WELCOME TO BAR", "ИЗЯЩЕСТВО"];
+                let step = 0;
                 setInterval(() => {
-                    i = (i + 1) % slogans.length;
-                    document.getElementById('active-slogan').innerText = slogans[i];
+                    step = (step + 1) % list.length;
+                    document.getElementById('slogan-out').innerText = list[step];
                 }, 5000);
             }
         };
 
-        function handleDoorClick() {
-            alert("Версия 4.3.9: Дверь в бар временно на заглушке. Доступ открывается в следующем блоке.");
-        }
-
-        window.onload = () => Hall_4_3_9.init();
+        window.onload = () => App_4_4_0.init();
     </script>
 </body>
 </html>
