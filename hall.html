@@ -2,154 +2,160 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Bar Project v.4.4.1 - Layer Calibration</title>
+    <title>Bar Project v.4.4.6 - Light Sofa Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
-            --slogan-brown: #4E342E;
-            --hologram-cyan: #00f3ff;
-            --gold-glow: rgba(212, 175, 55, 0.2);
+            --slogan-brown: #5D4037;   /* Коричневый для проекции */
+            --hologram-cyan: #00E5FF;
+            --sofa-glow: rgba(255, 255, 255, 0.4); /* Мягкое светлое свечение */
         }
 
         body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100vh;
+            margin: 0; padding: 0;
+            width: 100vw; height: 100vh;
             overflow: hidden;
-            background-color: #F9F7E8;
+            background-color: #FDFCF0; /* Под цвет ваших стен */
         }
 
-        /* ОСНОВНОЙ ФОН (HALL BLOCK 2) */
-        .hall-background {
-            position: absolute;
-            width: 100%;
-            height: 100%;
+        /* ОСНОВНОЙ ФОН: hall_bg.jpg */
+        .hall-viewport {
+            position: relative;
+            width: 100%; height: 100%;
             background: url('hall_bg.jpg') no-repeat center center;
-            background-size: cover;
+            background-size: contain;
             z-index: 1;
         }
 
-        /* 4.4.1: ЦЕНТРИРОВАННАЯ ПРОЕКЦИЯ (Уточненная позиция) */
-        .projector-display {
+        /* 1. ПРОЕКТОР: Центрированный слоган v.4.4.6 */
+        .projection-unit {
             position: absolute;
-            top: 22%; /* Юстировка под срез арки на hall_bg.jpg */
-            left: 50%;
-            transform: translateX(-50%);
+            top: 41.6%;
+            left: 50.1%;
+            transform: translate(-50%, -50%);
             z-index: 10;
+            width: 100%;
             text-align: center;
-            width: 90%;
             pointer-events: none;
         }
 
-        .slogan-v441 {
-            color: var(--slogan-brown);
+        .wall-slogan-v446 {
             font-family: 'Playfair Display', serif;
-            font-size: 3.2rem;
-            font-weight: 800;
+            color: var(--slogan-brown);
+            font-size: 2.3vw;
+            font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: 10px;
-            /* Наложение на текстуру JPG */
-            mix-blend-mode: multiply;
+            letter-spacing: 0.8vw;
+            mix-blend-mode: multiply; /* Интеграция в светлую стену */
             opacity: 0.85;
-            animation: light-pulse 6s infinite ease-in-out;
+            filter: blur(0.2px);
+            animation: light-pulse 5s infinite ease-in-out;
         }
 
-        /* 4.4.1: ГОЛОГРАММА (Карточка клуба) */
-        .card-hologram {
+        /* 2. ГАЛЕРЕЯ: 8 КАРТИН (Строгая симметрия) */
+        .gallery-wall-v446 {
             position: absolute;
-            right: 7%;
-            bottom: 20%;
-            width: 280px;
-            height: 160px;
-            z-index: 20;
-            border: 1px solid var(--hologram-cyan);
-            background: rgba(0, 243, 255, 0.02);
-            backdrop-filter: blur(2px);
-            border-radius: 10px;
-            box-shadow: 0 0 15px var(--hologram-cyan);
-            color: var(--hologram-cyan);
-            padding: 15px;
-            font-family: 'Courier New', monospace;
-            transform: rotateY(-20deg) rotateX(5deg);
-            animation: hover-effect 4s infinite ease-in-out;
+            left: 4.5%; top: 22%;
+            display: grid;
+            grid-template-columns: repeat(2, 85px);
+            grid-template-rows: repeat(4, 115px);
+            gap: 12px;
+            z-index: 5;
         }
 
-        /* 4.4.1: ЗОНА ДВЕРИ (Заглушка) */
-        .door-stub {
+        .frame-v446 {
+            border: 8px solid #2A1A17; /* Темный контраст для светлого холла */
+            background: #444;
+            box-shadow: 10px 10px 20px rgba(0,0,0,0.3);
+        }
+
+        /* 3. СВЕТЛЫЙ ДИВАН: Зона отдыха v.4.4.6 */
+        .light-sofa-area {
             position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 350px;
-            height: 480px;
-            z-index: 15;
+            bottom: 8%; left: 18%;
+            width: 32vw; height: 14vh;
+            z-index: 10;
             cursor: pointer;
-            background: transparent;
-            transition: background 0.4s;
+            border-radius: 30px;
+            transition: background 0.5s;
         }
 
-        .door-stub:hover {
-            background: radial-gradient(circle at center, var(--gold-glow), transparent);
+        .light-sofa-area:hover {
+            background: radial-gradient(circle, var(--sofa-glow), transparent);
         }
 
-        /* АНИМАЦИИ */
-        @keyframes light-pulse {
-            0%, 100% { opacity: 0.9; filter: blur(0px); }
-            50% { opacity: 0.7; filter: blur(0.5px); }
+        /* 4. ГОЛОГРАММА: Карточка (v.4.4.6 standard) */
+        .card-v446 {
+            position: absolute;
+            right: 17%; bottom: 31%;
+            width: 19vw; height: 11vw;
+            z-index: 20;
+            background: rgba(0, 229, 255, 0.03);
+            border: 1px solid var(--hologram-cyan);
+            backdrop-filter: blur(6px);
+            border-radius: 12px;
+            box-shadow: 0 0 25px rgba(0, 229, 255, 0.3);
+            color: var(--hologram-cyan);
+            padding: 1.3vw;
+            font-family: 'Share Tech Mono', monospace;
+            transform: rotateY(-20deg) rotateX(8deg);
+            animation: float 4s infinite alternate ease-in-out;
         }
-        @keyframes hover-effect {
-            0%, 100% { transform: translateY(0) rotateY(-20deg); }
-            50% { transform: translateY(-10px) rotateY(-15deg); }
-        }
+
+        @keyframes light-pulse { 0%, 100% { opacity: 0.85; } 50% { opacity: 0.65; } }
+        @keyframes float { from { transform: translateY(0) rotateY(-20deg); } to { transform: translateY(-12px) rotateY(-14deg); } }
     </style>
 </head>
 <body>
 
-    <div class="hall-background"></div>
+    <div class="hall-viewport">
+        <div class="projection-unit">
+            <div id="text-node" class="wall-slogan-v446">ВЕРСИЯ 4.4.6</div>
+        </div>
 
-    <div class="projector-display">
-        <div class="slogan-v441" id="dynamic-text">ВЕРСИЯ 4.4.1</div>
+        <div class="gallery-wall-v446">
+            <div class="frame-v446"></div><div class="frame-v446"></div>
+            <div class="frame-v446"></div><div class="frame-v446"></div>
+            <div class="frame-v446"></div><div class="frame-v446"></div>
+            <div class="frame-v446"></div><div class="frame-v446"></div>
+        </div>
+
+        <div class="light-sofa-area" onclick="console.log('Relax on Light Sofa...')"></div>
+
+        <div class="card-v446">
+            <div style="font-size: 0.7vw; border-bottom: 1px solid; padding-bottom: 5px; opacity: 0.6;">CLUB CARD / VER. 4.4.6</div>
+            <div id="user-id" style="margin-top: 1.5vw; font-size: 1.2vw; text-shadow: 0 0 5px #fff;">ID: [SCAN]</div>
+            <div id="user-nick" style="margin-top: 0.5vw; font-size: 0.8vw;">NICK: [AGENT]</div>
+            <div style="position: absolute; bottom: 10px; right: 15px; font-size: 0.6vw; opacity: 0.5;">LIGHT_MODE_4.4.6</div>
+        </div>
+
+        <div style="position: absolute; bottom: 34%; left: 49.5%; transform: translateX(-50%); width: 14%; height: 28%; z-index: 15; cursor: not-allowed;" onclick="alert('Access Denied: v.4.4.6 Stub')"></div>
     </div>
-
-    <div class="card-hologram">
-        <div style="font-size: 9px; opacity: 0.7; border-bottom: 1px solid;">VIRTUAL IDENTITY CARD</div>
-        <div id="user-id" style="margin-top: 12px; font-size: 1rem;">ID: [SCANNING]</div>
-        <div id="user-nick" style="margin-top: 8px; color: #fff; font-size: 0.8rem;">NAME: [PENDING]</div>
-        <div style="position: absolute; bottom: 10px; right: 10px; font-size: 8px;">BUILD_4.4.1</div>
-    </div>
-
-    <div class="door-stub" onclick="console.log('Door locked in 4.4.1')"></div>
 
     <script>
-        const App_4_4_1 = {
+        const Core446 = {
             init() {
-                this.setupTrace();
-                this.cycleSlogans();
+                this.auth();
+                this.cycle();
             },
-
-            setupTrace() {
-                // Согласно Архитектурному плану (Cookie + ID)
-                let id = localStorage.getItem('trace_id') || '441-' + Math.random().toString(16).slice(2,8).toUpperCase();
-                let nick = localStorage.getItem('nick') || 'Guest_' + id.split('-')[1];
-                
+            auth() {
+                let id = localStorage.getItem('trace_id') || '446-X-' + Math.random().toString(16).slice(2,8).toUpperCase();
+                let nick = localStorage.getItem('nick') || 'User_' + id.split('-')[2];
                 localStorage.setItem('trace_id', id);
                 localStorage.setItem('nick', nick);
-
                 document.getElementById('user-id').innerText = `ID: ${id}`;
-                document.getElementById('user-nick').innerText = `NAME: ${nick}`;
+                document.getElementById('user-nick').innerText = `NICK: ${nick}`;
             },
-
-            cycleSlogans() {
-                const phrases = ["ВЕРСИЯ 4.4.1", "HALL BLOCK 2", "BAR PROJECT"];
+            cycle() {
+                const slogans = ["ВЕРСИЯ 4.4.6", "8 КАРТИН", "СВЕТЛЫЙ ДИВАН", "HALL: BLOCK 2"];
                 let i = 0;
                 setInterval(() => {
-                    i = (i + 1) % phrases.length;
-                    document.getElementById('dynamic-text').innerText = phrases[i];
+                    i = (i + 1) % slogans.length;
+                    document.getElementById('text-node').innerText = slogans[i];
                 }, 5000);
             }
         };
-
-        window.onload = () => App_4_4_1.init();
+        window.onload = () => Core446.init();
     </script>
 </body>
 </html>
