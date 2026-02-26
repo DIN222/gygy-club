@@ -3,101 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bar Project v.4.5.9 - Identity & Truth</title>
+    <title>Bar Project v.4.6.0 - Refined Hall</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
             --slogan-color: #5D4037; 
             --hologram-cyan: #00E5FF;
+            --glass-bg: rgba(0, 20, 30, 0.8);
         }
 
         body, html {
             margin: 0; padding: 0;
             width: 100%; height: 100%;
             overflow: hidden;
-            background-color: #000;
-        }
-
-        .viewport {
-            position: relative;
-            width: 100vw; height: 100vh;
-            background: url('hall_bg_jpg.jpg') no-repeat center center;
-            background-size: contain; 
+            background-color: #0d0d0d; /* Глубокий темный фон вокруг холла */
             display: flex; justify-content: center; align-items: center;
         }
 
-        /* НАДПИСЬ НА СТЕНЕ: Стационарная на одну сессию */
+        /* КОНТЕЙНЕР 2/3: Создаем эффект "вставленного фото" */
+        .viewport {
+            position: relative;
+            width: 85vw; /* Оптимально для фокуса (почти 2/3) */
+            height: 85vh;
+            background: url('hall_bg_jpg.jpg') no-repeat center center;
+            background-size: contain; 
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+            border: 1px solid #222;
+        }
+
+        /* НАДПИСЬ: Точное попадание над аркой */
         .projector-layer {
             position: absolute;
-            top: 38%; 
+            top: 34%; /* Скорректировано под масштаб 85% */
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 5;
             text-align: center;
-            width: 80%; /* Ограничение ширины для многострочных фраз */
+            width: 100%;
             pointer-events: none;
         }
 
         .wall-phrase {
             font-family: 'Playfair Display', serif;
             color: var(--slogan-color);
-            font-size: clamp(16px, 2vw, 32px);
-            letter-spacing: 0.3vw;
+            font-size: clamp(14px, 1.8vw, 28px);
+            letter-spacing: 0.4vw;
             text-transform: uppercase;
             font-weight: 900;
-            text-shadow: 0 0 10px rgba(255,255,255,0.7);
-            opacity: 0.9;
-            line-height: 1.2;
+            text-shadow: 0 0 10px rgba(255,255,255,0.6);
+            opacity: 0.85;
         }
 
-        /* ТЕРМИНАЛ: Тот самый контрастный блок для телефона */
-        .hologram-v459 {
+        /* ГОЛОГРАММА: Сбалансированный дизайн */
+        .hologram-v460 {
             position: absolute;
-            right: 15%; bottom: 25%;
-            width: clamp(280px, 22vw, 400px);
+            right: 10%; bottom: 15%;
+            width: clamp(250px, 20vw, 350px);
             z-index: 100;
-            background: rgba(0, 10, 15, 0.92);
-            border: 2px solid var(--hologram-cyan);
-            border-radius: 8px;
-            padding: 25px;
-            box-shadow: 0 0 40px rgba(0, 229, 255, 0.3);
+            background: var(--glass-bg);
+            border: 1px solid rgba(0, 229, 255, 0.3); /* Тоньше и мягче */
+            backdrop-filter: blur(12px);
+            border-radius: 4px;
+            padding: 20px;
             color: var(--hologram-cyan);
             font-family: 'Share Tech Mono', monospace;
-            transition: 0.5s ease-in-out;
+            transition: all 0.8s ease;
         }
 
-        .hologram-v459.faded {
-            opacity: 0;
-            visibility: hidden;
-            transform: scale(0.9) translateX(30px);
-        }
+        .hologram-v460.faded { opacity: 0; transform: scale(0.95); pointer-events: none; }
 
+        /* КНОПКА: Спокойный баланс */
         .btn-confirm {
-            background: var(--hologram-cyan);
-            color: #000;
-            border: none;
+            background: rgba(0, 229, 255, 0.1); /* Прозрачная основа */
+            border: 1px solid var(--hologram-cyan);
+            color: var(--hologram-cyan);
             width: 100%;
-            padding: 15px;
-            margin-top: 20px;
-            font-weight: 900;
+            padding: 12px;
+            margin-top: 15px;
+            font-weight: 400;
             cursor: pointer;
             text-transform: uppercase;
             letter-spacing: 2px;
+            transition: 0.3s;
         }
 
-        /* ЗОНА ДВЕРИ: Только курсор-указатель */
+        .btn-confirm:hover {
+            background: rgba(0, 229, 255, 0.2);
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
+        }
+
+        /* ЗОНА ДВЕРИ */
         .door-link {
             position: absolute;
-            top: 40%; left: 50%;
+            top: 38%; left: 50%;
             transform: translateX(-50%);
-            width: 15vw; height: 30vh;
+            width: 10vw; height: 30vh;
             z-index: 10;
             cursor: pointer;
-        }
-
-        @media (max-width: 600px) {
-            .hologram-v459 { right: 5%; bottom: 5%; width: 90%; }
-            .projector-layer { top: 35%; width: 90%; }
         }
     </style>
 </head>
@@ -105,46 +107,40 @@
 
     <div class="viewport">
         <div class="projector-layer">
-            <div id="random-phrase" class="wall-phrase">VERSION 4.3.0</div>
+            <div id="random-phrase" class="wall-phrase">LOADING TRUTH...</div>
         </div>
 
-        <div class="hologram-v459" id="gate">
-            <div style="font-size: 12px; border-bottom: 1px solid; padding-bottom: 8px; opacity: 0.7;">BAR LOGISTIC v.4.3.0</div>
-            <div id="u-id" style="font-size: 16px; margin-top: 15px; font-weight: bold;">ID: SCANNING...</div>
-            <button class="btn-confirm" onclick="unlock()">ПОДТВЕРДИТЬ ВХОД</button>
+        <div class="hologram-v460" id="gate">
+            <div style="font-size: 10px; opacity: 0.6; letter-spacing: 1px;">SYSTEM ACCESS</div>
+            <div id="u-id" style="font-size: 14px; margin-top: 10px;">ID: SCANNING</div>
+            <button class="btn-confirm" onclick="unlock()">Подтвердить</button>
         </div>
 
-        <div class="door-link" onclick="goInside()"></div>
+        <div class="door-link" onclick="handleEntry()"></div>
     </div>
 
     <script>
         const Phrases = [
             "Истина не в вине, а в его количестве",
-            "Версия 4.3.0: Вход разрешен",
-            "Здесь начинается история",
-            "Помни о времени, забудь о делах",
-            "Ваш цифровой след активен",
-            "Тишина — лучший сомелье"
+            "Версия 4.3.0: Шлюз активен",
+            "Добро пожаловать в тишину",
+            "Оставьте алгоритмы снаружи"
         ];
 
-        let isReady = false;
+        let ready = false;
 
         function unlock() {
             document.getElementById('gate').classList.add('faded');
-            isReady = true;
+            ready = true;
         }
 
-        function goInside() {
-            if (isReady) alert("Загрузка основной зоны...");
-            else alert("Требуется подтверждение на терминале.");
+        function handleEntry() {
+            if (ready) alert("Вход в Блок 3...");
+            else alert("Требуется идентификация.");
         }
 
         window.onload = () => {
-            // 1. Выбор случайной фразы при заходе
-            const randomIdx = Math.floor(Math.random() * Phrases.length);
-            document.getElementById('random-phrase').innerText = Phrases[randomIdx];
-
-            // 2. Генерация ID
+            document.getElementById('random-phrase').innerText = Phrases[Math.floor(Math.random() * Phrases.length)];
             let id = localStorage.getItem('trace_id') || '4.3.0-' + Math.random().toString(16).slice(2,8).toUpperCase();
             document.getElementById('u-id').innerText = `ID: ${id}`;
         };
