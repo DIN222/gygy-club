@@ -2,8 +2,8 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Bar Project v.4.5.7 - Balanced View</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bar Project v.4.5.9 - Identity & Truth</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -15,101 +15,89 @@
             margin: 0; padding: 0;
             width: 100%; height: 100%;
             overflow: hidden;
-            background-color: #1a1a1a; /* Темный фон вокруг фото */
+            background-color: #000;
         }
 
         .viewport {
             position: relative;
-            width: 100vw;
-            height: 100vh;
-            /* ОТДАЛЯЕМ: contain показывает фото полностью без обрезки */
+            width: 100vw; height: 100vh;
             background: url('hall_bg_jpg.jpg') no-repeat center center;
             background-size: contain; 
-            z-index: 1;
+            display: flex; justify-content: center; align-items: center;
         }
 
-        /* 1. НАДПИСЬ: По центру над аркой */
+        /* НАДПИСЬ НА СТЕНЕ: Стационарная на одну сессию */
         .projector-layer {
             position: absolute;
-            top: 38%; /* Возвращаем в зону над аркой */
+            top: 38%; 
             left: 50%;
             transform: translate(-50%, -50%);
-            z-index: 10;
-            width: 100%;
+            z-index: 5;
             text-align: center;
-        }
-
-        .slogan-v457 {
-            font-family: 'Playfair Display', serif;
-            color: var(--slogan-color);
-            font-size: clamp(18px, 2.2vw, 36px); /* Сделали крупнее и четче */
-            letter-spacing: 0.5vw;
-            text-transform: uppercase;
-            font-weight: 900;
-            text-shadow: 1px 1px 0px #fff, -1px -1px 0px #fff, 0 0 10px rgba(255,255,255,0.5);
-        }
-
-        /* 2. ГОЛОГРАММА: Высокий контраст для телефона */
-        .hologram-v457 {
-            position: absolute;
-            right: 15%;
-            bottom: 22%;
-            width: clamp(280px, 24vw, 480px);
-            z-index: 50;
-            border: 2px solid var(--hologram-cyan);
-            /* ПОДСВЕТКА: Темный фон для читаемости на мобильных */
-            background: rgba(0, 20, 30, 0.85); 
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
-            box-shadow: 0 0 30px rgba(0, 229, 255, 0.4);
-            color: var(--hologram-cyan);
-            padding: 25px;
-            font-family: 'Share Tech Mono', monospace;
-            transition: 0.6s;
-        }
-
-        .hologram-v457.faded {
-            opacity: 0;
-            transform: scale(0.8);
+            width: 80%; /* Ограничение ширины для многострочных фраз */
             pointer-events: none;
         }
 
-        .confirm-btn {
+        .wall-phrase {
+            font-family: 'Playfair Display', serif;
+            color: var(--slogan-color);
+            font-size: clamp(16px, 2vw, 32px);
+            letter-spacing: 0.3vw;
+            text-transform: uppercase;
+            font-weight: 900;
+            text-shadow: 0 0 10px rgba(255,255,255,0.7);
+            opacity: 0.9;
+            line-height: 1.2;
+        }
+
+        /* ТЕРМИНАЛ: Тот самый контрастный блок для телефона */
+        .hologram-v459 {
+            position: absolute;
+            right: 15%; bottom: 25%;
+            width: clamp(280px, 22vw, 400px);
+            z-index: 100;
+            background: rgba(0, 10, 15, 0.92);
+            border: 2px solid var(--hologram-cyan);
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 0 40px rgba(0, 229, 255, 0.3);
+            color: var(--hologram-cyan);
+            font-family: 'Share Tech Mono', monospace;
+            transition: 0.5s ease-in-out;
+        }
+
+        .hologram-v459.faded {
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.9) translateX(30px);
+        }
+
+        .btn-confirm {
             background: var(--hologram-cyan);
             color: #000;
             border: none;
-            padding: 18px;
-            margin-top: 20px;
             width: 100%;
-            cursor: pointer;
+            padding: 15px;
+            margin-top: 20px;
             font-weight: 900;
-            font-size: 16px;
+            cursor: pointer;
             text-transform: uppercase;
             letter-spacing: 2px;
-            box-shadow: 0 0 15px var(--hologram-cyan);
         }
 
-        /* 3. ДВЕРЬ (Активная зона) */
-        .door-trigger {
+        /* ЗОНА ДВЕРИ: Только курсор-указатель */
+        .door-link {
             position: absolute;
-            top: 40%; 
-            left: 50%;
+            top: 40%; left: 50%;
             transform: translateX(-50%);
-            width: 12vw; 
-            height: 25vh;
-            z-index: 20;
+            width: 15vw; height: 30vh;
+            z-index: 10;
             cursor: pointer;
-            background: rgba(255,0,0,0); /* Полная прозрачность */
         }
 
-        /* Адаптация для маленьких экранов */
-        @media (max-width: 768px) {
-            .hologram-v457 {
-                right: 5%;
-                bottom: 5%;
-                width: 90%; /* На телефоне почти на весь экран */
-            }
-            .projector-layer { top: 35%; }
+        @media (max-width: 600px) {
+            .hologram-v459 { right: 5%; bottom: 5%; width: 90%; }
+            .projector-layer { top: 35%; width: 90%; }
         }
     </style>
 </head>
@@ -117,36 +105,47 @@
 
     <div class="viewport">
         <div class="projector-layer">
-            <div class="slogan-v457">VERSION 4.3.0</div>
+            <div id="random-phrase" class="wall-phrase">VERSION 4.3.0</div>
         </div>
 
-        <div class="hologram-v457" id="auth-panel">
-            <div style="font-size: 14px; border-bottom: 2px solid; padding-bottom: 10px; letter-spacing: 2px;">AUTHENTICATION</div>
-            <div id="u-id" style="font-size: 20px; margin-top: 20px; font-weight: bold; text-shadow: 0 0 10px var(--hologram-cyan);">ID: 4.3.0-TRACE</div>
-            <div style="font-size: 14px; margin-top: 10px; color: #fff;">STATUS: ACCESS PENDING</div>
-            
-            <button class="confirm-btn" onclick="confirmIdentity()">ПОДТВЕРДИТЬ</button>
+        <div class="hologram-v459" id="gate">
+            <div style="font-size: 12px; border-bottom: 1px solid; padding-bottom: 8px; opacity: 0.7;">BAR LOGISTIC v.4.3.0</div>
+            <div id="u-id" style="font-size: 16px; margin-top: 15px; font-weight: bold;">ID: SCANNING...</div>
+            <button class="btn-confirm" onclick="unlock()">ПОДТВЕРДИТЬ ВХОД</button>
         </div>
 
-        <div class="door-trigger" onclick="handleEntry()"></div>
+        <div class="door-link" onclick="goInside()"></div>
     </div>
 
     <script>
-        let isAuth = false;
+        const Phrases = [
+            "Истина не в вине, а в его количестве",
+            "Версия 4.3.0: Вход разрешен",
+            "Здесь начинается история",
+            "Помни о времени, забудь о делах",
+            "Ваш цифровой след активен",
+            "Тишина — лучший сомелье"
+        ];
 
-        function confirmIdentity() {
-            document.getElementById('auth-panel').classList.add('faded');
-            isAuth = true;
-            console.log("Trace confirmed.");
+        let isReady = false;
+
+        function unlock() {
+            document.getElementById('gate').classList.add('faded');
+            isReady = true;
         }
 
-        function handleEntry() {
-            if (isAuth) alert("Вход в Бар 4.3.0...");
-            else alert("Сначала подтвердите ID на голограмме.");
+        function goInside() {
+            if (isReady) alert("Загрузка основной зоны...");
+            else alert("Требуется подтверждение на терминале.");
         }
 
         window.onload = () => {
-            let id = localStorage.getItem('trace_id') || 'ID-' + Math.random().toString(16).slice(2,8).toUpperCase();
+            // 1. Выбор случайной фразы при заходе
+            const randomIdx = Math.floor(Math.random() * Phrases.length);
+            document.getElementById('random-phrase').innerText = Phrases[randomIdx];
+
+            // 2. Генерация ID
+            let id = localStorage.getItem('trace_id') || '4.3.0-' + Math.random().toString(16).slice(2,8).toUpperCase();
             document.getElementById('u-id').innerText = `ID: ${id}`;
         };
     </script>
