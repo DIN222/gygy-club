@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Bar Project v.4.5.6 - Clean Interaction</title>
+    <title>Bar Project v.4.5.7 - Balanced View</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -15,102 +15,101 @@
             margin: 0; padding: 0;
             width: 100%; height: 100%;
             overflow: hidden;
-            background-color: #000;
+            background-color: #1a1a1a; /* Темный фон вокруг фото */
         }
 
         .viewport {
             position: relative;
             width: 100vw;
             height: 100vh;
-            /* Растягиваем фото на весь экран без искажений */
+            /* ОТДАЛЯЕМ: contain показывает фото полностью без обрезки */
             background: url('hall_bg_jpg.jpg') no-repeat center center;
-            background-size: cover; 
+            background-size: contain; 
             z-index: 1;
         }
 
-        /* 1. НАДПИСЬ: VERSION 4.3.0 (Юстировка по высоте) */
+        /* 1. НАДПИСЬ: По центру над аркой */
         .projector-layer {
             position: absolute;
-            top: 30%; /* Оптимально: под потолком, но на стене */
+            top: 38%; /* Возвращаем в зону над аркой */
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 10;
             width: 100%;
             text-align: center;
-            pointer-events: none;
         }
 
-        .slogan-v456 {
+        .slogan-v457 {
             font-family: 'Playfair Display', serif;
             color: var(--slogan-color);
-            font-size: clamp(14px, 1.8vw, 28px);
-            letter-spacing: 0.6vw;
+            font-size: clamp(18px, 2.2vw, 36px); /* Сделали крупнее и четче */
+            letter-spacing: 0.5vw;
             text-transform: uppercase;
             font-weight: 900;
-            text-shadow: 0 0 8px rgba(255,255,255,0.7);
-            opacity: 0.9;
+            text-shadow: 1px 1px 0px #fff, -1px -1px 0px #fff, 0 0 10px rgba(255,255,255,0.5);
         }
 
-        /* 2. ГОЛОГРАММА: Справа, с кнопкой подтверждения */
-        .hologram-v456 {
+        /* 2. ГОЛОГРАММА: Высокий контраст для телефона */
+        .hologram-v457 {
             position: absolute;
-            right: 8%;
-            bottom: 20%;
-            width: clamp(260px, 22vw, 450px);
+            right: 15%;
+            bottom: 22%;
+            width: clamp(280px, 24vw, 480px);
             z-index: 50;
-            border: 1px solid var(--hologram-cyan);
-            background: rgba(0, 229, 255, 0.05);
+            border: 2px solid var(--hologram-cyan);
+            /* ПОДСВЕТКА: Темный фон для читаемости на мобильных */
+            background: rgba(0, 20, 30, 0.85); 
             backdrop-filter: blur(10px);
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.4);
             color: var(--hologram-cyan);
-            padding: 20px;
+            padding: 25px;
             font-family: 'Share Tech Mono', monospace;
-            transition: opacity 0.8s ease, transform 0.8s ease;
+            transition: 0.6s;
         }
 
-        .hologram-v456.faded {
+        .hologram-v457.faded {
             opacity: 0;
+            transform: scale(0.8);
             pointer-events: none;
-            transform: translateY(10px);
         }
 
         .confirm-btn {
-            background: transparent;
-            border: 1px solid var(--hologram-cyan);
-            color: var(--hologram-cyan);
-            padding: 12px;
-            margin-top: 15px;
-            width: 100%;
-            cursor: pointer; /* Сразу меняет на стрелку/указатель */
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: 0.3s;
-        }
-
-        .confirm-btn:hover {
             background: var(--hologram-cyan);
             color: #000;
+            border: none;
+            padding: 18px;
+            margin-top: 20px;
+            width: 100%;
+            cursor: pointer;
+            font-weight: 900;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 0 15px var(--hologram-cyan);
         }
 
-        /* 3. ДВЕРЬ (Только активная зона и курсор) */
+        /* 3. ДВЕРЬ (Активная зона) */
         .door-trigger {
             position: absolute;
-            top: 35%; /* Центр арки по фото */
+            top: 40%; 
             left: 50%;
             transform: translateX(-50%);
-            width: 15vw; 
-            height: 35vh;
+            width: 12vw; 
+            height: 25vh;
             z-index: 20;
-            /* ГЛАВНОЕ: Курсор меняется на стрелку (pointer) при наведении */
-            cursor: pointer; 
-            background: transparent; /* Никакого визуального шума */
+            cursor: pointer;
+            background: rgba(255,0,0,0); /* Полная прозрачность */
         }
 
-        /* Адаптация под мобильные устройства (горизонталь) */
-        @media (orientation: landscape) and (max-height: 500px) {
-            .projector-layer { top: 22%; }
-            .hologram-v456 { width: 35vw; bottom: 5%; }
+        /* Адаптация для маленьких экранов */
+        @media (max-width: 768px) {
+            .hologram-v457 {
+                right: 5%;
+                bottom: 5%;
+                width: 90%; /* На телефоне почти на весь экран */
+            }
+            .projector-layer { top: 35%; }
         }
     </style>
 </head>
@@ -118,18 +117,18 @@
 
     <div class="viewport">
         <div class="projector-layer">
-            <div class="slogan-v456">VERSION 4.3.0</div>
+            <div class="slogan-v457">VERSION 4.3.0</div>
         </div>
 
-        <div class="hologram-v456" id="auth-panel">
-            <div style="font-size: 12px; border-bottom: 1px solid; padding-bottom: 5px; opacity: 0.8;">BAR SYSTEM v.4.3.0</div>
-            <div id="u-id" style="font-size: 16px; margin-top: 15px; font-weight: bold;">ID: [SCANNING]</div>
-            <div id="u-nick" style="font-size: 12px; margin-top: 5px; color: #fff;">USER: [CONNECTED]</div>
+        <div class="hologram-v457" id="auth-panel">
+            <div style="font-size: 14px; border-bottom: 2px solid; padding-bottom: 10px; letter-spacing: 2px;">AUTHENTICATION</div>
+            <div id="u-id" style="font-size: 20px; margin-top: 20px; font-weight: bold; text-shadow: 0 0 10px var(--hologram-cyan);">ID: 4.3.0-TRACE</div>
+            <div style="font-size: 14px; margin-top: 10px; color: #fff;">STATUS: ACCESS PENDING</div>
             
             <button class="confirm-btn" onclick="confirmIdentity()">ПОДТВЕРДИТЬ</button>
         </div>
 
-        <div class="door-trigger" id="door-link" onclick="handleEntry()"></div>
+        <div class="door-trigger" onclick="handleEntry()"></div>
     </div>
 
     <script>
@@ -138,21 +137,16 @@
         function confirmIdentity() {
             document.getElementById('auth-panel').classList.add('faded');
             isAuth = true;
-            console.log("Trace confirmed. Access point ready.");
+            console.log("Trace confirmed.");
         }
 
         function handleEntry() {
-            if (isAuth) {
-                alert("Добро пожаловать в Бар 4.3.0");
-                // window.location.href = 'bar_main.html'; // Будущий переход
-            } else {
-                alert("Пожалуйста, подтвердите вашу личность на панели справа.");
-            }
+            if (isAuth) alert("Вход в Бар 4.3.0...");
+            else alert("Сначала подтвердите ID на голограмме.");
         }
 
         window.onload = () => {
-            let id = localStorage.getItem('trace_id') || '4.3.0-' + Math.random().toString(16).slice(2,6).toUpperCase();
-            localStorage.setItem('trace_id', id);
+            let id = localStorage.getItem('trace_id') || 'ID-' + Math.random().toString(16).slice(2,8).toUpperCase();
             document.getElementById('u-id').innerText = `ID: ${id}`;
         };
     </script>
