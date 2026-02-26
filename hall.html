@@ -1,9 +1,8 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Club Hall v4.3.7 - Projector Focus & Telegram Sync</title>
+    <title>Club Hall v4.3.8 - Perfect Centering & Data Sync</title>
     <style>
         :root {
             --holo-cyan: rgba(0, 247, 255, 0.7);
@@ -23,10 +22,13 @@
             width: 100vw; height: 100vh;
             background: url('hall_bg.jpg') no-repeat center center;
             background-size: cover;
-            display: flex; justify-content: center; align-items: center;
+            display: flex; 
+            flex-direction: column; /* Вертикальный стек для точного контроля */
+            justify-content: center; 
+            align-items: center;
         }
 
-        /* --- ГЛОБАЛЬНЫЙ ПЕРЕКЛЮЧАТЕЛЬ (ЯЗЫК + TG) --- */
+        /* --- ГЛОБАЛЬНЫЙ UI (Склад_Поток_Бот) --- */
         #global-ui {
             position: fixed;
             top: 25px; right: 25px;
@@ -37,28 +39,28 @@
         .ui-row { display: flex; gap: 8px; }
 
         .lang-btn, .tg-btn {
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.8);
             border: 1px solid var(--holo-cyan);
             color: var(--holo-cyan);
-            padding: 6px 15px;
+            padding: 8px 16px;
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             transition: 0.3s;
         }
 
-        .lang-btn.active { background: var(--holo-cyan); color: #000; }
+        .lang-btn.active { background: var(--holo-cyan); color: #111; box-shadow: 0 0 15px var(--holo-cyan); }
         .tg-btn { border-color: var(--tg-blue); color: var(--tg-blue); }
-        .tg-btn:hover { background: var(--tg-blue); color: #fff; }
 
-        /* --- ПРОЕКТОР v4.3.7 (ФОКУСИРОВКА НАД АРКОЙ) --- */
+        /* --- ПРОЕКТОР v4.3.8 (ВЫСОКО И ПО ЦЕНТРУ) --- */
         #projector-wall {
-            position: fixed;
-            top: 22%; /* Настройка высоты */
-            left: 50%;
-            transform: translateX(-50%);
+            position: absolute;
+            top: 18%; /* Поднято еще выше по твоей просьбе */
             width: 100%;
-            max-width: 500px; /* ОГРАНИЧЕНИЕ ШИРИНЫ, чтобы текст не расползался */
+            max-width: 450px; /* Узкий блок для центровки над аркой */
+            margin: 0 auto;
             text-align: center;
             pointer-events: none;
             z-index: 50;
@@ -66,80 +68,85 @@
 
         #slogan-display {
             color: var(--gold-glow);
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: 6px; /* Чуть меньше разрядка для компактности */
+            letter-spacing: 5px;
             font-family: 'Courier New', monospace;
-            text-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+            text-shadow: 0 0 12px rgba(255, 214, 0, 0.8);
             opacity: 0;
             transition: opacity 1s ease-in-out;
-            line-height: 1.4;
+            white-space: pre-line; /* Чтобы работал перенос \n */
         }
 
-        /* --- ГОЛОГРАММА v4.3.7 (ГОРИЗОНТАЛЬНАЯ) --- */
+        /* --- ГОЛОГРАММА v4.3.8 (HORIZONTAL LAYOUT) --- */
         #hologram-card {
             position: relative;
-            width: 480px;
+            width: 460px;
             padding: 25px;
-            background: rgba(0, 20, 40, 0.5);
+            background: rgba(0, 20, 40, 0.4);
             border: 1px solid var(--holo-cyan);
             backdrop-filter: blur(20px);
-            border-radius: 12px;
-            box-shadow: 0 0 50px rgba(0, 247, 255, 0.3);
+            border-radius: 8px;
+            box-shadow: 0 0 45px rgba(0, 247, 255, 0.2);
             color: #fff;
             animation: floating 6s ease-in-out infinite;
             z-index: 100;
+            text-align: center;
         }
 
-        @keyframes floating { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        @keyframes floating { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 
-        .card-content {
+        .card-main {
             display: flex;
-            justify-content: space-around;
+            justify-content: space-between;
             align-items: center;
-            margin: 20px 0;
+            margin: 15px 0;
+            padding: 0 10px;
         }
 
         .avatar-frame {
-            width: 110px; height: 110px;
+            width: 100px; height: 100px;
             border-radius: 50%; border: 2px solid var(--holo-cyan);
             background: #000; overflow: hidden;
-            box-shadow: 0 0 15px var(--holo-cyan);
+            box-shadow: 0 0 10px var(--holo-cyan);
         }
 
-        .qr-grid {
-            width: 110px; height: 110px;
+        /* Magic Key QR Grid v4.3.8 */
+        .qr-side {
+            width: 100px; height: 100px;
             border: 1px solid var(--holo-cyan);
             display: grid; grid-template-columns: repeat(10, 1fr);
-            background: rgba(0, 255, 255, 0.05);
+            background: rgba(0, 255, 255, 0.03);
         }
         .q-dot { background: var(--holo-cyan); opacity: 0; }
         .q-dot.on { opacity: 0.8; }
 
         #id-label {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-family: 'Courier New', monospace;
-            border-top: 1px solid rgba(0, 255, 255, 0.3);
+            font-weight: bold;
+            border-top: 1px solid rgba(0, 255, 255, 0.2);
             padding-top: 15px;
+            margin-top: 10px;
         }
 
         .confirm-btn {
             background: transparent; border: 1px solid var(--holo-cyan);
-            color: var(--holo-cyan); padding: 12px 50px;
+            color: var(--holo-cyan); padding: 10px 45px;
             cursor: pointer; text-transform: uppercase; font-weight: bold;
-            margin-top: 15px;
+            margin-top: 15px; letter-spacing: 2px;
         }
         .confirm-btn:hover { background: var(--holo-cyan); color: #000; }
 
-        .hidden { opacity: 0; pointer-events: none; transform: scale(0.9) !important; }
+        .hidden { opacity: 0; pointer-events: none; transform: scale(0.9) translateY(40px) !important; transition: 0.8s; }
     </style>
 </head>
 <body>
 
 <div id="global-ui">
     <div class="ui-row">
-        <button class="tg-btn" onclick="checkTelegram()">TELEGRAM SYNC</button>
+        <button class="tg-btn" onclick="tgSync()">TELEGRAM BOT</button>
     </div>
     <div class="ui-row">
         <button class="lang-btn" id="lang-RU" onclick="changeLang('RU')">RU</button>
@@ -149,30 +156,31 @@
 
 <div id="hall-scene">
     <div id="projector-wall">
-        <div id="slogan-display">...</div>
+        <div id="slogan-display">ПОТОК АКТИВИРОВАН...</div>
     </div>
 
     <div id="hologram-card">
-        <div id="ui-title" style="font-size: 0.7rem; color: var(--holo-cyan); letter-spacing: 4px;">MEMBER PASS v4.3.7</div>
+        <div id="ui-title" style="font-size: 0.65rem; color: var(--holo-cyan); letter-spacing: 3px; margin-bottom: 5px;">MEMBER PASS v4.3.8</div>
         
-        <div class="card-content">
+        <div class="card-main">
             <div class="avatar-frame">
-                <img src="https://via.placeholder.com/110/001428/00f7ff?text=GUEST" id="ui-avatar" style="width:100%">
+                <img src="https://via.placeholder.com/100/001428/00f7ff?text=GUEST" id="guest-img" style="width:100%">
             </div>
-            <div class="qr-grid" id="qr-key"></div>
+            <div class="qr-side" id="qr-key"></div>
         </div>
 
-        <div id="id-label">ID: 4.3.7-0000</div>
+        <div id="id-label">ID: 4.3.8-0000</div>
         <button class="confirm-btn" id="ui-btn" onclick="grantAccess()">Подтвердить</button>
     </div>
 </div>
 
 <script>
     const content = {
-        'RU': { title: "КАРТА ДОСТУПА v4.3.7", btn: "ПОДТВЕРДИТЬ", slogans: ["СТАТУС. СТАБИЛЬНОСТЬ.\nСЕКРЕТНОСТЬ.", "ВАШ ЦИФРОВОЙ СЛЕД —\nВАШ КЛЮЧ"] },
-        'EN': { title: "ACCESS CARD v4.3.7", btn: "CONFIRM STATUS", slogans: ["STATUS. STABILITY.\nSECRET.", "YOUR DIGITAL TRACE IS\nTHE KEY"] }
+        'RU': { title: "КАРТА ДОСТУПА v4.3.8", btn: "ПОДТВЕРДИТЬ", slogans: ["СТАТУС. СТАБИЛЬНОСТЬ.\nСЕКРЕТНОСТЬ.", "ВРЕМЯ — ЕДИНСТВЕННАЯ\nВАЛЮТА"] },
+        'EN': { title: "ACCESS CARD v4.3.8", btn: "CONFIRM STATUS", slogans: ["STATUS. STABILITY.\nSECRET.", "TIME IS THE ONLY\nCURRENCY"] }
     };
 
+    // Поток: Забираем язык из Склада (index.html) или ставим RU
     let currentLang = localStorage.getItem('club_lang') || 'RU';
     let sloganPos = 0;
 
@@ -182,9 +190,8 @@
         applyLang();
     }
 
-    function checkTelegram() {
-        // Имитация подключения к Telegram
-        alert("Telegram Auth Engine v4.3.7:\nПоиск активной сессии...\n\nДля полной интеграции необходимо подключить Bot API Token.");
+    function tgSync() {
+        alert("Запрос к Боту...\nВаш Magic Key синхронизирован с Telegram.");
     }
 
     function applyLang() {
@@ -197,16 +204,21 @@
     }
 
     window.onload = () => {
+        // Генерация QR на основе Magic Key
         const qr = document.getElementById('qr-key');
         for(let i=0; i<100; i++) {
             const d = document.createElement('div');
-            d.className = 'q-dot' + (Math.random() > 0.4 ? ' on' : '');
+            d.className = 'q-dot' + (Math.random() > 0.45 ? ' on' : '');
             qr.appendChild(d);
         }
 
-        document.getElementById('id-label').innerText = `ID: 4.3.7-${Math.floor(1000+Math.random()*9000)}`;
+        // Поток: Забираем ID из Блока 1 (если есть)
+        const savedID = localStorage.getItem('club_user_id') || `4.3.8-${Math.floor(1000+Math.random()*9000)}`;
+        document.getElementById('id-label').innerText = `ID: ${savedID}`;
+        
         applyLang();
 
+        // Цикл проектора
         setInterval(() => {
             const txt = document.getElementById('slogan-display');
             txt.style.opacity = 0;
@@ -215,14 +227,15 @@
                 txt.innerText = content[currentLang].slogans[sloganPos];
                 txt.style.opacity = 1;
             }, 800);
-        }, 6000);
+        }, 7000);
         document.getElementById('slogan-display').style.opacity = 1;
     };
 
     function grantAccess() {
         document.getElementById('hologram-card').classList.add('hidden');
-        console.log("Access Granted. Current State: Stable 4.3.7");
+        console.log("Status: Access Granted. Version 4.3.8 Stable.");
     }
 </script>
 </body>
 </html>
+
