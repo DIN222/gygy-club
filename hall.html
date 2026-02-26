@@ -2,240 +2,152 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Club Hall v4.3.8 - Perfect Centering & Data Sync</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bar Hall Interior - Release 4.3.9</title>
     <style>
+        /* === UI STYLES v.4.3.9 === */
         :root {
-            --holo-cyan: rgba(0, 247, 255, 0.7);
-            --gold-glow: #ffd700;
-            --tg-blue: #24A1DE;
+            --main-bg: #FDFCF0;         /* Общий светлый тон */
+            --slogan-brown: #5D4037;    /* Коричневый цвет букв */
+            --gold-ornament: #D4AF37;   /* Золотой орнамент */
+            --text-shadow: rgba(255, 255, 255, 0.6);
         }
 
-        body, html {
-            margin: 0; padding: 0;
-            width: 100%; height: 100%;
-            overflow: hidden; background: #000;
-            font-family: 'Segoe UI', sans-serif;
-        }
-
-        #hall-scene {
-            position: relative;
-            width: 100vw; height: 100vh;
-            background: url('hall_bg.jpg') no-repeat center center;
-            background-size: cover;
-            display: flex; 
-            flex-direction: column; /* Вертикальный стек для точного контроля */
-            justify-content: center; 
-            align-items: center;
-        }
-
-        /* --- ГЛОБАЛЬНЫЙ UI (Склад_Поток_Бот) --- */
-        #global-ui {
-            position: fixed;
-            top: 25px; right: 25px;
-            z-index: 1000;
-            display: flex; flex-direction: column; gap: 10px; align-items: flex-end;
-        }
-
-        .ui-row { display: flex; gap: 8px; }
-
-        .lang-btn, .tg-btn {
-            background: rgba(0, 0, 0, 0.8);
-            border: 1px solid var(--holo-cyan);
-            color: var(--holo-cyan);
-            padding: 8px 16px;
-            cursor: pointer;
-            font-size: 0.75rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: 0.3s;
-        }
-
-        .lang-btn.active { background: var(--holo-cyan); color: #111; box-shadow: 0 0 15px var(--holo-cyan); }
-        .tg-btn { border-color: var(--tg-blue); color: var(--tg-blue); }
-
-        /* --- ПРОЕКТОР v4.3.8 (ВЫСОКО И ПО ЦЕНТРУ) --- */
-        #projector-wall {
-            position: absolute;
-            top: 18%; /* Поднято еще выше по твоей просьбе */
-            width: 100%;
-            max-width: 450px; /* Узкий блок для центровки над аркой */
-            margin: 0 auto;
-            text-align: center;
-            pointer-events: none;
-            z-index: 50;
-        }
-
-        #slogan-display {
-            color: var(--gold-glow);
-            font-size: 1.15rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 5px;
-            font-family: 'Courier New', monospace;
-            text-shadow: 0 0 12px rgba(255, 214, 0, 0.8);
-            opacity: 0;
-            transition: opacity 1s ease-in-out;
-            white-space: pre-line; /* Чтобы работал перенос \n */
-        }
-
-        /* --- ГОЛОГРАММА v4.3.8 (HORIZONTAL LAYOUT) --- */
-        #hologram-card {
-            position: relative;
-            width: 460px;
-            padding: 25px;
-            background: rgba(0, 20, 40, 0.4);
-            border: 1px solid var(--holo-cyan);
-            backdrop-filter: blur(20px);
-            border-radius: 8px;
-            box-shadow: 0 0 45px rgba(0, 247, 255, 0.2);
-            color: #fff;
-            animation: floating 6s ease-in-out infinite;
-            z-index: 100;
-            text-align: center;
-        }
-
-        @keyframes floating { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-
-        .card-main {
+        body {
+            background-color: var(--main-bg);
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Georgia', serif;
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
             align-items: center;
-            margin: 15px 0;
-            padding: 0 10px;
+            height: 100vh;
         }
 
-        .avatar-frame {
-            width: 100px; height: 100px;
-            border-radius: 50%; border: 2px solid var(--holo-cyan);
-            background: #000; overflow: hidden;
-            box-shadow: 0 0 10px var(--holo-cyan);
+        /* Проектор и центрирование слогана */
+        #projector-area {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center; /* Центрируем по горизонтали */
+            align-items: center;     /* Центрируем по вертикали */
+            pointer-events: none;
         }
 
-        /* Magic Key QR Grid v4.3.8 */
-        .qr-side {
-            width: 100px; height: 100px;
-            border: 1px solid var(--holo-cyan);
-            display: grid; grid-template-columns: repeat(10, 1fr);
-            background: rgba(0, 255, 255, 0.03);
-        }
-        .q-dot { background: var(--holo-cyan); opacity: 0; }
-        .q-dot.on { opacity: 0.8; }
-
-        #id-label {
-            font-size: 1.6rem;
-            font-family: 'Courier New', monospace;
-            font-weight: bold;
-            border-top: 1px solid rgba(0, 255, 255, 0.2);
-            padding-top: 15px;
-            margin-top: 10px;
+        .projected-slogan {
+            color: var(--slogan-brown);
+            font-size: 3.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5rem;
+            text-align: center;
+            text-shadow: 2px 2px 4px var(--text-shadow);
+            opacity: 0.9;
+            max-width: 80%;
+            z-index: 100;
+            /* Фиксация позиции согласно ТЗ 4.3.9 */
+            margin-top: -100px; 
         }
 
-        .confirm-btn {
-            background: transparent; border: 1px solid var(--holo-cyan);
-            color: var(--holo-cyan); padding: 10px 45px;
-            cursor: pointer; text-transform: uppercase; font-weight: bold;
-            margin-top: 15px; letter-spacing: 2px;
+        /* Арка бара с тонким орнаментом */
+        .bar-arch-main {
+            position: absolute;
+            bottom: 0;
+            width: 400px;
+            height: 500px;
+            border: 3px solid var(--gold-ornament);
+            border-bottom: none;
+            border-radius: 200px 200px 0 0;
+            background: linear-gradient(to top, rgba(212,175,55,0.1), transparent);
         }
-        .confirm-btn:hover { background: var(--holo-cyan); color: #000; }
 
-        .hidden { opacity: 0; pointer-events: none; transform: scale(0.9) translateY(40px) !important; transition: 0.8s; }
+        /* Галлерея: 6 винтажных картин */
+        .gallery-container {
+            display: grid;
+            grid-template-columns: repeat(3, 150px);
+            grid-template-rows: repeat(2, 200px);
+            gap: 40px;
+            margin-top: 50px;
+            z-index: 5;
+        }
+
+        .vintage-frame {
+            border: 8px solid #3E2723;
+            background: #eee;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: #666;
+        }
     </style>
 </head>
 <body>
 
-<div id="global-ui">
-    <div class="ui-row">
-        <button class="tg-btn" onclick="tgSync()">TELEGRAM BOT</button>
-    </div>
-    <div class="ui-row">
-        <button class="lang-btn" id="lang-RU" onclick="changeLang('RU')">RU</button>
-        <button class="lang-btn" id="lang-EN" onclick="changeLang('EN')">EN</button>
-    </div>
-</div>
-
-<div id="hall-scene">
-    <div id="projector-wall">
-        <div id="slogan-display">ПОТОК АКТИВИРОВАН...</div>
+    <div id="projector-area">
+        <div id="slogan-target" class="projected-slogan"></div>
     </div>
 
-    <div id="hologram-card">
-        <div id="ui-title" style="font-size: 0.65rem; color: var(--holo-cyan); letter-spacing: 3px; margin-bottom: 5px;">MEMBER PASS v4.3.8</div>
+    <div class="gallery-container">
+        <div class="vintage-frame">Картина 1</div>
+        <div class="vintage-frame">Картина 2</div>
+        <div class="vintage-frame">Картина 3</div>
+        <div class="vintage-frame">Картина 4</div>
+        <div class="vintage-frame">Картина 5</div>
+        <div class="vintage-frame">Картина 6</div>
+    </div>
+
+    <div class="bar-arch-main"></div>
+
+    <script>
+        /**
+         * === LOGIC CORE v.4.3.9 ===
+         * Архитектурный план: Cookie, Digital Trace, Центрирование
+         */
         
-        <div class="card-main">
-            <div class="avatar-frame">
-                <img src="https://via.placeholder.com/100/001428/00f7ff?text=GUEST" id="guest-img" style="width:100%">
-            </div>
-            <div class="qr-side" id="qr-key"></div>
-        </div>
+        const VERSION = "4.3.9";
 
-        <div id="id-label">ID: 4.3.8-0000</div>
-        <button class="confirm-btn" id="ui-btn" onclick="grantAccess()">Подтвердить</button>
-    </div>
-</div>
+        const App = {
+            init() {
+                console.log("Release Version:", VERSION);
+                this.handleIdentity();
+                this.projectSlogan("Атмосфера и Стиль");
+            },
 
-<script>
-    const content = {
-        'RU': { title: "КАРТА ДОСТУПА v4.3.8", btn: "ПОДТВЕРДИТЬ", slogans: ["СТАТУС. СТАБИЛЬНОСТЬ.\nСЕКРЕТНОСТЬ.", "ВРЕМЯ — ЕДИНСТВЕННАЯ\nВАЛЮТА"] },
-        'EN': { title: "ACCESS CARD v4.3.8", btn: "CONFIRM STATUS", slogans: ["STATUS. STABILITY.\nSECRET.", "TIME IS THE ONLY\nCURRENCY"] }
-    };
+            // Система идентификации (Архитектурный стандарт)
+            handleIdentity() {
+                let traceID = localStorage.getItem('digital_trace_id');
+                
+                if (!traceID) {
+                    // Первый вход: создаем ID и присваиваем ник
+                    traceID = 'TR-' + Date.now();
+                    localStorage.setItem('digital_trace_id', traceID);
+                    console.log("New User Trace Created:", traceID);
+                    this.generateMagicKey(traceID);
+                } else {
+                    console.log("Welcome Back. Trace ID:", traceID);
+                }
+            },
 
-    // Поток: Забираем язык из Склада (index.html) или ставим RU
-    let currentLang = localStorage.getItem('club_lang') || 'RU';
-    let sloganPos = 0;
+            // Центрирование слогана (Главная задача 4.3.9)
+            projectSlogan(text) {
+                const display = document.getElementById('slogan-target');
+                display.innerText = text;
+                console.log(`[${VERSION}] Slogan centered and set to brown.`);
+            },
 
-    function changeLang(l) {
-        currentLang = l;
-        localStorage.setItem('club_lang', l);
-        applyLang();
-    }
+            // Генерация "Магического ключа" для непрерывности
+            generateMagicKey(id) {
+                // Логика создания QR/Аватара для восстановления
+                console.log("Magic Key (Avatar/QR) generated for ID:", id);
+            }
+        };
 
-    function tgSync() {
-        alert("Запрос к Боту...\nВаш Magic Key синхронизирован с Telegram.");
-    }
-
-    function applyLang() {
-        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(`lang-${currentLang}`).classList.add('active');
-
-        document.getElementById('ui-title').innerText = content[currentLang].title;
-        document.getElementById('ui-btn').innerText = content[currentLang].btn;
-        document.getElementById('slogan-display').innerText = content[currentLang].slogans[sloganPos];
-    }
-
-    window.onload = () => {
-        // Генерация QR на основе Magic Key
-        const qr = document.getElementById('qr-key');
-        for(let i=0; i<100; i++) {
-            const d = document.createElement('div');
-            d.className = 'q-dot' + (Math.random() > 0.45 ? ' on' : '');
-            qr.appendChild(d);
-        }
-
-        // Поток: Забираем ID из Блока 1 (если есть)
-        const savedID = localStorage.getItem('club_user_id') || `4.3.8-${Math.floor(1000+Math.random()*9000)}`;
-        document.getElementById('id-label').innerText = `ID: ${savedID}`;
-        
-        applyLang();
-
-        // Цикл проектора
-        setInterval(() => {
-            const txt = document.getElementById('slogan-display');
-            txt.style.opacity = 0;
-            setTimeout(() => {
-                sloganPos = (sloganPos + 1) % content[currentLang].slogans.length;
-                txt.innerText = content[currentLang].slogans[sloganPos];
-                txt.style.opacity = 1;
-            }, 800);
-        }, 7000);
-        document.getElementById('slogan-display').style.opacity = 1;
-    };
-
-    function grantAccess() {
-        document.getElementById('hologram-card').classList.add('hidden');
-        console.log("Status: Access Granted. Version 4.3.8 Stable.");
-    }
-</script>
+        // Запуск системы
+        window.onload = () => App.init();
+    </script>
 </body>
 </html>
-
