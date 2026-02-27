@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3</title>
+    <title>GY-GY Club v4.4</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none !important; }
         body { margin: 0; background: #000; color: #d4af37; font-family: 'Times New Roman', serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; }
         
-        /* СИСТЕМА ЭКРАНОВ */
         .block { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
             display: none; flex-direction: column; align-items: center; justify-content: center; 
@@ -17,35 +16,57 @@
         }
         .block.active { display: flex !important; }
 
-        /* БЛОК 1: ТЕРМИНАЛ РЕГИСТРАЦИИ */
-        #quote-reg { font-style: italic; font-size: 26px; line-height: 1.4; margin-bottom: 40px; color: #d4af37; max-width: 85%; }
+        /* ЭТАП 1: ДВЕРЬ */
+        .door-img { width: 75vw; max-width: 300px; filter: brightness(0.7); transition: 0.5s; cursor: pointer; }
+        .door-img:active { transform: scale(0.98); filter: brightness(1); }
+
+        /* ЭТАП 2: ЧАРЛИ */
+        .charlie-frame { 
+            width: 250px; height: 250px; border-radius: 50%; 
+            border: 2px solid #d4af37; overflow: hidden; margin-bottom: 30px;
+        }
+        .charlie-frame img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* ЭТАП 3: РЕГИСТРАЦИЯ */
+        #quote-reg { font-style: italic; font-size: 24px; line-height: 1.4; margin-bottom: 40px; color: #d4af37; max-width: 85%; }
         .setup-grid { display: grid; grid-template-columns: repeat(3, 95px); gap: 15px; margin-bottom: 40px; }
-        .square-box { width: 95px; height: 95px; border: 1px solid #d4af37; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; color: #000; }
+        .square-box { width: 95px; height: 95px; border: 1px solid #d4af37; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; color: #000; position: relative; }
         
-        /* БЛОК 2: ХОЛЛ С ДИВАНОМ */
+        /* ЭТАП 4: ХОЛЛ (ДИВАННАЯ ЗОНА) */
         .hologram-frame { 
             border: 1px solid rgba(212, 175, 55, 0.2); padding: 30px; 
             background: rgba(212,175,55,0.02); backdrop-filter: blur(15px);
-            box-shadow: 0 0 30px rgba(212, 175, 55, 0.1);
         }
         .user-img-hall { width: 180px; height: 180px; object-fit: cover; border: 1px solid #d4af37; margin-bottom: 20px; filter: sepia(0.4); }
-        .id-text-hall { font-size: 22px; letter-spacing: 6px; font-family: 'Courier New', monospace; }
 
         /* КНОПКИ */
-        .btn-gold { width: 180px; height: 45px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 11px; letter-spacing: 2px; cursor: pointer; transition: 0.4s; }
+        .btn-gold { width: 200px; height: 50px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 11px; letter-spacing: 2px; cursor: pointer; }
         #btn-to-hall { visibility: hidden; background: rgba(212, 175, 55, 0.1); }
 
-        .ver-tag { position: absolute; bottom: 10px; width: 100%; font-size: 10px; opacity: 0.2; letter-spacing: 1px; }
+        .ver-tag { position: absolute; bottom: 10px; width: 100%; font-size: 10px; opacity: 0.2; }
     </style>
 </head>
 <body>
 
+    <audio id="door-snd"><source src="door_open.mp3" type="audio/mpeg"></audio>
     <audio id="bg-ambient" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
 
-    <div id="scr-reg" class="block active">
+    <div id="scr-door" class="block active">
+        <div style="letter-spacing:12px; margin-bottom:40px; opacity:0.6;">GY-GY PRIVATE</div>
+        <img src="door_1.jpg" class="door-img" onclick="actionOpenDoor()">
+        <div class="ver-tag">v4.4 | ENTRANCE</div>
+    </div>
+
+    <div id="scr-welcome" class="block">
+        <div class="charlie-frame"><img src="charlie.png"></div>
+        <h1 style="font-size: 42px; letter-spacing: 10px; font-weight: normal;">WELCOME</h1>
+        <button class="btn-gold" onclick="show('scr-reg')">PROCEED</button>
+    </div>
+
+    <div id="scr-reg" class="block">
         <div id="quote-reg">«В каждой шутке есть доля виски...»</div>
         <div class="setup-grid">
-            <div class="square-box" style="flex-direction:column; font-size:10px;">
+            <div class="square-box" style="flex-direction:column; font-size:9px;">
                 <span style="opacity:0.5;">ID TRACE</span>
                 <div id="id-display" style="font-weight:bold; margin-top:5px;">#0042-XXXX</div>
             </div>
@@ -56,27 +77,66 @@
             </div>
         </div>
         <div style="display:flex; gap: 20px;">
-            <button id="btn-save" class="btn-gold" onclick="saveData()">СОХРАНИТЬ</button>
-            <button id="btn-to-hall" class="btn-gold" onclick="enterHall()">ВХОД</button>
+            <button id="btn-save" class="btn-gold" style="width:140px;" onclick="saveData()">СОХРАНИТЬ</button>
+            <button id="btn-to-hall" class="btn-gold" style="width:140px;" onclick="enterHall()">ВХОД</button>
         </div>
         <input type="file" id="f-in" style="display:none" onchange="loadPhoto(this)">
-        <div class="ver-tag">v4.3 | TERMINAL</div>
     </div>
 
     <div id="scr-hall" class="block">
         <div class="hologram-frame">
-            <div style="font-size: 9px; letter-spacing: 2px; margin-bottom: 15px; opacity: 0.5;">IDENTITY RECOGNIZED</div>
             <img id="hall-photo" class="user-img-hall" src="" style="display:none;">
-            <div id="hall-id" class="id-text-hall">#SCANNING...</div>
+            <div id="hall-id" style="font-size:22px; letter-spacing:5px; font-family:monospace;">#SCANNING...</div>
         </div>
-        <h2 style="letter-spacing: 15px; margin-top: 30px; opacity: 0.8; font-weight: normal;">HALL</h2>
-        <div class="ver-tag">v4.3 | INTERNAL</div>
+        <h2 style="letter-spacing: 15px; margin-top: 30px; font-weight: normal; opacity: 0.8;">HALL</h2>
+        <div class="ver-tag">v4.4 | LOUNGE</div>
     </div>
 
     <script>
-        // Генерируем ID при загрузке
         const guestID = `#0042-${Math.floor(1000 + Math.random() * 9000)}`;
         const ambient = document.getElementById('bg-ambient');
 
-        // Инициализация QR при загрузке страницы
-        window.onload = () =>
+        function actionOpenDoor() {
+            document.getElementById('door-snd').play().catch(()=>{});
+            setTimeout(() => show('scr-welcome'), 600);
+        }
+
+        function loadPhoto(input) {
+            const r = new FileReader();
+            r.onload = (e) => {
+                const data = e.target.result;
+                document.getElementById('prev-ph').src = data;
+                document.getElementById('prev-ph').style.display = "block";
+                document.getElementById('label-ph').style.display = "none";
+                document.getElementById('hall-photo').src = data;
+                document.getElementById('hall-photo').style.display = "block";
+            };
+            r.readAsDataURL(input.files[0]);
+        }
+
+        function saveData() {
+            document.getElementById('id-display').innerText = guestID;
+            document.getElementById('hall-id').innerText = guestID;
+            const q = document.getElementById("qrcode");
+            q.innerHTML = "";
+            new QRCode(q, { text: guestID, width: 95, height: 95 });
+            
+            document.getElementById('btn-save').style.opacity = '0.3';
+            document.getElementById('btn-to-hall').style.visibility = 'visible';
+            
+            ambient.volume = 0.1;
+            ambient.play().catch(()=>{});
+        }
+
+        function enterHall() {
+            ambient.volume = 0.5;
+            show('scr-hall');
+        }
+
+        function show(id) {
+            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+    </script>
+</body>
+</html>
