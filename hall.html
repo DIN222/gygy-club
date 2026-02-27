@@ -3,19 +3,19 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bar Project v.4.6.2</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bar Project v.4.6.3 - Full Scale</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
             --slogan-color: #5D4037; 
             --hologram-cyan: #00E5FF;
-            --glass-bg: rgba(0, 20, 30, 0.85);
+            --glass-bg: rgba(0, 15, 20, 0.9); /* Более глубокий темный фон */
 
-            /* Настройки для завтрашней калибровки */
-            --slogan-top: 38%;    
+            /* --- КАЛИБРОВКА НАДПИСИ --- */
+            --slogan-top: 38%;    /* Высота (поднимай/опускай тут) */
             --slogan-left: 50%;   
-            --slogan-size: 1.8vw; 
+            --slogan-size: clamp(16px, 2.2vw, 36px); /* Адаптивный размер */
         }
 
         body, html {
@@ -23,18 +23,18 @@
             width: 100%; height: 100%;
             overflow: hidden;
             background-color: #000;
-            display: flex; justify-content: center;
         }
 
         .viewport {
             position: relative;
-            width: 66vw; 
+            width: 100vw; 
             height: 100vh;
             background: url('hall_bg_jpg.jpg') no-repeat center center;
-            background-size: cover;
+            background-size: cover; /* Заполнение всего экрана без дыр */
             z-index: 1;
         }
 
+        /* Слоган над аркой */
         .projector-layer {
             position: absolute;
             top: var(--slogan-top);
@@ -53,50 +53,67 @@
             letter-spacing: 0.5vw;
             text-transform: uppercase;
             font-weight: 900;
-            text-shadow: 0 0 10px rgba(255,255,255,0.5);
-            opacity: 0.9;
+            text-shadow: 0 0 10px rgba(255,255,255,0.4);
         }
 
-        .hologram-v462 {
+        /* Голограмма */
+        .hologram-v463 {
             position: absolute;
-            right: 5%; bottom: 20%;
-            width: 280px;
+            right: 10%; bottom: 15%;
+            width: clamp(260px, 25vw, 380px);
             z-index: 100;
             background: var(--glass-bg);
-            border: 1px solid var(--hologram-cyan);
-            backdrop-filter: blur(10px);
-            padding: 20px;
+            border: 1px solid rgba(0, 229, 255, 0.4); /* Мягкая рамка */
+            backdrop-filter: blur(15px);
+            border-radius: 8px;
+            padding: 25px;
             color: var(--hologram-cyan);
             font-family: 'Share Tech Mono', monospace;
-            transition: 0.6s ease;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            transition: 0.8s ease;
         }
 
-        .hologram-v462.faded { opacity: 0; pointer-events: none; }
+        .hologram-v463.faded { opacity: 0; transform: translateY(20px); pointer-events: none; }
 
+        /* СПОКОЙНАЯ КНОПКА */
         .btn-confirm {
-            background: rgba(0, 229, 255, 0.1);
+            background: rgba(0, 229, 255, 0.05); /* Еле заметный фон */
             border: 1px solid var(--hologram-cyan);
             color: var(--hologram-cyan);
             width: 100%;
-            padding: 12px;
-            margin-top: 15px;
+            padding: 15px;
+            margin-top: 20px;
             cursor: pointer;
             text-transform: uppercase;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: bold;
-            letter-spacing: 1px;
-            transition: 0.3s;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
         }
 
-        .btn-confirm:hover { background: var(--hologram-cyan); color: #000; }
+        .btn-confirm:hover {
+            background: rgba(0, 229, 255, 0.15);
+            box-shadow: inset 0 0 15px rgba(0, 229, 255, 0.2);
+        }
 
+        /* Зона двери */
         .door-link {
             position: absolute;
             top: 40%; left: 50%;
             transform: translateX(-50%);
-            width: 15vw; height: 35vh;
+            width: 20vw; height: 40vh;
             z-index: 10;
             cursor: pointer;
+        }
+
+        /* Фикс для мобильных (вертикальный режим) */
+        @media (max-width: 600px) {
+            .hologram-v463 {
+                right: 5%; bottom: 5%;
+                width: 90%;
+                padding: 15px;
+            }
+            --slogan-top: 35%;
         }
     </style>
 </head>
@@ -107,13 +124,13 @@
             <div id="random-phrase" class="wall-phrase">...</div>
         </div>
 
-        <div class="hologram-v462" id="gate">
-            <div style="font-size: 10px; border-bottom: 1px solid; padding-bottom: 5px; opacity: 0.6;">IDENTIFICATION</div>
-            <div id="u-id" style="font-size: 14px; margin-top: 15px;">ID: TRACE_ACTIVE</div>
-            <button id="btn-text" class="btn-confirm" onclick="document.getElementById('gate').classList.add('faded')">Подтвердить</button>
+        <div class="hologram-v463" id="gate">
+            <div style="font-size: 11px; border-bottom: 1px solid rgba(0,229,255,0.2); padding-bottom: 10px; opacity: 0.7;">BAR LOGISTIC v.4.3.0</div>
+            <div id="u-id" style="font-size: 15px; margin-top: 20px; font-weight: bold;">ID: SCANNING...</div>
+            <button id="btn-text" class="btn-confirm" onclick="document.getElementById('gate').classList.add('faded')">ПОДТВЕРДИТЬ</button>
         </div>
 
-        <div class="door-link" onclick="console.log('Door Active')"></div>
+        <div class="door-link" onclick="handleDoor()"></div>
     </div>
 
     <script>
@@ -125,7 +142,6 @@
             "Тишина — лучший сомелье"
         ];
 
-        // Варианты для "человеческой" кнопки
         const ConfirmTexts = [
             "Именно так",
             "Всё верно",
@@ -136,16 +152,20 @@
         ];
 
         window.onload = () => {
-            // Выбираем случайную фразу для стены
             document.getElementById('random-phrase').innerText = Phrases[Math.floor(Math.random() * Phrases.length)];
-            
-            // Выбираем случайную фразу для кнопки
             document.getElementById('btn-text').innerText = ConfirmTexts[Math.floor(Math.random() * ConfirmTexts.length)];
             
-            // Генерация ID
-            let id = localStorage.getItem('trace_id') || 'ID-' + Math.random().toString(16).slice(2,8).toUpperCase();
+            let id = localStorage.getItem('trace_id') || '4.3.0-' + Math.random().toString(16).slice(2,8).toUpperCase();
             document.getElementById('u-id').innerText = `ID: ${id}`;
         };
+
+        function handleDoor() {
+            if(document.getElementById('gate').classList.contains('faded')) {
+                alert("Добро пожаловать.");
+            } else {
+                alert("Пожалуйста, подтвердите вход на терминале.");
+            }
+        }
     </script>
 </body>
 </html>
