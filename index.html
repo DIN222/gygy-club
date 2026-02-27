@@ -3,23 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v3.0.5.20</title>
+    <title>GY-GY Club v3.0.5.21</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
-        /* Стиль версии в углу */
-        .ver-tag { position: absolute; bottom: 10px; width: 100%; font-size: 10px; opacity: 0.3; pointer-events: none; z-index: 10; }
-        /* Остальные стили из вашего оригинала без изменений... */
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none !important; }
-        body { margin: 0; background: #000; color: #d4af37; font-family: 'Times New Roman', serif; text-align: center; height: 100vh; overflow: hidden; }
+        body { margin: 0; background: #000; color: #d4af37; font-family: 'Times New Roman', serif; text-align: center; height: 100vh; overflow: hidden; width: 100vw; }
+        
         .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
         .block.active { display: flex !important; }
+
+        /* ЭКРАН 1: ДВЕРЬ */
         .door-wrapper { cursor: pointer; transition: 1.2s ease-out; z-index: 100; }
-        .door-img { width: 75vw; max-width: 320px; display: block; }
-        .charlie-container { width: 250px; height: 250px; margin-bottom: 30px; border-radius: 50%; border: 2px solid #d4af37; overflow: hidden; background: #000; }
+        .door-img { width: 75vw; max-width: 320px; display: block; filter: brightness(0.8); }
+
+        /* ЭКРАН 2: ЧАРЛИ */
+        .charlie-container { 
+            position: relative; width: 250px; height: 250px; margin-bottom: 30px; 
+            border-radius: 50%; border: 2px solid #d4af37; overflow: hidden; background: #000; 
+        }
         .charlie-container img { width: 101%; height: 101%; object-fit: cover; }
-        .setup-grid { display: grid; grid-template-columns: repeat(3, 90px); gap: 15px; margin-bottom: 20px; justify-content: center; }
-        .square-box { width: 90px; height: 90px; border: 1px solid #d4af37; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; color: #000; }
-        .btn-gold { width: 140px; height: 40px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 11px; cursor: pointer; margin-top: 15px; }
+        #t-welcome { font-size: 52px; letter-spacing: 12px; font-weight: normal; margin: 0 0 30px 0; text-transform: uppercase; }
+
+        /* ЭКРАН 3: ТЕРМИНАЛ РЕГИСТРАЦИИ */
+        .setup-grid { display: grid; grid-template-columns: repeat(3, 95px); gap: 15px; margin-bottom: 40px; justify-content: center; }
+        .square-box { width: 95px; height: 95px; border: 1px solid #d4af37; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; color: #000; }
+        #id-box { flex-direction: column; font-size: 11px; }
+        
+        /* ГЛАВНАЯ ЦИТАТА (УВЕЛИЧЕННАЯ) */
+        #quote-reg { 
+            font-style: italic; 
+            font-size: 24px; /* Увеличено */
+            line-height: 1.4;
+            margin: 40px 0; 
+            color: #d4af37; 
+            max-width: 80%;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-gold { width: 180px; height: 45px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 12px; letter-spacing: 2px; cursor: pointer; transition: 0.3s; }
+        .btn-gold:hover { background: rgba(212, 175, 55, 0.1); }
+        .ver-tag { position: absolute; bottom: 10px; width: 100%; font-size: 10px; opacity: 0.2; }
     </style>
 </head>
 <body>
@@ -31,20 +54,22 @@
         <div class="door-wrapper" onclick="handleDoor()">
             <img src="door_1.jpg" class="door-img">
         </div>
-        <div class="ver-tag">v3.0.5.20 | ENTRANCE</div>
+        <div class="ver-tag">v3.0.5.21 | ENTRANCE</div>
     </div>
 
     <div id="block-welcome" class="block">
         <div class="charlie-container"><img src="charlie.png"></div>
         <h1 id="t-welcome">WELCOME</h1>
-        <button class="btn-gold" style="width:220px; height: 50px;" onclick="switchTo('block-identity')">PROCEED</button>
+        <button class="btn-gold" style="width:240px; height: 60px;" onclick="switchTo('block-identity')">PROCEED</button>
     </div>
 
     <div id="block-identity" class="block">
+        <div id="quote-reg">«В каждой шутке есть доля виски...»</div>
+        
         <div class="setup-grid">
             <div id="id-box" class="square-box">
-                <span style="font-size: 8px; margin-bottom: 5px;">ID TRACE</span>
-                <div id="id-display" style="font-size: 10px; font-weight: bold;">#0000-0000</div>
+                <span style="font-size: 8px; opacity: 0.6; margin-bottom: 5px;">ID TRACE</span>
+                <div id="id-display" style="font-size: 10px; font-weight: bold;">#0042-XXXX</div>
             </div>
             <div id="qrcode" class="square-box"></div>
             <div class="square-box" style="cursor:pointer;" onclick="document.getElementById('f').click()">
@@ -52,12 +77,17 @@
                 <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
             </div>
         </div>
-        <button id="btn-save" class="btn-gold" onclick="save()">СОХРАНИТЬ</button>
-        <button id="btn-to-hall" class="btn-gold" style="visibility:hidden;" onclick="location.href='hall.html'">ВХОД</button>
+
+        <div style="display:flex; gap: 20px;">
+            <button id="btn-save" class="btn-gold" onclick="save()">СОХРАНИТЬ</button>
+            <button id="btn-to-hall" class="btn-gold" style="visibility:hidden; background: #d4af37; color: #000;" onclick="location.href='hall.html'">ВХОД</button>
+        </div>
+
         <input type="file" id="f" style="display:none" onchange="preview(this)">
     </div>
 
     <script src="navigation.js"></script>
+
     <script>
         const fullID = `#0042-${Math.floor(1000 + Math.random() * 9000)}`;
 
@@ -75,24 +105,31 @@
                 document.getElementById('pp').src = data;
                 document.getElementById('pp').style.display = "block";
                 document.getElementById('t-ph').style.display = "none";
-                localStorage.setItem('trace_photo', data); // Сохраняем фото
+                localStorage.setItem('trace_photo', data); 
             };
             r.readAsDataURL(input.files[0]);
         }
 
         function save() { 
-            localStorage.setItem('trace_id', fullID); // Сохраняем ID
+            localStorage.setItem('trace_id', fullID); 
             document.getElementById('btn-to-hall').style.visibility = 'visible'; 
+            document.getElementById('btn-save').style.opacity = '0.5';
+            document.getElementById('btn-save').innerText = 'ГОТОВО';
         }
 
         function switchTo(id) {
             document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
             document.getElementById(id).classList.add('active');
+            
             if(id === 'block-identity') {
                 document.getElementById('id-display').innerText = fullID;
-                new QRCode(document.getElementById("qrcode"), { text: fullID, width: 90, height: 90 });
-                const bg = document.getElementById('club-bg-snd');
-                bg.volume = 0.1; bg.play().catch(() => {});
+                const qZone = document.getElementById("qrcode");
+                qZone.innerHTML = "";
+                new QRCode(qZone, { text: "GY-ID:" + fullID, width: 95, height: 95 });
+                
+                const bgSnd = document.getElementById('club-bg-snd');
+                bgSnd.volume = 0.1;
+                bgSnd.play().catch(() => {});
             }
         }
     </script>
