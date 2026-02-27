@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v3.0.5.21</title>
+    <title>GY-GY Club v3.0.5.22</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none !important; }
@@ -24,25 +24,26 @@
         .charlie-container img { width: 101%; height: 101%; object-fit: cover; }
         #t-welcome { font-size: 52px; letter-spacing: 12px; font-weight: normal; margin: 0 0 30px 0; text-transform: uppercase; }
 
-        /* ЭКРАН 3: ТЕРМИНАЛ РЕГИСТРАЦИИ */
+        /* ЭКРАН 3: ТЕРМИНАЛ */
+        #quote-reg { 
+            font-style: italic; font-size: 26px; line-height: 1.4;
+            margin-bottom: 40px; color: #d4af37; max-width: 85%;
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+        }
         .setup-grid { display: grid; grid-template-columns: repeat(3, 95px); gap: 15px; margin-bottom: 40px; justify-content: center; }
         .square-box { width: 95px; height: 95px; border: 1px solid #d4af37; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; color: #000; }
-        #id-box { flex-direction: column; font-size: 11px; }
         
-        /* ГЛАВНАЯ ЦИТАТА (УВЕЛИЧЕННАЯ) */
-        #quote-reg { 
-            font-style: italic; 
-            font-size: 24px; /* Увеличено */
-            line-height: 1.4;
-            margin: 40px 0; 
-            color: #d4af37; 
-            max-width: 80%;
-            text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        /* КНОПКИ */
+        .btn-gold { width: 180px; height: 45px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 11px; letter-spacing: 2px; cursor: pointer; transition: 0.4s; }
+        
+        #btn-to-hall { 
+            visibility: hidden; 
+            background: rgba(212, 175, 55, 0.05); 
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2); 
         }
+        #btn-to-hall:hover { background: rgba(212, 175, 55, 0.15); box-shadow: 0 0 25px rgba(212, 175, 55, 0.4); }
 
-        .btn-gold { width: 180px; height: 45px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 12px; letter-spacing: 2px; cursor: pointer; transition: 0.3s; }
-        .btn-gold:hover { background: rgba(212, 175, 55, 0.1); }
-        .ver-tag { position: absolute; bottom: 10px; width: 100%; font-size: 10px; opacity: 0.2; }
+        .ver-tag { position: absolute; bottom: 10px; width: 100%; font-size: 10px; opacity: 0.2; letter-spacing: 1px; }
     </style>
 </head>
 <body>
@@ -50,26 +51,26 @@
     <audio id="club-bg-snd" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active">
-        <div style="letter-spacing:10px; margin-bottom:30px; opacity:0.8;">GY-GY PRIVATE</div>
+        <div style="letter-spacing:12px; margin-bottom:30px; opacity:0.7; font-size:14px;">GY-GY PRIVATE</div>
         <div class="door-wrapper" onclick="handleDoor()">
-            <img src="door_1.jpg" class="door-img">
+            <img src="door_1.jpg" class="door-img" onerror="this.src='https://via.placeholder.com/300x500?text=DOOR'">
         </div>
-        <div class="ver-tag">v3.0.5.21 | ENTRANCE</div>
+        <div class="ver-tag">v3.0.5.22 | ENTRANCE</div>
     </div>
 
     <div id="block-welcome" class="block">
-        <div class="charlie-container"><img src="charlie.png"></div>
+        <div class="charlie-container"><img src="charlie.png" onerror="this.src='https://via.placeholder.com/250?text=CHARLIE'"></div>
         <h1 id="t-welcome">WELCOME</h1>
-        <button class="btn-gold" style="width:240px; height: 60px;" onclick="switchTo('block-identity')">PROCEED</button>
+        <button class="btn-gold" style="width:240px; height: 60px; font-size: 14px;" onclick="switchTo('block-identity')">PROCEED</button>
     </div>
 
     <div id="block-identity" class="block">
         <div id="quote-reg">«В каждой шутке есть доля виски...»</div>
         
         <div class="setup-grid">
-            <div id="id-box" class="square-box">
-                <span style="font-size: 8px; opacity: 0.6; margin-bottom: 5px;">ID TRACE</span>
-                <div id="id-display" style="font-size: 10px; font-weight: bold;">#0042-XXXX</div>
+            <div class="square-box" style="flex-direction:column; font-size:10px;">
+                <span style="opacity:0.5; font-size:8px; margin-bottom:5px;">ID TRACE</span>
+                <div id="id-display" style="font-weight:bold;">#0042-XXXX</div>
             </div>
             <div id="qrcode" class="square-box"></div>
             <div class="square-box" style="cursor:pointer;" onclick="document.getElementById('f').click()">
@@ -80,19 +81,18 @@
 
         <div style="display:flex; gap: 20px;">
             <button id="btn-save" class="btn-gold" onclick="save()">СОХРАНИТЬ</button>
-            <button id="btn-to-hall" class="btn-gold" style="visibility:hidden; background: #d4af37; color: #000;" onclick="location.href='hall.html'">ВХОД</button>
+            <button id="btn-to-hall" class="btn-gold" onclick="location.href='hall.html'">ВХОД</button>
         </div>
-
         <input type="file" id="f" style="display:none" onchange="preview(this)">
+        <div class="ver-tag">v3.0.5.22 | REGISTRATION</div>
     </div>
 
     <script src="navigation.js"></script>
-
     <script>
         const fullID = `#0042-${Math.floor(1000 + Math.random() * 9000)}`;
 
         function handleDoor() {
-            document.getElementById('door-snd').play().catch(() => {});
+            document.getElementById('door-snd').play().catch(()=>{});
             const w = document.querySelector('.door-wrapper');
             w.style.transform = "scale(5)"; w.style.opacity = "0";
             setTimeout(() => switchTo('block-welcome'), 1000);
@@ -112,24 +112,20 @@
 
         function save() { 
             localStorage.setItem('trace_id', fullID); 
-            document.getElementById('btn-to-hall').style.visibility = 'visible'; 
-            document.getElementById('btn-save').style.opacity = '0.5';
-            document.getElementById('btn-save').innerText = 'ГОТОВО';
+            const bS = document.getElementById('btn-save');
+            const bH = document.getElementById('btn-to-hall');
+            bS.style.opacity = '0.3'; bS.innerText = 'ГОТОВО'; bS.style.pointerEvents = 'none';
+            bH.style.visibility = 'visible';
         }
 
         function switchTo(id) {
             document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            
             if(id === 'block-identity') {
                 document.getElementById('id-display').innerText = fullID;
-                const qZone = document.getElementById("qrcode");
-                qZone.innerHTML = "";
-                new QRCode(qZone, { text: "GY-ID:" + fullID, width: 95, height: 95 });
-                
-                const bgSnd = document.getElementById('club-bg-snd');
-                bgSnd.volume = 0.1;
-                bgSnd.play().catch(() => {});
+                new QRCode(document.getElementById("qrcode"), { text: fullID, width: 95, height: 95 });
+                const bg = document.getElementById('club-bg-snd');
+                bg.volume = 0.1; bg.play().catch(()=>{});
             }
         }
     </script>
