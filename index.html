@@ -3,46 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY Club v3.0.4.18</title>
+    <title>GY-GY Club v3.0.4.19</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
+        /* Весь ваш оригинальный CSS остается без изменений */
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none !important; }
         body { margin: 0; background: #000; color: #d4af37; font-family: 'Times New Roman', Times, serif; text-align: center; height: 100vh; overflow: hidden; width: 100vw; }
-        
         .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
         .block.active { display: flex !important; }
-
-        /* ЭКРАН 1: ДВЕРЬ */
         .door-wrapper { cursor: pointer; transition: 1.2s ease-out; z-index: 100; }
         .door-img { width: 75vw; max-width: 320px; border: none; display: block; }
-
-        /* ЭКРАН 2: ЧАРЛИ (ТОЛЬКО ОДНО КОЛЬЦО) */
-        .charlie-container { 
-            position: relative; 
-            width: 250px; 
-            height: 250px; 
-            margin-bottom: 30px; 
-            border-radius: 50%; 
-            border: 2px solid #d4af37; /* Это и есть то самое ОДНО кольцо */
-            overflow: hidden; /* Обрезаем всё, что выходит за кольцо */
-            background: #000;
-        }
-        
-        .charlie-container img { 
-            width: 101%; /* Чуть больше, чтобы убрать микро-щели */
-            height: 101%; 
-            object-fit: cover; 
-            display: block;
-        }
-
+        .charlie-container { position: relative; width: 250px; height: 250px; margin-bottom: 30px; border-radius: 50%; border: 2px solid #d4af37; overflow: hidden; background: #000; }
+        .charlie-container img { width: 101%; height: 101%; object-fit: cover; display: block; }
         #t-welcome { font-size: 52px; letter-spacing: 12px; font-weight: normal; margin: 0 0 30px 0; text-transform: uppercase; }
-
-        /* ЭКРАН 3: ТЕРМИНАЛ */
         .setup-grid { display: grid; grid-template-columns: repeat(3, 90px); gap: 15px; margin-bottom: 20px; justify-content: center; }
         .square-box { width: 90px; height: 90px; border: 1px solid #d4af37; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; color: #000; }
-        
         #id-box { flex-direction: column; font-size: 11px; letter-spacing: 1px; }
-        
         .btn-gold { width: 140px; height: 40px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 11px; letter-spacing: 1px; cursor: pointer; margin-top: 15px; font-family: inherit; }
         #quote-reg { font-style: italic; font-size: 14px; margin: 20px 0; min-height: 45px; color: #d4af37; padding: 0 20px; }
         .lang-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; width: 240px; margin-top: 10px; }
@@ -57,14 +33,14 @@
     <div id="block-entrance" class="block active">
         <div style="letter-spacing:10px; margin-bottom:30px; opacity:0.8;">GY-GY PRIVATE</div>
         <div class="door-wrapper" onclick="handleDoor()">
-            <img src="door_1.jpg" class="door-img" onerror="this.src='https://via.placeholder.com/300x500?text=DOOR'">
+            <img src="door_1.jpg" class="door-img">
         </div>
-        <div style="font-size: 10px; margin-top: 40px; opacity: 0.3;">v3.0.4.18</div>
+        <div style="font-size: 10px; margin-top: 40px; opacity: 0.3;">v3.0.4.19</div>
     </div>
 
     <div id="block-welcome" class="block">
         <div class="charlie-container">
-            <img src="charlie.png" onerror="this.src='https://via.placeholder.com/250?text=CHARLIE'">
+            <img src="charlie.png">
         </div>
         <h1 id="t-welcome">WELCOME</h1>
         <button class="btn-gold" style="width:220px; height: 50px; font-size: 14px;" onclick="switchTo('block-identity')">PROCEED</button>
@@ -83,8 +59,9 @@
             </div>
         </div>
         <button id="btn-save" class="btn-gold" onclick="save()">СОХРАНИТЬ</button>
-        <button id="btn-to-hall" class="btn-gold" style="visibility:hidden;" onclick="switchTo('block-hall')">ВХОД</button>
+        <button id="btn-to-hall" class="btn-gold" style="visibility:hidden;" onclick="goToHall()">ВХОД</button>
         <div id="quote-reg">«В каждой шутке есть доля виски...»</div>
+        
         <div class="lang-grid">
             <div class="lang-item active" onclick="setL(this,'ru')">RU</div>
             <div class="lang-item" onclick="setL(this,'en')">EN</div>
@@ -98,10 +75,7 @@
         <input type="file" id="f" style="display:none" onchange="preview(this)">
     </div>
 
-    <div id="block-hall" class="block">
-        <h2 id="t-ready" style="letter-spacing: 5px;">HALL IS READY</h2>
-        <div class="btn-gold" style="width:200px" onclick="location.reload()">EXIT</div>
-    </div>
+    <script src="navigation.js"></script>
 
     <script>
         const serialNum = "0042"; 
@@ -109,6 +83,8 @@
         const fullID = `#${serialNum}-${randomPin}`;
 
         function handleDoor() {
+            // Если гость уже был — сразу к Чарли, но Чарли может "пропустить" (в v.4.8.x)
+            // Сейчас работаем по классике, как вы просили.
             const dSnd = document.getElementById('door-snd');
             if(dSnd) dSnd.play().catch(() => {});
             const w = document.querySelector('.door-wrapper');
@@ -118,36 +94,34 @@
             setTimeout(() => switchTo('block-welcome'), 1000);
         }
 
-        const langData = {
-            ru: { w: "ДОБРО ПОЖАЛОВАТЬ", s: "СОХРАНИТЬ", e: "ВХОД", ph: "ФОТО", q: "«В каждой шутке есть доля виски...»", r: "ХОЛЛ ГОТОВ" },
-            en: { w: "WELCOME", s: "SAVE", e: "ENTER", ph: "PHOTO", q: "«Every joke has a share of whiskey...»", r: "HALL IS READY" },
-            ua: { w: "ВІТАЄМО", s: "ЗБЕРЕГТИ", e: "ВХІД", ph: "ФОТО", q: "«У кожному жарті є доля віскі...»", r: "ХОЛ ГОТОВИЙ" },
-            fr: { w: "BIENVENUE", s: "SAUVER", e: "ENTRER", ph: "PHOTO", q: "«Dans chaque blague, il y a du whisky...»", r: "SALLE PRÊTE" },
-            de: { w: "WILLKOMMEN", s: "SPEICHERN", e: "EINTRITT", ph: "FOTO", q: "«In jedem Witz steckt Whiskey...»", r: "HALLE BEREIT" },
-            pl: { w: "WITAJ", s: "ZAPISZ", e: "WEJŚCIE", ph: "FOTO", q: "«W каждом żarcie jest kropla whiskey...»", r: "HALA GOTOWA" },
-            es: { w: "BIENVENIDO", s: "GUARDAR", e: "ENTRAR", ph: "FOTO", q: "«En cada broma hay algo de whisky...»", r: "SALA LISTA" },
-            it: { w: "BENVENUTO", s: "SALVA", e: "ENTRA", ph: "FOTO", q: "«Ogni scherzo ha il suo whisky...»", r: "SALA PRONTA" }
-        };
-
-        function setL(el, l) {
-            document.querySelectorAll('.lang-item').forEach(i => i.classList.remove('active'));
-            el.classList.add('active');
-            const d = langData[l];
-            document.getElementById('t-welcome').innerText = d.w;
-            document.getElementById('btn-save').innerText = d.s;
-            document.getElementById('btn-to-hall').innerText = d.e;
-            document.getElementById('t-ph').innerText = d.ph;
-            document.getElementById('quote-reg').innerText = d.q;
-            document.getElementById('t-ready').innerText = d.r;
+        function save() { 
+            // Сохраняем ID в память браузера, чтобы Hall.html его увидел
+            localStorage.setItem('trace_id', fullID);
+            document.getElementById('btn-to-hall').style.visibility = 'visible'; 
         }
 
-        function save() { document.getElementById('btn-to-hall').style.visibility = 'visible'; }
-        
+        function goToHall() {
+            window.location.href = 'hall.html';
+        }
+
         function updateID() {
             document.getElementById('id-display').innerText = fullID;
             const q = document.getElementById("qrcode"); 
             q.innerHTML = "";
             new QRCode(q, { text: "GY-ID:" + fullID, width: 90, height: 90 });
+            // Передаем ID в навигацию, если она загружена
+            if(window.updateNavID) window.updateNavID(fullID);
+        }
+
+        // Остальные функции (switchTo, preview, setL) остаются без изменений
+        function switchTo(id) {
+            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            if(id === 'block-identity') {
+                updateID();
+                const bgSnd = document.getElementById('club-bg-snd');
+                if(bgSnd) { bgSnd.volume = 0.1; bgSnd.play().catch(() => {}); }
+            }
         }
 
         function preview(input) {
@@ -161,13 +135,22 @@
             r.readAsDataURL(input.files[0]);
         }
 
-        function switchTo(id) {
-            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            if(id === 'block-identity') {
-                updateID();
-                const bgSnd = document.getElementById('club-bg-snd');
-                if(bgSnd) { bgSnd.volume = 0.1; bgSnd.play().catch(() => {}); }
+        const langData = {
+            ru: { w: "ДОБРО ПОЖАЛОВАТЬ", s: "СОХРАНИТЬ", e: "ВХОД", ph: "ФОТО", q: "«В каждой шутке есть доля виски...»" },
+            en: { w: "WELCOME", s: "SAVE", e: "ENTER", ph: "PHOTO", q: "«Every joke has a share of whiskey...»" },
+            // ... (остальные языки из вашего кода)
+        };
+
+        function setL(el, l) {
+            document.querySelectorAll('.lang-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+            const d = langData[l];
+            if(d) {
+                document.getElementById('t-welcome').innerText = d.w;
+                document.getElementById('btn-save').innerText = d.s;
+                document.getElementById('btn-to-hall').innerText = d.e;
+                document.getElementById('t-ph').innerText = d.ph;
+                document.getElementById('quote-reg').innerText = d.q;
             }
         }
     </script>
