@@ -2,149 +2,131 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GY-GY Club v3.0.5.22</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none !important; }
-        body { margin: 0; background: #000; color: #d4af37; font-family: 'Times New Roman', serif; text-align: center; height: 100vh; width: 100vw; overflow: hidden; }
+        body { margin: 0; background: #000; color: #d4af37; font-family: 'Times New Roman', serif; text-align: center; height: 100vh; overflow: hidden; width: 100vw; }
         
-        /* СИСТЕМА ЭКРАНОВ */
-        .block { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            display: none; flex-direction: column; align-items: center; justify-content: center; 
-            padding: 20px; background: #000; z-index: 10;
-        }
+        .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
         .block.active { display: flex !important; }
 
-        /* ЧАРЛИ: ГЕОМЕТРИЯ */
-        .charlie-frame { 
-            width: 280px; height: 280px; 
-            border-radius: 50%; border: 2px solid #d4af37; 
-            overflow: hidden; flex-shrink: 0; margin-bottom: 30px;
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
-        }
-        .charlie-frame img { width: 100%; height: 100%; object-fit: cover; }
+        /* ЭКРАН 1: ДВЕРЬ */
+        .door-wrapper { cursor: pointer; transition: 1.2s ease-out; z-index: 100; }
+        .door-img { width: 75vw; max-width: 320px; display: block; filter: brightness(0.8); }
 
-        /* РЕГИСТРАЦИЯ */
-        #quote-reg { font-style: italic; font-size: 28px; line-height: 1.3; margin-bottom: 40px; color: #d4af37; max-width: 90%; text-shadow: 0 0 10px rgba(212, 175, 55, 0.3); }
-        .setup-grid { display: grid; grid-template-columns: repeat(3, 95px); gap: 15px; margin-bottom: 40px; }
+        /* ЭКРАН 2: ЧАРЛИ */
+        .charlie-container { 
+            position: relative; width: 250px; height: 250px; margin-bottom: 30px; 
+            border-radius: 50%; border: 2px solid #d4af37; overflow: hidden; background: #000; 
+        }
+        .charlie-container img { width: 101%; height: 101%; object-fit: cover; }
+        #t-welcome { font-size: 52px; letter-spacing: 12px; font-weight: normal; margin: 0 0 30px 0; text-transform: uppercase; }
+
+        /* ЭКРАН 3: ТЕРМИНАЛ */
+        #quote-reg { 
+            font-style: italic; font-size: 26px; line-height: 1.4;
+            margin-bottom: 40px; color: #d4af37; max-width: 85%;
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+        }
+        .setup-grid { display: grid; grid-template-columns: repeat(3, 95px); gap: 15px; margin-bottom: 40px; justify-content: center; }
         .square-box { width: 95px; height: 95px; border: 1px solid #d4af37; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; color: #000; }
         
-        /* ХОЛЛ: ГОЛОГРАММА */
-        .hologram-container {
-            border: 1px solid rgba(212, 175, 55, 0.3); padding: 40px;
-            background: rgba(212, 175, 55, 0.03); backdrop-filter: blur(15px);
-            box-shadow: 0 0 50px rgba(212, 175, 55, 0.1);
-        }
-        .user-photo-hall { width: 200px; height: 200px; object-fit: cover; border: 1px solid #d4af37; margin-bottom: 20px; filter: brightness(1.1) sepia(0.3); }
-        .id-text-hall { font-size: 24px; letter-spacing: 8px; font-family: 'Courier New', monospace; }
-
         /* КНОПКИ */
-        .btn-gold { width: 180px; height: 45px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 11px; letter-spacing: 2px; cursor: pointer; transition: 0.3s; }
-        #btn-to-hall { visibility: hidden; background: rgba(212, 175, 55, 0.1); box-shadow: 0 0 15px rgba(212, 175, 55, 0.2); }
+        .btn-gold { width: 180px; height: 45px; background: transparent; border: 1px solid #d4af37; color: #d4af37; text-transform: uppercase; font-size: 11px; letter-spacing: 2px; cursor: pointer; transition: 0.4s; }
+        
+        #btn-to-hall { 
+            visibility: hidden; 
+            background: rgba(212, 175, 55, 0.05); 
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2); 
+        }
+        #btn-to-hall:hover { background: rgba(212, 175, 55, 0.15); box-shadow: 0 0 25px rgba(212, 175, 55, 0.4); }
 
-        .ver-tag { position: absolute; bottom: 15px; width: 100%; font-size: 10px; opacity: 0.3; letter-spacing: 2px; }
+        .ver-tag { position: absolute; bottom: 10px; width: 100%; font-size: 10px; opacity: 0.2; letter-spacing: 1px; }
     </style>
 </head>
 <body>
-
     <audio id="door-snd"><source src="door_open.mp3" type="audio/mpeg"></audio>
-    <audio id="bg-ambient" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
+    <audio id="club-bg-snd" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
 
-    <div id="screen-door" class="block active">
-        <div style="letter-spacing:10px; margin-bottom:40px; opacity:0.8;">GY-GY PRIVATE</div>
-        <div onclick="openClub()" style="cursor:pointer;">
-            <img src="door_1.jpg" style="width:70vw; max-width:300px; filter: brightness(0.7);">
+    <div id="block-entrance" class="block active">
+        <div style="letter-spacing:12px; margin-bottom:30px; opacity:0.7; font-size:14px;">GY-GY PRIVATE</div>
+        <div class="door-wrapper" onclick="handleDoor()">
+            <img src="door_1.jpg" class="door-img" onerror="this.src='https://via.placeholder.com/300x500?text=DOOR'">
         </div>
-        <div class="ver-tag">v4.3 | ACCESS</div>
+        <div class="ver-tag">v3.0.5.22 | ENTRANCE</div>
     </div>
 
-    <div id="screen-welcome" class="block">
-        <div class="charlie-frame"><img src="charlie.png"></div>
-        <h1 style="font-size: 48px; letter-spacing: 12px; font-weight: normal; margin: 0 0 30px 0;">WELCOME</h1>
-        <button class="btn-gold" style="width:240px; height: 60px;" onclick="showReg()">PROCEED</button>
-        <div class="ver-tag">v4.3 | CHARLIE</div>
+    <div id="block-welcome" class="block">
+        <div class="charlie-container"><img src="charlie.png" onerror="this.src='https://via.placeholder.com/250?text=CHARLIE'"></div>
+        <h1 id="t-welcome">WELCOME</h1>
+        <button class="btn-gold" style="width:240px; height: 60px; font-size: 14px;" onclick="switchTo('block-identity')">PROCEED</button>
     </div>
 
-    <div id="screen-reg" class="block">
+    <div id="block-identity" class="block">
         <div id="quote-reg">«В каждой шутке есть доля виски...»</div>
+        
         <div class="setup-grid">
             <div class="square-box" style="flex-direction:column; font-size:10px;">
-                <span style="opacity:0.5; font-size:8px;">ID TRACE</span>
-                <div id="id-val" style="font-weight:bold; margin-top:5px;">#0042-XXXX</div>
+                <span style="opacity:0.5; font-size:8px; margin-bottom:5px;">ID TRACE</span>
+                <div id="id-display" style="font-weight:bold;">#0042-XXXX</div>
             </div>
             <div id="qrcode" class="square-box"></div>
-            <div class="square-box" style="cursor:pointer;" onclick="document.getElementById('file-input').click()">
-                <span id="ph-label" style="font-size:10px; font-weight:bold;">PHOTO</span>
-                <img id="ph-preview" style="display:none; width:100%; height:100%; object-fit:cover;">
+            <div class="square-box" style="cursor:pointer;" onclick="document.getElementById('f').click()">
+                <span id="t-ph" style="font-size:10px; font-weight:bold;">PHOTO</span>
+                <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
             </div>
         </div>
-        <div style="display:flex; gap: 20px;">
-            <button id="btn-save" class="btn-gold" onclick="saveGuest()">СОХРАНИТЬ</button>
-            <button id="btn-to-hall" class="btn-gold" onclick="goToHall()">ВХОД</button>
-        </div>
-        <input type="file" id="file-input" style="display:none" onchange="handlePhoto(this)">
-        <div class="ver-tag">v4.3 | TERMINAL</div>
-    </div>
 
-    <div id="screen-hall" class="block">
-        <div class="hologram-container">
-            <img id="hall-img" class="user-photo-hall" src="" style="display:none;">
-            <div id="hall-id" class="id-text-hall">#0000-0000</div>
+        <div style="display:flex; gap: 20px;">
+            <button id="btn-save" class="btn-gold" onclick="save()">СОХРАНИТЬ</button>
+            <button id="btn-to-hall" class="btn-gold" onclick="location.href='hall.html'">ВХОД</button>
         </div>
-        <h2 style="letter-spacing: 20px; font-weight: normal; margin-top: 40px; opacity: 0.8;">HALL</h2>
-        <div class="ver-tag">v4.3 | INTERNAL</div>
+        <input type="file" id="f" style="display:none" onchange="preview(this)">
+        <div class="ver-tag">v3.0.5.22 | REGISTRATION</div>
     </div>
 
     <script src="navigation.js"></script>
     <script>
-        const myID = `#0042-${Math.floor(1000 + Math.random() * 9000)}`;
-        const snd = document.getElementById('bg-ambient');
+        const fullID = `#0042-${Math.floor(1000 + Math.random() * 9000)}`;
 
-        function openClub() {
+        function handleDoor() {
             document.getElementById('door-snd').play().catch(()=>{});
-            navTo('screen-welcome');
+            const w = document.querySelector('.door-wrapper');
+            w.style.transform = "scale(5)"; w.style.opacity = "0";
+            setTimeout(() => switchTo('block-welcome'), 1000);
         }
 
-        function handlePhoto(input) {
+        function preview(input) {
             const r = new FileReader();
-            r.onload = (e) => {
+            r.onload = (e) => { 
                 const data = e.target.result;
-                document.getElementById('ph-preview').src = data;
-                document.getElementById('ph-preview').style.display = "block";
-                document.getElementById('ph-label').style.display = "none";
-                document.getElementById('hall-img').src = data;
-                document.getElementById('hall-img').style.display = "block";
+                document.getElementById('pp').src = data;
+                document.getElementById('pp').style.display = "block";
+                document.getElementById('t-ph').style.display = "none";
+                localStorage.setItem('trace_photo', data); 
             };
             r.readAsDataURL(input.files[0]);
         }
 
-        function saveGuest() {
-            document.getElementById('btn-save').style.opacity = '0.3';
-            document.getElementById('btn-save').innerText = 'ГОТОВО';
-            document.getElementById('btn-to-hall').style.visibility = 'visible';
-            document.getElementById('hall-id').innerText = myID;
+        function save() { 
+            localStorage.setItem('trace_id', fullID); 
+            const bS = document.getElementById('btn-save');
+            const bH = document.getElementById('btn-to-hall');
+            bS.style.opacity = '0.3'; bS.innerText = 'ГОТОВО'; bS.style.pointerEvents = 'none';
+            bH.style.visibility = 'visible';
         }
 
-        function showReg() {
-            navTo('screen-reg');
-            document.getElementById('id-val').innerText = myID;
-            const q = document.getElementById("qrcode");
-            q.innerHTML = "";
-            new QRCode(q, { text: myID, width: 95, height: 95 });
-            snd.volume = 0.1;
-            snd.play().catch(()=>{});
-        }
-
-        function goToHall() {
-            snd.volume = 0.5; // Усиливаем звук до Уровня 2
-            navTo('screen-hall');
-        }
-
-        function navTo(id) {
+        function switchTo(id) {
             document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
             document.getElementById(id).classList.add('active');
+            if(id === 'block-identity') {
+                document.getElementById('id-display').innerText = fullID;
+                new QRCode(document.getElementById("qrcode"), { text: fullID, width: 95, height: 95 });
+                const bg = document.getElementById('club-bg-snd');
+                bg.volume = 0.1; bg.play().catch(()=>{});
+            }
         }
     </script>
 </body>
