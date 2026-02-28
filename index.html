@@ -3,20 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.19</title>
+    <title>GY-GY Club v4.3.21</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root {
             --gold: #d4af37;
             --hologram-cyan: #00E5FF;
-            --glass-bg: rgba(10, 15, 20, 0.7); /* Темный фон карточки */
+            --glass-bg: rgba(0, 5, 10, 0.85); /* Темный элитный пластик */
             --slogan-color: #5D4037;
         }
 
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Times New Roman', serif; overflow: hidden; }
 
+        /* ИЗОЛЯЦИЯ ЭКРАНОВ */
         .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: #000; z-index: 1; }
         .block.active { display: flex !important; z-index: 100; }
 
@@ -25,34 +26,47 @@
         .door-img { width: 70vw; max-width: 300px; display: block; border: 1px solid rgba(212, 175, 55, 0.3); }
 
         /* ЭКРАН 1: ЧАРЛИ */
-        .charlie-container { width: 200px; height: 200px; border-radius: 50%; border: 2px solid var(--gold); overflow: hidden; margin-bottom: 20px; background: #111; }
+        .charlie-container { width: 200px; height: 200px; border-radius: 50%; border: 2px solid var(--gold); overflow: hidden; margin-bottom: 25px; background: #111; }
         .charlie-container img { width: 100%; height: 100%; object-fit: cover; }
 
-        .btn-gold { width: 200px; height: 40px; background: transparent; border: 1px solid var(--gold); color: var(--gold); text-transform: uppercase; letter-spacing: 1px; cursor: pointer; margin-top: 10px; font-family: inherit; font-size: 12px; }
+        .btn-gold { width: 220px; height: 42px; background: transparent; border: 1px solid var(--gold); color: var(--gold); text-transform: uppercase; letter-spacing: 2px; cursor: pointer; margin-top: 10px; font-family: inherit; font-size: 12px; transition: 0.3s; }
+        .btn-gold:active { background: var(--gold); color: #000; }
+
+        /* ЭКРАН 2: ТЕРМИНАЛ РЕГИСТРАЦИИ */
+        .setup-grid { display: grid; grid-template-columns: repeat(3, 85px); gap: 12px; margin-bottom: 20px; }
+        .square-box { width: 85px; height: 85px; border: 1px solid var(--gold); background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; color: #000; position: relative; }
+        #qrcode img { width: 100% !important; height: 100% !important; padding: 4px; }
 
         /* ЭКРАН 3: ХОЛЛ */
         .viewport { width: 100vw; height: 100vh; background: url('hall_bg_jpg.jpg') no-repeat center center; background-size: cover; position: relative; }
-        .wall-phrase { 
-            position: absolute; top: 22%; left: 50%; transform: translateX(-50%); 
-            font-family: 'Playfair Display', serif; color: var(--slogan-color); 
-            font-size: clamp(18px, 4vw, 40px); text-transform: uppercase; text-align: center; 
-            width: 100%; font-weight: 900; letter-spacing: 5px; pointer-events: none;
-        }
-
-        /* КАРТОЧКА ГОСТЯ (КОМПАКТНАЯ И ТЕМНАЯ) */
-        .hologram-card { 
-            position: absolute; right: 5%; bottom: 8%; width: 240px; /* Уменьшил ширину */
-            background: var(--glass-bg); border: 1px solid rgba(0, 229, 255, 0.3); 
-            backdrop-filter: blur(8px); padding: 12px; color: var(--hologram-cyan); 
-            font-family: 'Share Tech Mono', monospace; border-radius: 10px; text-align: center;
-        }
-        .card-row { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
-        .hall-photo, .hall-qr { width: 100px; height: 100px; border: 1px solid var(--hologram-cyan); background: #000; object-fit: cover; }
-        .hall-qr { background: #fff; padding: 4px; }
-        .hall-id { font-size: 13px; margin: 8px 0; border-top: 1px solid rgba(0,229,255,0.2); padding-top: 8px; }
         
-        /* Маленькие кнопки в карточке */
-        .btn-mini { width: 100%; height: 32px; font-size: 10px; margin-top: 5px; border: 1px solid var(--hologram-cyan); color: var(--hologram-cyan); background: transparent; cursor: pointer; text-transform: uppercase; }
+        /* ГОЛОГРАФИЧЕСКАЯ ВЫВЕСКА */
+        .hall-sign-holo { 
+            position: absolute; top: 15%; left: 50%; transform: translateX(-50%); 
+            font-family: 'Playfair Display', serif; color: rgba(0, 229, 255, 0.8);
+            text-shadow: 0 0 15px var(--hologram-cyan), 0 0 30px rgba(0, 229, 255, 0.3);
+            font-size: clamp(22px, 5vw, 50px); text-transform: uppercase; text-align: center; 
+            width: 100%; font-weight: 900; letter-spacing: 12px; pointer-events: none;
+            animation: sign-glow 3s infinite alternate;
+        }
+        @keyframes sign-glow { from { opacity: 0.6; } to { opacity: 1; } }
+
+        /* КАРТОЧКА ГОСТЯ (ТЕМНЫЙ НЕОН) */
+        .hologram-card { 
+            position: absolute; right: 5%; bottom: 8%; width: 240px; 
+            background: var(--glass-bg); border: 1px solid rgba(0, 229, 255, 0.4); 
+            backdrop-filter: blur(12px); padding: 15px; color: var(--hologram-cyan); 
+            font-family: 'Share Tech Mono', monospace; border-radius: 12px; text-align: center;
+            transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1); z-index: 150;
+        }
+        .card-row { display: flex; justify-content: center; gap: 8px; margin-bottom: 10px; }
+        .hall-photo, .hall-qr { width: 95px; height: 95px; border: 1px solid var(--hologram-cyan); background: #000; object-fit: cover; }
+        .hall-qr { background: #fff; padding: 4px; }
+        .hall-id { font-size: 14px; margin: 10px 0; border-top: 1px solid rgba(0,229,255,0.2); padding-top: 8px; font-weight: bold; }
+        
+        .btn-mini { width: 100%; height: 35px; font-size: 10px; margin-top: 6px; border: 1px solid var(--hologram-cyan); color: var(--hologram-cyan); background: transparent; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
+        .btn-mini:active { background: var(--hologram-cyan); color: #000; }
+        .card-hidden { transform: translateY(120%) scale(0.7); opacity: 0; pointer-events: none; }
     </style>
 </head>
 <body>
@@ -61,28 +75,26 @@
     <audio id="bar-ambient" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active">
-        <div style="letter-spacing:10px; margin-bottom:40px; opacity:0.6; font-size: 10px;">GY-GY PRIVATE CLUB</div>
+        <div style="letter-spacing:8px; margin-bottom:40px; opacity:0.5; font-size: 10px;">GY-GY PRIVATE CLUB</div>
         <div class="door-wrapper" onclick="handleDoor()"><img src="door_1.jpg" class="door-img"></div>
     </div>
 
     <div id="block-welcome" class="block">
         <div class="charlie-container"><img src="charlie.png"></div>
-        <h1 id="welcome-text" style="font-size: 30px; letter-spacing: 10px; margin-bottom: 25px;">WELCOME</h1>
+        <h1 id="welcome-text" style="letter-spacing: 12px; margin-bottom: 25px;">WELCOME</h1>
         <button id="btn-proceed" class="btn-gold" onclick="switchTo('block-identity')">PROCEED</button>
     </div>
 
     <div id="block-identity" class="block">
-        <div style="display: grid; grid-template-columns: repeat(3, 85px); gap: 10px; margin-bottom: 20px;">
-            <div style="width: 85px; height: 85px; border: 1px solid var(--gold); background: #fff; display: flex; align-items: center; justify-content: center; color: #000;">
-                <div id="id-display" style="font-size: 9px; font-weight: bold;">#TRACE</div>
-            </div>
-            <div id="qrcode" style="width: 85px; height: 85px; border: 1px solid var(--gold); background: #fff;"></div>
-            <div style="width: 85px; height: 85px; border: 1px solid var(--gold); background: #fff; cursor:pointer;" onclick="document.getElementById('f').click()">
+        <div class="setup-grid">
+            <div class="square-box"><div id="id-display" style="font-size: 9px; font-weight: bold;">#TRACE</div></div>
+            <div id="qrcode" class="square-box"></div>
+            <div class="square-box" onclick="document.getElementById('f').click()" style="cursor:pointer;">
                 <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
-                <span id="t-ph" style="font-size: 10px; color: #000;">PHOTO</span>
+                <span id="t-ph" style="font-size: 10px;">PHOTO</span>
             </div>
         </div>
-        <div id="quote-reg" style="font-style: italic; font-size: 18px; margin: 20px 0; text-align: center; color: var(--gold); padding: 0 10px;">«В каждой шутке есть доля виски...»</div>
+        <div id="quote-reg" style="font-style: italic; font-size: 18px; margin: 25px 0; text-align: center; color: var(--gold); padding: 0 20px;"></div>
         <button id="btn-save" class="btn-gold" onclick="save()">СОХРАНИТЬ</button>
         <button id="btn-to-hall" class="btn-gold" style="visibility:hidden;" onclick="switchTo('block-hall')">ВХОД</button>
         <input type="file" id="f" style="display:none" onchange="preview(this)">
@@ -90,14 +102,16 @@
 
     <div id="block-hall" class="block" style="padding:0;">
         <div class="viewport">
-            <div id="wall-phrase" class="wall-phrase">ВСЕ БУДЕТ GY-GY</div>
-            <div class="hologram-card" id="gate">
+            <div class="hall-sign-holo">ВСЕ БУДЕТ GY-GY</div>
+            
+            <div class="hologram-card" id="user-pass">
+                <div style="font-size: 8px; opacity: 0.5; margin-bottom: 8px; letter-spacing: 1px;">MEMBER IDENTIFICATION</div>
                 <div class="card-row">
                     <img id="hall-user-photo" class="hall-photo" src="">
                     <div id="hall-qr-display" class="hall-qr"></div>
                 </div>
                 <div id="u-id" class="hall-id">#0000-0000</div>
-                <button id="btn-confirm-hall" class="btn-mini" onclick="document.getElementById('gate').style.opacity='0'">ПОДТВЕРДИТЬ</button>
+                <button id="btn-confirm-hall" class="btn-mini" onclick="confirmPass()">ПОДТВЕРДИТЬ</button>
                 <button id="btn-nav-hall" class="btn-mini" style="border-style: dashed; margin-top: 8px;">НАВИГАЦИЯ</button>
             </div>
         </div>
@@ -108,11 +122,11 @@
         const barAmbient = document.getElementById('bar-ambient');
 
         const lingo = {
-            ru: { welcome: "ДОБРО ПОЖАЛОВАТЬ", quote: "«В каждой шутке есть доля виски...»", save: "СОХРАНИТЬ", enter: "ВХОД", nav: "НАВИГАЦИЯ", confirm: "ПОДТВЕРДИТЬ", proceed: "ПРОДОЛЖИТЬ" },
-            en: { welcome: "WELCOME", quote: "«Every joke has a share of whiskey...»", save: "SAVE", enter: "ENTER", nav: "NAVIGATION", confirm: "CONFIRM", proceed: "PROCEED" }
+            ru: { welcome: "ДОБРО ПОЖАЛОВАТЬ", quote: "«В каждой шутке есть доля виски...»", save: "СОХРАНИТЬ", enter: "ВХОД", nav: "НАВИГАЦИЯ", confirm: "ПОДТВЕРДИТЬ", proceed: "ПРОДОЛЖИТЬ", photo: "ФОТО" },
+            en: { welcome: "WELCOME", quote: "«Every joke has a share of whiskey...»", save: "SAVE", enter: "ENTER", nav: "NAVIGATION", confirm: "CONFIRM", proceed: "PROCEED", photo: "PHOTO" }
         };
 
-        function applyLingo() {
+        function applyLanguage() {
             const lang = navigator.language.startsWith('ru') ? 'ru' : 'en';
             const s = lingo[lang];
             document.getElementById('welcome-text').innerText = s.welcome;
@@ -122,6 +136,7 @@
             document.getElementById('btn-nav-hall').innerText = s.nav;
             document.getElementById('btn-confirm-hall').innerText = s.confirm;
             document.getElementById('btn-proceed').innerText = s.proceed;
+            document.getElementById('t-ph').innerText = s.photo;
         }
 
         function handleDoor() {
@@ -132,7 +147,7 @@
         }
 
         function switchTo(id) {
-            applyLingo();
+            applyLanguage();
             document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
             document.getElementById(id).classList.add('active');
 
@@ -142,7 +157,7 @@
                 barAmbient.play().catch(()=>{});
                 let vol = 0;
                 let interval = setInterval(() => {
-                    if (vol < 0.5) { vol += 0.05; barAmbient.volume = vol; }
+                    if (vol < 0.45) { vol += 0.05; barAmbient.volume = vol; }
                     else { clearInterval(interval); }
                 }, 100);
 
@@ -171,7 +186,11 @@
             if(photoSrc) document.getElementById('hall-user-photo').src = photoSrc;
         }
 
-        window.onload = () => { applyLingo(); };
+        function confirmPass() {
+            document.getElementById('user-pass').classList.add('card-hidden');
+        }
+
+        window.onload = () => { applyLanguage(); };
     </script>
 </body>
 </html>
