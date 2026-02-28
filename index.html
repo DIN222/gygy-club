@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.34</title>
+    <title>GY-GY Club v4.3.35</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
@@ -11,10 +11,17 @@
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; color: var(--gold); font-family: serif; overflow: hidden; }
         
-        /* ШТОРЫ (ПЕРЕХОД) */
-        .curtain { position: fixed; top: 0; width: 50%; height: 100%; background: #050505; z-index: 10000; transition: transform 0.8s cubic-bezier(0.7, 0, 0.3, 1); border: 1px solid rgba(212, 175, 55, 0.1); }
-        .curtain.left { left: 0; transform: translateX(-100%); }
-        .curtain.right { right: 0; transform: translateX(100%); }
+        /* ШТОРЫ В ГОРОШЕК (СТИЛЬ ЧАРЛИ) */
+        .curtain { 
+            position: fixed; top: 0; width: 50.5%; height: 100%; 
+            background-color: #050505;
+            background-image: radial-gradient(#d40000 15%, transparent 16%);
+            background-size: 40px 40px;
+            z-index: 10000; transition: transform 0.9s cubic-bezier(0.7, 0, 0.3, 1); 
+            box-shadow: 0 0 50px rgba(0,0,0,1);
+        }
+        .curtain.left { left: 0; transform: translateX(-100%); border-right: 2px solid var(--gold); }
+        .curtain.right { right: 0; transform: translateX(100%); border-left: 2px solid var(--gold); }
         body.curtain-closed .curtain.left { transform: translateX(0); }
         body.curtain-closed .curtain.right { transform: translateX(0); }
 
@@ -37,20 +44,21 @@
         @keyframes neon-pulse { from { opacity: 0.6; } to { opacity: 1; } }
         .viewport { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: url('hall_bg_jpg.jpg') no-repeat center center; background-size: cover; z-index: -1; }
 
-        /* БАР И ЧАРЛИ */
+        /* БАР И КНОПКИ-ТАРЕЛКИ */
         #block-bar { background: #0a0a0a; }
-        .bar-counter { position: relative; width: 100%; max-width: 500px; height: 400px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .charlie-bartender { width: 220px; filter: drop-shadow(0 0 15px var(--gold)); animation: charlie-sway 3s infinite ease-in-out; }
-        @keyframes charlie-sway { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-5px) rotate(1deg); } }
+        .bar-counter { position: relative; width: 100%; max-width: 500px; height: 450px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; }
+        .charlie-bartender { width: 260px; filter: drop-shadow(0 0 20px var(--gold)); margin-bottom: -20px; }
         
-        .bar-options { display: flex; justify-content: space-around; width: 100%; margin-top: -40px; z-index: 10; }
+        .bar-options { display: flex; justify-content: center; gap: 20px; width: 100%; padding-bottom: 40px; }
         .plate-btn { 
-            width: 130px; height: 130px; background: url('plate_gold.png') no-repeat center; background-size: contain;
+            width: 120px; height: 120px; background: rgba(212, 175, 55, 0.1); 
+            border: 2px solid var(--gold); border-radius: 50%;
             display: flex; align-items: center; justify-content: center; text-align: center;
-            font-family: 'Share Tech Mono', monospace; font-size: 10px; color: #000; font-weight: bold;
-            cursor: pointer; transition: transform 0.3s; padding: 20px; text-transform: uppercase;
+            font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--gold);
+            cursor: pointer; transition: 0.3s; padding: 10px; text-transform: uppercase;
+            box-shadow: inset 0 0 15px rgba(212, 175, 55, 0.2), 0 5px 15px rgba(0,0,0,0.5);
         }
-        .plate-btn:hover { transform: scale(1.1) rotate(5deg); }
+        .plate-btn:hover { transform: translateY(-10px); background: var(--gold); color: #000; }
 
         /* КАРТОЧКА */
         .hologram-card { position: absolute; right: 5%; bottom: 8%; width: 240px; background: var(--glass-bg); border: 1px solid var(--hologram-cyan); backdrop-filter: blur(15px); padding: 15px; border-radius: 12px; text-align: center; }
@@ -89,9 +97,9 @@
         <div class="setup-grid">
             <div class="square" id="id-display" style="font-size:9px; font-weight:bold;">#TRACE</div>
             <div class="square" id="qrcode"></div>
-            <div class="square" onclick="document.getElementById('f').click()" style="cursor:pointer;"><img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;"><span id="t-ph">PHOTO</span></div>
+            <div class="square" onclick="document.getElementById('f').click()" style="cursor:pointer;"><img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;"><span id="t-ph">ФОТО</span></div>
         </div>
-        <div id="quote-reg" style="font-style: italic; font-size: 18px; margin: 20px 0; text-align: center; padding: 0 20px;"></div>
+        <div id="quote-reg" style="font-style: italic; font-size: 18px; margin: 20px 0; text-align: center; color: var(--gold); padding: 0 20px;"></div>
         <button id="btn-save" class="btn-gold" onclick="save()">СОХРАНИТЬ</button>
         <button id="btn-to-hall" class="btn-gold" style="visibility:hidden;" onclick="transitionTo('block-hall')">ВХОД</button>
         <input type="file" id="f" style="display:none" onchange="preview(this)">
@@ -111,14 +119,15 @@
     </div>
 
     <div id="block-bar" class="block">
+        <div id="bar-q1" style="color:#fff; margin-bottom:20px; text-align:center; font-family: 'Playfair Display'; font-size:22px;">...</div>
         <div class="bar-counter">
-            <img src="charlie_bartender.png" class="charlie-bartender"> <div id="bar-q1" style="color:#fff; margin-bottom:20px; text-align:center; font-family: 'Playfair Display'; font-size:18px; width:80%;">...</div>
+            <img src="charlie_bartender.png" class="charlie-bartender">
             <div class="bar-options">
                 <div class="plate-btn" id="btn-table" onclick="alert('Table')">ЗА СТОЛИК</div>
                 <div class="plate-btn" id="btn-ai" onclick="alert('AI')">ИНТЕРЕСУЕТ ИИ</div>
             </div>
         </div>
-        <button class="btn-mini" style="width:100px; margin-top:30px;" onclick="transitionTo('block-hall')">← EXIT</button>
+        <button class="btn-mini" style="width:100px; margin-top:20px; border-color:var(--gold); color:var(--gold);" onclick="transitionTo('block-hall')">← EXIT</button>
     </div>
 
     <script>
@@ -131,7 +140,7 @@
 
         function applyLanguage() {
             const bLang = (navigator.language || 'en').toLowerCase().split('-')[0];
-            document.getElementById('debug-lang').innerText = "System: " + navigator.language + " | Active: " + bLang;
+            document.getElementById('debug-lang').innerText = "Sys: " + navigator.language + " | Active: " + bLang;
             let lang = lingo[bLang] ? bLang : 'en';
             const s = lingo[lang];
             
@@ -141,12 +150,12 @@
             setT('bar-q1', s.barQ1); setT('btn-table', s.barTable); setT('btn-ai', s.barAI);
         }
 
-        // ПЕРЕХОД СО ШТОРКАМИ
         function transitionTo(id) {
             document.body.classList.add('curtain-closed');
             setTimeout(() => {
                 switchTo(id);
-                document.body.classList.remove('curtain-closed');
+                // Маленькая задержка перед открытием, чтобы сцена успела отрисоваться
+                setTimeout(() => document.body.classList.remove('curtain-closed'), 100);
             }, 850);
         }
 
