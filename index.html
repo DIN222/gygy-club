@@ -3,34 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.25</title>
+    <title>GY-GY Club v4.3.28</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
-        :root { --gold: #d4af37; --hologram-cyan: #00E5FF; --hologram-pink: #FF00FF; --glass-bg: rgba(0, 5, 10, 0.9); }
+        :root { --gold: #d4af37; --hologram-cyan: #00E5FF; --hologram-pink: #FF00FF; --glass-bg: rgba(0, 5, 10, 0.95); }
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Times New Roman', serif; overflow: hidden; }
         
         .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; z-index: 10; }
         .block.active { display: flex !important; }
         
-        #block-entrance, #block-welcome, #block-identity { background: #000; }
         #block-hall { background: transparent !important; }
+        .viewport { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: url('hall_bg_jpg.jpg') no-repeat center center; background-size: cover; z-index: -1; }
 
         .hall-sign-holo { 
             position: absolute; top: 15%; left: 50%; transform: translateX(-50%); 
             font-family: 'Playfair Display', serif; color: #FFF;
             text-shadow: 0 0 10px var(--hologram-pink), 0 0 20px var(--hologram-pink);
-            font-size: clamp(18px, 4vw, 35px); text-transform: uppercase; text-align: center; 
-            width: 100%; font-weight: 900; letter-spacing: 10px; pointer-events: none;
+            font-size: clamp(16px, 4vw, 30px); text-transform: uppercase; text-align: center; 
+            width: 100%; font-weight: 900; letter-spacing: 8px; pointer-events: none;
             animation: neon-pulse 2s infinite alternate; z-index: 5;
         }
         @keyframes neon-pulse { from { opacity: 0.7; } to { opacity: 1; } }
-        .viewport { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: url('hall_bg_jpg.jpg') no-repeat center center; background-size: cover; z-index: -1; }
-
-        .setup-grid { display: grid; grid-template-columns: repeat(3, 85px); gap: 10px; margin-bottom: 20px; }
-        .square { width: 85px; height: 85px; background: #fff; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; overflow: hidden; color: #000; text-align: center; font-family: 'Share Tech Mono', monospace; }
-        #qrcode img { width: 100% !important; height: 100% !important; padding: 5px; }
 
         .hologram-card { 
             position: absolute; right: 5%; bottom: 8%; width: 240px; 
@@ -38,16 +33,17 @@
             backdrop-filter: blur(15px); padding: 15px; color: var(--hologram-cyan); 
             font-family: 'Share Tech Mono', monospace; border-radius: 12px; text-align: center;
         }
-        .card-row { display: flex; justify-content: center; gap: 8px; margin-bottom: 10px; }
-        .hall-photo, .hall-qr { width: 90px; height: 90px; border: 1px solid var(--hologram-cyan); background: #000; object-fit: cover; }
-        .hall-qr { background: #fff; padding: 4px; display: flex; align-items: center; justify-content: center; }
+        .hall-photo, .hall-qr { width: 90px; height: 90px; border: 1px solid var(--hologram-cyan); background: #fff; object-fit: cover; }
         
+        .setup-grid { display: grid; grid-template-columns: repeat(3, 85px); gap: 10px; margin-bottom: 20px; }
+        .square { width: 85px; height: 85px; background: #fff; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; overflow: hidden; color: #000; font-family: 'Share Tech Mono', monospace; }
+
+        .btn-gold { width: 220px; height: 42px; background: transparent; border: 1px solid var(--gold); color: var(--gold); text-transform: uppercase; letter-spacing: 2px; cursor: pointer; font-size: 12px; margin-top: 10px; }
         .btn-mini { width: 100%; height: 35px; font-size: 10px; margin-top: 6px; border: 1px solid var(--hologram-cyan); color: var(--hologram-cyan); background: transparent; cursor: pointer; text-transform: uppercase; }
         .btn-mini.disabled { opacity: 0.2; pointer-events: none; border-style: dotted; }
-        
-        .door-wrapper { cursor: pointer; transition: 1.5s; }
-        .door-img { width: 70vw; max-width: 300px; display: block; border: 1px solid rgba(212, 175, 55, 0.3); }
-        .btn-gold { width: 220px; height: 42px; background: transparent; border: 1px solid var(--gold); color: var(--gold); text-transform: uppercase; letter-spacing: 2px; cursor: pointer; font-size: 12px; margin-top: 10px; }
+
+        #nav-submenu { display: none; position: absolute; bottom: 110%; left: 0; width: 100%; background: var(--glass-bg); border: 1px solid var(--hologram-cyan); border-radius: 8px; flex-direction: column; z-index: 200; }
+        .nav-item { padding: 12px; color: var(--hologram-cyan); font-size: 11px; text-transform: uppercase; border-bottom: 1px solid rgba(0, 229, 255, 0.2); cursor: pointer; }
     </style>
 </head>
 <body>
@@ -57,13 +53,11 @@
 
     <div id="block-entrance" class="block active">
         <div style="letter-spacing:8px; margin-bottom:40px; opacity:0.5; font-size: 10px;">GY-GY PRIVATE CLUB</div>
-        <div class="door-wrapper" onclick="handleDoor()"><img src="door_1.jpg" class="door-img"></div>
+        <div class="door-wrapper" onclick="handleDoor()" style="cursor:pointer;"><img src="door_1.jpg" style="width:70vw; max-width:300px;"></div>
     </div>
 
     <div id="block-welcome" class="block">
-        <div style="width: 180px; height: 180px; border-radius: 50%; border: 2px solid var(--gold); overflow: hidden; margin-bottom: 25px;">
-            <img src="charlie.png" style="width:100%; height:100%; object-fit:cover;">
-        </div>
+        <div style="width: 180px; height: 180px; border-radius: 50%; border: 2px solid var(--gold); overflow: hidden; margin-bottom: 25px;"><img src="charlie.png" style="width:100%; height:100%; object-fit:cover;"></div>
         <h1 id="welcome-text">WELCOME</h1>
         <button id="btn-proceed" class="btn-gold" onclick="switchTo('block-identity')">PROCEED</button>
     </div>
@@ -89,11 +83,29 @@
         <div class="hologram-card">
             <div class="card-row">
                 <img id="hall-user-photo" class="hall-photo" src="">
-                <div id="hall-qr-display" class="hall-qr"></div>
+                <div id="hall-qr-display" class="hall-qr" style="background:#fff; padding:4px;"></div>
             </div>
-            <div id="u-id" style="font-size: 13px; margin: 10px 0; font-weight: bold; border-top: 1px solid rgba(0,255,255,0.1); padding-top: 8px;">#0000-0000</div>
+            <div id="u-id" style="font-size: 13px; margin: 10px 0; font-weight: bold;">#0000-0000</div>
             <button id="btn-confirm-hall" class="btn-mini" onclick="confirmAccess()">ПОДТВЕРДИТЬ</button>
-            <button id="btn-nav-hall" class="btn-mini disabled">НАВИГАЦИЯ</button>
+            <div style="position:relative; width: 100%;">
+                <div id="nav-submenu">
+                    <div class="nav-item" id="nav-bar-btn" onclick="switchTo('block-bar')">🍸 БАР</div>
+                </div>
+                <button id="btn-nav-hall" class="btn-mini disabled" onclick="toggleNav()">НАВИГАЦИЯ</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="block-bar" class="block" style="background: #050505;">
+        <div id="bar-step-1" style="text-align:center;">
+            <div class="bar-question" id="bar-q1" style="color:#fff; margin-bottom:20px; font-size:18px;">...</div>
+            <button class="btn-gold" id="btn-table" onclick="alert('Table...')">ЗА СТОЛИК</button>
+            <button class="btn-gold" id="btn-ai" onclick="barStep(2)">ИНТЕРЕСУЕТ ИИ</button>
+        </div>
+        <div id="bar-step-2" style="display:none; text-align:center;">
+            <div class="bar-question" id="bar-q2" style="color:#fff; margin-bottom:20px; font-size:18px;">...</div>
+            <button class="btn-gold" id="btn-one" onclick="alert('Solo...')">ОДИН</button>
+            <button class="btn-gold" id="btn-more" onclick="alert('Show...')">БОЛЬШЕ</button>
         </div>
     </div>
 
@@ -102,52 +114,50 @@
         let userData = { id: fullID, photo: '', qr: '' };
 
         const lingo = {
-            ru: { slogan: "ВСЕ БУДЕТ GY-GY", welcome: "ДОБРО ПОЖАЛОВАТЬ", quote: "«В каждой шутке есть доля виски...»", save: "СОХРАНИТЬ", enter: "ВХОД", nav: "НАВИГАЦИЯ", confirm: "ПОДТВЕРДИТЬ", proceed: "ПРОДОЛЖИТЬ", photo: "ФОТО" },
-            en: { slogan: "EVERYTHING WILL BE GY-GY", welcome: "WELCOME", quote: "«Every joke has a share of whiskey...»", save: "SAVE", enter: "ENTER", nav: "NAVIGATION", confirm: "CONFIRM", proceed: "PROCEED", photo: "PHOTO" }
+            ru: { slogan: "ВСЕ БУДЕТ GY-GY", welcome: "ДОБРО ПОЖАЛОВАТЬ", quote: "«В каждой шутке есть доля виски...»", save: "СОХРАНИТЬ", enter: "ВХОД", nav: "НАВИГАЦИЯ", confirm: "ПОДТВЕРДИТЬ", proceed: "ПРОДОЛЖИТЬ", photo: "ФОТО", barQ1: "Желаете пройти за столик или интересуетесь ИИ?", barTable: "ЗА СТОЛИК", barAI: "ИНТЕРЕСУЕТ ИИ", barQ2: "Вам один, или больше?", barOne: "ОДИН", barMore: "БОЛЬШЕ" },
+            en: { slogan: "EVERYTHING WILL BE GY-GY", welcome: "WELCOME", quote: "«Every joke has a share of whiskey...»", save: "SAVE", enter: "ENTER", nav: "NAVIGATION", confirm: "CONFIRM", proceed: "PROCEED", photo: "PHOTO", barQ1: "Table or AI?", barTable: "TABLE", barAI: "INTERESTED IN AI", barQ2: "One or more?", barOne: "ONE", barMore: "MORE" },
+            fr: { slogan: "TOUT SERA GY-GY", welcome: "BIENVENUE", quote: "«Dans chaque blague, il y a une part de whisky...»", save: "ENREGISTRER", enter: "ENTRER", nav: "NAVIGATION", confirm: "CONFIRMER", proceed: "CONTINUER", photo: "PHOTO", barQ1: "Une table ou l'IA?", barTable: "UNE TABLE", barAI: "L'IA M'INTÉRESSE", barQ2: "Seul ou plus?", barOne: "SEUL", barMore: "PLUS" }
         };
 
+        function getAutoLang() {
+            const browserLang = (navigator.language || 'en').toLowerCase();
+            if (browserLang.includes('ru')) return 'ru';
+            if (browserLang.includes('fr')) return 'fr';
+            return 'en';
+        }
+
         function applyLanguage() {
-            const sysLang = (navigator.language || 'ru').toLowerCase();
-            const offset = new Date().getTimezoneOffset() / -60;
-            const lang = (sysLang.includes('ru') || (offset >= 2 && offset <= 12)) ? 'ru' : 'en';
-            const s = lingo[lang];
-            
+            const currentLang = getAutoLang();
+            const s = lingo[currentLang];
             const setT = (id, t) => { if(document.getElementById(id)) document.getElementById(id).innerText = t; };
             setT('main-slogan', s.slogan); setT('welcome-text', s.welcome); setT('quote-reg', s.quote);
             setT('btn-save', s.save); setT('btn-to-hall', s.enter); setT('btn-nav-hall', s.nav);
             setT('btn-confirm-hall', s.confirm); setT('btn-proceed', s.proceed); setT('t-ph', s.photo);
+            setT('bar-q1', s.barQ1); setT('btn-table', s.barTable); setT('btn-ai', s.barAI);
+            setT('bar-q2', s.barQ2); setT('btn-one', s.barOne); setT('btn-more', s.barMore);
         }
 
         function handleDoor() {
             document.getElementById('door-snd').play().catch(()=>{});
-            const w = document.querySelector('.door-wrapper');
-            w.style.transform = "scale(8)"; w.style.opacity = "0";
-            setTimeout(() => switchTo('block-welcome'), 1200);
+            document.querySelector('.door-wrapper').style.transform = "scale(10)";
+            document.querySelector('.door-wrapper').style.opacity = "0";
+            setTimeout(() => switchTo('block-welcome'), 1000);
         }
 
         function switchTo(id) {
             applyLanguage();
             document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            
             if(id === 'block-identity') {
-                const ambient = document.getElementById('bar-ambient');
-                ambient.volume = 0.5;
-                ambient.play().catch(() => {
-                    window.addEventListener('click', () => { ambient.play(); }, {once: true});
-                });
+                document.getElementById('bar-ambient').play().catch(()=>{});
                 document.getElementById('id-display').innerText = userData.id;
-                const q = document.getElementById("qrcode");
-                if(!q.innerHTML) {
-                   new QRCode(q, { text: "GY-ID:" + userData.id, width: 85, height: 85 });
-                   // Костыль для мобилок: ждем отрисовки QR и сохраняем его в userData
-                   setTimeout(() => { const img = q.querySelector('img'); if(img) userData.qr = img.src; }, 500);
-                }
+                if(!document.getElementById("qrcode").innerHTML) new QRCode(document.getElementById("qrcode"), { text: userData.id, width: 85, height: 85 });
             }
             if(id === 'block-hall') {
                 document.getElementById('u-id').innerText = userData.id;
-                if(userData.photo) document.getElementById('hall-user-photo').src = userData.photo;
-                if(userData.qr) document.getElementById('hall-qr-display').innerHTML = `<img src="${userData.qr}" style="width:100%">`;
+                document.getElementById('hall-user-photo').src = userData.photo;
+                const q = document.querySelector('#qrcode img');
+                if(q) document.getElementById('hall-qr-display').innerHTML = `<img src="${q.src}" style="width:100%">`;
             }
         }
 
@@ -157,28 +167,17 @@
                 document.getElementById('pp').src = e.target.result; 
                 document.getElementById('pp').style.display = "block"; 
                 document.getElementById('t-ph').style.display = "none";
-                userData.photo = e.target.result; // Сохраняем сразу в объект
+                userData.photo = e.target.result;
             };
             r.readAsDataURL(input.files[0]);
         }
 
-        function save() {
-            // Принудительно берем QR из картинки, если он там появился
-            const qrImg = document.querySelector('#qrcode img');
-            if(qrImg) userData.qr = qrImg.src;
-            
-            document.getElementById('btn-to-hall').style.visibility = 'visible';
-            // Визуальный фидбек для мобилки
-            document.getElementById('btn-save').style.background = "var(--gold)";
-            document.getElementById('btn-save').style.color = "#000";
-        }
+        function save() { document.getElementById('btn-to-hall').style.visibility = 'visible'; }
+        function confirmAccess() { document.getElementById('btn-confirm-hall').style.display = 'none'; document.getElementById('btn-nav-hall').classList.remove('disabled'); }
+        function toggleNav() { const m = document.getElementById('nav-submenu'); m.style.display = (m.style.display === 'flex') ? 'none' : 'flex'; }
+        function barStep(n) { document.getElementById('bar-step-1').style.display = n === 1 ? 'block' : 'none'; document.getElementById('bar-step-2').style.display = n === 2 ? 'block' : 'none'; }
 
-        function confirmAccess() {
-            document.getElementById('btn-confirm-hall').style.display = 'none';
-            document.getElementById('btn-nav-hall').classList.remove('disabled');
-        }
-
-        window.onload = () => { applyLanguage(); };
+        window.onload = applyLanguage;
     </script>
 </body>
 </html>
