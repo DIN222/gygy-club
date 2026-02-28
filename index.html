@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.33</title>
+    <title>GY-GY Club v4.3.34</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
@@ -11,24 +11,48 @@
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; color: var(--gold); font-family: serif; overflow: hidden; }
         
-        .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; z-index: 10; }
+        /* ШТОРЫ (ПЕРЕХОД) */
+        .curtain { position: fixed; top: 0; width: 50%; height: 100%; background: #050505; z-index: 10000; transition: transform 0.8s cubic-bezier(0.7, 0, 0.3, 1); border: 1px solid rgba(212, 175, 55, 0.1); }
+        .curtain.left { left: 0; transform: translateX(-100%); }
+        .curtain.right { right: 0; transform: translateX(100%); }
+        body.curtain-closed .curtain.left { transform: translateX(0); }
+        body.curtain-closed .curtain.right { transform: translateX(0); }
+
+        /* БЛОКИ */
+        .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
         .block.active { display: flex !important; }
-        #block-entrance { z-index: 9999; }
+        
+        /* ДВЕРЬ */
+        .door-wrapper { transition: transform 2.5s ease-in, opacity 2s ease-out; cursor: pointer; z-index: 100; }
+        .door-img { width: 70vw; max-width: 300px; border: 1px solid rgba(212, 175, 55, 0.3); }
 
-        .door-wrapper { position: relative; transition: transform 2.5s ease-in, opacity 2s ease-out; cursor: pointer; pointer-events: auto !important; }
-        .door-img { width: 70vw; max-width: 300px; border: 1px solid rgba(212, 175, 55, 0.3); pointer-events: none; }
-
-        /* ВОЗВРАЩАЕМ МАЛИНОВЫЙ НЕОН */
+        /* ХОЛЛ */
         .hall-sign-holo { 
             position: absolute; top: 15%; left: 50%; transform: translateX(-50%); 
             font-family: 'Playfair Display', serif; color: #FFF;
             text-shadow: 0 0 10px var(--hologram-pink), 0 0 20px var(--hologram-pink);
             font-size: clamp(16px, 4vw, 30px); text-transform: uppercase; text-align: center; 
-            width: 100%; font-weight: 900; letter-spacing: 8px; pointer-events: none;
-            animation: neon-pulse 2s infinite alternate; z-index: 5;
+            letter-spacing: 8px; animation: neon-pulse 2s infinite alternate; z-index: 5;
         }
         @keyframes neon-pulse { from { opacity: 0.6; } to { opacity: 1; } }
+        .viewport { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: url('hall_bg_jpg.jpg') no-repeat center center; background-size: cover; z-index: -1; }
 
+        /* БАР И ЧАРЛИ */
+        #block-bar { background: #0a0a0a; }
+        .bar-counter { position: relative; width: 100%; max-width: 500px; height: 400px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .charlie-bartender { width: 220px; filter: drop-shadow(0 0 15px var(--gold)); animation: charlie-sway 3s infinite ease-in-out; }
+        @keyframes charlie-sway { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-5px) rotate(1deg); } }
+        
+        .bar-options { display: flex; justify-content: space-around; width: 100%; margin-top: -40px; z-index: 10; }
+        .plate-btn { 
+            width: 130px; height: 130px; background: url('plate_gold.png') no-repeat center; background-size: contain;
+            display: flex; align-items: center; justify-content: center; text-align: center;
+            font-family: 'Share Tech Mono', monospace; font-size: 10px; color: #000; font-weight: bold;
+            cursor: pointer; transition: transform 0.3s; padding: 20px; text-transform: uppercase;
+        }
+        .plate-btn:hover { transform: scale(1.1) rotate(5deg); }
+
+        /* КАРТОЧКА */
         .hologram-card { position: absolute; right: 5%; bottom: 8%; width: 240px; background: var(--glass-bg); border: 1px solid var(--hologram-cyan); backdrop-filter: blur(15px); padding: 15px; border-radius: 12px; text-align: center; }
         .card-row { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
         .hall-photo, .hall-qr { width: 95px; height: 95px; background: #fff; border: 1px solid var(--hologram-cyan); object-fit: cover; }
@@ -38,48 +62,38 @@
 
         .btn-gold { width: 220px; height: 42px; background: transparent; border: 1px solid var(--gold); color: var(--gold); text-transform: uppercase; letter-spacing: 2px; cursor: pointer; margin-top: 10px; font-family: 'Share Tech Mono'; }
         .btn-mini { width: 100%; height: 35px; font-size: 10px; margin-top: 6px; border: 1px solid var(--hologram-cyan); color: var(--hologram-cyan); background: transparent; cursor: pointer; text-transform: uppercase; font-family: 'Share Tech Mono'; }
-        .btn-mini.disabled { opacity: 0.2; pointer-events: none; border-style: dotted; }
-
-        #nav-submenu { display: none; position: absolute; bottom: 110%; left: 0; width: 100%; background: var(--glass-bg); border: 1px solid var(--hologram-cyan); border-radius: 8px; flex-direction: column; }
-        .nav-item { padding: 12px; color: var(--hologram-cyan); font-size: 11px; text-transform: uppercase; border-bottom: 1px solid rgba(0, 229, 255, 0.2); cursor: pointer; font-family: 'Share Tech Mono'; }
         
-        .viewport { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: url('hall_bg_jpg.jpg') no-repeat center center; background-size: cover; z-index: -1; }
-        
-        /* ТЕХНИЧЕСКАЯ ИНФО О ЯЗЫКЕ */
-        #debug-lang { position: fixed; bottom: 5px; left: 5px; font-size: 8px; opacity: 0.3; font-family: monospace; color: #fff; pointer-events: none; }
+        #debug-lang { position: fixed; bottom: 5px; left: 5px; font-size: 8px; opacity: 0.3; color: #fff; pointer-events: none; z-index: 20000; }
     </style>
 </head>
 <body>
 
     <div id="debug-lang"></div>
+    <div class="curtain left"></div><div class="curtain right"></div>
+
     <audio id="door-snd"><source src="door_open.mp3" type="audio/mpeg"></audio>
     <audio id="bar-ambient" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active">
-        <div style="letter-spacing:8px; margin-bottom:40px; opacity:0.5; font-size: 10px; font-family: 'Share Tech Mono';">GY-GY PRIVATE CLUB</div>
-        <div class="door-wrapper" id="door-clicker" onclick="handleDoor()">
-            <img src="door_1.jpg" class="door-img">
-        </div>
+        <div style="letter-spacing:8px; margin-bottom:40px; opacity:0.5; font-size: 10px;">GY-GY PRIVATE CLUB</div>
+        <div class="door-wrapper" onclick="handleDoor()"><img src="door_1.jpg" class="door-img"></div>
     </div>
 
     <div id="block-welcome" class="block">
         <div style="width: 180px; height: 180px; border-radius: 50%; border: 2px solid var(--gold); overflow: hidden; margin-bottom: 25px;"><img src="charlie.png" style="width:100%; height:100%; object-fit:cover;"></div>
-        <h1 id="welcome-text" style="font-family: 'Playfair Display';">WELCOME</h1>
-        <button id="btn-proceed" class="btn-gold" onclick="switchTo('block-identity')">PROCEED</button>
+        <h1 id="welcome-text">WELCOME</h1>
+        <button id="btn-proceed" class="btn-gold" onclick="transitionTo('block-identity')">PROCEED</button>
     </div>
 
     <div id="block-identity" class="block">
         <div class="setup-grid">
             <div class="square" id="id-display" style="font-size:9px; font-weight:bold;">#TRACE</div>
             <div class="square" id="qrcode"></div>
-            <div class="square" onclick="document.getElementById('f').click()" style="cursor:pointer;">
-                <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
-                <span id="t-ph" style="font-size:10px;">PHOTO</span>
-            </div>
+            <div class="square" onclick="document.getElementById('f').click()" style="cursor:pointer;"><img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;"><span id="t-ph">PHOTO</span></div>
         </div>
-        <div id="quote-reg" style="font-style: italic; font-size: 18px; margin: 20px 0; text-align: center; color: var(--gold); padding: 0 20px;"></div>
+        <div id="quote-reg" style="font-style: italic; font-size: 18px; margin: 20px 0; text-align: center; padding: 0 20px;"></div>
         <button id="btn-save" class="btn-gold" onclick="save()">СОХРАНИТЬ</button>
-        <button id="btn-to-hall" class="btn-gold" style="visibility:hidden;" onclick="switchTo('block-hall')">ВХОД</button>
+        <button id="btn-to-hall" class="btn-gold" style="visibility:hidden;" onclick="transitionTo('block-hall')">ВХОД</button>
         <input type="file" id="f" style="display:none" onchange="preview(this)">
     </div>
 
@@ -89,82 +103,75 @@
         <div class="hologram-card">
             <div class="card-row">
                 <div style="background:#fff; width:95px; height:95px;"><img id="hall-user-photo" class="hall-photo" src=""></div>
-                <div id="hall-qr-display" class="hall-qr" style="background:#fff; width:95px; height:95px; display:flex; align-items:center; justify-content:center;"></div>
+                <div id="hall-qr-display" class="hall-qr"></div>
             </div>
-            <div id="u-id" style="font-size: 13px; margin: 10px 0; font-weight: bold; font-family: 'Share Tech Mono';">#0000-0000</div>
-            <button id="btn-confirm-hall" class="btn-mini" onclick="confirmAccess()">ПОДТВЕРДИТЬ</button>
-            <div style="position:relative; width: 100%;">
-                <div id="nav-submenu">
-                    <div class="nav-item" onclick="switchTo('block-bar')">🍸 БАР</div>
-                </div>
-                <button id="btn-nav-hall" class="btn-mini disabled" onclick="toggleNav()">НАВИГАЦИЯ</button>
-            </div>
+            <div id="u-id" style="font-size: 13px; margin: 10px 0; font-weight: bold;">#0000-0000</div>
+            <button class="btn-mini" onclick="transitionTo('block-bar')">🍸 БАР</button>
         </div>
     </div>
 
-    <div id="block-bar" class="block" style="background: #000;">
-        <div id="bar-step-1" style="text-align:center;">
-            <div class="bar-question" id="bar-q1" style="color:#fff; margin-bottom:20px; font-size:18px;">...</div>
-            <button class="btn-gold" id="btn-table">ЗА СТОЛИК</button>
-            <button class="btn-gold" id="btn-ai" onclick="barStep(2)">ИНТЕРЕСУЕТ ИИ</button>
+    <div id="block-bar" class="block">
+        <div class="bar-counter">
+            <img src="charlie_bartender.png" class="charlie-bartender"> <div id="bar-q1" style="color:#fff; margin-bottom:20px; text-align:center; font-family: 'Playfair Display'; font-size:18px; width:80%;">...</div>
+            <div class="bar-options">
+                <div class="plate-btn" id="btn-table" onclick="alert('Table')">ЗА СТОЛИК</div>
+                <div class="plate-btn" id="btn-ai" onclick="alert('AI')">ИНТЕРЕСУЕТ ИИ</div>
+            </div>
         </div>
+        <button class="btn-mini" style="width:100px; margin-top:30px;" onclick="transitionTo('block-hall')">← EXIT</button>
     </div>
 
     <script>
         let userData = { id: `#0042-${Math.floor(1000 + Math.random() * 9999)}`, photo: '', qr: '' };
         const lingo = {
-            ru: { slogan: "ВСЕ БУДЕТ GY-GY", welcome: "ДОБРО ПОЖАЛОВАТЬ", quote: "«В каждой шутке есть доля виски...»", save: "СОХРАНИТЬ", enter: "ВХОД", nav: "НАВИГАЦИЯ", confirm: "ПОДТВЕРДИТЬ", proceed: "ПРОДОЛЖИТЬ", photo: "ФОТО", barQ1: "Желаете пройти за столик или интересуетесь ИИ?" },
-            en: { slogan: "EVERYTHING WILL BE GY-GY", welcome: "WELCOME", quote: "«Every joke has a share of whiskey...»", save: "SAVE", enter: "ENTER", nav: "NAVIGATION", confirm: "CONFIRM", proceed: "PROCEED", photo: "PHOTO", barQ1: "Table or AI?" },
-            fr: { slogan: "TOUT SERA GY-GY", welcome: "BIENVENUE", quote: "«Dans chaque blague, il y a une part de whisky...»", save: "ENREGISTRER", enter: "ENTRER", nav: "NAVIGATION", confirm: "CONFIRMER", proceed: "CONTINUER", photo: "PHOTO", barQ1: "Une table ou l'IA?" }
+            ru: { slogan: "ВСЕ БУДЕТ GY-GY", welcome: "ДОБРО ПОЖАЛОВАТЬ", quote: "«В каждой шутке есть доля виски...»", save: "СОХРАНИТЬ", enter: "ВХОД", photo: "ФОТО", barQ1: "Куда желаете присесть?", barTable: "За столик", barAI: "ИИ Меню" },
+            en: { slogan: "EVERYTHING WILL BE GY-GY", welcome: "WELCOME", quote: "«Every joke has a share of whiskey...»", save: "SAVE", enter: "ENTER", photo: "PHOTO", barQ1: "Where would you like to sit?", barTable: "Table", barAI: "AI Menu" },
+            fr: { slogan: "TOUT SERA GY-GY", welcome: "BIENVENUE", quote: "«Dans chaque blague, il y a une part de whisky...»", save: "ENREGISTRER", enter: "ENTRER", photo: "PHOTO", barQ1: "Où voulez-vous vous asseoir?", barTable: "Une table", barAI: "Menu IA" }
         };
 
         function applyLanguage() {
-            const bLang = (navigator.language || 'en').toLowerCase();
-            document.getElementById('debug-lang').innerText = "System Lang: " + bLang; // Увидишь это в углу на ПК
-            
-            let lang = 'en';
-            if (bLang.includes('ru')) lang = 'ru';
-            else if (bLang.includes('fr')) lang = 'fr';
-            
+            const bLang = (navigator.language || 'en').toLowerCase().split('-')[0];
+            document.getElementById('debug-lang').innerText = "System: " + navigator.language + " | Active: " + bLang;
+            let lang = lingo[bLang] ? bLang : 'en';
             const s = lingo[lang];
+            
             const setT = (id, t) => { if(document.getElementById(id)) document.getElementById(id).innerText = t; };
-            setT('main-slogan', s.slogan); setT('welcome-text', s.welcome); setT('quote-reg', s.quote); 
-            setT('btn-save', s.save); setT('btn-to-hall', s.enter); setT('btn-nav-hall', s.nav);
-            setT('btn-confirm-hall', s.confirm); setT('btn-proceed', s.proceed); setT('t-ph', s.photo);
-            setT('bar-q1', s.barQ1);
+            setT('main-slogan', s.slogan); setT('welcome-text', s.welcome); setT('quote-reg', s.quote);
+            setT('btn-save', s.save); setT('btn-to-hall', s.enter); setT('t-ph', s.photo);
+            setT('bar-q1', s.barQ1); setT('btn-table', s.barTable); setT('btn-ai', s.barAI);
+        }
+
+        // ПЕРЕХОД СО ШТОРКАМИ
+        function transitionTo(id) {
+            document.body.classList.add('curtain-closed');
+            setTimeout(() => {
+                switchTo(id);
+                document.body.classList.remove('curtain-closed');
+            }, 850);
         }
 
         function handleDoor() {
             document.getElementById('door-snd').play().catch(()=>{});
-            const d = document.getElementById('door-clicker');
-            d.style.transform = "scale(15)";
-            d.style.opacity = "0";
-            d.style.pointerEvents = "none";
-            setTimeout(() => {
-                document.getElementById('block-entrance').style.zIndex = "1";
-                switchTo('block-welcome');
-            }, 1800);
+            const d = document.querySelector('.door-wrapper');
+            d.style.transform = "scale(15)"; d.style.opacity = "0"; d.style.pointerEvents = "none";
+            setTimeout(() => transitionTo('block-welcome'), 1800);
         }
 
         function switchTo(id) {
             applyLanguage();
             document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
-            const target = document.getElementById(id);
-            if(target) target.classList.add('active');
-            
+            document.getElementById(id).classList.add('active');
             if(id === 'block-identity') {
                 document.getElementById('bar-ambient').play().catch(()=>{});
                 document.getElementById('id-display').innerText = userData.id;
                 const qrBox = document.getElementById("qrcode");
-                if(!qrBox.innerHTML) {
-                    new QRCode(qrBox, { text: userData.id, width: 85, height: 85 });
-                    setTimeout(() => { if(qrBox.querySelector('img')) userData.qr = qrBox.querySelector('img').src; }, 600);
-                }
+                if(!qrBox.innerHTML) new QRCode(qrBox, { text: userData.id, width: 85, height: 85 });
             }
             if(id === 'block-hall') {
                 document.getElementById('u-id').innerText = userData.id;
                 document.getElementById('hall-user-photo').src = userData.photo || '';
-                if(userData.qr) document.getElementById('hall-qr-display').innerHTML = `<img src="${userData.qr}" style="width:90px">`;
+                const qImg = document.querySelector('#qrcode img');
+                if(qImg) document.getElementById('hall-qr-display').innerHTML = `<img src="${qImg.src}" style="width:90px">`;
             }
         }
 
@@ -180,9 +187,6 @@
         }
 
         function save() { document.getElementById('btn-to-hall').style.visibility = 'visible'; }
-        function confirmAccess() { document.getElementById('btn-confirm-hall').style.display = 'none'; document.getElementById('btn-nav-hall').classList.remove('disabled'); }
-        function toggleNav() { const m = document.getElementById('nav-submenu'); m.style.display = (m.style.display === 'flex') ? 'none' : 'flex'; }
-        function barStep(n) { document.getElementById('bar-step-1').style.display = n === 1 ? 'block' : 'none'; }
 
         window.onload = applyLanguage;
     </script>
