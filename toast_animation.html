@@ -3,130 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.14</title>
+    <title>GY-GY Club v4.3.15</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root {
             --gold: #d4af37;
             --hologram-cyan: #00E5FF;
-            --glass-bg: rgba(0, 15, 20, 0.9);
+            --glass-bg: rgba(200, 240, 255, 0.15); /* Сделал светлее */
             --slogan-color: #5D4037;
         }
 
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none; }
-        
-        body, html { 
-            margin: 0; padding: 0; width: 100%; height: 100%; 
-            background: #000; color: var(--gold); 
-            font-family: 'Times New Roman', serif; overflow: hidden; 
-        }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Times New Roman', serif; overflow: hidden; }
 
-        .block { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            display: none; flex-direction: column; align-items: center; justify-content: center; 
-            padding: 20px; background: #000; z-index: 1; 
-        }
+        .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: #000; z-index: 1; }
         .block.active { display: flex !important; z-index: 10; }
 
-        /* ЭКРАН 1: ДВЕРЬ */
-        .door-wrapper { cursor: pointer; transition: 1.2s ease-out; }
-        .door-img { width: 75vw; max-width: 320px; display: block; }
-
-        /* ЭКРАН 2: ЧАРЛИ */
-        .charlie-container { 
-            width: 250px; height: 250px; border-radius: 50%; 
-            border: 2px solid var(--gold); overflow: hidden; margin-bottom: 30px; 
-        }
-        .charlie-container img { width: 101%; height: 101%; object-fit: cover; }
-
-        /* ЭКРАН 3: ТЕРМИНАЛ */
+        /* ЭКРАН: ТЕРМИНАЛ */
         .setup-grid { display: grid; grid-template-columns: repeat(3, 90px); gap: 15px; margin-bottom: 20px; }
-        .square-box { 
-            width: 90px; height: 90px; border: 1px solid var(--gold); 
-            background: #fff; display: flex; align-items: center; justify-content: center; 
-            overflow: hidden; color: #000; position: relative;
-        }
-        /* Исправление рамки QR */
+        .square-box { width: 90px; height: 90px; border: 1px solid var(--gold); background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; color: #000; position: relative; }
         #qrcode img { width: 100% !important; height: 100% !important; padding: 5px; }
 
-        .btn-gold { 
-            width: 200px; height: 45px; background: transparent; 
-            border: 1px solid var(--gold); color: var(--gold); 
-            text-transform: uppercase; letter-spacing: 1px; cursor: pointer; 
-            margin-top: 10px; font-family: inherit; 
+        .btn-gold { width: 220px; height: 45px; background: transparent; border: 1px solid var(--gold); color: var(--gold); text-transform: uppercase; letter-spacing: 1px; cursor: pointer; margin-top: 10px; font-family: inherit; }
+
+        /* ЭКРАН: ХОЛЛ */
+        .viewport { width: 100vw; height: 100vh; background: url('hall_bg_jpg.jpg') no-repeat center center; background-size: cover; position: relative; }
+        
+        /* СЛОГАН НАД АРКОЙ */
+        .wall-phrase { 
+            position: absolute; top: 25%; left: 50%; transform: translateX(-50%); 
+            font-family: 'Playfair Display', serif; color: var(--slogan-color); 
+            font-size: clamp(18px, 3.5vw, 40px); text-transform: uppercase; text-align: center; 
+            width: 90%; font-weight: 900; letter-spacing: 5px; pointer-events: none;
         }
 
-        /* ЭКРАН 4: ХОЛЛ */
-        .viewport { 
-            width: 100vw; height: 100vh; 
-            background: url('hall_bg_jpg.jpg') no-repeat center center; 
-            background-size: cover; position: relative; 
-        }
+        /* КАРТОЧКА ГОСТЯ */
         .hologram-v464 { 
-            position: absolute; right: 5%; bottom: 10%; width: 300px; 
-            background: var(--glass-bg); border: 1px solid rgba(0, 229, 255, 0.3); 
-            backdrop-filter: blur(15px); padding: 20px; color: var(--hologram-cyan); 
-            font-family: 'Share Tech Mono', monospace; border-radius: 8px;
-            text-align: center;
+            position: absolute; right: 5%; bottom: 12%; width: 280px; 
+            background: var(--glass-bg); border: 1px solid rgba(0, 229, 255, 0.4); 
+            backdrop-filter: blur(10px); padding: 15px; color: var(--hologram-cyan); 
+            font-family: 'Share Tech Mono', monospace; border-radius: 12px;
         }
-        .hall-qr-zone { width: 60px; height: 60px; background: #fff; margin: 10px auto; padding: 2px; }
-        .hall-qr-zone img { width: 100%; height: 100%; }
+        .card-top { display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 10px; }
+        .hall-photo { width: 80px; height: 80px; object-fit: cover; border: 1px solid var(--hologram-cyan); background: rgba(0,0,0,0.3); }
+        .hall-qr { width: 80px; height: 80px; background: #fff; padding: 3px; border: 1px solid var(--hologram-cyan); }
+        .hall-qr img { width: 100%; height: 100%; }
+        .hall-id { font-size: 14px; text-align: center; margin: 10px 0; letter-spacing: 2px; border-top: 1px solid rgba(0,229,255,0.2); padding-top: 8px; }
     </style>
 </head>
 <body>
 
-    <audio id="door-snd"><source src="door_open.mp3" type="audio/mpeg"></audio>
-    <audio id="club-bg-snd" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
-
-    <div id="block-entrance" class="block active">
-        <div style="letter-spacing:10px; margin-bottom:30px; opacity:0.8;">GY-GY PRIVATE</div>
-        <div class="door-wrapper" onclick="handleDoor()"><img src="door_1.jpg" class="door-img"></div>
-    </div>
-
-    <div id="block-welcome" class="block">
-        <div class="charlie-container"><img src="charlie.png"></div>
-        <h1 style="font-size: 52px; letter-spacing: 12px; margin: 0 0 30px 0;">WELCOME</h1>
-        <button class="btn-gold" onclick="switchTo('block-identity')">PROCEED</button>
-    </div>
-
-    <div id="block-identity" class="block">
-        <div class="setup-grid">
-            <div id="id-box" class="square-box">
-                <span style="font-size: 8px; opacity: 0.6; position: absolute; top: 5px;">ID TRACE</span>
-                <div id="id-display" style="font-size: 10px; font-weight: bold;">#0000-0000</div>
-            </div>
+    <div id="block-identity" class="block active"> <div class="setup-grid">
+            <div class="square-box"><div id="id-display" style="font-size: 10px; font-weight: bold;">#GEN...</div></div>
             <div id="qrcode" class="square-box"></div>
-            <div class="square-box" style="cursor:pointer;" onclick="document.getElementById('f').click()">
-                <span id="t-ph" style="font-size:10px; font-weight:bold;">PHOTO</span>
+            <div class="square-box" onclick="document.getElementById('f').click()" style="cursor:pointer;">
+                <span id="t-ph" style="font-size:10px;">PHOTO</span>
                 <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
             </div>
         </div>
-
-        <div id="quote-reg" style="font-style: italic; font-size: 22px; margin: 20px 0; min-height: 50px; color: var(--gold); padding: 0 20px; text-align: center;">
-            «В каждой шутке есть доля виски...»
-        </div>
-
+        <div id="quote-reg" style="font-style: italic; font-size: 20px; margin: 20px 0; text-align: center;">«В каждой шутке есть доля виски...»</div>
         <button id="btn-save" class="btn-gold" onclick="save()">СОХРАНИТЬ</button>
         <button id="btn-to-hall" class="btn-gold" style="visibility:hidden;" onclick="switchTo('block-hall')">ВХОД</button>
-
         <input type="file" id="f" style="display:none" onchange="preview(this)">
     </div>
 
     <div id="block-hall" class="block" style="padding:0;">
         <div class="viewport">
+            <div class="wall-phrase">ВСЕ БУДЕТ GY-GY</div>
+            
             <div class="hologram-v464" id="gate">
-                <div style="font-size: 10px; border-bottom: 1px solid rgba(0,229,255,0.2); padding-bottom: 5px; margin-bottom: 10px;">IDENTITY CARD</div>
+                <div style="font-size: 9px; opacity: 0.7; margin-bottom: 10px;">GUEST VERIFICATION</div>
                 
-                <img id="hall-user-photo" style="display:none; width:70px; height:70px; object-fit:cover; border:1px solid var(--hologram-cyan); margin: 0 auto 10px auto;">
+                <div class="card-top">
+                    <img id="hall-user-photo" class="hall-photo" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+                    <div id="hall-qr-display" class="hall-qr"></div>
+                </div>
+
+                <div id="u-id" class="hall-id">#0000-0000</div>
                 
-                <div id="hall-qr-display" class="hall-qr-zone"></div>
-                
-                <div id="u-id" style="font-size: 12px; margin-top: 5px;">#SCANNING...</div>
-                
-                <button class="btn-gold" style="width:100%; color:var(--hologram-cyan); border-color:var(--hologram-cyan); margin-top:15px;" onclick="document.getElementById('gate').style.opacity='0'">ПОДТВЕРДИТЬ</button>
-                
-                <button class="btn-gold" style="width:100%; margin-top: 10px; border-style: dashed; font-size: 10px;">НАВИГАЦИЯ</button>
+                <button class="btn-gold" style="width:100%; color:var(--hologram-cyan); border-color:var(--hologram-cyan);" onclick="document.getElementById('gate').style.opacity='0'">ПОДТВЕРДИТЬ</button>
+                <button class="btn-gold" style="width:100%; border-style: dashed; font-size: 10px; margin-top: 10px;">НАВИГАЦИЯ</button>
             </div>
         </div>
     </div>
@@ -134,23 +91,18 @@
     <script>
         let fullID = `#0042-${Math.floor(1000 + Math.random() * 9000)}`;
 
-        function handleDoor() {
-            document.getElementById('door-snd').play().catch(()=>{});
-            const w = document.querySelector('.door-wrapper');
-            w.style.transform = "scale(5)"; w.style.opacity = "0";
-            setTimeout(() => switchTo('block-welcome'), 1000);
-        }
-
         function switchTo(id) {
             document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            
             if(id === 'block-identity') {
                 document.getElementById('id-display').innerText = fullID;
                 const q = document.getElementById("qrcode"); q.innerHTML = "";
                 new QRCode(q, { text: "GY-ID:" + fullID, width: 90, height: 90 });
             }
         }
+
+        // Инициализация при загрузке
+        switchTo('block-identity');
 
         function preview(input) {
             const r = new FileReader();
@@ -166,19 +118,13 @@
             document.getElementById('btn-to-hall').style.visibility = 'visible';
             document.getElementById('u-id').innerText = fullID;
             
-            // ПЕРЕДАЧА QR-КОДА
+            // Дублируем QR
             const sourceQR = document.querySelector('#qrcode img');
-            if(sourceQR) {
-                document.getElementById('hall-qr-display').innerHTML = `<img src="${sourceQR.src}">`;
-            }
+            if(sourceQR) document.getElementById('hall-qr-display').innerHTML = `<img src="${sourceQR.src}">`;
 
-            // ПЕРЕДАЧА ФОТО
+            // Передаем ФОТО
             const photoSrc = document.getElementById('pp').src;
-            if(photoSrc.startsWith('data:')) {
-                const hPhoto = document.getElementById('hall-user-photo');
-                hPhoto.src = photoSrc;
-                hPhoto.style.display = "block";
-            }
+            if(photoSrc.startsWith('data:')) document.getElementById('hall-user-photo').src = photoSrc;
         }
     </script>
 </body>
