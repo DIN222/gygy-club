@@ -61,17 +61,30 @@
         <button class="btn-gold" style="width:220px; height: 50px;" onclick="switchTo('block-identity')">PROCEED</button>
     </div>
 
-    <div id="block-identity" class="block">
-        <div class="setup-grid">
-            <div class="square-box" id="id-box">
-                <span style="font-size: 8px; opacity: 0.6;">ID TRACE</span>
-                <div id="id-display" style="font-size: 10px; font-weight: bold;">#0000-0000</div>
-            </div>
-            <div id="qrcode" class="square-box"></div>
-            <div class="square-box" style="cursor:pointer;" onclick="document.getElementById('f').click()">
-                <span id="t-ph" style="font-size:10px; font-weight:bold;">PHOTO</span>
-                <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
-            </div>
+   <div id="block-identity" class="block">
+    <div class="setup-grid">
+        <div class="square-box" id="id-box">
+            <span style="font-size: 8px; opacity: 0.6;">ID TRACE</span>
+            <div id="id-display" style="font-size: 10px; font-weight: bold;">#0000-0000</div>
+        </div>
+        <div id="qrcode" class="square-box"></div>
+        <div class="square-box" style="cursor:pointer;" onclick="document.getElementById('f').click()">
+            <span id="t-ph" style="font-size:10px; font-weight:bold;">PHOTO</span>
+            <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
+        </div>
+    </div>
+
+    <div id="quote-reg" style="font-style: italic; font-size: 14px; margin: 20px 0; min-height: 45px; color: #d4af37; padding: 0 20px;">
+        «В каждой шутке есть доля виски...»
+    </div>
+    <div style="display:flex; flex-direction: column; gap: 10px; align-items: center;">
+        <button id="btn-save" class="btn-gold" style="width: 180px;" onclick="save()">СОХРАНИТЬ</button>
+        <button id="btn-to-hall" class="btn-gold" style="width: 180px; visibility:hidden;" onclick="switchTo('block-hall')">ВХОД</button>
+        <button id="btn-nav" class="btn-gold" style="width: 180px; margin-top: 20px; border-style: dashed; opacity: 0.6;" onclick="toggleGlobalNav()">НАВИГАЦИЯ</button>
+    </div>
+
+    <input type="file" id="f" style="display:none" onchange="preview(this)">
+</div>
         </div>
         <button id="btn-save" class="btn-gold" onclick="save()">СОХРАНИТЬ</button>
         <button id="btn-to-hall" class="btn-gold" style="visibility:hidden;" onclick="switchTo('block-hall')">ВХОД</button>
