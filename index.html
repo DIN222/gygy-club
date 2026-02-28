@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.39</title>
+    <title>GY-GY Club v4.3.40</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
@@ -11,40 +11,42 @@
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; color: var(--gold); font-family: serif; overflow: hidden; }
         
-        .block { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; z-index: 10; background: #000; }
-        .block.active { display: flex !important; }
-
-        /* ШТОРЫ */
+        /* ГЛАВНЫЙ ФИКС: ШТОРЫ НЕ ДОЛЖНЫ МЕШАТЬ КЛИКУ */
         .curtain { 
             position: fixed; top: 0; width: 51%; height: 100%; 
             background-color: #070707;
             background-image: radial-gradient(#b00000 12%, transparent 15%);
             background-size: 50px 50px;
             z-index: 10000; transition: transform 0.9s ease-in-out; 
-            box-shadow: 0 0 50px #000;
+            pointer-events: none; /* Магия здесь: клики проходят сквоść */
         }
+        body.curtain-closed .curtain { pointer-events: auto; } /* Кликабельны только когда закрыты */
+        
         .curtain.left { left: 0; transform: translateX(-100%); border-right: 2px solid var(--gold); }
         .curtain.right { right: 0; transform: translateX(100%); border-left: 2px solid var(--gold); }
         body.curtain-closed .curtain.left { transform: translateX(0); }
         body.curtain-closed .curtain.right { transform: translateX(0); }
 
-        /* ЯЗЫКИ */
-        .lang-bar { position: absolute; top: 20px; right: 20px; display: flex; gap: 10px; z-index: 1000; }
-        .lang-btn { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 5px 10px; cursor: pointer; font-family: 'Share Tech Mono'; font-size: 12px; }
-        .lang-btn.active { background: var(--gold); color: #000; }
+        .block { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; z-index: 10; background: #000; }
+        .block.active { display: flex !important; }
 
-        /* ЭЛЕМЕНТЫ */
-        .door-wrapper { transition: transform 2s ease-in, opacity 1.5s ease-out; cursor: pointer; }
-        .hall-sign-holo { position: absolute; top: 10%; font-family: 'Playfair Display'; color: #FFF; text-shadow: 0 0 10px var(--hologram-pink), 0 0 20px var(--hologram-pink); font-size: 24px; text-transform: uppercase; letter-spacing: 8px; text-align: center; }
+        /* ДВЕРЬ (ПОВЕРХ ВСЕГО В НАЧАЛЕ) */
+        #block-entrance { z-index: 100; display: flex; } 
+        .door-wrapper { cursor: pointer; position: relative; z-index: 101; pointer-events: auto !important; }
+        .door-img { width: 70vw; max-width: 300px; border: 1px solid #333; transition: transform 2s ease-in, opacity 1.5s ease-out; }
+
+        /* ЯЗЫКИ */
+        .lang-bar { position: absolute; top: 20px; right: 20px; display: flex; gap: 10px; z-index: 11000; }
+        .lang-btn { background: rgba(0,0,0,0.5); border: 1px solid var(--gold); color: var(--gold); padding: 5px 10px; cursor: pointer; font-family: 'Share Tech Mono'; }
+
+        /* ХОЛЛ И КАРТОЧКА */
         .viewport { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: url('hall_bg_jpg.jpg') no-repeat center; background-size: cover; z-index: -1; }
         .hologram-card { position: absolute; right: 5%; bottom: 8%; width: 230px; background: var(--glass-bg); border: 1px solid var(--hologram-cyan); padding: 15px; border-radius: 12px; text-align: center; backdrop-filter: blur(10px); }
         
         .charlie-img { width: 100%; max-width: 500px; position: absolute; bottom: -20px; z-index: 5; pointer-events: none; }
         .plate-btn { position: absolute; width: 110px; height: 110px; background: radial-gradient(circle, #222 0%, #000 100%); border: 2px solid var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; text-align: center; font-family: 'Share Tech Mono'; font-size: 10px; cursor: pointer; z-index: 10; transition: 0.3s; }
-        .plate-btn:hover { background: var(--gold); color: #000; }
 
-        .btn-gold { width: 200px; padding: 12px; background: transparent; border: 1px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; margin: 10px; transition: 0.3s; }
-        .btn-gold:hover { box-shadow: 0 0 15px var(--gold); }
+        .btn-gold { width: 200px; padding: 12px; background: transparent; border: 1px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; margin: 10px; }
     </style>
 </head>
 <body>
@@ -61,7 +63,7 @@
 
     <div id="block-entrance" class="block active">
         <div class="door-wrapper" onclick="handleDoor()">
-            <img src="door_1.jpg" style="width:70vw; max-width:300px; border:1px solid #333;">
+            <img src="door_1.jpg" class="door-img">
         </div>
     </div>
 
@@ -69,13 +71,13 @@
         <div style="width: 200px; height: 200px; border-radius: 50%; border: 2px solid var(--gold); overflow: hidden; margin-bottom: 20px;">
             <img src="charlie.png" style="width:100%; height:100%; object-fit:cover;">
         </div>
-        <h1 id="txt-welcome" style="font-family: 'Playfair Display'; font-size: 28px;">WELCOME</h1>
-        <button id="btn-proceed" class="btn-gold" onclick="transitionTo('block-identity')">PROCEED</button>
+        <h1 id="txt-welcome" style="font-family: 'Playfair Display';">ДОБРО ПОЖАЛОВАТЬ</h1>
+        <button id="btn-proceed" class="btn-gold" onclick="transitionTo('block-identity')">ПРОДОЛЖИТЬ</button>
     </div>
 
     <div id="block-identity" class="block">
         <div style="display:flex; gap:10px; margin-bottom:20px;">
-            <div id="id-display" style="width:80px; height:80px; background:#fff; color:#000; display:flex; align-items:center; justify-content:center; font-size:10px; text-align:center; padding:5px; font-family:'Share Tech Mono';"></div>
+            <div id="id-display" style="width:80px; height:80px; background:#fff; color:#000; display:flex; align-items:center; justify-content:center; font-size:10px; font-family:'Share Tech Mono'; text-align:center;"></div>
             <div id="qrcode" style="width:80px; height:80px; background:#fff;"></div>
             <div onclick="document.getElementById('f').click()" style="width:80px; height:80px; background:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center;">
                 <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
@@ -89,24 +91,24 @@
 
     <div id="block-hall" class="block">
         <div class="viewport"></div>
-        <div id="txt-slogan" class="hall-sign-holo"></div>
+        <div id="txt-slogan" style="position: absolute; top: 10%; font-family: 'Playfair Display'; font-size: 24px; text-shadow: 0 0 15px var(--hologram-pink); letter-spacing: 8px;"></div>
         <div class="hologram-card">
             <div style="display:flex; gap:10px; justify-content:center; margin-bottom:10px;">
                 <img id="hall-photo" style="width:80px; height:80px; border:1px solid var(--hologram-cyan); object-fit:cover;">
-                <div id="hall-qr" style="width:80px; height:80px; background:#fff; border:1px solid var(--hologram-cyan);"></div>
+                <div id="hall-qr" style="width:80px; height:80px; background:#fff;"></div>
             </div>
-            <div id="hall-id" style="font-family:'Share Tech Mono'; font-size:14px; margin:5px 0;">#ID</div>
-            <button id="btn-to-bar" class="btn-gold" style="width:100%; font-size:12px; margin:5px 0;" onclick="transitionTo('block-bar')">🍸 БАР</button>
+            <div id="hall-id" style="font-family:'Share Tech Mono'; font-size:14px;"></div>
+            <button class="btn-gold" style="width:100%; font-size:12px; margin-top:10px;" onclick="transitionTo('block-bar')">🍸 БАР</button>
         </div>
     </div>
 
     <div id="block-bar" class="block">
-        <div class="bar-scene">
+        <div style="position:relative; width:100%; height:100%; display:flex; justify-content:center;">
             <img src="OIG1 (2).png" class="charlie-img">
-            <div class="plate-btn" id="btn-table" style="left:10%; bottom:35%;" onclick="alert('Table soon')">ЗА СТОЛИК</div>
-            <div class="plate-btn" id="btn-ai" style="right:10%; bottom:25%;" onclick="alert('AI Menu soon')">ИНТЕРЕСУЕТ ИИ</div>
+            <div class="plate-btn" style="left:10%; bottom:35%;" id="btn-table">ЗА СТОЛИК</div>
+            <div class="plate-btn" style="right:10%; bottom:25%;" id="btn-ai">ИНТЕРЕСУЕТ ИИ</div>
         </div>
-        <button onclick="transitionTo('block-hall')" style="position:absolute; bottom:20px; z-index:20; color:var(--gold); background:none; border:none; cursor:pointer; font-family:'Share Tech Mono';">← EXIT</button>
+        <button onclick="transitionTo('block-hall')" style="position:absolute; bottom:20px; color:var(--gold); background:none; border:none; cursor:pointer;">← ВЫХОД</button>
     </div>
 
     <script>
@@ -115,15 +117,69 @@
         let curLang = 'ru';
 
         const lingo = {
-            ru: { welcome: "ДОБРО ПОЖАЛОВАТЬ", proceed: "ПРОДОЛЖИТЬ", save: "СОХРАНИТЬ", enter: "ВХОД", photo: "ФОТО", slogan: "ВСЕ БУДЕТ GY-GY", barTable: "ЗА СТОЛИК", barAI: "ИНТЕРЕСУЕТ ИИ" },
-            en: { welcome: "WELCOME", proceed: "PROCEED", save: "SAVE", enter: "ENTER", photo: "PHOTO", slogan: "EVERYTHING WILL BE GY-GY", barTable: "TABLE", barAI: "AI INTEREST" }
+            ru: { welcome: "ДОБРО ПОЖАЛОВАТЬ", proceed: "ПРОДОЛЖИТЬ", save: "СОХРАНИТЬ", enter: "ВХОД", photo: "ФОТО", slogan: "ВСЕ БУДЕТ GY-GY", barTable: "ЗА СТОЛИК", barAI: "ИИ МЕНЮ" },
+            en: { welcome: "WELCOME", proceed: "PROCEED", save: "SAVE", enter: "ENTER", photo: "PHOTO", slogan: "EVERYTHING GY-GY", barTable: "TABLE", barAI: "AI MENU" }
         };
 
-        function setLang(lang) {
-            curLang = lang;
-            updateText();
-        }
+        function setLang(lang) { curLang = lang; updateText(); }
 
         function updateText() {
             const t = lingo[curLang];
             document.getElementById('txt-welcome').innerText = t.welcome;
+            document.getElementById('btn-proceed').innerText = t.proceed;
+            document.getElementById('btn-save').innerText = t.save;
+            document.getElementById('btn-to-hall').innerText = t.enter;
+            document.getElementById('txt-photo').innerText = t.photo;
+            document.getElementById('txt-slogan').innerText = t.slogan;
+            document.getElementById('btn-table').innerText = t.barTable;
+            document.getElementById('btn-ai').innerText = t.barAI;
+        }
+
+        function transitionTo(id) {
+            document.body.classList.add('curtain-closed');
+            setTimeout(() => {
+                document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
+                document.getElementById(id).classList.add('active');
+                document.getElementById('lang-ui').style.display = (id === 'block-entrance') ? 'none' : 'flex';
+
+                if(id === 'block-identity') {
+                    document.getElementById('id-display').innerText = userData.id;
+                    const qrBox = document.getElementById("qrcode");
+                    if(!qrBox.innerHTML) new QRCode(qrBox, { text: userData.id, width: 80, height: 80 });
+                }
+                if(id === 'block-hall') {
+                    document.getElementById('hall-id').innerText = userData.id;
+                    document.getElementById('hall-photo').src = userData.photo;
+                    const qrSource = document.querySelector("#qrcode img");
+                    if(qrSource) document.getElementById('hall-qr').innerHTML = `<img src="${qrSource.src}" style="width:100%;">`;
+                }
+                if(id === 'block-bar') document.getElementById('snd-bar').play().catch(()=>{});
+                
+                updateText();
+                setTimeout(() => document.body.classList.remove('curtain-closed'), 200);
+            }, 1000);
+        }
+
+        function handleDoor() {
+            try { document.getElementById('snd-door').play(); } catch(e) {}
+            const img = document.querySelector('.door-img');
+            img.style.transform = "scale(15)"; img.style.opacity = "0";
+            setTimeout(() => transitionTo('block-welcome'), 1200);
+        }
+
+        function preview(input) {
+            const r = new FileReader();
+            r.onload = (e) => { 
+                document.getElementById('pp').src = e.target.result; 
+                document.getElementById('pp').style.display = "block"; 
+                document.getElementById('txt-photo').style.display = "none";
+                userData.photo = e.target.result;
+            };
+            r.readAsDataURL(input.files[0]);
+        }
+
+        function save() { document.getElementById('btn-to-hall').style.display = 'block'; }
+        window.onload = updateText;
+    </script>
+</body>
+</html>
