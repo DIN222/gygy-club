@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.28</title>
+    <title>GY-GY Club v4.3.29</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
@@ -11,9 +11,15 @@
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Times New Roman', serif; overflow: hidden; }
         
-        .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; z-index: 10; }
+        /* БЛОКИ */
+        .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; z-index: 10; transition: 0.5s; }
         .block.active { display: flex !important; }
         
+        /* АНИМАЦИЯ ДВЕРИ */
+        .door-wrapper { transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 1s ease-out; cursor: pointer; }
+        .door-img { width: 70vw; max-width: 300px; border: 1px solid rgba(212, 175, 55, 0.3); }
+
+        /* ХОЛЛ */
         #block-hall { background: transparent !important; }
         .viewport { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: url('hall_bg_jpg.jpg') no-repeat center center; background-size: cover; z-index: -1; }
 
@@ -25,15 +31,18 @@
             width: 100%; font-weight: 900; letter-spacing: 8px; pointer-events: none;
             animation: neon-pulse 2s infinite alternate; z-index: 5;
         }
-        @keyframes neon-pulse { from { opacity: 0.7; } to { opacity: 1; } }
+        @keyframes neon-pulse { from { opacity: 0.6; } to { opacity: 1; } }
 
+        /* КАРТОЧКА И СЕТКА */
         .hologram-card { 
             position: absolute; right: 5%; bottom: 8%; width: 240px; 
             background: var(--glass-bg); border: 1px solid var(--hologram-cyan); 
             backdrop-filter: blur(15px); padding: 15px; color: var(--hologram-cyan); 
             font-family: 'Share Tech Mono', monospace; border-radius: 12px; text-align: center;
         }
-        .hall-photo, .hall-qr { width: 90px; height: 90px; border: 1px solid var(--hologram-cyan); background: #fff; object-fit: cover; }
+        .card-row { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 10px; width: 100%; }
+        .hall-photo, .hall-qr { width: 95px; height: 95px; border: 1px solid var(--hologram-cyan); background: #fff; object-fit: cover; }
+        .hall-qr { display: flex; align-items: center; justify-content: center; padding: 4px; }
         
         .setup-grid { display: grid; grid-template-columns: repeat(3, 85px); gap: 10px; margin-bottom: 20px; }
         .square { width: 85px; height: 85px; background: #fff; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; overflow: hidden; color: #000; font-family: 'Share Tech Mono', monospace; }
@@ -53,7 +62,7 @@
 
     <div id="block-entrance" class="block active">
         <div style="letter-spacing:8px; margin-bottom:40px; opacity:0.5; font-size: 10px;">GY-GY PRIVATE CLUB</div>
-        <div class="door-wrapper" onclick="handleDoor()" style="cursor:pointer;"><img src="door_1.jpg" style="width:70vw; max-width:300px;"></div>
+        <div class="door-wrapper" onclick="handleDoor()"><img src="door_1.jpg" class="door-img"></div>
     </div>
 
     <div id="block-welcome" class="block">
@@ -64,11 +73,11 @@
 
     <div id="block-identity" class="block">
         <div class="setup-grid">
-            <div class="square" id="id-display" style="font-size:9px; font-weight:bold;">#TRACE</div>
-            <div class="square" id="qrcode"></div>
-            <div class="square" onclick="document.getElementById('f').click()" style="cursor:pointer;">
+            <div class="square" id="id-display" style="font-size:9px; font-weight:bold; background:#fff; color:#000;">#TRACE</div>
+            <div class="square" id="qrcode" style="background:#fff;"></div>
+            <div class="square" onclick="document.getElementById('f').click()" style="cursor:pointer; background:#fff;">
                 <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
-                <span id="t-ph" style="font-size:10px;">PHOTO</span>
+                <span id="t-ph" style="font-size:10px; color:#000;">PHOTO</span>
             </div>
         </div>
         <div id="quote-reg" style="font-style: italic; font-size: 18px; margin: 20px 0; text-align: center; color: var(--gold); padding: 0 20px;"></div>
@@ -82,14 +91,14 @@
         <div id="main-slogan" class="hall-sign-holo"></div>
         <div class="hologram-card">
             <div class="card-row">
-                <img id="hall-user-photo" class="hall-photo" src="">
-                <div id="hall-qr-display" class="hall-qr" style="background:#fff; padding:4px;"></div>
+                <div style="background:#fff; width:95px; height:95px;"><img id="hall-user-photo" class="hall-photo" src=""></div>
+                <div id="hall-qr-display" class="hall-qr"></div>
             </div>
             <div id="u-id" style="font-size: 13px; margin: 10px 0; font-weight: bold;">#0000-0000</div>
             <button id="btn-confirm-hall" class="btn-mini" onclick="confirmAccess()">ПОДТВЕРДИТЬ</button>
             <div style="position:relative; width: 100%;">
                 <div id="nav-submenu">
-                    <div class="nav-item" id="nav-bar-btn" onclick="switchTo('block-bar')">🍸 БАР</div>
+                    <div class="nav-item" onclick="switchTo('block-bar')">🍸 БАР</div>
                 </div>
                 <button id="btn-nav-hall" class="btn-mini disabled" onclick="toggleNav()">НАВИГАЦИЯ</button>
             </div>
@@ -106,6 +115,7 @@
             <div class="bar-question" id="bar-q2" style="color:#fff; margin-bottom:20px; font-size:18px;">...</div>
             <button class="btn-gold" id="btn-one" onclick="alert('Solo...')">ОДИН</button>
             <button class="btn-gold" id="btn-more" onclick="alert('Show...')">БОЛЬШЕ</button>
+            <button class="btn-mini" onclick="barStep(1)" style="border:none; color:var(--gold); margin-top:10px;">← BACK</button>
         </div>
     </div>
 
@@ -119,16 +129,14 @@
             fr: { slogan: "TOUT SERA GY-GY", welcome: "BIENVENUE", quote: "«Dans chaque blague, il y a une part de whisky...»", save: "ENREGISTRER", enter: "ENTRER", nav: "NAVIGATION", confirm: "CONFIRMER", proceed: "CONTINUER", photo: "PHOTO", barQ1: "Une table ou l'IA?", barTable: "UNE TABLE", barAI: "L'IA M'INTÉRESSE", barQ2: "Seul ou plus?", barOne: "SEUL", barMore: "PLUS" }
         };
 
-        function getAutoLang() {
-            const browserLang = (navigator.language || 'en').toLowerCase();
-            if (browserLang.includes('ru')) return 'ru';
-            if (browserLang.includes('fr')) return 'fr';
-            return 'en';
-        }
-
         function applyLanguage() {
-            const currentLang = getAutoLang();
-            const s = lingo[currentLang];
+            const browserLang = (navigator.language || 'en').toLowerCase();
+            let lang = 'en';
+            if (browserLang.includes('ru')) lang = 'ru';
+            else if (browserLang.includes('fr')) lang = 'fr';
+            
+            console.log("Detecting lang:", browserLang, "Using:", lang);
+            const s = lingo[lang];
             const setT = (id, t) => { if(document.getElementById(id)) document.getElementById(id).innerText = t; };
             setT('main-slogan', s.slogan); setT('welcome-text', s.welcome); setT('quote-reg', s.quote);
             setT('btn-save', s.save); setT('btn-to-hall', s.enter); setT('btn-nav-hall', s.nav);
@@ -139,8 +147,9 @@
 
         function handleDoor() {
             document.getElementById('door-snd').play().catch(()=>{});
-            document.querySelector('.door-wrapper').style.transform = "scale(10)";
-            document.querySelector('.door-wrapper').style.opacity = "0";
+            const door = document.querySelector('.door-wrapper');
+            door.style.transform = "scale(12)";
+            door.style.opacity = "0";
             setTimeout(() => switchTo('block-welcome'), 1000);
         }
 
@@ -151,13 +160,16 @@
             if(id === 'block-identity') {
                 document.getElementById('bar-ambient').play().catch(()=>{});
                 document.getElementById('id-display').innerText = userData.id;
-                if(!document.getElementById("qrcode").innerHTML) new QRCode(document.getElementById("qrcode"), { text: userData.id, width: 85, height: 85 });
+                const qrBox = document.getElementById("qrcode");
+                if(!qrBox.innerHTML) {
+                    new QRCode(qrBox, { text: userData.id, width: 85, height: 85 });
+                    setTimeout(() => { if(qrBox.querySelector('img')) userData.qr = qrBox.querySelector('img').src; }, 600);
+                }
             }
             if(id === 'block-hall') {
                 document.getElementById('u-id').innerText = userData.id;
-                document.getElementById('hall-user-photo').src = userData.photo;
-                const q = document.querySelector('#qrcode img');
-                if(q) document.getElementById('hall-qr-display').innerHTML = `<img src="${q.src}" style="width:100%">`;
+                document.getElementById('hall-user-photo').src = userData.photo || '';
+                if(userData.qr) document.getElementById('hall-qr-display').innerHTML = `<img src="${userData.qr}" style="width:100%">`;
             }
         }
 
