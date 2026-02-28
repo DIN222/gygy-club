@@ -73,6 +73,19 @@
             </div>
         </div>
 
+        <div id="quote-reg" style="font-style: italic; font-size: 20px; margin: 25px 0; min-height: 55px; color: #d4af37; padding: 0 20px;">
+            «В каждой шутке есть доля виски...»
+        </div>
+
+        <div style="display:flex; flex-direction: column; gap: 10px; align-items: center;">
+            <button id="btn-save" class="btn-gold" style="width: 180px;" onclick="save()">СОХРАНИТЬ</button>
+            <button id="btn-to-hall" class="btn-gold" style="width: 180px; visibility:hidden;" onclick="switchTo('block-hall')">ВХОД</button>
+            
+            <button id="btn-nav" class="btn-gold" style="width: 180px; margin-top: 20px; border-style: dashed; opacity: 0.6;" onclick="toggleGlobalNav()">НАВИГАЦИЯ</button>
+        </div>
+
+        <input type="file" id="f" style="display:none" onchange="preview(this)">
+    </div>
         <div id="quote-reg" style="font-style: italic; font-size: 14px; margin: 15px 0; min-height: 40px; color: #d4af37; padding: 0 20px; max-width: 280px;">
             «В каждой шутке есть доля виски...»
         </div>
