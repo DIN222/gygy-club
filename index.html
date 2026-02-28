@@ -3,35 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.32</title>
+    <title>GY-GY Club v4.3.33</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
-        :root { --gold: #d4af37; --hologram-cyan: #00E5FF; --glass-bg: rgba(0, 5, 10, 0.95); }
+        :root { --gold: #d4af37; --hologram-cyan: #00E5FF; --hologram-pink: #FF00FF; --glass-bg: rgba(0, 5, 10, 0.95); }
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; color: var(--gold); font-family: serif; overflow: hidden; }
         
-        /* ГЛАВНЫЙ ФИКС: СЛОИ */
-        .block { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            display: none; flex-direction: column; align-items: center; justify-content: center; 
-            padding: 20px; z-index: 10;
-        }
+        .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; z-index: 10; }
         .block.active { display: flex !important; }
-        
-        /* Блок входа всегда сверху, пока не нажмут */
         #block-entrance { z-index: 9999; }
 
-        /* ДВЕРЬ - ГАРАНТИЯ КЛИКА */
-        .door-wrapper { 
-            position: relative;
-            transition: transform 2.5s ease-in, opacity 2s ease-out; 
-            cursor: pointer;
-            pointer-events: auto !important; /* Принудительный клик */
-        }
+        .door-wrapper { position: relative; transition: transform 2.5s ease-in, opacity 2s ease-out; cursor: pointer; pointer-events: auto !important; }
         .door-img { width: 70vw; max-width: 300px; border: 1px solid rgba(212, 175, 55, 0.3); pointer-events: none; }
 
-        /* КАРТОЧКА */
+        /* ВОЗВРАЩАЕМ МАЛИНОВЫЙ НЕОН */
+        .hall-sign-holo { 
+            position: absolute; top: 15%; left: 50%; transform: translateX(-50%); 
+            font-family: 'Playfair Display', serif; color: #FFF;
+            text-shadow: 0 0 10px var(--hologram-pink), 0 0 20px var(--hologram-pink);
+            font-size: clamp(16px, 4vw, 30px); text-transform: uppercase; text-align: center; 
+            width: 100%; font-weight: 900; letter-spacing: 8px; pointer-events: none;
+            animation: neon-pulse 2s infinite alternate; z-index: 5;
+        }
+        @keyframes neon-pulse { from { opacity: 0.6; } to { opacity: 1; } }
+
         .hologram-card { position: absolute; right: 5%; bottom: 8%; width: 240px; background: var(--glass-bg); border: 1px solid var(--hologram-cyan); backdrop-filter: blur(15px); padding: 15px; border-radius: 12px; text-align: center; }
         .card-row { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
         .hall-photo, .hall-qr { width: 95px; height: 95px; background: #fff; border: 1px solid var(--hologram-cyan); object-fit: cover; }
@@ -47,10 +44,14 @@
         .nav-item { padding: 12px; color: var(--hologram-cyan); font-size: 11px; text-transform: uppercase; border-bottom: 1px solid rgba(0, 229, 255, 0.2); cursor: pointer; font-family: 'Share Tech Mono'; }
         
         .viewport { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: url('hall_bg_jpg.jpg') no-repeat center center; background-size: cover; z-index: -1; }
+        
+        /* ТЕХНИЧЕСКАЯ ИНФО О ЯЗЫКЕ */
+        #debug-lang { position: fixed; bottom: 5px; left: 5px; font-size: 8px; opacity: 0.3; font-family: monospace; color: #fff; pointer-events: none; }
     </style>
 </head>
 <body>
 
+    <div id="debug-lang"></div>
     <audio id="door-snd"><source src="door_open.mp3" type="audio/mpeg"></audio>
     <audio id="bar-ambient" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
 
@@ -84,12 +85,13 @@
 
     <div id="block-hall" class="block">
         <div class="viewport"></div>
+        <div id="main-slogan" class="hall-sign-holo"></div>
         <div class="hologram-card">
             <div class="card-row">
                 <div style="background:#fff; width:95px; height:95px;"><img id="hall-user-photo" class="hall-photo" src=""></div>
                 <div id="hall-qr-display" class="hall-qr" style="background:#fff; width:95px; height:95px; display:flex; align-items:center; justify-content:center;"></div>
             </div>
-            <div id="u-id" style="font-size: 13px; margin: 10px 0; font-weight: bold;">#0000-0000</div>
+            <div id="u-id" style="font-size: 13px; margin: 10px 0; font-weight: bold; font-family: 'Share Tech Mono';">#0000-0000</div>
             <button id="btn-confirm-hall" class="btn-mini" onclick="confirmAccess()">ПОДТВЕРДИТЬ</button>
             <div style="position:relative; width: 100%;">
                 <div id="nav-submenu">
@@ -106,43 +108,40 @@
             <button class="btn-gold" id="btn-table">ЗА СТОЛИК</button>
             <button class="btn-gold" id="btn-ai" onclick="barStep(2)">ИНТЕРЕСУЕТ ИИ</button>
         </div>
-        <div id="bar-step-2" style="display:none; text-align:center;">
-            <div class="bar-question" id="bar-q2" style="color:#fff; margin-bottom:20px; font-size:18px;">...</div>
-            <button class="btn-gold" id="btn-one">ОДИН</button>
-            <button class="btn-gold" id="btn-more">БОЛЬШЕ</button>
-        </div>
     </div>
 
     <script>
         let userData = { id: `#0042-${Math.floor(1000 + Math.random() * 9999)}`, photo: '', qr: '' };
         const lingo = {
-            ru: { welcome: "ДОБРО ПОЖАЛОВАТЬ", quote: "«В каждой шутке есть доля виски...»", save: "СОХРАНИТЬ", enter: "ВХОД", nav: "НАВИГАЦИЯ", confirm: "ПОДТВЕРДИТЬ", proceed: "ПРОДОЛЖИТЬ", photo: "ФОТО", barQ1: "Желаете пройти за столик или интересуетесь ИИ?", barTable: "ЗА СТОЛИК", barAI: "ИНТЕРЕСУЕТ ИИ", barQ2: "Вам один, или больше?", barOne: "ОДИН", barMore: "БОЛЬШЕ" },
-            en: { welcome: "WELCOME", quote: "«Every joke has a share of whiskey...»", save: "SAVE", enter: "ENTER", nav: "NAVIGATION", confirm: "CONFIRM", proceed: "PROCEED", photo: "PHOTO", barQ1: "Table or AI?", barTable: "TABLE", barAI: "INTERESTED IN AI", barQ2: "One or more?", barOne: "ONE", barMore: "MORE" },
-            fr: { welcome: "BIENVENUE", quote: "«Dans chaque blague, il y a une part de whisky...»", save: "ENREGISTRER", enter: "ENTRER", nav: "NAVIGATION", confirm: "CONFIRMER", proceed: "CONTINUER", photo: "PHOTO", barQ1: "Une table ou l'IA?", barTable: "UNE TABLE", barAI: "L'IA M'INTÉRESSE", barQ2: "Seul ou plus?", barOne: "SEUL", barMore: "PLUS" }
+            ru: { slogan: "ВСЕ БУДЕТ GY-GY", welcome: "ДОБРО ПОЖАЛОВАТЬ", quote: "«В каждой шутке есть доля виски...»", save: "СОХРАНИТЬ", enter: "ВХОД", nav: "НАВИГАЦИЯ", confirm: "ПОДТВЕРДИТЬ", proceed: "ПРОДОЛЖИТЬ", photo: "ФОТО", barQ1: "Желаете пройти за столик или интересуетесь ИИ?" },
+            en: { slogan: "EVERYTHING WILL BE GY-GY", welcome: "WELCOME", quote: "«Every joke has a share of whiskey...»", save: "SAVE", enter: "ENTER", nav: "NAVIGATION", confirm: "CONFIRM", proceed: "PROCEED", photo: "PHOTO", barQ1: "Table or AI?" },
+            fr: { slogan: "TOUT SERA GY-GY", welcome: "BIENVENUE", quote: "«Dans chaque blague, il y a une part de whisky...»", save: "ENREGISTRER", enter: "ENTRER", nav: "NAVIGATION", confirm: "CONFIRMER", proceed: "CONTINUER", photo: "PHOTO", barQ1: "Une table ou l'IA?" }
         };
 
         function applyLanguage() {
             const bLang = (navigator.language || 'en').toLowerCase();
-            let lang = bLang.includes('ru') ? 'ru' : (bLang.includes('fr') ? 'fr' : 'en');
+            document.getElementById('debug-lang').innerText = "System Lang: " + bLang; // Увидишь это в углу на ПК
+            
+            let lang = 'en';
+            if (bLang.includes('ru')) lang = 'ru';
+            else if (bLang.includes('fr')) lang = 'fr';
+            
             const s = lingo[lang];
             const setT = (id, t) => { if(document.getElementById(id)) document.getElementById(id).innerText = t; };
-            setT('welcome-text', s.welcome); setT('quote-reg', s.quote); setT('btn-save', s.save);
-            setT('btn-to-hall', s.enter); setT('btn-nav-hall', s.nav); setT('btn-confirm-hall', s.confirm);
-            setT('btn-proceed', s.proceed); setT('t-ph', s.photo); setT('bar-q1', s.barQ1);
-            setT('btn-table', s.barTable); setT('btn-ai', s.barAI); setT('bar-q2', s.barQ2);
-            setT('btn-one', s.barOne); setT('btn-more', s.barMore);
+            setT('main-slogan', s.slogan); setT('welcome-text', s.welcome); setT('quote-reg', s.quote); 
+            setT('btn-save', s.save); setT('btn-to-hall', s.enter); setT('btn-nav-hall', s.nav);
+            setT('btn-confirm-hall', s.confirm); setT('btn-proceed', s.proceed); setT('t-ph', s.photo);
+            setT('bar-q1', s.barQ1);
         }
 
         function handleDoor() {
-            console.log("Door clicked!"); // Проверка в консоли браузера
             document.getElementById('door-snd').play().catch(()=>{});
             const d = document.getElementById('door-clicker');
             d.style.transform = "scale(15)";
             d.style.opacity = "0";
-            // Убираем кликабельность после нажатия, чтобы не спамить
             d.style.pointerEvents = "none";
             setTimeout(() => {
-                document.getElementById('block-entrance').style.zIndex = "1"; // Опускаем вход вниз
+                document.getElementById('block-entrance').style.zIndex = "1";
                 switchTo('block-welcome');
             }, 1800);
         }
@@ -183,9 +182,8 @@
         function save() { document.getElementById('btn-to-hall').style.visibility = 'visible'; }
         function confirmAccess() { document.getElementById('btn-confirm-hall').style.display = 'none'; document.getElementById('btn-nav-hall').classList.remove('disabled'); }
         function toggleNav() { const m = document.getElementById('nav-submenu'); m.style.display = (m.style.display === 'flex') ? 'none' : 'flex'; }
-        function barStep(n) { document.getElementById('bar-step-1').style.display = n === 1 ? 'block' : 'none'; document.getElementById('bar-step-2').style.display = n === 2 ? 'block' : 'none'; }
+        function barStep(n) { document.getElementById('bar-step-1').style.display = n === 1 ? 'block' : 'none'; }
 
-        // Запуск языка при старте
         window.onload = applyLanguage;
     </script>
 </body>
