@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.17</title>
+    <title>GY-GY Club v4.3.18</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
@@ -17,29 +17,16 @@
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Times New Roman', serif; overflow: hidden; }
 
-        /* ИЗОЛЯЦИЯ БЛОКОВ */
-        .block { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            display: none; /* Скрыто всё */
-            flex-direction: column; align-items: center; justify-content: center; 
-            padding: 20px; background: #000; z-index: 1; 
-        }
-        
-        /* КЛЮЧЕВОЙ МОМЕНТ: Только .active виден */
+        .block { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: #000; z-index: 1; }
         .block.active { display: flex !important; z-index: 100; }
 
         /* ЭКРАН 0: ДВЕРЬ */
         .door-wrapper { cursor: pointer; transition: 1.5s cubic-bezier(0.4, 0, 0.2, 1); z-index: 101; }
         .door-img { width: 75vw; max-width: 320px; display: block; border: 1px solid rgba(212, 175, 55, 0.3); }
 
-        /* ЭКРАН 1: ПРИВЕТСТВИЕ (ЧАРЛИ) */
+        /* ЭКРАН 1: ЧАРЛИ */
         .charlie-container { width: 220px; height: 220px; border-radius: 50%; border: 2px solid var(--gold); overflow: hidden; margin-bottom: 30px; background: #111; }
         .charlie-container img { width: 100%; height: 100%; object-fit: cover; }
-
-        /* ЭКРАН 2: ТЕРМИНАЛ */
-        .setup-grid { display: grid; grid-template-columns: repeat(3, 90px); gap: 15px; margin-bottom: 20px; }
-        .square-box { width: 90px; height: 90px; border: 1px solid var(--gold); background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; color: #000; position: relative; }
-        #qrcode img { width: 100% !important; height: 100% !important; padding: 5px; }
 
         .btn-gold { width: 220px; height: 45px; background: transparent; border: 1px solid var(--gold); color: var(--gold); text-transform: uppercase; letter-spacing: 1px; cursor: pointer; margin-top: 10px; font-family: inherit; }
 
@@ -61,36 +48,35 @@
         .card-row { display: flex; justify-content: center; gap: 10px; margin-bottom: 10px; }
         .hall-photo, .hall-qr { width: 85px; height: 85px; border: 1px solid var(--hologram-cyan); background: #000; object-fit: cover; }
         .hall-qr { background: #fff; padding: 3px; }
-        .hall-qr img { width: 100%; height: 100%; }
     </style>
 </head>
 <body>
 
     <audio id="door-snd"><source src="door_open.mp3" type="audio/mpeg"></audio>
+    <audio id="bar-ambient" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active">
         <div style="letter-spacing:10px; margin-bottom:40px; opacity:0.6; font-size: 12px;">GY-GY PRIVATE CLUB</div>
-        <div class="door-wrapper" onclick="handleDoor()">
-            <img src="door_1.jpg" class="door-img">
-        </div>
+        <div class="door-wrapper" onclick="handleDoor()"><img src="door_1.jpg" class="door-img"></div>
     </div>
 
     <div id="block-welcome" class="block">
         <div class="charlie-container"><img src="charlie.png"></div>
-        <h1 id="welcome-text" style="font-size: 40px; letter-spacing: 12px; margin-bottom: 30px;">WELCOME</h1>
-        <button class="btn-gold" onclick="switchTo('block-identity')">PROCEED</button>
+        <h1 id="welcome-text" style="font-size: 36px; letter-spacing: 12px; margin-bottom: 30px;">WELCOME</h1>
+        <button id="btn-proceed" class="btn-gold" onclick="switchTo('block-identity')">PROCEED</button>
     </div>
 
     <div id="block-identity" class="block">
-        <div class="setup-grid">
-            <div class="square-box"><div id="id-display" style="font-size: 10px; font-weight: bold;">#TRACE</div></div>
-            <div id="qrcode" class="square-box"></div>
-            <div class="square-box" onclick="document.getElementById('f').click()" style="cursor:pointer;">
-                <span id="t-ph" style="font-size:10px;">PHOTO</span>
+        <div style="display: grid; grid-template-columns: repeat(3, 90px); gap: 15px; margin-bottom: 20px;">
+            <div style="width: 90px; height: 90px; border: 1px solid var(--gold); background: #fff; display: flex; align-items: center; justify-content: center; color: #000;">
+                <div id="id-display" style="font-size: 10px; font-weight: bold;">#TRACE</div>
+            </div>
+            <div id="qrcode" style="width: 90px; height: 90px; border: 1px solid var(--gold); background: #fff;"></div>
+            <div style="width: 90px; height: 90px; border: 1px solid var(--gold); background: #fff; cursor:pointer;" onclick="document.getElementById('f').click()">
                 <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
             </div>
         </div>
-        <div id="quote-reg" style="font-style: italic; font-size: 20px; margin: 20px 0; text-align: center;">«В каждой шутке есть доля виски...»</div>
+        <div id="quote-reg" style="font-style: italic; font-size: 20px; margin: 20px 0; text-align: center; color: var(--gold);">«В каждой шутке есть доля виски...»</div>
         <button id="btn-save" class="btn-gold" onclick="save()">СОХРАНИТЬ</button>
         <button id="btn-to-hall" class="btn-gold" style="visibility:hidden;" onclick="switchTo('block-hall')">ВХОД</button>
         <input type="file" id="f" style="display:none" onchange="preview(this)">
@@ -98,9 +84,8 @@
 
     <div id="block-hall" class="block" style="padding:0;">
         <div class="viewport">
-            <div class="wall-phrase">ВСЕ БУДЕТ GY-GY</div>
+            <div id="wall-phrase" class="wall-phrase">ВСЕ БУДЕТ GY-GY</div>
             <div class="hologram-v464" id="gate">
-                <div style="font-size: 9px; margin-bottom: 10px;">ID VERIFICATION</div>
                 <div class="card-row">
                     <img id="hall-user-photo" class="hall-photo" src="">
                     <div id="hall-qr-display" class="hall-qr"></div>
@@ -114,20 +99,22 @@
 
     <script>
         let fullID = `#0042-${Math.floor(1000 + Math.random() * 9999)}`;
+        const barAmbient = document.getElementById('bar-ambient');
 
-        // ЛИНГВО-ЦЕНТР
         const lingo = {
-            ru: { w: "ПРИВЕТ", q: "«В каждой шутке есть доля виски...»", s: "СОХРАНИТЬ", e: "ВХОД", n: "НАВИГАЦИЯ" },
-            en: { w: "WELCOME", q: "«Every joke has a share of whiskey...»", s: "SAVE", e: "ENTER", n: "NAVIGATION" }
+            ru: { welcome: "ДОБРО ПОЖАЛОВАТЬ", quote: "«В каждой шутке есть доля виски...»", save: "СОХРАНИТЬ", enter: "ВХОД", nav: "НАВИГАЦИЯ", proceed: "ПРОДОЛЖИТЬ" },
+            en: { welcome: "WELCOME", quote: "«Every joke has a share of whiskey...»", save: "SAVE", enter: "ENTER", nav: "NAVIGATION", proceed: "PROCEED" }
         };
 
         function applyLingo() {
             const lang = navigator.language.startsWith('ru') ? 'ru' : 'en';
-            document.getElementById('welcome-text').innerText = lingo[lang].w;
-            document.getElementById('quote-reg').innerText = lingo[lang].q;
-            document.getElementById('btn-save').innerText = lingo[lang].s;
-            document.getElementById('btn-to-hall').innerText = lingo[lang].e;
-            document.getElementById('btn-nav-hall').innerText = lingo[lang].n;
+            const s = lingo[lang];
+            document.getElementById('welcome-text').innerText = s.welcome;
+            document.getElementById('quote-reg').innerText = s.quote;
+            document.getElementById('btn-save').innerText = s.save;
+            document.getElementById('btn-to-hall').innerText = s.enter;
+            document.getElementById('btn-nav-hall').innerText = s.nav;
+            document.getElementById('btn-proceed').innerText = s.proceed;
         }
 
         function handleDoor() {
@@ -139,12 +126,13 @@
         }
 
         function switchTo(id) {
-            applyLingo(); // Проверяем язык при каждом переходе
+            applyLingo();
             document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
-            const target = document.getElementById(id);
-            if(target) target.classList.add('active');
+            document.getElementById(id).classList.add('active');
 
             if(id === 'block-identity') {
+                barAmbient.volume = 0.2;
+                barAmbient.play().catch(()=>{});
                 document.getElementById('id-display').innerText = fullID;
                 const q = document.getElementById("qrcode"); q.innerHTML = "";
                 new QRCode(q, { text: "GY-ID:" + fullID, width: 90, height: 90 });
@@ -156,7 +144,6 @@
             r.onload = (e) => {
                 document.getElementById('pp').src = e.target.result;
                 document.getElementById('pp').style.display = "block";
-                document.getElementById('t-ph').style.display = "none";
             };
             r.readAsDataURL(input.files[0]);
         }
@@ -165,13 +152,12 @@
             document.getElementById('btn-to-hall').style.visibility = 'visible';
             document.getElementById('u-id').innerText = fullID;
             const sourceQR = document.querySelector('#qrcode img');
-            if(sourceQR) document.getElementById('hall-qr-display').innerHTML = `<img src="${sourceQR.src}">`;
+            if(sourceQR) document.getElementById('hall-qr-display').innerHTML = `<img src="${sourceQR.src}" style="width:100%">`;
             const photoSrc = document.getElementById('pp').src;
             if(photoSrc) document.getElementById('hall-user-photo').src = photoSrc;
         }
 
-        // Принудительно ставим Дверь активной при загрузке
-        window.onload = () => { switchTo('block-entrance'); };
+        window.onload = () => { applyLingo(); };
     </script>
 </body>
 </html>
