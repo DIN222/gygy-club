@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.60</title>
+    <title>GY-GY Club v4.3.62</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
@@ -21,24 +21,23 @@
         .door-img { width: 75vw; max-width: 320px; cursor: pointer; z-index: 20; }
         .hall-bg { position: absolute; width: 100%; height: 100%; background: url('hall_bg_jpg.jpg') no-repeat center; background-size: cover; z-index: -1; }
 
-        /* ИНТЕРЬЕР БАРА */
-        .bar-container { position: relative; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; background: #000; }
-        .charlie-bar-img { width: 100%; max-width: 700px; height: auto; z-index: 5; filter: contrast(1.1); margin-bottom: -10px; }
-        .bar-counter { position: absolute; bottom: 0; width: 100%; height: 140px; background: linear-gradient(0deg, #000 0%, #1a1a1a 100%); border-top: 3px solid var(--gold); z-index: 6; }
+        /* БАРНЫЙ ВИЗУАЛ */
+        .bar-fullscreen { 
+            position: absolute; width: 100%; height: 100%; 
+            background: url('charlie_bar.png') no-repeat center bottom; 
+            background-size: cover; z-index: 1;
+        }
 
         .neon-sign { position: absolute; top: 8%; width: 90%; text-align: center; font-size: clamp(18px, 5vw, 26px); color: #fff; text-shadow: 0 0 10px var(--cyan), 0 0 30px var(--cyan); animation: flicker 6s infinite; z-index: 2; }
         @keyframes flicker { 0%, 90%, 94%, 100% { opacity: 1; } 92%, 96% { opacity: 0.6; } }
 
-        /* ОБЛАЧКА ПОД РУКИ ЧАРЛИ */
         .bubble { 
             position: absolute; background: #fff; color: #000; padding: 18px 25px; border-radius: 60px; 
-            font-family: 'Share Tech Mono'; font-size: 12px; font-weight: bold; cursor: pointer; z-index: 20; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 15px rgba(255,255,255,0.2); 
-            transition: transform 0.2s; text-align: center; border: 2px solid #fff;
-            animation: float-pulse 4s infinite ease-in-out;
+            font-family: 'Share Tech Mono'; font-size: 11px; font-weight: bold; cursor: pointer; z-index: 20; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8); text-align: center; border: 2px solid #fff;
+            animation: float 4s infinite ease-in-out;
         }
-        @keyframes float-pulse { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-8px) scale(1.03); } }
-        .bubble:active { transform: scale(0.9); }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
         .lang-panel { position: fixed; top: 20px; right: 20px; z-index: 1000; font-family: 'Share Tech Mono'; cursor: pointer; border: 1px solid var(--gold); padding: 8px 15px; background: rgba(0,0,0,0.8); }
         .btn-gold { min-width: 220px; padding: 18px; background: transparent; border: 1px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; letter-spacing: 3px; margin: 10px; text-transform: uppercase; }
@@ -56,7 +55,9 @@
     <div id="block-entrance" class="block active"><img src="door_1.jpg" class="door-img" id="main-door" onclick="handleDoor()"></div>
 
     <div id="block-welcome" class="block">
-        <div style="width:160px; height:160px; border-radius:50%; border:2px solid var(--gold); overflow:hidden; margin-bottom:20px;"><img src="charlie.png" style="width:100%; height:100%; object-fit:cover;"></div>
+        <div style="width:160px; height:160px; border-radius:50%; border:2px solid var(--gold); overflow:hidden; margin-bottom:20px;">
+            <img src="charlie.png" style="width:100%; height:100%; object-fit:cover;">
+        </div>
         <h2 id="t-welcome"></h2>
         <button class="btn-gold" id="b-pass" onclick="portalTransition('block-identity')"></button>
     </div>
@@ -81,19 +82,16 @@
         <div style="position:absolute; right:5%; bottom:8%; background:rgba(0,0,0,0.9); border:1px solid var(--cyan); padding:20px; border-radius:15px; text-align:center;">
             <div style="display:flex; gap:10px; margin-bottom:15px;"><img id="h-photo" style="width:80px; height:80px; background:#fff; object-fit:cover;"><div id="h-qr" style="width:80px; height:80px; background:#fff;"></div></div>
             <div id="h-id-display" style="font-family:'Share Tech Mono'; color:var(--cyan); font-size:12px; margin-bottom:15px;"></div>
-            <button class="btn-gold" id="b-to-bar" style="width:100%; margin:0;" onclick="startBar()"></button>
+            <button class="btn-gold" id="b-to-bar" style="width:100%; margin:0;" onclick="enterBar()"></button>
         </div>
     </div>
 
     <div id="block-bar" class="block">
-        <div class="bar-container">
-            <div id="t-neon" class="neon-sign"></div>
-            <img src="charlie_bar.png" class="charlie-bar-img">
-            <div class="bar-counter"></div>
-            <div class="bubble" style="left:5%; bottom:40%;" id="t-table"></div>
-            <div class="bubble" style="right:5%; bottom:30%; animation-delay: 2s;" id="t-ai"></div>
-        </div>
-        <button onclick="location.reload()" style="position:absolute; bottom:20px; color:var(--gold); background:none; border:none; z-index:100; cursor:pointer; font-family:'Share Tech Mono';">← EXIT</button>
+        <div class="bar-fullscreen"></div>
+        <div id="t-neon" class="neon-sign"></div>
+        <div class="bubble" style="left:5%; bottom:40%;" id="t-table"></div>
+        <div class="bubble" style="right:5%; bottom:30%; animation-delay: 2s;" id="t-ai"></div>
+        <button onclick="location.reload()" style="position:absolute; bottom:20px; color:var(--gold); background:none; border:none; z-index:100; cursor:pointer;">← EXIT</button>
     </div>
 
     <script>
@@ -113,6 +111,32 @@
             document.getElementById('cur-l').innerText = curL.toUpperCase();
         }
 
+        function handleDoor() {
+            document.getElementById('snd-door').play().catch(()=>{});
+            document.getElementById('main-door').classList.add('zoom-out');
+            
+            // Включаем гул бара сразу после дверей (на этапе регистрации)
+            document.getElementById('snd-ambient').volume = 0.4;
+            document.getElementById('snd-ambient').play().catch(()=>{});
+
+            document.getElementById('id-box').innerText = fullID;
+            if(!document.getElementById("qr-box").innerHTML) new QRCode(document.getElementById("qr-box"), { text: fullID, width: 85, height: 85 });
+            setTimeout(() => portalTransition('block-welcome'), 2500);
+        }
+
+        function enterBar() {
+            const jazz = document.getElementById('snd-jazz');
+            jazz.volume = 0;
+            jazz.play();
+            // Нарастание джаза
+            let vol = 0;
+            const interval = setInterval(() => {
+                if (vol < 0.8) { vol += 0.05; jazz.volume = vol; } 
+                else { clearInterval(interval); }
+            }, 200);
+            portalTransition('block-bar');
+        }
+
         function portalTransition(nextId) {
             document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
             document.getElementById(nextId).classList.add('active');
@@ -122,22 +146,6 @@
                 const qrImg = document.querySelector("#qr-box img");
                 if(qrImg) document.getElementById('h-qr').innerHTML = `<img src="${qrImg.src}" style="width:100%;">`;
             }
-        }
-
-        function startBar() {
-            // Исправленные имена файлов
-            const a1 = document.getElementById('snd-ambient');
-            const a2 = document.getElementById('snd-jazz');
-            a1.play().catch(() => {}); a2.play().catch(() => {});
-            portalTransition('block-bar');
-        }
-
-        function handleDoor() {
-            document.getElementById('snd-door').play().catch(()=>{});
-            document.getElementById('main-door').classList.add('zoom-out');
-            document.getElementById('id-box').innerText = fullID;
-            if(!document.getElementById("qr-box").innerHTML) new QRCode(document.getElementById("qr-box"), { text: fullID, width: 85, height: 85 });
-            setTimeout(() => portalTransition('block-welcome'), 2500);
         }
 
         function preview(input) {
