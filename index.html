@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.59</title>
+    <title>GY-GY Club v4.3.60</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
@@ -11,6 +11,7 @@
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; }
         
+        /* ДВЕРИ */
         .zoom-out { animation: zOut 2.5s forwards ease-in-out; pointer-events: none; }
         @keyframes zOut { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(15); opacity: 0; filter: blur(20px); } }
 
@@ -20,27 +21,34 @@
         .door-img { width: 75vw; max-width: 320px; cursor: pointer; z-index: 20; }
         .hall-bg { position: absolute; width: 100%; height: 100%; background: url('hall_bg_jpg.jpg') no-repeat center; background-size: cover; z-index: -1; }
 
-        /* ИНТЕРЬЕР БАРА - ФИКС */
-        .bar-container { position: relative; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; overflow: hidden; background: #050505; }
-        .charlie-bar-img { position: relative; width: 100%; max-width: 600px; height: auto; z-index: 5; display: block; filter: drop-shadow(0 0 20px #000); margin-bottom: -5px; }
-        .bar-counter { position: absolute; bottom: 0; width: 100%; height: 120px; background: linear-gradient(0deg, #000 0%, #1a1a1a 100%); border-top: 3px solid var(--gold); z-index: 6; }
+        /* ИНТЕРЬЕР БАРА */
+        .bar-container { position: relative; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; background: #000; }
+        .charlie-bar-img { width: 100%; max-width: 700px; height: auto; z-index: 5; filter: contrast(1.1); margin-bottom: -10px; }
+        .bar-counter { position: absolute; bottom: 0; width: 100%; height: 140px; background: linear-gradient(0deg, #000 0%, #1a1a1a 100%); border-top: 3px solid var(--gold); z-index: 6; }
 
-        .neon-sign { position: absolute; top: 10%; width: 90%; text-align: center; font-size: clamp(18px, 5vw, 28px); color: #fff; text-shadow: 0 0 10px var(--cyan), 0 0 30px var(--cyan); animation: flicker 5s infinite; z-index: 2; }
+        .neon-sign { position: absolute; top: 8%; width: 90%; text-align: center; font-size: clamp(18px, 5vw, 26px); color: #fff; text-shadow: 0 0 10px var(--cyan), 0 0 30px var(--cyan); animation: flicker 6s infinite; z-index: 2; }
         @keyframes flicker { 0%, 90%, 94%, 100% { opacity: 1; } 92%, 96% { opacity: 0.6; } }
 
-        .lang-panel { position: fixed; top: 20px; right: 20px; z-index: 1000; font-family: 'Share Tech Mono'; cursor: pointer; border: 1px solid var(--gold); padding: 8px 15px; background: rgba(0,0,0,0.8); }
-        .btn-gold { min-width: 200px; padding: 15px; background: transparent; border: 1px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; letter-spacing: 2px; margin: 10px; text-transform: uppercase; }
-        
-        .bubble { position: absolute; background: #fff; color: #000; padding: 12px 20px; border-radius: 50px; font-family: 'Share Tech Mono'; font-size: 11px; font-weight: bold; cursor: pointer; z-index: 20; animation: float 3s infinite ease-in-out; box-shadow: 0 5px 15px #000; }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        /* ОБЛАЧКА ПОД РУКИ ЧАРЛИ */
+        .bubble { 
+            position: absolute; background: #fff; color: #000; padding: 18px 25px; border-radius: 60px; 
+            font-family: 'Share Tech Mono'; font-size: 12px; font-weight: bold; cursor: pointer; z-index: 20; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 15px rgba(255,255,255,0.2); 
+            transition: transform 0.2s; text-align: center; border: 2px solid #fff;
+            animation: float-pulse 4s infinite ease-in-out;
+        }
+        @keyframes float-pulse { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-8px) scale(1.03); } }
+        .bubble:active { transform: scale(0.9); }
 
-        .square-box { width: 85px; height: 85px; background: #fff; color: #000; display: flex; align-items: center; justify-content: center; font-size: 9px; font-family: 'Share Tech Mono'; text-align: center; overflow: hidden; }
+        .lang-panel { position: fixed; top: 20px; right: 20px; z-index: 1000; font-family: 'Share Tech Mono'; cursor: pointer; border: 1px solid var(--gold); padding: 8px 15px; background: rgba(0,0,0,0.8); }
+        .btn-gold { min-width: 220px; padding: 18px; background: transparent; border: 1px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; letter-spacing: 3px; margin: 10px; text-transform: uppercase; }
+        .square-box { width: 85px; height: 85px; background: #fff; color: #000; display: flex; align-items: center; justify-content: center; font-size: 9px; font-family: 'Share Tech Mono'; }
     </style>
 </head>
 <body>
 
     <audio id="snd-door"><source src="door_open.mp3" type="audio/mpeg"></audio>
-    <audio id="snd-ambient" loop><source src="bar_crowd.mp3" type="audio/mpeg"></audio>
+    <audio id="snd-ambient" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
     <audio id="snd-jazz" loop><source src="charlie_jazz_duet.mp3" type="audio/mpeg"></audio>
 
     <div id="lang-ui" class="lang-panel" style="display:none;" onclick="toggleLang()">LANG: <span id="cur-l">RU</span></div>
@@ -48,13 +56,13 @@
     <div id="block-entrance" class="block active"><img src="door_1.jpg" class="door-img" id="main-door" onclick="handleDoor()"></div>
 
     <div id="block-welcome" class="block">
-        <div style="width:150px; height:150px; border-radius:50%; border:2px solid var(--gold); overflow:hidden; margin-bottom:20px;"><img src="charlie.png" style="width:100%; height:100%; object-fit:cover;"></div>
+        <div style="width:160px; height:160px; border-radius:50%; border:2px solid var(--gold); overflow:hidden; margin-bottom:20px;"><img src="charlie.png" style="width:100%; height:100%; object-fit:cover;"></div>
         <h2 id="t-welcome"></h2>
         <button class="btn-gold" id="b-pass" onclick="portalTransition('block-identity')"></button>
     </div>
 
     <div id="block-identity" class="block">
-        <div id="t-whisky" style="font-size: 20px; font-style: italic; margin-bottom: 30px; text-align: center;"></div>
+        <div id="t-whisky" style="font-size: 22px; font-style: italic; margin-bottom: 30px; text-align: center;"></div>
         <div style="display:flex; gap:10px; margin-bottom:30px;">
             <div id="id-box" class="square-box"></div>
             <div id="qr-box" class="square-box"></div>
@@ -80,10 +88,10 @@
     <div id="block-bar" class="block">
         <div class="bar-container">
             <div id="t-neon" class="neon-sign"></div>
-            <img src="charlie_bar.png" class="charlie-bar-img" onerror="this.src='charlie.png'; this.style.width='50%'">
+            <img src="charlie_bar.png" class="charlie-bar-img">
             <div class="bar-counter"></div>
-            <div class="bubble" style="left:10%; bottom:35%;" id="t-table"></div>
-            <div class="bubble" style="right:10%; bottom:25%;" id="t-ai"></div>
+            <div class="bubble" style="left:5%; bottom:40%;" id="t-table"></div>
+            <div class="bubble" style="right:5%; bottom:30%; animation-delay: 2s;" id="t-ai"></div>
         </div>
         <button onclick="location.reload()" style="position:absolute; bottom:20px; color:var(--gold); background:none; border:none; z-index:100; cursor:pointer; font-family:'Share Tech Mono';">← EXIT</button>
     </div>
@@ -92,8 +100,8 @@
         const fullID = `#0042-${Math.floor(1000 + Math.random() * 9999)}`;
         let curL = 'ru';
         const dict = {
-            ru: { welcome: "ДОБРО ПОЖАЛОВАТЬ", pass: "ПРОХОДИТЕ", photo: "ФОТО", save: "СОХРАНИТЬ", enter: "В ХОЛЛ", tobar: "В БАР", table: "СТОЛИК", ai: "МЕНЮ", neon: "Истина не в вине, а в его количестве", whisky: "«В каждой шутке есть доля виски»" },
-            en: { welcome: "WELCOME", pass: "COME IN", photo: "PHOTO", save: "SAVE", enter: "TO HALL", tobar: "TO BAR", table: "TABLE", ai: "MENU", neon: "Truth is not in wine, but in its quantity", whisky: "“Every joke has a measure of whisky”" }
+            ru: { welcome: "ДОБРО ПОЖАЛОВАТЬ", pass: "ПРОХОДИТЕ", photo: "ФОТО", save: "СОХРАНИТЬ", enter: "В ХОЛЛ", tobar: "В БАР", table: "ПРОЙТИ К СТОЛИКАМ", ai: "ОСТАТЬСЯ С ИИ", neon: "Истина не в вине, а в его количестве", whisky: "«В каждой шутке есть доля виски»" },
+            en: { welcome: "WELCOME", pass: "COME IN", photo: "PHOTO", save: "SAVE", enter: "TO HALL", tobar: "TO BAR", table: "GO TO TABLES", ai: "STAY WITH AI", neon: "Truth is not in wine, but in its quantity", whisky: "“Every joke has a measure of whisky”" }
         };
 
         function toggleLang() { curL = (curL === 'ru') ? 'en' : 'ru'; updateUI(); }
@@ -117,11 +125,10 @@
         }
 
         function startBar() {
-            // Принудительный старт звука по клику
+            // Исправленные имена файлов
             const a1 = document.getElementById('snd-ambient');
             const a2 = document.getElementById('snd-jazz');
-            a1.play().catch(() => console.log("Audio 1 blocked"));
-            a2.play().catch(() => console.log("Audio 2 blocked"));
+            a1.play().catch(() => {}); a2.play().catch(() => {});
             portalTransition('block-bar');
         }
 
@@ -141,7 +148,6 @@
             };
             r.readAsDataURL(input.files[0]);
         }
-
         window.onload = updateUI;
     </script>
 </body>
