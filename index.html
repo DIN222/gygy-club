@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.65 | Audio Reactive</title>
+    <title>GY-GY Club v4.3.66 | Seamless & Integrated</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
@@ -11,36 +11,36 @@
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none; margin: 0; padding: 0; }
         body, html { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; }
         
-        .lang-panel { position: fixed; top: 20px; right: 20px; z-index: 9999; font-family: 'Share Tech Mono'; cursor: pointer; border: 1px solid var(--gold); padding: 8px 15px; background: rgba(0,0,0,0.9); }
+        /* КНОПКА ЯЗЫКА - ПРИВЯЗАНА К СИСТЕМЕ */
+        .lang-panel { position: fixed; top: 20px; right: 20px; z-index: 9999; font-family: 'Share Tech Mono'; cursor: pointer; border: 1px solid var(--gold); padding: 8px 15px; background: rgba(0,0,0,0.9); transition: 0.3s; }
+        .lang-panel:hover { color: #fff; border-color: #fff; }
+
         .block { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; z-index: 10; }
         .block.active { display: flex !important; }
 
-        /* БАР */
+        /* БАР И ИНТЕГРИРОВАННЫЕ ОБЛАЧКА */
         .bar-wrap { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #000; }
         .bar-img { width: 100%; height: 100%; object-fit: contain; z-index: 1; }
         
-        /* ПЛЯШУЩИЙ НЕОН */
+        /* КНОПКИ-НЕВИДИМКИ НА МЕСТЕ НАРИСОВАННЫХ ОБЛАЧЕК */
+        .art-bubble { 
+            position: absolute; 
+            background: rgba(255,255,255,0.01); /* Почти прозрачно */
+            cursor: pointer; z-index: 20; 
+            display: flex; align-items: center; justify-content: center;
+            text-align: center; font-family: 'Share Tech Mono'; font-weight: bold;
+            color: transparent; /* Скрываем текст, так как он есть на рисунке */
+            transition: 0.3s;
+        }
+        /* Подсветка при наведении, чтобы показать интерактивность */
+        .art-bubble:hover { background: rgba(0, 229, 255, 0.1); box-shadow: 0 0 30px rgba(0, 229, 255, 0.2); border-radius: 50%; }
+
         .neon-sign { 
             position: absolute; top: 10%; width: 100%; text-align: center; 
             font-size: clamp(16px, 4vw, 24px); color: #fff; 
             text-shadow: 0 0 10px var(--cyan); z-index: 2;
-            transition: text-shadow 0.1s ease-out, opacity 0.1s ease-out;
         }
 
-        /* ИНТЕРАКТИВНЫЕ ОБЛАЧКА */
-        .bubble { 
-            position: absolute; background: #fff; color: #000; padding: 15px 25px; border-radius: 40px; 
-            font-family: 'Share Tech Mono'; font-size: 13px; font-weight: bold; cursor: pointer; z-index: 20; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 2px solid #fff; text-align: center;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            animation: float 4s infinite ease-in-out;
-        }
-        .bubble:hover { transform: scale(1.15); background: var(--cyan); box-shadow: 0 0 20px var(--cyan); }
-        .bubble:active { transform: scale(0.95); }
-
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-
-        /* ЭЛЕМЕНТЫ */
         .btn-gold { min-width: 200px; padding: 15px; background: transparent; border: 1px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; letter-spacing: 2px; margin: 10px; text-transform: uppercase; }
         .square-box { width: 85px; height: 85px; background: #fff; color: #000; display: flex; align-items: center; justify-content: center; font-size: 9px; font-family: 'Share Tech Mono'; text-align: center; }
         .door-img { width: 75vw; max-width: 320px; cursor: pointer; transition: 2.5s; }
@@ -51,9 +51,9 @@
 
     <audio id="snd-door"><source src="door_open.mp3" type="audio/mpeg"></audio>
     <audio id="snd-ambient" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
-    <audio id="snd-jazz" loop crossorigin="anonymous"><source src="charlie_jazz_duet.mp3" type="audio/mpeg"></audio>
+    <audio id="snd-jazz" crossorigin="anonymous"><source src="charlie_jazz_duet.mp3" type="audio/mpeg"></audio>
 
-    <div id="lang-ui" class="lang-panel" onclick="toggleLang()">LANG: <span id="cur-l">RU</span></div>
+    <div id="lang-ui" class="lang-panel" onclick="toggleLang()">LANG: <span id="cur-l">--</span></div>
 
     <div id="block-entrance" class="block active"><img src="door_1.jpg" class="door-img" id="main-door" onclick="handleDoor()"></div>
     
@@ -87,59 +87,77 @@
         <div class="bar-wrap">
             <div id="t-neon" class="neon-sign"></div>
             <img src="charlie_bar.png" class="bar-img">
-            <div class="bubble" style="left:12%; bottom:35%;" id="t-table"></div>
-            <div class="bubble" style="right:12%; bottom:25%;" id="t-ai"></div>
+            
+            <div class="art-bubble" style="left:15%; bottom:32%; width:150px; height:100px;" id="t-table" onclick="alert('Переход к столикам...')"></div>
+            <div class="art-bubble" style="right:15%; bottom:22%; width:150px; height:100px;" id="t-ai" onclick="alert('Ветка ИИ...')"></div>
         </div>
         <button onclick="location.reload()" style="position:absolute; bottom:20px; color:var(--gold); background:none; border:none; z-index:100; cursor:pointer;">← EXIT</button>
     </div>
 
     <script>
         const fullID = `#0042-${Math.floor(1000 + Math.random() * 9999)}`;
-        const userLang = navigator.language || navigator.userLanguage;
-        let curL = userLang.startsWith('ru') ? 'ru' : 'en';
+        
+        // 1. ЖЕСТКАЯ ПРИВЯЗКА ЯЗЫКА К БРАУЗЕРУ И ПАМЯТИ
+        const getInitialLang = () => {
+            const saved = localStorage.getItem('gy_club_lang');
+            if (saved) return saved;
+            return navigator.language.startsWith('ru') ? 'ru' : 'en';
+        };
+        let curL = getInitialLang();
 
         const dict = {
-            ru: { welcome: "ДОБРО ПОЖАЛОВАТЬ", pass: "ПРОХОДИТЕ", photo: "ФОТО", save: "СОХРАНИТЬ", enter: "В ХОЛЛ", tobar: "В БАР", table: "ПРОЙТИ К СТОЛИКАМ", ai: "ОСТАТЬСЯ С ИИ", whisky: "«В каждой шутке есть доля виски»", neon: "Истина не в вине, а в его количестве" },
-            en: { welcome: "WELCOME", pass: "COME IN", photo: "PHOTO", save: "SAVE", enter: "TO HALL", tobar: "TO BAR", table: "GO TO TABLES", ai: "STAY WITH AI", whisky: "“Every joke has a measure of whisky”", neon: "The truth is not in wine, but in its quantity" }
+            ru: { welcome: "ДОБРО ПОЖАЛОВАТЬ", pass: "ПРОХОДИТЕ", photo: "ФОТО", save: "СОХРАНИТЬ", enter: "В ХОЛЛ", tobar: "В БАР", neon: "Истина не в вине, а в его количестве", whisky: "«В каждой шутке есть доля виски»" },
+            en: { welcome: "WELCOME", pass: "COME IN", photo: "PHOTO", save: "SAVE", enter: "TO HALL", tobar: "TO BAR", neon: "The truth is not in wine, but in its quantity", whisky: "“Every joke has a measure of whisky”" }
         };
 
-        function toggleLang() { curL = (curL === 'ru') ? 'en' : 'ru'; updateUI(); }
+        function toggleLang() { 
+            curL = (curL === 'ru') ? 'en' : 'ru'; 
+            localStorage.setItem('gy_club_lang', curL); // Запоминаем выбор
+            updateUI(); 
+        }
+
         function updateUI() {
             const d = dict[curL];
-            const mapping = { 't-welcome': d.welcome, 'b-pass': d.pass, 't-photo': d.photo, 'b-save': d.save, 'b-enter': d.enter, 'b-to-bar': d.tobar, 't-table': d.table, 't-ai': d.ai, 't-whisky': d.whisky, 't-neon': d.neon };
+            const mapping = { 't-welcome': d.welcome, 'b-pass': d.pass, 't-photo': d.photo, 'b-save': d.save, 'b-enter': d.enter, 'b-to-bar': d.tobar, 't-whisky': d.whisky, 't-neon': d.neon };
             for (let id in mapping) { if (document.getElementById(id)) document.getElementById(id).innerText = mapping[id]; }
             document.getElementById('cur-l').innerText = curL.toUpperCase();
         }
 
-        // РЕАКТИВНЫЙ НЕОН (ПОД ТРЕК)
+        // 2. БЕСШОВНЫЙ ПОВТОР ТРЕКА
+        const jazz = document.getElementById('snd-jazz');
+        jazz.addEventListener('timeupdate', function() {
+            const buffer = 0.15; // Секунды до конца
+            if(this.currentTime > this.duration - buffer) {
+                this.currentTime = 0;
+                this.play();
+            }
+        });
+
+        // ВИЗУАЛИЗАТОР НЕОНА
         function startVisualizer(audioElement) {
             const context = new (window.AudioContext || window.webkitAudioContext)();
             const src = context.createMediaElementSource(audioElement);
             const analyser = context.createAnalyser();
-            src.connect(analyser);
-            analyser.connect(context.destination);
+            src.connect(analyser); analyser.connect(context.destination);
             analyser.fftSize = 64;
-            const bufferLength = analyser.frequencyBinCount;
-            const dataArray = new Uint8Array(bufferLength);
+            const dataArray = new Uint8Array(analyser.frequencyBinCount);
             const neon = document.getElementById('t-neon');
 
             function renderFrame() {
                 requestAnimationFrame(renderFrame);
                 analyser.getByteFrequencyData(dataArray);
-                let avg = dataArray.reduce((a,b) => a+b) / bufferLength;
-                let intensity = avg / 120; // Нормализация
-                neon.style.opacity = 0.5 + (intensity * 0.5);
-                neon.style.textShadow = `0 0 ${10 + intensity * 30}px var(--cyan), 0 0 ${5 + intensity * 15}px #fff`;
+                let avg = dataArray.reduce((a,b) => a+b) / dataArray.length;
+                let intensity = avg / 120;
+                neon.style.opacity = 0.4 + (intensity * 0.6);
+                neon.style.textShadow = `0 0 ${10 + intensity * 40}px var(--cyan)`;
             }
             renderFrame();
         }
 
         function enterBar() {
-            document.getElementById('snd-ambient').pause(); // Выключаем гул
-            const jazz = document.getElementById('snd-jazz');
+            document.getElementById('snd-ambient').pause();
             jazz.volume = 0; jazz.play();
-            startVisualizer(jazz); // Запускаем "танцы" неона
-            
+            startVisualizer(jazz);
             let v = 0;
             const fade = setInterval(() => { if (v < 0.7) { v += 0.05; jazz.volume = v; } else { clearInterval(fade); } }, 200);
             portalTransition('block-bar');
