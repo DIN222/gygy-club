@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.72 | Gold & Rhythm</title>
+    <title>GY-GY Club v4.3.74 | Pure Gold</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -20,37 +20,45 @@
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; }
         body, html { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; }
 
-        #google_translate_element { position: fixed; top: 10px; left: 10px; z-index: 9999; opacity: 0.6; }
+        #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 9999; border: 1px solid var(--gold); background: rgba(0,0,0,0.5); }
 
-        .block { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; z-index: 10; opacity: 0; transition: 0.4s; }
-        .block.active { display: flex !important; opacity: 1; }
-
-        /* ДВЕРИ */
-        .door-img { width: 85vw; max-width: 480px; cursor: pointer; transition: 1.8s cubic-bezier(0.4, 0, 0.2, 1); }
-        .zoom-out { transform: scale(10); opacity: 0; filter: blur(15px); pointer-events: none; }
-
-        /* КНОПКИ С ИНВЕРСИЕЙ */
-        .btn-gy { 
-            min-width: 220px; padding: 15px; background: transparent; 
-            border: 1px solid var(--gold); color: var(--gold); 
-            cursor: pointer; font-family: 'Share Tech Mono'; 
-            text-transform: uppercase; transition: 0.2s; letter-spacing: 2px;
+        /* Плавные переходы */
+        .block { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            display: none; flex-direction: column; align-items: center; justify-content: center; 
+            background: #000; z-index: 10; 
+            opacity: 0; transform: scale(1.02); transition: all 0.7s ease;
         }
-        .btn-gy:hover { border-color: #fff; color: #fff; }
+        .block.active { display: flex !important; opacity: 1; transform: scale(1); }
 
-        .square-box { width: 90px; height: 90px; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #000; overflow: hidden; border: 1px solid var(--gold); transition: 0.3s; }
-        .square-box:hover { border-color: #fff; }
+        /* Входная дверь */
+        .door-img { width: 70vw; max-width: 380px; cursor: pointer; transition: 1.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        .zoom-out { transform: scale(9); opacity: 0; filter: blur(12px); pointer-events: none; }
 
-        /* БАР */
+        /* Кнопки: Строго Золото */
+        .btn-gy { 
+            min-width: 210px; padding: 14px 28px; background: transparent; 
+            border: 2px solid var(--gold); color: var(--gold); 
+            cursor: pointer; font-family: 'Share Tech Mono'; 
+            text-transform: uppercase; transition: 0.3s; letter-spacing: 2px;
+            outline: none;
+        }
+        .btn-gy:hover { box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); border-color: var(--gold); color: var(--gold); text-shadow: 0 0 5px var(--gold); }
+
+        .charlie-portrait { width: 280px; height: 280px; border-radius: 15px; overflow: hidden; margin-bottom: 30px; border: 1px solid rgba(212,175,55,0.3); }
+
+        .vertical-card { 
+            width: 250px; padding: 25px; border: 2px solid var(--cyan); 
+            background: rgba(5,5,5,0.95); border-radius: 20px; text-align: center;
+            box-shadow: 0 0 30px rgba(0,229,255,0.1);
+        }
+
+        .square-box { width: 85px; height: 85px; background: #fff; border: 1px solid var(--gold); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #000; }
+
+        .neon-sign { position: absolute; top: 12%; width: 100%; text-align: center; font-size: clamp(16px, 4.5vw, 26px); color: #fff; text-shadow: 0 0 15px var(--cyan); z-index: 5; }
         .bar-wrap { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
         .bar-img { width: 100%; height: 100%; object-fit: contain; }
-        .neon-sign { position: absolute; top: 12%; width: 100%; text-align: center; font-size: clamp(18px, 5vw, 28px); color: #fff; text-shadow: 0 0 10px var(--cyan); z-index: 5; pointer-events: none; }
-
-        /* ИНТЕРАКТИВНЫЕ ОБЛАЧКА */
-        .art-bubble { position: absolute; background: rgba(255,255,255,0.01); cursor: pointer; z-index: 20; border-radius: 50%; pointer-events: auto; }
-        .art-bubble:hover { background: rgba(0,229,255,0.1); box-shadow: 0 0 30px var(--cyan); }
-
-        .id-card-corner { position: absolute; right: 20px; bottom: 20px; border: 1px solid var(--cyan); padding: 15px; background: rgba(0,0,0,0.8); text-align: center; }
+        .art-bubble { position: absolute; background: rgba(255,255,255,0.01); cursor: pointer; z-index: 20; border-radius: 50%; }
     </style>
 </head>
 <body>
@@ -67,42 +75,41 @@
     </div>
     
     <div id="block-welcome" class="block">
-        <div style="text-align:center;">
-            <h1 style="font-size: 18px; color: var(--gold); letter-spacing: 8px; margin-bottom: 30px; text-shadow: 0 0 10px rgba(212,175,55,0.5);">GY-GY PRIVAT CLUB</h1>
-            <div style="width:220px; height:220px; border-radius:15px; overflow:hidden; margin: 0 auto 30px;"><img src="charlie.png" style="width:100%; height:100%; object-fit:cover;"></div>
-            <button class="btn-gy" onclick="portalTransition('block-identity')">ПРОХОДИТЕ</button>
-        </div>
+        <h1 style="font-size: 18px; color: var(--gold); letter-spacing: 8px; margin-bottom: 25px; text-shadow: 0 0 10px rgba(212,175,55,0.3);">GY-GY PRIVAT CLUB</h1>
+        <div class="charlie-portrait"><img src="charlie.png" style="width:100%; height:100%; object-fit:cover;"></div>
+        <button class="btn-gy" onclick="portalTransition('block-identity')">ПРОХОДИТЕ</button>
     </div>
 
     <div id="block-identity" class="block">
-        <div style="text-align:center;">
-            <div style="font-size: 18px; font-style: italic; margin-bottom: 40px;">«В каждой шутке есть доля виски»</div>
-            <div style="display:flex; gap:15px; justify-content:center; margin-bottom:40px;">
-                <div id="id-box" class="square-box" style="background:#000; color:var(--cyan); font-family:'Share Tech Mono';"></div>
-                <div id="qr-box" class="square-box"></div>
-                <div class="square-box" style="position:relative; cursor:pointer;">
-                    <input type="file" onchange="preview(this)" style="position:absolute; opacity:0; width:100%; height:100%; cursor:pointer;">
-                    <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
-                    <span>ФОТО</span>
-                </div>
+        <div style="font-size: 18px; font-style: italic; margin-bottom: 40px; text-align:center; padding: 0 15px;">«В каждой шутке есть доля виски»</div>
+        <div style="display:flex; gap:15px; margin-bottom:40px;">
+            <div id="id-box" class="square-box" style="background:#000; color:var(--cyan); font-family:'Share Tech Mono';">ID</div>
+            <div id="qr-box" class="square-box">QR</div>
+            <div class="square-box">
+                <input type="file" onchange="preview(this)" style="position:absolute; opacity:0; width:100%; height:100%; cursor:pointer; z-index:5;">
+                <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
+                <span id="photo-text">ФОТО</span>
             </div>
-            <button id="btn-confirm" class="btn-gy" onclick="confirmIdentity()">ПОДТВЕРДИТЬ</button>
-            <button id="btn-to-hall" class="btn-gy" style="display:none;" onclick="portalTransition('block-hall')">К КАРТЕ ХОЛЛА</button>
         </div>
+        <button id="btn-save" class="btn-gy" onclick="saveData()">СОХРАНИТЬ</button>
+        <button id="btn-go" class="btn-gy" style="display:none;" onclick="portalTransition('block-hall')">ПРОХОДИТЕ</button>
     </div>
 
     <div id="block-hall" class="block">
         <div style="position:absolute; width:100%; height:100%; background:url('hall_bg_jpg.jpg') center/cover; z-index:-1;"></div>
-        <div class="id-card-corner">
-            <div style="display:flex; gap:10px; margin-bottom:10px;"><img id="h-photo" style="width:60px; height:60px; background:#fff; object-fit:cover;"><div id="h-qr" style="width:60px; height:60px; background:#fff;"></div></div>
-            <div id="h-id" style="color:var(--cyan); font-family:'Share Tech Mono'; font-size:10px; margin-bottom:10px;"></div>
-            <button class="btn-gy" style="width:100%; padding:10px; font-size:12px;" onclick="startBarSequence()">В БАР</button>
+        <h2 style="position:absolute; top:12%; width:100%; text-align:center; color:var(--gold); text-shadow: 0 0 15px #000; font-size: 28px;">ВСЕ БУДЕТ GY-GY</h2>
+        <div class="vertical-card">
+            <img id="h-photo" style="width:130px; height:130px; background:#fff; margin:0 auto 15px; display:block; object-fit:cover; border:1px solid var(--cyan);">
+            <div id="h-qr" style="width:100px; height:100px; background:#fff; margin:0 auto 15px;"></div>
+            <div id="h-id" style="color:var(--cyan); font-family:'Share Tech Mono'; font-size:13px; margin-bottom:20px;"></div>
+            <button id="h-confirm" class="btn-gy" style="width:100%; font-size:12px;" onclick="confirmCard()">ПОДТВЕРДИТЬ</button>
+            <button id="h-tobar" class="btn-gy" style="width:100%; font-size:12px; display:none;" onclick="startBarSequence()">В БАР</button>
         </div>
     </div>
 
     <div id="block-bar" class="block">
         <div class="bar-wrap">
-            <div id="t-neon" class="neon-sign">ВСЁ БУДЕТ GY_GY</div>
+            <div id="t-neon" class="neon-sign">ИСТИНА НЕ В ВИНЕ, А В ЕГО КОЛИЧЕСТВЕ</div>
             <img src="charlie_bar.png" class="bar-img">
             <div class="art-bubble" style="left:12%; bottom:32%; width:160px; height:120px;" onclick="window.location.href='tables.html'"></div>
             <div class="art-bubble" style="right:12%; bottom:22%; width:160px; height:120px;" onclick="window.location.href='ai_room.html'"></div>
@@ -110,20 +117,28 @@
     </div>
 
     <script>
+        let audioCtx;
         const fullID = `#0042-${Math.floor(1000 + Math.random() * 9999)}`;
         const jazz = document.getElementById('snd-jazz');
         const champagne = document.getElementById('snd-champagne');
         const ambient = document.getElementById('snd-ambient');
 
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
         function handleDoor() {
+            initAudio();
             document.getElementById('snd-door').play();
             document.getElementById('main-door').classList.add('zoom-out');
             document.getElementById('id-box').innerText = fullID;
-            new QRCode(document.getElementById("qr-box"), { text: fullID, width: 90, height: 90 });
-            setTimeout(() => {
-                ambient.play();
-                portalTransition('block-welcome');
-            }, 1200);
+            new QRCode(document.getElementById("qr-box"), { text: fullID, width: 85, height: 85 });
+            setTimeout(() => { ambient.play(); portalTransition('block-welcome'); }, 1400);
         }
 
         function preview(input) {
@@ -131,24 +146,35 @@
             r.onload = (e) => { 
                 document.getElementById('pp').src = e.target.result; 
                 document.getElementById('pp').style.display = "block";
+                document.getElementById('photo-text').style.display = "none";
                 document.getElementById('h-photo').src = e.target.result;
             };
             r.readAsDataURL(input.files[0]);
         }
 
-        function confirmIdentity() {
-            document.getElementById('btn-confirm').style.display = 'none';
-            document.getElementById('btn-to-hall').style.display = 'inline-block';
+        function saveData() {
+            document.getElementById('btn-save').style.display = 'none';
+            document.getElementById('btn-go').style.display = 'inline-block';
             document.getElementById('h-id').innerText = fullID;
-            const qrImg = document.querySelector("#qr-box img");
-            if(qrImg) document.getElementById('h-qr').innerHTML = `<img src="${qrImg.src}" style="width:100%">`;
+            setTimeout(() => {
+                const qrImg = document.querySelector("#qr-box img");
+                if(qrImg) document.getElementById('h-qr').innerHTML = `<img src="${qrImg.src}" style="width:100%">`;
+            }, 150);
+        }
+
+        function confirmCard() {
+            document.getElementById('h-confirm').style.display = 'none';
+            document.getElementById('h-tobar').style.display = 'block';
         }
 
         function startBarSequence() {
+            initAudio();
             ambient.pause();
             portalTransition('block-bar');
+            
             champagne.currentTime = 0;
-            champagne.play().then(() => startVisualizer(champagne)).catch(e => console.log("Audio play error"));
+            champagne.play();
+            startVisualizer(champagne);
 
             setTimeout(() => {
                 jazz.volume = 0; jazz.play();
@@ -161,10 +187,9 @@
         }
 
         function startVisualizer(audioElement) {
-            const context = new (window.AudioContext || window.webkitAudioContext)();
-            const src = context.createMediaElementSource(audioElement);
-            const analyser = context.createAnalyser();
-            src.connect(analyser); analyser.connect(context.destination);
+            const src = audioCtx.createMediaElementSource(audioElement);
+            const analyser = audioCtx.createAnalyser();
+            src.connect(analyser); analyser.connect(audioCtx.destination);
             analyser.fftSize = 64;
             const dataArray = new Uint8Array(analyser.frequencyBinCount);
             const neon = document.getElementById('t-neon');
@@ -172,11 +197,10 @@
             function renderFrame() {
                 requestAnimationFrame(renderFrame);
                 analyser.getByteFrequencyData(dataArray);
-                // Берем только низкие частоты (бит)
                 let bass = dataArray[1] + dataArray[2]; 
-                let intensity = Math.pow(bass / 320, 2);
+                let intensity = Math.pow(bass / 280, 2);
                 neon.style.opacity = Math.max(0.2, intensity);
-                neon.style.textShadow = `0 0 ${intensity * 40}px var(--cyan), 0 0 ${intensity * 15}px #fff`;
+                neon.style.textShadow = `0 0 ${intensity * 40}px var(--cyan), 0 0 10px var(--cyan)`;
             }
             renderFrame();
         }
