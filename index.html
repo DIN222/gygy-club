@@ -3,74 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.47</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <title>GY-GY Club v4.3.51</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root { --gold: #d4af37; --hologram-cyan: #00E5FF; --hologram-pink: #FF00FF; }
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; }
         
-        /* ПОРТАЛЬНЫЙ ПЕРЕХОД */
-        .zoom-out { animation: zoomOut 1.2s forwards cubic-bezier(0.4, 0, 0.2, 1); }
-        @keyframes zoomOut { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(8); opacity: 0; filter: blur(20px); } }
-        .zoom-in { animation: zoomIn 0.8s forwards ease-out; }
-        @keyframes zoomIn { 0% { transform: scale(0.2); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        .zoom-out { animation: zOut 0.6s forwards ease-in; }
+        @keyframes zOut { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(10); opacity: 0; filter: blur(15px); } }
+        .zoom-in { animation: zIn 0.4s forwards ease-out; }
+        @keyframes zIn { 0% { transform: scale(0.2); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
         .block { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 10; background: #000; }
         .block.active { display: flex !important; }
 
-        /* 1. ЗАМЕДЛЕННАЯ ДВЕРЬ */
-        .door-img { width: 75vw; max-width: 320px; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s; cursor: pointer; }
+        .door-img { width: 75vw; max-width: 320px; transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s; cursor: pointer; }
 
-        /* 4. ИСПРАВЛЕННАЯ ЗАНАВЕСКА */
-        .hall-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('hall_bg_jpg.jpg') no-repeat center; background-size: cover; z-index: -2; }
-        .beads-overlay { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: repeating-linear-gradient(90deg, transparent, transparent 25px, rgba(0,0,0,0.3) 26px, transparent 50px);
-            z-index: -1; pointer-events: none; opacity: 0.6;
+        /* ХОЛЛ БЕЗ ШТОР */
+        .hall-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('hall_bg_jpg.jpg') no-repeat center; background-size: cover; z-index: -1; }
+
+        /* БАР С ПОДСВЕТКОЙ СТОЙКИ */
+        .charlie-container { 
+            position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: flex-end; 
+            background: linear-gradient(0deg, rgba(212,175,55,0.1) 0%, rgba(0,0,0,1) 50%); 
         }
-
-        /* 6. БАР И ЧАРЛИ */
-        .charlie-container { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: flex-end; background: radial-gradient(circle at center, #222 0%, #000 80%); }
-        .charlie-img { width: 100%; max-width: 600px; z-index: 5; filter: drop-shadow(0 0 15px rgba(212,175,55,0.2)); }
+        .charlie-img { width: 100%; max-width: 600px; z-index: 5; filter: drop-shadow(0 0 15px rgba(255,255,255,0.1)); }
         
+        .neon-sign {
+            position: absolute; top: 12%; width: 85%; text-align: center;
+            font-family: 'Playfair Display', serif; font-style: italic; font-size: clamp(16px, 4.5vw, 26px);
+            color: #fff; text-shadow: 0 0 10px var(--hologram-cyan), 0 0 30px var(--hologram-cyan);
+            animation: flicker 3s infinite alternate; z-index: 2;
+        }
+        @keyframes flicker { 0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; } 20%, 24%, 55% { opacity: 0.3; } }
+
         .speech-bubble {
-            position: absolute; background: #fff; color: #000; padding: 12px 20px;
+            position: absolute; background: #fff; color: #000; padding: 12px 18px;
             border-radius: 50px; font-family: 'Share Tech Mono'; font-size: 11px; font-weight: bold;
-            text-align: center; cursor: pointer; z-index: 10; box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-            transition: 0.3s; min-width: 140px;
+            text-align: center; cursor: pointer; z-index: 10; box-shadow: 0 10px 30px rgba(0,0,0,0.9);
+            min-width: 130px; border: 2px solid #fff;
         }
-        .speech-bubble:hover { transform: scale(1.1) translateY(-5px); background: var(--gold); }
-        .speech-bubble::after { content: ''; position: absolute; bottom: -10px; left: 50%; border-width: 10px 10px 0; border-style: solid; border-color: inherit transparent; transform: translateX(-50%); }
-        
-        #bubble-table { left: 10%; bottom: 35%; }
-        #bubble-ai { right: 10%; bottom: 25%; }
+        #bubble-table { left: 5%; bottom: 34%; }
+        #bubble-ai { right: 5%; bottom: 24%; }
 
-        .btn-gold { min-width: 220px; padding: 15px; background: transparent; border: 1px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; margin: 10px; transition: 0.3s; }
-        .btn-gold:hover { background: rgba(212,175,55,0.1); }
-        
-        .lang-panel { position: absolute; top: 20px; right: 20px; z-index: 1000; font-family: 'Share Tech Mono'; cursor: pointer; border: 1px solid var(--gold); padding: 8px 15px; background: rgba(0,0,0,0.8); }
-
-        /* 5. БЕЛЫЙ ФОН ФОТО */
-        #h-photo { width: 80px; height: 80px; object-fit: cover; background: #fff; border: 1px solid var(--hologram-cyan); }
+        .btn-gold { min-width: 200px; padding: 15px; background: transparent; border: 1px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; margin: 10px; }
+        .lang-panel { position: absolute; top: 20px; right: 20px; z-index: 1000; font-family: 'Share Tech Mono'; cursor: pointer; border: 1px solid var(--gold); padding: 8px 15px; background: rgba(0,0,0,0.85); }
     </style>
 </head>
 <body>
 
     <audio id="snd-door"><source src="door_open.mp3" type="audio/mpeg"></audio>
-    <audio id="snd-bar" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
 
-    <div id="lang-ui" class="lang-panel" style="display:none;" onclick="toggleLang()">
-        LANG: <span id="cur-l">RU</span>
-    </div>
+    <div id="lang-ui" class="lang-panel" style="display:none;" onclick="toggleLang()">LANG: <span id="cur-l">RU</span></div>
 
     <div id="block-entrance" class="block active">
         <img src="door_1.jpg" class="door-img" onclick="handleDoor()">
     </div>
 
     <div id="block-welcome" class="block">
-        <div style="width:150px; height:150px; border-radius:50%; border:1px solid var(--gold); overflow:hidden; margin-bottom:20px;">
+        <div style="width:140px; height:140px; border-radius:50%; border:1px solid var(--gold); overflow:hidden; margin-bottom:20px;">
             <img src="charlie.png" style="width:100%; height:100%; object-fit:cover;">
         </div>
         <h2 id="t-welcome"></h2>
@@ -78,8 +71,10 @@
     </div>
 
     <div id="block-identity" class="block">
-        <div style="display:flex; gap:10px; margin-bottom:20px;">
-            <div id="id-box" style="width:80px; height:80px; background:#fff; color:#000; display:flex; align-items:center; justify-content:center; font-size:9px;"></div>
+        <div id="t-whisky" style="font-family:'Share Tech Mono'; font-size:10px; letter-spacing:3px; margin-bottom:10px; opacity:0.8; color: var(--hologram-cyan);"></div>
+        <h3 id="t-reg-title" style="letter-spacing:4px; font-size:14px; margin-bottom:20px;">AUTHENTICATION</h3>
+        <div style="display:flex; gap:10px; margin-bottom:25px;">
+            <div id="id-box" style="width:80px; height:80px; background:#fff; color:#000; display:flex; align-items:center; justify-content:center; font-size:9px; font-family:'Share Tech Mono';"></div>
             <div id="qr-box" style="width:80px; height:80px; background:#fff;"></div>
             <div onclick="document.getElementById('f').click()" style="width:80px; height:80px; background:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; overflow:hidden;">
                 <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
@@ -93,12 +88,10 @@
 
     <div id="block-hall" class="block">
         <div class="hall-bg"></div>
-        <div class="beads-overlay"></div>
-        <h1 id="t-slogan" style="position:absolute; top:15%; color:#fff; text-shadow: 0 0 20px var(--hologram-pink); text-align:center; width:100%; letter-spacing:10px; font-weight:900;"></h1>
-        
-        <div style="position:absolute; right:5%; bottom:8%; background:rgba(0,0,0,0.85); border:1px solid var(--hologram-cyan); padding:15px; border-radius:10px; text-align:center; z-index:20;">
-            <div style="display:flex; gap:8px; margin-bottom:10px; justify-content:center;">
-                <img id="h-photo">
+        <h1 id="t-slogan" style="position:absolute; top:10%; color:#fff; text-shadow: 0 0 20px var(--hologram-pink); text-align:center; width:100%; letter-spacing:10px; font-weight:900;"></h1>
+        <div style="position:absolute; right:5%; bottom:8%; background:rgba(0,0,0,0.85); border:1px solid var(--hologram-cyan); padding:15px; border-radius:12px; text-align:center;">
+            <div style="display:flex; gap:10px; margin-bottom:10px; justify-content:center;">
+                <img id="h-photo" style="width:80px; height:80px; background:#fff; object-fit:cover;">
                 <div id="h-qr" style="width:80px; height:80px; background:#fff;"></div>
             </div>
             <div id="h-id" style="font-size:12px; font-family:'Share Tech Mono'; color:var(--hologram-cyan); margin-bottom:10px;"></div>
@@ -108,9 +101,10 @@
 
     <div id="block-bar" class="block">
         <div class="charlie-container">
+            <div id="t-neon" class="neon-sign"></div>
             <img src="charlie_bar.png" class="charlie-img">
-            <div id="bubble-table" class="speech-bubble" onclick="alert('Table...')"></div>
-            <div id="bubble-ai" class="speech-bubble" onclick="alert('AI...')"></div>
+            <div id="bubble-table" class="speech-bubble" onclick="alert('Going to tables...')"></div>
+            <div id="bubble-ai" class="speech-bubble" onclick="alert('Opening AI chat...')"></div>
         </div>
         <button onclick="portalTransition('block-hall')" style="position:absolute; bottom:20px; color:var(--gold); background:none; border:none; cursor:pointer; font-family:'Share Tech Mono';">← EXIT</button>
     </div>
@@ -121,19 +115,14 @@
         let curL = 'ru';
 
         const dict = {
-            ru: { welcome: "ДОБРО ПОЖАЛОВАТЬ", proceed: "ПРОДОЛЖИТЬ", photo: "ФОТО", save: "СОХРАНИТЬ", enter: "ВХОД", slogan: "ВСЕ БУДЕТ GY-GY", bar: "В БАР", table: "ЗА СТОЛИК", ai: "ИИ МЕНЮ" },
-            en: { welcome: "WELCOME", proceed: "CONTINUE", photo: "PHOTO", save: "SAVE", enter: "ENTER", slogan: "EVERYTHING GY-GY", bar: "TO BAR", table: "GET A TABLE", ai: "AI MENU" }
+            ru: { welcome: "ДОБРО ПОЖАЛОВАТЬ", proceed: "ПРОДОЛЖИТЬ", photo: "ФОТО", save: "СОХРАНИТЬ", enter: "ВХОД", slogan: "ВСЕ БУДЕТ GY-GY", bar: "В БАР", table: "ЗА СТОЛИК", ai: "ИИ МЕНЮ", neon: "Истина не в вине, а в его количестве", whisky: "В КАЖДОЙ ШУТКЕ ЕСТЬ ДОЛЯ ВИСКИ" },
+            en: { welcome: "WELCOME", proceed: "CONTINUE", photo: "PHOTO", save: "SAVE", enter: "ENTER", slogan: "EVERYTHING GY-GY", bar: "TO BAR", table: "GET TABLE", ai: "AI MENU", neon: "Truth is not in wine, but in its quantity", whisky: "EVERY JOKE HAS A MEASURE OF WHISKY" }
         };
 
-        function toggleLang() {
-            curL = (curL === 'ru') ? 'en' : 'ru';
-            document.getElementById('cur-l').innerText = curL.toUpperCase();
-            updateUI();
-        }
+        function toggleLang() { curL = (curL === 'ru') ? 'en' : 'ru'; document.getElementById('cur-l').innerText = curL.toUpperCase(); updateUI(); }
 
         function updateUI() {
             const d = dict[curL];
-            // 3. ИСПРАВЛЕННЫЙ ПЕРЕВОД ВСЕХ КНОПОК
             document.getElementById('t-welcome').innerText = d.welcome;
             document.getElementById('b-proceed').innerText = d.proceed;
             document.getElementById('t-photo-label').innerText = d.photo;
@@ -143,23 +132,21 @@
             document.getElementById('b-bar').innerText = d.bar;
             document.getElementById('bubble-table').innerText = d.table;
             document.getElementById('bubble-ai').innerText = d.ai;
+            document.getElementById('t-neon').innerText = d.neon;
+            document.getElementById('t-whisky').innerText = d.whisky;
         }
 
         function portalTransition(nextId) {
             const current = document.querySelector('.block.active');
             current.classList.add('zoom-out');
-            
-            // 2. УСКОРЕННОЕ ПОЯВЛЕНИЕ ЧАРЛИ (переход через 800мс вместо 1000)
             setTimeout(() => {
                 current.classList.remove('active', 'zoom-out');
                 const next = document.getElementById(nextId);
                 next.classList.add('active', 'zoom-in');
                 document.getElementById('lang-ui').style.display = (nextId === 'block-entrance') ? 'none' : 'block';
-                
                 if(nextId === 'block-identity') {
                     document.getElementById('id-box').innerText = userData.id;
                     if(!document.getElementById("qr-box").innerHTML) new QRCode(document.getElementById("qr-box"), { text: userData.id, width: 80, height: 80 });
-                    document.getElementById('snd-bar').play();
                 }
                 if(nextId === 'block-hall') {
                     document.getElementById('h-id').innerText = userData.id;
@@ -168,8 +155,8 @@
                     if(srcQR) document.getElementById('h-qr').innerHTML = `<img src="${srcQR.src}" style="width:100%;">`;
                 }
                 updateUI();
-                setTimeout(() => next.classList.remove('zoom-in'), 700);
-            }, 800);
+                setTimeout(() => next.classList.remove('zoom-in'), 400);
+            }, 550);
         }
 
         function handleDoor() {
@@ -177,7 +164,7 @@
             const img = document.querySelector('.door-img');
             img.style.transform = "scale(15)"; 
             img.style.opacity = "0";
-            setTimeout(() => portalTransition('block-welcome'), 2200); // 1. Замедленный вход
+            setTimeout(() => portalTransition('block-welcome'), 800);
         }
 
         function preview(input) {
