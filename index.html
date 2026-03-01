@@ -1,46 +1,43 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.69 | Pouring Magic</title>
+    <title>GY-GY Club v4.3.70 | Final Polish</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
-    <script type="text/javascript">
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({pageLanguage: 'ru', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
-        }
-    </script>
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
     <style>
         :root { --gold: #d4af37; --cyan: #00E5FF; }
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; }
         body, html { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; }
-        
-        #google_translate_element { position: fixed; top: 10px; right: 10px; z-index: 9999; opacity: 0.5; }
 
-        .block { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; z-index: 10; }
-        .block.active { display: flex !important; }
+        .block { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; z-index: 10; opacity: 0; transition: 0.8s; }
+        .block.active { display: flex !important; opacity: 1; }
 
-        .id-card-corner { position: absolute; right: 20px; bottom: 20px; background: rgba(0,0,0,0.9); border: 1px solid var(--cyan); padding: 15px; border-radius: 12px; text-align: center; z-index: 20; }
+        /* АНИМАЦИИ */
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .anim-up { animation: fadeInUp 1.2s ease forwards; }
 
+        /* УВЕЛИЧЕННЫЕ ДВЕРИ */
+        .door-img { width: 90vw; max-width: 500px; cursor: pointer; transition: 2.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .zoom-out { transform: scale(12); opacity: 0; filter: blur(20px); pointer-events: none; }
+
+        /* КАРТОЧКА */
+        .id-card { background: rgba(20,20,20,0.95); border: 1px solid var(--cyan); padding: 20px; border-radius: 15px; box-shadow: 0 0 30px rgba(0,229,255,0.2); }
+        .square-box { width: 90px; height: 90px; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #000; overflow: hidden; border: 1px solid var(--gold); }
+
+        /* БАР */
         .bar-wrap { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
-        .bar-img { width: 100%; height: 100%; object-fit: contain; z-index: 1; }
-        
-        .neon-sign { 
-            position: absolute; top: 10%; width: 100%; text-align: center; 
-            font-size: clamp(16px, 4vw, 24px); color: #fff; 
-            text-shadow: 0 0 10px var(--cyan); z-index: 2; opacity: 0;
-        }
+        .bar-img { width: 100%; height: 100%; object-fit: contain; }
+        .neon-sign { position: absolute; top: 12%; width: 100%; text-align: center; font-size: clamp(18px, 5vw, 28px); color: #fff; text-shadow: 0 0 10px var(--cyan); z-index: 5; }
 
-        .art-bubble { position: absolute; background: rgba(255,255,255,0.01); cursor: pointer; z-index: 20; }
+        .art-bubble { position: absolute; background: rgba(255,255,255,0.01); cursor: pointer; z-index: 20; border-radius: 50%; transition: 0.3s; }
+        .art-bubble:hover { background: rgba(0,229,255,0.1); box-shadow: 0 0 30px var(--cyan); }
 
-        .btn-gold { min-width: 180px; padding: 12px; background: transparent; border: 1px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; margin: 10px; text-transform: uppercase; }
-        .square-box { width: 85px; height: 85px; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 9px; color: #000; }
-        .door-img { width: 70vw; max-width: 300px; cursor: pointer; transition: 2.5s; }
-        .zoom-out { transform: scale(15); opacity: 0; filter: blur(20px); pointer-events: none; }
+        .btn-gold { min-width: 200px; padding: 15px; background: transparent; border: 1px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; margin: 10px; text-transform: uppercase; transition: 0.3s; }
+        .btn-gold:hover { background: var(--gold); color: #000; }
     </style>
 </head>
 <body>
@@ -50,40 +47,98 @@
     <audio id="snd-champagne"><source src="champagne_sequence.mp3" type="audio/mpeg"></audio>
     <audio id="snd-jazz" crossorigin="anonymous"><source src="charlie_jazz_duet.mp3" type="audio/mpeg"></audio>
 
-    <div id="google_translate_element"></div>
-
-    <div id="block-entrance" class="block active"><img src="door_1.jpg" class="door-img" id="main-door" onclick="handleDoor()"></div>
+    <div id="block-entrance" class="block active">
+        <img src="door_1.jpg" class="door-img" id="main-door" onclick="handleDoor()">
+    </div>
+    
     <div id="block-welcome" class="block">
-        <div style="width:140px; height:140px; border-radius:50%; border:2px solid var(--gold); overflow:hidden; margin-bottom:20px;"><img src="charlie.png" style="width:100%; height:100%; object-fit:cover;"></div>
-        <h2>ДОБРО ПОЖАЛОВАТЬ</h2>
-        <button class="btn-gold" onclick="portalTransition('block-identity')">ПРОЙТИ</button>
-    </div>
-    <div id="block-identity" class="block">
-        <div id="id-box" class="square-box" style="display:none"></div>
-        <div id="qr-box" class="square-box" style="display:none"></div>
-        <button class="btn-gold" onclick="portalTransition('block-hall')">В ХОЛЛ</button>
+        <div class="anim-up" style="text-align:center;">
+            <div style="width:180px; height:180px; border-radius:50%; border:3px solid var(--gold); overflow:hidden; margin: 0 auto 20px;"><img src="charlie.png" style="width:100%; height:100%; object-fit:cover;"></div>
+            <h2 style="letter-spacing: 5px;">ДОБРО ПОЖАЛОВАТЬ</h2>
+            <button class="btn-gold" onclick="portalTransition('block-identity')">ПРОЙТИ РЕГИСТРАЦИЮ</button>
+        </div>
     </div>
 
-    <div id="block-hall" class="block">
-        <div style="position:absolute; width:100%; height:100%; background:url('hall_bg_jpg.jpg') center/cover; z-index:-1;"></div>
-        <div class="id-card-corner">
-            <div id="h-id-display" style="font-family:'Share Tech Mono'; color:var(--cyan); font-size:10px; margin-bottom:10px;">CLUB CARD</div>
-            <button class="btn-gold" style="width:100%; margin:0;" onclick="startBarSequence()">В БАР</button>
+    <div id="block-identity" class="block">
+        <div class="id-card anim-up">
+            <div style="display:flex; gap:15px; margin-bottom:20px;">
+                <div id="id-box" class="square-box" style="background:#000; color:var(--cyan); font-family:'Share Tech Mono';"></div>
+                <div id="qr-box" class="square-box"></div>
+                <div class="square-box" style="position:relative; cursor:pointer;">
+                    <input type="file" onchange="preview(this)" style="position:absolute; opacity:0; width:100%; height:100%;">
+                    <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
+                    <span id="photo-label">ФОТО</span>
+                </div>
+            </div>
+            <button id="btn-confirm" class="btn-gold" style="width:100%;" onclick="confirmIdentity()">ПОДТВЕРДИТЬ</button>
+            <button id="btn-to-bar" class="btn-gold" style="width:100%; display:none;" onclick="startBarSequence()">ПРОХОДИТЕ В БАР</button>
         </div>
     </div>
 
     <div id="block-bar" class="block">
         <div class="bar-wrap">
-            <div id="t-neon" class="neon-sign">Истина не в вине, а в его количестве</div>
+            <div id="t-neon" class="neon-sign">ВСЁ БУДЕТ GY_GY</div>
             <img src="charlie_bar.png" class="bar-img">
-            <div class="art-bubble" style="left:15%; bottom:32%; width:150px; height:100px;" onclick="alert('Ч-ИИ-ИИ')"></div>
-            <div class="art-bubble" style="right:15%; bottom:22%; width:150px; height:100px;" onclick="alert('Ч-ИИ')"></div>
+            <div class="art-bubble" style="left:15%; bottom:35%; width:140px; height:100px;" onclick="window.location.href='tables.html'"></div>
+            <div class="art-bubble" style="right:15%; bottom:25%; width:140px; height:100px;" onclick="window.location.href='ai_room.html'"></div>
         </div>
     </div>
 
     <script>
+        const fullID = `#0042-${Math.floor(1000 + Math.random() * 9999)}`;
         const jazz = document.getElementById('snd-jazz');
         const champagne = document.getElementById('snd-champagne');
+
+        function handleDoor() {
+            document.getElementById('snd-door').play();
+            document.getElementById('main-door').classList.add('zoom-out');
+            document.getElementById('id-box').innerText = fullID;
+            new QRCode(document.getElementById("qr-box"), { text: fullID, width: 90, height: 90 });
+            setTimeout(() => {
+                document.getElementById('snd-ambient').play();
+                portalTransition('block-welcome');
+            }, 2500);
+        }
+
+        function preview(input) {
+            const r = new FileReader();
+            r.onload = (e) => { 
+                document.getElementById('pp').src = e.target.result; 
+                document.getElementById('pp').style.display = "block";
+                document.getElementById('photo-label').style.display = "none";
+            };
+            r.readAsDataURL(input.files[0]);
+        }
+
+        function confirmIdentity() {
+            document.getElementById('btn-confirm').style.display = 'none';
+            document.getElementById('btn-to-bar').style.display = 'block';
+        }
+
+        function startBarSequence() {
+            document.getElementById('snd-ambient').pause();
+            portalTransition('block-bar');
+            
+            champagne.play();
+            startVisualizer(champagne); 
+
+            setTimeout(() => {
+                jazz.volume = 0;
+                jazz.play();
+                startVisualizer(jazz);
+                let v = 0;
+                const fade = setInterval(() => { 
+                    if (v < 0.7) { v += 0.05; jazz.volume = v; } 
+                    else { clearInterval(fade); } 
+                }, 200);
+            }, 4000); 
+        }
+
+        function portalTransition(nextId) {
+            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
+            const next = document.getElementById(nextId);
+            next.classList.add('active');
+        }
 
         function startVisualizer(audioElement) {
             const context = new (window.AudioContext || window.webkitAudioContext)();
@@ -98,44 +153,11 @@
                 requestAnimationFrame(renderFrame);
                 analyser.getByteFrequencyData(dataArray);
                 let avg = dataArray.reduce((a,b) => a+b) / dataArray.length;
-                // Более агрессивная реакция для шипения
-                let intensity = Math.pow(avg / 150, 2); 
+                let intensity = Math.pow(avg / 140, 2.5);
                 neon.style.opacity = Math.max(0.1, intensity);
-                neon.style.textShadow = `0 0 ${intensity * 80}px var(--cyan)`;
+                neon.style.textShadow = `0 0 ${intensity * 60}px var(--cyan), 0 0 ${intensity * 20}px #fff`;
             }
             renderFrame();
-        }
-
-        function startBarSequence() {
-            document.getElementById('snd-ambient').pause();
-            portalTransition('block-bar');
-            
-            // Запуск цепочки шампанского
-            champagne.play();
-            startVisualizer(champagne); 
-
-            // На 5-й секунде (когда идет активное шипение) подмешиваем джаз
-            setTimeout(() => {
-                jazz.volume = 0;
-                jazz.play();
-                let v = 0;
-                const fade = setInterval(() => { 
-                    if (v < 0.6) { v += 0.05; jazz.volume = v; } 
-                    else { clearInterval(fade); } 
-                }, 300);
-            }, 5000); 
-        }
-
-        function handleDoor() {
-            document.getElementById('snd-door').play();
-            document.getElementById('main-door').classList.add('zoom-out');
-            document.getElementById('snd-ambient').play();
-            setTimeout(() => portalTransition('block-welcome'), 2500);
-        }
-
-        function portalTransition(nextId) {
-            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
-            document.getElementById(nextId).classList.add('active');
         }
     </script>
 </body>
