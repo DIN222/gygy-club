@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.40</title>
+    <title>GY-GY Club v4.3.41</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
@@ -11,40 +11,47 @@
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; color: var(--gold); font-family: serif; overflow: hidden; }
         
-        /* ГЛАВНЫЙ ФИКС: ШТОРЫ НЕ ДОЛЖНЫ МЕШАТЬ КЛИКУ */
+        /* ШТОРЫ */
         .curtain { 
             position: fixed; top: 0; width: 51%; height: 100%; 
             background-color: #070707;
             background-image: radial-gradient(#b00000 12%, transparent 15%);
             background-size: 50px 50px;
             z-index: 10000; transition: transform 0.9s ease-in-out; 
-            pointer-events: none; /* Магия здесь: клики проходят сквоść */
+            pointer-events: none;
         }
-        body.curtain-closed .curtain { pointer-events: auto; } /* Кликабельны только когда закрыты */
-        
+        body.curtain-closed .curtain { pointer-events: auto; transform: translateX(0) !important; }
         .curtain.left { left: 0; transform: translateX(-100%); border-right: 2px solid var(--gold); }
         .curtain.right { right: 0; transform: translateX(100%); border-left: 2px solid var(--gold); }
-        body.curtain-closed .curtain.left { transform: translateX(0); }
-        body.curtain-closed .curtain.right { transform: translateX(0); }
 
-        .block { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; z-index: 10; background: #000; }
+        /* БЛОКИ */
+        .block { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            display: none; flex-direction: column; align-items: center; justify-content: center; 
+            padding: 20px; z-index: 10; background: #000; 
+        }
         .block.active { display: flex !important; }
 
-        /* ДВЕРЬ (ПОВЕРХ ВСЕГО В НАЧАЛЕ) */
-        #block-entrance { z-index: 100; display: flex; } 
-        .door-wrapper { cursor: pointer; position: relative; z-index: 101; pointer-events: auto !important; }
-        .door-img { width: 70vw; max-width: 300px; border: 1px solid #333; transition: transform 2s ease-in, opacity 1.5s ease-out; }
+        /* ДВЕРЬ */
+        #block-entrance { z-index: 100; background: #000; }
+        .door-wrapper { cursor: pointer; z-index: 101; }
+        .door-img { width: 70vw; max-width: 300px; border: 1px solid #333; transition: transform 1.5s ease-in, opacity 1s ease-out; }
 
         /* ЯЗЫКИ */
         .lang-bar { position: absolute; top: 20px; right: 20px; display: flex; gap: 10px; z-index: 11000; }
-        .lang-btn { background: rgba(0,0,0,0.5); border: 1px solid var(--gold); color: var(--gold); padding: 5px 10px; cursor: pointer; font-family: 'Share Tech Mono'; }
+        .lang-btn { background: #000; border: 1px solid var(--gold); color: var(--gold); padding: 5px 10px; cursor: pointer; font-family: 'Share Tech Mono'; }
 
-        /* ХОЛЛ И КАРТОЧКА */
-        .viewport { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: url('hall_bg_jpg.jpg') no-repeat center; background-size: cover; z-index: -1; }
+        /* КОНТЕНТ ПРИВЕТСТВИЯ */
+        .welcome-content { text-align: center; animation: fadeIn 1s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* ХОЛЛ */
+        .viewport { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #050505 url('hall_bg_jpg.jpg') no-repeat center; background-size: cover; z-index: -1; }
         .hologram-card { position: absolute; right: 5%; bottom: 8%; width: 230px; background: var(--glass-bg); border: 1px solid var(--hologram-cyan); padding: 15px; border-radius: 12px; text-align: center; backdrop-filter: blur(10px); }
         
+        /* БАР */
         .charlie-img { width: 100%; max-width: 500px; position: absolute; bottom: -20px; z-index: 5; pointer-events: none; }
-        .plate-btn { position: absolute; width: 110px; height: 110px; background: radial-gradient(circle, #222 0%, #000 100%); border: 2px solid var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; text-align: center; font-family: 'Share Tech Mono'; font-size: 10px; cursor: pointer; z-index: 10; transition: 0.3s; }
+        .plate-btn { position: absolute; width: 110px; height: 110px; background: radial-gradient(circle, #222 0%, #000 100%); border: 2px solid var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; text-align: center; font-family: 'Share Tech Mono'; font-size: 10px; cursor: pointer; z-index: 10; }
 
         .btn-gold { width: 200px; padding: 12px; background: transparent; border: 1px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; margin: 10px; }
     </style>
@@ -68,16 +75,18 @@
     </div>
 
     <div id="block-welcome" class="block">
-        <div style="width: 200px; height: 200px; border-radius: 50%; border: 2px solid var(--gold); overflow: hidden; margin-bottom: 20px;">
-            <img src="charlie.png" style="width:100%; height:100%; object-fit:cover;">
+        <div class="welcome-content">
+            <div style="width: 180px; height: 180px; border-radius: 50%; border: 2px solid var(--gold); overflow: hidden; margin: 0 auto 20px; background: #111;">
+                <img src="charlie.png" style="width:100%; height:100%; object-fit:cover;" onerror="this.style.display='none'">
+            </div>
+            <h1 id="txt-welcome" style="font-family: 'Playfair Display'; color: var(--gold); margin-bottom: 30px;">ДОБРО ПОЖАЛОВАТЬ</h1>
+            <button id="btn-proceed" class="btn-gold" onclick="transitionTo('block-identity')">ПРОДОЛЖИТЬ</button>
         </div>
-        <h1 id="txt-welcome" style="font-family: 'Playfair Display';">ДОБРО ПОЖАЛОВАТЬ</h1>
-        <button id="btn-proceed" class="btn-gold" onclick="transitionTo('block-identity')">ПРОДОЛЖИТЬ</button>
     </div>
 
     <div id="block-identity" class="block">
         <div style="display:flex; gap:10px; margin-bottom:20px;">
-            <div id="id-display" style="width:80px; height:80px; background:#fff; color:#000; display:flex; align-items:center; justify-content:center; font-size:10px; font-family:'Share Tech Mono'; text-align:center;"></div>
+            <div id="id-display" style="width:80px; height:80px; background:#fff; color:#000; display:flex; align-items:center; justify-content:center; font-size:10px; font-family:'Share Tech Mono';"></div>
             <div id="qrcode" style="width:80px; height:80px; background:#fff;"></div>
             <div onclick="document.getElementById('f').click()" style="width:80px; height:80px; background:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center;">
                 <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
@@ -106,7 +115,7 @@
         <div style="position:relative; width:100%; height:100%; display:flex; justify-content:center;">
             <img src="OIG1 (2).png" class="charlie-img">
             <div class="plate-btn" style="left:10%; bottom:35%;" id="btn-table">ЗА СТОЛИК</div>
-            <div class="plate-btn" style="right:10%; bottom:25%;" id="btn-ai">ИНТЕРЕСУЕТ ИИ</div>
+            <div class="plate-btn" style="right:10%; bottom:25%;" id="btn-ai">ИИ МЕНЮ</div>
         </div>
         <button onclick="transitionTo('block-hall')" style="position:absolute; bottom:20px; color:var(--gold); background:none; border:none; cursor:pointer;">← ВЫХОД</button>
     </div>
@@ -125,21 +134,21 @@
 
         function updateText() {
             const t = lingo[curLang];
-            document.getElementById('txt-welcome').innerText = t.welcome;
-            document.getElementById('btn-proceed').innerText = t.proceed;
-            document.getElementById('btn-save').innerText = t.save;
-            document.getElementById('btn-to-hall').innerText = t.enter;
-            document.getElementById('txt-photo').innerText = t.photo;
-            document.getElementById('txt-slogan').innerText = t.slogan;
+            const ids = ['txt-welcome','btn-proceed','btn-save','btn-to-hall','txt-photo','txt-slogan','btn-table','btn-ai'];
+            ids.forEach(id => { if(document.getElementById(id)) document.getElementById(id).innerText = t[id.replace('txt-','').replace('btn-','').replace('to-','').replace('bar','')]; });
+            // Ручной фикс для несовпадающих ключей
             document.getElementById('btn-table').innerText = t.barTable;
             document.getElementById('btn-ai').innerText = t.barAI;
+            document.getElementById('btn-to-hall').innerText = t.enter;
         }
 
         function transitionTo(id) {
             document.body.classList.add('curtain-closed');
             setTimeout(() => {
                 document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
-                document.getElementById(id).classList.add('active');
+                const target = document.getElementById(id);
+                target.classList.add('active');
+                
                 document.getElementById('lang-ui').style.display = (id === 'block-entrance') ? 'none' : 'flex';
 
                 if(id === 'block-identity') {
@@ -153,18 +162,18 @@
                     const qrSource = document.querySelector("#qrcode img");
                     if(qrSource) document.getElementById('hall-qr').innerHTML = `<img src="${qrSource.src}" style="width:100%;">`;
                 }
-                if(id === 'block-bar') document.getElementById('snd-bar').play().catch(()=>{});
+                if(id === 'block-bar') try { document.getElementById('snd-bar').play(); } catch(e){}
                 
                 updateText();
-                setTimeout(() => document.body.classList.remove('curtain-closed'), 200);
+                setTimeout(() => document.body.classList.remove('curtain-closed'), 300);
             }, 1000);
         }
 
         function handleDoor() {
             try { document.getElementById('snd-door').play(); } catch(e) {}
             const img = document.querySelector('.door-img');
-            img.style.transform = "scale(15)"; img.style.opacity = "0";
-            setTimeout(() => transitionTo('block-welcome'), 1200);
+            img.style.transform = "scale(10) translateY(-100px)"; img.style.opacity = "0";
+            setTimeout(() => transitionTo('block-welcome'), 1000);
         }
 
         function preview(input) {
