@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.70 | Final Polish</title>
+    <title>GY-GY Club v4.3.71 | Classic Core</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -13,19 +13,25 @@
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; }
         body, html { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; }
 
-        .block { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; z-index: 10; opacity: 0; transition: 0.8s; }
+        .block { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; z-index: 10; opacity: 0; transition: 0.5s; }
         .block.active { display: flex !important; opacity: 1; }
 
-        /* АНИМАЦИИ */
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        .anim-up { animation: fadeInUp 1.2s ease forwards; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .anim-up { animation: fadeInUp 0.8s ease forwards; }
 
-        /* УВЕЛИЧЕННЫЕ ДВЕРИ */
-        .door-img { width: 90vw; max-width: 500px; cursor: pointer; transition: 2.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        /* ДВЕРИ */
+        .door-img { width: 95vw; max-width: 600px; cursor: pointer; transition: 1.5s cubic-bezier(0.4, 0, 0.2, 1); }
         .zoom-out { transform: scale(12); opacity: 0; filter: blur(20px); pointer-events: none; }
 
-        /* КАРТОЧКА */
-        .id-card { background: rgba(20,20,20,0.95); border: 1px solid var(--cyan); padding: 20px; border-radius: 15px; box-shadow: 0 0 30px rgba(0,229,255,0.2); }
+        /* КНОПКИ (БЕЗ ЗАЛИВКИ) */
+        .btn-outline { 
+            min-width: 220px; padding: 15px; background: transparent; 
+            border: 1px solid var(--gold); color: var(--gold); 
+            cursor: pointer; font-family: 'Share Tech Mono'; 
+            text-transform: uppercase; transition: 0.3s; letter-spacing: 2px;
+        }
+        .btn-outline:hover { border-color: #fff; color: #fff; box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); }
+
         .square-box { width: 90px; height: 90px; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #000; overflow: hidden; border: 1px solid var(--gold); }
 
         /* БАР */
@@ -33,11 +39,7 @@
         .bar-img { width: 100%; height: 100%; object-fit: contain; }
         .neon-sign { position: absolute; top: 12%; width: 100%; text-align: center; font-size: clamp(18px, 5vw, 28px); color: #fff; text-shadow: 0 0 10px var(--cyan); z-index: 5; }
 
-        .art-bubble { position: absolute; background: rgba(255,255,255,0.01); cursor: pointer; z-index: 20; border-radius: 50%; transition: 0.3s; }
-        .art-bubble:hover { background: rgba(0,229,255,0.1); box-shadow: 0 0 30px var(--cyan); }
-
-        .btn-gold { min-width: 200px; padding: 15px; background: transparent; border: 1px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; margin: 10px; text-transform: uppercase; transition: 0.3s; }
-        .btn-gold:hover { background: var(--gold); color: #000; }
+        .art-bubble { position: absolute; background: rgba(255,255,255,0.01); cursor: pointer; z-index: 20; border-radius: 50%; }
     </style>
 </head>
 <body>
@@ -53,15 +55,16 @@
     
     <div id="block-welcome" class="block">
         <div class="anim-up" style="text-align:center;">
-            <div style="width:180px; height:180px; border-radius:50%; border:3px solid var(--gold); overflow:hidden; margin: 0 auto 20px;"><img src="charlie.png" style="width:100%; height:100%; object-fit:cover;"></div>
-            <h2 style="letter-spacing: 5px;">ДОБРО ПОЖАЛОВАТЬ</h2>
-            <button class="btn-gold" onclick="portalTransition('block-identity')">ПРОЙТИ РЕГИСТРАЦИЮ</button>
+            <h1 style="font-size: 14px; color: var(--cyan); letter-spacing: 10px; margin-bottom: 20px;">GY-GY PRIVAT CLUB</h1>
+            <div style="width:160px; height:160px; border-radius:50%; border:2px solid var(--gold); overflow:hidden; margin: 0 auto 30px;"><img src="charlie.png" style="width:100%; height:100%; object-fit:cover;"></div>
+            <button class="btn-outline" onclick="portalTransition('block-identity')">ПРОХОДИТЕ</button>
         </div>
     </div>
 
     <div id="block-identity" class="block">
-        <div class="id-card anim-up">
-            <div style="display:flex; gap:15px; margin-bottom:20px;">
+        <div class="anim-up" style="text-align:center;">
+            <div style="font-size: 20px; font-style: italic; margin-bottom: 40px;">«В каждой шутке есть доля виски»</div>
+            <div style="display:flex; gap:15px; justify-content:center; margin-bottom:40px;">
                 <div id="id-box" class="square-box" style="background:#000; color:var(--cyan); font-family:'Share Tech Mono';"></div>
                 <div id="qr-box" class="square-box"></div>
                 <div class="square-box" style="position:relative; cursor:pointer;">
@@ -70,8 +73,16 @@
                     <span id="photo-label">ФОТО</span>
                 </div>
             </div>
-            <button id="btn-confirm" class="btn-gold" style="width:100%;" onclick="confirmIdentity()">ПОДТВЕРДИТЬ</button>
-            <button id="btn-to-bar" class="btn-gold" style="width:100%; display:none;" onclick="startBarSequence()">ПРОХОДИТЕ В БАР</button>
+            <button id="btn-confirm" class="btn-outline" onclick="confirmIdentity()">ПОДТВЕРДИТЬ</button>
+            <button id="btn-to-hall" class="btn-outline" style="display:none;" onclick="portalTransition('block-hall')">В ХОЛЛ</button>
+        </div>
+    </div>
+
+    <div id="block-hall" class="block">
+        <div style="position:absolute; width:100%; height:100%; background:url('hall_bg_jpg.jpg') center/cover; z-index:-1;"></div>
+        <div style="position:absolute; right:30px; bottom:30px; text-align:right;">
+            <div id="h-id-display" style="color:var(--cyan); font-family:'Share Tech Mono'; font-size:12px; margin-bottom:10px;"></div>
+            <button class="btn-outline" onclick="startBarSequence()">В БАР</button>
         </div>
     </div>
 
@@ -88,6 +99,7 @@
         const fullID = `#0042-${Math.floor(1000 + Math.random() * 9999)}`;
         const jazz = document.getElementById('snd-jazz');
         const champagne = document.getElementById('snd-champagne');
+        const ambient = document.getElementById('snd-ambient');
 
         function handleDoor() {
             document.getElementById('snd-door').play();
@@ -95,30 +107,23 @@
             document.getElementById('id-box').innerText = fullID;
             new QRCode(document.getElementById("qr-box"), { text: fullID, width: 90, height: 90 });
             setTimeout(() => {
-                document.getElementById('snd-ambient').play();
+                ambient.play();
                 portalTransition('block-welcome');
-            }, 2500);
-        }
-
-        function preview(input) {
-            const r = new FileReader();
-            r.onload = (e) => { 
-                document.getElementById('pp').src = e.target.result; 
-                document.getElementById('pp').style.display = "block";
-                document.getElementById('photo-label').style.display = "none";
-            };
-            r.readAsDataURL(input.files[0]);
+            }, 1200); // Быстрый переход
         }
 
         function confirmIdentity() {
             document.getElementById('btn-confirm').style.display = 'none';
-            document.getElementById('btn-to-bar').style.display = 'block';
+            document.getElementById('btn-to-hall').style.display = 'inline-block';
+            document.getElementById('h-id-display').innerText = "ID: " + fullID;
         }
 
         function startBarSequence() {
-            document.getElementById('snd-ambient').pause();
+            ambient.pause(); // Глушим холл
             portalTransition('block-bar');
             
+            // Запуск шампанского
+            champagne.currentTime = 0;
             champagne.play();
             startVisualizer(champagne); 
 
@@ -134,17 +139,21 @@
             }, 4000); 
         }
 
-        function portalTransition(nextId) {
-            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
-            const next = document.getElementById(nextId);
-            next.classList.add('active');
-        }
-
         function startVisualizer(audioElement) {
             const context = new (window.AudioContext || window.webkitAudioContext)();
             const src = context.createMediaElementSource(audioElement);
+            
+            // Фильтр для фортепиано и духовых
+            const filter = context.createBiquadFilter();
+            filter.type = "peaking";
+            filter.frequency.value = 2500;
+            filter.gain.value = 10;
+
             const analyser = context.createAnalyser();
-            src.connect(analyser); analyser.connect(context.destination);
+            src.connect(filter);
+            filter.connect(analyser);
+            analyser.connect(context.destination);
+            
             analyser.fftSize = 64;
             const dataArray = new Uint8Array(analyser.frequencyBinCount);
             const neon = document.getElementById('t-neon');
@@ -152,12 +161,28 @@
             function renderFrame() {
                 requestAnimationFrame(renderFrame);
                 analyser.getByteFrequencyData(dataArray);
-                let avg = dataArray.reduce((a,b) => a+b) / dataArray.length;
-                let intensity = Math.pow(avg / 140, 2.5);
+                // Привязка только к ритму (низкие частоты 0-5 индекс)
+                let rhythm = dataArray[1] + dataArray[2] + dataArray[3]; 
+                let intensity = Math.pow(rhythm / 400, 2);
                 neon.style.opacity = Math.max(0.1, intensity);
-                neon.style.textShadow = `0 0 ${intensity * 60}px var(--cyan), 0 0 ${intensity * 20}px #fff`;
+                neon.style.textShadow = `0 0 ${intensity * 50}px var(--cyan)`;
             }
             renderFrame();
+        }
+
+        function portalTransition(nextId) {
+            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
+            document.getElementById(nextId).classList.add('active');
+        }
+
+        function preview(input) {
+            const r = new FileReader();
+            r.onload = (e) => { 
+                document.getElementById('pp').src = e.target.result; 
+                document.getElementById('pp').style.display = "block";
+                document.getElementById('photo-label').style.display = "none";
+            };
+            r.readAsDataURL(input.files[0]);
         }
     </script>
 </body>
