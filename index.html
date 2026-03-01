@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.46</title>
+    <title>GY-GY Club v4.3.47</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
@@ -11,49 +11,49 @@
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; }
         
-        /* АНИМАЦИЯ ПЕРЕХОДА */
-        .zoom-out { animation: zoomOut 1.1s forwards cubic-bezier(0.4, 0, 0.2, 1); }
-        @keyframes zoomOut { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(6); opacity: 0; filter: blur(15px); } }
-        .zoom-in { animation: zoomIn 0.7s forwards ease-out; }
-        @keyframes zoomIn { 0% { transform: scale(0.3); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        /* ПОРТАЛЬНЫЙ ПЕРЕХОД */
+        .zoom-out { animation: zoomOut 1.2s forwards cubic-bezier(0.4, 0, 0.2, 1); }
+        @keyframes zoomOut { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(8); opacity: 0; filter: blur(20px); } }
+        .zoom-in { animation: zoomIn 0.8s forwards ease-out; }
+        @keyframes zoomIn { 0% { transform: scale(0.2); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
         .block { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 10; background: #000; }
         .block.active { display: flex !important; }
 
-        /* ВХОДНАЯ ДВЕРЬ */
-        .door-wrapper { cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .door-img { width: 75vw; max-width: 320px; transition: 1.2s; }
+        /* 1. ЗАМЕДЛЕННАЯ ДВЕРЬ */
+        .door-img { width: 75vw; max-width: 320px; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s; cursor: pointer; }
 
-        /* ХОЛЛ И ВИСЮЛЬКИ */
+        /* 4. ИСПРАВЛЕННАЯ ЗАНАВЕСКА */
         .hall-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('hall_bg_jpg.jpg') no-repeat center; background-size: cover; z-index: -2; }
         .beads-overlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: repeating-linear-gradient(90deg, transparent, transparent 15px, rgba(0,0,0,0.4) 16px, transparent 30px);
-            z-index: -1; pointer-events: none; 
+            background: repeating-linear-gradient(90deg, transparent, transparent 25px, rgba(0,0,0,0.3) 26px, transparent 50px);
+            z-index: -1; pointer-events: none; opacity: 0.6;
         }
 
-        /* ЧАРЛИ И ОБЛАЧКА */
-        .charlie-container { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: flex-end; }
-        .charlie-img { width: 100%; max-width: 600px; z-index: 5; }
+        /* 6. БАР И ЧАРЛИ */
+        .charlie-container { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: flex-end; background: radial-gradient(circle at center, #222 0%, #000 80%); }
+        .charlie-img { width: 100%; max-width: 600px; z-index: 5; filter: drop-shadow(0 0 15px rgba(212,175,55,0.2)); }
         
         .speech-bubble {
-            position: absolute; background: #fff; color: #000; padding: 10px 15px;
+            position: absolute; background: #fff; color: #000; padding: 12px 20px;
             border-radius: 50px; font-family: 'Share Tech Mono'; font-size: 11px; font-weight: bold;
-            text-align: center; cursor: pointer; z-index: 10; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            transition: transform 0.2s; min-width: 120px;
+            text-align: center; cursor: pointer; z-index: 10; box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+            transition: 0.3s; min-width: 140px;
         }
-        .speech-bubble:hover { transform: scale(1.1); }
-        .speech-bubble::after { 
-            content: ''; position: absolute; bottom: -10px; left: 50%; 
-            border-width: 10px 10px 0; border-style: solid; border-color: #fff transparent; 
-        }
+        .speech-bubble:hover { transform: scale(1.1) translateY(-5px); background: var(--gold); }
+        .speech-bubble::after { content: ''; position: absolute; bottom: -10px; left: 50%; border-width: 10px 10px 0; border-style: solid; border-color: inherit transparent; transform: translateX(-50%); }
         
-        /* Координаты облачков под пальцы нового Чарли */
-        #bubble-table { left: 15%; bottom: 32%; }
-        #bubble-ai { right: 15%; bottom: 22%; }
+        #bubble-table { left: 10%; bottom: 35%; }
+        #bubble-ai { right: 10%; bottom: 25%; }
 
-        .btn-gold { min-width: 200px; padding: 14px; background: transparent; border: 1px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; margin: 10px; }
-        .lang-panel { position: absolute; top: 20px; right: 20px; z-index: 1000; font-family: 'Share Tech Mono'; cursor: pointer; border: 1px solid var(--gold); padding: 5px 10px; }
+        .btn-gold { min-width: 220px; padding: 15px; background: transparent; border: 1px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; margin: 10px; transition: 0.3s; }
+        .btn-gold:hover { background: rgba(212,175,55,0.1); }
+        
+        .lang-panel { position: absolute; top: 20px; right: 20px; z-index: 1000; font-family: 'Share Tech Mono'; cursor: pointer; border: 1px solid var(--gold); padding: 8px 15px; background: rgba(0,0,0,0.8); }
+
+        /* 5. БЕЛЫЙ ФОН ФОТО */
+        #h-photo { width: 80px; height: 80px; object-fit: cover; background: #fff; border: 1px solid var(--hologram-cyan); }
     </style>
 </head>
 <body>
@@ -66,53 +66,53 @@
     </div>
 
     <div id="block-entrance" class="block active">
-        <div class="door-wrapper" onclick="handleDoor()">
-            <img src="door_1.jpg" class="door-img">
-        </div>
+        <img src="door_1.jpg" class="door-img" onclick="handleDoor()">
     </div>
 
     <div id="block-welcome" class="block">
         <div style="width:150px; height:150px; border-radius:50%; border:1px solid var(--gold); overflow:hidden; margin-bottom:20px;">
             <img src="charlie.png" style="width:100%; height:100%; object-fit:cover;">
         </div>
-        <h2 id="t-welcome">ДОБРО ПОЖАЛОВАТЬ</h2>
-        <button id="b-proceed" class="btn-gold" onclick="portalTransition('block-identity')">ПРОДОЛЖИТЬ</button>
+        <h2 id="t-welcome"></h2>
+        <button id="b-proceed" class="btn-gold" onclick="portalTransition('block-identity')"></button>
     </div>
 
     <div id="block-identity" class="block">
         <div style="display:flex; gap:10px; margin-bottom:20px;">
             <div id="id-box" style="width:80px; height:80px; background:#fff; color:#000; display:flex; align-items:center; justify-content:center; font-size:9px;"></div>
             <div id="qr-box" style="width:80px; height:80px; background:#fff;"></div>
-            <div onclick="document.getElementById('f').click()" style="width:80px; height:80px; background:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center;">
+            <div onclick="document.getElementById('f').click()" style="width:80px; height:80px; background:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; overflow:hidden;">
                 <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
-                <span id="t-photo">ФОТО</span>
+                <span id="t-photo-label" style="color:#000; font-size:10px; font-family:'Share Tech Mono'"></span>
             </div>
         </div>
-        <button id="b-save" class="btn-gold" onclick="save()">СОХРАНИТЬ</button>
-        <button id="b-enter" class="btn-gold" style="display:none;" onclick="portalTransition('block-hall')">ВХОД</button>
+        <button id="b-save" class="btn-gold" onclick="save()"></button>
+        <button id="b-enter" class="btn-gold" style="display:none;" onclick="portalTransition('block-hall')"></button>
         <input type="file" id="f" style="display:none" onchange="preview(this)">
     </div>
 
     <div id="block-hall" class="block">
         <div class="hall-bg"></div>
-        <div class="beads-overlay"></div> <h1 id="t-slogan" style="position:absolute; top:15%; color:#fff; text-shadow: 0 0 20px var(--hologram-pink); text-align:center; width:100%; letter-spacing:10px;"></h1>
+        <div class="beads-overlay"></div>
+        <h1 id="t-slogan" style="position:absolute; top:15%; color:#fff; text-shadow: 0 0 20px var(--hologram-pink); text-align:center; width:100%; letter-spacing:10px; font-weight:900;"></h1>
         
-        <div style="position:absolute; right:5%; bottom:8%; background:rgba(0,0,0,0.8); border:1px solid var(--hologram-cyan); padding:15px; border-radius:10px; text-align:center;">
-            <div style="display:flex; gap:5px; margin-bottom:10px;">
-                <img id="h-photo" style="width:70px; height:70px; object-fit:cover;">
-                <div id="h-qr" style="width:70px; height:70px; background:#fff;"></div>
+        <div style="position:absolute; right:5%; bottom:8%; background:rgba(0,0,0,0.85); border:1px solid var(--hologram-cyan); padding:15px; border-radius:10px; text-align:center; z-index:20;">
+            <div style="display:flex; gap:8px; margin-bottom:10px; justify-content:center;">
+                <img id="h-photo">
+                <div id="h-qr" style="width:80px; height:80px; background:#fff;"></div>
             </div>
-            <div id="h-id" style="font-size:12px; font-family:'Share Tech Mono'; color:var(--hologram-cyan);"></div>
-            <button id="b-bar" class="btn-gold" style="width:100%; margin-top:10px; font-size:10px;" onclick="portalTransition('block-bar')">В БАР</button>
+            <div id="h-id" style="font-size:12px; font-family:'Share Tech Mono'; color:var(--hologram-cyan); margin-bottom:10px;"></div>
+            <button id="b-bar" class="btn-gold" style="width:100%; margin:0; font-size:11px;" onclick="portalTransition('block-bar')"></button>
         </div>
     </div>
 
     <div id="block-bar" class="block">
         <div class="charlie-container">
-            <img src="charlie_bar.png" class="charlie-img"> <div id="bubble-table" class="speech-bubble" onclick="alert('Переход к столикам...')">ЗА СТОЛИК</div>
-            <div id="bubble-ai" class="speech-bubble" onclick="alert('Разговор с ИИ...')">ИИ МЕНЮ</div>
+            <img src="charlie_bar.png" class="charlie-img">
+            <div id="bubble-table" class="speech-bubble" onclick="alert('Table...')"></div>
+            <div id="bubble-ai" class="speech-bubble" onclick="alert('AI...')"></div>
         </div>
-        <button onclick="portalTransition('block-hall')" style="position:absolute; bottom:20px; color:var(--gold); background:none; border:none; cursor:pointer;">← EXIT</button>
+        <button onclick="portalTransition('block-hall')" style="position:absolute; bottom:20px; color:var(--gold); background:none; border:none; cursor:pointer; font-family:'Share Tech Mono';">← EXIT</button>
     </div>
 
     <script>
@@ -121,8 +121,8 @@
         let curL = 'ru';
 
         const dict = {
-            ru: { welcome: "ДОБРО ПОЖАЛОВАТЬ", photo: "ФОТО", save: "СОХРАНИТЬ", enter: "ВХОД", slogan: "ВСЕ БУДЕТ GY-GY", bar: "В БАР", table: "ПРОЙТИ ЗА СТОЛИК", ai: "ОСТАТЬСЯ С ИИ" },
-            en: { welcome: "WELCOME", photo: "PHOTO", save: "SAVE", enter: "ENTER", slogan: "EVERYTHING GY-GY", bar: "TO BAR", table: "GO TO TABLE", ai: "STAY WITH AI" }
+            ru: { welcome: "ДОБРО ПОЖАЛОВАТЬ", proceed: "ПРОДОЛЖИТЬ", photo: "ФОТО", save: "СОХРАНИТЬ", enter: "ВХОД", slogan: "ВСЕ БУДЕТ GY-GY", bar: "В БАР", table: "ЗА СТОЛИК", ai: "ИИ МЕНЮ" },
+            en: { welcome: "WELCOME", proceed: "CONTINUE", photo: "PHOTO", save: "SAVE", enter: "ENTER", slogan: "EVERYTHING GY-GY", bar: "TO BAR", table: "GET A TABLE", ai: "AI MENU" }
         };
 
         function toggleLang() {
@@ -133,8 +133,10 @@
 
         function updateUI() {
             const d = dict[curL];
+            // 3. ИСПРАВЛЕННЫЙ ПЕРЕВОД ВСЕХ КНОПОК
             document.getElementById('t-welcome').innerText = d.welcome;
-            document.getElementById('t-photo').innerText = d.photo;
+            document.getElementById('b-proceed').innerText = d.proceed;
+            document.getElementById('t-photo-label').innerText = d.photo;
             document.getElementById('b-save').innerText = d.save;
             document.getElementById('b-enter').innerText = d.enter;
             document.getElementById('t-slogan').innerText = d.slogan;
@@ -146,6 +148,8 @@
         function portalTransition(nextId) {
             const current = document.querySelector('.block.active');
             current.classList.add('zoom-out');
+            
+            // 2. УСКОРЕННОЕ ПОЯВЛЕНИЕ ЧАРЛИ (переход через 800мс вместо 1000)
             setTimeout(() => {
                 current.classList.remove('active', 'zoom-out');
                 const next = document.getElementById(nextId);
@@ -165,14 +169,15 @@
                 }
                 updateUI();
                 setTimeout(() => next.classList.remove('zoom-in'), 700);
-            }, 1000);
+            }, 800);
         }
 
         function handleDoor() {
             document.getElementById('snd-door').play();
             const img = document.querySelector('.door-img');
-            img.style.transform = "scale(15)"; img.style.opacity = "0";
-            setTimeout(() => portalTransition('block-welcome'), 1000);
+            img.style.transform = "scale(15)"; 
+            img.style.opacity = "0";
+            setTimeout(() => portalTransition('block-welcome'), 2200); // 1. Замедленный вход
         }
 
         function preview(input) {
@@ -180,7 +185,7 @@
             r.onload = (e) => { 
                 document.getElementById('pp').src = e.target.result; 
                 document.getElementById('pp').style.display = "block"; 
-                document.getElementById('t-photo').style.display = "none";
+                document.getElementById('t-photo-label').style.display = "none";
                 userData.photo = e.target.result;
             };
             r.readAsDataURL(input.files[0]);
