@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY PRIVAT v4.3.100</title>
+    <title>GY-GY PRIVAT v4.3.101</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -12,56 +12,57 @@
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; }
         body, html { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; }
 
-        /* --- ЯЗЫКОВОЙ СЕРВИС: ПОЛНЫЙ ФИКС СКРОЛЛА --- */
-        #google_translate_element { position: absolute; top: 15px; left: 15px; z-index: 5000; opacity: 0.6; }
+        /* --- ЯЗЫКОВОЙ СЕРВИС: ВЫСШИЙ ПРИОРИТЕТ --- */
+        #google_translate_element { 
+            position: fixed; top: 15px; left: 15px; z-index: 9999 !important; 
+            opacity: 0.8; pointer-events: auto !important; 
+        }
         .goog-te-banner-frame.skiptranslate { display: none !important; }
         body { top: 0px !important; }
-        /* Принудительный скролл для выпадающего меню */
-        .goog-te-menu-frame { max-height: 400px !important; overflow-y: auto !important; }
-        .goog-te-gadget-simple { background: rgba(0,0,0,0.8) !important; border: 1px solid var(--gold) !important; padding: 5px !important; border-radius: 4px; }
-        .goog-te-gadget-simple span { color: var(--gold) !important; font-family: 'Share Tech Mono' !important; }
+        /* Фикс скролла выпадающего списка */
+        .goog-te-menu-frame { 
+            max-height: 350px !important; 
+            overflow-y: auto !important; 
+            box-shadow: 0 5px 20px rgba(0,0,0,0.8) !important;
+        }
 
-        /* --- ОБЩАЯ ЛОГИКА БЛОКОВ --- */
+        /* --- БЛОКИ --- */
         .block { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             display: none; flex-direction: column; align-items: center; justify-content: center; 
-            background: #000; z-index: 10; opacity: 0; transition: opacity 2s ease-in-out; 
+            background: #000; z-index: 10; opacity: 0; 
+            transition: opacity 1.5s ease-in-out; 
         }
         .block.active { display: flex !important; opacity: 1; }
 
-        /* --- СЦЕНА 1: ДВЕРЬ (ФИКС КЛИКА) --- */
-        #block-entrance { z-index: 1000; }
-        .door-img { width: 60vw; max-width: 320px; cursor: pointer; transition: 2.8s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: auto; }
-        .zoom-in-open { transform: scale(18); opacity: 0; filter: blur(20px); pointer-events: none; }
+        /* --- СЦЕНА 1: ДВЕРЬ --- */
+        #block-entrance { z-index: 500; }
+        .door-img { width: 60vw; max-width: 320px; cursor: pointer; transition: 2.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .zoom-in-open { transform: scale(20); opacity: 0; filter: blur(15px); pointer-events: none; }
 
-        /* --- СЦЕНА 2: ЧАРЛИ ПРИВЕТСТВИЕ (МАСШТАБ) --- */
+        /* --- СЦЕНА 2: ЧАРЛИ ПРИВЕТСТВИЕ --- */
         .charlie-welcome-wrap {
             width: 200px; height: 200px;
             -webkit-mask-image: radial-gradient(circle, black 45%, transparent 90%);
             mask-image: radial-gradient(circle, black 45%, transparent 90%);
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
-        .charlie-img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* --- СЦЕНА 3: РЕГИСТРАЦИЯ --- */
+        /* --- РЕГИСТРАЦИЯ И ХОЛЛ --- */
         .qr-gold-frame { border: 2px solid var(--gold); background: #fff; padding: 4px; display: flex; align-items: center; justify-content: center; }
-        .photo-box-reg { background: #fff; border: 1px solid var(--gold); position: relative; color: #000; overflow: hidden; }
-
-        /* --- СЦЕНА 4: ХОЛЛ (БЕЛАЯ КАРТОЧКА) --- */
         .hall-card { 
             position: absolute; right: 25px; bottom: 25px;
-            width: 200px; padding: 15px; border: 1px solid var(--gold); 
+            width: 195px; padding: 15px; border: 1px solid var(--gold); 
             background: #ffffff; border-radius: 12px;
             display: flex; flex-direction: column; align-items: center;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
         .hall-id-text { color: #000; font-family: 'Share Tech Mono'; font-size: 11px; margin-bottom: 12px; font-weight: bold; }
 
-        /* --- СЦЕНА 5: БАР (В ПРИТЫК) --- */
-        .bar-container { width: 100vw; height: 100vh; position: relative; overflow: hidden; }
+        /* --- БАР --- */
+        .bar-container { width: 100vw; height: 100vh; position: relative; }
         .bar-bg { width: 100%; height: 100%; object-fit: cover; }
 
-        /* КНОПКИ */
         .btn-gy { 
             min-width: 210px; padding: 12px 25px; background: #000; border: 1px solid var(--gold); 
             color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; 
@@ -84,19 +85,18 @@
     </div>
     
     <div id="block-welcome" class="block">
-        <p style="letter-spacing: 5px; font-size: 12px; margin-bottom: 15px;">GY-GY PRIVAT</p>
-        <div class="charlie-welcome-wrap"><img src="charlie.png" class="charlie-img"></div>
-        <h1 style="font-size: 42px; letter-spacing: 10px; margin-bottom: 25px;">WELCOME</h1>
+        <div class="charlie-welcome-wrap"><img src="charlie.png" style="width:100%; height:100%; object-fit:cover;"></div>
+        <h1 style="font-size: 40px; letter-spacing: 8px; margin-bottom: 25px;">WELCOME</h1>
         <button class="btn-gy" onclick="portalTransition('block-identity')">ПРОХОДИТЕ</button>
     </div>
 
     <div id="block-identity" class="block">
-        <div style="margin-bottom: 30px; letter-spacing: 3px; font-size: 14px;">IDENTIFICATION</div>
-        <div style="display:flex; gap:12px; margin-bottom:40px;">
+        <div style="margin-bottom: 25px; letter-spacing: 2px; font-size: 14px;">IDENTIFICATION</div>
+        <div style="display:flex; gap:10px; margin-bottom:30px;">
             <div id="id-box" class="qr-gold-frame" style="width:75px; height:75px; color:#000; font-size:9px; font-weight:bold; text-align:center;">ID</div>
             <div id="qr-box-reg" class="qr-gold-frame"></div>
-            <div class="qr-gold-frame photo-box-reg" style="width:75px; height:75px;">
-                <input type="file" onchange="preview(this)" style="position:absolute; opacity:0; width:100%; height:100%; cursor:pointer; z-index:10;">
+            <div class="qr-gold-frame" style="width:75px; height:75px; position:relative;">
+                <input type="file" onchange="preview(this)" style="position:absolute; opacity:0; width:100%; height:100%; cursor:pointer; z-index:20;">
                 <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
                 <span style="font-size:9px; color:#000;">ФОТО</span>
             </div>
@@ -107,113 +107,15 @@
 
     <div id="block-hall" class="block">
         <div style="position:absolute; width:100%; height:100%; background:url('hall_bg_jpg.jpg') center/cover; opacity: 0.4; z-index:-1;"></div>
-        <h2 style="color:#fff; text-shadow:0 0 10px var(--indigo); letter-spacing:5px; margin-bottom:30px;">ВСЕ БУДЕТ GY-GY</h2>
         <div class="hall-card">
-            <div style="display:flex; gap:10px; margin-bottom:15px;">
-                <div style="border:1px solid #ddd;"><img id="h-photo" style="width:75px; height:75px; object-fit:cover; background:#fff;"></div>
-                <div id="h-qr" style="width:75px; height:75px; border:1px solid #ddd; background:#fff;"></div>
+            <div style="display:flex; gap:8px; margin-bottom:12px;">
+                <img id="h-photo" style="width:70px; height:70px; object-fit:cover; border:1px solid #ddd; background:#fff;">
+                <div id="h-qr" style="width:70px; height:70px; border:1px solid #ddd; background:#fff;"></div>
             </div>
             <div id="h-id" class="hall-id-text"></div>
-            <button class="btn-gy" style="min-width:100%; font-size:11px; background:#000; color:var(--gold);" onclick="startBarTransition()">В БАР</button>
+            <button class="btn-gy" style="min-width:100%; font-size:10px; background:#000;" onclick="startBarTransition()">В БАР</button>
         </div>
     </div>
 
     <div id="block-bar" class="block">
-        <div class="bar-container">
-            <img src="charlie_bar.png" class="bar-bg">
-            <div style="position:absolute; top:10%; width:100%; text-align:center; color:#fff; font-style:italic; letter-spacing:3px; text-shadow: 0 0 10px #000;">
-                Чарли ждал именно вас
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // ЛОГИКА ID
-        let visitCount = localStorage.getItem('visitCount') || 1;
-        const randomNum = Math.floor(1000 + Math.random() * 8999);
-        const fullID = `№${visitCount}-${randomNum}`;
-        localStorage.setItem('visitCount', parseInt(visitCount) + 1);
-
-        function handleDoor() {
-            document.getElementById('snd-door').play();
-            document.getElementById('main-door').classList.add('zoom-in-open');
-            
-            new QRCode(document.getElementById("qr-box-reg"), { text: fullID, width: 67, height: 67 });
-            new QRCode(document.getElementById("h-qr"), { text: fullID, width: 70, height: 70 });
-            document.getElementById('id-box').innerText = fullID;
-            document.getElementById('h-id').innerText = fullID;
-
-            setTimeout(() => { 
-                document.getElementById('snd-ambient').play(); 
-                portalTransition('block-welcome'); 
-            }, 1500);
-        }
-
-        function portalTransition(id) {
-            const current = document.querySelector('.block.active');
-            if(current) current.style.opacity = '0';
-            
-            setTimeout(() => {
-                document.querySelectorAll('.block').forEach(b => { b.classList.remove('active'); b.style.display = 'none'; });
-                const next = document.getElementById(id);
-                next.style.display = 'flex';
-                void next.offsetWidth; 
-                next.classList.add('active');
-                next.style.opacity = '1';
-            }, 1000);
-        }
-
-        function startBarTransition() {
-            const amb = document.getElementById('snd-ambient');
-            const intro = document.getElementById('snd-intro');
-            const jazz = document.getElementById('snd-jazz');
-
-            // 1. Плавно гасим амбиент
-            let vol = 1.0;
-            const fadeOut = setInterval(() => {
-                if (vol > 0.05) { vol -= 0.05; amb.volume = vol; } 
-                else { clearInterval(fadeOut); amb.pause(); }
-            }, 150);
-
-            // 2. Переход в бар
-            portalTransition('block-bar');
-
-            // 3. Звук (Пробка + Налив + Кхе-Кхе)
-            setTimeout(() => { intro.play(); }, 1200);
-
-            // 4. Плавный джаз через 7 секунд
-            setTimeout(() => {
-                jazz.volume = 0; jazz.play();
-                let jVol = 0;
-                const fadeIn = setInterval(() => {
-                    if (jVol < 0.6) { jVol += 0.05; jazz.volume = jVol; }
-                    else { clearInterval(fadeIn); }
-                }, 250);
-            }, 7500);
-        }
-
-        function preview(i) {
-            const r = new FileReader();
-            r.onload = (e) => { 
-                document.getElementById('pp').src = e.target.result; 
-                document.getElementById('pp').style.display = "block";
-                document.getElementById('h-photo').src = e.target.result;
-            };
-            r.readAsDataURL(i.files[0]);
-        }
-
-        function saveReg() {
-            document.getElementById('btn-save').innerText = 'ПРИНЯТО';
-            document.getElementById('btn-go-hall').classList.remove('btn-disabled');
-        }
-
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({
-                pageLanguage: 'ru',
-                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-            }, 'google_translate_element');
-        }
-    </script>
-    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-</body>
-</html>
+        <div class="bar-container"><img
