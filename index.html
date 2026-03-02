@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.92</title>
+    <title>GY-GY Club v4.3.93</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -19,14 +18,14 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             display: none; flex-direction: column; align-items: center; justify-content: center; 
             background: #000; z-index: 10; opacity: 0; 
-            transition: opacity 2s ease-in-out; /* Плавность для всех переходов */
+            transition: opacity 2s ease-in-out; 
         }
-        /* Особо медленный Чарли */
-        #block-welcome.active { display: flex !important; opacity: 1; transition: opacity 3.5s ease-in-out; }
+        /* Чарли появляется особенно плавно */
+        #block-welcome { transition: opacity 3.5s ease-in-out; }
         .block.active { display: flex !important; opacity: 1; }
 
         /* Дверь */
-        .door-img { width: 65vw; max-width: 350px; cursor: pointer; transition: 2.8s cubic-bezier(0.4, 0, 0.2, 1); z-index: 100; }
+        .door-img { width: 65vw; max-width: 350px; cursor: pointer; transition: 2.8s cubic-bezier(0.4, 0, 0.2, 1); position: relative; z-index: 150; }
         .zoom-in-open { transform: scale(18); opacity: 0; filter: blur(20px); pointer-events: none; }
 
         /* Чарли */
@@ -45,7 +44,7 @@
             border: 1px solid var(--gold); color: var(--gold); 
             cursor: pointer; font-family: 'Share Tech Mono'; 
             text-transform: uppercase; letter-spacing: 2px;
-            margin: 8px 0; outline: none; transition: none;
+            margin: 8px 0; outline: none;
         }
         .btn-disabled { border-color: #333; color: #333; pointer-events: none; opacity: 0.5; }
 
@@ -60,12 +59,12 @@
         }
         .hall-card { 
             position: absolute; right: 25px; bottom: 25px;
-            width: 190px; padding: 15px; border: 1px solid var(--cyan); 
+            width: 195px; padding: 15px; border: 1px solid var(--cyan); 
             background: rgba(0,0,0,0.95); border-radius: 12px; 
             display: flex; flex-direction: column; align-items: center;
         }
         .card-row { display: flex; gap: 10px; margin-bottom: 10px; }
-        .hall-mini-qr { width: 70px; height: 70px; background: #fff; padding: 2px; }
+        .hall-mini-qr { width: 75px; height: 75px; background: #fff; padding: 2px; }
     </style>
 </head>
 <body>
@@ -75,7 +74,7 @@
     <audio id="snd-door"><source src="door_open.mp3" type="audio/mpeg"></audio>
     <audio id="snd-ambient" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
 
-    <div id="block-entrance" class="block active" style="z-index: 100; transition: opacity 1s;">
+    <div id="block-entrance" class="block active" style="z-index: 200;">
         <img src="door_1.jpg" class="door-img" id="main-door" onclick="handleDoor()">
     </div>
     
@@ -107,12 +106,12 @@
         
         <div class="hall-card">
             <div class="card-row">
-                <img id="h-photo" style="width:70px; height:70px; background:#333; object-fit:cover;">
+                <img id="h-photo" style="width:75px; height:75px; background:#333; object-fit:cover;">
                 <div id="h-qr" class="hall-mini-qr"></div>
             </div>
             <div id="h-id" style="color:var(--cyan); font-family:'Share Tech Mono'; font-size:10px; margin-bottom:15px; text-align: center;"></div>
             <button id="h-confirm" class="btn-gy" style="min-width:100%; font-size:10px;" onclick="confirmH()">ПОДТВЕРДИТЬ</button>
-            <button id="h-tobar" class="btn-gy" style="min-width:100%; font-size:10px; display:none; border-color:var(--cyan); color:var(--cyan);" onclick="alert('Переход в БАР...')">В БАР</button>
+            <button id="h-tobar" class="btn-gy" style="min-width:100%; font-size:10px; display:none; border-color:var(--cyan); color:var(--cyan);" onclick="alert('Вход в бар...')">В БАР</button>
         </div>
     </div>
 
@@ -124,21 +123,40 @@
         }
 
         function handleDoor() {
+            const door = document.getElementById('main-door');
             document.getElementById('snd-door').play();
-            document.getElementById('main-door').classList.add('zoom-in-open');
+            door.classList.add('zoom-in-open');
             
-            // Генерация QR для регистрации
+            // Заранее генерируем QR-коды
             new QRCode(document.getElementById("qr-box-reg"), { text: fullID, width: 75, height: 75 });
-            // Генерация QR для Холла
-            new QRCode(document.getElementById("h-qr"), { text: fullID, width: 70, height: 70 });
+            new QRCode(document.getElementById("h-qr"), { text: fullID, width: 75, height: 75 });
             
             document.getElementById('id-box').innerText = fullID;
             document.getElementById('h-id').innerText = fullID;
 
+            // Переход к Чарли
             setTimeout(() => { 
                 document.getElementById('snd-ambient').play(); 
                 portalTransition('block-welcome'); 
             }, 2600);
+        }
+
+        function portalTransition(id) {
+            const blocks = document.querySelectorAll('.block');
+            const target = document.getElementById(id);
+
+            // 1. Плавно гасим текущий активный блок
+            blocks.forEach(b => { if(b.classList.contains('active')) b.style.opacity = '0'; });
+
+            // 2. Ждем затухания и включаем новый
+            setTimeout(() => {
+                blocks.forEach(b => { b.classList.remove('active'); b.style.display = 'none'; });
+                target.style.display = 'flex';
+                // Форсируем перерисовку для анимации
+                void target.offsetWidth; 
+                target.classList.add('active');
+                target.style.opacity = '1';
+            }, 1000);
         }
 
         function preview(i) {
@@ -158,26 +176,14 @@
             saveBtn.style.opacity = '0.3';
             saveBtn.innerText = 'ГОТОВО';
             goBtn.classList.remove('btn-disabled');
-            goBtn.style.borderColor = 'var(--gold)';
-            goBtn.style.color = 'var(--gold)';
         }
 
         function confirmH() {
             document.getElementById('h-confirm').style.display='none';
             document.getElementById('h-tobar').style.display='block';
         }
-
-        function portalTransition(id) {
-            const current = document.querySelector('.block.active');
-            if(current) current.style.opacity = '0';
-            
-            setTimeout(() => {
-                document.querySelectorAll('.block').forEach(b => { b.classList.remove('active'); b.style.opacity = '0'; });
-                const next = document.getElementById(id);
-                next.classList.add('active');
-            }, 1000); // Время на затухание перед следующим появлением
-        }
     </script>
     <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
+
