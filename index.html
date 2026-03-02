@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.89</title>
+    <title>GY-GY Club v4.3.90</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -13,16 +13,17 @@
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; }
         body, html { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; }
 
-        /* Переводчик со скроллом */
-        #google_translate_element { position: absolute; top: 10px; left: 10px; z-index: 1000; opacity: 0.7; transition: 0.5s; }
+        /* Переводчик */
+        #google_translate_element { position: absolute; top: 10px; left: 10px; z-index: 1000; opacity: 0.7; }
         .goog-te-banner-frame.skiptranslate { display: none !important; }
         body { top: 0px !important; }
 
+        /* Плавные переходы страниц */
         .block { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             display: none; flex-direction: column; align-items: center; justify-content: center; 
             background: #000; z-index: 10; opacity: 0; 
-            transition: opacity 3s ease-in-out; 
+            transition: opacity 3s ease-in-out; /* Плавность появления Чарли */
         }
         .block.active { display: flex !important; opacity: 1; }
 
@@ -40,27 +41,26 @@
         .charlie-img { width: 100%; height: 100%; object-fit: cover; }
         .welcome-title { font-size: 55px; font-weight: 900; letter-spacing: 12px; margin-bottom: 30px; color: var(--gold); }
 
-        /* Кнопки: Только золото */
+        /* СТАТИЧНЫЕ КНОПКИ (Без подсветки) */
         .btn-gy { 
             min-width: 210px; padding: 12px 30px; background: #000; 
             border: 1px solid var(--gold); color: var(--gold); 
             cursor: pointer; font-family: 'Share Tech Mono'; 
-            text-transform: uppercase; transition: 0.4s; letter-spacing: 2px;
-            outline: none;
+            text-transform: uppercase; letter-spacing: 2px;
+            transition: none; outline: none; margin: 5px 0;
         }
-        .btn-gy:hover { box-shadow: 0 0 20px var(--gold); color: var(--gold); border-color: var(--gold); text-shadow: 0 0 5px var(--gold); }
-        .btn-gy:active { background: #111 !important; color: var(--gold) !important; box-shadow: 0 0 30px var(--gold) inset; }
 
         .square-box { width: 75px; height: 75px; display: flex; align-items: center; justify-content: center; font-size: 9px; }
-        
-        /* Белый фон для поля фото */
-        .photo-upload-box { background: #fff; border: 1px solid var(--gold); position: relative; color: #000; }
+        .photo-upload-box { background: #fff; border: 1px solid var(--gold); position: relative; color: #000; overflow: hidden; }
 
+        /* Холл и Карточка */
         .hall-card { 
             position: absolute; right: 25px; bottom: 25px;
-            width: 175px; padding: 15px; border: 1px solid var(--cyan); 
-            background: rgba(0,0,0,0.92); border-radius: 12px; text-align: center;
+            width: 185px; padding: 15px; border: 1px solid var(--cyan); 
+            background: rgba(0,0,0,0.92); border-radius: 12px; 
+            display: flex; flex-direction: column; align-items: center; /* Центрирование кнопок */
         }
+        .hall-card img { width: 110px; height: 110px; background: #fff; margin-bottom: 10px; object-fit: cover; }
     </style>
 </head>
 <body>
@@ -72,7 +72,7 @@
     <audio id="snd-champagne"><source src="champagne_sequence.mp3" type="audio/mpeg"></audio>
     <audio id="snd-jazz" loop><source src="charlie_jazz_duet.mp3" type="audio/mpeg"></audio>
 
-    <div id="block-entrance" class="block active">
+    <div id="block-entrance" class="block active" style="transition: opacity 1s;">
         <img src="door_1.jpg" class="door-img" id="main-door" onclick="handleDoor()">
     </div>
     
@@ -83,7 +83,7 @@
         <button class="btn-gy" onclick="portalTransition('block-identity')">ПРОХОДИТЕ</button>
     </div>
 
-    <div id="block-identity" class="block">
+    <div id="block-identity" class="block" style="transition: opacity 1s;">
         <div style="font-style: italic; margin-bottom: 35px; opacity: 0.8;">«В каждой шутке есть доля виски»</div>
         <div style="display:flex; gap:15px; margin-bottom:40px;">
             <div id="id-box" class="square-box" style="border:1px solid var(--cyan); color:var(--cyan);">ID</div>
@@ -95,26 +95,17 @@
             </div>
         </div>
         <button id="btn-save" class="btn-gy" onclick="saveReg()">СОХРАНИТЬ</button>
-        <button id="btn-go-final" class="btn-gy" style="display:none; border-color:var(--cyan); color:var(--cyan);" onclick="portalTransition('block-hall')">ПРОХОДИТЕ</button>
+        <button id="btn-go-final" class="btn-gy" style="border-color: #555; color: #555; pointer-events: none;" onclick="portalTransition('block-hall')">ПРОХОДИТЕ</button>
     </div>
 
-    <div id="block-hall" class="block">
+    <div id="block-hall" class="block" style="transition: opacity 1.5s;">
         <div style="position:absolute; width:100%; height:100%; background:url('hall_bg_jpg.jpg') center/cover; z-index:-1;"></div>
         <h2 style="color:#fff; text-shadow:0 0 15px var(--indigo-neon); letter-spacing:5px; margin-bottom:30px;">ВСЕ БУДЕТ GY-GY</h2>
         <div class="hall-card">
-            <img id="h-photo" style="width:105px; height:105px; background:#fff; margin:0 auto 10px; display:block; object-fit:cover;">
-            <div id="h-id" style="color:var(--cyan); font-family:'Share Tech Mono'; font-size:11px; margin-bottom:15px;"></div>
+            <img id="h-photo">
+            <div id="h-id" style="color:var(--cyan); font-family:'Share Tech Mono'; font-size:11px; margin-bottom:15px; text-align: center;"></div>
             <button id="h-confirm" class="btn-gy" style="min-width:100%; font-size:11px;" onclick="confirmH()">ПОДТВЕРДИТЬ</button>
             <button id="h-tobar" class="btn-gy" style="min-width:100%; font-size:11px; display:none;" onclick="startBar()">В БАР</button>
-        </div>
-    </div>
-
-    <div id="block-bar" class="block">
-        <div style="width: 100%; height: 100%; position: relative;">
-            <div style="position:absolute; top:12%; width:100%; text-align:center; font-size:18px; color:#fff; text-shadow:0 0 10px var(--cyan);">ИСТИНА НЕ В ВИНЕ, А В ЕГО КОЛИЧЕСТВЕ</div>
-            <img src="charlie_bar.png" style="width:100%; height:100%; object-fit:contain;">
-            <div style="position:absolute; left:12%; bottom:35%; width:180px; height:180px; cursor:pointer;" onclick="window.location.href='tables.html'"></div>
-            <div style="position:absolute; right:12%; bottom:25%; width:180px; height:180px; cursor:pointer;" onclick="window.location.href='ai_room.html'"></div>
         </div>
     </div>
 
@@ -141,14 +132,19 @@
             r.onload = (e) => { 
                 document.getElementById('pp').src = e.target.result; 
                 document.getElementById('pp').style.display = "block";
+                document.getElementById('p-label').style.display = "none"; // Текст исчезает полностью
                 document.getElementById('h-photo').src = e.target.result;
             };
             r.readAsDataURL(i.files[0]);
         }
 
         function saveReg() {
-            document.getElementById('btn-save').style.display = 'none';
-            document.getElementById('btn-go-final').style.display = 'block';
+            const goBtn = document.getElementById('btn-go-final');
+            document.getElementById('btn-save').style.opacity = '0.5';
+            document.getElementById('btn-save').innerText = 'СОХРАНЕНО';
+            goBtn.style.borderColor = var(--cyan);
+            goBtn.style.color = var(--cyan);
+            goBtn.style.pointerEvents = 'auto';
             document.getElementById('h-id').innerText = fullID;
         }
 
@@ -159,21 +155,16 @@
 
         function startBar() {
             document.getElementById('snd-ambient').pause();
-            portalTransition('block-bar');
+            portalTransition('block-bar'); // Добавь блок бара сам, если нужно
             document.getElementById('snd-champagne').play();
-            setTimeout(() => {
-                const j = document.getElementById('snd-jazz');
-                j.volume = 0; j.play();
-                let v = 0;
-                const f = setInterval(() => { if(v < 0.6) { v += 0.05; j.volume = v; } else clearInterval(f); }, 200);
-            }, 4000);
         }
 
         function portalTransition(id) {
             document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
+            // Маленькая задержка для чистоты CSS анимации
             setTimeout(() => {
                 document.getElementById(id).classList.add('active');
-            }, 100);
+            }, 50);
         }
     </script>
     <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
