@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY Club v4.3.82 (Safe Entry)</title>
+    <title>GY-GY Club v4.3.78</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
@@ -12,183 +12,183 @@
             --gold: #D4AF37;
             --black: #0a0a0a;
             --neon-purple: #9400D3;
-            --tg-blue: #24A1DE;
         }
+
+        * { box-sizing: border-box; }
 
         body, html {
-            margin: 0; padding: 0; width: 100%; height: 100%;
-            background-color: var(--black); color: var(--gold);
-            font-family: 'Playfair Display', serif; overflow: hidden;
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            background-color: var(--black);
+            color: var(--gold);
+            font-family: 'Playfair Display', serif;
+            overflow: hidden;
         }
 
+        /* Контейнер для экранов */
         .screen {
-            display: none; flex-direction: column; align-items: center;
-            justify-content: center; height: 100vh; width: 100vw;
-            text-align: center; position: absolute; transition: opacity 0.5s ease;
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background-size: cover;
+            background-position: center;
+            transition: opacity 0.8s ease-in-out;
         }
 
-        .active { display: flex; }
+        .active { display: flex; z-index: 10; }
 
-        /* Вход и Приветствие */
-        #entrance-screen { background: url('door_1.jpg') no-repeat center center; background-size: cover; cursor: pointer; }
-        .charlie-mask {
-            width: 300px; height: 300px; object-fit: cover;
-            mask-image: radial-gradient(circle, black 50%, rgba(0,0,0,0) 70%);
-            -webkit-mask-image: radial-gradient(circle, black 50%, rgba(0,0,0,0) 70%);
-        }
-        .welcome-text { font-size: 3rem; letter-spacing: 10px; margin-top: 20px; font-weight: 700; }
-
-        /* Кнопки */
-        .btn-gold {
-            background: transparent; border: 2px solid var(--gold);
-            color: var(--gold); padding: 15px 40px; font-size: 1.1rem;
-            cursor: pointer; text-transform: uppercase; margin: 10px; transition: 0.3s;
-        }
-        .btn-gold:hover { background: var(--gold); color: var(--black); }
+        /* Экраны */
+        #entrance { background-image: url('door_1.jpg'); cursor: pointer; }
         
-        .btn-tg {
-            background: var(--tg-blue); color: white; border: none;
-            padding: 12px 30px; border-radius: 5px; font-family: sans-serif;
-            font-weight: bold; cursor: pointer; margin-bottom: 20px;
+        #welcome { background: var(--black); }
+        .charlie-mask {
+            width: 350px; height: 350px;
+            object-fit: cover;
+            -webkit-mask-image: radial-gradient(circle, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 70%);
+            mask-image: radial-gradient(circle, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 70%);
         }
 
-        /* Холл и Бар */
-        #hall-screen { background: url('hall_bg_jpg.jpg') no-repeat center center; background-size: cover; }
+        #registration { background: #111; }
+        
+        #hall { background-image: url('hall_bg_jpg.jpg'); }
         .neon-text {
-            font-size: 3.5rem; color: var(--neon-purple);
-            text-shadow: -2px -2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff, 2px 2px 0 #fff, 0 0 20px var(--neon-purple);
+            font-size: clamp(2rem, 8vw, 4rem);
+            color: var(--neon-purple);
             font-weight: 700;
+            text-transform: uppercase;
+            paint-order: stroke fill;
+            -webkit-text-stroke: 1.5px white;
+            filter: drop-shadow(0 0 15px var(--neon-purple));
         }
 
-        #bar-screen { background: url('charlie_bar.png') no-repeat center center; background-size: contain; }
-        .click-zone {
-            position: absolute; background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%; cursor: pointer; padding: 25px;
-            backdrop-filter: blur(5px); border: 1px solid var(--gold);
-            color: white; text-decoration: none; font-weight: bold;
-        }
-        .zone-tables { top: 35%; left: 20%; }
-        .zone-ai { top: 35%; right: 20%; }
+        #bar { background-image: url('charlie_bar.png'); background-size: contain; background-repeat: no-repeat; }
 
-        #qr-code { background: white; padding: 10px; margin: 15px; border-radius: 8px; }
+        /* Элементы управления */
+        .btn-gold {
+            background: transparent;
+            border: 2px solid var(--gold);
+            color: var(--gold);
+            padding: 15px 45px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+        .btn-gold:hover { background: var(--gold); color: #000; }
+
+        #qr-container { background: white; padding: 15px; border-radius: 10px; margin: 20px; }
+
+        .cloud-link {
+            position: absolute;
+            padding: 20px 40px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--gold);
+            border-radius: 50px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+        .cloud-link:hover { transform: scale(1.1); background: rgba(212, 175, 55, 0.2); }
     </style>
 </head>
 <body>
 
-    <audio id="snd-door" src="door_open.mp3"></audio>
-    <audio id="snd-ambient" src="hall_ambient.mp3" loop></audio>
-    <audio id="snd-champagne" src="champagne_pop.mp3"></audio>
-    <audio id="snd-jazz" src="bar_jazz.mp3" loop></audio>
+    <audio id="snd-door" src="door_open.mp3" preload="auto"></audio>
+    <audio id="snd-hall" src="hall_ambient.mp3" loop preload="auto"></audio>
+    <audio id="snd-pop" src="champagne_pop.mp3" preload="auto"></audio>
+    <audio id="snd-jazz" src="bar_jazz.mp3" loop preload="auto"></audio>
 
-    <div id="entrance-screen" class="screen active" onclick="handleInitialEntry()">
-        <h1 style="background: rgba(0,0,0,0.6); padding: 20px;">GY-GY CLUB<br><small>TAP TO UNLOCK</small></h1>
+    <div id="entrance" class="screen active" onclick="initEntry()">
+        <h1 style="background: rgba(0,0,0,0.7); padding: 40px;">ENTER THE CLUB</h1>
     </div>
 
-    <div id="welcome-screen" class="screen">
+    <div id="welcome" class="screen">
         <img src="charlie.png" class="charlie-mask" alt="Charlie">
-        <div class="welcome-text">WELCOME</div>
+        <h2 style="font-size: 4rem; letter-spacing: 15px;">WELCOME</h2>
     </div>
 
-    <div id="auth-screen" class="screen">
-        <h3>ВЫБЕРИТЕ СПОСОБ ВХОДА</h3>
-        <button class="btn-tg" onclick="tgLogin()">LOG IN WITH TELEGRAM</button>
-        <p>— ИЛИ —</p>
-        <button class="btn-gold" onclick="startNewRegistration()">ПОЛУЧИТЬ ID ГОСТЯ</button>
+    <div id="registration" class="screen">
+        <h3>ГЕНЕРАЦИЯ ВАШЕГО ID</h3>
+        <div id="qr-container"></div>
+        <div id="id-text" style="font-size: 1.5rem; margin-bottom: 20px;"></div>
+        <button id="save-btn" class="btn-gold" onclick="saveUserData()">Сохранить</button>
+        <button id="pass-btn" class="btn-gold" style="display:none;" onclick="goHall()">Проходите</button>
     </div>
 
-    <div id="reg-screen" class="screen">
-        <h2>ВАШ МАГИЧЕСКИЙ КЛЮЧ</h2>
-        <div id="qr-code"></div>
-        <p id="user-id-display" style="letter-spacing: 2px;"></p>
-        <button id="save-btn" class="btn-gold" onclick="confirmRegistration()">СОХРАНИТЬ И ВОЙТИ</button>
-        <button id="proceed-btn" class="btn-gold" style="display: none;" onclick="enterHall()">ПРОХОДИТЕ</button>
+    <div id="hall" class="screen" onclick="goBar()">
+        <div class="neon-text">ВСЕ БУДЕТ GY-GY</div>
     </div>
 
-    <div id="hall-screen" class="screen" onclick="enterBar()">
-        <h1 class="neon-text">ВСЕ БУДЕТ GY-GY</h1>
-    </div>
-
-    <div id="bar-screen" class="screen">
-        <a href="tables.html" class="click-zone zone-tables">TABLES</a>
-        <a href="ai_room.html" class="click-zone zone-ai">AI ROOM</a>
+    <div id="bar" class="screen">
+        <a href="tables.html" class="cloud-link" style="top: 30%; left: 20%;">TABLES</a>
+        <a href="ai_room.html" class="cloud-link" style="top: 30%; right: 20%;">AI ROOM</a>
     </div>
 
     <script>
-        const state = { id: null };
+        // Инициализация ID (Unique Digital Trace)
+        let userId = localStorage.getItem('gygy_user_id');
 
         function showScreen(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
         }
 
-        // Логика входа
-        function handleInitialEntry() {
+        function initEntry() {
             document.getElementById('snd-door').play();
-            const savedId = getCookie('gygy_id');
-
-            showScreen('welcome-screen');
+            showScreen('welcome');
 
             setTimeout(() => {
-                if (savedId) {
-                    state.id = savedId;
-                    enterHall();
+                if (userId) {
+                    goHall();
                 } else {
-                    showScreen('auth-screen');
+                    startReg();
                 }
-            }, 2500);
+            }, 3000);
         }
 
-        // Telegram Auth (Имитация для фронта)
-        function tgLogin() {
-            alert("Перенаправление в Telegram @GYGY_Bot для подтверждения...");
-            // Здесь должна быть логика OAuth, но для прототипа:
-            state.id = "TG-" + Math.floor(1000 + Math.random() * 9000);
-            confirmRegistration();
-        }
-
-        function startNewRegistration() {
-            state.id = 'GY-' + Math.random().toString(36).substr(2, 9).toUpperCase();
-            document.getElementById('user-id-display').innerText = state.id;
+        function startReg() {
+            userId = 'ID-' + Math.floor(Math.random() * 1000000);
+            document.getElementById('id-text').innerText = userId;
             
-            const qrContainer = document.getElementById("qr-code");
-            qrContainer.innerHTML = "";
-            new QRCode(qrContainer, {
-                text: state.id,
-                width: 150, height: 150
+            const qrBox = document.getElementById('qr-container');
+            qrBox.innerHTML = '';
+            new QRCode(qrBox, {
+                text: userId,
+                width: 160,
+                height: 160
             });
-            showScreen('reg-screen');
+            showScreen('registration');
         }
 
-        function confirmRegistration() {
-            setCookie('gygy_id', state.id, 365);
+        function saveUserData() {
+            localStorage.setItem('gygy_user_id', userId);
+            // Куки для "автоматического распознавания" (Cookie-recognition)
+            document.cookie = "gygy_recognized=true; max-age=" + (60*60*24*365) + "; path=/";
+            
             document.getElementById('save-btn').style.display = 'none';
-            document.getElementById('proceed-btn').style.display = 'inline-block';
-            if(document.getElementById('auth-screen').classList.contains('active')) enterHall();
+            document.getElementById('pass-btn').style.display = 'inline-block';
         }
 
-        function enterHall() {
-            document.getElementById('snd-ambient').play();
-            showScreen('hall-screen');
+        function goHall() {
+            document.getElementById('snd-hall').play();
+            showScreen('hall');
         }
 
-        function enterBar() {
-            document.getElementById('snd-ambient').pause();
-            document.getElementById('snd-champagne').play();
-            setTimeout(() => document.getElementById('snd-jazz').play(), 600);
-            showScreen('bar-screen');
-        }
-
-        // Cookie Helpers
-        function setCookie(name, value, days) {
-            const d = new Date();
-            d.setTime(d.getTime() + (days*24*60*60*1000));
-            document.cookie = `${name}=${value};expires=${d.toUTCString()};path=/`;
-        }
-
-        function getCookie(name) {
-            const value = `; ${document.cookie}`;
-            const parts = value.split(`; ${name}=`);
-            if (parts.length === 2) return parts.pop().split(';').shift();
+        function goBar() {
+            document.getElementById('snd-hall').pause();
+            document.getElementById('snd-pop').play();
+            setTimeout(() => {
+                document.getElementById('snd-jazz').play();
+            }, 500);
+            showScreen('bar');
         }
     </script>
 </body>
