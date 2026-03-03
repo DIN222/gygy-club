@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.107</title>
+    <title>GY-GY Club v4.3.108</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -19,19 +20,20 @@
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; }
         body, html { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; }
 
-        /* ФИКС ПЕРЕВОДА */
-        #google_translate_element { position: absolute; top: 15px; left: 15px; z-index: 9999; min-height: 40px; }
-        .goog-te-menu-frame { max-height: 300px !important; overflow-y: auto !important; }
+        #google_translate_element { position: absolute; top: 15px; left: 15px; z-index: 9999; }
 
         .block { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             display: none; flex-direction: column; align-items: center; justify-content: center; 
-            background: #000; opacity: 0; transition: opacity 1s ease; 
+            background: #000; opacity: 0; transition: opacity 1s ease-in-out;
+            z-index: 10;
         }
-        .block.active { display: flex !important; opacity: 1; z-index: 50; }
+        
+        /* Принудительный показ активного блока */
+        .block.active { display: flex !important; opacity: 1 !important; z-index: 100 !important; }
 
-        /* ДВЕРЬ (Блок 1) */
-        #block-entrance { display: flex; opacity: 1; z-index: 100; }
+        /* ДВЕРЬ */
+        #block-entrance { display: flex; opacity: 1; z-index: 500; }
         .door-img { width: 65vw; max-width: 350px; cursor: pointer; transition: 2.5s cubic-bezier(0.4, 0, 0.2, 1); }
         .zoom-out { transform: scale(15); opacity: 0; pointer-events: none; }
 
@@ -53,10 +55,11 @@
         }
         .btn-gy.disabled { border-color: #333; color: #333; pointer-events: none; opacity: 0.4; }
 
+        /* КАРТОЧКА */
         .hall-card { 
-            position: absolute; right: 20px; bottom: 20px; width: 190px; padding: 15px; 
-            border: 1px solid var(--gold); background: #fff; border-radius: 10px; 
-            display: flex; flex-direction: column; align-items: center; z-index: 200;
+            position: absolute; right: 20px; bottom: 20px; width: 195px; padding: 15px; 
+            border: 1px solid var(--gold); background: #fff; border-radius: 12px; 
+            display: flex; flex-direction: column; align-items: center;
         }
     </style>
 </head>
@@ -67,24 +70,24 @@
     <audio id="snd-door"><source src="door_open.mp3" type="audio/mpeg"></audio>
     <audio id="snd-ambient" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
 
-    <div id="block-entrance" class="block">
+    <div id="block-entrance">
         <img src="door_1.jpg" class="door-img" id="main-door" onclick="handleDoor()">
     </div>
     
     <div id="block-welcome" class="block">
-        <div style="width:200px; height:200px; -webkit-mask-image: radial-gradient(circle, black 40%, transparent 85%); margin-bottom:10px;">
+        <div style="width:210px; height:210px; -webkit-mask-image: radial-gradient(circle, black 40%, transparent 85%); margin-bottom:15px;">
             <img src="charlie.png" style="width:100%; height:100%; object-fit:cover;">
         </div>
-        <h1 style="font-size: 40px; letter-spacing: 8px;">WELCOME</h1>
+        <h1 style="font-size: 45px; letter-spacing: 10px; font-weight: 900;">WELCOME</h1>
         <button class="btn-gy" onclick="portalTransition('block-identity')">ПРОХОДИТЕ</button>
     </div>
 
     <div id="block-identity" class="block">
         <div class="reg-grid">
-            <div class="square-box"><div id="id-box" style="font-size:9px; font-family:'Share Tech Mono';"></div></div>
+            <div class="square-box"><div id="id-box" style="font-size:9px; font-family:'Share Tech Mono'; font-weight: bold;"></div></div>
             <div id="qr-box-reg" class="square-box white-bg"></div>
             <div class="square-box">
-                <span id="p-label" style="font-size:10px;">ФОТО</span>
+                <span id="p-label" style="font-size:10px; font-family:'Share Tech Mono';">ФОТО</span>
                 <input type="file" onchange="preview(this)" style="position:absolute; opacity:0; width:100%; height:100%; cursor:pointer; z-index:10;">
                 <img id="pp">
             </div>
@@ -94,54 +97,58 @@
     </div>
 
     <div id="block-hall" class="block">
-        <div style="position:absolute; width:100%; height:100%; background:url('hall_bg_jpg.jpg') center/cover; opacity: 0.4; z-index:-1;"></div>
+        <div style="position:absolute; width:100%; height:100%; background:url('hall_bg_jpg.jpg') center/cover; opacity: 0.5; z-index:-1;"></div>
         <div class="hall-card">
-            <div style="display:flex; gap:8px; margin-bottom:10px;">
-                <img id="h-photo" style="width:70px; height:70px; background:#eee; object-fit:cover; border:1px solid var(--gold);">
-                <div id="h-qr" style="width:70px; height:70px; background:#fff; border:1px solid var(--gold);"></div>
+            <div style="display:flex; gap:10px; margin-bottom:10px;">
+                <img id="h-photo" style="width:75px; height:75px; background:#eee; object-fit:cover; border:1px solid var(--gold);">
+                <div id="h-qr" style="width:75px; height:75px; background:#fff; border:1px solid var(--gold);"></div>
             </div>
-            <div id="h-id" style="color:#000; font-family:'Share Tech Mono'; font-size:10px; font-weight:bold; margin-bottom:10px;"></div>
-            <button class="btn-gy" style="min-width:100%; font-size:10px; background:#000;" onclick="alert('В Бар...')">В БАР</button>
+            <div id="h-id" style="color:#000; font-family:'Share Tech Mono'; font-size:11px; font-weight:bold; margin-bottom:10px;"></div>
+            <button class="btn-gy" style="min-width:100%; font-size:10px; background:#000; color: var(--gold);" onclick="window.location.href='ai_room.html'">В АЙ-РУМ</button>
         </div>
     </div>
 
     <script>
-        // ID и QR
+        // Инициализация ID
         let vCount = localStorage.getItem('vCount') || 1;
-        const fullID = `№${vCount}-${Math.floor(1000 + Math.random() * 8999)}`;
+        const randomID = Math.floor(1000 + Math.random() * 8999);
+        const fullID = `№${vCount}-${randomID}`;
         localStorage.setItem('vCount', parseInt(vCount) + 1);
 
         function handleDoor() {
-            const door = document.getElementById('main-door');
-            document.getElementById('snd-door').play();
-            door.classList.add('zoom-out');
+            const doorImg = document.getElementById('main-door');
+            const entranceBlock = document.getElementById('block-entrance');
             
-            // Генерация данных заранее
+            document.getElementById('snd-door').play();
+            doorImg.classList.add('zoom-out');
+            
+            // Предзагрузка данных
             new QRCode(document.getElementById("qr-box-reg"), { text: fullID, width: 75, height: 75 });
-            new QRCode(document.getElementById("h-qr"), { text: fullID, width: 70, height: 70 });
+            new QRCode(document.getElementById("h-qr"), { text: fullID, width: 75, height: 75 });
             document.getElementById('id-box').innerText = fullID;
             document.getElementById('h-id').innerText = fullID;
 
             setTimeout(() => { 
                 document.getElementById('snd-ambient').play(); 
-                document.getElementById('block-entrance').style.display = 'none'; // Убираем дверь совсем
+                entranceBlock.style.display = 'none'; // Полное удаление двери
                 portalTransition('block-welcome'); 
-            }, 2000);
+            }, 2100);
         }
 
-        function portalTransition(id) {
-            // Гасим все блоки
-            document.querySelectorAll('.block').forEach(b => { 
-                b.classList.remove('active'); 
-                b.style.display = 'none'; 
-                b.style.opacity = '0';
+        function portalTransition(targetId) {
+            // Сначала гасим всё
+            const blocks = document.querySelectorAll('.block');
+            blocks.forEach(b => {
+                b.classList.remove('active');
             });
+
+            // Находим нужный блок
+            const target = document.getElementById(targetId);
             
-            const target = document.getElementById(id);
+            // Маленькая задержка для корректного срабатывания display:flex и opacity
             target.style.display = 'flex';
             setTimeout(() => {
                 target.classList.add('active');
-                target.style.opacity = '1';
             }, 50);
         }
 
@@ -152,6 +159,7 @@
                 document.getElementById('pp').style.display = "block";
                 document.getElementById('p-label').style.display = "none";
                 document.getElementById('h-photo').src = e.target.result;
+                localStorage.setItem('userPhoto', e.target.result); // Сохраняем фото для AI Room
             };
             r.readAsDataURL(i.files[0]);
         }
