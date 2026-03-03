@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.118</title>
+    <title>GY-GY Club v4.3.119</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -21,44 +21,47 @@
         .block { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             display: none; flex-direction: column; align-items: center; justify-content: center; 
-            background: #000; z-index: 10; opacity: 0; transition: opacity 1.5s ease-in-out; 
+            background: #000; z-index: 10; opacity: 0; transition: opacity 1.2s ease-in-out; 
         }
         .block.active { display: flex !important; opacity: 1; }
 
-        /* ДВЕРЬ */
+        /* ДВЕРЬ (Классика) */
         .door-img { width: 65vw; max-width: 350px; cursor: pointer; transition: 2.8s cubic-bezier(0.4, 0, 0.2, 1); position: relative; z-index: 150; }
         .zoom-in-open { transform: scale(18); opacity: 0; filter: blur(20px); pointer-events: none; }
 
-        /* ЧАРЛИ В ПРИВЕТСТВИИ */
-        .charlie-wrap { width: 240px; height: 240px; -webkit-mask-image: radial-gradient(circle, black 40%, transparent 85%); margin-bottom: 5px; }
-        .charlie-img { width: 100%; height: 100%; object-fit: cover; }
-
-        /* ЗОНА РЕГИСТРАЦИИ */
-        .square-box { width: 75px; height: 75px; display: flex; align-items: center; justify-content: center; font-size: 9px; border: 1px solid var(--gold); }
-        .photo-box { background: #fff; position: relative; color: #000; overflow: hidden; }
-
-        /* БАР И ЧАРЛИ-БАРМЕН */
+        /* БАР И ЧАРЛИ */
         #block-bar { background: url('bar_bg.jpg') center/cover no-repeat; justify-content: flex-end; }
-        .bartender { width: 85vw; max-width: 400px; cursor: pointer; z-index: 5; margin-bottom: -20px; transition: transform 0.2s; }
-        .bartender:active { transform: scale(0.95); }
+        .bartender { width: 85vw; max-width: 420px; cursor: pointer; z-index: 5; margin-bottom: -10px; }
 
-        /* ОБЛАЧКО (BUBBLE) */
-        .bubble {
-            position: absolute; background: rgba(255, 255, 255, 0.95); color: #000;
-            padding: 12px 18px; border-radius: 15px; font-family: 'Share Tech Mono';
-            font-size: 13px; max-width: 180px; text-align: center;
-            bottom: 45%; left: 50%; transform: translateX(-50%) translateY(20px);
-            opacity: 0; transition: 0.4s; z-index: 10; pointer-events: none;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        /* ОБЛАЧКА-КНОПКИ */
+        .nav-bubbles {
+            position: absolute; bottom: 50%; width: 100%;
+            display: flex; flex-direction: column; align-items: center; gap: 15px;
+            opacity: 0; pointer-events: none; transition: 0.5s; z-index: 20;
         }
-        .bubble.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-        .bubble:after { content: ''; position: absolute; bottom: -10px; left: 50%; margin-left: -10px; border-width: 10px 10px 0; border-style: solid; border-color: white transparent transparent; }
+        .nav-bubbles.show { opacity: 1; pointer-events: auto; transform: translateY(-20px); }
 
-        /* КНОПКИ */
-        .btn-gy { min-width: 210px; padding: 12px 30px; background: #000; border: 1px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; letter-spacing: 2px; margin: 8px 0; outline: none; }
+        .bubble-btn {
+            background: rgba(255, 255, 255, 0.95); color: #000;
+            padding: 15px 25px; border-radius: 30px; font-family: 'Share Tech Mono';
+            font-size: 14px; font-weight: bold; border: 2px solid var(--gold);
+            cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            min-width: 180px; text-align: center; transition: 0.3s;
+            position: relative;
+        }
+        .bubble-btn:active { transform: scale(0.9); background: var(--gold); color: #fff; }
+        
+        /* Хвостик облачка только у нижней кнопки */
+        .bubble-btn.last::after {
+            content: ''; position: absolute; bottom: -12px; left: 50%; margin-left: -10px;
+            border-width: 12px 12px 0; border-style: solid; border-color: white transparent transparent;
+        }
+
+        /* Остальные стили (Холл, Регистрация) берем из v93 */
+        .square-box { width: 75px; height: 75px; display: flex; align-items: center; justify-content: center; font-size: 9px; border: 1px solid var(--gold); }
+        .photo-box { background: #fff; position: relative; overflow: hidden; }
+        .btn-gy { min-width: 210px; padding: 12px 30px; background: #000; border: 1px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; letter-spacing: 2px; margin: 8px 0; }
         .btn-disabled { border-color: #333 !important; color: #333 !important; pointer-events: none; opacity: 0.4; }
-
-        /* КАРТОЧКА ХОЛЛА */
         .hall-card { position: absolute; right: 25px; bottom: 25px; width: 195px; padding: 15px; border: 1px solid var(--gold); background: #fff; border-radius: 12px; display: flex; flex-direction: column; align-items: center; }
     </style>
 </head>
@@ -74,7 +77,7 @@
     </div>
     
     <div id="block-welcome" class="block">
-        <div class="charlie-wrap"><img src="charlie.png" class="charlie-img"></div>
+        <div class="charlie-wrap" style="width:240px; height:240px; -webkit-mask-image:radial-gradient(circle, black 40%, transparent 85%);"><img src="charlie.png" style="width:100%; height:100%; object-fit:cover;"></div>
         <h1 style="font-size:50px; letter-spacing:10px;">WELCOME</h1>
         <button class="btn-gy" onclick="portalTransition('block-identity')">ПРОХОДИТЕ</button>
     </div>
@@ -86,7 +89,7 @@
             <div class="square-box photo-box">
                 <input type="file" onchange="preview(this)" style="position:absolute; opacity:0; width:100%; height:100%; cursor:pointer; z-index:5;">
                 <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
-                <span id="p-label">ФОТО</span>
+                <span id="p-label" style="color:#000;">ФОТО</span>
             </div>
         </div>
         <button id="btn-save" class="btn-gy" onclick="saveReg()">СОХРАНИТЬ</button>
@@ -107,21 +110,17 @@
     </div>
 
     <div id="block-bar" class="block">
-        <div id="bubble" class="bubble"></div>
-        <img src="charlie.png" class="bartender" onclick="charlieTalk()">
+        <div id="bubbles-menu" class="nav-bubbles">
+            <div class="bubble-btn" onclick="alert('Уходим за столики...')">ЗА СТОЛИКИ</div>
+            <div class="bubble-btn last" onclick="window.location.href='ai_room.html'">В ИИ-РУМ</div>
+        </div>
+        
+        <img src="charlie.png" class="bartender" onclick="toggleMenu()">
+        
         <button class="btn-gy" style="position:absolute; top:20px; right:20px; min-width:100px; font-size:10px;" onclick="window.location.reload()">ВЫХОД</button>
     </div>
 
     <script>
-        const jokes = [
-            "В каждой шутке есть доля виски!",
-            "Тут промпты наливают в чистом виде.",
-            "Слушай, а ты точно не бот? Выглядишь слишком хорошо.",
-            "Бармен не ошибается, он дебажит реальность.",
-            "Коктейль 'Сингулярность' за счет заведения!",
-            "Твоя аватарка сегодня просто GY-GY!"
-        ];
-        let jokeIdx = 0;
         const fullID = `#GY-${Math.floor(1000 + Math.random() * 8999)}`;
         
         function googleTranslateElementInit() {
@@ -151,16 +150,12 @@
                 void target.offsetWidth; 
                 target.classList.add('active');
                 target.style.opacity = '1';
-                if(id === 'block-bar') setTimeout(charlieTalk, 1000);
+                // При входе в бар меню скрыто, пока не кликнут на Чарли
             }, 1000);
         }
 
-        function charlieTalk() {
-            const b = document.getElementById('bubble');
-            b.innerText = jokes[jokeIdx];
-            b.classList.add('show');
-            jokeIdx = (jokeIdx + 1) % jokes.length;
-            setTimeout(() => { b.classList.remove('show'); }, 3000);
+        function toggleMenu() {
+            document.getElementById('bubbles-menu').classList.toggle('show');
         }
 
         function preview(i) {
