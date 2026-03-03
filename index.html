@@ -3,81 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.112</title>
+    <title>GY-GY Club v4.3.113</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
-        :root { --gold: #d4af37; --cyan: #00E5FF; }
+        :root { --gold: #d4af37; --cyan: #00E5FF; --indigo: #4B0082; }
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; }
-        body, html { width: 100%; height: 100%; background: #000 !important; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; }
+        body, html { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; }
 
-        /* СКРОЛЛ ЯЗЫКОВ - Радикальный подход */
-        #google_translate_element { 
-            position: absolute; top: 10px; left: 10px; z-index: 9999; 
-            max-height: 50px; overflow: visible; 
-        }
-        /* Попытка пробить стили гугла */
-        .goog-te-menu-frame { max-height: 200px !important; overflow-y: auto !important; }
-        iframe.goog-te-menu-frame { height: 200px !important; }
+        /* СКРОЛЛ ЯЗЫКОВ */
+        #google_translate_element { position: absolute; top: 10px; left: 10px; z-index: 2000; opacity: 0.8; }
+        .goog-te-menu-frame { max-height: 250px !important; overflow-y: auto !important; display: block !important; }
+        body { top: 0 !important; }
 
         .block { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            display: none; /* Возвращаем дисплей для чистоты */
-            flex-direction: column; align-items: center; justify-content: center; 
-            background: #000; z-index: 10;
+            display: none; flex-direction: column; align-items: center; justify-content: center; 
+            background: #000; z-index: 10; opacity: 0; 
+            transition: opacity 1.5s ease-in-out; 
         }
-        
-        .block.active { display: flex !important; z-index: 100; animation: fadeIn 0.5s forwards; }
+        #block-welcome { transition: opacity 2.5s ease-in-out; }
+        .block.active { display: flex !important; opacity: 1; }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* Дверь (Строго из v93) */
+        .door-img { width: 65vw; max-width: 350px; cursor: pointer; transition: 2.8s cubic-bezier(0.4, 0, 0.2, 1); position: relative; z-index: 150; }
+        .zoom-in-open { transform: scale(18); opacity: 0; filter: blur(20px); pointer-events: none; }
 
-        /* ДВЕРЬ */
-        #block-entrance { display: flex; z-index: 500; opacity: 1; }
-        .door-img { width: 65vw; max-width: 320px; cursor: pointer; transition: 2s ease-in; }
-        .zoom-open { transform: scale(20); opacity: 0; pointer-events: none; }
-
-        /* ЧАРЛИ */
+        /* Чарли (Размер чуть уменьшен) */
         .charlie-wrap {
-            width: 220px; height: 220px;
-            -webkit-mask-image: radial-gradient(circle, black 50%, transparent 95%);
-            margin-bottom: 10px;
+            width: 240px; height: 240px;
+            -webkit-mask-image: radial-gradient(circle, black 40%, transparent 85%);
+            mask-image: radial-gradient(circle, black 40%, transparent 85%);
+            margin-bottom: 5px;
         }
         .charlie-img { width: 100%; height: 100%; object-fit: cover; }
+        .welcome-title { font-size: 45px; font-weight: 900; letter-spacing: 10px; margin-bottom: 30px; }
 
+        /* Кнопки */
         .btn-gy { 
-            min-width: 210px; padding: 12px; background: #000; border: 1px solid var(--gold); 
-            color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; 
-            text-transform: uppercase; letter-spacing: 2px; margin: 8px 0;
+            min-width: 210px; padding: 12px 30px; background: #000; 
+            border: 1px solid var(--gold); color: var(--gold); 
+            cursor: pointer; font-family: 'Share Tech Mono'; 
+            text-transform: uppercase; letter-spacing: 2px;
+            margin: 8px 0; outline: none;
         }
         .btn-disabled { border-color: #333 !important; color: #333 !important; pointer-events: none; opacity: 0.5; }
 
-        .square-box { width: 75px; height: 75px; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; position: relative; }
-        .white { background: #fff !important; }
+        /* Регистрация: Тонкие золотые рамки */
+        .square-box { 
+            width: 75px; height: 75px; border: 1px solid var(--gold); 
+            display: flex; align-items: center; justify-content: center; font-size: 9px;
+            position: relative; overflow: hidden;
+        }
+        .white-bg { background: #fff !important; }
+
+        /* Холл */
+        .hall-card { 
+            position: absolute; right: 25px; bottom: 25px;
+            width: 195px; padding: 15px; border: 1px solid var(--gold); 
+            background: #fff; border-radius: 12px; 
+            display: flex; flex-direction: column; align-items: center;
+        }
     </style>
 </head>
 <body>
 
     <div id="google_translate_element"></div>
 
-    <div id="block-entrance">
+    <audio id="snd-door"><source src="door_open.mp3" type="audio/mpeg"></audio>
+    <audio id="snd-ambient" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
+
+    <div id="block-entrance" class="block active" style="z-index: 200;">
         <img src="door_1.jpg" class="door-img" id="main-door" onclick="handleDoor()">
     </div>
     
     <div id="block-welcome" class="block">
+        <p style="letter-spacing: 6px; font-size: 13px; margin-bottom: 12px; opacity: 0.9;">GY-GY PRIVAT</p>
         <div class="charlie-wrap"><img src="charlie.png" class="charlie-img"></div>
-        <h1 style="font-size: 35px; letter-spacing: 5px;">WELCOME</h1>
+        <h1 class="welcome-title">WELCOME</h1>
         <button class="btn-gy" onclick="portalTransition('block-identity')">ПРОХОДИТЕ</button>
     </div>
 
     <div id="block-identity" class="block">
-        <div style="display:flex; gap:10px; margin-bottom:20px;">
-            <div id="id-box" class="square-box" style="font-size:9px;">ID</div>
-            <div id="qr-reg" class="square-box white"></div>
+        <div style="font-style: italic; margin-bottom: 35px; opacity: 0.8; font-size: 14px;">«В каждой шутке есть доля виски»</div>
+        <div style="display:flex; gap:15px; margin-bottom:40px;">
+            <div id="id-box" class="square-box" style="font-family:'Share Tech Mono';">ID</div>
+            <div id="qr-box-reg" class="square-box white-bg"></div>
             <div class="square-box">
-                <input type="file" onchange="preview(this)" style="position:absolute; opacity:0; width:100%; height:100%; z-index:10;">
-                <img id="pp" style="width:100%; height:100%; object-fit:cover; display:none;">
-                <span id="p-label" style="font-size:10px;">ФОТО</span>
+                <input type="file" onchange="preview(this)" style="position:absolute; opacity:0; width:100%; height:100%; cursor:pointer; z-index:5;">
+                <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
+                <span id="p-label" style="font-family:'Share Tech Mono';">ФОТО</span>
             </div>
         </div>
         <button id="btn-save" class="btn-gy" onclick="saveReg()">СОХРАНИТЬ</button>
@@ -85,56 +101,55 @@
     </div>
 
     <div id="block-hall" class="block">
-        <div style="background: white; padding: 15px; border-radius: 10px; color: #000; text-align: center;">
-            <div style="display:flex; gap:5px;">
-                <img id="h-photo" style="width:70px; height:70px; background:#fff; border:1px solid var(--gold);">
-                <div id="h-qr" style="width:70px; height:70px; background:#fff;"></div>
+        <div style="position:absolute; width:100%; height:100%; background:url('hall_bg_jpg.jpg') center/cover; z-index:-1; opacity: 0.5;"></div>
+        <div class="hall-card">
+            <div style="display:flex; gap:10px; margin-bottom:10px;">
+                <img id="h-photo" style="width:75px; height:75px; background:#fff; object-fit:cover; border:1px solid var(--gold);">
+                <div id="h-qr" style="width:75px; height:75px; background:#fff; border:1px solid var(--gold);"></div>
             </div>
-            <div id="h-id" style="font-size:10px; margin: 10px 0;"></div>
-            <button class="btn-gy" style="min-width:100%; background:#000;" onclick="window.location.href='ai_room.html'">В АЙ-РУМ</button>
+            <div id="h-id" style="color:#000; font-family:'Share Tech Mono'; font-size:10px; font-weight:bold; margin-bottom:15px; text-align: center;"></div>
+            <button class="btn-gy" style="min-width:100%; font-size:10px; background:#000;" onclick="window.location.href='ai_room.html'">В АЙ-РУМ</button>
         </div>
     </div>
 
     <script>
+        // Логика ID из последних пожеланий
         let vCount = localStorage.getItem('vCount') || 1;
         const fullID = `№${vCount}-${Math.floor(1000 + Math.random() * 8999)}`;
         localStorage.setItem('vCount', parseInt(vCount) + 1);
 
         function googleTranslateElementInit() {
-            new google.translate.TranslateElement({pageLanguage: 'ru', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+            new google.translate.TranslateElement({pageLanguage: 'ru'}, 'google_translate_element');
         }
 
         function handleDoor() {
             const door = document.getElementById('main-door');
-            door.classList.add('zoom-open');
+            if(document.getElementById('snd-door')) document.getElementById('snd-door').play();
+            door.classList.add('zoom-in-open');
             
-            // Сразу генерим QR
-            new QRCode(document.getElementById("qr-reg"), { text: fullID, width: 75, height: 75 });
-            new QRCode(document.getElementById("h-qr"), { text: fullID, width: 70, height: 70 });
+            new QRCode(document.getElementById("qr-box-reg"), { text: fullID, width: 75, height: 75 });
+            new QRCode(document.getElementById("h-qr"), { text: fullID, width: 75, height: 75 });
+            
             document.getElementById('id-box').innerText = fullID;
             document.getElementById('h-id').innerText = fullID;
 
-            // Переход через 1.5 секунды
-            setTimeout(() => {
-                document.getElementById('block-entrance').remove(); // УДАЛЯЕМ ДВЕРЬ ИЗ КОДА
-                portalTransition('block-welcome');
-            }, 1500);
+            setTimeout(() => { 
+                if(document.getElementById('snd-ambient')) document.getElementById('snd-ambient').play(); 
+                portalTransition('block-welcome'); 
+            }, 2100); // Быстрее, чем в v93
         }
 
-        function portalTransition(targetId) {
-            // Скрываем всё
-            const blocks = ['block-welcome', 'block-identity', 'block-hall'];
-            blocks.forEach(id => {
-                const el = document.getElementById(id);
-                if(el) { el.classList.remove('active'); el.style.display = 'none'; }
-            });
-
-            // Показываем нужный
-            const target = document.getElementById(targetId);
-            if(target) {
+        function portalTransition(id) {
+            const blocks = document.querySelectorAll('.block');
+            const target = document.getElementById(id);
+            blocks.forEach(b => { if(b.classList.contains('active')) b.style.opacity = '0'; });
+            setTimeout(() => {
+                blocks.forEach(b => { b.classList.remove('active'); b.style.display = 'none'; });
                 target.style.display = 'flex';
+                void target.offsetWidth; 
                 target.classList.add('active');
-            }
+                target.style.opacity = '1';
+            }, 800);
         }
 
         function preview(i) {
@@ -150,6 +165,7 @@
 
         function saveReg() {
             document.getElementById('btn-save').classList.add('btn-disabled');
+            document.getElementById('btn-save').innerText = 'ГОТОВО';
             document.getElementById('btn-go-hall').classList.remove('btn-disabled');
         }
     </script>
