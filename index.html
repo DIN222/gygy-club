@@ -1,11 +1,9 @@
-
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.110</title>
+    <title>GY-GY Club v4.3.111</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -14,59 +12,63 @@
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; }
         body, html { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; }
 
-        /* УБИРАЕМ ВЕРХНЮЮ ПАНЕЛЬ GOOGLE */
+        /* ЯЗЫКОВАЯ ПАНЕЛЬ И СКРОЛЛ */
+        #google_translate_element { position: absolute; top: 10px; left: 10px; z-index: 5000; }
+        .goog-te-menu-frame { 
+            max-height: 250px !important; 
+            overflow-y: auto !important; 
+            box-shadow: 0 0 10px var(--gold) !important;
+        }
         body { top: 0 !important; }
-        .goog-te-banner-frame.skiptranslate { display: none !important; }
-        .goog-logo-link { display: none !important; }
-        .goog-te-gadget { color: transparent !important; }
-        #google_translate_element { position: absolute; top: 10px; left: 10px; z-index: 2000; opacity: 0.8; }
+        .goog-te-banner-frame { display: none !important; }
 
+        /* ГЛОБАЛЬНЫЕ БЛОКИ */
         .block { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            display: none; flex-direction: column; align-items: center; justify-content: center; 
-            background: #000; z-index: 10; opacity: 0; 
-            transition: opacity 1.5s ease-in-out; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            background: #000; opacity: 0; pointer-events: none;
+            transition: opacity 1.2s ease-in-out; 
+            z-index: 10;
         }
-        .block.active { display: flex !important; opacity: 1; }
+        /* Тот, кто активен — сверху и виден */
+        .block.active { opacity: 1; pointer-events: auto; z-index: 100; }
 
-        /* Дверь */
-        .door-img { width: 65vw; max-width: 350px; cursor: pointer; transition: 2.8s cubic-bezier(0.4, 0, 0.2, 1); position: relative; z-index: 150; }
-        .zoom-in-open { transform: scale(18); opacity: 0; filter: blur(20px); pointer-events: none; }
+        /* ДВЕРЬ (Блок 1) */
+        #block-entrance { opacity: 1; pointer-events: auto; z-index: 1000; }
+        .door-img { width: 65vw; max-width: 320px; cursor: pointer; transition: 2.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .zoom-in-open { transform: scale(15); opacity: 0; filter: blur(10px); }
 
-        /* Чарли (Размер уменьшен) */
+        /* ЧАРЛИ */
         .charlie-wrap {
-            width: 240px; height: 240px;
-            -webkit-mask-image: radial-gradient(circle, black 45%, transparent 90%);
-            mask-image: radial-gradient(circle, black 45%, transparent 90%);
-            margin-bottom: 5px;
+            width: 220px; height: 220px;
+            -webkit-mask-image: radial-gradient(circle, black 50%, transparent 95%);
+            mask-image: radial-gradient(circle, black 50%, transparent 95%);
+            margin-bottom: 10px;
         }
         .charlie-img { width: 100%; height: 100%; object-fit: cover; }
-        .welcome-title { font-size: 45px; font-weight: 900; letter-spacing: 10px; margin-bottom: 25px; }
 
-        /* Кнопки */
+        /* КНОПКИ */
         .btn-gy { 
-            min-width: 210px; padding: 12px 30px; background: #000; 
+            min-width: 210px; padding: 12px; background: #000; 
             border: 1px solid var(--gold); color: var(--gold); 
             cursor: pointer; font-family: 'Share Tech Mono'; 
             text-transform: uppercase; letter-spacing: 2px; margin: 8px 0;
         }
         .btn-disabled { border-color: #333 !important; color: #333 !important; pointer-events: none; opacity: 0.5; }
 
-        /* Регистрация: Золотые рамки для всех */
+        /* РЕГИСТРАЦИЯ */
         .square-box { 
-            width: 75px; height: 75px; 
-            border: 1px solid var(--gold); 
+            width: 75px; height: 75px; border: 1px solid var(--gold); 
             display: flex; align-items: center; justify-content: center; 
             font-size: 9px; position: relative; overflow: hidden;
         }
         .qr-white { background: #fff !important; }
         #pp { width: 100%; height: 100%; object-fit: cover; display: none; position: absolute; z-index: 5; }
 
-        /* Холл */
+        /* ХОЛЛ */
         .hall-card { 
-            position: absolute; right: 25px; bottom: 25px;
-            width: 195px; padding: 15px; border: 1px solid var(--gold); 
-            background: #fff; border-radius: 12px; 
+            position: absolute; right: 20px; bottom: 20px; width: 190px; padding: 15px; 
+            border: 1px solid var(--gold); background: #fff; border-radius: 12px; 
             display: flex; flex-direction: column; align-items: center;
         }
     </style>
@@ -78,20 +80,18 @@
     <audio id="snd-door"><source src="door_open.mp3" type="audio/mpeg"></audio>
     <audio id="snd-ambient" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
 
-    <div id="block-entrance" class="block active" style="z-index: 200;">
+    <div id="block-entrance" class="block active">
         <img src="door_1.jpg" class="door-img" id="main-door" onclick="handleDoor()">
     </div>
     
     <div id="block-welcome" class="block">
-        <p style="letter-spacing: 6px; font-size: 13px; margin-bottom: 12px; opacity: 0.9;">GY-GY PRIVAT</p>
         <div class="charlie-wrap"><img src="charlie.png" class="charlie-img"></div>
-        <h1 class="welcome-title">WELCOME</h1>
+        <h1 style="font-size: 40px; letter-spacing: 8px;">WELCOME</h1>
         <button class="btn-gy" onclick="portalTransition('block-identity')">ПРОХОДИТЕ</button>
     </div>
 
     <div id="block-identity" class="block">
-        <div style="font-style: italic; margin-bottom: 35px; opacity: 0.8;">«В каждой шутке есть доля виски»</div>
-        <div style="display:flex; gap:15px; margin-bottom:40px;">
+        <div style="display:flex; gap:12px; margin-bottom:30px;">
             <div id="id-box" class="square-box" style="font-family:'Share Tech Mono';">ID</div>
             <div id="qr-box-reg" class="square-box qr-white"></div>
             <div class="square-box">
@@ -105,13 +105,13 @@
     </div>
 
     <div id="block-hall" class="block">
-        <div style="position:absolute; width:100%; height:100%; background:url('hall_bg_jpg.jpg') center/cover; z-index:-1; opacity: 0.5;"></div>
+        <div style="position:absolute; width:100%; height:100%; background:url('hall_bg_jpg.jpg') center/cover; opacity: 0.5;"></div>
         <div class="hall-card">
             <div style="display:flex; gap:10px; margin-bottom:10px;">
-                <img id="h-photo" style="width:75px; height:75px; background:#fff; object-fit:cover; border:1px solid var(--gold);">
-                <div id="h-qr" style="width:75px; height:75px; background:#fff; border:1px solid var(--gold);"></div>
+                <img id="h-photo" style="width:70px; height:70px; background:#fff; object-fit:cover; border:1px solid var(--gold);">
+                <div id="h-qr" style="width:70px; height:70px; background:#fff; border:1px solid var(--gold);"></div>
             </div>
-            <div id="h-id" style="color:#000; font-family:'Share Tech Mono'; font-size:10px; font-weight:bold; margin-bottom:15px;"></div>
+            <div id="h-id" style="color:#000; font-family:'Share Tech Mono'; font-size:10px; font-weight:bold; margin-bottom:10px;"></div>
             <button class="btn-gy" style="min-width:100%; font-size:10px; background:#000;" onclick="window.location.href='ai_room.html'">В АЙ-РУМ</button>
         </div>
     </div>
@@ -126,32 +126,26 @@
         }
 
         function handleDoor() {
-            const door = document.getElementById('main-door');
             document.getElementById('snd-door').play();
-            door.classList.add('zoom-in-open');
+            document.getElementById('main-door').classList.add('zoom-in-open');
             
             new QRCode(document.getElementById("qr-box-reg"), { text: fullID, width: 75, height: 75 });
-            new QRCode(document.getElementById("h-qr"), { text: fullID, width: 75, height: 75 });
+            new QRCode(document.getElementById("h-qr"), { text: fullID, width: 70, height: 70 });
             document.getElementById('id-box').innerText = fullID;
             document.getElementById('h-id').innerText = fullID;
 
+            // Переход к Чарли происходит через смену Z-INDEX
             setTimeout(() => { 
                 document.getElementById('snd-ambient').play(); 
                 portalTransition('block-welcome'); 
-            }, 2100); // Уменьшено время до появления Чарли
+            }, 2000);
         }
 
-        function portalTransition(id) {
-            const blocks = document.querySelectorAll('.block');
-            const target = document.getElementById(id);
-            blocks.forEach(b => { if(b.classList.contains('active')) b.style.opacity = '0'; });
-            setTimeout(() => {
-                blocks.forEach(b => { b.classList.remove('active'); b.style.display = 'none'; });
-                target.style.display = 'flex';
-                void target.offsetWidth; 
-                target.classList.add('active');
-                target.style.opacity = '1';
-            }, 800);
+        function portalTransition(targetId) {
+            // У всех убираем статус активного
+            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
+            // Целевому блоку даем активный статус (opacity 1 и z-index 100)
+            document.getElementById(targetId).classList.add('active');
         }
 
         function preview(i) {
