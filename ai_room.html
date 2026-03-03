@@ -4,172 +4,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY BACKSTAGE v5.4 - TRAINER</title>
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <title>GY-GY BACKSTAGE v5.5</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #d4af37; --bg: #050505; --panel: #111; --border: #2a2212; }
+        :root { --gold: #d4af37; --gold-bright: #ffcc00; --bg: #030303; --panel: #0d0d0d; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body, html { background: var(--bg); margin: 0; color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; height: 100vh; }
 
         .app-container { display: flex; flex-direction: column; height: 100vh; }
 
-        /* ВЕРХНЯЯ ЗОНА ТЕЛЕВИЗОРОВ */
-        .tv-area { height: 40%; display: flex; gap: 10px; padding: 10px; background: #000; border-bottom: 2px solid var(--gold); }
-        .tv-box { flex: 1; border: 1px solid var(--border); position: relative; transition: 0.5s; overflow: hidden; display: flex; flex-direction: column; border-radius: 5px; }
-        .tv-box.active { flex: 50; border-color: var(--gold); }
+        /* ВЕРХНЯЯ ЗОНА: МОНИТОРЫ */
+        .tv-area { height: 42%; display: flex; gap: 15px; padding: 15px; background: #000; }
+
+        .tv-box {
+            flex: 1; border: 2px solid #222; background: var(--panel);
+            position: relative; transition: all 0.5s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+            overflow: hidden; display: flex; flex-direction: column;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5); border-radius: 8px;
+        }
+
+        /* Четкие границы при активации */
+        .tv-box.active { flex: 60; border: 2px solid var(--gold); box-shadow: 0 0 25px rgba(211, 175, 55, 0.4); }
         .tv-box.hidden { flex: 0; opacity: 0; pointer-events: none; margin: 0; border: none; }
         
-        .tv-header { background: #1a1a1a; font-size: 10px; padding: 5px; text-align: center; color: #666; }
-        .active .tv-header { background: var(--gold); color: #000; font-weight: bold; }
+        .tv-header { 
+            background: #151515; font-family: 'Orbitron', sans-serif; font-size: 11px; 
+            padding: 8px; text-align: center; color: #555; letter-spacing: 2px;
+            border-bottom: 1px solid #222;
+        }
+        .active .tv-header { background: var(--gold); color: #000; box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
 
-        /* ИНТЕРФЕЙС ТРЕНАЖЕРА ВНУТРИ ТВ */
-        .trainer-ui { display: flex; width: 100%; height: 100%; opacity: 0; pointer-events: none; }
-        .active .trainer-ui { opacity: 1; pointer-events: auto; }
+        /* ТРЕНАЖЕР МИЛЛИОНЕРА */
+        .trainer-ui { display: flex; width: 100%; height: 100%; opacity: 0; }
+        .active .trainer-ui { opacity: 1; }
 
-        /* Левая панель - Аватары */
-        .avatars-side { width: 50px; border-right: 1px solid #222; display: flex; flex-direction: column; align-items: center; padding: 5px; gap: 10px; }
-        .avatar { width: 35px; height: 35px; border: 1px solid #444; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; }
-        .avatar.selected { border-color: var(--gold); box-shadow: 0 0 10px var(--gold); }
+        .avatars-side { width: 60px; border-right: 1px solid #222; display: flex; flex-direction: column; align-items: center; padding: 10px 0; gap: 15px; background: #080808; }
+        .avatar { width: 40px; height: 40px; border: 2px solid #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; transition: 0.3s; }
+        .avatar.selected { border-color: var(--gold); background: #1a150a; transform: scale(1.1); }
 
-        /* Центр - Экран торга */
-        .trade-screen { flex: 1; display: flex; flex-direction: column; position: relative; }
-        .trade-divider { height: 1px; background: var(--gold); width: 100%; position: absolute; top: 50%; opacity: 0.3; }
-        .trade-msg { flex: 1; padding: 10px; font-size: 14px; display: flex; align-items: center; justify-content: center; text-align: center; }
+        .trade-display { flex: 1; display: flex; flex-direction: column; background: radial-gradient(circle, #111 0%, #000 100%); position: relative; }
+        .dollar-sign { position: absolute; top: 10px; left: 10px; font-size: 24px; color: var(--gold); font-weight: bold; text-shadow: 0 0 10px var(--gold); opacity: 0.8; }
+        
+        .trade-content { flex: 1; display: flex; flex-direction: column; justify-content: space-around; padding: 20px; text-align: center; }
+        .ai-speech { font-size: 16px; color: #fff; text-shadow: 0 0 5px #fff; }
+        .divider { height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); width: 80%; margin: 0 auto; }
+        .user-speech { font-size: 18px; color: var(--gold-bright); }
 
-        /* Правая панель - Табло */
-        .scoreboard { width: 120px; border-left: 1px solid #222; font-size: 9px; display: flex; flex-direction: column; }
-        .score-row { display: grid; grid-template-columns: 1fr 1fr 1fr; border-bottom: 1px solid #222; text-align: center; padding: 3px 0; }
-        .score-head { background: #111; color: #888; }
-        .score-list { flex: 1; overflow-y: auto; }
+        .scoreboard { width: 130px; border-left: 1px solid #222; font-size: 10px; display: flex; flex-direction: column; background: #050505; }
+        .score-row { display: grid; grid-template-columns: 1fr 1fr 1fr; border-bottom: 1px solid #1a1a1a; padding: 5px 2px; text-align: center; }
+        .score-row.head { background: #111; color: var(--gold); font-weight: bold; border-bottom: 1px solid var(--gold); }
+        .score-body { flex: 1; overflow-y: auto; color: #888; }
 
-        /* НИЖНЯЯ ЗОНА - КОНСОЛЬ */
-        .work-area { height: 60%; display: flex; flex-direction: column; padding: 15px; background: #000; }
-        .console { flex: 1; background: #080808; border: 1px solid #151515; margin-bottom: 10px; padding: 15px; font-size: 14px; overflow-y: auto; position: relative; }
-        .input-box { display: flex; gap: 10px; height: 50px; }
-        input { flex: 1; background: #0a0a0a; border: 1px solid #333; color: #fff; padding: 10px; font-family: inherit; outline: none; }
-        .btn-send { background: var(--gold); border: none; padding: 0 25px; font-weight: bold; cursor: pointer; }
+        /* НИЖНЯЯ ЗОНА */
+        .work-area { height: 58%; display: flex; flex-direction: column; padding: 15px; background: #000; border-top: 1px solid #111; }
+        .console { flex: 1; background: #050505; border: 1px solid #1a1a1a; margin-bottom: 10px; padding: 15px; font-size: 14px; overflow-y: auto; box-shadow: inset 0 0 20px #000; }
+        .input-box { display: flex; gap: 10px; height: 55px; }
+        input { flex: 1; background: #080808; border: 1px solid #333; color: #fff; padding: 0 15px; font-family: inherit; font-size: 16px; outline: none; border-radius: 4px; }
+        input:focus { border-color: var(--gold); }
+        .btn-run { background: linear-gradient(to bottom, var(--gold-bright), var(--gold)); color: #000; border: none; padding: 0 25px; font-weight: bold; border-radius: 4px; cursor: pointer; }
 
-        .close-btn { position: absolute; top: 30px; right: 10px; border: 1px solid var(--gold); background: #000; color: var(--gold); width: 25px; height: 25px; cursor: pointer; z-index: 100; display: none; }
-        .active .close-btn { display: block; }
+        .close-btn { position: absolute; top: 40px; right: 10px; background: #000; border: 1px solid var(--gold); color: var(--gold); width: 30px; height: 30px; cursor: pointer; z-index: 100; border-radius: 50%; }
     </style>
 </head>
 <body>
 
 <div class="app-container">
     <div class="tv-area">
-        <div class="tv-box" id="t-a" onclick="setMode('a')">
-            <div class="tv-header">CH-A: PUNCHLINES</div>
-            <button class="close-btn" onclick="event.stopPropagation(); reset()">✕</button>
-            <div style="text-align:center; padding: 20px; font-size: 30px;">🎭</div>
+        <div class="tv-box" id="t-a" onclick="setM('a')">
+            <div class="tv-header">CH-A: PUNCHLINE</div>
+            <button class="close-btn" onclick="event.stopPropagation(); res()">✕</button>
+            <div style="text-align:center; padding-top:40px; font-size:40px; opacity:0.3;">🎭</div>
         </div>
 
-        <div class="tv-box" id="t-b" onclick="setMode('b')">
+        <div class="tv-box" id="t-b" onclick="setM('b')">
             <div class="tv-header">CH-B: MILLIONAIRE TRAINER</div>
-            <button class="close-btn" onclick="event.stopPropagation(); reset()">✕</button>
-            
+            <button class="close-btn" onclick="event.stopPropagation(); res()">✕</button>
             <div class="trainer-ui">
                 <div class="avatars-side">
-                    <div class="avatar selected" title="Шейх">👳</div>
-                    <div class="avatar" title="Брокер">👔</div>
-                    <div class="avatar" title="Бабуля">👵</div>
+                    <div class="avatar selected">🤖</div>
+                    <div class="avatar">👳</div>
+                    <div class="avatar">👔</div>
                 </div>
-                <div class="trade-screen">
-                    <div class="trade-msg" id="ai-offer">ВЫБЕРИТЕ РОЛЬ И НАЖМИТЕ RUN</div>
-                    <div class="trade-divider"></div>
-                    <div class="trade-msg" id="user-bid">...</div>
+                <div class="trade-display">
+                    <div class="dollar-sign">$</div>
+                    <div class="trade-content">
+                        <div class="ai-speech" id="ai-txt">КТО ЗДЕСЬ ХОЧЕТ СТАТЬ МИЛЛИОНЕРОМ?</div>
+                        <div class="divider"></div>
+                        <div class="user-speech" id="user-txt">...</div>
+                    </div>
                 </div>
                 <div class="scoreboard">
-                    <div class="score-row score-head"><div>ИИ</div><div>Ч</div><div>+/-</div></div>
-                    <div class="score-list" id="log"></div>
-                    <div class="score-row" style="border-top:1px solid var(--gold)"><div>Σ</div><div id="total">0</div><div>$</div></div>
+                    <div class="score-row head"><div>ИИ</div><div>Ч</div><div>+/-</div></div>
+                    <div class="score-body" id="score-log"></div>
+                    <div class="score-row" style="color:#fff; border-top:1px solid #333;"><div>Σ</div><div id="total">0</div><div>$</div></div>
                 </div>
             </div>
         </div>
 
-        <div class="tv-box" id="t-v" onclick="setMode('v')">
+        <div class="tv-box" id="t-v" onclick="setM('v')">
             <div class="tv-header">CH-V: TUNER</div>
-            <button class="close-btn" onclick="event.stopPropagation(); reset()">✕</button>
-            <div style="text-align:center; padding: 20px; font-size: 30px;">💎</div>
+            <button class="close-btn" onclick="event.stopPropagation(); res()">✕</button>
+            <div style="text-align:center; padding-top:40px; font-size:40px; opacity:0.3;">💎</div>
         </div>
     </div>
 
     <div class="work-area">
-        <div class="console" id="log-screen">> СИСТЕМА v5.4: ГОТОВА К ТОРГАМ.</div>
+        <div class="console" id="cons">> SYSTEM v5.5 CONNECTED. ЖДУ ВЫБОРА КАНАЛА.</div>
         <div class="input-box">
-            <input type="text" id="inp" placeholder="Ваше предложение (например: 500)...">
-            <button class="btn-send" onclick="action()">RUN</button>
+            <input type="text" id="inp" placeholder="Введите цену или ответ...">
+            <button class="btn-run" onclick="run()">ВВОД</button>
         </div>
     </div>
 </div>
 
 <script>
     let mode = null;
-    let targetPrice = 0;
-    let currentAIPrice = 0;
-    let sessionTotal = 0;
+    let total = 0;
+    let aiP = 500;
+    let targetP = 150; 
+    let step = 0;
 
-    function setMode(m) {
+    function setM(m) {
         mode = m;
         ['t-a', 't-b', 't-v'].forEach(id => {
             const el = document.getElementById(id);
             el.classList.remove('active', 'hidden');
             if (id === 't-'+m) el.classList.add('active'); else el.classList.add('hidden');
         });
-        if(m === 'b') startNewDeal();
+        if(m === 'b') {
+            document.getElementById('cons').innerHTML = "> ТРЕНАЖЕР ЗАПУЩЕН. ОППОНЕНТ: GROK-VIBE.";
+            document.getElementById('ai-txt').innerText = "ПРОДАМ ВЕЛОСИПЕД 'ПУПСИК' (БЕЗ ПЕДАЛЕЙ) ЗА 500$!";
+        }
     }
 
-    function reset() {
+    function res() {
         mode = null;
         ['t-a', 't-b', 't-v'].forEach(id => document.getElementById(id).classList.remove('active', 'hidden'));
     }
 
-    function startNewDeal() {
-        const items = [
-            {n: "Золотые шнурки", p: 10},
-            {n: "Велосипед без педалей", p: 50},
-            {n: "Ключ от Холла", p: 100}
-        ];
-        let item = items[Math.floor(Math.random()*items.length)];
-        currentAIPrice = item.p;
-        targetPrice = Math.round(item.p * 0.7); // ИИ хочет не меньше 70%
-        document.getElementById('ai-offer').innerText = `ПРОДАМ: ${item.n} ЗА ${currentAIPrice}$`;
-        document.getElementById('log-screen').innerHTML += `<br>> Начало торга: ${item.n}`;
-    }
-
-    function action() {
-        if (mode !== 'b') return;
-        let val = parseInt(document.getElementById('inp').value);
-        if (isNaN(val)) return;
-
-        document.getElementById('user-bid').innerText = val + "$";
+    function run() {
+        const val = document.getElementById('inp').value;
+        if (!mode || !val) return;
         
-        // Логика торга
-        if (val >= currentAIPrice) {
-            finishDeal(currentAIPrice, val, "КУПЛЕНО!");
-        } else if (val < targetPrice) {
-            currentAIPrice -= 1;
-            document.getElementById('ai-offer').innerText = `МАЛО! ДАВАЙ ХОТЯ БЫ ${currentAIPrice}$`;
-            addScore(currentAIPrice, val);
-        } else {
-            finishDeal(currentAIPrice, val, "ПО РУКАМ!");
+        if (mode === 'b') {
+            const bid = parseInt(val);
+            document.getElementById('user-txt').innerText = val + (isNaN(bid) ? "" : "$");
+            
+            if (isNaN(bid)) {
+                document.getElementById('ai-txt').innerText = "ТЫ МНЕ ЗУБЫ НЕ ЗАГОВАРИВАЙ, ЦЕНУ ДАВАЙ!";
+                return;
+            }
+
+            if (bid >= aiP) {
+                endDeal(aiP, bid, "ПО РУКАМ! ПУПСИК ТВОЙ!");
+            } else if (bid < targetP) {
+                aiP -= 25;
+                document.getElementById('ai-txt').innerText = `ТЫ МЕНЯ ГРАБИШЬ! МЕНЬШЕ ЧЕМ ЗА ${aiP}$ НЕ ОТДАМ!`;
+                log(aiP, bid);
+            } else {
+                endDeal(aiP, bid, "ЛЮБЛЮ ТЕБЯ, БРАТАН! ЗАБИРАЙ ПУПСИКА!");
+            }
         }
         document.getElementById('inp').value = "";
     }
 
-    function addScore(ai, user) {
+    function log(ai, user) {
         const diff = user - ai;
         const row = `<div class="score-row"><div>${ai}</div><div>${user}</div><div>${diff}</div></div>`;
-        document.getElementById('log').innerHTML += row;
+        document.getElementById('score-log').innerHTML += row;
     }
 
-    function finishDeal(ai, user, msg) {
+    function endDeal(ai, user, msg) {
         const diff = user - ai;
-        sessionTotal += diff;
-        addScore(ai, user);
-        document.getElementById('total').innerText = sessionTotal;
-        document.getElementById('ai-offer').innerText = msg;
-        document.getElementById('log-screen').innerHTML += `<br>> Сделка закрыта. Профит: ${diff}$`;
-        setTimeout(startNewDeal, 2000);
+        total += diff;
+        log(ai, user);
+        document.getElementById('total').innerText = total;
+        document.getElementById('ai-txt').innerText = msg;
+        document.getElementById('cons').innerHTML += `<br>> СДЕЛКА ЗАКРЫТА. ИТОГ: ${diff}$`;
+        setTimeout(() => {
+            aiP = 300; targetP = 250;
+            document.getElementById('ai-txt').innerText = "А ТЕПЕРЬ... ПРОДАМ ЗОЛОТЫЕ ШНУРКИ 'AUREUS LACES' ЗА 300$!";
+        }, 3000);
     }
 </script>
 
