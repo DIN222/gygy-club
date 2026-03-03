@@ -4,10 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY BACKSTAGE v5.2</title>
+    <title>GY-GY BACKSTAGE v5.3</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #c5a059; --bg: #000; --panel: #111; --border: #333; }
+        :root { 
+            --gold: #d4af37; 
+            --gold-bright: #ffdf00;
+            --bg: #050505; 
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: #2a2212;
+        }
+        
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body, html { 
@@ -15,66 +22,88 @@
             color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden;
         }
 
-        /* ОСНОВНОЙ КОНТЕЙНЕР */
-        .app-container { display: flex; flex-direction: column; height: 100vh; width: 100vw; }
+        /* ОСНОВНОЙ КОНТЕЙНЕР С ГРАДИЕНТОМ ПО КРАЯМ */
+        .app-container { 
+            display: flex; flex-direction: column; height: 100vh; width: 100vw;
+            box-shadow: inset 0 0 100px rgba(0,0,0,1);
+        }
 
-        /* ВЕРХ: ТЕЛЕВИЗОРЫ (45% высоты) */
+        /* ВЕРХ: ТЕЛЕВИЗОРЫ */
         .tv-area { 
-            height: 45%; display: flex; gap: 4px; padding: 8px; 
-            background: #0a0a0a; border-bottom: 2px solid var(--gold);
+            height: 40%; display: flex; gap: 10px; padding: 15px; 
+            background: linear-gradient(180deg, #15110a 0%, #000 100%);
+            border-bottom: 1px solid var(--gold);
         }
 
         .tv-box {
-            flex: 1; border: 1px solid var(--border); background: #050505;
+            flex: 1; border: 1px solid var(--border); background: #080808;
             display: flex; flex-direction: column; position: relative;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1); overflow: hidden;
+            border-radius: 4px;
         }
 
-        /* Состояния ТВ */
-        .tv-box.active { flex: 50; border-color: var(--gold); box-shadow: 0 0 15px rgba(197, 160, 89, 0.3); }
+        .tv-box.active { flex: 50; border-color: var(--gold); box-shadow: 0 0 30px rgba(212, 175, 55, 0.2); }
         .tv-box.hidden { flex: 0; margin: 0; border: none; opacity: 0; pointer-events: none; }
 
         .tv-header { 
-            background: #1a1a1a; font-size: 11px; padding: 6px; text-align: center; 
-            color: #666; text-transform: uppercase; border-bottom: 1px solid var(--border);
+            background: #111; font-size: 10px; padding: 8px; text-align: center; 
+            color: #555; text-transform: uppercase; border-bottom: 1px solid #1a1a1a;
+            letter-spacing: 2px;
         }
         .active .tv-header { background: var(--gold); color: #000; font-weight: bold; }
 
-        .tv-body { flex: 1; padding: 12px; font-size: 12px; color: #555; overflow-y: auto; }
-        .active .tv-body { color: #fff; font-size: 14px; }
+        /* ЭМБЛЕМЫ ИИ */
+        .ai-icon {
+            font-size: 40px; text-align: center; margin-top: 20px; opacity: 0.3;
+            transition: 0.3s;
+        }
+        .active .ai-icon { opacity: 1; transform: scale(1.2); color: var(--gold-bright); }
+
+        .tv-body { flex: 1; padding: 15px; font-size: 12px; color: #444; text-align: center; }
+        .active .tv-body { color: #fff; font-size: 16px; text-align: left; }
 
         .close-x {
-            position: absolute; top: 30px; right: 10px; background: #000; 
-            border: 1px solid var(--gold); color: var(--gold); width: 28px; height: 28px;
-            display: none; cursor: pointer; z-index: 100; font-weight: bold;
+            position: absolute; top: 35px; right: 10px; background: rgba(0,0,0,0.8); 
+            border: 1px solid var(--gold); color: var(--gold); width: 32px; height: 32px;
+            display: none; cursor: pointer; z-index: 100; border-radius: 50%;
         }
         .active .close-x { display: block; }
 
-        /* НИЗ: ФУНКЦИОНАЛ (55% высоты) */
-        .work-area { height: 55%; display: flex; flex-direction: column; padding: 12px; background: var(--bg); }
+        /* НИЗ: ФУНКЦИОНАЛ */
+        .work-area { height: 60%; display: flex; flex-direction: column; padding: 20px; background: #000; }
 
         .console-output { 
-            flex: 1; background: var(--panel); border: 1px solid #1a1a1a; 
-            margin-bottom: 10px; padding: 12px; font-size: 14px; overflow-y: auto;
-            box-shadow: inset 0 0 10px #000; line-height: 1.5;
+            flex: 1; background: #050505; border: 1px solid #151515; 
+            margin-bottom: 15px; padding: 20px; font-size: 15px; overflow-y: auto;
+            box-shadow: inset 0 0 20px #000; line-height: 1.6; position: relative;
+        }
+        .console-output::before {
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.1) 0px, rgba(0,0,0,0.1) 1px, transparent 2px);
+            pointer-events: none;
         }
 
-        .input-group { display: flex; height: 50px; gap: 8px; margin-bottom: 10px; }
+        .input-group { display: flex; height: 55px; gap: 10px; margin-bottom: 15px; }
         input[type="text"] { 
-            flex: 1; background: #050505; border: 1px solid var(--border); color: #fff; 
-            padding: 0 12px; font-family: inherit; outline: none; font-size: 16px;
+            flex: 1; background: #0a0a0a; border: 1px solid #222; color: #fff; 
+            padding: 0 15px; font-family: inherit; outline: none; font-size: 16px;
+            border-radius: 4px;
         }
-        input:focus { border-color: var(--gold); }
+        input:focus { border-color: var(--gold); background: #0f0f0f; }
+        
         .run-cmd { 
-            background: var(--gold); color: #000; border: none; padding: 0 20px; 
+            background: linear-gradient(135deg, #d4af37 0%, #aa8a2e 100%);
+            color: #000; border: none; padding: 0 30px; border-radius: 4px;
             font-weight: bold; text-transform: uppercase; cursor: pointer;
+            transition: 0.2s;
         }
+        .run-cmd:active { transform: scale(0.95); opacity: 0.8; }
 
         /* ПОДВАЛ */
-        .footer-nav { display: flex; justify-content: space-between; align-items: center; }
+        .footer-nav { display: flex; justify-content: space-between; }
         .f-btn { 
-            border: 1px solid #222; padding: 6px 12px; font-size: 11px; 
-            color: #444; text-decoration: none; cursor: pointer;
+            border: 1px solid #1a1a1a; padding: 8px 16px; font-size: 11px; 
+            color: #444; text-decoration: none; cursor: pointer; border-radius: 20px;
         }
         .f-btn:hover { color: var(--gold); border-color: var(--gold); }
     </style>
@@ -84,32 +113,104 @@
 <div class="app-container">
     <div class="tv-area">
         <div class="tv-box" id="t-a" onclick="selectMode('a')">
-            <div class="tv-header">A: PUNCHLINE</div>
+            <div class="tv-header">CH-A: PUNCHLINE</div>
             <button class="close-x" onclick="event.stopPropagation(); deselect()">✕</button>
-            <div class="tv-body">РЕЖИМ ДОБИВОК. Острота и юмор.</div>
+            <div class="ai-icon">🎭</div>
+            <div class="tv-body">Генератор добивок</div>
         </div>
         <div class="tv-box" id="t-b" onclick="selectMode('b')">
-            <div class="tv-header">B: SCENARIO</div>
+            <div class="tv-header">CH-B: SCENARIO</div>
             <button class="close-x" onclick="event.stopPropagation(); deselect()">✕</button>
-            <div class="tv-body">РЕЖИМ ШТУРМА. Идеи и сюжеты.</div>
+            <div class="ai-icon">🎬</div>
+            <div class="tv-body">Сценарный отдел</div>
         </div>
         <div class="tv-box" id="t-v" onclick="selectMode('v')">
-            <div class="tv-header">V: GY-GY STYLE</div>
+            <div class="tv-header">CH-V: TUNER</div>
             <button class="close-x" onclick="event.stopPropagation(); deselect()">✕</button>
-            <div class="tv-body">РЕЖИМ ТЮНИНГА. Пафос клуба.</div>
+            <div class="ai-icon">💎</div>
+            <div class="tv-body">Стиль GY-GY</div>
         </div>
     </div>
 
     <div class="work-area">
         <div class="console-output" id="screen">
-            <span style="color:#444;">> GY-GY BACKSTAGE v5.2 CONNECTED...</span><br>
-            ВЫБЕРИТЕ ОДИН ИЗ ТРЕХ ЭКРАНОВ ВЕРХНЕЙ ПАНЕЛИ.
+            <span style="color:#d4af37;">> СИСТЕМА BACKSTAGE v5.3 ГОТОВА...</span><br>
+            > ВЫБЕРИТЕ КАНАЛ ДЛЯ РАБОТЫ.
         </div>
         
         <div class="input-group">
-            <input type="text" id="user-input" placeholder="Введите текст...">
-            <button class="run-cmd" onclick="process()">RUN</button>
+            <input type="text" id="user-input" placeholder="Введите текст сообщения..." onkeydown="if(event.keyCode==13) process()">
+            <button class="run-cmd" onclick="process()">ВВОД</button>
         </div>
 
         <div class="footer-nav">
-            <div class="f-btn
+            <div class="f-btn" onclick="alert('Magic Key: AI-777-GOLD')">🔑 MAGIC KEY</div>
+            <a href="index.html" class="f-btn">↩ В ХОЛЛ 4.3</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    let activeMode = null;
+
+    function selectMode(m) {
+        activeMode = m;
+        const boxes = ['t-a', 't-b', 't-v'];
+        const info = {
+            'a': 'АКТИВИРОВАН КАНАЛ ПАНЧЛАЙНОВ. Введите шутку, которую нужно дожать.',
+            'b': 'АКТИВИРОВАН СЦЕНАРНЫЙ ОТДЕЛ. Опишите завязку сюжета.',
+            'v': 'АКТИВИРОВАН ТЮНИНГ СТИЛЯ. Введите текст для облагораживания.'
+        };
+        boxes.forEach(id => {
+            const el = document.getElementById(id);
+            el.classList.remove('active', 'hidden');
+            if (id === 't-' + m) el.classList.add('active');
+            else el.classList.add('hidden');
+        });
+        typeWrite(`> ${info[m]}`);
+    }
+
+    function deselect() {
+        activeMode = null;
+        ['t-a', 't-b', 't-v'].forEach(id => {
+            document.getElementById(id).classList.remove('active', 'hidden');
+        });
+        typeWrite("> СИСТЕМА В ОЖИДАНИИ ВЫБОРА КАНАЛА...");
+    }
+
+    function typeWrite(text) {
+        const screen = document.getElementById('screen');
+        screen.innerHTML = "";
+        let i = 0;
+        function type() {
+            if (i < text.length) {
+                screen.innerHTML += text.charAt(i);
+                i++;
+                setTimeout(type, 20);
+            }
+        }
+        type();
+    }
+
+    function process() {
+        const val = document.getElementById('user-input').value;
+        const screen = document.getElementById('screen');
+        if (!activeMode) { screen.innerHTML = "<span style='color:#f00;'>[!] ОШИБКА: КАНАЛ НЕ ВЫБРАН</span>"; return; }
+        if (!val) return;
+
+        screen.innerHTML = "> ИДЕТ ВЫЧИСЛЕНИЕ...";
+        
+        setTimeout(() => {
+            let response = "";
+            if (activeMode === 'a') response = `ПАНЧЛАЙН ДЛЯ "${val}": ...и тут он понимает, что это был не микрофон!`;
+            if (activeMode === 'b') response = `СЦЕНАРИЙ: На основе "${val}" предлагаю сцену в лифте с Архивариусом.`;
+            if (activeMode === 'v') response = `GY-GY STYLE: Господа, "${val}" — это слишком просто. Скажем так: "Изысканный жест в сторону вечности".`;
+            
+            screen.innerHTML = `<span style="color:#fff;">РЕЗУЛЬТАТ:</span><br>${response}`;
+            document.getElementById('user-input').value = '';
+        }, 800);
+    }
+</script>
+
+</body>
+</html>
