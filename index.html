@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.124</title>
+    <title>GY-GY Club v4.3.125</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -13,50 +13,43 @@
         body, html { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; }
 
         /* ЯЗЫКИ */
-        #google_translate_element { position: absolute; top: 15px; left: 15px; z-index: 9999; }
-        .goog-te-banner-frame { display: none !important; }
-        body { top: 0 !important; position: static !important; }
+        #google_translate_element { position: absolute; top: 10px; left: 10px; z-index: 9999; background: rgba(0,0,0,0.5); border-radius: 5px; padding: 2px; }
 
         .block { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             display: none; flex-direction: column; align-items: center; justify-content: center; 
-            background: #000; z-index: 10; opacity: 0; transition: opacity 1.5s ease-in-out; 
+            background: #000; z-index: 10; opacity: 0; transition: opacity 1.2s ease-in-out; 
         }
         .block.active { display: flex !important; opacity: 1; }
 
-        /* ДВЕРЬ (Растворение) */
-        .door-img { 
-            width: 65vw; max-width: 350px; cursor: pointer; 
-            transition: transform 2.5s ease-in, opacity 2s ease-out, filter 2s ease-out; 
-        }
+        /* ДВЕРЬ */
+        .door-img { width: 65vw; max-width: 350px; cursor: pointer; transition: transform 2.5s, opacity 2s, filter 2s; }
         .door-open-anim { transform: scale(15); opacity: 0; filter: blur(20px); pointer-events: none; }
 
         /* РАМКИ */
-        .square-box, .card-img-box { 
-            width: 85px; height: 85px; display: flex; align-items: center; justify-content: center; 
-            border: 2px solid var(--gold) !important; background: #fff; position: relative;
-            overflow: hidden;
-        }
+        .square-box, .card-img-box { width: 85px; height: 85px; display: flex; align-items: center; justify-content: center; border: 2.5px solid var(--gold) !important; background: #fff; position: relative; overflow: hidden; }
 
         /* КНОПКИ */
-        .btn-gy { 
-            min-width: 220px; padding: 14px; background: #000; 
-            border: 1px solid var(--gold); color: var(--gold); 
-            cursor: pointer; font-family: 'Share Tech Mono'; 
-            text-transform: uppercase; letter-spacing: 2px; margin: 10px 0; 
-            transition: 0.4s;
-        }
-        .btn-inactive { opacity: 0.3; pointer-events: none; }
+        .btn-gy { min-width: 220px; padding: 14px; background: #000; border: 1px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; letter-spacing: 2px; margin: 10px 0; transition: 0.4s; }
+        .btn-inactive { opacity: 0.2; pointer-events: none; }
         .btn-active { opacity: 1; pointer-events: auto; box-shadow: 0 0 15px var(--gold); }
 
-        /* БАР */
-        .bartender-container { position: relative; width: 100%; height: 100%; display: flex; align-items: flex-end; justify-content: center; }
-        .bartender-img { width: 95vw; max-width: 550px; z-index: 5; pointer-events: none; }
-        .bubble-zone { position: absolute; z-index: 100; cursor: pointer; border-radius: 50%; }
-        #zone-tables { width: 25%; height: 15%; bottom: 60%; left: 10%; }
-        #zone-ai { width: 25%; height: 15%; bottom: 65%; right: 10%; }
+        /* ХОЛЛ */
+        .neon-title { font-size: 28px; font-weight: 900; color: #fff; text-shadow: 0 0 20px #4B0082, 0 0 40px #4B0082; letter-spacing: 5px; margin-bottom: 20px; z-index: 5; text-align: center; }
 
-        .hall-card { position: absolute; right: 25px; bottom: 25px; width: 200px; padding: 15px; border: 2px solid var(--gold); background: #fff; border-radius: 12px; display: flex; flex-direction: column; align-items: center; }
+        /* БАР */
+        .bar-quote { font-size: 18px; text-align: center; color: var(--gold); margin-top: 60px; padding: 0 20px; z-index: 6; font-weight: 700; text-transform: uppercase; }
+        .bartender-container { position: relative; width: 100%; height: 70vh; display: flex; align-items: flex-end; justify-content: center; margin-top: auto; }
+        .bartender-img { height: 100%; width: auto; max-width: 100%; z-index: 5; pointer-events: none; }
+        
+        .bubble-zone { 
+            position: absolute; z-index: 100; cursor: pointer; border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1); /* Сделай 0, если зоны попали точно */
+        }
+        #zone-tables { width: 100px; height: 100px; bottom: 55%; left: 15%; }
+        #zone-ai { width: 100px; height: 100px; bottom: 60%; right: 15%; }
+
+        .hall-card { position: absolute; right: 20px; bottom: 20px; width: 190px; padding: 12px; border: 2px solid var(--gold); background: #fff; border-radius: 12px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
     </style>
 </head>
 <body>
@@ -87,7 +80,7 @@
             <div class="square-box photo-box">
                 <input type="file" onchange="preview(this)" style="position:absolute; opacity:0; width:100%; height:100%; z-index:10; cursor:pointer;">
                 <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
-                <span id="p-label" style="color:#000;">ФОТО</span>
+                <span id="p-label" style="color:#000; font-family:'Share Tech Mono';">ФОТО</span>
             </div>
         </div>
         <button id="btn-save" class="btn-gy btn-active" onclick="saveReg()">СОХРАНИТЬ</button>
@@ -95,21 +88,23 @@
     </div>
 
     <div id="block-hall" class="block">
-        <div style="position:absolute; width:100%; height:100%; background:url('hall_bg_jpg.jpg') center/cover; opacity: 0.5;"></div>
+        <div style="position:absolute; width:100%; height:100%; background:url('hall_bg_jpg.jpg') center/cover; opacity: 0.85;"></div>
+        <h2 class="neon-title">ВСЕ БУДЕТ GY-GY</h2>
         <div class="hall-card">
             <div style="display:flex; gap:10px; margin-bottom:10px;">
                 <img id="h-photo" class="card-img-box" style="object-fit:cover;">
                 <div id="h-qr" class="card-img-box"></div>
             </div>
             <div id="h-id" style="color:#000; font-family:'Share Tech Mono'; font-size:11px; margin-bottom:15px; font-weight: bold;"></div>
-            <button id="h-confirm" class="btn-gy btn-active" style="min-width:100%; font-size:10px;" onclick="confirmH()">ПОДТВЕРДИТЬ</button>
-            <button id="h-tobar" class="btn-gy btn-active" style="min-width:100%; font-size:10px; display:none;" onclick="portalTransition('block-bar')">ПРОХОДИТЕ В БАР</button>
+            <button id="h-confirm" class="btn-gy btn-active" style="min-width:100%; font-size:10px; background:#000;" onclick="confirmH()">ПОДТВЕРДИТЬ</button>
+            <button id="h-tobar" class="btn-gy btn-active" style="min-width:100%; font-size:10px; display:none; background:#000;" onclick="portalTransition('block-bar')">ПРОХОДИТЕ В БАР</button>
         </div>
     </div>
 
     <div id="block-bar" class="block">
+        <div class="bar-quote">«ИСТИНА НЕ В ВИНЕ, А В ЕГО КОЛИЧЕСТВЕ»</div>
         <div class="bartender-container">
-            <div id="zone-tables" class="bubble-zone" onclick="alert('Места забронированы!')"></div>
+            <div id="zone-tables" class="bubble-zone" onclick="alert('Места за столиками забронированы!')"></div>
             <div id="zone-ai" class="bubble-zone" onclick="window.location.href='ai_room.html'"></div>
             <img src="charlie_bar.png" class="bartender-img">
         </div>
@@ -135,7 +130,7 @@
             setTimeout(() => { 
                 document.getElementById('snd-ambient').play(); 
                 portalTransition('block-welcome'); 
-            }, 2000); 
+            }, 2100); 
         }
 
         function portalTransition(id) {
