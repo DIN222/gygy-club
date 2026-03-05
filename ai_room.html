@@ -3,150 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY AI ROOM v6.3</title>
+    <title>GY-GY AI ROOM v7.0.1-LH</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #ffcc00; --bg-main: #1c1c1c; --bg-chat: #151515; --text: #ffffff; }
+        :root { 
+            --gold: #ffcc00; 
+            --neon: #00f2ff;
+            --bg-main: #0a0a0a; /* Еще чернее для контраста */
+            --bg-chat: rgba(15, 15, 15, 0.95); 
+        }
         * { box-sizing: border-box; }
-        body, html { background: var(--bg-main); margin: 0; color: var(--text); font-family: 'Montserrat', sans-serif; overflow: hidden; height: 100vh; }
+        body, html { background: var(--bg-main); margin: 0; color: #fff; font-family: 'Montserrat', sans-serif; overflow: hidden; height: 100vh; }
+
+        /* ВИНТАЖНЫЙ ЭФФЕКТ ЭКРАНА */
+        body::before {
+            content: " ";
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 3px, 3px 100%;
+            pointer-events: none; z-index: 1000;
+        }
 
         .outer-nav { position: absolute; top: 20px; right: 25px; display: flex; gap: 15px; z-index: 2000; }
-        .btn-outer { background: #333; border: 1px solid var(--gold); color: var(--gold); padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 11px; font-weight: bold; text-decoration: none; }
+        .btn-outer { background: #222; border: 1px solid var(--neon); color: var(--neon); padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 10px; text-decoration: none; text-transform: uppercase; }
 
-        .folder-hub { display: flex; height: 100vh; justify-content: center; align-items: center; gap: 30px; }
-        .folder { width: 250px; height: 350px; border: 2px solid #444; background: #2a2a2a; border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; }
-        .folder:hover { border-color: var(--gold); transform: translateY(-10px); }
-        .folder .artifact { font-size: 60px; margin-bottom: 20px; }
-        .folder-title { font-size: 14px; text-align: center; color: var(--gold); text-transform: uppercase; }
+        /* ГЛАВНЫЙ ХАБ МОДУЛЕЙ */
+        .folder-hub { display: flex; height: 100vh; justify-content: center; align-items: center; gap: 40px; }
+        .module { 
+            width: 280px; height: 380px; border: 1px solid #333; 
+            background: linear-gradient(135deg, #111 0%, #050505 100%); 
+            border-radius: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            cursor: pointer; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .module:hover { border-color: var(--neon); transform: scale(1.05); box-shadow: 0 0 30px rgba(0, 242, 255, 0.2); }
+        .module .icon { font-size: 50px; margin-bottom: 25px; filter: drop-shadow(0 0 10px var(--neon)); }
+        .module-title { font-family: 'Share Tech Mono', monospace; font-size: 16px; color: var(--neon); letter-spacing: 2px; }
 
-        .active-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1500; background: #111; display: none; flex-direction: column; }
+        /* ИНТЕРФЕЙС ТЕХНОПАРКА */
+        .active-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1500; background: #050505; display: none; flex-direction: column; }
         .active-overlay.show { display: flex; }
 
-        .trainer-header { height: 110px; background: #000; border-bottom: 2px solid var(--gold); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 25px; position: relative; }
-        .hint-text { font-size: 11px; color: #777; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
-        .header-row { display: flex; width: 100%; justify-content: space-between; align-items: center; }
+        .header-lunar { 
+            height: 100px; border-bottom: 1px solid #222; 
+            display: flex; align-items: center; justify-content: space-between; padding: 0 40px;
+        }
+        .stats-lunar { display: flex; gap: 30px; font-family: 'Share Tech Mono', monospace; }
+        .stat-item { color: #555; font-size: 11px; }
+        .stat-item b { color: var(--neon); font-size: 18px; display: block; }
+
+        .chat-area { flex: 1; overflow-y: auto; padding: 40px; display: flex; flex-direction: column; gap: 20px; }
+        .msg { max-width: 70%; display: flex; flex-direction: column; gap: 5px; animation: fadeIn 0.4s ease; }
+        .msg.ai { align-self: flex-start; }
+        .msg.user { align-self: flex-end; align-items: flex-end; }
         
-        .ai-selector { display: flex; gap: 12px; }
-        .ai-av { width: 45px; height: 45px; border: 1px solid #444; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; position: relative; background: #222; }
-        .ai-av:hover::after { content: attr(data-name); position: absolute; bottom: -25px; font-size: 10px; color: var(--gold); background: #000; padding: 2px 5px; border-radius: 3px; white-space: nowrap; z-index: 10; }
-        .ai-av.active { border-color: var(--gold); background: #332b00; box-shadow: 0 0 10px var(--gold); }
-        .user-av { border: 1px dashed var(--gold); color: var(--gold); }
+        .m-meta { font-family: 'Share Tech Mono', monospace; font-size: 10px; color: #555; text-transform: uppercase; }
+        .m-bubble { padding: 15px 20px; border-radius: 5px; font-size: 15px; border: 1px solid #222; background: rgba(255,255,255,0.02); }
+        .user .m-bubble { border-color: var(--gold); color: var(--gold); background: rgba(255, 204, 0, 0.03); }
 
-        .trainer-stats { display: flex; gap: 15px; }
-        .stat-box { text-align: center; font-family: 'Share Tech Mono', monospace; min-width: 50px; }
-        .stat-box span { display: block; font-size: 8px; color: #555; }
-        .stat-box b { font-size: 16px; color: #fff; }
-
-        .chat-area { flex: 1; overflow-y: auto; padding: 30px; display: flex; flex-direction: column; gap: 20px; background: var(--bg-chat); }
-        .m-line { display: flex; gap: 15px; max-width: 85%; align-items: flex-start; animation: fadeIn 0.3s ease; }
-        .m-line.ai { align-self: flex-start; }
-        .m-line.user { align-self: flex-end; flex-direction: row-reverse; }
-
-        .m-icon { width: 40px; height: 40px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 18px; }
-        .m-text { background: #262626; padding: 12px 18px; border-radius: 10px; font-size: 15px; line-height: 1.5; color: #ddd; border: 1px solid #333; }
-        .user .m-text { background: #3d341f; border: 1px solid var(--gold); color: #fff; }
-
-        .input-bar { height: 75px; background: #000; display: flex; padding: 15px 25px; gap: 15px; }
-        input { flex: 1; background: #151515; border: 1px solid #444; color: #fff; padding: 0 15px; border-radius: 8px; outline: none; font-family: inherit; }
-        .btn-send { background: var(--gold); color: #000; border: none; padding: 0 30px; border-radius: 8px; font-weight: bold; cursor: pointer; }
-
-        .btn-close { position: absolute; right: 20px; top: 40px; background: #441111; color: #fff; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 10px; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .input-lunar { height: 80px; border-top: 1px solid #222; display: flex; padding: 15px 40px; gap: 20px; }
+        input { flex: 1; background: transparent; border: 1px solid #333; color: #fff; padding: 0 20px; font-family: 'Share Tech Mono', monospace; outline: none; }
+        input:focus { border-color: var(--neon); }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
     <div class="outer-nav">
-        <div class="btn-outer">🌐 RU</div>
+        <div class="btn-outer">Build: v7.0.1-LH</div>
         <a href="index.html" class="btn-outer" style="border-color: #ff4444;">В ХОЛЛ</a>
     </div>
 
     <div class="folder-hub">
-        <div class="folder" onclick="alert('Режим PUNCHLINE в разработке')"><div class="artifact">✧</div><div class="folder-title">PUNCHLINE</div></div>
-        <div class="folder" onclick="openTrainer()"><div class="artifact">$</div><div class="folder-title">ТРЕНАЖЕР<br>МИЛЛИОНЕРА</div></div>
-        <div class="folder" onclick="alert('Режим TUNER в разработке')"><div class="artifact">🎭</div><div class="folder-title">TUNER</div></div>
+        <div class="module" onclick="openBase()">
+            <div class="icon">🚀</div>
+            <div class="module-title">LUNAR TECHPARK</div>
+        </div>
+        <div class="module" onclick="alert('Module Arch-Archive Locked')">
+            <div class="icon">📦</div>
+            <div class="module-title">ARCHIVE (v6.3)</div>
+        </div>
     </div>
 
-    <div class="active-overlay" id="trainer-view">
-        <div class="trainer-header">
-            <div class="hint-text">Здесь мы весело торгуемся. Выбери оппонента и начинай тренинг!</div>
-            <div class="header-row">
-                <div class="ai-selector">
-                    <div class="ai-av" data-name="Gemini" onclick="selAI('gemini','✧','#4285f4',this)">✧</div>
-                    <div class="ai-av" data-name="Grok" onclick="selAI('grok','/','#fff',this)">/</div>
-                    <div class="ai-av" data-name="Copilot" onclick="selAI('copilot','∞','#3bd0a4',this)">∞</div>
-                    <div class="ai-av user-av" data-name="Вы">👤</div>
-                </div>
-                <div class="trainer-stats">
-                    <div class="stat-box"><span>Старт</span><b>100$</b></div>
-                    <div class="stat-box"><span>Текущая</span><b id="c-val">0$</b></div>
-                    <div class="stat-box"><span>Итого</span><b id="i-val">0$</b></div>
-                </div>
+    <div class="active-overlay" id="base-view">
+        <div class="header-lunar">
+            <div class="module-title" style="font-size: 20px;">L-Hacker Terminal</div>
+            <div class="stats-lunar">
+                <div class="stat-item">OXYGEN<b>98%</b></div>
+                <div class="stat-item">ENERGY<b>MAX</b></div>
+                <div class="stat-item">OBJECTS<b>001</b></div>
             </div>
-            <button class="btn-close" onclick="closeTrainer()">ЗАКРЫТЬ X</button>
+            <button class="btn-outer" onclick="location.reload()">CLOSE</button>
         </div>
-        <div class="chat-area" id="chat-b"></div>
-        <div class="input-bar">
-            <input type="text" id="inp-b" placeholder="Ваше предложение..." onkeydown="if(event.keyCode==13) send()">
-            <button class="btn-send" onclick="send()">ВВОД</button>
+        <div class="chat-area" id="chat-lunar">
+            <div class="msg ai">
+                <span class="m-meta">System Info</span>
+                <div class="m-bubble">Связь установлена. Модератор, группа "Лунный Хакер" готова к проектированию. Ждем ваших указаний.</div>
+            </div>
+        </div>
+        <div class="input-lunar">
+            <input type="text" id="inp-l" placeholder="Введите команду или идею..." onkeydown="if(event.keyCode==13) sendMsg()">
         </div>
     </div>
 
 <script>
-    let curAI = { id: '', icon: '', color: '' };
-    let step = 0;
+    function openBase() { document.getElementById('base-view').classList.add('show'); }
 
-    const replies = {
-        grok: [
-            "Велосипед без педалей? Ты еще предложи мне купить дырку от бублика! Даю 5$, чисто за металлолом.",
-            "Слушай, твои аргументы всё абсурднее. Это тактика такая или ты реально веришь, что это стоит больше 50$?",
-            "Ок, ты меня почти убедил своим нахальством. 150$ и я забираю этот хлам, пока я не передумал!"
-        ],
-        gemini: [
-            "Ваше предложение интересно с точки зрения арт-объекта. Однако рыночная стоимость такого лота не превышает 40$.",
-            "Анализ показывает, что отсутствие педалей снижает функциональность на 70%. Могу предложить 65$.",
-            "Вы отличный переговорщик. Мой финальный бюджет на этот лот повышен до 120$."
-        ],
-        copilot: [
-            "Я проверил базу данных. Велосипеды без педалей сейчас в тренде у хипстеров. Предлагаю 30$.",
-            "Хм, вы настаиваете. Я не уверен, что это выгодная сделка для меня. Давайте остановимся на 55$?",
-            "Внимание! Обнаружена высокая ценность аргументации. Подтверждаю покупку за 200$."
-        ]
-    };
+    function sendMsg() {
+        const inp = document.getElementById('inp-l');
+        const val = inp.value;
+        if(!val) return;
 
-    function openTrainer() { document.getElementById('trainer-view').classList.add('show'); }
-    function closeTrainer() { document.getElementById('trainer-view').classList.remove('show'); step = 0; document.getElementById('chat-b').innerHTML=''; }
-
-    function selAI(id, icon, color, el) {
-        curAI = { id, icon, color };
-        document.querySelectorAll('.ai-av').forEach(a => a.classList.remove('active'));
-        el.classList.add('active');
-        addMsg('ai', `Агент <b>${id.toUpperCase()}</b> в сети. Что на кону?`);
-    }
-
-    function addMsg(side, text) {
-        const chat = document.getElementById('chat-b');
-        const icon = side === 'ai' ? curAI.icon : '👤';
-        const bg = side === 'ai' ? curAI.color : '#ffcc00';
-        const color = (side === 'ai' && curAI.id === 'grok') ? '#000' : '#fff';
-        const html = `<div class="m-line ${side}"><div class="m-icon" style="background:${bg}; color:${color}">${icon}</div><div class="m-text">${text}</div></div>`;
-        chat.insertAdjacentHTML('beforeend', html);
-        chat.scrollTop = chat.scrollHeight;
-    }
-
-    function send() {
-        const val = document.getElementById('inp-b').value;
-        if(!val || !curAI.id) return;
-        addMsg('user', val);
-        document.getElementById('inp-b').value = '';
+        const chat = document.getElementById('chat-lunar');
+        chat.innerHTML += `
+            <div class="msg user">
+                <span class="m-meta">Moderator</span>
+                <div class="m-bubble">${val}</div>
+            </div>`;
         
-        const num = val.match(/\d+/);
-        if(num) document.getElementById('c-val').innerText = num[0] + '$';
+        inp.value = '';
+        chat.scrollTop = chat.scrollHeight;
 
+        // Имитация ответа от ИИ-Монстров
         setTimeout(() => {
-            let answer = replies[curAI.id][step] || "Сделка зашла в тупик. Давай новое предложение!";
-            addMsg('ai', answer);
-            if(step < 2) step++;
+            chat.innerHTML += `
+                <div class="msg ai">
+                    <span class="m-meta" style="color:var(--neon)">Grok [Audit]</span>
+                    <div class="m-bubble">Идея принята в работу. Кибербуль уже навострил уши. Начинаю проверку на "духоустойчивость"...</div>
+                </div>`;
+            chat.scrollTop = chat.scrollHeight;
         }, 1000);
     }
 </script>
