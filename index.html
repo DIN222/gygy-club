@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.155</title>
+    <title>GY-GY Club v4.3.156</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -11,14 +11,15 @@
         :root { --gold: #d4af37; --violet: #8A2BE2; }
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; }
         
-        /* ЗОЛОТАЯ РАМКА КОДА (ВОЗВРАТ) */
-        html::before {
+        /* ГЛОБАЛЬНАЯ ЗОЛОТАЯ РАМКА */
+        html::after {
             content: ""; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            border: 4px solid var(--gold); pointer-events: none; z-index: 1000000;
+            border: 4px solid var(--gold); pointer-events: none; z-index: 2000000;
         }
 
         body, html { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; }
 
+        /* ЯЗЫК (ВСЕГДА ВИДЕН ИЗ-ЗА z-index) */
         #google_translate_element { 
             position: fixed !important; top: 15px !important; left: 15px !important; 
             z-index: 999999 !important; background: rgba(0,0,0,0.6); border-radius: 5px;
@@ -33,38 +34,37 @@
 
         #main-door { width: 280px; cursor: pointer; transition: transform 2s ease, opacity 1.5s ease; z-index: 100; }
 
-        /* ЧИСТЫЙ КОНТРАСТНЫЙ ХОЛЛ */
+        /* ХОЛЛ: КОНТРАСТ И ВОЗДУХ */
         .hall-bg {
             position: absolute; width: 100%; height: 100%; 
             background: url('hall_bg_jpg.jpg') center/cover;
-            filter: contrast(1.2) brightness(0.3); z-index: -1;
+            filter: contrast(1.2) brightness(0.25); z-index: -1;
         }
 
         /* УВЕЛИЧЕННАЯ ЦИТАТА */
         .whiskey-quote-huge {
-            font-weight: 900; font-size: 52px; /* Увеличено */
-            text-align: center; line-height: 0.85; text-transform: uppercase;
-            color: var(--gold); text-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
-            margin-bottom: 40px;
+            font-weight: 900; font-size: 56px; text-align: center; line-height: 0.85; 
+            text-transform: uppercase; color: var(--gold); 
+            text-shadow: 0 0 30px rgba(212, 175, 55, 0.4); margin-bottom: 40px;
         }
 
-        /* ОБЛАЧКА-КНОПКИ */
+        /* ОБЛАКА-КНОПКИ В БАРЕ */
         .cloud-bubble {
             position: absolute; z-index: 500; background: #fff; border: 2px solid var(--gold); 
-            padding: 14px 22px; border-radius: 40px; font-family: 'Share Tech Mono'; 
+            padding: 16px 24px; border-radius: 40px; font-family: 'Share Tech Mono'; 
             font-weight: 900; font-size: 14px; color: #000; cursor: pointer; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.7); white-space: nowrap; transition: 0.2s;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8); white-space: nowrap; transition: 0.2s;
         }
-        .cloud-bubble:active { transform: scale(0.95); }
+        .cloud-bubble:active { transform: scale(0.92); background: #f0f0f0; }
         .cloud-bubble:after {
-            content: ''; position: absolute; bottom: -8px; width: 15px; height: 15px;
+            content: ''; position: absolute; bottom: -10px; width: 18px; height: 18px;
             background: #fff; border-right: 2px solid var(--gold); border-bottom: 2px solid var(--gold);
         }
         #btn-to-tables { bottom: 52%; left: 8%; border-bottom-left-radius: 2px; }
-        #btn-to-tables:after { left: 15px; transform: rotate(45deg); }
+        #btn-to-tables:after { left: 18px; transform: rotate(45deg); }
         
         #btn-to-ai { bottom: 60%; right: 8%; border-bottom-right-radius: 2px; }
-        #btn-to-ai:after { right: 15px; transform: rotate(-45deg); }
+        #btn-to-ai:after { right: 18px; transform: rotate(-45deg); }
 
         .btn-gy { min-width: 240px; padding: 18px; background: #000; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; font-weight: 900; }
         .square-box { width: 95px; height: 95px; border: 3px solid var(--gold); background: #fff; display: flex; align-items: center; justify-content: center; position: relative; }
@@ -83,7 +83,7 @@
     </div>
     
     <div id="block-welcome" class="block">
-        <div style="font-family:'Share Tech Mono'; letter-spacing:10px; font-size:20px; opacity:0.8;">GY-GY PRIVAT</div>
+        <div style="font-family:'Share Tech Mono'; letter-spacing:10px; font-size:20px;">GY-GY PRIVAT</div>
         <img src="charlie.png" style="max-height: 45vh; -webkit-mask-image: radial-gradient(circle, black 65%, transparent 98%); margin: 20px 0;">
         <h1 style="font-size:52px; font-weight: 900; margin-bottom: 25px;">WELCOME</h1>
         <button class="btn-gy" onclick="portalTransition('block-identity')">ПРОХОДИТЕ</button>
@@ -120,9 +120,9 @@
     </div>
 
     <div id="block-bar" class="block" style="padding:0; justify-content: flex-end;">
-        <div style="position: absolute; top: 70px; font-weight: 900; color: var(--gold); text-align: center; width:100%; z-index:100; letter-spacing: 2px;">«Истина не в вине, а в его количестве»</div>
+        <div style="position: absolute; top: 70px; font-weight: 900; color: var(--gold); text-align: center; width:100%; z-index:100;">«Истина не в вине, а в его количестве»</div>
         
-        <div id="btn-to-tables" class="cloud-bubble" onclick="alert('Места забронированы!')">ЗА СТОЛИКИ</div>
+        <div id="btn-to-tables" class="cloud-bubble" onclick="alert('Все столики забронированы!')">ЗА СТОЛИКИ</div>
         <div id="btn-to-ai" class="cloud-bubble" onclick="window.location.href='ai_room.html'">В AI ROOM</div>
         
         <img src="charlie_bar.png" style="height: 85vh; width: auto; pointer-events: none; z-index: 10;">
@@ -140,7 +140,7 @@
         function handleDoor() {
             const door = document.getElementById('main-door');
             document.getElementById('snd-door').play().catch(()=>{});
-            door.style.transform = "scale(15)"; // Еще больше масштаба для "входа"
+            door.style.transform = "scale(15)";
             door.style.opacity = "0";
             new Audio('charlie_welcome.mp3').play().catch(()=>{});
             new QRCode(document.getElementById("qr-box-reg"), { text: fullID, width: 95, height: 95 });
