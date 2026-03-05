@@ -3,83 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.147</title>
+    <title>GY-GY Club v4.3.148</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
-        :root { --gold: #d4af37; --violet: #8A2BE2; --bg: #050505; }
+        :root { --gold: #d4af37; --bg: #000; }
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; }
         body, html { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; }
 
-        #google_translate_element { position: absolute; top: 10px; left: 10px; z-index: 10000; }
-
+        /* ГЛАВНЫЙ ФИКС: ПРИНУДИТЕЛЬНОЕ ОТОБРАЖЕНИЕ */
         .block { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             display: none; flex-direction: column; align-items: center; justify-content: center; 
-            background: #000; opacity: 0; transition: opacity 0.8s ease; z-index: 10; padding: 20px;
+            background: #000; opacity: 0; transition: opacity 0.6s ease; z-index: 10; padding: 20px;
         }
-        .block.active { display: flex !important; opacity: 1; }
+        .block.active { 
+            display: flex !important; 
+            opacity: 1 !important; 
+        }
 
-        /* --- НОВАЯ 3D ДВЕРЬ --- */
+        /* 3D ДВЕРЬ */
         .door-perspective {
-            width: 200px; height: 300px; perspective: 1200px; cursor: pointer;
-            position: relative; margin-bottom: 30px;
-        }
-        .door-frame {
-            width: 100%; height: 100%; border: 3px solid #1a1a1a; position: relative;
-            background: #000; overflow: visible;
+            width: 180px; height: 280px; perspective: 1000px; cursor: pointer;
+            position: relative; margin-bottom: 20px;
         }
         .door-leaf {
             width: 100%; height: 100%; background: #111;
-            border: 2px solid var(--gold); border-radius: 4px;
+            border: 2px solid var(--gold); border-radius: 5px;
             transform-origin: left;
-            transition: transform 1.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex; align-items: center; justify-content: center;
-            position: relative; z-index: 2;
+            position: relative;
         }
-        .door-leaf::after { /* Ручка */
-            content: ''; position: absolute; right: 15px; width: 12px; height: 12px;
-            background: var(--gold); border-radius: 50%; box-shadow: 0 0 10px var(--gold);
+        .door-leaf::after { 
+            content: ''; position: absolute; right: 15px; width: 10px; height: 10px;
+            background: var(--gold); border-radius: 50%; box-shadow: 0 0 8px var(--gold);
         }
         .door-perspective.open .door-leaf {
-            transform: rotateY(-110deg);
+            transform: rotateY(-105deg);
         }
-        .entrance-text { font-size: 10px; letter-spacing: 4px; opacity: 0.5; text-transform: uppercase; }
 
-        /* --- ОСТАЛЬНЫЕ СТИЛИ --- */
+        /* КОНТЕНТ */
         .welcome-charlie { 
-            max-height: 40vh; width: auto; margin: 10px 0;
+            max-height: 40vh; width: auto; 
             -webkit-mask-image: radial-gradient(circle, black 65%, transparent 98%);
         }
-
         .whiskey-quote-huge {
-            font-weight: 900; font-size: 38px; margin-bottom: 25px;
-            text-align: center; line-height: 0.95; text-transform: uppercase;
-            color: var(--gold); text-shadow: 2px 2px 0px #000, 0 0 20px rgba(212, 175, 55, 0.5);
+            font-weight: 900; font-size: 32px; text-align: center;
+            line-height: 1.0; text-transform: uppercase; margin-bottom: 20px;
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
         }
-
-        .hall-bg {
-            position: absolute; width: 100%; height: 100%; 
-            background: url('hall_bg_jpg.jpg') center/cover;
-            filter: brightness(0.4); z-index: -1;
-        }
-
         .cloud-bubble {
-            position: absolute; z-index: 500; 
-            background: #fff; border: 2px solid var(--gold); 
-            padding: 14px 22px; border-radius: 40px;
-            font-family: 'Share Tech Mono'; font-weight: 900; font-size: 14px; 
-            color: #000; cursor: pointer; box-shadow: 0 10px 25px rgba(0,0,0,0.7);
-            white-space: nowrap; transition: 0.2s;
+            position: absolute; z-index: 500; background: #fff; border: 2px solid var(--gold); 
+            padding: 12px 18px; border-radius: 30px; font-family: 'Share Tech Mono'; 
+            font-weight: 900; font-size: 13px; color: #000; white-space: nowrap;
         }
         .cloud-bubble:after {
-            content: ''; position: absolute; bottom: -8px; width: 15px; height: 15px;
+            content: ''; position: absolute; bottom: -8px; width: 12px; height: 12px;
             background: #fff; border-right: 2px solid var(--gold); border-bottom: 2px solid var(--gold);
         }
-        #cloud-left { bottom: 52%; left: 8%; border-bottom-left-radius: 2px; }
+        #cloud-left { bottom: 50%; left: 5%; border-bottom-left-radius: 2px; }
         #cloud-left:after { left: 15px; transform: rotate(45deg); }
-        #cloud-right { bottom: 60%; right: 8%; border-bottom-right-radius: 2px; }
+        #cloud-right { bottom: 58%; right: 5%; border-bottom-right-radius: 2px; }
         #cloud-right:after { right: 15px; transform: rotate(-45deg); }
 
-        .btn-gy { min-width: 240px; padding: 18px; background: #000; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; font-weight: 900; border-radius: 50px;
+        .btn-gy { min-width: 220px; padding: 16px; background: #000; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; font-weight: 900; border-radius: 40px; }
+        .square-box { width: 90px; height: 90px; border: 2px solid var(--gold); background: #fff; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    </style>
+</head>
+<body>
+
+    <div id="block-entrance" class="block active">
+        <div class="door-perspective" id="doorCont" onclick="handleDoor()">
+            <div class="door-leaf">
+                <span style="font-size: 10px; opacity: 0.4; letter-spacing: 2px;">GY-GY</span>
+            </div>
+        </div>
+        <div style="font-family: 'Share Tech Mono'; font-size: 12px; letter-spacing: 3px;">TAP TO ENTER</div>
+    </div>
+    
+    <div id="block-welcome" class="block">
+        <div style="font-family:'Share Tech Mono'; letter-spacing:6px; margin-bottom:10px;">GY-GY PRIVAT</div>
+        <img src="charlie.png" class="welcome-charlie">
+        <h1 style="font-size:42px; font-weight: 900; margin: 10px 0;">WELCOME</h1>
+        <button class="btn-gy" onclick="portalTransition('block-identity')">ПРОХОДИТЕ</button>
+    </div>
+
+    <div id="block-identity" class="block">
+        <div class="whiskey-quote-huge">«В КАЖДОЙ ШУТКЕ<br>ЕСТЬ ДОЛЯ ВИСКИ»</div>
+        <div style="display:flex; gap:10px; margin-bottom:25px;">
+            <div id="id-box" class="square-box" style="background:transparent; color:var(--gold); font-weight:900;">ID</div>
+            <div id="qr-box-reg" class="square-box"></div>
+            <div class="square-box">
+                <input type="file" onchange="preview(this)" style="position:absolute; opacity:0; width:100%; height:100%; z-index:10; cursor:pointer;">
+                <img id="pp" style="position:absolute; width:100%; height:100%; object-fit:cover; z-index:2; display:none;">
+                <span style="color:#000; font-size:10px; font-weight:bold;">ФОТО</span>
+            </div>
+        </div>
+        <button id="btn-save" class="btn-gy" onclick="saveReg()">СОХРАНИТЬ</button>
+        <button id="btn-go-hall" class="btn-gy" style="opacity:0.1; pointer-events:none; margin-top:10px;" onclick="portalTransition('block-hall')">ПРОХОДИТЕ</button>
+    </div>
+
+    <div id="block-hall" class="block">
+        <div style="position:absolute; width:100%; height:100%; background:url('hall_bg_jpg.jpg') center/cover; filter:brightness(0.3); z-index:-1;"></div>
+        <h2 style="font-size:32px; font-weight: 900; text-shadow:0 0 15px #8A2BE2;">ВСЕ БУДЕТ GY-GY</h2>
+        <div style="position: absolute; right: 15px; bottom: 15px; width: 220px; padding: 15px; border: 2px solid var(--gold); background: #fff; border-radius: 12px; display: flex; flex-direction: column; align-items: center;">
+            <div style="display:flex; gap:8px; margin-bottom:10px;">
+                <img id="h-photo" style="width:70px; height:70px; border:1px solid var(--gold); object-fit:cover;">
+                <div id="h-qr" style="width:70px; height:70px; border:1px solid var(--gold);"></div>
+            </div>
+            <div id="h-id" style="color:#000; font-family:'Share Tech Mono'; font-weight:900; font-size: 14px; margin-bottom:10px;"></div>
+            <button class="btn-gy" style="min-width:100%; font-size:12px; background:#000; padding:10px;" onclick="goToBar()">НАЛИТЬ & ВОЙТИ</button>
+        </div>
+    </div>
+
+    <div id="block-bar" class="block" style="padding:0; justify-content: flex-end;">
+        <div id="cloud-left" class="cloud-bubble" onclick="alert('Места забронированы!')">ЗА СТОЛИКИ</div>
+        <div id="cloud-right" class="cloud-bubble" onclick="window.location.href='ai_room.html'">В AI ROOM</div>
+        <img src="charlie_bar.png" style="height: 82vh; width: auto; pointer-events: none;">
+    </div>
+
+    <audio id="snd-door"><source src="door_open.mp3" type="audio/mpeg"></audio>
+    <audio id="snd-ambient" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
+    <audio id="snd-jazz" loop><source src="charlie_jazz_duet.mp3" type="audio/mpeg"></audio>
+
+    <script>
+        const fullID = `#GY-${Math.floor(1000 + Math.random() * 8999)}`;
+        const sndAmbient = document.getElementById('snd-ambient');
+        const sndJazz = document.getElementById('snd-jazz');
+
+        function handleDoor() {
+            document.getElementById('doorCont').classList.add('open');
+            document.getElementById('snd-door').play().catch(()=>{});
+            new Audio('charlie_welcome.mp3').play().catch(()=>{});
+            
+            document.getElementById('id-box').innerText = fullID;
+            document.getElementById('h-id').innerText = fullID;
+            new QRCode(document.getElementById("qr-box-reg"), { text: fullID, width: 90, height: 90 });
+            new QRCode(document.getElementById("h-qr"), { text: fullID, width: 70, height: 70 });
+
+            setTimeout(() => { 
+                sndAmbient.play().catch(()=>{}); 
+                portalTransition('block-welcome'); 
+            }, 1600); 
+        }
+
+        function goToBar() {
+            const charlieFX = new Audio('charlie_bar_fx.mp3');
+            charlieFX.play().catch(()=>{});
+            sndAmbient.pause();
+            portalTransition('block-bar');
+            charlieFX.onended = () => {
+                sndJazz.volume = 0; sndJazz.play();
+                let v = 0; let f = setInterval(() => { if(v<0.5){v+=0.05; sndJazz.volume=v;} else clearInterval(f); }, 150);
+            };
+        }
+
+        function portalTransition(id) {
+            document.querySelectorAll('.block').forEach(b => { b.classList.remove('active'); b.style.display = 'none'; });
+            const target = document.getElementById(id);
+            target.style.display = 'flex';
+            setTimeout(() => target.classList.add('active'), 50);
+        }
+
+        function preview(i) {
+            const r = new FileReader();
+            r.onload = (e) => { 
+                document.getElementById('pp').src = e.target.result; 
+                document.getElementById('pp').style.display = "block";
+                document.getElementById('h-photo').src = e.target.result;
+            };
+            r.readAsDataURL(i.files[0]);
+        }
+
+        function saveReg() {
+            document.getElementById('btn-save').innerText = 'OK';
+            document.getElementById('btn-go-hall').style.opacity = '1';
+            document.getElementById('btn-go-hall').style.pointerEvents = 'auto';
+        }
+    </script>
+</body>
+</html>
