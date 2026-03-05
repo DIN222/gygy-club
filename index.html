@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.152</title>
+    <title>GY-GY Club v4.3.153</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -12,16 +12,19 @@
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; }
         body, html { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; }
 
-        /* КНОПКА ЯЗЫКОВ: ВИДНА ВСЕГДА И ПОВЕРХ ВСЕГО */
+        /* РЕМОНТ ЯЗЫКА: ФИКСИРОВАННЫЙ СЛОЙ */
         #google_translate_element { 
-            position: fixed; 
-            top: 15px; 
-            left: 15px; 
-            z-index: 99999 !important; /* Максимальный приоритет по всей территории */
-            background: rgba(0,0,0,0.5);
-            padding: 5px;
-            border-radius: 4px;
+            position: fixed !important; 
+            top: 10px !important; 
+            left: 10px !important; 
+            z-index: 999999 !important; 
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+            min-height: 20px;
         }
+        /* Скрываем лишние элементы гугла, если они мешают */
+        .goog-te-banner-frame.skiptranslate { display: none !important; } 
+        body { top: 0px !important; }
 
         .block { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
@@ -30,7 +33,6 @@
         }
         .block.active { display: flex !important; opacity: 1; }
 
-        /* ДВЕРЬ v4.3.144 */
         #main-door {
             width: 280px; cursor: pointer;
             transition: transform 2s ease, opacity 1.5s ease;
@@ -76,6 +78,15 @@
 <body>
 
     <div id="google_translate_element"></div>
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'ru',
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
     <audio id="snd-door"><source src="door_open.mp3" type="audio/mpeg"></audio>
     <audio id="snd-ambient" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
@@ -133,14 +144,6 @@
         const sndAmbient = document.getElementById('snd-ambient');
         const sndJazz = document.getElementById('snd-jazz');
 
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({
-                pageLanguage: 'ru',
-                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-                autoDisplay: false
-            }, 'google_translate_element');
-        }
-
         function handleDoor() {
             const door = document.getElementById('main-door');
             document.getElementById('snd-door').play().catch(()=>{});
@@ -163,17 +166,13 @@
         function goToBar() {
             const charlieFX = new Audio('charlie_bar_fx.mp3');
             charlieFX.play().catch(()=>{});
-
             let fadeOut = setInterval(() => {
                 if (sndAmbient.volume > 0.1) { sndAmbient.volume -= 0.1; }
                 else { clearInterval(fadeOut); sndAmbient.pause(); sndAmbient.volume = 1.0; }
             }, 50);
-
             portalTransition('block-bar');
-
             charlieFX.onended = () => {
-                sndJazz.volume = 0;
-                sndJazz.play().catch(()=>{});
+                sndJazz.volume = 0; sndJazz.play().catch(()=>{});
                 let fadeIn = setInterval(() => {
                     if (sndJazz.volume < 0.7) { sndJazz.volume += 0.05; }
                     else { clearInterval(fadeIn); }
@@ -213,6 +212,5 @@
             document.getElementById('h-tobar').style.display = 'block';
         }
     </script>
-    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
