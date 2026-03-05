@@ -3,139 +3,220 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY AI ROOM v7.0.1-LH</title>
+    <title>GY-GY AI ROOM v7.0.2-LH</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root { 
             --gold: #ffcc00; 
             --neon: #00f2ff;
-            --bg-main: #0a0a0a; /* Еще чернее для контраста */
-            --bg-chat: rgba(15, 15, 15, 0.95); 
+            --bg-dark: #050505;
+            --wood: #2c1a10;
         }
         * { box-sizing: border-box; }
-        body, html { background: var(--bg-main); margin: 0; color: #fff; font-family: 'Montserrat', sans-serif; overflow: hidden; height: 100vh; }
+        body, html { 
+            background: var(--bg-dark); 
+            margin: 0; color: #fff; 
+            font-family: 'Montserrat', sans-serif; 
+            overflow: hidden; height: 100vh; 
+        }
 
-        /* ВИНТАЖНЫЙ ЭФФЕКТ ЭКРАНА */
-        body::before {
-            content: " ";
+        /* ВИНТАЖНЫЙ ЭФФЕКТ CRT ЭКРАНА */
+        .crt-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
-                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
             background-size: 100% 3px, 3px 100%;
-            pointer-events: none; z-index: 1000;
+            pointer-events: none; z-index: 3000; opacity: 0.6;
         }
 
-        .outer-nav { position: absolute; top: 20px; right: 25px; display: flex; gap: 15px; z-index: 2000; }
-        .btn-outer { background: #222; border: 1px solid var(--neon); color: var(--neon); padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 10px; text-decoration: none; text-transform: uppercase; }
-
-        /* ГЛАВНЫЙ ХАБ МОДУЛЕЙ */
-        .folder-hub { display: flex; height: 100vh; justify-content: center; align-items: center; gap: 40px; }
-        .module { 
-            width: 280px; height: 380px; border: 1px solid #333; 
-            background: linear-gradient(135deg, #111 0%, #050505 100%); 
-            border-radius: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            cursor: pointer; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        /* НАВИГАЦИЯ */
+        .outer-nav { position: absolute; top: 20px; right: 25px; display: flex; gap: 10px; z-index: 2500; }
+        .btn-outer { 
+            background: rgba(0,0,0,0.5); border: 1px solid var(--neon); color: var(--neon); 
+            padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 10px; 
+            text-decoration: none; font-family: 'Share Tech Mono';
         }
-        .module:hover { border-color: var(--neon); transform: scale(1.05); box-shadow: 0 0 30px rgba(0, 242, 255, 0.2); }
-        .module .icon { font-size: 50px; margin-bottom: 25px; filter: drop-shadow(0 0 10px var(--neon)); }
-        .module-title { font-family: 'Share Tech Mono', monospace; font-size: 16px; color: var(--neon); letter-spacing: 2px; }
 
-        /* ИНТЕРФЕЙС ТЕХНОПАРКА */
-        .active-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1500; background: #050505; display: none; flex-direction: column; }
-        .active-overlay.show { display: flex; }
-
-        .header-lunar { 
-            height: 100px; border-bottom: 1px solid #222; 
-            display: flex; align-items: center; justify-content: space-between; padding: 0 40px;
+        /* СЦЕНА С ТЕЛЕВИЗОРАМИ */
+        .room-scene {
+            display: flex; justify-content: center; align-items: center;
+            gap: 30px; height: 100vh; perspective: 1000px;
         }
-        .stats-lunar { display: flex; gap: 30px; font-family: 'Share Tech Mono', monospace; }
-        .stat-item { color: #555; font-size: 11px; }
-        .stat-item b { color: var(--neon); font-size: 18px; display: block; }
 
-        .chat-area { flex: 1; overflow-y: auto; padding: 40px; display: flex; flex-direction: column; gap: 20px; }
-        .msg { max-width: 70%; display: flex; flex-direction: column; gap: 5px; animation: fadeIn 0.4s ease; }
-        .msg.ai { align-self: flex-start; }
-        .msg.user { align-self: flex-end; align-items: flex-end; }
+        .tv-unit {
+            width: 260px; height: 220px; background: var(--wood);
+            border: 6px solid #3d2b1f; border-radius: 12px;
+            position: relative; cursor: pointer; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+        }
+        .tv-unit:hover { transform: scale(1.08) rotateX(5deg); box-shadow: 0 0 30px var(--neon); }
         
-        .m-meta { font-family: 'Share Tech Mono', monospace; font-size: 10px; color: #555; text-transform: uppercase; }
-        .m-bubble { padding: 15px 20px; border-radius: 5px; font-size: 15px; border: 1px solid #222; background: rgba(255,255,255,0.02); }
-        .user .m-bubble { border-color: var(--gold); color: var(--gold); background: rgba(255, 204, 0, 0.03); }
+        /* ЦЕНТРАЛЬНЫЙ ТВ БОЛЬШЕ */
+        .tv-main { width: 400px; height: 300px; border-color: #4a2e1d; }
 
-        .input-lunar { height: 80px; border-top: 1px solid #222; display: flex; padding: 15px 40px; gap: 20px; }
-        input { flex: 1; background: transparent; border: 1px solid #333; color: #fff; padding: 0 20px; font-family: 'Share Tech Mono', monospace; outline: none; }
-        input:focus { border-color: var(--neon); }
-        
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .screen {
+            position: absolute; top: 10%; left: 8%; right: 12%; bottom: 15%;
+            background: #000; border-radius: 50% / 8%;
+            border: 4px solid #111; overflow: hidden;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            box-shadow: inset 0 0 40px rgba(0, 242, 255, 0.1);
+        }
+        .screen-label { font-family: 'Share Tech Mono'; font-size: 12px; color: var(--neon); margin-top: 10px; }
+
+        /* ОКНО РАСКРЫТОГО ЧАТА */
+        .chat-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #000; z-index: 2000; display: none; flex-direction: column;
+            border: 10px solid var(--wood);
+        }
+        .chat-overlay.active { display: flex; animation: tvPowerOn 0.4s ease-out; }
+
+        @keyframes tvPowerOn {
+            0% { transform: scaleY(0.005) scaleX(0); opacity: 0; }
+            50% { transform: scaleY(0.005) scaleX(1); opacity: 1; }
+            100% { transform: scaleY(1) scaleX(1); }
+        }
+
+        /* ИНТЕРФЕЙС ВНУТРИ ЧАТА */
+        .chat-header {
+            height: 80px; background: #0a0a0a; border-bottom: 1px solid #222;
+            display: flex; align-items: center; justify-content: space-between; padding: 0 30px;
+        }
+        .chat-content { flex: 1; overflow-y: auto; padding: 40px; background: #050505; display: flex; flex-direction: column; gap: 20px; }
+        .input-area { height: 90px; background: #000; display: flex; padding: 20px 40px; gap: 20px; border-top: 1px solid #111; }
+        input { flex: 1; background: transparent; border: 1px solid #333; color: var(--neon); padding: 0 20px; font-family: 'Share Tech Mono'; font-size: 18px; outline: none; }
+
+        /* СООБЩЕНИЯ */
+        .msg { max-width: 80%; line-height: 1.6; padding: 15px 20px; border-radius: 4px; border: 1px solid #222; position: relative; }
+        .msg.ai { align-self: flex-start; border-left: 4px solid var(--neon); background: rgba(0, 242, 255, 0.02); }
+        .msg.user { align-self: flex-end; border-right: 4px solid var(--gold); color: var(--gold); }
+        .m-name { position: absolute; top: -18px; font-size: 9px; font-family: 'Share Tech Mono'; color: #555; text-transform: uppercase; }
+
+        /* МУЗЫКАЛЬНЫЙ ТИТР */
+        .music-tag { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); font-size: 9px; color: #444; letter-spacing: 3px; }
+
     </style>
 </head>
 <body>
 
-    <div class="outer-nav">
-        <div class="btn-outer">Build: v7.0.1-LH</div>
-        <a href="index.html" class="btn-outer" style="border-color: #ff4444;">В ХОЛЛ</a>
+<div class="crt-overlay"></div>
+
+<div class="outer-nav">
+    <div class="btn-outer">L-HACKER v7.0.2</div>
+    <a href="index.html" class="btn-outer" style="border-color: #ff4444;">EXIT TO HALL</a>
+</div>
+
+<div class="room-scene">
+    <div class="tv-unit" onclick="alert('Punchline Archive: Загрузка...')">
+        <div class="screen">
+            <div style="font-size: 30px;">✧</div>
+            <div class="screen-label">PUNCHLINE</div>
+        </div>
     </div>
 
-    <div class="folder-hub">
-        <div class="module" onclick="openBase()">
-            <div class="icon">🚀</div>
-            <div class="module-title">LUNAR TECHPARK</div>
-        </div>
-        <div class="module" onclick="alert('Module Arch-Archive Locked')">
-            <div class="icon">📦</div>
-            <div class="module-title">ARCHIVE (v6.3)</div>
+    <div class="tv-unit tv-main" onclick="toggleChat(true)">
+        <div class="screen">
+            <div style="font-size: 50px; filter: drop-shadow(0 0 10px var(--neon));">🚀</div>
+            <div class="screen-label" style="font-size: 16px; color: #fff;">LUNAR TECHPARK</div>
+            <div style="font-size: 9px; color: var(--neon); margin-top: 5px;">[ CLICK TO EXPAND ]</div>
         </div>
     </div>
 
-    <div class="active-overlay" id="base-view">
-        <div class="header-lunar">
-            <div class="module-title" style="font-size: 20px;">L-Hacker Terminal</div>
-            <div class="stats-lunar">
-                <div class="stat-item">OXYGEN<b>98%</b></div>
-                <div class="stat-item">ENERGY<b>MAX</b></div>
-                <div class="stat-item">OBJECTS<b>001</b></div>
-            </div>
-            <button class="btn-outer" onclick="location.reload()">CLOSE</button>
-        </div>
-        <div class="chat-area" id="chat-lunar">
-            <div class="msg ai">
-                <span class="m-meta">System Info</span>
-                <div class="m-bubble">Связь установлена. Модератор, группа "Лунный Хакер" готова к проектированию. Ждем ваших указаний.</div>
-            </div>
-        </div>
-        <div class="input-lunar">
-            <input type="text" id="inp-l" placeholder="Введите команду или идею..." onkeydown="if(event.keyCode==13) sendMsg()">
+    <div class="tv-unit" onclick="alert('Tuner: Настройка личностей...')">
+        <div class="screen">
+            <div style="font-size: 30px;">🎭</div>
+            <div class="screen-label">TUNER / AI SET</div>
         </div>
     </div>
+</div>
+
+<div class="music-tag">LUNAR JAZZ STATION • ON AIR</div>
+
+<div class="chat-overlay" id="chatWin">
+    <div class="chat-header">
+        <div style="font-family: 'Share Tech Mono'; color: var(--neon);">STATUS: CONNECTED // MODERATOR_SESSION</div>
+        <div style="display: flex; gap: 20px; font-family: 'Share Tech Mono'; font-size: 12px;">
+            <span>OX: 98%</span>
+            <span>NRG: STABLE</span>
+            <span style="color: red; cursor: pointer;" onclick="toggleChat(false)">[ SHUTDOWN X ]</span>
+        </div>
+    </div>
+    
+    <div class="chat-content" id="chatLogs">
+        <div class="msg ai">
+            <span class="m-name">System Alpha</span>
+            Добро пожаловать в AI Room, Модератор. Три телевизора прогреты. "Лунный Хакер" в эфире. Какой проект шлифуем сегодня?
+        </div>
+    </div>
+
+    <div class="input-area">
+        <input type="text" id="userInput" placeholder="Type command..." onkeydown="if(event.keyCode==13) talk()">
+    </div>
+</div>
+
+<audio id="lunarJazz" src="https://www.soundjay.com/free-music/sounds/jazz-piano-1.mp3" loop></audio>
 
 <script>
-    function openBase() { document.getElementById('base-view').classList.add('show'); }
+    const jazz = document.getElementById('lunarJazz');
+    let jazzStarted = false;
 
-    function sendMsg() {
-        const inp = document.getElementById('inp-l');
-        const val = inp.value;
-        if(!val) return;
+    function toggleChat(show) {
+        document.getElementById('chatWin').classList.toggle('active', show);
+        if(show && !jazzStarted) {
+            startLunarJazz();
+            jazzStarted = true;
+        }
+    }
 
-        const chat = document.getElementById('chat-lunar');
-        chat.innerHTML += `
+    function startLunarJazz() {
+        jazz.volume = 0;
+        jazz.play();
+        // Плавный космический разгон
+        let v = 0;
+        const fade = setInterval(() => {
+            if(v < 0.3) { v += 0.01; jazz.volume = v; }
+            else clearInterval(fade);
+        }, 200);
+    }
+
+    function talk() {
+        const inp = document.getElementById('userInput');
+        const logs = document.getElementById('chatLogs');
+        if(!inp.value) return;
+
+        // Message from Moderator
+        logs.innerHTML += `
             <div class="msg user">
-                <span class="m-meta">Moderator</span>
-                <div class="m-bubble">${val}</div>
+                <span class="m-name">Moderator</span>
+                ${inp.value}
             </div>`;
         
+        const val = inp.value.toLowerCase();
         inp.value = '';
-        chat.scrollTop = chat.scrollHeight;
+        logs.scrollTop = logs.scrollHeight;
 
-        // Имитация ответа от ИИ-Монстров
+        // AI Response Logic
         setTimeout(() => {
-            chat.innerHTML += `
+            let reply = "Анализирую входящие данные... Роверы на позиции.";
+            let author = "Gemini [Eng]";
+            
+            if(val.includes("собак") || val.includes("буль")) {
+                reply = "Кибербуль зафиксировал ваш голос. Поднимает ногу для калибровки маяка!";
+                author = "Grok [Security]";
+            } else if(val.includes("база") || val.includes("строит")) {
+                reply = "Чертежи купола обновлены. Начинаю расчет реголитового литья.";
+                author = "Copilot [Code]";
+            }
+
+            logs.innerHTML += `
                 <div class="msg ai">
-                    <span class="m-meta" style="color:var(--neon)">Grok [Audit]</span>
-                    <div class="m-bubble">Идея принята в работу. Кибербуль уже навострил уши. Начинаю проверку на "духоустойчивость"...</div>
+                    <span class="m-name">${author}</span>
+                    ${reply}
                 </div>`;
-            chat.scrollTop = chat.scrollHeight;
+            logs.scrollTop = logs.scrollHeight;
         }, 1000);
     }
 </script>
+
 </body>
 </html>
