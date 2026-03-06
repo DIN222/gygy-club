@@ -1,1 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>GY-GY Tables v4.4.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #d4af37; }
+        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; }
+        
+        /* Глобальная золотая рамка клуба */
+        html::after {
+            content: ""; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            border: 5px solid var(--gold); pointer-events: none; z-index: 9999;
+        }
 
+        body, html { width: 100%; height: 100%; background: #000; overflow: hidden; font-family: 'Share Tech Mono', monospace; color: var(--gold); }
+
+        .stage {
+            position: relative; width: 100%; height: 100%;
+            background: url('6жэд666.png') center/cover no-repeat;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        /* ЗОНЫ ЛАМП (Кликеры) */
+        .lamp-trigger {
+            position: absolute; width: 70px; height: 90px;
+            cursor: pointer; z-index: 100;
+        }
+        
+        /* Точные координаты под твой интерьер */
+        .l-left   { bottom: 13%; left: 15%; }
+        .l-right  { bottom: 13%; right: 15%; }
+        .l-center { bottom: 41%; left: 32%; width: 45px; height: 65px; }
+
+        /* Эффект свечения при клике */
+        .glow {
+            position: absolute; width: 150%; height: 150%; top: -25%; left: -25%;
+            background: radial-gradient(circle, rgba(212,175,55,0.5) 0%, transparent 70%);
+            opacity: 0; transition: opacity 0.3s; pointer-events: none;
+        }
+
+        .nav-btn {
+            position: absolute; bottom: 35px; padding: 12px 30px;
+            background: rgba(0,0,0,0.85); border: 2px solid var(--gold);
+            color: var(--gold); cursor: pointer; text-transform: uppercase;
+            font-weight: 900; letter-spacing: 2px; z-index: 1000;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+        }
+
+        .message-box {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.95); border: 2px solid var(--gold);
+            padding: 25px; min-width: 280px; text-align: center;
+            opacity: 0; pointer-events: none; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 2000;
+        }
+        .message-box.active { opacity: 1; transform: translate(-50%, -60%); }
+    </style>
+</head>
+<body>
+
+    <div class="stage">
+        <div class="lamp-trigger l-left" onclick="clickLamp(this, 'За этим столом не говорят о делах.')"><div class="glow"></div></div>
+        <div class="lamp-trigger l-right" onclick="clickLamp(this, 'Свет этой лампы помнит первых гостей.')"><div class="glow"></div></div>
+        <div class="lamp-trigger l-center" onclick="clickLamp(this, 'Тишина — самая дорогая позиция в меню.')"><div class="glow"></div></div>
+
+        <button class="nav-btn" onclick="window.location.href='index.html'">Назад к бару</button>
+    </div>
+
+    <div id="msg" class="message-box"></div>
+
+    <script>
+        function clickLamp(el, txt) {
+            const glow = el.querySelector('.glow');
+            const msg = document.getElementById('msg');
+            
+            // Вспышка
+            glow.style.opacity = '1';
+            
+            // Текст
+            msg.innerText = txt;
+            msg.classList.add('active');
+
+            setTimeout(() => {
+                glow.style.opacity = '0';
+                msg.classList.remove('active');
+            }, 2500);
+        }
+    </script>
+</body>
+</html>
