@@ -4,57 +4,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY Club | Tables v1.2.6</title>
+    <title>GY-GY Club | Tables v1.2.7</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #d4af37; --violet: #8A2BE2; }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; font-family: 'Share Tech Mono', monospace; color: white; overflow: hidden; }
+        :root { 
+            --gold: #d4af37; 
+            --violet: #8A2BE2; 
+            --max-w: 1200px; /* Максимальная ширина для комфортного просмотра */
+        }
+        
+        body, html { 
+            margin: 0; padding: 0; 
+            width: 100%; height: 100%; 
+            background: #050505; 
+            font-family: 'Share Tech Mono', monospace; 
+            color: white; 
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden; 
+        }
 
         /* --- GATEKEEPER --- */
         #entry-layer { 
             position: fixed; inset: 0; background: #000; 
-            display: none; /* Скрыто по умолчанию, включается если нет ID */
-            flex-direction: column; justify-content: center; align-items: center; 
+            display: none; flex-direction: column; justify-content: center; align-items: center; 
             z-index: 2000; 
         }
-        .charlie-card { border: 1px solid var(--violet); padding: 40px; text-align: center; background: #050505; }
-        .reg-btn { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 12px 30px; cursor: pointer; margin-top: 20px; font-family: inherit; letter-spacing: 2px; }
+        .charlie-card { border: 1px solid var(--violet); padding: 40px; text-align: center; background: #0a0a0a; }
 
-        /* --- MAIN HALL --- */
-        #hall-layer { 
-            position: absolute; inset: 0; 
-            background-image: url('lounge.jpg'); 
-            background-repeat: no-repeat; background-position: center center; background-size: cover; 
-            display: none; 
+        /* --- MAIN CONTAINER (Ограничиваем масштаб) --- */
+        #lounge-container {
+            position: relative;
+            width: 95%;
+            max-width: var(--max-w);
+            height: 85vh;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            box-shadow: 0 0 50px rgba(0,0,0,1), 0 0 20px rgba(138, 43, 226, 0.1);
+            overflow: hidden;
+            display: none; /* Включается после авторизации */
         }
 
-        #fortune-zone { position: absolute; top: 62%; left: 43%; width: 180px; height: 130px; cursor: pointer; z-index: 100; border: 1px solid rgba(212, 175, 55, 0.1); }
-        #fortune-zone:hover { border: 1px solid var(--gold); background: rgba(212, 175, 55, 0.05); }
+        #hall-layer { 
+            width: 100%; height: 100%; 
+            background-image: url('lounge.jpg'); 
+            background-repeat: no-repeat; 
+            background-position: center center; 
+            background-size: cover; 
+            position: relative;
+        }
+
+        /* ИНТЕРАКТИВНАЯ ЗОНА: ПЕРВЫЙ СТОЛИК */
+        #fortune-zone { 
+            position: absolute; 
+            top: 72%; left: 18%; /* Координаты под первый столик на переднем плане */
+            width: 120px; height: 80px; 
+            cursor: pointer; 
+            z-index: 100; 
+            border: 1px dashed rgba(212, 175, 55, 0.3); /* Визуальная подсказка */
+            transition: 0.3s;
+            transform: perspective(500px) rotateX(20deg);
+        }
+        #fortune-zone:hover { 
+            border: 1px solid var(--gold); 
+            background: rgba(212, 175, 55, 0.1);
+            box-shadow: 0 0 15px var(--gold);
+        }
 
         /* --- UI ELEMENTS --- */
-        #hud { position: fixed; top: 20px; left: 20px; display: flex; align-items: center; gap: 15px; z-index: 1500; display: none; }
-        .avatar { width: 48px; height: 48px; border-radius: 50%; border: 2px solid var(--gold); background: #fff; }
-        .lang-footer { position: fixed; bottom: 20px; right: 20px; font-size: 11px; color: var(--gold); letter-spacing: 2px; }
+        #hud { 
+            position: absolute; top: 20px; left: 20px; 
+            display: flex; align-items: center; gap: 12px; 
+            z-index: 1500; 
+        }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--gold); background: #fff; }
+        .lang-footer { position: absolute; bottom: 15px; right: 20px; font-size: 10px; color: var(--gold); letter-spacing: 2px; }
+        
+        .reg-btn { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 10px 25px; cursor: pointer; margin-top: 15px; font-family: inherit; }
     </style>
 </head>
 <body>
 
     <div id="entry-layer">
         <div class="charlie-card">
-            <div style="font-size: 10px; color: var(--gold); margin-bottom: 15px;">BUILD v1.2.6</div>
-            <p>Чарли: "Кхм... Кто здесь? Оцифруйте ID."</p>
+            <div style="font-size: 10px; color: var(--gold); margin-bottom: 15px;">BUILD v1.2.7</div>
+            <p>Чарли: "ID не распознан. Оцифруйтесь."</p>
             <button class="reg-btn" onclick="Core.register()">Оцифровать</button>
         </div>
     </div>
 
-    <div id="hud">
-        <img id="user-avatar" class="avatar" src="" alt="?">
-        <span id="user-id" style="color: var(--gold)"></span>
-    </div>
+    <div id="lounge-container">
+        <div id="hud">
+            <img id="user-avatar" class="avatar" src="" alt="?">
+            <span id="user-id" style="color: var(--gold); font-size: 12px;"></span>
+        </div>
 
-    <div id="hall-layer">
-        <div id="fortune-zone" onclick="alert('Модуль Азарт-Фортуна в калибровке...')"></div>
-        <div class="lang-footer">RU | EN | BUILD v1.2.6</div>
+        <div id="hall-layer">
+            <div id="fortune-zone" onclick="alert('Стол 01: Азарт-Фортуна. Модуль загружается...')"></div>
+        </div>
+
+        <div class="lang-footer">RU | EN | v1.2.7</div>
     </div>
 
     <script>
@@ -68,31 +115,21 @@
             },
 
             enter(id, avatar) {
-                // Мгновенная подготовка данных
                 document.getElementById('user-avatar').src = avatar;
                 document.getElementById('user-id').innerText = id;
                 
-                // Переключение слоев
                 document.getElementById('entry-layer').style.display = 'none';
-                document.getElementById('hall-layer').style.display = 'block';
-                document.getElementById('hud').style.display = 'flex';
+                document.getElementById('lounge-container').style.display = 'block';
             },
 
             checkAuth() {
                 const savedId = localStorage.getItem('gygy_id');
                 const savedAvatar = localStorage.getItem('gygy_avatar');
-
-                if (savedId) {
-                    // ЕСЛИ ID ЕСТЬ: Сразу в зал
-                    this.enter(savedId, savedAvatar);
-                } else {
-                    // ЕСЛИ ID НЕТ: Показываем Чарли
-                    document.getElementById('entry-layer').style.display = 'flex';
-                }
+                if (savedId) this.enter(savedId, savedAvatar);
+                else document.getElementById('entry-layer').style.display = 'flex';
             }
         };
 
-        // Запуск проверки при загрузке
         window.onload = () => Core.checkAuth();
     </script>
 </body>
