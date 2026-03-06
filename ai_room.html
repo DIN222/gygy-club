@@ -2,116 +2,94 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY AI ROOM v7.0.4-LH</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GY-GY AI ROOM v7.0.5-LH</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { 
             --gold: #ffcc00; --neon: #00f2ff; --wood: #3d2b1f; --bg: #050505; 
-            --crt-glow: rgba(0, 242, 255, 0.1);
         }
+        * { box-sizing: border-box; }
         body, html { 
-            margin: 0; padding: 0; width: 100%; height: 100%; 
+            margin: 0; padding: 0; width: 100vw; height: 100vh; 
             background: var(--bg); color: #fff; font-family: 'Montserrat', sans-serif; 
-            overflow: hidden; 
+            overflow: hidden; /* Фикс выхода за рамки */
         }
 
-        /* ПРИНЦИП №1: ПЛАВНОСТЬ ЭКРАНА */
         #fade-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #000; z-index: 9999; pointer-events: none;
-            transition: opacity 2s ease; opacity: 1;
+            transition: opacity 2.5s ease; opacity: 1;
         }
 
-        /* НАВИГАЦИЯ (ПРИНЦИПЫ №3 и №4) */
+        /* НАВИГАЦИЯ */
         .top-nav {
-            position: absolute; top: 20px; left: 20px; right: 20px;
+            position: absolute; top: 15px; left: 15px; right: 15px;
             display: flex; justify-content: space-between; z-index: 4000;
         }
+        .nav-group { display: flex; gap: 10px; }
         .ui-btn { 
-            background: rgba(0,0,0,0.6); border: 1px solid var(--gold); 
-            color: var(--gold); padding: 10px 20px; cursor: pointer; 
-            font-family: 'Share Tech Mono'; font-size: 14px; text-decoration: none;
-            transition: 0.3s; border-radius: 2px; backdrop-filter: blur(5px);
+            background: rgba(20,20,20,0.8); border: 1px solid var(--gold); 
+            color: var(--gold); padding: 8px 15px; cursor: pointer; 
+            font-family: 'Share Tech Mono'; font-size: 11px; text-decoration: none;
+            text-transform: uppercase; transition: 0.3s;
         }
-        .ui-btn:hover { background: var(--gold); color: #000; box-shadow: 0 0 20px var(--gold); }
+        .ui-btn:hover { background: var(--gold); color: #000; box-shadow: 0 0 15px var(--gold); }
 
-        /* ИНТЕРЬЕР AI ROOM (БОЛЬШЕ РЕТРО) */
+        /* ТЕЛЕВИЗОРЫ (ОДИНАКОВЫЕ) */
         .room-scene {
             display: flex; justify-content: center; align-items: center;
-            gap: 50px; height: 100vh; 
-            background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+            gap: 2vw; width: 100vw; height: 100vh;
+            background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
         }
         
-        .tv-unit { position: relative; text-align: center; }
-        .tv-label { 
-            font-family: 'Share Tech Mono'; color: var(--gold); 
-            margin-top: 15px; font-size: 12px; opacity: 0.7; letter-spacing: 2px;
-        }
-
         .tv-case {
-            width: 300px; height: 260px; background: var(--wood);
-            border: 10px solid #2a1d15; border-radius: 15px;
-            position: relative; box-shadow: 0 40px 100px rgba(0,0,0,0.9), inset 0 0 20px #000;
-            cursor: pointer; transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            width: 28vw; height: 22vw; max-width: 350px; max-height: 280px;
+            background: var(--wood); border: 8px solid #2a1d15; border-radius: 10px;
+            position: relative; cursor: pointer; transition: 0.4s;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
         }
-        .tv-case:hover { transform: scale(1.05) translateY(-10px); }
-        .tv-case.main { width: 450px; height: 340px; border-color: #333; background: #111; }
+        .tv-case:hover { transform: translateY(-5px); border-color: var(--gold); }
 
         .screen {
-            position: absolute; top: 12%; left: 10%; right: 18%; bottom: 18%;
-            background: #0a0a0a; border-radius: 50% / 8%;
-            border: 4px solid #000; overflow: hidden;
+            position: absolute; top: 10%; left: 8%; right: 15%; bottom: 15%;
+            background: #080808; border-radius: 50% / 10%;
+            border: 2px solid #000; overflow: hidden;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            box-shadow: inset 0 0 30px rgba(0,242,255,0.05);
+            font-family: 'Share Tech Mono'; font-size: 0.8vw; color: var(--neon);
         }
 
-        /* ЭФФЕКТ СТАРОГО ТВ */
-        .screen::after {
-            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
-                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
-            background-size: 100% 3px, 3px 100%; pointer-events: none;
-        }
-
-        /* ТЕРМИНАЛ ТЕХНОПАРКА (v7.0.4) */
+        /* ТЕРМИНАЛ И ЧАТ */
         #techpark-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); z-index: 5000; display: none; 
-            flex-direction: column; opacity: 0; transition: opacity 1.5s ease;
+            background: #050505; z-index: 5000; display: none; 
+            flex-direction: column; opacity: 0; transition: opacity 2s ease;
         }
-        .tp-header { 
-            padding: 30px; border-bottom: 1px solid #222; 
-            display: flex; justify-content: space-between; 
-            font-family: 'Share Tech Mono'; color: var(--neon);
+
+        /* ПАНЕЛЬ АВАТАРОК (SCROLLABLE) */
+        .avatar-shelf {
+            display: flex; gap: 15px; padding: 15px 40px;
+            background: #0a0a0a; border-bottom: 1px solid #222;
+            overflow-x: auto; scrollbar-width: thin;
         }
-        .tp-content { flex: 1; padding: 40px; display: flex; gap: 30px; }
+        .avatar-shelf::-webkit-scrollbar { height: 4px; }
+        .avatar-shelf::-webkit-scrollbar-thumb { background: var(--gold); }
         
-        /* ИНДИКАТОР ГРОМКОСТИ (VU METER) */
-        .vu-meter {
-            width: 10px; height: 100px; background: #111; position: relative; border: 1px solid #333;
-        }
-        #vu-bar {
-            position: absolute; bottom: 0; width: 100%; background: var(--neon);
-            height: 0%; transition: height 0.1s; box-shadow: 0 0 10px var(--neon);
+        .user-trace {
+            min-width: 50px; height: 50px; border: 1px solid #333;
+            border-radius: 4px; display: flex; align-items: center; 
+            justify-content: center; font-size: 20px; background: #111;
         }
 
-        #chat-logs { 
-            flex: 1; background: rgba(10,10,10,0.8); border: 1px solid #222; 
-            padding: 20px; overflow-y: auto; font-family: 'Share Tech Mono';
-            font-size: 14px; line-height: 1.6; color: #aaa;
-        }
-        .m-ai { color: var(--neon); margin-bottom: 10px; }
-        .m-user { color: var(--gold); margin-bottom: 10px; text-align: right; }
+        .chat-area { flex: 1; display: flex; flex-direction: column; padding: 20px 40px; }
+        #chat-logs { flex: 1; overflow-y: auto; margin-bottom: 20px; font-family: 'Share Tech Mono'; }
+        
+        .m-line { margin-bottom: 12px; font-size: 14px; }
+        .m-ai { color: var(--neon); }
+        .m-user { color: var(--gold); }
 
-        .tp-input { 
-            padding: 20px 40px; background: #000; display: flex; gap: 20px; 
-            border-top: 1px solid #222;
-        }
-        input { 
-            flex: 1; background: transparent; border: 1px solid #333; 
-            color: var(--neon); padding: 15px; font-family: 'Share Tech Mono'; outline: none; 
-        }
+        .input-wrap { display: flex; gap: 10px; border-top: 1px solid #222; padding-top: 20px; }
+        input { flex: 1; background: #000; border: 1px solid #333; color: #fff; padding: 12px; outline: none; }
     </style>
 </head>
 <body onload="initRoom()">
@@ -119,53 +97,40 @@
     <div id="fade-overlay"></div>
 
     <div class="top-nav">
-        <a href="index.html" class="ui-btn" onclick="return transitionBack(this.href)">← EXIT TO HALL</a>
-        <div class="ui-btn">🌐 LANGUAGE</div>
+        <div class="nav-group">
+            <a href="index.html" class="ui-btn" onclick="return exitScene(this.href)">← BACK</a>
+            <div class="ui-btn" onclick="toggleAudio()" id="audio-ctrl">⏸ STOP AUDIO</div>
+        </div>
+        <div class="nav-group">
+            <div class="ui-btn">🌐 LANGUAGE</div>
+        </div>
     </div>
 
     <div class="room-scene">
-        <div class="tv-unit">
-            <div class="tv-case" onclick="alert('System: Punchline Archive Encrypted')">
-                <div class="screen"><span style="color:#444">PUNCHLINE</span></div>
-            </div>
-            <div class="tv-label">RETR0_VAULT</div>
-        </div>
-        
-        <div class="tv-unit">
-            <div class="tv-case main" onclick="openTechPark()">
-                <div class="screen">
-                    <div style="font-size: 50px; filter: drop-shadow(0 0 10px var(--neon))">🚀</div>
-                    <div style="font-family:'Share Tech Mono'; color:var(--neon); margin-top:20px; letter-spacing: 5px;">TECHPARK</div>
-                    <div style="font-size: 10px; opacity: 0.4; margin-top: 10px;">V.7.0.4-LH ACCESS</div>
-                </div>
-            </div>
-            <div class="tv-label">CORE_INTERFACE</div>
-        </div>
-
-        <div class="tv-unit">
-            <div class="tv-case" onclick="alert('System: Scanning Frequencies...')">
-                <div class="screen"><span style="color:#444">AI TUNER</span></div>
-            </div>
-            <div class="tv-label">SIGNAL_STATION</div>
-        </div>
+        <div class="tv-case" onclick="alert('Retro Archive')"><div class="screen">PUNCHLINE</div></div>
+        <div class="tv-case" onclick="openTechPark()"><div class="screen" style="color:var(--gold)">🚀 TECHPARK</div></div>
+        <div class="tv-case" onclick="alert('Frequency Tuner')"><div class="screen">AI TUNER</div></div>
     </div>
 
     <div id="techpark-overlay">
-        <div class="tp-header">
-            <span>> LUNAR_TECHNOPARK_OS [SYSTEM_READY]</span>
-            <div style="display: flex; align-items: center; gap: 20px;">
-                <span style="font-size: 10px;">AUDIO_GAIN:</span>
-                <div class="vu-meter"><div id="vu-bar"></div></div>
-                <span style="color:red; cursor:pointer;" onclick="closeTechPark()">[ TERMINATE_SESSION ]</span>
-            </div>
+        <div class="avatar-shelf" id="user-traces">
+            <div class="user-trace" title="User ID: 001">🤖</div>
+            <div class="user-trace" title="User ID: 002">🐱</div>
+            <div class="user-trace" title="User ID: 003">🦊</div>
+            <div class="user-trace" title="User ID: 004">💀</div>
+            <div class="user-trace" title="User ID: 005">👽</div>
+            <div class="user-trace" title="User ID: 006">🚀</div>
+            <div class="user-trace" title="User ID: 007">🍀</div>
         </div>
-        <div class="tp-content">
+
+        <div class="chat-area">
             <div id="chat-logs">
-                <div class="m-ai">> Добро пожаловать, Модератор. Лунный джаз v7.0.4 загружен в буфер. Ожидаю команд...</div>
+                <div class="m-ai">> Система активна. Лунный джаз v7.0.4 в режиме Loop.</div>
             </div>
-        </div>
-        <div class="tp-input">
-            <input type="text" id="user-inp" placeholder="Введите директиву..." onkeydown="if(event.keyCode==13) sendMsg()">
+            <div class="input-wrap">
+                <input type="text" id="user-msg" placeholder="Сообщение..." onkeydown="if(event.keyCode==13) send()">
+                <div class="ui-btn" style="border-color: red;" onclick="closeTechPark()">[ CLOSE ]</div>
+            </div>
         </div>
     </div>
 
@@ -174,75 +139,65 @@
     <script>
         const jazz = document.getElementById('lunar-jazz');
         const fade = document.getElementById('fade-overlay');
-        const vuBar = document.getElementById('vu-bar');
-        
-        const config = {
-            maxVol: 0.5,
-            fadeTime: 2000
-        };
 
         function initRoom() {
-            // ПРИНЦИП №1: Плавное проявление при входе
-            setTimeout(() => { fade.style.opacity = 0; }, 500);
+            fade.style.opacity = 0;
         }
 
-        function transitionBack(url) {
+        function exitScene(url) {
             fade.style.opacity = 1;
-            fadeAudio(jazz, 0, 1500);
-            setTimeout(() => { window.location.href = url; }, 1600);
+            fadeAudio(0, 2000);
+            setTimeout(() => window.location.href = url, 2500);
             return false;
         }
 
-        // ПРИНЦИП №2: Плавное нарастание и убывание
-        function fadeAudio(audio, targetVol, duration) {
-            const startVol = audio.volume;
-            const diff = targetVol - startVol;
-            const steps = 30;
-            const interval = duration / steps;
-            let currentStep = 0;
+        function toggleAudio() {
+            const btn = document.getElementById('audio-ctrl');
+            if (jazz.paused) {
+                jazz.play();
+                btn.innerText = "⏸ STOP AUDIO";
+                fadeAudio(0.5, 1000);
+            } else {
+                btn.innerText = "▶ PLAY AUDIO";
+                fadeAudio(0, 1000);
+            }
+        }
 
-            const timer = setInterval(() => {
-                currentStep++;
-                audio.volume = startVol + (diff * (currentStep / steps));
-                
-                // Обновляем VU-метр
-                vuBar.style.height = (audio.volume * 200) + '%';
-
-                if (currentStep >= steps) {
-                    clearInterval(timer);
-                    if (targetVol === 0) audio.pause();
+        function fadeAudio(target, duration) {
+            const startVol = jazz.volume;
+            const steps = 20;
+            const delta = (target - startVol) / steps;
+            let i = 0;
+            const interval = setInterval(() => {
+                i++;
+                jazz.volume = Math.max(0, Math.min(1, startVol + delta * i));
+                if (i >= steps) {
+                    clearInterval(interval);
+                    if (target === 0) jazz.pause();
                 }
-            }, interval);
+            }, duration / steps);
         }
 
         function openTechPark() {
             const tp = document.getElementById('techpark-overlay');
             tp.style.display = 'flex';
             setTimeout(() => tp.style.opacity = 1, 50);
-            
-            jazz.volume = 0;
-            jazz.play().catch(e => console.log("Нужен клик для запуска аудио"));
-            fadeAudio(jazz, config.maxVol, config.fadeTime);
+            jazz.play();
+            fadeAudio(0.5, 2500);
         }
 
         function closeTechPark() {
             const tp = document.getElementById('techpark-overlay');
             tp.style.opacity = 0;
-            fadeAudio(jazz, 0, config.fadeTime);
-            setTimeout(() => { tp.style.display = 'none'; }, config.fadeTime);
+            fadeAudio(0, 2000);
+            setTimeout(() => tp.style.display = 'none', 2000);
         }
 
-        function sendMsg() {
-            const inp = document.getElementById('user-inp');
+        function send() {
+            const inp = document.getElementById('user-msg');
             const logs = document.getElementById('chat-logs');
             if(!inp.value) return;
-            
             logs.innerHTML += `<div class="m-user">> ${inp.value}</div>`;
-            setTimeout(() => {
-                logs.innerHTML += `<div class="m-ai">> Директива "${inp.value}" принята. Обработка на частоте 432Гц...</div>`;
-                logs.scrollTop = logs.scrollHeight;
-            }, 600);
-            
             inp.value = '';
             logs.scrollTop = logs.scrollHeight;
         }
