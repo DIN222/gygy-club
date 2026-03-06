@@ -1,14 +1,16 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY Club | Tables v1.2.2</title>
+    <title>GY-GY Club | Tables v1.2.3</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
             --gold: #d4af37;
             --violet: #8A2BE2;
+            --bg-dark: #0a0a0a;
         }
 
         body, html {
@@ -20,49 +22,72 @@
             overflow: hidden;
         }
 
-        /* --- СЛОЙ 1: ЧАРЛИ (ВХОД) --- */
+        /* --- СЛОЙ 1: ВХОД (ЧАРЛИ) --- */
         #entry-layer {
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: radial-gradient(circle at center, #111 0%, #000 100%);
+            background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 2000;
-            transition: opacity 0.8s ease-in-out;
+            transition: opacity 0.5s ease;
         }
 
-        .charlie-box {
+        .charlie-card {
             text-align: center;
             border: 1px solid var(--violet);
             padding: 40px;
-            background: rgba(10, 10, 10, 0.9);
-            box-shadow: 0 0 40px rgba(138, 43, 226, 0.2);
+            background: rgba(0, 0, 0, 0.8);
+            box-shadow: 0 0 30px rgba(138, 43, 226, 0.2);
+        }
+
+        .reg-btn {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 12px 30px;
+            cursor: pointer;
+            font-family: inherit;
+            margin-top: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .reg-btn:hover {
+            background: var(--gold);
+            color: #000;
+            box-shadow: 0 0 20px var(--gold);
         }
 
         /* --- СЛОЙ 2: ЗАЛ (ВИЗУАЛ) --- */
         #hall-layer {
             position: relative;
-            width: 100vw; 
-            height: 100vh;
-            /* ВАЖНО: Прямое указание файла */
-            background-image: url('lounge.jpg');
+            width: 100vw; height: 100vh;
+            background-color: #000;
+            background-image: url('lounge.jpg'); /* ИМЯ ФАЙЛА В РЕПОЗИТОРИИ */
             background-repeat: no-repeat;
             background-position: center center;
             background-size: cover;
-            display: none; 
+            display: none;
         }
 
-        /* Кликабельный столик Фортуна */
+        /* Зона Фортуна */
         #fortune-zone {
             position: absolute;
-            top: 60%; left: 42%;
-            width: 180px; height: 140px;
+            top: 62%; left: 43%;
+            width: 180px; height: 130px;
             cursor: pointer;
             z-index: 100;
-            /* border: 1px dashed var(--gold); // Раскомментируй для отладки, если не видишь зону */
+            border: 1px solid rgba(212, 175, 55, 0); /* Скрытая граница */
+            transition: 0.3s;
+        }
+
+        #fortune-zone:hover {
+            border: 1px solid var(--gold);
+            background: rgba(212, 175, 55, 0.05);
         }
 
         #fortune-zone:hover::after {
@@ -71,80 +96,83 @@
             top: -30px; left: 50%;
             transform: translateX(-50%);
             color: var(--gold);
-            text-shadow: 0 0 10px var(--gold);
+            font-size: 14px;
             white-space: nowrap;
         }
 
-        /* --- HUD УЧАСТНИКА --- */
+        /* --- HUD И ЯЗЫКОВАЯ ПАНЕЛЬ --- */
         #hud {
             position: fixed;
             top: 20px; left: 20px;
-            display: flex; align-items: center; gap: 12px;
+            display: flex; align-items: center; gap: 15px;
             z-index: 1500;
             opacity: 0;
-            transition: 1s;
         }
 
-        .avatar-frame {
+        .avatar-box {
             width: 50px; height: 50px;
             border-radius: 50%;
             border: 2px solid var(--gold);
-            overflow: hidden;
             background: #fff;
+            overflow: hidden;
+        }
+
+        .lang-switcher {
+            position: fixed;
+            bottom: 20px; right: 20px;
+            font-size: 12px;
+            color: var(--gold);
+            z-index: 1500;
+            letter-spacing: 2px;
+            cursor: default;
         }
 
         /* --- МОДАЛКА --- */
-        #modal {
+        #modal-stub {
             position: fixed; top: 0; left: 0;
             width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95);
+            background: rgba(0,0,0,0.9);
             display: none;
             justify-content: center; align-items: center;
             z-index: 3000;
         }
 
-        .modal-box {
+        .modal-content {
             border: 1px solid var(--gold);
             padding: 40px;
-            background: #000;
+            background: var(--bg-dark);
             text-align: center;
-        }
-
-        .reg-btn {
-            background: transparent;
-            border: 1px solid var(--gold);
-            color: var(--gold);
-            padding: 10px 30px;
-            cursor: pointer;
-            font-family: inherit;
-            margin-top: 20px;
         }
     </style>
 </head>
 <body>
 
     <div id="entry-layer">
-        <div class="charlie-box">
-            <div style="color:var(--gold); font-size:10px; margin-bottom:10px;">BUILD v1.2.2</div>
-            <p>Кхм-кхм... Нужно оцифровать <br> ваш цифровой след.</p>
-            <button class="reg-btn" onclick="Core.register()">ОЦИФРОВАТЬ ID</button>
+        <div class="charlie-card">
+            <div style="font-size: 10px; color: var(--gold); margin-bottom: 10px;">BUILD v1.2.3</div>
+            <p>Чарли: "Кхм... Оцифруйте ваш след, <br> чтобы войти в Lounge Fortune."</p>
+            <button class="reg-btn" onclick="Core.register()">Оцифровать</button>
         </div>
     </div>
 
     <div id="hud">
-        <div class="avatar-frame"><img id="hud-avatar" src="" style="width:100%"></div>
-        <span id="hud-id" style="color: var(--gold);"></span>
+        <div class="avatar-box"><img id="user-avatar" src="" style="width:100%"></div>
+        <span id="user-id" style="color: var(--gold)"></span>
+    </div>
+
+    <div class="lang-switcher">
+        <span style="border-bottom: 1px solid var(--gold)">RU</span> | <span>EN</span>
     </div>
 
     <div id="hall-layer">
-        <div id="fortune-zone" onclick="Core.openModal()"></div>
+        <div id="fortune-zone" onclick="Core.toggleModal(true)"></div>
     </div>
 
-    <div id="modal" onclick="this.style.display='none'">
-        <div class="modal-box">
-            <h2 style="color: var(--gold)">АЗАРТ — ФОРТУНА</h2>
-            <p>Доступ подтвержден. Модуль в разработке.</p>
-            <small style="color: var(--violet)">[ ВЕРНУТЬСЯ ]</small>
+    <div id="modal-stub" onclick="Core.toggleModal(false)">
+        <div class="modal-content">
+            <h2 style="color: var(--gold); margin-top: 0;">АЗАРТ — ФОРТУНА</h2>
+            <p>Ваш цифровой след подтвержден.<br>Модуль калибруется для v1.3.x</p>
+            <small style="color: var(--violet); cursor: pointer;">[ ЗАКРЫТЬ ]</small>
         </div>
     </div>
 
@@ -157,23 +185,29 @@
                 localStorage.setItem('gygy_avatar', avatar);
                 this.enter(id, avatar);
             },
+
             enter(id, avatar) {
                 document.getElementById('entry-layer').style.opacity = '0';
                 setTimeout(() => {
                     document.getElementById('entry-layer').style.display = 'none';
                     document.getElementById('hall-layer').style.display = 'block';
                     document.getElementById('hud').style.opacity = '1';
-                    document.getElementById('hud-avatar').src = avatar;
-                    document.getElementById('hud-id').innerText = id;
-                }, 800);
+                    document.getElementById('user-avatar').src = avatar;
+                    document.getElementById('user-id').innerText = id;
+                }, 500);
             },
-            openModal() { document.getElementById('modal').style.display = 'flex'; },
-            check() {
+
+            toggleModal(show) {
+                document.getElementById('modal-stub').style.display = show ? 'flex' : 'none';
+            },
+
+            init() {
                 const id = localStorage.getItem('gygy_id');
                 if (id) this.enter(id, localStorage.getItem('gygy_avatar'));
             }
         };
-        window.onload = () => Core.check();
+
+        window.onload = () => Core.init();
     </script>
 </body>
 </html>
