@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.163</title>
+    <title>GY-GY Club v4.3.164</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -13,10 +13,10 @@
         
         body, html { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; }
 
-        /* ПАНЕЛЬ ЯЗЫКОВ - ВИДИМОСТЬ ОТ ВХОДА */
+        /* ЯЗЫКИ - ПРИОРИТЕТНЫЙ СЛОЙ */
         #google_translate_element { 
             position: fixed !important; top: 20px !important; left: 20px !important; 
-            z-index: 10000000 !important; background: rgba(0,0,0,0.8); border-radius: 5px; padding: 2px;
+            z-index: 999999 !important; background: rgba(0,0,0,0.8); border-radius: 5px; padding: 2px;
         }
 
         .block { 
@@ -26,18 +26,18 @@
         }
         .block.active { display: flex !important; opacity: 1; }
 
-        /* ВХОДНАЯ ДВЕРЬ - ФИКСАЦИЯ В ЦЕНТРЕ */
+        /* ИСПРАВЛЕННЫЙ БЛОК ВХОДА И ДВЕРЬ */
+        #block-entrance { z-index: 1000; }
         #main-door { 
-            width: 280px; cursor: pointer; 
-            transition: transform 2s ease, opacity 1.5s ease; 
-            z-index: 100; transform-origin: center center;
+            width: 280px; cursor: pointer; position: relative; z-index: 1001;
+            transition: transform 2s ease, opacity 1.5s ease; transform-origin: center center;
         }
 
-        /* ТОЛЩИНА РАМОК QR И ID (3px) */
+        /* РЕГИСТРАЦИЯ И ХОЛЛ */
         .qr-gold-frame { width: 105px; height: 105px; border: 3px solid var(--gold); padding: 5px; background: #fff; display: flex; align-items: center; justify-content: center; }
         .square-box { width: 105px; height: 105px; border: 3px solid var(--gold); background: #fff; display: flex; align-items: center; justify-content: center; position: relative; }
 
-        /* ОБЛАКА-КНОПКИ В БАРЕ */
+        /* ОБЛАКА В БАРЕ */
         .cloud-btn {
             position: absolute; z-index: 500; background: #fff; border: 2px solid var(--gold); 
             padding: 14px 22px; border-radius: 40px; font-family: 'Share Tech Mono'; 
@@ -65,7 +65,7 @@
     <audio id="snd-jazz" loop><source src="charlie_jazz_duet.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active">
-        <img src="door_1.jpg" id="main-door" onclick="handleDoor()">
+        <img src="door_1.jpg" id="main-door" onclick="handleDoor()" alt="Вход">
     </div>
     
     <div id="block-welcome" class="block">
@@ -76,11 +76,118 @@
     </div>
 
     <div id="block-identity" class="block">
-        <div style="font-family:'Share Tech Mono'; font-size:24px; text-align:center; margin-bottom:40px; letter-spacing: 1px;">«В КАЖДОЙ ШУТКЕ<br>ЕСТЬ ДОЛЯ ВИСКИ»</div>
+        <div style="font-family:'Share Tech Mono'; font-size:24px; text-align:center; margin-bottom:40px;">«В КАЖДОЙ ШУТКЕ<br>ЕСТЬ ДОЛЯ ВИСКИ»</div>
         <div style="display:flex; gap:15px; margin-bottom:40px;">
-            <div id="id-box" class="square-box" style="background:transparent; color:var(--gold); font-size: 14px;">ID</div>
+            <div id="id-box" class="square-box" style="background:transparent; color:var(--gold);">ID</div>
             <div class="qr-gold-frame"><div id="qr-box-reg"></div></div>
             <div class="square-box">
                 <input type="file" onchange="preview(this)" style="position:absolute; opacity:0; width:100%; height:100%; cursor:pointer; z-index:10;">
-                <img id="pp" style="width:100%; height:100%; object-fit:cover; display:none;">
-                <span style="color:#000; font-
+                <img id="pp" style="width:100%; height:100%; object-fit:cover; display:none; position:absolute;">
+                <span style="color:#000; font-size:10px; font-weight:900;">ФОТО</span>
+            </div>
+        </div>
+        <button id="btn-save" class="btn-gy" onclick="saveReg()">СОХРАНИТЬ</button>
+        <button id="btn-go-hall" class="btn-gy" style="opacity:0.1; pointer-events:none; margin-top:15px;" onclick="portalTransition('block-hall')">ПРОХОДИТЕ</button>
+    </div>
+
+    <div id="block-hall" class="block">
+        <div style="position:absolute; width:100%; height:100%; background:url('hall_bg_jpg.jpg') center/cover; filter:contrast(1.2) brightness(0.65); z-index:-1;"></div>
+        <h2 style="font-size:42px; color:#fff; text-shadow:0 0 25px var(--violet); font-weight: 900; letter-spacing: 5px;">ВСЕ БУДЕТ GY-GY</h2>
+        
+        <div style="position: absolute; right: 40px; bottom: 40px; width: 260px; padding: 25px; border: 3px solid var(--gold); background: #fff; border-radius: 15px; display: flex; flex-direction: column; align-items: center; color:#000;">
+            <div style="display:flex; gap:12px; margin-bottom:15px;">
+                <img id="h-photo" style="width:95px; height:95px; border:1px solid var(--gold); object-fit:cover; background:#eee;">
+                <div class="qr-gold-frame" style="width:95px; height:95px;"><div id="h-qr"></div></div>
+            </div>
+            <div id="h-id" style="font-family:'Share Tech Mono'; font-weight:900; margin-bottom:15px;"></div>
+            <button id="h-tobar" class="btn-gy" style="min-width:100%; font-size:14px; background:#000;" onclick="goToBar()">ВХОД В БАР</button>
+        </div>
+    </div>
+
+    <div id="block-bar" class="block" style="padding:0; justify-content: flex-end;">
+        <div style="position: absolute; top: 80px; font-weight: 900; color: var(--gold); text-align: center; width:100%; font-size: 26px; z-index:100;">«Истина не в вине, а в его количестве»</div>
+        
+        <button id="btn-tables" class="cloud-btn" onclick="window.location.href='tables.html'">ЗА СТОЛИКИ</button>
+        <button id="btn-ai" class="cloud-btn" onclick="window.location.href='ai_room.html'">В AI ROOM</button>
+        
+        <img src="charlie_bar.png" style="height: 85vh; width: auto; pointer-events: none; z-index: 10;">
+    </div>
+
+    <script>
+        const fullID = `#GY-${Math.floor(1000 + Math.random() * 8999)}`;
+        const sndAmbient = document.getElementById('snd-ambient');
+        const sndJazz = document.getElementById('snd-jazz');
+
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({ pageLanguage: 'ru', autoDisplay: false }, 'google_translate_element');
+        }
+
+        function handleDoor() {
+            const door = document.getElementById('main-door');
+            document.getElementById('snd-door').play().catch(()=>{});
+            door.style.transform = "scale(15)"; 
+            door.style.opacity = "0";
+            new Audio('charlie_welcome.mp3').play().catch(()=>{});
+            
+            new QRCode(document.getElementById("qr-box-reg"), { text: fullID, width: 85, height: 85 });
+            new QRCode(document.getElementById("h-qr"), { text: fullID, width: 80, height: 80 });
+            
+            document.getElementById('id-box').innerText = fullID;
+            document.getElementById('h-id').innerText = fullID;
+            
+            setTimeout(() => { 
+                sndAmbient.play().catch(()=>{}); 
+                portalTransition('block-welcome'); 
+            }, 1800);
+        }
+
+        function goToBar() { 
+            let fadeOut = setInterval(() => {
+                if (sndAmbient.volume > 0.1) { sndAmbient.volume -= 0.1; }
+                else { clearInterval(fadeOut); sndAmbient.pause(); sndAmbient.volume = 1.0; }
+            }, 100);
+            
+            portalTransition('block-bar'); 
+
+            const charlieFX = new Audio('charlie_bar_fx.mp3');
+            charlieFX.play().catch(()=>{});
+
+            charlieFX.onended = () => {
+                sndJazz.volume = 0;
+                sndJazz.play().catch(()=>{});
+                let fadeIn = setInterval(() => {
+                    if (sndJazz.volume < 0.6) { sndJazz.volume += 0.05; }
+                    else { clearInterval(fadeIn); }
+                }, 200);
+            };
+        }
+
+        function portalTransition(id) {
+            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
+            setTimeout(() => {
+                document.querySelectorAll('.block').forEach(b => b.style.display = 'none');
+                const t = document.getElementById(id);
+                t.style.display = 'flex';
+                setTimeout(() => t.classList.add('active'), 50);
+            }, 600);
+        }
+
+        function preview(i) {
+            const r = new FileReader();
+            r.onload = (e) => { 
+                document.getElementById('pp').src = e.target.result; 
+                document.getElementById('pp').style.display = "block";
+                document.getElementById('h-photo').src = e.target.result;
+            };
+            r.readAsDataURL(i.files[0]);
+        }
+
+        function saveReg() { 
+            document.getElementById('btn-save').innerText = 'СОХРАНЕНО';
+            document.getElementById('btn-go-hall').style.opacity = '1'; 
+            document.getElementById('btn-go-hall').style.pointerEvents = 'auto'; 
+        }
+    </script>
+    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>
