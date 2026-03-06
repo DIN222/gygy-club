@@ -1,97 +1,45 @@
 
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY Club | Tables v1.2.4</title>
+    <title>GY-GY Club | Tables v1.2.5</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --gold: #d4af37;
-            --violet: #8A2BE2;
+        :root { --gold: #d4af37; --violet: #8A2BE2; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; font-family: 'Share Tech Mono', monospace; color: white; overflow: hidden; }
+
+        /* --- GATEKEEPER --- */
+        #entry-layer { position: fixed; inset: 0; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2000; transition: 0.5s; }
+        .charlie-card { border: 1px solid var(--violet); padding: 40px; text-align: center; background: #050505; box-shadow: 0 0 30px rgba(138, 43, 226, 0.2); }
+        .reg-btn { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 12px 30px; cursor: pointer; margin-top: 20px; font-family: inherit; letter-spacing: 2px; }
+        .reg-btn:hover { background: var(--gold); color: #000; }
+
+        /* --- MAIN HALL --- */
+        #hall-layer { 
+            position: absolute; inset: 0; 
+            background-color: #111; 
+            background-repeat: no-repeat; 
+            background-position: center center; 
+            background-size: cover; 
+            display: none; 
         }
 
-        body, html {
-            margin: 0; padding: 0;
-            width: 100%; height: 100%;
-            background: #000;
-            font-family: 'Share Tech Mono', monospace;
-            color: white;
-            overflow: hidden;
-        }
+        #fortune-zone { position: absolute; top: 62%; left: 43%; width: 180px; height: 130px; cursor: pointer; z-index: 100; border: 1px solid rgba(212, 175, 55, 0.1); }
+        #fortune-zone:hover { border: 1px solid var(--gold); background: rgba(212, 175, 55, 0.05); }
 
-        /* --- ВХОД (ЧАРЛИ) --- */
-        #entry-layer {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: #000;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-        }
-
-        .charlie-card {
-            border: 1px solid var(--violet);
-            padding: 30px;
-            text-align: center;
-            background: #050505;
-        }
-
-        /* --- ЗАЛ (ИСПРАВЛЕННЫЙ ФОН) --- */
-        #hall-layer {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100vw; 
-            height: 100vh;
-            /* Пробуем разные варианты путей через CSS */
-            background-image: url('lounge.jpg'); 
-            background-repeat: no-repeat;
-            background-position: center center;
-            background-size: cover;
-            background-color: #111; /* Серый фон, если картинка не подгрузится */
-            display: none;
-        }
-
-        #fortune-zone {
-            position: absolute;
-            top: 60%; left: 42%;
-            width: 180px; height: 140px;
-            cursor: pointer;
-            z-index: 100;
-            border: 1px dashed rgba(212, 175, 55, 0.3);
-        }
-
-        #hud {
-            position: fixed;
-            top: 20px; left: 20px;
-            display: flex; align-items: center; gap: 12px;
-            z-index: 1500;
-            opacity: 0;
-        }
-
-        .avatar { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--gold); background: #fff; }
-
-        .lang-btn {
-            position: fixed; bottom: 20px; right: 20px;
-            color: var(--gold); font-size: 12px; letter-spacing: 2px;
-        }
-
-        .reg-btn {
-            background: transparent; border: 1px solid var(--gold); color: var(--gold);
-            padding: 10px 25px; cursor: pointer; margin-top: 15px; font-family: inherit;
-        }
+        /* --- HUD & UI --- */
+        #hud { position: fixed; top: 20px; left: 20px; display: flex; align-items: center; gap: 15px; z-index: 1500; opacity: 0; transition: 1s; }
+        .avatar { width: 48px; height: 48px; border-radius: 50%; border: 2px solid var(--gold); background: #fff; }
+        .lang-footer { position: fixed; bottom: 20px; right: 20px; font-size: 11px; color: var(--gold); letter-spacing: 2px; }
     </style>
 </head>
 <body>
 
     <div id="entry-layer">
         <div class="charlie-card">
-            <div style="font-size: 10px; color: var(--gold); margin-bottom: 10px;">BUILD v1.2.4</div>
+            <div style="font-size: 10px; color: var(--gold); margin-bottom: 15px;">BUILD v1.2.5</div>
             <p>Чарли: "Кхм... Оцифровка ID обязательна."</p>
             <button class="reg-btn" onclick="Core.register()">Оцифровать</button>
         </div>
@@ -103,12 +51,20 @@
     </div>
 
     <div id="hall-layer">
-        <div id="fortune-zone" onclick="alert('Модуль в разработке')"></div>
-        <div class="lang-btn">RU | EN</div>
+        <div id="fortune-zone" onclick="alert('Модуль Азарт-Фортуна: Калибровка...')"></div>
+        <div class="lang-footer">RU | EN | BUILD v1.2.5</div>
     </div>
 
     <script>
         const Core = {
+            // ФУНКЦИЯ ОПРЕДЕЛЕНИЯ ПУТИ
+            getImgPath() {
+                // Если мы на GitHub Pages, берем путь относительно текущей страницы
+                const loc = window.location.pathname;
+                const dir = loc.substring(0, loc.lastIndexOf('/'));
+                return (dir ? dir + '/' : '') + 'lounge.jpg';
+            },
+
             register() {
                 const id = 'GY-' + Math.random().toString(36).substr(2, 6).toUpperCase();
                 const avatar = `https://api.dicebear.com/7.x/identicon/svg?seed=${id}`;
@@ -119,33 +75,38 @@
 
             enter(id, avatar) {
                 const hall = document.getElementById('hall-layer');
-                
-                // ДИАГНОСТИКА: Проверяем, видит ли JS картинку
-                const testImg = new Image();
-                testImg.src = 'lounge.jpg';
-                
-                testImg.onload = () => {
-                    console.log("Чарли: Визуал lounge.jpg успешно загружен.");
-                    this.showHall(id, avatar);
+                const imgPath = this.getImgPath();
+
+                // Принудительная загрузка через JS
+                const bgImg = new Image();
+                bgImg.src = imgPath;
+
+                bgImg.onload = () => {
+                    hall.style.backgroundImage = `url('${imgPath}')`;
+                    this.transition();
                 };
 
-                testImg.onerror = () => {
-                    console.error("Чарли: Ошибка! Картинка lounge.jpg не найдена по адресу: " + testImg.src);
-                    // Показываем зал в любом случае, чтобы проект не висел
-                    this.showHall(id, avatar);
+                bgImg.onerror = () => {
+                    console.warn("Ошибка пути. Пробую запасной вариант...");
+                    hall.style.backgroundImage = "url('lounge.jpg')";
+                    this.transition();
                 };
-            },
 
-            showHall(id, avatar) {
-                document.getElementById('entry-layer').style.display = 'none';
-                document.getElementById('hall-layer').style.display = 'block';
-                document.getElementById('hud').style.opacity = '1';
+                // Данные пользователя
                 document.getElementById('user-avatar').src = avatar;
                 document.getElementById('user-id').innerText = id;
+            },
+
+            transition() {
+                document.getElementById('entry-layer').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('entry-layer').style.display = 'none';
+                    document.getElementById('hall-layer').style.display = 'block';
+                    document.getElementById('hud').style.opacity = '1';
+                }, 500);
             }
         };
 
-        // Авто-вход
         window.onload = () => {
             const id = localStorage.getItem('gygy_id');
             if (id) Core.enter(id, localStorage.getItem('gygy_avatar'));
@@ -153,3 +114,4 @@
     </script>
 </body>
 </html>
+
