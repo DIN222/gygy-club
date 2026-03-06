@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.157</title>
+    <title>GY-GY Club v4.3.158</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -11,19 +11,17 @@
         :root { --gold: #d4af37; --violet: #8A2BE2; }
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; }
         
-        /* ГЛОБАЛЬНАЯ РАМКА — ТЕПЕРЬ ТОЧНО ВИДНА */
-        body::after {
+        /* ЖЕСТКАЯ ГЛОБАЛЬНАЯ РАМКА ПО ВСЕМУ ЭКРАНУ */
+        html::after {
             content: ""; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            border: 5px solid var(--gold);
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
-            pointer-events: none; z-index: 9999999;
+            border: 6px solid var(--gold); pointer-events: none; z-index: 9999999;
         }
 
         body, html { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; }
 
         #google_translate_element { 
-            position: fixed !important; top: 20px !important; left: 20px !important; 
-            z-index: 10000000 !important; background: rgba(0,0,0,0.7); border-radius: 5px;
+            position: fixed !important; top: 25px !important; left: 25px !important; 
+            z-index: 10000000 !important; background: rgba(0,0,0,0.8); border-radius: 5px; padding: 2px;
         }
 
         .block { 
@@ -33,40 +31,44 @@
         }
         .block.active { display: flex !important; opacity: 1; }
 
-        #main-door { width: 280px; cursor: pointer; transition: transform 2s ease, opacity 1.5s ease; z-index: 100; }
-
-        /* ЧИСТЫЙ КОНТРАСТНЫЙ ХОЛЛ (БЕЗ ТУМАНА) */
+        /* ХОЛЛ: МАКСИМАЛЬНЫЙ КОНТРАСТ И ЧИСТОТА */
         .hall-bg {
             position: absolute; width: 100%; height: 100%; 
             background: url('hall_bg_jpg.jpg') center/cover;
-            filter: contrast(1.1) brightness(0.7) saturate(1.1); z-index: -1;
+            filter: contrast(1.3) brightness(0.75); z-index: -1;
         }
 
-        .whiskey-quote-huge {
-            font-weight: 900; font-size: 56px; text-align: center; line-height: 0.85; 
-            text-transform: uppercase; color: var(--gold); margin-bottom: 40px;
+        /* ЗОЛОТАЯ РАМКА ДЛЯ QR */
+        .qr-gold-frame {
+            width: 105px; height: 105px;
+            background: var(--gold); /* Золотая подложка */
+            padding: 5px; /* Создает рамку вокруг белого квадрата */
+            display: flex; align-items: center; justify-content: center;
         }
+        .qr-white-inner { background: #fff; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
 
-        /* ОБЛАКА-КНОПКИ */
+        /* ОБЛАКА-КНОПКИ (ЕДИНЫЙ ОБЪЕКТ) */
         .cloud-btn {
-            position: absolute; z-index: 500; background: #fff; border: 2px solid var(--gold); 
-            padding: 16px 24px; border-radius: 40px; font-family: 'Share Tech Mono'; 
+            position: absolute; z-index: 500; background: #fff; border: 3px solid var(--gold); 
+            padding: 16px 26px; border-radius: 50px; font-family: 'Share Tech Mono'; 
             font-weight: 900; font-size: 15px; color: #000; cursor: pointer; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8); transition: 0.2s;
-            outline: none;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.9); transition: transform 0.1s;
+            text-transform: uppercase;
         }
-        .cloud-btn:active { transform: scale(0.9); background: #eee; }
+        .cloud-btn:hover { background: #fdfdfd; }
+        .cloud-btn:active { transform: scale(0.9) translateY(5px); }
         .cloud-btn:after {
-            content: ''; position: absolute; bottom: -10px; width: 18px; height: 18px;
-            background: #fff; border-right: 2px solid var(--gold); border-bottom: 2px solid var(--gold);
+            content: ''; position: absolute; bottom: -11px; width: 20px; height: 20px;
+            background: #fff; border-right: 3px solid var(--gold); border-bottom: 3px solid var(--gold);
         }
-        #btn-tables { bottom: 52%; left: 8%; border-bottom-left-radius: 2px; }
-        #btn-tables:after { left: 18px; transform: rotate(45deg); }
-        #btn-ai { bottom: 60%; right: 8%; border-bottom-right-radius: 2px; }
-        #btn-ai:after { right: 18px; transform: rotate(-45deg); }
+        #btn-tables { bottom: 54%; left: 10%; border-bottom-left-radius: 2px; }
+        #btn-tables:after { left: 20px; transform: rotate(45deg); }
+        
+        #btn-ai { bottom: 62%; right: 10%; border-bottom-right-radius: 2px; }
+        #btn-ai:after { right: 20px; transform: rotate(-45deg); }
 
         .btn-gy { min-width: 240px; padding: 18px; background: #000; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; font-weight: 900; }
-        .square-box { width: 95px; height: 95px; border: 3px solid var(--gold); background: #fff; display: flex; align-items: center; justify-content: center; position: relative; }
+        .square-box { width: 105px; height: 105px; border: 3px solid var(--gold); background: #fff; display: flex; align-items: center; justify-content: center; position: relative; }
     </style>
 </head>
 <body>
@@ -78,21 +80,21 @@
     <audio id="snd-jazz" loop><source src="charlie_jazz_duet.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active">
-        <img src="door_1.jpg" id="main-door" onclick="handleDoor()">
+        <img src="door_1.jpg" id="main-door" style="z-index:1000;" onclick="handleDoor()">
     </div>
     
     <div id="block-welcome" class="block">
-        <div style="font-family:'Share Tech Mono'; letter-spacing:10px; font-size:20px;">GY-GY PRIVAT</div>
-        <img src="charlie.png" style="max-height: 45vh; -webkit-mask-image: radial-gradient(circle, black 65%, transparent 98%); margin: 20px 0;">
-        <h1 style="font-size:52px; font-weight: 900; margin-bottom: 25px;">WELCOME</h1>
+        <img src="charlie.png" style="max-height: 45vh; -webkit-mask-image: radial-gradient(circle, black 65%, transparent 98%); margin-bottom: 30px;">
         <button class="btn-gy" onclick="portalTransition('block-identity')">ПРОХОДИТЕ</button>
     </div>
 
     <div id="block-identity" class="block">
-        <div class="whiskey-quote-huge">«В КАЖДОЙ ШУТКЕ<br>ЕСТЬ ДОЛЯ ВИСКИ»</div>
-        <div style="display:flex; gap:15px; margin-bottom:40px;">
-            <div id="id-box" class="square-box" style="background:transparent; color:var(--gold); font-weight:900;">ID</div>
-            <div id="qr-box-reg" class="square-box"></div>
+        <div style="font-size: 56px; font-weight: 900; text-align: center; line-height: 0.85; margin-bottom: 40px;">«В КАЖДОЙ ШУТКЕ<br>ЕСТЬ ДОЛЯ ВИСКИ»</div>
+        <div style="display:flex; gap:20px; margin-bottom:40px;">
+            <div id="id-box" class="square-box" style="background:transparent; color:var(--gold); font-weight:900; font-size: 14px;">ID</div>
+            
+            <div class="qr-gold-frame"><div id="qr-box-reg" class="qr-white-inner"></div></div>
+            
             <div class="square-box">
                 <span style="color:#000; font-size:10px; font-weight:bold; position:absolute; z-index:1;">ФОТО</span>
                 <input type="file" onchange="preview(this)" style="position:absolute; opacity:0; width:100%; height:100%; z-index:10; cursor:pointer;">
@@ -105,23 +107,23 @@
 
     <div id="block-hall" class="block">
         <div class="hall-bg"></div>
-        <h2 style="font-size:42px; color:#fff; text-shadow:0 0 25px var(--violet); font-weight: 900; text-transform: uppercase; letter-spacing: 5px; margin-bottom: 50px;">ВСЕ БУДЕТ GY-GY</h2>
+        <h2 style="font-size:42px; color:#fff; text-shadow:0 0 25px var(--violet); font-weight: 900; letter-spacing: 5px; margin-bottom: 50px;">ВСЕ БУДЕТ GY-GY</h2>
         
-        <div style="position: absolute; right: 40px; bottom: 40px; width: 260px; padding: 25px; border: 3px solid var(--gold); background: #fff; border-radius: 15px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 20px 50px rgba(0,0,0,0.8);">
-            <div style="display:flex; gap:12px; margin-bottom:15px;">
-                <img id="h-photo" style="width:95px; height:95px; border:1px solid var(--gold); object-fit:cover; background:#f0f0f0;">
-                <div id="h-qr" style="width:95px; height:95px; border:1px solid var(--gold);"></div>
+        <div style="position: absolute; right: 50px; bottom: 50px; width: 280px; padding: 30px; border: 4px solid var(--gold); background: #fff; border-radius: 15px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 30px 60px rgba(0,0,0,0.9);">
+            <div style="display:flex; gap:15px; margin-bottom:20px;">
+                <img id="h-photo" style="width:100px; height:100px; border:1px solid var(--gold); object-fit:cover; background:#eee;">
+                <div class="qr-gold-frame" style="width:100px; height:100px;"><div id="h-qr" class="qr-white-inner"></div></div>
             </div>
-            <div id="h-id" style="color:#000; font-family:'Share Tech Mono'; font-weight:900; margin-bottom:15px; font-size: 18px;"></div>
+            <div id="h-id" style="color:#000; font-family:'Share Tech Mono'; font-weight:900; margin-bottom:20px; font-size: 20px;"></div>
             <button id="h-confirm" class="btn-gy" style="min-width:100%; font-size:12px; background:#000;" onclick="confirmH()">ПОДТВЕРДИТЬ</button>
             <button id="h-tobar" class="btn-gy" style="min-width:100%; font-size:14px; background:#000; display:none;" onclick="goToBar()">ВХОД В БАР</button>
         </div>
     </div>
 
     <div id="block-bar" class="block" style="padding:0; justify-content: flex-end;">
-        <div style="position: absolute; top: 80px; font-weight: 900; color: var(--gold); text-align: center; width:100%; z-index:100;">«Истина не в вине, а в его количестве»</div>
+        <div style="position: absolute; top: 100px; font-weight: 900; color: var(--gold); text-align: center; width:100%; z-index:100; letter-spacing: 2px;">«Истина не в вине, а в его количестве»</div>
         
-        <button id="btn-tables" class="cloud-btn" onclick="alert('Места забронированы!')">ЗА СТОЛИКИ</button>
+        <button id="btn-tables" class="cloud-btn" onclick="alert('Чарли говорит: Места только для своих!')">ЗА СТОЛИКИ</button>
         <button id="btn-ai" class="cloud-btn" onclick="window.location.href='ai_room.html'">В AI ROOM</button>
         
         <img src="charlie_bar.png" style="height: 85vh; width: auto; pointer-events: none; z-index: 10;">
@@ -139,11 +141,14 @@
         function handleDoor() {
             const door = document.getElementById('main-door');
             document.getElementById('snd-door').play().catch(()=>{});
-            door.style.transform = "scale(15)";
+            door.style.transform = "scale(20)";
             door.style.opacity = "0";
             new Audio('charlie_welcome.mp3').play().catch(()=>{});
+            
+            // Генерируем QR сразу в оба блока
             new QRCode(document.getElementById("qr-box-reg"), { text: fullID, width: 95, height: 95 });
-            new QRCode(document.getElementById("h-qr"), { text: fullID, width: 95, height: 95 });
+            new QRCode(document.getElementById("h-qr"), { text: fullID, width: 90, height: 90 });
+            
             document.getElementById('id-box').innerText = fullID;
             document.getElementById('h-id').innerText = fullID;
             setTimeout(() => { sndAmbient.play().catch(()=>{}); portalTransition('block-welcome'); }, 1800); 
