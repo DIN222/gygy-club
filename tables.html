@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY Club | Tables v1.2.1</title>
+    <title>GY-GY Club | Tables v1.2.2</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -20,7 +20,7 @@
             overflow: hidden;
         }
 
-        /* --- LAYER 1: GATEKEEPER (CHARLIE) --- */
+        /* --- LAYER 1: GATEKEEPER --- */
         #entry-layer {
             position: fixed;
             top: 0; left: 0;
@@ -37,9 +37,10 @@
         .charlie-box {
             text-align: center;
             border: 1px solid var(--violet);
-            padding: 30px;
+            padding: 40px;
             background: rgba(138, 43, 226, 0.05);
             position: relative;
+            box-shadow: 0 0 30px rgba(138, 43, 226, 0.1);
         }
 
         .version-badge {
@@ -50,6 +51,7 @@
             font-size: 10px;
             padding: 0 10px;
             border: 1px solid var(--gold);
+            letter-spacing: 1px;
         }
 
         .reg-btn {
@@ -62,24 +64,24 @@
             font-family: inherit;
             letter-spacing: 2px;
             transition: 0.3s;
+            text-transform: uppercase;
         }
 
         .reg-btn:hover {
             background: var(--gold);
             color: black;
-            box-shadow: 0 0 20px var(--gold);
+            box-shadow: 0 0 25px var(--gold);
         }
 
-        /* --- LAYER 2: MAIN LOUNGE --- */
+        /* --- LAYER 2: LOUNGE HALL --- */
         #hall-layer {
             position: relative;
             width: 100%; height: 100%;
-            background: url('lounge_main_v1.jpg') no-repeat center center;
+            background: url('lounge.jpg') no-repeat center center;
             background-size: cover;
-            display: none; /* Ждем авторизации */
+            display: none; 
         }
 
-        /* Интерактивная зона столика */
         #fortune-zone {
             position: absolute;
             top: 62%; left: 43%;
@@ -98,25 +100,26 @@
             font-size: 14px;
         }
 
-        /* --- USER INTERFACE (HUD) --- */
+        /* --- USER HUD --- */
         #hud {
             position: fixed;
             top: 20px; left: 20px;
             display: flex; align-items: center; gap: 12px;
             z-index: 1500;
             opacity: 0;
-            transition: opacity 1s;
+            transform: translateX(-20px);
+            transition: all 1s ease-out;
         }
 
         .avatar {
-            width: 48px; height: 48px;
+            width: 50px; height: 50px;
             border-radius: 50%;
-            border: 2px solid var(--gold);
+            border: 3px solid var(--gold);
             background: white;
-            box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
         }
 
-        /* --- OVERLAY STUB --- */
+        /* --- STUB MODAL --- */
         #modal {
             position: fixed; top: 0; left: 0;
             width: 100%; height: 100%;
@@ -131,12 +134,14 @@
             padding: 40px;
             background: #050505;
             text-align: center;
+            max-width: 80%;
         }
 
         .lang-footer {
             position: fixed; bottom: 20px; right: 25px;
             font-size: 11px; color: var(--gold);
-            opacity: 0.7;
+            opacity: 0.6;
+            letter-spacing: 1px;
         }
     </style>
 </head>
@@ -144,27 +149,27 @@
 
     <div id="entry-layer">
         <div class="charlie-box">
-            <span class="version-badge">v1.2.1</span>
-            <p id="charlie-speech">Кхм-кхм... Кто это у нас тут? <br> Сначала регистрация ID, потом отдых.</p>
+            <span class="version-badge">v1.2.2</span>
+            <p>Кхм-кхм... <br> Для доступа к столам <br> оцифруйте ваш цифровой след.</p>
             <button class="reg-btn" onclick="Core.register()">ОЦИФРОВАТЬ ID</button>
         </div>
     </div>
 
     <div id="hud">
-        <img id="hud-avatar" class="avatar" src="" alt="?">
-        <span id="hud-id" style="color: var(--gold);"></span>
+        <img id="hud-avatar" class="avatar" src="" alt="Avatar">
+        <span id="hud-id" style="color: var(--gold); font-size: 14px;"></span>
     </div>
 
     <div id="hall-layer">
         <div id="fortune-zone" onclick="Core.openModal()"></div>
-        <div class="lang-footer">RU | EN | BUILD v1.2.1</div>
+        <div class="lang-footer">RU | EN | BUILD v1.2.2</div>
     </div>
 
     <div id="modal" onclick="this.style.display='none'">
         <div class="modal-box">
-            <h2 style="color: var(--gold); margin-top:0;">АЗАРТ — ФОРТУНА</h2>
-            <p>Ваш цифровой след распознан.<br>Модуль игры находится в разработке.</p>
-            <small style="color: var(--violet); cursor:pointer;">[ ВЕРНУТЬСЯ В ЛАУНЖ ]</small>
+            <h2 style="color: var(--gold); margin-top:0; letter-spacing: 3px;">АЗАРТ — ФОРТУНА</h2>
+            <p>Цифровой след верифицирован.<br>Доступ к модулю будет открыт в v1.3.x</p>
+            <small style="color: var(--violet); cursor:pointer;">[ ВЕРНУТЬСЯ В ЗАЛ ]</small>
         </div>
     </div>
 
@@ -172,6 +177,7 @@
         const Core = {
             register() {
                 const newID = 'GY-' + Math.random().toString(36).substr(2, 6).toUpperCase();
+                // Используем DiceBear для генерации аватара по ID
                 const newAvatar = `https://api.dicebear.com/7.x/identicon/svg?seed=${newID}`;
                 
                 localStorage.setItem('gygy_id', newID);
@@ -181,13 +187,20 @@
             },
 
             enter(id, avatar) {
-                document.getElementById('entry-layer').style.opacity = '0';
+                const entry = document.getElementById('entry-layer');
+                const hud = document.getElementById('hud');
+                
+                entry.style.opacity = '0';
+                
                 setTimeout(() => {
-                    document.getElementById('entry-layer').style.display = 'none';
+                    entry.style.display = 'none';
                     document.getElementById('hall-layer').style.display = 'block';
-                    document.getElementById('hud').style.opacity = '1';
+                    
+                    // Анимация появления HUD
                     document.getElementById('hud-avatar').src = avatar;
                     document.getElementById('hud-id').innerText = id;
+                    hud.style.opacity = '1';
+                    hud.style.transform = 'translateX(0)';
                 }, 800);
             },
 
@@ -198,11 +211,22 @@
             checkAuth() {
                 const id = localStorage.getItem('gygy_id');
                 const avatar = localStorage.getItem('gygy_avatar');
-                if (id) this.enter(id, avatar);
+                if (id) {
+                    // Если уже авторизован, входим без анимации регистрации
+                    this.enter(id, avatar);
+                }
             }
         };
 
-        window.onload = () => Core.checkAuth();
+        window.onload = () => {
+            Core.checkAuth();
+            
+            // Проверка загрузки фона lounge.jpg
+            const imgCheck = new Image();
+            imgCheck.src = "lounge.jpg";
+            imgCheck.onerror = () => console.error("Чарли: Файл 'lounge.jpg' отсутствует в репозитории!");
+            imgCheck.onload = () => console.log("Система: v1.2.2 готова к работе.");
+        };
     </script>
 </body>
 </html>
