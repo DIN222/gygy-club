@@ -20,7 +20,7 @@
             overflow: hidden;
         }
 
-        /* --- LAYER 1: GATEKEEPER --- */
+        /* --- СЛОЙ 1: ЧАРЛИ (ВХОД) --- */
         #entry-layer {
             position: fixed;
             top: 0; left: 0;
@@ -38,92 +38,66 @@
             text-align: center;
             border: 1px solid var(--violet);
             padding: 40px;
-            background: rgba(138, 43, 226, 0.05);
-            position: relative;
-            box-shadow: 0 0 30px rgba(138, 43, 226, 0.1);
+            background: rgba(10, 10, 10, 0.9);
+            box-shadow: 0 0 40px rgba(138, 43, 226, 0.2);
         }
 
-        .version-badge {
-            position: absolute;
-            top: -12px; left: 20px;
-            background: #000;
-            color: var(--gold);
-            font-size: 10px;
-            padding: 0 10px;
-            border: 1px solid var(--gold);
-            letter-spacing: 1px;
-        }
-
-        .reg-btn {
-            margin-top: 25px;
-            background: transparent;
-            border: 1px solid var(--gold);
-            color: var(--gold);
-            padding: 12px 35px;
-            cursor: pointer;
-            font-family: inherit;
-            letter-spacing: 2px;
-            transition: 0.3s;
-            text-transform: uppercase;
-        }
-
-        .reg-btn:hover {
-            background: var(--gold);
-            color: black;
-            box-shadow: 0 0 25px var(--gold);
-        }
-
-        /* --- LAYER 2: LOUNGE HALL --- */
+        /* --- СЛОЙ 2: ЗАЛ (ВИЗУАЛ) --- */
         #hall-layer {
             position: relative;
-            width: 100%; height: 100%;
-            background: url('lounge.jpg') no-repeat center center;
+            width: 100vw; 
+            height: 100vh;
+            /* ВАЖНО: Прямое указание файла */
+            background-image: url('lounge.jpg');
+            background-repeat: no-repeat;
+            background-position: center center;
             background-size: cover;
             display: none; 
         }
 
+        /* Кликабельный столик Фортуна */
         #fortune-zone {
             position: absolute;
-            top: 62%; left: 43%;
-            width: 180px; height: 120px;
+            top: 60%; left: 42%;
+            width: 180px; height: 140px;
             cursor: pointer;
-            z-index: 10;
+            z-index: 100;
+            /* border: 1px dashed var(--gold); // Раскомментируй для отладки, если не видишь зону */
         }
 
         #fortune-zone:hover::after {
             content: "АЗАРТ — ФОРТУНА";
             position: absolute;
-            top: -35px; left: 50%;
+            top: -30px; left: 50%;
             transform: translateX(-50%);
             color: var(--gold);
             text-shadow: 0 0 10px var(--gold);
-            font-size: 14px;
+            white-space: nowrap;
         }
 
-        /* --- USER HUD --- */
+        /* --- HUD УЧАСТНИКА --- */
         #hud {
             position: fixed;
             top: 20px; left: 20px;
             display: flex; align-items: center; gap: 12px;
             z-index: 1500;
             opacity: 0;
-            transform: translateX(-20px);
-            transition: all 1s ease-out;
+            transition: 1s;
         }
 
-        .avatar {
+        .avatar-frame {
             width: 50px; height: 50px;
             border-radius: 50%;
-            border: 3px solid var(--gold);
-            background: white;
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+            border: 2px solid var(--gold);
+            overflow: hidden;
+            background: #fff;
         }
 
-        /* --- STUB MODAL --- */
+        /* --- МОДАЛКА --- */
         #modal {
             position: fixed; top: 0; left: 0;
             width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.95);
             display: none;
             justify-content: center; align-items: center;
             z-index: 3000;
@@ -132,16 +106,18 @@
         .modal-box {
             border: 1px solid var(--gold);
             padding: 40px;
-            background: #050505;
+            background: #000;
             text-align: center;
-            max-width: 80%;
         }
 
-        .lang-footer {
-            position: fixed; bottom: 20px; right: 25px;
-            font-size: 11px; color: var(--gold);
-            opacity: 0.6;
-            letter-spacing: 1px;
+        .reg-btn {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 10px 30px;
+            cursor: pointer;
+            font-family: inherit;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -149,84 +125,55 @@
 
     <div id="entry-layer">
         <div class="charlie-box">
-            <span class="version-badge">v1.2.2</span>
-            <p>Кхм-кхм... <br> Для доступа к столам <br> оцифруйте ваш цифровой след.</p>
+            <div style="color:var(--gold); font-size:10px; margin-bottom:10px;">BUILD v1.2.2</div>
+            <p>Кхм-кхм... Нужно оцифровать <br> ваш цифровой след.</p>
             <button class="reg-btn" onclick="Core.register()">ОЦИФРОВАТЬ ID</button>
         </div>
     </div>
 
     <div id="hud">
-        <img id="hud-avatar" class="avatar" src="" alt="Avatar">
-        <span id="hud-id" style="color: var(--gold); font-size: 14px;"></span>
+        <div class="avatar-frame"><img id="hud-avatar" src="" style="width:100%"></div>
+        <span id="hud-id" style="color: var(--gold);"></span>
     </div>
 
     <div id="hall-layer">
         <div id="fortune-zone" onclick="Core.openModal()"></div>
-        <div class="lang-footer">RU | EN | BUILD v1.2.2</div>
     </div>
 
     <div id="modal" onclick="this.style.display='none'">
         <div class="modal-box">
-            <h2 style="color: var(--gold); margin-top:0; letter-spacing: 3px;">АЗАРТ — ФОРТУНА</h2>
-            <p>Цифровой след верифицирован.<br>Доступ к модулю будет открыт в v1.3.x</p>
-            <small style="color: var(--violet); cursor:pointer;">[ ВЕРНУТЬСЯ В ЗАЛ ]</small>
+            <h2 style="color: var(--gold)">АЗАРТ — ФОРТУНА</h2>
+            <p>Доступ подтвержден. Модуль в разработке.</p>
+            <small style="color: var(--violet)">[ ВЕРНУТЬСЯ ]</small>
         </div>
     </div>
 
     <script>
         const Core = {
             register() {
-                const newID = 'GY-' + Math.random().toString(36).substr(2, 6).toUpperCase();
-                // Используем DiceBear для генерации аватара по ID
-                const newAvatar = `https://api.dicebear.com/7.x/identicon/svg?seed=${newID}`;
-                
-                localStorage.setItem('gygy_id', newID);
-                localStorage.setItem('gygy_avatar', newAvatar);
-                
-                this.enter(newID, newAvatar);
+                const id = 'GY-' + Math.random().toString(36).substr(2, 6).toUpperCase();
+                const avatar = `https://api.dicebear.com/7.x/identicon/svg?seed=${id}`;
+                localStorage.setItem('gygy_id', id);
+                localStorage.setItem('gygy_avatar', avatar);
+                this.enter(id, avatar);
             },
-
             enter(id, avatar) {
-                const entry = document.getElementById('entry-layer');
-                const hud = document.getElementById('hud');
-                
-                entry.style.opacity = '0';
-                
+                document.getElementById('entry-layer').style.opacity = '0';
                 setTimeout(() => {
-                    entry.style.display = 'none';
+                    document.getElementById('entry-layer').style.display = 'none';
                     document.getElementById('hall-layer').style.display = 'block';
-                    
-                    // Анимация появления HUD
+                    document.getElementById('hud').style.opacity = '1';
                     document.getElementById('hud-avatar').src = avatar;
                     document.getElementById('hud-id').innerText = id;
-                    hud.style.opacity = '1';
-                    hud.style.transform = 'translateX(0)';
                 }, 800);
             },
-
-            openModal() {
-                document.getElementById('modal').style.display = 'flex';
-            },
-
-            checkAuth() {
+            openModal() { document.getElementById('modal').style.display = 'flex'; },
+            check() {
                 const id = localStorage.getItem('gygy_id');
-                const avatar = localStorage.getItem('gygy_avatar');
-                if (id) {
-                    // Если уже авторизован, входим без анимации регистрации
-                    this.enter(id, avatar);
-                }
+                if (id) this.enter(id, localStorage.getItem('gygy_avatar'));
             }
         };
-
-        window.onload = () => {
-            Core.checkAuth();
-            
-            // Проверка загрузки фона lounge.jpg
-            const imgCheck = new Image();
-            imgCheck.src = "lounge.jpg";
-            imgCheck.onerror = () => console.error("Чарли: Файл 'lounge.jpg' отсутствует в репозитории!");
-            imgCheck.onload = () => console.log("Система: v1.2.2 готова к работе.");
-        };
+        window.onload = () => Core.check();
     </script>
 </body>
 </html>
