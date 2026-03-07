@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.188</title>
+    <title>GY-GY Club v4.3.190</title>
     
     <script type="text/javascript">
         function googleTranslateElementInit() {
@@ -23,21 +23,10 @@
         :root { --gold: #d4af37; --black: #000; }
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; }
         
-        /* 1. ИСПРАВЛЕНИЕ СКРОЛЛА ЯЗЫКА */
-        #google_translate_element { 
-            position: fixed !important; 
-            top: 10px !important; 
-            left: 10px !important; 
-            z-index: 9999999 !important; 
-            max-height: 50px; 
-            overflow: hidden;
-        }
-        /* Чтобы выпадающий список внутри гугла скроллился, если он статичен */
-        .goog-te-menu-frame { max-height: 200px !important; overflow-y: auto !important; }
+        #google_translate_element { position: fixed !important; top: 15px !important; left: 15px !important; z-index: 9999999 !important; }
+        .goog-te-banner-frame.skiptranslate { display: none !important; }
+        body { top: 0 !important; background: var(--black); color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; width: 100vw; height: 100vh; }
 
-        body { background: var(--black); color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; width: 100vw; height: 100vh; }
-
-        /* ДВЕРЬ */
         #main-door { width: 260px; cursor: pointer; transition: transform 2.5s ease-in, opacity 2s ease-in-out; }
 
         .btn-gy { 
@@ -50,18 +39,21 @@
         .block { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; background: var(--black); opacity: 0; transition: opacity 1s ease; z-index: 100; }
         .block.active { display: flex !important; opacity: 1; }
 
-        /* 2. ФИКС ВЕРТИКАЛИ У ЧАРЛИ */
         #charlie-img { max-height: 35vh; width: auto; margin: 10px 0; object-fit: contain; }
 
-        /* 3. КАРТОЧКА В ХОЛЛЕ - ЕЩЕ НИЖЕ */
+        /* ХОЛЛ - ТЕКСТЫ */
         .hall-bg { position: absolute; width: 100%; height: 100%; background: url('hall_bg_jpg.jpg') center/cover no-repeat; z-index: -1; }
-        .id-card { position: relative; margin-top: 25vh; width: 260px; padding: 20px; border: 3px solid var(--gold); background: #fdf5e6; border-radius: 12px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 20px 50px rgba(0,0,0,0.9); }
+        .hall-header { position: absolute; top: 8%; width: 100%; text-align: center; z-index: 600; }
+        .hall-title { font-size: 38px; color: #fff; font-weight: 900; text-shadow: 0 0 15px var(--gold); }
+        .hall-motto { font-family: 'Share Tech Mono'; font-size: 16px; color: var(--gold); letter-spacing: 3px; margin-top: 5px; font-weight: 900; }
 
-        /* 4. БАР - КНОПКИ К КРАЯМ */
-        .bar-controls { position: absolute; bottom: 40%; display: flex; flex-direction: column; gap: 15px; z-index: 500; }
+        .id-card { position: relative; margin-top: 40vh; width: 260px; padding: 20px; border: 3px solid var(--gold); background: #fdf5e6; border-radius: 12px; display: flex; flex-direction: column; align-items: center; z-index: 500; box-shadow: 0 20px 60px rgba(0,0,0,1); }
+
+        /* БАР */
+        .bar-controls { position: absolute; bottom: 35%; display: flex; flex-direction: column; gap: 15px; z-index: 700; }
         
-        .qr-gold-frame { width: 80px; height: 80px; border: 2px solid var(--gold); background: #fff; display: flex; align-items: center; justify-content: center; padding: 4px; }
-        .square-box { width: 90px; height: 90px; border: 2px solid var(--gold); background: #fff; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+        .qr-gold-frame { width: 90px; height: 90px; border: 3px solid #d4af37 !important; background: #fff; display: flex; align-items: center; justify-content: center; padding: 5px; }
+        .square-box { width: 100px; height: 100px; border: 2px solid var(--gold); background: #fff; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
     </style>
 </head>
 <body>
@@ -100,7 +92,10 @@
 
     <div id="block-hall" class="block">
         <div class="hall-bg"></div>
-        <div style="position:absolute; top:8%; width:100%; text-align:center; font-size:36px; color:#fff; font-weight:900;">ЭТО ВЫ?</div>
+        <div class="hall-header">
+            <div class="hall-title">ЭТО ВЫ?</div>
+            <div class="hall-motto">ВСЁ БУДЕТ GY-GY</div>
+        </div>
         
         <div class="id-card">
             <div style="display:flex; gap:10px; margin-bottom:15px;">
@@ -115,10 +110,10 @@
 
     <div id="block-bar" class="block" style="padding:0; justify-content: flex-end;">
         <div class="bar-controls" style="left:3%;">
-            <button class="btn-gy" style="min-width:140px; font-size:12px;" onclick="window.location.href='tables.html'">ЗА СТОЛИКИ</button>
+            <button class="btn-gy" style="min-width:130px; font-size:11px;" onclick="window.location.href='tables.html'">ЗА СТОЛИКИ</button>
         </div>
         <div class="bar-controls" style="right:3%;">
-            <button class="btn-gy" style="min-width:140px; font-size:12px;" onclick="alert('AI Room...')">AI ROOM</button>
+            <button class="btn-gy" style="min-width:130px; font-size:11px;" onclick="alert('Entering AI Room...')">AI ROOM</button>
         </div>
         <img src="charlie_bar.png" style="height: 80vh; width: auto; pointer-events: none; z-index: 10;">
     </div>
@@ -167,30 +162,4 @@
                 document.querySelectorAll('.block').forEach(b => b.style.display = 'none');
                 const t = document.getElementById(id);
                 t.style.display = 'flex';
-                setTimeout(() => t.classList.add('active'), 50);
-            }, 800);
-        }
-
-        function transitionToBar() {
-            const ambient = document.getElementById('snd-ambient');
-            let vol = 1.0;
-            const fadeInterval = setInterval(() => {
-                if (vol > 0.1) { vol -= 0.1; ambient.volume = vol; } 
-                else { ambient.pause(); clearInterval(fadeInterval); }
-            }, 100);
-            portalTransition('block-bar');
-        }
-
-        function preview(i) {
-            const r = new FileReader();
-            r.onload = (e) => { 
-                document.getElementById('pp').src = e.target.result; 
-                document.getElementById('pp').style.display = "block";
-                document.getElementById('photo-txt').style.display = "none";
-                document.getElementById('h-photo').src = e.target.result;
-            };
-            r.readAsDataURL(i.files[0]);
-        }
-    </script>
-</body>
-</html>
+                setTimeout(() => t.classList.
