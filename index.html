@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.200</title>
+    <title>GY-GY Club v4.3.201</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -40,7 +40,15 @@
         .qr-gold-frame { width: 95px; height: 95px; border: 3px solid var(--gold); padding: 5px; background: #fff; display: flex; align-items: center; justify-content: center; }
         .square-box { width: 105px; height: 105px; border: 3px solid var(--gold); background: #fff; display: flex; align-items: center; justify-content: center; position: relative; }
 
-        /* КНОПКИ БАРА (СТРОГИЕ) */
+        /* КНОПКИ */
+        .btn-gy { 
+            min-width: 280px; padding: 18px; background: #000; border: 3px solid var(--gold); 
+            color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; 
+            text-transform: uppercase; font-weight: 900; position: relative; z-index: 1000;
+            margin: 10px 0; transition: 0.3s;
+        }
+        .btn-gy:active { transform: scale(0.98); }
+
         .bar-btn-simple {
             position: absolute; z-index: 500; background: #000; border: 2px solid var(--gold); 
             padding: 14px 22px; font-family: 'Share Tech Mono'; 
@@ -49,13 +57,6 @@
         }
         #btn-tables { bottom: 20%; left: 10%; }
         #btn-ai { bottom: 20%; right: 10%; }
-
-        .btn-gy { 
-            min-width: 240px; padding: 18px; background: #000; border: 3px solid var(--gold); 
-            color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; 
-            text-transform: uppercase; font-weight: 900; position: relative; z-index: 1000;
-            pointer-events: auto !important;
-        }
     </style>
 </head>
 <body>
@@ -65,6 +66,7 @@
     <audio id="snd-door"><source src="door_open.mp3" type="audio/mpeg"></audio>
     <audio id="snd-ambient" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
     <audio id="snd-jazz" loop><source src="charlie_jazz_duet.mp3" type="audio/mpeg"></audio>
+    <audio id="snd-pour"><source src="pour_whisky.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active">
         <img src="door_1.jpg" id="main-door" onclick="handleDoor()">
@@ -73,8 +75,10 @@
     <div id="block-welcome" class="block">
         <div style="font-family:'Share Tech Mono'; letter-spacing:10px; font-size:22px; margin-bottom: 10px;">GY-GY PRIVAT</div>
         <img src="charlie.png" style="max-height: 40vh; -webkit-mask-image: radial-gradient(circle, black 65%, transparent 98%); margin: 15px 0;">
-        <h1 style="font-size:52px; font-weight: 900; margin-bottom: 25px;">WELCOME</h1>
-        <button class="btn-gy" onclick="portalTransition('block-identity')">ПРОХОДИТЕ</button>
+        <h1 style="font-size:52px; font-weight: 900; margin-bottom: 15px;">WELCOME</h1>
+        
+        <button class="btn-gy" onclick="portalTransition('block-hall')">ПРОХОДИТЕ В ХОЛЛ</button>
+        <button class="btn-gy" onclick="portalTransition('block-identity')">ПРОХОДИТЕ НА РЕГИСТРАЦИЮ</button>
     </div>
 
     <div id="block-identity" class="block">
@@ -117,6 +121,7 @@
         const fullID = `#GY-${Math.floor(1000 + Math.random() * 8999)}`;
         const sndAmbient = document.getElementById('snd-ambient');
         const sndJazz = document.getElementById('snd-jazz');
+        const sndPour = document.getElementById('snd-pour');
 
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({ pageLanguage: 'ru', autoDisplay: false }, 'google_translate_element');
@@ -182,10 +187,11 @@
         }
 
         function saveReg() { 
-            new Audio('pour_whisky.mp3').play().catch(()=>{});
+            sndPour.play().catch(()=>{});
             document.getElementById('btn-save').innerText = 'СОХРАНЕНО';
-            document.getElementById('btn-go-hall').style.opacity = '1'; 
-            document.getElementById('btn-go-hall').style.pointerEvents = 'auto'; 
+            const goBtn = document.getElementById('btn-go-hall');
+            goBtn.style.opacity = '1'; 
+            goBtn.style.pointerEvents = 'auto'; 
         }
     </script>
     <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
