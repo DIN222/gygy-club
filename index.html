@@ -1,53 +1,53 @@
 
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" translate="no">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>GY-GY Club v4.3.193</title>
+    <title>GY-GY Club v4.3.194</title>
     
-    <script type="text/javascript">
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({
-                pageLanguage: 'ru', 
-                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-            }, 'google_translate_element');
-        }
-    </script>
-    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
         :root { --gold: #d4af37; --black: #000; }
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; }
+        
+        /* ГУГЛ ПАНЕЛЬ */
+        #google_translate_element { 
+            position: fixed !important; 
+            top: 15px !important; 
+            left: 15px !important; 
+            z-index: 100000 !important; 
+            min-height: 40px;
+        }
+        /* Скролл для выпадающего меню */
+        .goog-te-menu-frame { max-height: 300px !important; overflow-y: auto !important; }
+
+        .btn-back { position: fixed; top: 70px; left: 20px; z-index: 99999; color: var(--gold); font-family: 'Share Tech Mono'; font-size: 28px; cursor: pointer; display: none; }
+
         body { background: var(--black); color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; width: 100vw; height: 100vh; }
 
-        /* ЯЗЫКИ И НАВИГАЦИЯ */
-        #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 10000; }
-        .btn-back { position: fixed; top: 65px; left: 20px; z-index: 10000; color: var(--gold); font-family: 'Share Tech Mono'; font-size: 28px; cursor: pointer; display: none; font-weight: 900; }
-
-        .block { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; background: var(--black); z-index: 100; transition: opacity 0.8s; opacity: 0; }
+        /* ЭКРАНЫ */
+        .block { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; background: var(--black); z-index: 100; transition: opacity 0.6s ease; opacity: 0; }
         .block.active { display: flex !important; opacity: 1; }
 
-        #main-door { width: 260px; cursor: pointer; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s ease-in-out; }
+        /* ДВЕРЬ */
+        #main-door { width: 260px; cursor: pointer; transition: transform 2.5s ease-in, opacity 2s ease; position: relative; z-index: 200; }
 
         .btn-gy { 
             min-width: 240px; padding: 16px; background: var(--black); border: 2px solid var(--gold); 
             color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; 
             text-transform: uppercase; font-weight: 900; margin: 10px; transition: 0.3s;
         }
-        .btn-gy:disabled { opacity: 0.15; border-color: #444; color: #444; cursor: default; }
+        .btn-gy:disabled { opacity: 0.1; border-color: #333; color: #333; pointer-events: none; }
 
         /* ХОЛЛ */
         .hall-bg { position: absolute; width: 100%; height: 100%; background: url('hall_bg_jpg.jpg') center/cover; z-index: -1; }
-        .hall-header { position: absolute; top: 8%; text-align: center; width: 100%; z-index: 600; }
-        .id-card { margin-top: 38vh; width: 270px; padding: 20px; border: 3px solid var(--gold); background: #fdf5e6; border-radius: 12px; display: flex; flex-direction: column; align-items: center; z-index: 500; box-shadow: 0 10px 50px #000; }
+        .hall-header { position: absolute; top: 8%; text-align: center; width: 100%; z-index: 500; }
+        .id-card { margin-top: 40vh; width: 270px; padding: 20px; border: 3px solid var(--gold); background: #fdf5e6; border-radius: 12px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 10px 50px #000; z-index: 501; }
 
-        /* БАР */
-        .bar-controls { position: absolute; bottom: 35%; display: flex; flex-direction: column; gap: 15px; z-index: 700; }
-        .qr-frame { width: 90px; height: 90px; border: 2px solid var(--gold); background: #fff; padding: 5px; display: flex; align-items: center; justify-content: center; }
+        .qr-frame { width: 90px; height: 90px; border: 2px solid var(--gold); background: #fff; display: flex; align-items: center; justify-content: center; padding: 5px; }
     </style>
 </head>
 <body>
@@ -63,51 +63,51 @@
         <img src="door_1.jpg" id="main-door" onclick="GY.openDoor()">
     </div>
     
-    <div id="block-welcome" class="block">
+    <div id="block-welcome" class="block" translate="yes">
         <div style="font-family:'Share Tech Mono'; letter-spacing:8px; margin-bottom:10px;">GY-GY PRIVAT</div>
         <img src="charlie.png" style="max-height: 35vh; margin: 10px 0;">
-        <h1 style="font-size:36px; margin-bottom:20px; font-weight:900;">WELCOME</h1>
-        <button id="btn-w-1" class="btn-gy" onclick="GY.mode('member')">ПРОХОДИТЕ</button>
-        <button id="btn-w-2" class="btn-gy" onclick="GY.mode('guest')">АВТОГРАФ, ПОЖАЛУЙСТА</button>
+        <h1 style="font-size:36px; margin-bottom:20px;">WELCOME</h1>
+        <button id="btn-w-1" class="btn-gy" onclick="GY.selMode(1)">ПРОХОДИТЕ</button>
+        <button id="btn-w-2" class="btn-gy" onclick="GY.selMode(2)">АВТОГРАФ, ПОЖАЛУЙСТА</button>
     </div>
 
-    <div id="block-identity" class="block">
-        <div style="font-family:'Share Tech Mono'; margin-bottom:20px; text-align:center; font-weight:900;">В КАЖДОЙ ШУТКЕ ЕСТЬ ДОЛЯ ВИСКИ</div>
+    <div id="block-identity" class="block" translate="yes">
+        <div style="font-family:'Share Tech Mono'; margin-bottom:20px; text-align:center;">В КАЖДОЙ ШУТКЕ ЕСТЬ ДОЛЯ ВИСКИ</div>
         <div style="display:flex; gap:10px; margin-bottom:20px;">
             <div class="qr-frame" id="qr-reg"></div>
-            <div style="width:90px; height:90px; border:2px solid var(--gold); background:#fff; position:relative; overflow:hidden;">
-                <input type="file" onchange="GY.preview(this)" style="position:absolute; width:100%; height:100%; opacity:0; z-index:10; cursor:pointer;">
+            <div style="width:90px; height:90px; border:2px solid var(--gold); background:#fff; position:relative;">
+                <input type="file" onchange="GY.preview(this)" style="position:absolute; width:100%; height:100%; opacity:0; z-index:10;">
                 <img id="pp" style="width:100%; height:100%; object-fit:cover; display:none;">
-                <span style="color:#000; font-size:10px; font-weight:900; position:absolute; top:40%; width:100%; text-align:center;">PHOTO</span>
+                <span style="color:#000; font-size:10px; position:absolute; top:40%; width:100%; text-align:center;">PHOTO</span>
             </div>
         </div>
-        <button id="btn-reg-save" class="btn-gy" onclick="GY.saveProfile()">СОХРАНИТЕ</button>
+        <button id="btn-reg-save" class="btn-gy" onclick="GY.save()">СОХРАНИТЕ</button>
         <button id="btn-reg-next" class="btn-gy" disabled onclick="GY.nav('block-hall')">ПРОХОДИТЕ</button>
     </div>
 
     <div id="block-hall" class="block">
         <div class="hall-bg"></div>
-        <div class="hall-header">
-            <h2 style="font-size:42px; color:#fff; font-weight:900; text-shadow: 0 0 20px #000;">ЭТО ВЫ?</h2>
-            <p style="font-family:'Share Tech Mono'; color:var(--gold); letter-spacing:5px; font-weight:900; margin-top:5px;">ВСЁ БУДЕТ GY-GY</p>
+        <div class="hall-header" translate="yes">
+            <h2 style="font-size:38px; color:#fff; text-shadow: 0 0 15px #000;">ЭТО ВЫ?</h2>
+            <p style="font-family:'Share Tech Mono'; color:var(--gold); letter-spacing:4px; font-weight:900;">ВСЁ БУДЕТ GY-GY</p>
         </div>
         <div class="id-card">
             <div style="display:flex; gap:10px; margin-bottom:15px;">
                 <div style="width:80px; height:80px; background:#fff; border:1px solid var(--gold);"><img id="h-photo" style="width:100%; height:100%; object-fit:cover;"></div>
                 <div class="qr-frame" id="h-qr" style="width:80px; height:80px;"></div>
             </div>
-            <div id="h-id" style="color:#000; font-family:'Share Tech Mono'; font-weight:900; margin-bottom:15px; font-size:14px;"></div>
-            <button id="btn-h-confirm" class="btn-gy" style="min-width:100%;" onclick="GY.confirmHall()">ПОДТВЕРЖДАЮ</button>
-            <button id="btn-h-bar" class="btn-gy" disabled style="min-width:100%; margin-top:10px;" onclick="GY.enterBar()">В БАР</button>
+            <div id="h-id" style="color:#000; font-family:'Share Tech Mono'; font-weight:900; margin-bottom:15px;" translate="no"></div>
+            <button id="btn-h-ok" class="btn-gy" style="min-width:100%;" onclick="GY.confirm()">ПОДТВЕРЖДАЮ</button>
+            <button id="btn-h-bar" class="btn-gy" disabled style="min-width:100%; margin-top:10px;" onclick="GY.toBar()">В БАР</button>
         </div>
     </div>
 
     <div id="block-bar" class="block" style="justify-content: flex-end; padding:0;">
         <div class="bar-controls" style="left:5%;">
-            <button class="btn-gy" style="min-width:140px; font-size:12px;" onclick="window.location.href='tables.html'">ЗА СТОЛИКИ</button>
+            <button class="btn-gy" style="min-width:130px; font-size:12px;" onclick="window.location.href='tables.html'">ЗА СТОЛИКИ</button>
         </div>
         <div class="bar-controls" style="right:5%;">
-            <button class="btn-gy" style="min-width:140px; font-size:12px;" onclick="alert('AI ROOM')">AI ROOM</button>
+            <button class="btn-gy" style="min-width:130px; font-size:12px;" onclick="alert('AI ROOM')">AI ROOM</button>
         </div>
         <img src="charlie_bar.png" style="height: 85vh; width: auto; pointer-events: none;">
     </div>
@@ -119,11 +119,12 @@
 
             openDoor: function() {
                 document.getElementById('snd-door').play().catch(()=>{});
-                const d = document.getElementById('main-door');
-                d.style.transform = "scale(12)"; d.style.opacity = "0";
+                const door = document.getElementById('main-door');
+                door.style.transform = "scale(12)";
+                door.style.opacity = "0";
                 
-                const amb = document.getElementById('snd-ambient');
-                amb.volume = 0.1; amb.play().catch(()=>{});
+                document.getElementById('snd-ambient').volume = 0.1;
+                document.getElementById('snd-ambient').play().catch(()=>{});
 
                 setTimeout(() => {
                     this.nav('block-welcome');
@@ -148,49 +149,50 @@
             goBack: function() {
                 if(this.stack.length > 1) {
                     this.stack.pop();
-                    this.nav(this.stack[this.stack.length-1]);
-                    this.stack.pop(); // Чтобы nav не дублировал в стек
+                    const prev = this.stack.pop();
+                    this.nav(prev);
                 }
             },
 
-            mode: function(m) {
-                if(m === 'member') {
-                    document.getElementById('btn-w-2').disabled = true;
-                    this.nav('block-hall');
-                } else {
-                    document.getElementById('btn-w-1').disabled = true;
-                    this.nav('block-identity');
-                }
+            selMode: function(n) {
+                document.getElementById('btn-w-1').disabled = (n === 2);
+                document.getElementById('btn-w-2').disabled = (n === 1);
+                setTimeout(() => this.nav(n === 1 ? 'block-hall' : 'block-identity'), 300);
             },
 
-            saveProfile: function() {
+            save: function() {
                 document.getElementById('snd-pour').play().catch(()=>{});
                 document.getElementById('btn-reg-save').innerText = "АКЦЕПТ";
                 document.getElementById('btn-reg-save').disabled = true;
                 document.getElementById('btn-reg-next').disabled = false;
             },
 
-            confirmHall: function() {
-                document.getElementById('btn-h-confirm').innerText = "ОК";
-                document.getElementById('btn-h-confirm').disabled = true;
+            confirm: function() {
+                document.getElementById('btn-h-ok').innerText = "ОК";
+                document.getElementById('btn-h-ok').disabled = true;
                 document.getElementById('btn-h-bar').disabled = false;
             },
 
-            enterBar: function() {
+            toBar: function() {
                 document.getElementById('snd-ambient').volume = 0.5;
                 this.nav('block-bar');
             },
 
-            preview: function(i) {
-                const r = new FileReader();
-                r.onload = (e) => {
+            preview: function(input) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
                     document.getElementById('pp').src = e.target.result;
                     document.getElementById('pp').style.display = "block";
                     document.getElementById('h-photo').src = e.target.result;
                 };
-                r.readAsDataURL(i.files[0]);
+                reader.readAsDataURL(input.files[0]);
             }
         };
+
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage: 'ru', layout: 0}, 'google_translate_element');
+        }
     </script>
+    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
