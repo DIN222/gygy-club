@@ -3,39 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY | Risk-Fortuna v1.4.3</title>
+    <title>GY-GY | Risk Terminal v1.4.1</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root { --neon: #00f2ff; --gold: #d4af37; --bg: #050a0f; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: white; font-family: 'Share Tech Mono', monospace; overflow: hidden; }
 
-        /* ОБЯЗАТЕЛЬНЫЕ АТРИБУТЫ v1.4.3 */
-        #ui-logo { position: fixed; top: 20px; right: 25px; color: var(--gold); letter-spacing: 5px; font-size: 20px; }
-        #ui-lang { position: fixed; bottom: 20px; right: 25px; color: var(--gold); border: 1px solid var(--gold); padding: 5px 10px; font-size: 10px; }
-        .back-nav { position: fixed; top: 20px; left: 25px; color: var(--neon); cursor: pointer; border: 1px solid var(--neon); padding: 5px 10px; font-size: 10px; text-decoration: none; }
-
-        .terminal { display: flex; flex-direction: column; height: 100vh; max-width: 800px; margin: 0 auto; border-left: 1px solid rgba(0, 242, 255, 0.1); border-right: 1px solid rgba(0, 242, 255, 0.1); }
-        .messages { flex-grow: 1; padding: 80px 20px 20px; overflow-y: auto; color: #acc; }
-        .input-area { padding: 20px; border-top: 1px solid rgba(0, 242, 255, 0.2); display: flex; gap: 10px; }
+        /* ГУГЛ ЯЗЫКИ (ВЕРХНИЙ ЛЕВЫЙ) */
+        #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 6000; }
         
-        input { background: transparent; border: 1px solid var(--neon); color: var(--neon); flex-grow: 1; padding: 10px; font-family: inherit; outline: none; }
-        button { background: var(--neon); color: #000; border: none; padding: 0 20px; cursor: pointer; font-family: inherit; font-weight: bold; }
-        .msg { margin-bottom: 10px; border-left: 2px solid var(--neon); padding-left: 10px; }
+        #ui-logo { position: fixed; top: 15px; right: 25px; color: var(--gold); letter-spacing: 5px; font-size: 20px; }
+        .back-nav { position: fixed; top: 60px; left: 15px; color: var(--neon); cursor: pointer; border: 1px solid var(--neon); padding: 5px 10px; font-size: 10px; text-decoration: none; }
+
+        /* УНИФИЦИРОВАННЫЙ БЛОК ЧАТА */
+        .terminal { display: flex; flex-direction: column; height: 100vh; max-width: 800px; margin: 0 auto; border-left: 1px solid rgba(0, 242, 255, 0.1); }
+        .messages { flex-grow: 1; padding: 110px 20px 20px; overflow-y: auto; }
+        .input-area { padding: 20px; border-top: 1px solid rgba(0, 242, 255, 0.2); display: flex; gap: 10px; background: rgba(0,0,0,0.5); }
+        
+        input { background: transparent; border: 1px solid var(--neon); color: var(--neon); flex-grow: 1; padding: 12px; font-family: inherit; outline: none; }
+        button { background: var(--neon); color: #000; border: none; padding: 0 25px; cursor: pointer; font-family: inherit; font-weight: bold; }
+        .msg { margin-bottom: 12px; border-left: 2px solid var(--neon); padding-left: 10px; font-size: 14px; }
     </style>
 </head>
 <body>
-
-    <a href="tables.html" class="back-nav">← НАЗАД К СТОЛИКАМ</a>
+    <div id="google_translate_element"></div>
+    <a href="tables.html" class="back-nav">← В ЗАЛ</a>
     <div id="ui-logo">GY-GY</div>
-    <div id="ui-lang">RU | EN</div>
 
     <div class="terminal">
         <div class="messages" id="chat">
-            <div class="msg" style="color: var(--gold)">[SYSTEM]: Терминал 'Риск-Фортуна' активирован.</div>
-            <div class="msg">[AI]: Я вижу ваш цифровой след. Готовы сделать первый ход?</div>
+            <div class="msg" style="color: var(--gold)">[SYSTEM]: Связь установлена. Ветка v1.4.1 активна.</div>
+            <div class="msg">[AI]: Я просканировал ваш ID. Какие параметры риска сегодня установим?</div>
         </div>
         <div class="input-area">
-            <input type="text" id="userInput" placeholder="Введите сообщение...">
+            <input type="text" id="userInput" placeholder="Команда для ИИ...">
             <button onclick="send()">ВВОД</button>
         </div>
     </div>
@@ -50,6 +51,8 @@
                 chat.scrollTop = chat.scrollHeight;
             }
         }
+        function googleTranslateElementInit() { new google.translate.TranslateElement({pageLanguage: 'ru'}, 'google_translate_element'); }
     </script>
+    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
