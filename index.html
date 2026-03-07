@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.172</title>
+    <title>GY-GY Club v4.3.174</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -14,48 +14,56 @@
         
         body, html { width: 100%; height: 100%; background: #000 !important; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; }
 
-        #google_translate_element { position: fixed !important; top: 15px !important; left: 15px !important; z-index: 1000000 !important; }
-
-        /* --- ПАСХАЛКА: СКРЫТЫЙ МОНИТОР --- */
-        #secret-trigger {
-            position: fixed; top: 15px; right: 15px; width: 30px; height: 30px;
-            z-index: 1000001; cursor: help; display: flex; align-items: center; justify-content: center;
+        /* ЯЗЫКИ */
+        #google_translate_element { 
+            position: fixed !important; top: 15px !important; left: 15px !important; 
+            z-index: 2000000 !important; background: rgba(0,0,0,0.5); border-radius: 4px;
         }
-        #secret-trigger:after { content: '·'; color: rgba(212, 175, 55, 0.3); font-size: 20px; }
 
+        /* ПАСХАЛКА */
+        #secret-trigger { position: fixed; top: 15px; right: 15px; width: 30px; height: 30px; z-index: 1000001; cursor: help; display: flex; align-items: center; justify-content: center; }
+        #secret-trigger:after { content: '·'; color: rgba(212, 175, 55, 0.3); font-size: 20px; }
         #secret-monitor {
             position: fixed; top: 50px; right: 20px; background: rgba(0,0,0,0.9);
             border: 1px solid var(--gold); padding: 15px; border-radius: 8px;
             font-family: 'Share Tech Mono'; font-size: 11px; color: #fff;
             opacity: 0; pointer-events: none; transition: opacity 0.5s ease; z-index: 1000000;
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2); line-height: 1.6;
         }
-        #secret-trigger:hover + #secret-monitor, 
-        #secret-trigger:active + #secret-monitor { opacity: 1; }
+        #secret-trigger:hover + #secret-monitor { opacity: 1; }
 
-        /* КНОПКИ v4.3.172 */
+        /* СТАНДАРТ ЗОЛОТОЙ КНОПКИ */
         .btn-gy { 
             min-width: 240px; padding: 16px; background: #000; border: 3px solid var(--gold); 
             color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; 
             text-transform: uppercase; font-weight: 900; letter-spacing: 2px;
-            transition: opacity 0.8s ease, border-color 0.8s ease; opacity: 1; margin-top: 15px;
+            transition: 0.5s; opacity: 1; margin-top: 15px;
         }
         .btn-gy:disabled { opacity: 0.05; border-color: rgba(212, 175, 55, 0.1); color: rgba(212, 175, 55, 0.1); pointer-events: none; }
-        .btn-confirm { border-color: var(--violet); color: var(--violet); }
-        .btn-confirm:disabled { border-color: rgba(138, 43, 226, 0.1); color: rgba(138, 43, 226, 0.1); }
 
         .block { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; opacity: 0; transition: opacity 0.8s ease; z-index: 100; padding: 40px; }
         .block.active { display: flex !important; opacity: 1; }
+
         #main-door { width: 280px; cursor: pointer; z-index: 99999; transition: 2s; transform-origin: center; }
 
+        /* НАДПИСЬ В ХОЛЛЕ - ТЕПЕРЬ С ЗОЛОТОЙ ТЕНЬЮ */
+        .hall-title {
+            position: absolute; top: 15%; width: 100%; text-align: center;
+            font-size: 48px; color: #fff; text-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
+            font-weight: 900; letter-spacing: 8px; z-index: 10;
+        }
+
+        /* КАРТОЧКА */
         .id-card {
-            position: absolute; right: 40px; bottom: 40px; width: 290px; padding: 25px; 
+            position: absolute; right: 40px; bottom: 60px; width: 260px; padding: 20px; 
             border: 3px solid var(--gold); background: linear-gradient(135deg, #fffaf0 0%, #fdf5e6 100%);
-            border-radius: 15px; display: flex; flex-direction: column; align-items: center; 
+            border-radius: 12px; display: flex; flex-direction: column; align-items: center; 
             color:#000; z-index: 500; box-shadow: 0 20px 40px rgba(0,0,0,0.8);
         }
-        .qr-gold-frame { width: 95px; height: 95px; border: 3px solid var(--gold); padding: 5px; background: #fff; display: flex; align-items: center; justify-content: center; }
-        .square-box { width: 105px; height: 105px; border: 3px solid var(--gold); background: #fff; display: flex; align-items: center; justify-content: center; position: relative; }
+        .qr-gold-frame { width: 90px; height: 90px; border: 2px solid var(--gold); padding: 5px; background: #fff; display: flex; align-items: center; justify-content: center; }
+        
+        /* ФОТО С БЕЛЫМ ФОНОМ */
+        .square-box { width: 100px; height: 100px; border: 2px solid var(--gold); background: #fff !important; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+        #h-photo { width: 90px; height: 90px; border: 1px solid #ddd; object-fit: cover; background: #fff !important; }
     </style>
 </head>
 <body>
@@ -64,31 +72,29 @@
 
     <div id="secret-trigger"></div>
     <div id="secret-monitor">
-        <div style="color:var(--gold); border-bottom:1px solid var(--gold); margin-bottom:8px; padding-bottom:4px;">SYSTEM INSIGHT</div>
-        <div>ACTIVE USERS: <span id="val-total">142</span></div>
-        <div>ATMOSPHERE: <span style="color:var(--violet)">PREMIUM</span></div>
-        <div>ANONYMITY: <span style="color:#00ff00">SECURE</span></div>
-        <div style="margin-top:8px; font-size:9px; opacity:0.6;">* INFO FOR MEMBERS ONLY</div>
+        <div style="color:var(--gold); border-bottom:1px solid var(--gold); margin-bottom:8px;">SYSTEM INSIGHT</div>
+        <div>ACTIVE USERS: 142</div>
+        <div>ATMOSPHERE: PREMIUM</div>
     </div>
 
     <audio id="snd-door"><source src="door_open.mp3" type="audio/mpeg"></audio>
     <audio id="snd-ambient" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
 
-    <div id="block-entrance" class="block active" style="z-index:2000;">
+    <div id="block-entrance" class="block active" style="z-index:1000;">
         <img src="door_1.jpg" id="main-door" onclick="handleDoor()">
     </div>
     
     <div id="block-welcome" class="block">
-        <div style="font-family:'Share Tech Mono'; letter-spacing:10px; font-size:20px; margin-bottom: 10px;">GY-GY PRIVAT</div>
-        <img src="charlie.png" style="max-height: 42vh; -webkit-mask-image: radial-gradient(circle, black 65%, transparent 98%); margin: 20px 0;">
-        <h1 style="font-size:52px; font-weight: 900; margin-bottom: 25px;">WELCOME</h1>
+        <div style="font-family:'Share Tech Mono'; letter-spacing:10px; font-size:20px;">GY-GY PRIVAT</div>
+        <img src="charlie.png" style="max-height: 40vh; margin: 20px 0;">
+        <h1 style="font-size:52px; font-weight: 900;">WELCOME</h1>
         <button class="btn-gy" onclick="portalTransition('block-identity')">ПРОХОДИТЕ</button>
     </div>
 
     <div id="block-identity" class="block">
-        <div style="font-family:'Share Tech Mono'; font-size:20px; text-align:center; margin-bottom:35px;">«В КАЖДОЙ ШУТКЕ<br>ЕСТЬ ДОЛЯ ВИСКИ»</div>
-        <div style="display:flex; gap:15px; margin-bottom:35px;">
-            <div id="id-box" class="square-box" style="background:transparent; color:var(--gold); font-size:11px;">ID</div>
+        <div style="font-family:'Share Tech Mono'; font-size:18px; text-align:center; margin-bottom:30px;">«В КАЖДОЙ ШУТКЕ<br>ЕСТЬ ДОЛЯ ВИСКИ»</div>
+        <div style="display:flex; gap:15px; margin-bottom:30px;">
+            <div id="id-box" class="square-box" style="background:transparent !important; color:var(--gold); font-size:10px;">ID</div>
             <div class="qr-gold-frame"><div id="qr-box-reg"></div></div>
             <div class="square-box">
                 <input type="file" onchange="preview(this)" style="position:absolute; opacity:0; width:100%; height:100%; cursor:pointer; z-index:10;">
@@ -102,14 +108,18 @@
 
     <div id="block-hall" class="block">
         <div style="position:absolute; width:100%; height:100%; background:url('hall_bg_jpg.jpg') center/cover; filter:brightness(0.5); z-index:-1;"></div>
+        
+        <div class="hall-title">ВСЕ БУДЕТ GY-GY</div>
+        
         <div class="id-card">
-            <div style="display:flex; gap:12px; margin-bottom:15px;">
-                <img id="h-photo" style="width:95px; height:95px; border:1px solid var(--gold); object-fit:cover; background:#ccc;">
-                <div class="qr-gold-frame"><div id="h-qr"></div></div>
+            <div style="display:flex; gap:10px; margin-bottom:15px;">
+                <div class="square-box" style="width:90px; height:90px;"><img id="h-photo"></div>
+                <div class="qr-gold-frame" style="width:90px; height:90px;"><div id="h-qr"></div></div>
             </div>
-            <div id="h-id" style="font-family:'Share Tech Mono'; font-weight:900; margin-bottom:15px; color:#000; font-size:15px;"></div>
-            <button id="h-confirm" class="btn-gy btn-confirm" style="min-width:100%; margin-top:0;" onclick="actionConfirm()">ПОДТВЕРДИТЕ</button>
-            <button id="h-tobar" class="btn-gy" disabled style="min-width:100%;" onclick="goToBar()">ПРОХОДИТЕ В БАР</button>
+            <div id="h-id" style="font-family:'Share Tech Mono'; font-weight:900; margin-bottom:15px; color:#000; font-size:14px;"></div>
+            
+            <button id="h-confirm" class="btn-gy" style="min-width:100%; padding:12px; margin-top:0;" onclick="actionConfirm()">ПОДТВЕРДИТЕ</button>
+            <button id="h-tobar" class="btn-gy" disabled style="min-width:100%; padding:12px;" onclick="goToBar()">ПРОХОДИТЕ В БАР</button>
         </div>
     </div>
 
@@ -123,15 +133,21 @@
         const randomNum = Math.floor(1000 + Math.random() * 8999);
         const fullID = `#GY-${orderNum}-${randomNum}`;
 
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({ pageLanguage: 'ru', autoDisplay: false }, 'google_translate_element');
+        }
+
         function handleDoor() {
             document.getElementById('snd-door').play().catch(()=>{});
             document.getElementById('main-door').style.transform = "scale(15)"; 
             document.getElementById('main-door').style.opacity = "0";
             new Audio('charlie_welcome.mp3').play().catch(()=>{});
-            new QRCode(document.getElementById("qr-box-reg"), { text: fullID, width: 85, height: 85 });
+            
+            new QRCode(document.getElementById("qr-box-reg"), { text: fullID, width: 80, height: 80 });
             new QRCode(document.getElementById("h-qr"), { text: fullID, width: 80, height: 80 });
             document.getElementById('id-box').innerText = fullID;
             document.getElementById('h-id').innerText = fullID;
+            
             setTimeout(() => { 
                 document.getElementById('snd-ambient').play().catch(()=>{}); 
                 portalTransition('block-welcome'); 
@@ -140,13 +156,13 @@
 
         function actionSave() {
             localStorage.setItem('gy_order_num', parseInt(orderNum) + 1);
-            document.getElementById('btn-save').style.opacity = "0.3";
+            document.getElementById('btn-save').style.opacity = "0.2";
             document.getElementById('btn-save').innerText = "СОХРАНЕНО";
             document.getElementById('btn-go-hall').disabled = false;
         }
 
         function actionConfirm() {
-            document.getElementById('h-confirm').style.opacity = "0.3";
+            document.getElementById('h-confirm').style.opacity = "0.2";
             document.getElementById('h-confirm').innerText = "ПОДТВЕРЖДЕНО";
             document.getElementById('h-tobar').disabled = false;
         }
@@ -176,6 +192,7 @@
             r.readAsDataURL(i.files[0]);
         }
     </script>
+    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
-/* --- END OF CODE v4.3.172 --- */
+/* --- END OF CODE v4.3.174 --- */
