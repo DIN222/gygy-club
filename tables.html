@@ -4,55 +4,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY Club | Tables v1.4.3</title>
+    <title>GY-GY Club | Tables v1.4.5</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #d4af37; --violet: #8A2BE2; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; font-family: 'Share Tech Mono', monospace; overflow: hidden; }
 
-        /* ОБЯЗАТЕЛЬНЫЕ АТРИБУТЫ */
-        #ui-logo { position: fixed; top: 20px; right: 25px; z-index: 5000; color: var(--gold); font-size: 24px; font-weight: bold; letter-spacing: 5px; }
-        #ui-lang-panel { position: fixed; bottom: 20px; right: 25px; z-index: 5000; color: var(--gold); font-size: 11px; letter-spacing: 2px; background: rgba(0, 0, 0, 0.8); padding: 8px 15px; border: 1px solid var(--gold); }
+        /* --- ПАНЕЛЬ ГУГЛ (ВЕРХНИЙ ЛЕВЫЙ) --- */
+        #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 6000; opacity: 0.8; }
         
-        #hud { position: fixed; top: 20px; left: 20px; display: flex; align-items: center; gap: 15px; z-index: 1500; }
-        .back-btn { background: transparent; border: 1px solid var(--violet); color: var(--violet); font-size: 10px; padding: 4px 8px; cursor: pointer; font-family: inherit; margin-top: 5px; }
+        #ui-logo { position: fixed; top: 15px; right: 25px; z-index: 5000; color: var(--gold); font-size: 24px; font-weight: bold; letter-spacing: 5px; }
 
         #hall-layer { width: 100vw; height: 100vh; background: url('lounge.jpg') no-repeat center bottom / contain #000; position: relative; display: none; }
-        .lamp-zone { position: absolute; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; z-index: 100; background: radial-gradient(circle, rgba(212, 175, 55, 0.4) 0%, transparent 70%); border: 1px solid rgba(212, 175, 55, 0.1); }
-        .lamp-zone:hover { border: 1px solid var(--gold); background: radial-gradient(circle, rgba(212, 175, 55, 0.7) 0%, transparent 80%); }
+        
+        /* КАЛИБРОВКА ФОНАРИКОВ (ПОДНЯТЫ ВЫШЕ) */
+        .lamp-zone { position: absolute; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; z-index: 100; background: radial-gradient(circle, rgba(212, 175, 55, 0.5) 0%, transparent 70%); border: 1px solid rgba(212, 175, 55, 0.2); transition: 0.4s; }
+        .lamp-zone:hover { border: 1px solid var(--gold); box-shadow: 0 0 20px var(--gold); }
 
-        /* Координаты фонариков */
-        #table-1 { bottom: 44%; left: 19%; } 
-        #table-2 { bottom: 45%; left: 35%; }
-        #table-3 { bottom: 47%; left: 47%; }
-        #table-4 { bottom: 50%; left: 14%; }
-        #table-5 { bottom: 53%; left: 28%; }
-        #table-6 { bottom: 55%; left: 42%; }
-        #mic-zone { bottom: 52%; left: 58%; }
+        /* Координаты под абажуры */
+        #table-1 { bottom: 58%; left: 21%; } /* Риск-Фортуна */
+        #table-2 { bottom: 59%; left: 34%; }
+        #table-3 { bottom: 61%; left: 45%; }
+        #table-4 { bottom: 63%; left: 16%; }
+        #table-5 { bottom: 66%; left: 29%; }
+        #table-6 { bottom: 67%; left: 41%; }
+        #mic-zone { bottom: 64%; left: 56%; border-color: var(--violet); }
+
+        /* HUD & BACK */
+        #hud { position: fixed; top: 70px; left: 20px; display: flex; align-items: center; gap: 12px; z-index: 1500; }
+        .back-btn { background: transparent; border: 1px solid var(--violet); color: var(--violet); padding: 5px 10px; cursor: pointer; font-family: inherit; font-size: 10px; }
 
         #entry-layer { position: fixed; inset: 0; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2000; }
-        .reg-btn { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 12px 30px; cursor: pointer; margin-top: 20px; font-family: inherit; }
+        .reg-btn { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 15px 40px; cursor: pointer; margin-top: 20px; font-family: inherit; letter-spacing: 2px; }
     </style>
 </head>
 <body>
 
+    <div id="google_translate_element"></div>
     <div id="ui-logo">GY-GY</div>
-    <div id="ui-lang-panel">RU | EN</div>
 
     <div id="entry-layer">
-        <div style="border: 1px solid var(--violet); padding: 40px; text-align: center;">
-            <p>Чарли: "Кхм... Оцифруйте ID."</p>
-            <button class="reg-btn" onclick="Core.register()">Оцифровать</button>
+        <div id="charlie-box" style="border: 1px solid var(--violet); padding: 40px; text-align: center;">
+            <p id="charlie-msg">Чарли: "Кхм... Оцифруйте ID."</p>
+            <button id="gate-btn" class="reg-btn" onclick="Core.register()">Оцифровать</button>
         </div>
     </div>
 
     <div id="hall-layer">
         <div id="hud">
-            <img id="user-avatar" style="width:42px; height:42px; border-radius:50%; border:2px solid var(--gold); background:#fff;">
-            <div>
-                <span id="user-id" style="color: var(--gold); font-size: 12px;"></span><br>
-                <button class="back-btn" onclick="Core.backToBar()">← НАЗАД К БАРУ</button>
-            </div>
+            <img id="user-avatar" style="width:40px; height:40px; border-radius:50%; border:1px solid var(--gold);">
+            <button class="back-btn" onclick="Core.backToBar()">← В БАР</button>
         </div>
         <div id="table-1" class="lamp-zone" onclick="location.href='risk.html'"></div>
         <div id="table-2" class="lamp-zone"></div>
@@ -60,7 +61,7 @@
         <div id="table-4" class="lamp-zone"></div>
         <div id="table-5" class="lamp-zone"></div>
         <div id="table-6" class="lamp-zone"></div>
-        <div id="mic-zone" class="lamp-zone"></div>
+        <div id="mic-zone" class="lamp-zone" onclick="alert('Микрофон: Вход на сцену...')"></div>
     </div>
 
     <script>
@@ -73,17 +74,20 @@
             },
             enter() {
                 document.getElementById('user-avatar').src = localStorage.getItem('gygy_avatar');
-                document.getElementById('user-id').innerText = localStorage.getItem('gygy_id');
                 document.getElementById('entry-layer').style.display = 'none';
                 document.getElementById('hall-layer').style.display = 'block';
             },
             backToBar() {
                 document.getElementById('hall-layer').style.display = 'none';
                 document.getElementById('entry-layer').style.display = 'flex';
+                document.getElementById('charlie-msg').innerText = 'Чарли: "С возвращением. Желаете что-то еще?"';
+                document.getElementById('gate-btn').innerText = 'ВЕРНУТЬСЯ В ЗАЛ';
+                document.getElementById('gate-btn').onclick = () => Core.enter();
             }
         };
         window.onload = () => { if(localStorage.getItem('gygy_id')) Core.enter(); };
     </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <script>function googleTranslateElementInit() { new google.translate.TranslateElement({pageLanguage: 'ru'}, 'google_translate_element'); }</script>
 </body>
 </html>
-
