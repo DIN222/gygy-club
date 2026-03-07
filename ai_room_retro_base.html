@@ -1,1 +1,170 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GY-GY AI ROOM v7.0.6-LH [Retro Base]</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --gold: #ffcc00; --neon: #00f2ff; --wood: #3d2b1f; --bg: #050505; 
+        }
+        * { box-sizing: border-box; }
+        body, html { 
+            margin: 0; padding: 0; width: 100vw; height: 100vh; 
+            background: var(--bg); color: #fff; font-family: 'Montserrat', sans-serif; 
+            overflow: hidden;
+        }
 
+        /* Основной контейнер с картинкой */
+        .vintage-room {
+            position: relative; width: 100vw; height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+        }
+        
+        /* Визуал от Модератора */
+        .bg-image {
+            width: 100%; height: 100%;
+            object-fit: cover; /* Картинка заполняет экран */
+            filter: grayscale(0.2) contrast(1.1); /* Легкий винтажный фильтр */
+        }
+
+        /* Интерактивные "горячие зоны" на экранах */
+        .screen-trigger {
+            position: absolute;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.0); /* Прозрачные */
+            transition: 0.3s;
+            display: flex; justify-content: center; align-items: center;
+            font-family: 'Share Tech Mono'; color: #000; font-size: 1.5vw;
+            border-radius: 5px;
+        }
+        
+        /* При наведении подсвечиваем контур */
+        .screen-trigger:hover { 
+            background: rgba(0, 242, 255, 0.05);
+            box-shadow: 0 0 15px var(--neon);
+            border: 2px solid var(--neon);
+        }
+
+        /* Позиционирование зон (координаты под картинку Модератора) */
+        .screen-trigger.left   { top: 25%; left: 7%;  width: 25.5%; height: 28%; }
+        .screen-trigger.center { top: 25%; left: 37%; width: 25.5%; height: 28%; }
+        .screen-trigger.right  { top: 25%; left: 67%; width: 25.5%; height: 28%; }
+
+        /* НАВИГАЦИЯ (Принципы №3 и №4) */
+        .top-nav {
+            position: absolute; top: 15px; left: 15px; right: 15px;
+            display: flex; justify-content: space-between; z-index: 4000;
+        }
+        .ui-btn { 
+            background: rgba(20,20,20,0.8); border: 1px solid var(--gold); 
+            color: var(--gold); padding: 8px 15px; cursor: pointer; 
+            font-family: 'Share Tech Mono'; font-size: 11px; text-decoration: none;
+            text-transform: uppercase; transition: 0.3s; border-radius: 2px;
+        }
+        .ui-btn:hover { background: var(--gold); color: #000; box-shadow: 0 0 15px var(--gold); }
+
+        /* Fade-overlay для плавных переходов (Принцип №1) */
+        #fade-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 9999; pointer-events: none;
+            transition: opacity 2s ease; opacity: 1;
+        }
+
+        /* ТЕРМИНАЛ ТЕХНОПАРКА (v7.0.6) */
+        #techpark-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.98); z-index: 5000; display: none; 
+            flex-direction: column; opacity: 0; transition: opacity 1.5s ease;
+        }
+        .chat-area { flex: 1; display: flex; flex-direction: column; padding: 40px; }
+        #chat-logs { flex: 1; overflow-y: auto; font-family: 'Share Tech Mono'; color: #888; }
+        .m-ai { color: var(--neon); margin-bottom: 10px; }
+    </style>
+</head>
+<body onload="initRoom()">
+
+    <div id="fade-overlay"></div>
+
+    <div class="vintage-room">
+        <img src="https://i.ibb.co/3W4z1S4/OIG2-vintage-tv-room.jpg" class="bg-image" alt="GY-GY Retro Base">
+
+        <div class="screen-trigger left" onclick="alert('Retro Archive [cite: 2026-03-05]')">
+            <span>PUNCHLINE</span>
+        </div>
+        
+        <div class="screen-trigger center" onclick="openTechPark()">
+            <span style="font-weight:700; font-size: 1.8vw; color: #000;">ЛУННАЯ БАЗА</span>
+        </div>
+        
+        <div class="screen-trigger right" onclick="alert('Signal Station [cite: 2026-03-05]')">
+            <span>TUNER</span>
+        </div>
+    </div>
+
+    <div class="top-nav">
+        <a href="index.html" class="ui-btn" onclick="return exitScene(this.href)">← BACK</a>
+        <div class="ui-btn">🌐 LANGUAGE [cite: 2026-03-05]</div>
+    </div>
+
+    <div id="techpark-overlay">
+        <div class="chat-area">
+            <div id="chat-logs">
+                <div class="m-ai">> Терминал v7.0.6 активен. Лунный джаз на паузе. Банано отдыхает.</div>
+            </div>
+            <div class="ui-btn" style="border-color:red; margin-top:20px; align-self: flex-end;" onclick="closeTechPark()">[ SHUTDOWN ]</div>
+        </div>
+    </div>
+
+    <audio id="lunar-jazz" src="lunar_jazz_loop_v7.0.4.mp3" loop></audio>
+
+    <script>
+        const jazz = document.getElementById('lunar-jazz');
+        const fade = document.getElementById('fade-overlay');
+
+        function initRoom() {
+            // Плавное проявление при входе [cite: 2026-03-07]
+            setTimeout(() => { fade.style.opacity = 0; }, 500);
+        }
+
+        function exitScene(url) {
+            fade.style.opacity = 1;
+            // Плавно глушим звук [cite: 2026-03-07]
+            fadeAudio(0, 1500); 
+            setTimeout(() => window.location.href = url, 1600);
+            return false;
+        }
+
+        function fadeAudio(target, duration) {
+            const startVol = jazz.volume;
+            const steps = 30;
+            const delta = (target - startVol) / steps;
+            let i = 0;
+            const interval = setInterval(() => {
+                i++;
+                jazz.volume = Math.max(0, Math.min(1, startVol + delta * i));
+                if (i >= steps) {
+                    clearInterval(interval);
+                    if (target === 0) jazz.pause();
+                }
+            }, duration / steps);
+        }
+
+        function openTechPark() {
+            const tp = document. TechPark-overlay');
+            tp.style.display = 'flex';
+            setTimeout(() => tp.style.opacity = 1, 50);
+            jazz.play();
+            fadeAudio(0.4, 2500); // Плавное нарастание [cite: 2026-03-07]
+        }
+
+        function closeTechPark() {
+            const tp = document.getElementById('techpark-overlay');
+            tp.style.opacity = 0;
+            fadeAudio(0, 1500);
+            setTimeout(() => tp.style.display = 'none', 1500);
+        }
+    </script>
+</body>
+</html>
