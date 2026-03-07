@@ -5,101 +5,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY Club | Tables v1.3.0</title>
+    <title>GY-GY Club | Tables v1.3.1</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
-        :root { 
-            --gold: #d4af37; 
-            --violet: #8A2BE2; 
-        }
-        
-        body, html { 
-            margin: 0; padding: 0; 
-            width: 100%; height: 100%; 
-            background: #000; 
-            font-family: 'Share Tech Mono', monospace; 
-            overflow: hidden; 
-        }
+        :root { --gold: #d4af37; --violet: #8A2BE2; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; font-family: 'Share Tech Mono', monospace; overflow: hidden; }
 
-        /* --- ПОСТОЯННАЯ ПАНЕЛЬ ЯЗЫКОВ --- */
+        /* --- ПАНЕЛЬ ЯЗЫКОВ (ФИКС) --- */
         #ui-lang-panel {
             position: fixed; bottom: 20px; right: 25px;
-            z-index: 5000; color: var(--gold);
+            z-index: 9999; color: var(--gold);
             font-size: 11px; letter-spacing: 2px;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 8px 15px; border: 1px solid rgba(212, 175, 55, 0.3);
-            cursor: pointer; transition: 0.3s;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 8px 15px; border: 1px solid var(--gold);
+            cursor: pointer;
         }
-        #ui-lang-panel:hover { border-color: var(--gold); box-shadow: 0 0 10px var(--gold); }
 
-        /* --- GATEKEEPER (ЧАРЛИ) --- */
+        /* --- LAYER 1: БАР / ЧАРЛИ --- */
         #entry-layer { 
-            position: fixed; inset: 0; background: #000; 
+            position: fixed; inset: 0; background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
             display: flex; flex-direction: column; justify-content: center; align-items: center; 
             z-index: 2000; 
         }
-        .charlie-card { border: 1px solid var(--violet); padding: 40px; text-align: center; background: #0a0a0a; }
+        .charlie-card { border: 1px solid var(--violet); padding: 40px; text-align: center; background: #050505; }
+        .reg-btn { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 12px 30px; cursor: pointer; margin-top: 20px; font-family: inherit; }
 
-        /* --- LOUNGE HALL --- */
+        /* --- LAYER 2: ЛАУНЖ --- */
         #hall-layer { 
             width: 100vw; height: 100vh; 
             background: url('lounge.jpg') no-repeat center bottom / contain #000;
             position: relative; display: none;
         }
 
-        /* ОБЩИЙ СТИЛЬ АБАЖУРОВ-КНОПОК */
+        /* ФОНАРИКИ (7 ЗОН) */
         .lamp-zone {
-            position: absolute;
-            width: 40px; height: 40px; /* Уменьшено до размера абажура */
-            border-radius: 50%;
-            cursor: pointer;
-            z-index: 100;
+            position: absolute; width: 35px; height: 35px; border-radius: 50%;
+            cursor: pointer; z-index: 100;
             background: radial-gradient(circle, rgba(212, 175, 55, 0.4) 0%, transparent 70%);
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            transition: 0.4s;
+            border: 1px solid rgba(212, 175, 55, 0.2); transition: 0.3s;
         }
-        .lamp-zone:hover {
-            background: radial-gradient(circle, rgba(212, 175, 55, 0.8) 0%, transparent 80%);
-            border: 1px solid var(--gold);
-            box-shadow: 0 0 20px var(--gold);
-        }
+        .lamp-zone:hover { background: radial-gradient(circle, rgba(212, 175, 55, 0.7) 0%, transparent 80%); border: 1px solid var(--gold); box-shadow: 0 0 15px var(--gold); }
 
-        /* КООРДИНАТЫ 6 СТОЛИКОВ (АБАЖУРЫ) */
-        #table-1 { bottom: 38%; left: 24%; } /* Риск-Фортуна (Ближний левый) */
-        #table-2 { bottom: 42%; left: 38%; }
-        #table-3 { bottom: 45%; left: 52%; }
-        #table-4 { bottom: 48%; left: 15%; }
-        #table-5 { bottom: 52%; left: 32%; }
-        #table-6 { bottom: 55%; left: 48%; }
+        /* Координаты (Калибровка v1.3.1) */
+        #table-1 { bottom: 44%; left: 19%; } /* Риск-Фортуна */
+        #table-2 { bottom: 45%; left: 35%; }
+        #table-3 { bottom: 47%; left: 47%; }
+        #table-4 { bottom: 50%; left: 14%; }
+        #table-5 { bottom: 53%; left: 28%; }
+        #table-6 { bottom: 55%; left: 42%; }
+        #mic-zone { bottom: 52%; left: 58%; border-color: var(--violet); } /* МИКРОФОН */
 
-        /* --- HUD & NAVIGATION --- */
-        #hud { 
-            position: fixed; top: 20px; left: 20px; 
-            display: flex; align-items: center; gap: 15px; 
-            z-index: 1500; 
-        }
-        .avatar { width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--gold); background: #fff; }
-        
-        .exit-btn {
-            background: transparent; border: 1px solid var(--violet);
-            color: var(--violet); font-family: inherit; font-size: 10px;
-            padding: 5px 10px; cursor: pointer; margin-left: 10px;
-            transition: 0.3s;
-        }
-        .exit-btn:hover { color: white; border-color: white; box-shadow: 0 0 10px white; }
-
-        .reg-btn { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 12px 30px; cursor: pointer; margin-top: 20px; font-family: inherit; }
+        /* --- HUD --- */
+        #hud { position: fixed; top: 20px; left: 20px; display: flex; align-items: center; gap: 15px; z-index: 1500; }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--gold); background: #fff; }
+        .back-btn { background: transparent; border: 1px solid var(--violet); color: var(--violet); font-size: 10px; padding: 4px 8px; cursor: pointer; font-family: inherit; margin-top: 5px; }
     </style>
 </head>
 <body>
 
-    <div id="ui-lang-panel">ЯЗЫК: RU | EN</div>
+    <div id="ui-lang-panel">RU | EN</div>
 
     <div id="entry-layer">
         <div class="charlie-card">
-            <div style="font-size: 9px; color: var(--gold); margin-bottom: 10px; opacity: 0.7;">GY-GY SYSTEM v1.3.0</div>
-            <p>Чарли: "Кхм... Оцифруйте ваш след."</p>
-            <button class="reg-btn" onclick="Core.register()">Оцифровать</button>
+            <div style="font-size: 9px; color: var(--gold); margin-bottom: 10px;">GY-GY SYSTEM v1.3.1</div>
+            <p id="charlie-msg">Чарли: "Кхм... Оцифруйте ID для входа."</p>
+            <button id="main-reg-btn" class="reg-btn" onclick="Core.register()">Оцифровать</button>
+            <button id="return-hall-btn" class="reg-btn" style="display:none;" onclick="Core.enter()">Вернуться к столам</button>
         </div>
     </div>
 
@@ -107,17 +78,18 @@
         <div id="hud">
             <img id="user-avatar" class="avatar" src="" alt="?">
             <div>
-                <span id="user-id" style="color: var(--gold); display: block;"></span>
-                <button class="exit-btn" onclick="Core.logout()">[ ВЫХОД / DE-ID ]</button>
+                <span id="user-id" style="color: var(--gold); font-size: 12px;"></span><br>
+                <button class="back-btn" onclick="Core.backToBar()">← В БАР К ЧАРЛИ</button>
             </div>
         </div>
 
-        <div id="table-1" class="lamp-zone" onclick="alert('МОДУЛЬ: РИСК-ФОРТУНА (АКТИВЕН)')"></div>
-        <div id="table-2" class="lamp-zone" onclick="alert('Стол 02: Подключение...')"></div>
-        <div id="table-3" class="lamp-zone" onclick="alert('Стол 03: Подключение...')"></div>
-        <div id="table-4" class="lamp-zone" onclick="alert('Стол 04: Подключение...')"></div>
-        <div id="table-5" class="lamp-zone" onclick="alert('Стол 05: Подключение...')"></div>
-        <div id="table-6" class="lamp-zone" onclick="alert('Стол 06: Подключение...')"></div>
+        <div id="table-1" class="lamp-zone" title="РИСК-ФОРТУНА" onclick="alert('МОДУЛЬ: РИСК-ФОРТУНА')"></div>
+        <div id="table-2" class="lamp-zone"></div>
+        <div id="table-3" class="lamp-zone"></div>
+        <div id="table-4" class="lamp-zone"></div>
+        <div id="table-5" class="lamp-zone"></div>
+        <div id="table-6" class="lamp-zone"></div>
+        <div id="mic-zone" class="lamp-zone" title="МИКРОФОН" onclick="alert('СЦЕНА: Ожидание артиста...')"></div>
     </div>
 
     <script>
@@ -127,26 +99,33 @@
                 const avatar = `https://api.dicebear.com/7.x/identicon/svg?seed=${id}`;
                 localStorage.setItem('gygy_id', id);
                 localStorage.setItem('gygy_avatar', avatar);
-                this.enter(id, avatar);
+                this.enter();
             },
 
-            enter(id, avatar) {
+            enter() {
+                const id = localStorage.getItem('gygy_id');
+                const avatar = localStorage.getItem('gygy_avatar');
+                
                 document.getElementById('user-avatar').src = avatar;
                 document.getElementById('user-id').innerText = id;
                 document.getElementById('entry-layer').style.display = 'none';
                 document.getElementById('hall-layer').style.display = 'block';
             },
 
-            logout() {
-                localStorage.removeItem('gygy_id');
-                localStorage.removeItem('gygy_avatar');
-                location.reload(); // Полный сброс системы
+            backToBar() {
+                // Возвращаемся к Чарли, но не удаляем ID
+                document.getElementById('hall-layer').style.display = 'none';
+                document.getElementById('entry-layer').style.display = 'flex';
+                
+                // Меняем интерфейс Чарли для "своих"
+                document.getElementById('charlie-msg').innerText = 'Чарли: "С возвращением к стойке. Чего желаете?"';
+                document.getElementById('main-reg-btn').style.display = 'none';
+                document.getElementById('return-hall-btn').style.display = 'inline-block';
             },
 
             checkAuth() {
-                const savedId = localStorage.getItem('gygy_id');
-                const savedAvatar = localStorage.getItem('gygy_avatar');
-                if (savedId) this.enter(savedId, savedAvatar);
+                const id = localStorage.getItem('gygy_id');
+                if (id) this.enter();
                 else document.getElementById('entry-layer').style.display = 'flex';
             }
         };
