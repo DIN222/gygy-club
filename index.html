@@ -4,13 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.190</title>
+    <title>GY-GY Club v4.3.191</title>
     
     <script type="text/javascript">
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({
                 pageLanguage: 'ru', 
-                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
             }, 'google_translate_element');
         }
     </script>
@@ -23,31 +24,40 @@
         :root { --gold: #d4af37; --black: #000; }
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; }
         
-        #google_translate_element { position: fixed !important; top: 15px !important; left: 15px !important; z-index: 9999999 !important; }
-        .goog-te-banner-frame.skiptranslate { display: none !important; }
+        /* ГУГЛ И СКРОЛЛ */
+        #google_translate_element { position: fixed !important; top: 15px !important; left: 15px !important; z-index: 10000; }
+        .goog-te-menu-frame { max-height: 250px !important; overflow-y: auto !important; }
+        .skiptranslate { opacity: 1 !important; }
+
+        /* КНОПКА ВОЗВРАТА (BACK) - ОБЯЗАТЕЛЬНЫЙ АТРИБУТ */
+        .btn-back { 
+            position: fixed; top: 70px; left: 20px; z-index: 10000; 
+            color: var(--gold); font-family: 'Share Tech Mono'; font-size: 24px; 
+            cursor: pointer; text-decoration: none; display: none;
+        }
+
         body { top: 0 !important; background: var(--black); color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; width: 100vw; height: 100vh; }
 
-        #main-door { width: 260px; cursor: pointer; transition: transform 2.5s ease-in, opacity 2s ease-in-out; }
+        #main-door { width: 260px; cursor: pointer; transition: transform 2.5s ease-in, opacity 2s ease-in-out; display: block; margin: 0 auto; }
 
         .btn-gy { 
             min-width: 220px; padding: 14px; background: var(--black); border: 2px solid var(--gold); 
             color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; 
             text-transform: uppercase; font-weight: 900; letter-spacing: 1px; transition: 0.5s; margin: 8px;
         }
-        .btn-gy:disabled { opacity: 0.1 !important; pointer-events: none; border-color: #333; }
 
-        .block { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; background: var(--black); opacity: 0; transition: opacity 1s ease; z-index: 100; }
+        .block { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; background: var(--black); opacity: 0; transition: opacity 0.8s ease; z-index: 100; }
         .block.active { display: flex !important; opacity: 1; }
 
         #charlie-img { max-height: 35vh; width: auto; margin: 10px 0; object-fit: contain; }
 
-        /* ХОЛЛ - ТЕКСТЫ */
+        /* ХОЛЛ */
         .hall-bg { position: absolute; width: 100%; height: 100%; background: url('hall_bg_jpg.jpg') center/cover no-repeat; z-index: -1; }
         .hall-header { position: absolute; top: 8%; width: 100%; text-align: center; z-index: 600; }
         .hall-title { font-size: 38px; color: #fff; font-weight: 900; text-shadow: 0 0 15px var(--gold); }
         .hall-motto { font-family: 'Share Tech Mono'; font-size: 16px; color: var(--gold); letter-spacing: 3px; margin-top: 5px; font-weight: 900; }
 
-        .id-card { position: relative; margin-top: 40vh; width: 260px; padding: 20px; border: 3px solid var(--gold); background: #fdf5e6; border-radius: 12px; display: flex; flex-direction: column; align-items: center; z-index: 500; box-shadow: 0 20px 60px rgba(0,0,0,1); }
+        .id-card { position: relative; margin-top: 38vh; width: 260px; padding: 20px; border: 3px solid var(--gold); background: #fdf5e6; border-radius: 12px; display: flex; flex-direction: column; align-items: center; z-index: 500; }
 
         /* БАР */
         .bar-controls { position: absolute; bottom: 35%; display: flex; flex-direction: column; gap: 15px; z-index: 700; }
@@ -59,6 +69,7 @@
 <body>
 
     <div id="google_translate_element"></div>
+    <div id="gy-back-btn" class="btn-back" onclick="goBack()">←</div>
 
     <audio id="snd-door"><source src="door_open.mp3" type="audio/mpeg"></audio>
     <audio id="snd-ambient" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
@@ -71,8 +82,8 @@
         <div style="font-family:'Share Tech Mono'; letter-spacing:8px; font-size:16px;">GY-GY PRIVAT</div>
         <img src="charlie.png" id="charlie-img">
         <h1 style="font-size:36px; margin-bottom:10px; font-weight:900;">WELCOME</h1>
-        <button id="btn-member-go" class="btn-gy" onclick="portalTransition('block-hall')">ПРОХОДИТЕ</button>
-        <button id="btn-guest-reg" class="btn-gy" onclick="portalTransition('block-identity')">АВТОГРАФ, ПОЖАЛУЙСТА</button>
+        <button class="btn-gy" onclick="portalTransition('block-hall')">ПРОХОДИТЕ</button>
+        <button class="btn-gy" onclick="portalTransition('block-identity')">АВТОГРАФ, ПОЖАЛУЙСТА</button>
     </div>
 
     <div id="block-identity" class="block">
@@ -103,8 +114,8 @@
                 <div class="qr-gold-frame" style="width:80px; height:80px;"><div id="h-qr"></div></div>
             </div>
             <div id="h-id" style="font-family:'Share Tech Mono'; font-weight:900; color:#000; font-size:12px; margin-bottom:15px;"></div>
-            <button id="h-confirm" class="btn-gy" style="min-width:100%; margin:0; border-width:2px; padding:10px;" onclick="actionConfirm()">ПОДТВЕРЖДАЮ</button>
-            <button id="h-tobar" class="btn-gy" disabled style="min-width:100%; margin:10px 0 0 0; border-width:2px; padding:10px;" onclick="transitionToBar()">В БАР</button>
+            <button id="h-confirm" class="btn-gy" style="min-width:100%; border-width:2px;" onclick="actionConfirm()">ПОДТВЕРЖДАЮ</button>
+            <button id="h-tobar" class="btn-gy" disabled style="min-width:100%; border-width:2px; margin-top:10px;" onclick="transitionToBar()">В БАР</button>
         </div>
     </div>
 
@@ -119,21 +130,56 @@
     </div>
 
     <script>
+        let historyStack = ['block-entrance'];
         const orderNum = localStorage.getItem('gy_order_num') || 1;
         const fullID = `#GY-${orderNum}-${Math.floor(1000 + Math.random() * 8999)}`;
 
         function handleDoor() {
             document.getElementById('snd-door').play().catch(()=>{});
             const door = document.getElementById('main-door');
-            door.style.transform = "scale(10)"; door.style.opacity = "0";
+            door.style.transform = "scale(10)"; 
+            door.style.opacity = "0";
+            
             new Audio('charlie_welcome.mp3').play().catch(()=>{});
             setupProfile();
             setTimeout(() => { 
                 document.getElementById('snd-ambient').play().catch(()=>{});
                 portalTransition('block-welcome'); 
-                document.getElementById('btn-member-go').disabled = true;
-                document.getElementById('btn-guest-reg').disabled = false;
             }, 2200);
+        }
+
+        function portalTransition(id) {
+            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
+            setTimeout(() => {
+                document.querySelectorAll('.block').forEach(b => b.style.display = 'none');
+                const t = document.getElementById(id);
+                t.style.display = 'flex';
+                setTimeout(() => {
+                    t.classList.add('active');
+                    historyStack.push(id);
+                    updateBackBtn();
+                }, 50);
+            }, 600);
+        }
+
+        function goBack() {
+            if (historyStack.length > 1) {
+                historyStack.pop(); 
+                const prevId = historyStack[historyStack.length - 1];
+                document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
+                setTimeout(() => {
+                    document.querySelectorAll('.block').forEach(b => b.style.display = 'none');
+                    const t = document.getElementById(prevId);
+                    t.style.display = 'flex';
+                    setTimeout(() => t.classList.add('active'), 50);
+                    updateBackBtn();
+                }, 600);
+            }
+        }
+
+        function updateBackBtn() {
+            const btn = document.getElementById('gy-back-btn');
+            btn.style.display = (historyStack.length > 1 && historyStack[historyStack.length-1] !== 'block-entrance') ? 'block' : 'none';
         }
 
         function setupProfile() {
@@ -156,10 +202,21 @@
             document.getElementById('h-tobar').disabled = false;
         }
 
-        function portalTransition(id) {
-            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
-            setTimeout(() => {
-                document.querySelectorAll('.block').forEach(b => b.style.display = 'none');
-                const t = document.getElementById(id);
-                t.style.display = 'flex';
-                setTimeout(() => t.classList.
+        function transitionToBar() {
+            document.getElementById('snd-ambient').volume = 0.4;
+            portalTransition('block-bar');
+        }
+
+        function preview(i) {
+            const r = new FileReader();
+            r.onload = (e) => { 
+                document.getElementById('pp').src = e.target.result; 
+                document.getElementById('pp').style.display = "block";
+                document.getElementById('photo-txt').style.display = "none";
+                document.getElementById('h-photo').src = e.target.result;
+            };
+            r.readAsDataURL(i.files[0]);
+        }
+    </script>
+</body>
+</html>
