@@ -5,12 +5,13 @@
     <meta charset="UTF-8">
     <meta name="google" content="notranslate">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.182</title>
+    <title>GY-GY Club v4.3.183</title>
     
     <script type="text/javascript">
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({
                 pageLanguage: 'ru', 
+                includedLanguages: 'en,de,fr,it,es,zh-CN',
                 layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
                 autoDisplay: false
             }, 'google_translate_element');
@@ -25,34 +26,44 @@
         :root { --gold: #d4af37; --black: #000; }
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; }
         
-        #google_translate_element { position: fixed !important; top: 20px !important; left: 20px !important; z-index: 10000000 !important; opacity: 0.8; }
-        .goog-te-banner-frame, .skiptranslate { display: none !important; }
+        /* ГИПЕР-ВИДИМОСТЬ ЯЗЫКОВОЙ ПАНЕЛИ */
+        #google_translate_element { 
+            position: fixed !important; 
+            top: 20px !important; 
+            left: 20px !important; 
+            z-index: 10000000 !important; 
+            min-width: 160px; 
+            min-height: 40px;
+            background: rgba(20, 20, 20, 0.9) !important;
+            border: 1px solid var(--gold);
+            border-radius: 5px;
+            padding: 2px;
+        }
+        .goog-te-banner-frame, .skiptranslate, .goog-te-balloon-frame { display: none !important; }
         body { top: 0 !important; position: static !important; background: var(--black); color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; width: 100%; height: 100%; }
 
-        /* ПЛАВНАЯ ДВЕРЬ */
+        /* ПЛАВНАЯ ДВЕРЬ (ШАГ 2) */
         #main-door { 
             width: 280px; cursor: pointer; z-index: 99999; 
             transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s ease-in-out; 
         }
 
-        /* СТАНДАРТНАЯ КНОПКА КЛУБА */
+        /* КНОПКИ КЛУБА */
         .btn-gy { 
             min-width: 240px; padding: 16px; background: var(--black); border: 3px solid var(--gold); 
             color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; 
             text-transform: uppercase; font-weight: 900; letter-spacing: 2px; transition: 0.5s; margin: 10px;
-            outline: none;
         }
         .btn-gy:disabled { opacity: 0.1 !important; pointer-events: none; border-color: #333; color: #333; }
-        .btn-gy:active { transform: scale(0.98); }
 
         .block { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; background: var(--black); opacity: 0; transition: opacity 0.8s ease; z-index: 100; }
         .block.active { display: flex !important; opacity: 1; }
 
-        /* ХОЛЛ: КАРТА В ЦЕНТРЕ */
+        /* ХОЛЛ: ЦЕНТРОВКА */
         .hall-bg { position: absolute; width: 100%; height: 100%; background: url('hall_bg_jpg.jpg') center/cover no-repeat; z-index: -1; }
         .id-card { position: relative; width: 270px; padding: 25px; border: 3px solid var(--gold); background: #fdf5e6; border-radius: 15px; display: flex; flex-direction: column; align-items: center; z-index: 500; box-shadow: 0 0 40px rgba(0,0,0,0.8); }
 
-        /* БАР: КНОПКИ У РУК */
+        /* БАР: КНОПКИ У РУК ЧАРЛИ */
         .bar-controls { position: absolute; bottom: 45%; display: flex; flex-direction: column; gap: 20px; }
         
         .qr-gold-frame { width: 90px; height: 90px; border: 3px solid var(--gold); background: #fff; display: flex; align-items: center; justify-content: center; padding: 5px; }
@@ -73,7 +84,7 @@
     <div id="block-welcome" class="block">
         <div style="font-family:'Share Tech Mono'; letter-spacing:10px; font-size:18px;">GY-GY PRIVAT</div>
         <img src="charlie.png" style="max-height: 40vh; margin: 20px 0;">
-        <h1 style="font-size:48px; margin-bottom:15px; font-weight:900;">WELCOME</h1>
+        <h1 translate="no" style="font-size:48px; margin-bottom:15px; font-weight:900;">WELCOME</h1>
         
         <button id="btn-member-go" class="btn-gy" onclick="portalTransition('block-hall')">ПРОХОДИТЕ</button>
         <button id="btn-guest-reg" class="btn-gy" onclick="portalTransition('block-identity')">АВТОГРАФ, ПОЖАЛУЙСТА</button>
@@ -120,7 +131,7 @@
     </div>
 
     <script>
-        // Идентификация v4.3.182
+        // Идентификация v4.3.183
         const userData = JSON.parse(localStorage.getItem('gy_user_profile'));
         const orderNum = localStorage.getItem('gy_order_num') || 1;
         const fullID = userData ? userData.id : `#GY-${orderNum}-${Math.floor(1000 + Math.random() * 8999)}`;
@@ -150,8 +161,8 @@
                 btnGuest.disabled = true;
                 btnGuest.style.display = "none";
             } else {
-                btnMember.disabled = true; // Спит для новичков
-                btnGuest.disabled = false; // Просыпается кнопка автографа
+                btnMember.disabled = true;
+                btnGuest.disabled = false;
             }
         }
 
