@@ -5,7 +5,19 @@
     <meta charset="UTF-8">
     <meta name="google" content="notranslate">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.177</title>
+    <title>GY-GY Club v4.3.178</title>
+    
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'ru',
+                includedLanguages: 'en,de,fr,it,es,zh-CN',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -13,30 +25,42 @@
         :root { --gold: #d4af37; }
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; }
         
-        /* ЖЕСТКОЕ УДАЛЕНИЕ МУСОРА GOOGLE */
-        .goog-te-banner-frame, .goog-te-balloon-frame, .skiptranslate, .goog-tooltip, .goog-tooltip:hover { display: none !important; }
-        font { background-color: transparent !important; box-shadow: none !important; }
+        /* ГИПЕР-ВИДИМОСТЬ ЯЗЫКОВОЙ ПАНЕЛИ */
+        #google_translate_element { 
+            position: fixed !important; 
+            top: 25px !important; 
+            left: 20px !important; 
+            z-index: 9999999 !important; 
+            display: block !important;
+            visibility: visible !important;
+            min-width: 160px;
+            min-height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+        }
+        
+        /* УБИРАЕМ МУСОРНЫЕ ПОЛОСКИ */
+        .goog-te-banner-frame, .skiptranslate, .goog-te-balloon-frame { display: none !important; }
         body { top: 0 !important; position: static !important; background: #000 !important; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; width: 100%; height: 100%; }
 
-        /* ЯЗЫКОВАЯ ПАНЕЛЬ - ФИКС СЛЕВА */
-        #google_translate_element { position: fixed !important; top: 20px !important; left: 20px !important; z-index: 999999 !important; min-height: 40px; }
-
-        /* ПАСХАЛКА */
+        /* ПАСХАЛКА (ТОЧКА СПРАВА) */
         #secret-trigger { position: fixed; top: 20px; right: 20px; width: 40px; height: 40px; z-index: 1000001; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         #secret-trigger:after { content: '·'; color: var(--gold); font-size: 24px; opacity: 0.4; }
         #secret-monitor { position: fixed; top: 70px; right: 20px; background: rgba(0,0,0,0.95); border: 2px solid var(--gold); padding: 15px; font-family: 'Share Tech Mono'; font-size: 12px; opacity: 0; transition: 0.5s; z-index: 1000000; color: #fff; border-radius: 8px; pointer-events: none; }
         #secret-trigger:hover + #secret-monitor { opacity: 1; }
 
         /* КНОПКИ */
-        .btn-gy { min-width: 220px; padding: 14px; background: #000; border: 3px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; font-weight: 900; letter-spacing: 2px; transition: 0.5s; margin-top: 10px; }
+        .btn-gy { min-width: 220px; padding: 14px; background: #000; border: 3px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; font-weight: 900; letter-spacing: 2px; transition: 0.5s; margin-top: 10px; outline: none; }
         .btn-gy:disabled { opacity: 0.15; border-color: rgba(212, 175, 55, 0.2); color: rgba(212, 175, 55, 0.2); pointer-events: none; }
 
         .block { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; opacity: 0; transition: opacity 0.6s ease; z-index: 100; }
         .block.active { display: flex !important; opacity: 1; }
 
-        /* ХОЛЛ: ПЕРЕРАБОТКА */
+        /* ХОЛЛ */
         .hall-bg { position: absolute; width: 100%; height: 100%; background: url('hall_bg_jpg.jpg') center/cover no-repeat; z-index: -1; }
         .hall-title { position: absolute; top: 6%; width: 100%; text-align: center; font-size: 44px; color: #fff; text-shadow: 0 0 20px var(--gold); font-weight: 900; z-index: 10; }
+        
+        /* КАРТОЧКА НАПРОТИВ ДВЕРИ БАРА (СПРАВА) */
         .id-card { position: absolute; right: 5%; bottom: 5%; width: 250px; padding: 20px; border: 3px solid var(--gold); background: #fdf5e6; border-radius: 15px; display: flex; flex-direction: column; align-items: center; z-index: 500; }
         
         .qr-gold-frame { width: 90px; height: 90px; border: 3px solid var(--gold); background: #fff; display: flex; align-items: center; justify-content: center; padding: 5px; margin-bottom: 5px; }
@@ -55,7 +79,6 @@
     <div id="secret-monitor">
         <div style="color:var(--gold); border-bottom:1px solid var(--gold); margin-bottom:5px;">SYSTEM STATUS</div>
         <div>MEMBERS: 142</div>
-        <div>SECURITY: HIGH</div>
     </div>
 
     <audio id="snd-door"><source src="door_open.mp3" type="audio/mpeg"></audio>
@@ -118,10 +141,6 @@
         const sndAmbient = document.getElementById('snd-ambient');
         const sndJazz = document.getElementById('snd-jazz');
 
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({ pageLanguage: 'ru', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false }, 'google_translate_element');
-        }
-
         function handleDoor() {
             document.getElementById('snd-door').play().catch(()=>{});
             document.getElementById('main-door').style.transform = "scale(12)"; 
@@ -155,20 +174,17 @@
                 if (vol > 0.1) { vol -= 0.1; sndAmbient.volume = vol; }
                 else { clearInterval(fadeOut); sndAmbient.pause(); }
             }, 100);
-
             portalTransition('block-bar'); 
             const fx = new Audio('charlie_bar_fx.mp3');
             fx.play().catch(()=>{});
-
             fx.onended = () => {
                 setTimeout(() => {
-                    sndJazz.volume = 0;
-                    sndJazz.play();
+                    sndJazz.volume = 0; sndJazz.play();
                     let fadeIn = setInterval(() => {
                         if (sndJazz.volume < 0.5) { sndJazz.volume += 0.05; }
                         else { clearInterval(fadeIn); }
                     }, 200);
-                }, 2000); // 2 сек задержка перед музыкой
+                }, 1500);
             };
         }
 
@@ -193,7 +209,6 @@
             r.readAsDataURL(i.files[0]);
         }
     </script>
-    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
-/* --- END OF CODE v4.3.177 --- */
+/* --- END OF CODE v4.3.178 --- */
