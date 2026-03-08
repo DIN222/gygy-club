@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.236</title>
+    <title>GY-GY Club v4.3.237</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -16,32 +16,28 @@
         #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 10000; background: rgba(0,0,0,0.5); padding: 5px; border-radius: 4px; }
         #ui-logo-top { position: fixed; top: 15px; right: 25px; z-index: 10000; color: var(--gold); font-size: 24px; font-weight: bold; letter-spacing: 5px; font-family: 'Share Tech Mono', monospace; }
 
-        /* ЧИСТЫЙ ЧЕРНЫЙ ФЕЙД ДЛЯ ВЫХОДА ИЗ БАРА */
         #fade-overlay { position: fixed; inset: 0; background: #000 !important; z-index: 999999; pointer-events: none; opacity: 0; transition: opacity 0.4s ease-in; }
 
         .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; opacity: 0; z-index: 10; padding: 15px; }
         .block.active { display: flex !important; opacity: 1; transition: opacity 0.5s ease; }
 
-        .btn-gy { min-width: 260px; padding: 12px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; font-weight: 900; margin: 6px 0; transition: 0.3s; z-index: 20; }
+        .btn-gy { min-width: 260px; padding: 10px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; font-weight: 900; margin: 4px 0; transition: 0.3s; z-index: 20; font-size: 13px; }
         .btn-sleep { opacity: 0.1 !important; pointer-events: none !important; }
 
-        #id-box { 
-            width: 90px; height: 90px; border: 2px solid var(--gold); 
-            display: flex; align-items: center; justify-content: center; 
-            font-family: 'Share Tech Mono'; font-weight: 900; font-size: 10px; 
-            text-align: center; word-break: break-all; padding: 5px; 
-        }
-
+        /* ЗОНА РЕГИСТРАЦИИ */
+        #id-box { width: 90px; height: 90px; border: 2px solid var(--gold); display: flex; align-items: center; justify-content: center; font-family: 'Share Tech Mono'; font-weight: 900; font-size: 10px; text-align: center; word-break: break-all; padding: 5px; }
         .qr-gold-frame { width: 90px; height: 90px; border: 2px solid var(--gold); padding: 4px; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
 
-        /* КОМПАКТНАЯ КАРТОЧКА */
+        /* ХОЛЛ: ВЫВЕСКА И КАРТОЧКА */
+        .hall-slogan { position: absolute; top: 8%; font-family: 'Playfair Display'; font-style: italic; font-weight: 900; font-size: 22px; text-shadow: 0 0 15px #000; }
+        
         .id-card { 
-            position: absolute; left: 50%; top: 62%; transform: translate(-50%, -50%); 
-            width: 260px; padding: 15px; border: 3px solid var(--gold); 
-            background: #F5F5DC; border-radius: 15px; display: flex; flex-direction: column; 
+            position: absolute; left: 50%; top: 68%; transform: translate(-50%, -50%); 
+            width: 250px; padding: 12px; border: 2px solid var(--gold); 
+            background: #F5F5DC; border-radius: 12px; display: flex; flex-direction: column; 
             align-items: center; color: #000; z-index: 500; box-shadow: 0 10px 40px rgba(0,0,0,0.9); 
         }
-        .hall-frame { width: 80px; height: 80px; border: 2px solid #000; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .hall-frame { width: 75px; height: 75px; border: 1px solid #000; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 
         .bar-btn-simple { position: absolute; z-index: 1000; background: transparent; border: 2px solid var(--gold); padding: 12px 20px; color: var(--gold); font-family: 'Share Tech Mono'; font-weight: 900; cursor: pointer; text-transform: uppercase; }
     </style>
@@ -84,17 +80,17 @@
 
     <div id="block-hall" class="block">
         <div style="position:absolute; inset:0; background:url('hall_bg_jpg.jpg') center/cover; z-index:-1;"></div>
+        <div class="hall-slogan">«Все будет GY-GY»</div>
         
         <div class="id-card">
-            <div style="font-family:'Share Tech Mono'; font-weight:900; margin-bottom:10px; color:#000; letter-spacing: 2px; font-size: 14px;">ID VERIFICATION</div>
-            <div style="display:flex; gap:10px; margin-bottom:10px;">
+            <div style="font-family:'Share Tech Mono'; font-weight:900; margin-bottom:8px; color:#000; letter-spacing: 1px; font-size: 13px;">ID VERIFICATION</div>
+            <div style="display:flex; gap:8px; margin-bottom:8px;">
                 <div class="hall-frame"><img id="h-photo" style="width:100%; height:100%; object-fit:cover;"></div>
                 <div class="hall-frame"><div id="h-qr"></div></div>
             </div>
-            <div id="h-id" style="font-family:'Share Tech Mono'; font-weight:900; font-size:14px; margin-bottom:10px; color:#000; border-bottom: 1px solid #000;"></div>
-            <button id="btn-confirm-hall" class="btn-gy" style="min-width:100%; border-color:#000; color:#000; margin-bottom: 5px; padding: 8px;" onclick="confirmHall()">ПОДТВЕРДИТЬ</button>
-            <button id="btn-go-bar" class="btn-gy btn-sleep" style="min-width:100%; background:#000; color:var(--gold); margin-bottom: 8px; padding: 8px;" onclick="goToBar()">ВХОД В БАР</button>
-            <div style="font-family: 'Playfair Display'; font-style: italic; font-weight: 900; color: #000; font-size: 12px;">«Все будет GY-GY»</div>
+            <div id="h-id" style="font-family:'Share Tech Mono'; font-weight:900; font-size:13px; margin-bottom:8px; color:#000; border-bottom: 1px solid #000;"></div>
+            <button id="btn-confirm-hall" class="btn-gy" style="min-width:100%; border-color:#000; color:#000; margin-bottom: 4px; padding: 6px;" onclick="confirmHall()">ПОДТВЕРДИТЬ</button>
+            <button id="btn-go-bar" class="btn-gy btn-sleep" style="min-width:100%; background:#000; color:var(--gold); padding: 6px;" onclick="goToBar()">ВХОД В БАР</button>
         </div>
     </div>
 
@@ -112,18 +108,15 @@
             try { document.getElementById('snd-door').play(); } catch(e){}
             const door = document.getElementById('main-door');
             door.style.transform = "scale(15)"; door.style.opacity = "0";
-            
             const sessionNum = Math.floor(100 + Math.random() * 899);
             const randomPart = Math.floor(1000 + Math.random() * 8999);
             currentID = `#GY-${sessionNum}-${randomPart}`;
-            
             setTimeout(() => {
                 new QRCode(document.getElementById("qr-box-reg"), { text: currentID, width: 80, height: 80 });
-                new QRCode(document.getElementById("h-qr"), { text: currentID, width: 70, height: 70 });
+                new QRCode(document.getElementById("h-qr"), { text: currentID, width: 65, height: 65 });
                 document.getElementById('id-box').innerText = currentID;
                 document.getElementById('h-id').innerText = currentID;
             }, 300);
-
             setTimeout(() => { 
                 try { document.getElementById('snd-ambient').play(); } catch(e){} 
                 portalTransition('block-welcome'); 
@@ -145,11 +138,7 @@
         }
 
         function goToBar() {
-            // Мгновенная смена блоков без переходных эффектов, чтобы избежать фиолетовых рамок
-            document.querySelectorAll('.block').forEach(b => {
-                b.classList.remove('active');
-                b.style.display = 'none';
-            });
+            document.querySelectorAll('.block').forEach(b => { b.classList.remove('active'); b.style.display = 'none'; });
             const bar = document.getElementById('block-bar');
             bar.style.display = 'flex';
             setTimeout(() => bar.classList.add('active'), 10);
