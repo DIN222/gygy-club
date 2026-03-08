@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.232</title>
+    <title>GY-GY Club v4.3.234</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -13,38 +13,35 @@
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; }
         body, html { width: 100%; height: 100%; background: #000 !important; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; }
 
-        #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 10000000; background: rgba(0,0,0,0.5); padding: 5px; border-radius: 4px; }
-        #ui-logo-top { position: fixed; top: 15px; right: 25px; z-index: 5000; color: var(--gold); font-size: 24px; font-weight: bold; letter-spacing: 5px; font-family: 'Share Tech Mono', monospace; }
+        #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 10000; background: rgba(0,0,0,0.5); padding: 5px; border-radius: 4px; }
+        #ui-logo-top { position: fixed; top: 15px; right: 25px; z-index: 10000; color: var(--gold); font-size: 24px; font-weight: bold; letter-spacing: 5px; font-family: 'Share Tech Mono', monospace; }
 
-        #fade-overlay { position: fixed; inset: 0; background: #000; z-index: 999999; pointer-events: none; opacity: 0; transition: opacity 0.8s ease; }
+        #fade-overlay { position: fixed; inset: 0; background: #000 !important; z-index: 999999; pointer-events: none; opacity: 0; transition: opacity 0.4s ease-in; }
 
-        .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; opacity: 0; transition: opacity 0.8s ease; z-index: 10; padding: 15px; }
+        .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; opacity: 0; transition: opacity 0.6s ease; z-index: 10; padding: 15px; }
         .block.active { display: flex !important; opacity: 1; }
 
-        .btn-gy { min-width: 280px; padding: 14px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; font-weight: 900; margin: 6px 0; transition: 0.3s; }
+        .btn-gy { min-width: 280px; padding: 14px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; font-weight: 900; margin: 6px 0; transition: 0.3s; z-index: 20; }
         .btn-sleep { opacity: 0.1 !important; pointer-events: none !important; }
 
-        /* ЗОЛОТЫЕ РАМКИ ДЛЯ РЕГИСТРАЦИИ */
-        .qr-gold-frame { 
+        #id-box { 
             width: 105px; height: 105px; border: 2px solid var(--gold); 
-            padding: 4px; background: #fff; display: flex; align-items: center; 
-            justify-content: center; overflow: hidden; position: relative; 
+            display: flex; align-items: center; justify-content: center; 
+            font-family: 'Share Tech Mono'; font-weight: 900; font-size: 11px; 
+            text-align: center; word-break: break-all; padding: 5px; line-height: 1.2;
         }
 
-        /* КАРТОЧКА В ХОЛЛЕ - ЕДИНЫЙ СТИЛЬ */
+        .qr-gold-frame { width: 105px; height: 105px; border: 2px solid var(--gold); padding: 4px; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
+
         .id-card { 
-            position: absolute; left: 50%; top: 60%; transform: translate(-50%, -50%); 
-            width: 300px; padding: 25px; border: 3px solid var(--gold); 
+            position: absolute; left: 50%; top: 52%; transform: translate(-50%, -50%); 
+            width: 300px; padding: 20px; border: 3px solid var(--gold); 
             background: #F5F5DC; border-radius: 15px; display: flex; flex-direction: column; 
-            align-items: center; color: #000; z-index: 500; box-shadow: 0 10px 40px rgba(0,0,0,0.8); 
+            align-items: center; color: #000; z-index: 500; box-shadow: 0 10px 40px rgba(0,0,0,0.9); 
         }
-        .hall-frame { width: 100px; height: 100px; border: 2px solid #000; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .hall-frame { width: 95px; height: 95px; border: 2px solid #000; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 
-        .bar-btn-simple { 
-            position: absolute; z-index: 500; background: transparent; 
-            border: 2px solid var(--gold); padding: 12px 20px; color: var(--gold);
-            font-family: 'Share Tech Mono'; font-weight: 900; cursor: pointer; text-transform: uppercase;
-        }
+        .bar-btn-simple { position: absolute; z-index: 1000; background: transparent; border: 2px solid var(--gold); padding: 12px 20px; color: var(--gold); font-family: 'Share Tech Mono'; font-weight: 900; cursor: pointer; text-transform: uppercase; }
     </style>
 </head>
 <body>
@@ -71,7 +68,7 @@
 
     <div id="block-identity" class="block">
         <div style="display:flex; gap:10px; margin-bottom:25px;">
-            <div style="width:105px; height:105px; border:2px solid var(--gold); display:flex; align-items:center; justify-content:center; font-family:'Share Tech Mono'; font-weight:900;" id="id-box">ID</div>
+            <div id="id-box">ID</div>
             <div class="qr-gold-frame"><div id="qr-box-reg"></div></div>
             <div class="qr-gold-frame">
                 <input type="file" onchange="preview(this)" style="position:absolute; inset:0; opacity:0; z-index:10; cursor:pointer;">
@@ -87,13 +84,14 @@
         <div style="position:absolute; inset:0; background:url('hall_bg_jpg.jpg') center/cover; z-index:-1;"></div>
         <div class="id-card">
             <div style="font-family:'Share Tech Mono'; font-weight:900; margin-bottom:10px; color:#000; letter-spacing: 2px;">ID VERIFICATION</div>
-            <div style="display:flex; gap:12px; margin-bottom:15px;">
+            <div style="display:flex; gap:12px; margin-bottom:10px;">
                 <div class="hall-frame"><img id="h-photo" style="width:100%; height:100%; object-fit:cover;"></div>
                 <div class="hall-frame"><div id="h-qr"></div></div>
             </div>
-            <div id="h-id" style="font-family:'Share Tech Mono'; font-weight:900; font-size:18px; margin-bottom:15px; color:#000; border-bottom: 2px solid #000;"></div>
-            <button id="btn-confirm-hall" class="btn-gy" style="min-width:100%; border-color:#000; color:#000;" onclick="confirmHall()">ПОДТВЕРДИТЬ</button>
-            <button id="btn-go-bar" class="btn-gy btn-sleep" style="min-width:100%; background:#000; color:var(--gold);" onclick="goToBar()">ВХОД В БАР</button>
+            <div id="h-id" style="font-family:'Share Tech Mono'; font-weight:900; font-size:16px; margin-bottom:10px; color:#000; border-bottom: 2px solid #000;"></div>
+            <button id="btn-confirm-hall" class="btn-gy" style="min-width:100%; border-color:#000; color:#000; margin-bottom: 5px;" onclick="confirmHall()">ПОДТВЕРДИТЬ</button>
+            <button id="btn-go-bar" class="btn-gy btn-sleep" style="min-width:100%; background:#000; color:var(--gold); margin-bottom: 10px;" onclick="goToBar()">ВХОД В БАР</button>
+            <div style="font-family: 'Playfair Display'; font-style: italic; font-weight: 900; color: #000; font-size: 14px;">«Все будет GY-GY»</div>
         </div>
     </div>
 
@@ -112,7 +110,6 @@
             const door = document.getElementById('main-door');
             door.style.transform = "scale(15)"; door.style.opacity = "0";
             
-            // ГЕНЕРАЦИЯ ПОЛНОГО КОДА: ПОРЯДКОВЫЙ НОМЕР + ID
             const sessionNum = Math.floor(100 + Math.random() * 899);
             const randomPart = Math.floor(1000 + Math.random() * 8999);
             currentID = `#GY-${sessionNum}-${randomPart}`;
@@ -150,8 +147,8 @@
             const overlay = document.getElementById('fade-overlay');
             const amb = document.getElementById('snd-ambient');
             if (amb) sessionStorage.setItem('gyambient_pos', amb.currentTime);
-            overlay.style.opacity = '1';
-            setTimeout(() => { window.location.href = url; }, 800);
+            overlay.style.opacity = '1'; 
+            setTimeout(() => { window.location.href = url; }, 500);
         }
 
         function portalTransition(id) {
