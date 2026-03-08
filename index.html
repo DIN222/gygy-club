@@ -3,59 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.242</title>
+    <title>GY-GY Club v4.3.243</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
         :root { --gold: #d4af37; --light-brown: #D2B48C; }
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; }
-        
-        /* ГАРАНТИРОВАННЫЙ ЧЕРНЫЙ ФОН */
-        body, html { 
-            width: 100%; height: 100%; 
-            background: #000 !important; 
-            color: var(--gold); 
-            font-family: 'Playfair Display', serif; 
-            overflow: hidden; 
-        }
+        body, html { width: 100%; height: 100%; background: #000 !important; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; }
 
-        #google_translate_element { 
-            position: fixed; top: 15px; left: 15px; 
-            z-index: 10000000 !important; 
-            background: rgba(0,0,0,0.6); padding: 5px; border-radius: 4px; 
-        }
+        /* ЯЗЫКОВАЯ ПАНЕЛЬ */
+        #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 10000000 !important; background: rgba(0,0,0,0.6); padding: 5px; border-radius: 4px; }
 
-        #fade-overlay { 
-            position: fixed; inset: 0; 
-            background: #000 !important; 
-            z-index: 999999; 
-            pointer-events: none; 
-            opacity: 0; 
-            transition: opacity 0.5s ease; 
-        }
+        #fade-overlay { position: fixed; inset: 0; background: #000 !important; z-index: 999999; pointer-events: none; opacity: 0; transition: opacity 0.4s; }
 
-        /* ПЛАВНЫЕ БЛОКИ */
-        .block { 
-            position: fixed; inset: 0; 
-            display: none; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            background: #000 !important; 
-            z-index: 10; 
-            padding: 15px; 
-            opacity: 0; 
-            transition: opacity 0.8s ease-in-out; 
-        }
-        .block.active { display: flex !important; opacity: 1; }
+        .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000 !important; z-index: 10; opacity: 0; }
+        .block.active { display: flex !important; opacity: 1; transition: opacity 0.6s ease-in; }
 
-        #main-door { width: 280px; cursor: pointer; transition: transform 2.5s ease-out, opacity 2s ease-in-out; }
+        /* БЫСТРАЯ ДВЕРЬ */
+        #main-door { width: 280px; cursor: pointer; transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s ease-out; }
 
         .btn-gy { min-width: 260px; padding: 12px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; font-weight: 900; margin: 6px 0; }
         .btn-sleep { opacity: 0.1 !important; pointer-events: none !important; }
 
-        /* HALL & ID */
         .hall-slogan { position: absolute; top: 8%; font-family: 'Playfair Display'; font-style: italic; font-weight: 900; font-size: 22px; color: var(--light-brown); text-shadow: 0 0 10px #000; }
         .id-card { position: absolute; left: 50%; top: 70%; transform: translate(-50%, -50%); width: 250px; padding: 15px; border: 2px solid var(--gold); background: #F5F5DC; border-radius: 12px; display: flex; flex-direction: column; align-items: center; color: #000; }
         .hall-frame { width: 75px; height: 75px; border: 1px solid #000; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; }
@@ -67,7 +37,10 @@
     <div id="google_translate_element"></div>
     <div id="fade-overlay"></div>
 
-    <div id="block-entrance" class="block active">
+    <audio id="snd-door" preload="auto"><source src="door_open.mp3" type="audio/mpeg"></audio>
+    <audio id="snd-ambient" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
+
+    <div id="block-entrance" class="block active" style="opacity: 1;">
         <img src="door_1.jpg" id="main-door" onclick="handleDoor()">
     </div>
     
@@ -88,7 +61,7 @@
                 <span style="color:#000; position:absolute; top:40%; left:25%; font-size:10px; font-weight:900;">ФОТО</span>
             </div>
         </div>
-        <button id="btn-save" class="btn-gy" onclick="saveReg()">СОХРАНИТЬ ДАННЫЕ</button>
+        <button class="btn-gy" onclick="saveReg()">СОХРАНИТЬ ДАННЫЕ</button>
         <button id="btn-go-hall-reg" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">ПРОДОЛЖИТЬ</button>
     </div>
 
@@ -102,7 +75,7 @@
                 <div class="hall-frame" id="h-qr"></div>
             </div>
             <div id="h-id" style="font-family:'Share Tech Mono'; font-weight:900; font-size:13px; margin-bottom:10px; border-bottom:1px solid #000; width:100%; text-align:center;"></div>
-            <button id="btn-confirm-hall" class="btn-gy" style="min-width:100%; border-color:#000; color:#000;" onclick="confirmHall()">ПОДТВЕРДИТЬ</button>
+            <button class="btn-gy" style="min-width:100%; border-color:#000; color:#000;" onclick="confirmHall(this)">ПОДТВЕРДИТЬ</button>
             <button id="btn-go-bar" class="btn-gy btn-sleep" style="min-width:100%; background:#000; color:var(--gold);" onclick="goToBar()">ВХОД В БАР</button>
         </div>
     </div>
@@ -116,6 +89,30 @@
     <script>
         let currentID = "";
 
+        function handleDoor() {
+            const s = document.getElementById('snd-door');
+            s.currentTime = 0; s.play().catch(()=>{});
+            
+            const door = document.getElementById('main-door');
+            door.style.transform = "scale(1.8)";
+            door.style.opacity = "0";
+            
+            currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
+            
+            setTimeout(() => {
+                new QRCode(document.getElementById("qr-box-reg"), { text: currentID, width: 80, height: 80 });
+                new QRCode(document.getElementById("h-qr"), { text: currentID, width: 75, height: 75 });
+                document.getElementById('id-label').innerText = currentID;
+                document.getElementById('h-id').innerText = currentID;
+            }, 100);
+
+            setTimeout(() => { 
+                portalTransition('block-welcome'); 
+                const amb = document.getElementById('snd-ambient');
+                amb.currentTime = 0; amb.play().catch(()=>{});
+            }, 1300);
+        }
+
         function portalTransition(nextId) {
             const current = document.querySelector('.block.active');
             if(current) {
@@ -126,36 +123,16 @@
                     const next = document.getElementById(nextId);
                     next.style.display = "flex";
                     setTimeout(() => { next.classList.add('active'); }, 50);
-                }, 800);
+                }, 600);
             }
         }
 
-        function handleDoor() {
-            try { document.getElementById('snd-door').play(); } catch(e){}
-            const door = document.getElementById('main-door');
-            door.style.transform = "scale(1.3)";
-            door.style.opacity = "0";
-            
-            // Генерация ID
-            currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
-            
-            setTimeout(() => {
-                new QRCode(document.getElementById("qr-box-reg"), { text: currentID, width: 80, height: 80 });
-                new QRCode(document.getElementById("h-qr"), { text: currentID, width: 75, height: 75 });
-                document.getElementById('id-label').innerText = currentID;
-                document.getElementById('h-id').innerText = currentID;
-            }, 300);
-
-            setTimeout(() => { portalTransition('block-welcome'); }, 2000);
-        }
-
         function saveReg() {
-            document.getElementById('btn-save').innerText = "СОХРАНЕНО";
             document.querySelectorAll('.btn-sleep').forEach(b => b.classList.remove('btn-sleep'));
         }
 
-        function confirmHall() {
-            document.getElementById('btn-confirm-hall').innerText = "ПОДТВЕРЖДЕНО";
+        function confirmHall(btn) {
+            btn.innerText = "ПОДТВЕРЖДЕНО";
             document.getElementById('btn-go-bar').classList.remove('btn-sleep');
         }
 
@@ -163,7 +140,7 @@
 
         function smoothLeave(url) {
             document.getElementById('fade-overlay').style.opacity = "1";
-            setTimeout(() => { window.location.href = url; }, 500);
+            setTimeout(() => { window.location.href = url; }, 400);
         }
 
         function preview(i) {
