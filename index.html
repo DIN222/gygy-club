@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.224</title>
+    <title>GY-GY Club v4.3.225</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -13,27 +13,60 @@
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; }
         body, html { width: 100%; height: 100%; background: #000 !important; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; }
 
-        #fade-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 999999; pointer-events: none; opacity: 0; transition: opacity 0.8s ease; }
+        /* ЭФФЕКТ ПЕРЕХОДА (КОНСЕРВАЦИЯ) */
+        #fade-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: #000; z-index: 999999; pointer-events: none; 
+            opacity: 0; transition: opacity 0.8s ease; 
+        }
 
-        #google_translate_element { position: fixed !important; top: 15px !important; left: 15px !important; z-index: 10000000 !important; background: rgba(0,0,0,0.8); border-radius: 5px; }
+        #google_translate_element { 
+            position: fixed !important; top: 15px !important; left: 15px !important; 
+            z-index: 10000000 !important; background: rgba(0,0,0,0.8); border-radius: 5px; 
+        }
 
-        .block { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; opacity: 0; transition: opacity 0.8s ease; z-index: 10; padding: 15px; }
+        #ui-logo-top {
+            position: fixed; top: 15px; right: 25px; z-index: 5000; 
+            color: var(--gold); font-size: 24px; font-weight: bold; letter-spacing: 5px;
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        .block { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            display: none; flex-direction: column; align-items: center; justify-content: center; 
+            background: #000; opacity: 0; transition: opacity 0.8s ease; z-index: 10; padding: 15px; 
+        }
         .block.active { display: flex !important; opacity: 1; }
 
-        .btn-gy { min-width: 280px; padding: 14px; background: #000; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; font-weight: 900; margin: 6px 0; transition: 0.3s; }
+        .btn-gy { 
+            min-width: 280px; padding: 14px; background: #000; border: 2px solid var(--gold); 
+            color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; 
+            text-transform: uppercase; font-weight: 900; margin: 6px 0; transition: 0.3s; 
+        }
         .btn-sleep { opacity: 0.1 !important; pointer-events: none !important; }
-
-        .id-card { position: absolute; left: 50%; top: 65%; transform: translate(-50%, -50%); width: 280px; padding: 20px; border: 3px solid var(--gold); background: #F5F5DC; border-radius: 15px; display: flex; flex-direction: column; align-items: center; color: #000; z-index: 500; box-shadow: 0 10px 40px rgba(0,0,0,0.6); }
 
         .qr-gold-frame { width: 105px; height: 105px; border: 2px solid var(--gold); padding: 4px; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; position: relative; }
 
-        .bar-btn-simple { position: absolute; z-index: 500; background: #000; border: 2px solid var(--gold); padding: 12px 20px; font-family: 'Share Tech Mono'; font-weight: 900; color: var(--gold); cursor: pointer; text-transform: uppercase; transition: 0.3s; }
+        .id-card { 
+            position: absolute; left: 50%; top: 65%; transform: translate(-50%, -50%); 
+            width: 280px; padding: 20px; border: 3px solid var(--gold); 
+            background: #F5F5DC; border-radius: 15px; display: flex; flex-direction: column; 
+            align-items: center; color: #000; z-index: 500; box-shadow: 0 10px 40px rgba(0,0,0,0.6); 
+        }
+
+        .bar-btn-simple { 
+            position: absolute; z-index: 500; background: #000; border: 2px solid var(--gold); 
+            padding: 12px 20px; font-family: 'Share Tech Mono'; font-weight: 900; 
+            color: var(--gold); cursor: pointer; text-transform: uppercase; transition: 0.3s; 
+        }
+        .bar-btn-simple:hover { background: var(--gold); color: #000; }
     </style>
 </head>
 <body>
 
     <div id="fade-overlay"></div>
     <div id="google_translate_element"></div>
+    <div id="ui-logo-top">GY-GY</div>
 
     <audio id="snd-door"><source src="door_open.mp3" type="audio/mpeg"></audio>
     <audio id="snd-ambient" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
@@ -93,7 +126,6 @@
             const door = document.getElementById('main-door');
             door.style.transform = "scale(15)"; door.style.opacity = "0";
             try { new Audio('charlie_welcome.mp3').play(); } catch(e){}
-
             setTimeout(() => {
                 try {
                     new QRCode(document.getElementById("qr-box-reg"), { text: fullID, width: 85, height: 85 });
@@ -102,7 +134,6 @@
                 document.getElementById('id-box').innerText = fullID;
                 document.getElementById('h-id').innerText = fullID;
             }, 100);
-            
             setTimeout(() => { 
                 try { document.getElementById('snd-ambient').play(); } catch(e){} 
                 portalTransition('block-welcome'); 
@@ -114,6 +145,8 @@
             document.getElementById('btn-save').innerText = 'СОХРАНЕНО';
             document.getElementById('btn-go-hall-reg').classList.remove('btn-sleep');
             document.getElementById('btn-welcome-hall').classList.remove('btn-sleep');
+            // Сохраняем для других веток
+            localStorage.setItem('gygy_id', fullID);
         }
 
         function confirmHall() {
@@ -123,7 +156,6 @@
         }
 
         function goToBar() { 
-            // Теперь звук бара НЕ меняется на джаз, просто открываем блок Чарли
             portalTransition('block-bar'); 
             try { new Audio('charlie_bar_fx.mp3').play(); } catch(e){}
         }
@@ -131,13 +163,10 @@
         function smoothLeave(url) {
             const overlay = document.getElementById('fade-overlay');
             const amb = document.getElementById('snd-ambient');
-            
-            // Сохраняем прогресс барного шума
             if (amb) {
                 sessionStorage.setItem('gyambient_pos', amb.currentTime);
                 sessionStorage.setItem('gyambient_active', 'true');
             }
-
             if(overlay) overlay.style.opacity = '1';
             setTimeout(() => { window.location.href = url; }, 800);
         }
@@ -159,6 +188,7 @@
                     document.getElementById('pp').style.display = "block";
                     document.getElementById('photo-label').style.display = "none";
                     document.getElementById('h-photo').src = e.target.result;
+                    localStorage.setItem('gygy_avatar', e.target.result);
                 };
                 r.readAsDataURL(i.files[0]);
             }
