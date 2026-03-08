@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.234</title>
+    <title>GY-GY Club v4.3.235</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -21,6 +21,9 @@
         .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; opacity: 0; transition: opacity 0.6s ease; z-index: 10; padding: 15px; }
         .block.active { display: flex !important; opacity: 1; }
 
+        /* НАДПИСЬ НАД ВХОДОМ */
+        .entrance-sign { font-family: 'Playfair Display'; font-style: italic; font-weight: 900; font-size: 24px; margin-bottom: 20px; text-shadow: 0 0 15px var(--gold); }
+
         .btn-gy { min-width: 280px; padding: 14px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; font-weight: 900; margin: 6px 0; transition: 0.3s; z-index: 20; }
         .btn-sleep { opacity: 0.1 !important; pointer-events: none !important; }
 
@@ -33,8 +36,9 @@
 
         .qr-gold-frame { width: 105px; height: 105px; border: 2px solid var(--gold); padding: 4px; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
 
+        /* ХОЛЛ: ПОРЯДОК И ПОЗИЦИЯ */
         .id-card { 
-            position: absolute; left: 50%; top: 52%; transform: translate(-50%, -50%); 
+            position: absolute; left: 50%; top: 62%; transform: translate(-50%, -50%); 
             width: 300px; padding: 20px; border: 3px solid var(--gold); 
             background: #F5F5DC; border-radius: 15px; display: flex; flex-direction: column; 
             align-items: center; color: #000; z-index: 500; box-shadow: 0 10px 40px rgba(0,0,0,0.9); 
@@ -55,6 +59,7 @@
     <audio id="snd-pour"><source src="pour_whisky.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active">
+        <div class="entrance-sign">«Все будет GY-GY»</div>
         <img src="door_1.jpg" style="width:280px; cursor:pointer; transition: 2.5s;" id="main-door" onclick="handleDoor()">
     </div>
     
@@ -82,6 +87,8 @@
 
     <div id="block-hall" class="block">
         <div style="position:absolute; inset:0; background:url('hall_bg_jpg.jpg') center/cover; z-index:-1;"></div>
+        <div style="position: absolute; top: 15%; font-family: 'Playfair Display'; font-weight: 900; font-size: 60px; letter-spacing: 15px; opacity: 0.8;">БАР</div>
+        
         <div class="id-card">
             <div style="font-family:'Share Tech Mono'; font-weight:900; margin-bottom:10px; color:#000; letter-spacing: 2px;">ID VERIFICATION</div>
             <div style="display:flex; gap:12px; margin-bottom:10px;">
@@ -90,8 +97,7 @@
             </div>
             <div id="h-id" style="font-family:'Share Tech Mono'; font-weight:900; font-size:16px; margin-bottom:10px; color:#000; border-bottom: 2px solid #000;"></div>
             <button id="btn-confirm-hall" class="btn-gy" style="min-width:100%; border-color:#000; color:#000; margin-bottom: 5px;" onclick="confirmHall()">ПОДТВЕРДИТЬ</button>
-            <button id="btn-go-bar" class="btn-gy btn-sleep" style="min-width:100%; background:#000; color:var(--gold); margin-bottom: 10px;" onclick="goToBar()">ВХОД В БАР</button>
-            <div style="font-family: 'Playfair Display'; font-style: italic; font-weight: 900; color: #000; font-size: 14px;">«Все будет GY-GY»</div>
+            <button id="btn-go-bar" class="btn-gy btn-sleep" style="min-width:100%; background:#000; color:var(--gold);" onclick="goToBar()">ВХОД В БАР</button>
         </div>
     </div>
 
