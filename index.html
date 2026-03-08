@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.222</title>
+    <title>GY-GY Club v4.3.223</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -13,7 +13,12 @@
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; }
         body, html { width: 100%; height: 100%; background: #000 !important; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; }
 
-        #fade-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 999999; pointer-events: none; opacity: 0; transition: opacity 0.8s ease; }
+        /* ОВЕРЛЕЙ ДЛЯ ПЛАВНОГО УХОДА В ДРУГИЕ ФАЙЛЫ */
+        #fade-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: #000; z-index: 999999; pointer-events: none; 
+            opacity: 0; transition: opacity 0.8s ease; 
+        }
 
         #google_translate_element { 
             position: fixed !important; top: 15px !important; left: 15px !important; 
@@ -30,7 +35,8 @@
 
         .id-card { position: absolute; left: 50%; top: 65%; transform: translate(-50%, -50%); width: 280px; padding: 20px; border: 3px solid var(--gold); background: #F5F5DC; border-radius: 15px; display: flex; flex-direction: column; align-items: center; color: #000; z-index: 500; box-shadow: 0 10px 40px rgba(0,0,0,0.6); }
 
-        .bar-btn-simple { position: absolute; z-index: 500; background: #000; border: 2px solid var(--gold); padding: 12px 20px; font-family: 'Share Tech Mono'; font-weight: 900; color: var(--gold); cursor: pointer; text-transform: uppercase; }
+        .bar-btn-simple { position: absolute; z-index: 500; background: #000; border: 2px solid var(--gold); padding: 12px 20px; font-family: 'Share Tech Mono'; font-weight: 900; color: var(--gold); cursor: pointer; text-transform: uppercase; transition: 0.3s; }
+        .bar-btn-simple:active { transform: scale(0.95); background: var(--gold); color: #000; }
     </style>
 </head>
 <body>
@@ -85,8 +91,10 @@
 
     <div id="block-bar" class="block" style="padding:0; justify-content: flex-end;">
         <div style="position: absolute; top: 60px; font-weight: 900; color: var(--gold); text-align: center; width:100%; font-size: 22px; z-index:100;">«Истина не в вине, а в его количестве»</div>
+        
         <button style="bottom: 15%; left: 5%;" class="bar-btn-simple" onclick="smoothLeave('tables.html')">ЗА СТОЛИКИ</button>
-        <button style="bottom: 15%; right: 5%;" class="bar-btn-simple" onclick="smoothLeave('ai_room.html')">В AI ROOM</button>
+        <button style="bottom: 15%; right: 5%;" class="bar-btn-simple" onclick="smoothLeave('ai_room_retro_base.html')">В AI ROOM</button>
+        
         <img src="charlie_bar.png" style="height: 80vh; width: auto; pointer-events: none; z-index: 10;">
     </div>
 
@@ -148,9 +156,21 @@
             } catch(e){}
         }
 
+        // КЛЮЧЕВАЯ ФУНКЦИЯ ПЕРЕХОДА МЕЖДУ ФАЙЛАМИ
         function smoothLeave(url) {
             const overlay = document.getElementById('fade-overlay');
+            const jaz = document.getElementById('snd-jazz');
+            
+            // 1. Запоминаем время джаза в память браузера
+            if (jaz && !jaz.paused) {
+                sessionStorage.setItem('gymusic_pos', jaz.currentTime);
+                sessionStorage.setItem('gymusic_active', 'true');
+            }
+
+            // 2. Включаем затемнение
             if(overlay) overlay.style.opacity = '1';
+
+            // 3. Через 800мс переходим на другой файл
             setTimeout(() => { window.location.href = url; }, 800);
         }
 
