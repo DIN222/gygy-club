@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.231</title>
+    <title>GY-GY Club v4.3.232</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -13,45 +13,38 @@
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; }
         body, html { width: 100%; height: 100%; background: #000 !important; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; }
 
-        /* СТАНДАРТНЫЙ ГУГЛ - БЕЗ ЭКСПЕРИМЕНТОВ */
         #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 10000000; background: rgba(0,0,0,0.5); padding: 5px; border-radius: 4px; }
         #ui-logo-top { position: fixed; top: 15px; right: 25px; z-index: 5000; color: var(--gold); font-size: 24px; font-weight: bold; letter-spacing: 5px; font-family: 'Share Tech Mono', monospace; }
 
-        /* ЭФФЕКТ ПЕРЕХОДА */
         #fade-overlay { position: fixed; inset: 0; background: #000; z-index: 999999; pointer-events: none; opacity: 0; transition: opacity 0.8s ease; }
 
-        /* БЛОКИ */
         .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; opacity: 0; transition: opacity 0.8s ease; z-index: 10; padding: 15px; }
         .block.active { display: flex !important; opacity: 1; }
 
-        /* КНОПКИ С ЗОЛОТЫМ КОНТУРОМ */
         .btn-gy { min-width: 280px; padding: 14px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; font-weight: 900; margin: 6px 0; transition: 0.3s; }
-        .btn-gy:hover { background: rgba(212, 175, 55, 0.1); }
         .btn-sleep { opacity: 0.1 !important; pointer-events: none !important; }
 
-        /* ЗОЛОТЫЕ РАМКИ */
+        /* ЗОЛОТЫЕ РАМКИ ДЛЯ РЕГИСТРАЦИИ */
         .qr-gold-frame { 
             width: 105px; height: 105px; border: 2px solid var(--gold); 
             padding: 4px; background: #fff; display: flex; align-items: center; 
             justify-content: center; overflow: hidden; position: relative; 
         }
 
-        /* КАРТОЧКА В ХОЛЛЕ */
+        /* КАРТОЧКА В ХОЛЛЕ - ЕДИНЫЙ СТИЛЬ */
         .id-card { 
             position: absolute; left: 50%; top: 60%; transform: translate(-50%, -50%); 
-            width: 300px; padding: 20px; border: 3px solid var(--gold); 
+            width: 300px; padding: 25px; border: 3px solid var(--gold); 
             background: #F5F5DC; border-radius: 15px; display: flex; flex-direction: column; 
             align-items: center; color: #000; z-index: 500; box-shadow: 0 10px 40px rgba(0,0,0,0.8); 
         }
+        .hall-frame { width: 100px; height: 100px; border: 2px solid #000; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 
-        /* КНОПКИ У ЧАРЛИ (БЕЗ ЗАЛИВКИ) */
         .bar-btn-simple { 
             position: absolute; z-index: 500; background: transparent; 
             border: 2px solid var(--gold); padding: 12px 20px; color: var(--gold);
             font-family: 'Share Tech Mono'; font-weight: 900; cursor: pointer; text-transform: uppercase;
-            transition: 0.3s;
         }
-        .bar-btn-simple:hover { background: rgba(212, 175, 55, 0.2); }
     </style>
 </head>
 <body>
@@ -65,7 +58,7 @@
     <audio id="snd-pour"><source src="pour_whisky.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active">
-        <img src="door_1.jpg" style="width:280px; cursor:pointer; transition: 2.5s ease-in-out;" id="main-door" onclick="handleDoor()">
+        <img src="door_1.jpg" style="width:280px; cursor:pointer; transition: 2.5s;" id="main-door" onclick="handleDoor()">
     </div>
     
     <div id="block-welcome" class="block">
@@ -93,18 +86,19 @@
     <div id="block-hall" class="block">
         <div style="position:absolute; inset:0; background:url('hall_bg_jpg.jpg') center/cover; z-index:-1;"></div>
         <div class="id-card">
-            <div style="font-family:'Share Tech Mono'; font-weight:900; margin-bottom:10px; color:#000;">ID VERIFICATION</div>
-            <div style="display:flex; gap:10px; margin-bottom:15px;">
-                <div class="qr-gold-frame" style="border-color:#000;"><img id="h-photo" style="width:100%; height:100%; object-fit:cover;"></div>
-                <div class="qr-gold-frame" style="border-color:#000;"><div id="h-qr"></div></div>
+            <div style="font-family:'Share Tech Mono'; font-weight:900; margin-bottom:10px; color:#000; letter-spacing: 2px;">ID VERIFICATION</div>
+            <div style="display:flex; gap:12px; margin-bottom:15px;">
+                <div class="hall-frame"><img id="h-photo" style="width:100%; height:100%; object-fit:cover;"></div>
+                <div class="hall-frame"><div id="h-qr"></div></div>
             </div>
-            <div id="h-id" style="font-family:'Share Tech Mono'; font-weight:900; font-size:18px; margin-bottom:15px; color:#000;"></div>
+            <div id="h-id" style="font-family:'Share Tech Mono'; font-weight:900; font-size:18px; margin-bottom:15px; color:#000; border-bottom: 2px solid #000;"></div>
             <button id="btn-confirm-hall" class="btn-gy" style="min-width:100%; border-color:#000; color:#000;" onclick="confirmHall()">ПОДТВЕРДИТЬ</button>
             <button id="btn-go-bar" class="btn-gy btn-sleep" style="min-width:100%; background:#000; color:var(--gold);" onclick="goToBar()">ВХОД В БАР</button>
         </div>
     </div>
 
     <div id="block-bar" class="block" style="padding:0; justify-content: flex-end;">
+        <div style="position: absolute; top: 80px; width: 100%; text-align: center; font-family: 'Playfair Display'; font-style: italic; font-weight: 900; font-size: 22px; color: var(--gold); text-shadow: 0 0 10px #000;">«Истина не в вине, а в его количестве»</div>
         <button style="bottom: 15%; left: 8%;" class="bar-btn-simple" onclick="smoothLeave('tables.html')">ЗА СТОЛИКИ</button>
         <button style="bottom: 15%; right: 8%;" class="bar-btn-simple" onclick="smoothLeave('ai_room_retro_base.html')">В AI ROOM</button>
         <img src="charlie_bar.png" style="height: 85vh; width: auto; pointer-events: none;">
@@ -116,10 +110,12 @@
         function handleDoor() {
             try { document.getElementById('snd-door').play(); } catch(e){}
             const door = document.getElementById('main-door');
-            door.style.transform = "scale(15)"; 
-            door.style.opacity = "0";
+            door.style.transform = "scale(15)"; door.style.opacity = "0";
             
-            currentID = `#GY-${Math.floor(1000 + Math.random() * 8999)}`;
+            // ГЕНЕРАЦИЯ ПОЛНОГО КОДА: ПОРЯДКОВЫЙ НОМЕР + ID
+            const sessionNum = Math.floor(100 + Math.random() * 899);
+            const randomPart = Math.floor(1000 + Math.random() * 8999);
+            currentID = `#GY-${sessionNum}-${randomPart}`;
             
             setTimeout(() => {
                 new QRCode(document.getElementById("qr-box-reg"), { text: currentID, width: 90, height: 90 });
