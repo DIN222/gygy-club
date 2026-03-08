@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.226</title>
+    <title>GY-GY Club v4.3.227</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -13,42 +13,46 @@
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; }
         body, html { width: 100%; height: 100%; background: #000 !important; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; }
 
-        /* ЧИСТКА GOOGLE TRANSLATE */
-        .goog-te-banner-frame.skiptranslate, .goog-te-gadget-icon { display: none !important; }
+        /* ПОЛНАЯ АНГЛИФИКАЦИЯ ПАНЕЛИ ЯЗЫКОВ */
+        .goog-te-banner-frame.skiptranslate, .goog-te-gadget-icon, .goog-te-gadget span { display: none !important; }
         body { top: 0px !important; }
-        .goog-te-gadget span { display: none !important; }
         .goog-te-gadget { color: transparent !important; font-size: 0 !important; }
-        .goog-te-gadget .goog-te-combo { 
-            background: rgba(0,0,0,0.8); color: var(--gold); border: 1px solid var(--gold); 
-            padding: 4px; font-family: 'Share Tech Mono'; outline: none; 
+        
+        #google_translate_element { 
+            position: fixed !important; top: 15px !important; left: 15px !important; 
+            z-index: 10000000 !important; background: rgba(0,0,0,0.5); padding: 5px; border-radius: 4px;
         }
 
-        /* Кнопка "SELECT LANGUAGE" */
         #google_translate_element::before {
             content: "SELECT LANGUAGE";
             display: block;
             font-family: 'Share Tech Mono';
             font-size: 10px;
             color: var(--gold);
-            margin-bottom: 2px;
+            margin-bottom: 4px;
             letter-spacing: 1px;
         }
 
-        #fade-overlay { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: #000; z-index: 999999; pointer-events: none; 
-            opacity: 0; transition: opacity 0.6s steps(20); /* Сделали более жестким и быстрым */
-        }
-
-        #google_translate_element { 
-            position: fixed !important; top: 15px !important; left: 15px !important; 
-            z-index: 10000000 !important; background: rgba(0,0,0,0.5); padding: 5px; border-radius: 4px;
+        .goog-te-combo { 
+            background: #000 !important; 
+            color: var(--gold) !important; 
+            border: 1px solid var(--gold) !important; 
+            padding: 5px !important; 
+            font-family: 'Share Tech Mono' !important; 
+            font-size: 12px !important;
+            outline: none;
         }
 
         #ui-logo-top {
             position: fixed; top: 15px; right: 25px; z-index: 5000; 
             color: var(--gold); font-size: 24px; font-weight: bold; letter-spacing: 5px;
             font-family: 'Share Tech Mono', monospace;
+        }
+
+        #fade-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: #000; z-index: 999999; pointer-events: none; 
+            opacity: 0; transition: opacity 0.6s ease;
         }
 
         .block { 
@@ -97,8 +101,8 @@
         <div style="font-family:'Share Tech Mono'; letter-spacing:8px; font-size:16px; margin-bottom: 5px;">GY-GY PRIVAT</div>
         <img src="charlie.png" style="max-height: 30vh; -webkit-mask-image: radial-gradient(circle, black 65%, transparent 98%); margin: 5px 0;">
         <h1 style="font-size:38px; font-weight: 900; margin-bottom: 10px; color: var(--gold); text-transform: uppercase;">WELCOME</h1>
-        <button id="btn-welcome-hall" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">ПРОХОДИТЕ В ХОЛЛ</button>
-        <button class="btn-gy" onclick="portalTransition('block-identity')">ПРОХОДИТЕ НА РЕГИСТРАЦИЮ</button>
+        <button id="btn-welcome-hall" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">PROCEED TO HALL</button>
+        <button class="btn-gy" onclick="portalTransition('block-identity')">PROCEED TO REGISTRATION</button>
     </div>
 
     <div id="block-identity" class="block">
@@ -111,8 +115,8 @@
                 <span id="photo-label" style="color:#000; font-size:10px; font-weight:900; position:absolute; top:40%; left:25%;">PHOTO</span>
             </div>
         </div>
-        <button id="btn-save" class="btn-gy" onclick="saveReg()">СОХРАНИТЬ</button>
-        <button id="btn-go-hall-reg" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">ПРОХОДИТЕ</button>
+        <button id="btn-save" class="btn-gy" onclick="saveReg()">SAVE</button>
+        <button id="btn-go-hall-reg" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">PROCEED</button>
     </div>
 
     <div id="block-hall" class="block">
@@ -123,14 +127,14 @@
                 <div style="width:105px; height:105px; border:1px solid #000; background:#fff; display:flex; align-items:center; justify-content:center;"><div id="h-qr"></div></div>
             </div>
             <div id="h-id" style="font-family:'Share Tech Mono'; font-weight:900; margin-bottom:12px; font-size:16px;"></div>
-            <button id="btn-confirm-hall" class="btn-gy" style="min-width:100%; font-size:12px;" onclick="confirmHall()">ПОДТВЕРДИТЕ</button>
-            <button id="btn-go-bar" class="btn-gy btn-sleep" style="min-width:100%; font-size:12px;" onclick="goToBar()">ВХОД В БАР</button>
+            <button id="btn-confirm-hall" class="btn-gy" style="min-width:100%; font-size:12px;" onclick="confirmHall()">CONFIRM</button>
+            <button id="btn-go-bar" class="btn-gy btn-sleep" style="min-width:100%; font-size:12px;" onclick="ENTER BAR">ENTER BAR</button>
         </div>
     </div>
 
     <div id="block-bar" class="block" style="padding:0; justify-content: flex-end;">
-        <button style="bottom: 15%; left: 5%;" class="bar-btn-simple" onclick="smoothLeave('tables.html')">ЗА СТОЛИКИ</button>
-        <button style="bottom: 15%; right: 5%;" class="bar-btn-simple" onclick="smoothLeave('ai_room_retro_base.html')">В AI ROOM</button>
+        <button style="bottom: 15%; left: 5%;" class="bar-btn-simple" onclick="smoothLeave('tables.html')">TO TABLES</button>
+        <button style="bottom: 15%; right: 5%;" class="bar-btn-simple" onclick="smoothLeave('ai_room_retro_base.html')">TO AI ROOM</button>
         <img src="charlie_bar.png" style="height: 80vh; width: auto; pointer-events: none; z-index: 10;">
     </div>
 
@@ -156,7 +160,7 @@
 
         function saveReg() { 
             try { document.getElementById('snd-pour').play(); } catch(e){}
-            document.getElementById('btn-save').innerText = 'СОХРАНЕНО';
+            document.getElementById('btn-save').innerText = 'SAVED';
             document.getElementById('btn-go-hall-reg').classList.remove('btn-sleep');
             document.getElementById('btn-welcome-hall').classList.remove('btn-sleep');
             localStorage.setItem('gygy_id', fullID);
@@ -164,7 +168,7 @@
 
         function confirmHall() {
             try { document.getElementById('snd-pour').play(); } catch(e){}
-            document.getElementById('btn-confirm-hall').innerText = 'ПОДТВЕРЖДЕНО';
+            document.getElementById('btn-confirm-hall').innerText = 'CONFIRMED';
             document.getElementById('btn-go-bar').classList.remove('btn-sleep');
         }
 
@@ -177,7 +181,6 @@
                 sessionStorage.setItem('gyambient_pos', amb.currentTime);
                 sessionStorage.setItem('gyambient_active', 'true');
             }
-            // Мгновенная блокировка интерфейса перед уходом
             overlay.style.opacity = '1';
             overlay.style.pointerEvents = 'auto';
             setTimeout(() => { window.location.href = url; }, 600);
@@ -206,7 +209,11 @@
         }
 
         function googleTranslateElementInit() {
-            new google.translate.TranslateElement({ pageLanguage: 'ru', autoDisplay: false }, 'google_translate_element');
+            new google.translate.TranslateElement({ 
+                pageLanguage: 'en', // Установили английский базовым
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false 
+            }, 'google_translate_element');
         }
     </script>
     <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
