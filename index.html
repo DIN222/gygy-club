@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.227</title>
+    <title>GY-GY Club v4.3.228</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -13,34 +13,20 @@
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; }
         body, html { width: 100%; height: 100%; background: #000 !important; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; }
 
-        /* ПОЛНАЯ АНГЛИФИКАЦИЯ ПАНЕЛИ ЯЗЫКОВ */
-        .goog-te-banner-frame.skiptranslate, .goog-te-gadget-icon, .goog-te-gadget span { display: none !important; }
-        body { top: 0px !important; }
-        .goog-te-gadget { color: transparent !important; font-size: 0 !important; }
-        
+        /* ФИКС ЯЗЫКОВОЙ ПАНЕЛИ */
         #google_translate_element { 
             position: fixed !important; top: 15px !important; left: 15px !important; 
-            z-index: 10000000 !important; background: rgba(0,0,0,0.5); padding: 5px; border-radius: 4px;
+            z-index: 10000000 !important; background: rgba(0,0,0,0.6); padding: 6px; border-radius: 4px; border: 1px solid rgba(212,175,55,0.3);
         }
-
         #google_translate_element::before {
             content: "SELECT LANGUAGE";
-            display: block;
-            font-family: 'Share Tech Mono';
-            font-size: 10px;
-            color: var(--gold);
-            margin-bottom: 4px;
-            letter-spacing: 1px;
+            display: block; font-family: 'Share Tech Mono'; font-size: 10px; color: var(--gold); margin-bottom: 4px; letter-spacing: 1px;
         }
-
+        .goog-te-gadget span, .goog-te-banner-frame, .goog-te-gadget-icon { display: none !important; }
+        .goog-te-gadget { color: transparent !important; font-size: 0 !important; }
         .goog-te-combo { 
-            background: #000 !important; 
-            color: var(--gold) !important; 
-            border: 1px solid var(--gold) !important; 
-            padding: 5px !important; 
-            font-family: 'Share Tech Mono' !important; 
-            font-size: 12px !important;
-            outline: none;
+            background: #000 !important; color: var(--gold) !important; border: 1px solid var(--gold) !important; 
+            padding: 4px !important; font-family: 'Share Tech Mono' !important; outline: none;
         }
 
         #ui-logo-top {
@@ -49,38 +35,22 @@
             font-family: 'Share Tech Mono', monospace;
         }
 
-        #fade-overlay { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: #000; z-index: 999999; pointer-events: none; 
-            opacity: 0; transition: opacity 0.6s ease;
-        }
+        #fade-overlay { position: fixed; inset: 0; background: #000; z-index: 999999; pointer-events: none; opacity: 0; transition: opacity 0.6s ease; }
 
-        .block { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            display: none; flex-direction: column; align-items: center; justify-content: center; 
-            background: #000; opacity: 0; transition: opacity 0.8s ease; z-index: 10; padding: 15px; 
-        }
+        .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; opacity: 0; transition: opacity 0.8s ease; z-index: 10; padding: 15px; }
         .block.active { display: flex !important; opacity: 1; }
 
-        .btn-gy { 
-            min-width: 280px; padding: 14px; background: #000; border: 2px solid var(--gold); 
-            color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; 
-            text-transform: uppercase; font-weight: 900; margin: 6px 0; transition: 0.3s; 
-        }
+        .btn-gy { min-width: 280px; padding: 14px; background: #000; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; font-weight: 900; margin: 6px 0; transition: 0.3s; }
         .btn-sleep { opacity: 0.1 !important; pointer-events: none !important; }
 
         .id-card { 
-            position: absolute; left: 50%; top: 65%; transform: translate(-50%, -50%); 
-            width: 280px; padding: 20px; border: 3px solid var(--gold); 
+            position: absolute; left: 50%; top: 60%; transform: translate(-50%, -50%); 
+            width: 290px; padding: 20px; border: 3px solid var(--gold); 
             background: #F5F5DC; border-radius: 15px; display: flex; flex-direction: column; 
-            align-items: center; color: #000; z-index: 500; box-shadow: 0 10px 40px rgba(0,0,0,0.6); 
+            align-items: center; color: #000; z-index: 500; box-shadow: 0 10px 40px rgba(0,0,0,0.8); 
         }
 
-        .bar-btn-simple { 
-            position: absolute; z-index: 500; background: #000; border: 2px solid var(--gold); 
-            padding: 12px 20px; font-family: 'Share Tech Mono'; font-weight: 900; 
-            color: var(--gold); cursor: pointer; text-transform: uppercase; transition: 0.3s; 
-        }
+        .bar-btn-simple { position: absolute; z-index: 500; background: #000; border: 2px solid var(--gold); padding: 12px 20px; font-family: 'Share Tech Mono'; font-weight: 900; color: var(--gold); cursor: pointer; text-transform: uppercase; }
     </style>
 </head>
 <body>
@@ -94,48 +64,49 @@
     <audio id="snd-pour"><source src="pour_whisky.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active">
-        <img src="door_1.jpg" style="width:260px; cursor:pointer; transition:2s;" id="main-door" onclick="handleDoor()">
+        <img src="door_1.jpg" style="width:260px; cursor:pointer;" id="main-door" onclick="handleDoor()">
     </div>
     
     <div id="block-welcome" class="block">
         <div style="font-family:'Share Tech Mono'; letter-spacing:8px; font-size:16px; margin-bottom: 5px;">GY-GY PRIVAT</div>
-        <img src="charlie.png" style="max-height: 30vh; -webkit-mask-image: radial-gradient(circle, black 65%, transparent 98%); margin: 5px 0;">
-        <h1 style="font-size:38px; font-weight: 900; margin-bottom: 10px; color: var(--gold); text-transform: uppercase;">WELCOME</h1>
+        <img src="charlie.png" style="max-height: 30vh; margin: 10px 0;">
+        <h1 style="font-size:32px; font-weight: 900; color: var(--gold); text-transform: uppercase;">WELCOME</h1>
         <button id="btn-welcome-hall" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">PROCEED TO HALL</button>
-        <button class="btn-gy" onclick="portalTransition('block-identity')">PROCEED TO REGISTRATION</button>
+        <button class="btn-gy" onclick="portalTransition('block-identity')">REGISTRATION</button>
     </div>
 
     <div id="block-identity" class="block">
-        <div style="display:flex; gap:15px; margin-bottom:25px;">
-            <div style="width:105px; height:105px; border:2px solid var(--gold); display:flex; align-items:center; justify-content:center; color:var(--gold); font-family:'Share Tech Mono'; font-weight:900;" id="id-box">ID</div>
-            <div style="width:105px; height:105px; border:2px solid var(--gold); padding:4px; background:#fff; display:flex; align-items:center; justify-content:center;"><div id="qr-box-reg"></div></div>
-            <div style="width:105px; height:105px; border:2px solid var(--gold); padding:4px; background:#fff; position:relative;">
-                <input type="file" onchange="preview(this)" style="position:absolute; opacity:0; width:100%; height:100%; cursor:pointer; z-index:10;">
+        <div style="display:flex; gap:10px; margin-bottom:20px;">
+            <div style="width:90px; height:90px; border:2px solid var(--gold); display:flex; align-items:center; justify-content:center; font-family:'Share Tech Mono';" id="id-box">ID</div>
+            <div style="width:90px; height:90px; border:2px solid var(--gold); background:#fff; display:flex; align-items:center; justify-content:center;"><div id="qr-box-reg"></div></div>
+            <div style="width:90px; height:90px; border:2px solid var(--gold); background:#fff; position:relative;">
+                <input type="file" onchange="preview(this)" style="position:absolute; inset:0; opacity:0; z-index:10; cursor:pointer;">
                 <img id="pp" style="width:100%; height:100%; object-fit:cover; display:none;">
-                <span id="photo-label" style="color:#000; font-size:10px; font-weight:900; position:absolute; top:40%; left:25%;">PHOTO</span>
+                <span id="photo-label" style="color:#000; font-size:10px; font-weight:900; position:absolute; top:40%; left:20%;">PHOTO</span>
             </div>
         </div>
-        <button id="btn-save" class="btn-gy" onclick="saveReg()">SAVE</button>
+        <button id="btn-save" class="btn-gy" onclick="saveReg()">SAVE ID</button>
         <button id="btn-go-hall-reg" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">PROCEED</button>
     </div>
 
     <div id="block-hall" class="block">
-        <div style="position:absolute; width:100%; height:100%; background:url('hall_bg_jpg.jpg') center/cover; z-index:-1;"></div>
+        <div style="position:absolute; inset:0; background:url('hall_bg_jpg.jpg') center/cover; z-index:-1;"></div>
         <div class="id-card">
-            <div style="display:flex; gap:12px; margin-bottom:12px;">
-                <div style="width:105px; height:105px; border:1px solid #000; background:#fff;"><img id="h-photo" style="width:100%; height:100%; object-fit:cover;"></div>
-                <div style="width:105px; height:105px; border:1px solid #000; background:#fff; display:flex; align-items:center; justify-content:center;"><div id="h-qr"></div></div>
+            <div style="font-family:'Share Tech Mono'; font-weight:900; font-size:14px; margin-bottom:10px;">ID VERIFICATION</div>
+            <div style="display:flex; gap:10px; margin-bottom:15px;">
+                <div style="width:100px; height:100px; border:1px solid #000; background:#fff;"><img id="h-photo" style="width:100%; height:100%; object-fit:cover;"></div>
+                <div style="width:100px; height:100px; border:1px solid #000; background:#fff; display:flex; align-items:center; justify-content:center;"><div id="h-qr"></div></div>
             </div>
-            <div id="h-id" style="font-family:'Share Tech Mono'; font-weight:900; margin-bottom:12px; font-size:16px;"></div>
-            <button id="btn-confirm-hall" class="btn-gy" style="min-width:100%; font-size:12px;" onclick="confirmHall()">CONFIRM</button>
-            <button id="btn-go-bar" class="btn-gy btn-sleep" style="min-width:100%; font-size:12px;" onclick="ENTER BAR">ENTER BAR</button>
+            <div id="h-id" style="font-family:'Share Tech Mono'; font-weight:900; margin-bottom:15px; font-size:16px; border-bottom:1px solid #000;"></div>
+            <button id="btn-confirm-hall" class="btn-gy" style="min-width:100%; font-size:12px; border-color:#000; color:#000;" onclick="confirmHall()">CONFIRM ENTRY</button>
+            <button id="btn-go-bar" class="btn-gy btn-sleep" style="min-width:100%; font-size:12px; background:#000; color:var(--gold);" onclick="goToBar()">ENTER BAR</button>
         </div>
     </div>
 
     <div id="block-bar" class="block" style="padding:0; justify-content: flex-end;">
-        <button style="bottom: 15%; left: 5%;" class="bar-btn-simple" onclick="smoothLeave('tables.html')">TO TABLES</button>
-        <button style="bottom: 15%; right: 5%;" class="bar-btn-simple" onclick="smoothLeave('ai_room_retro_base.html')">TO AI ROOM</button>
-        <img src="charlie_bar.png" style="height: 80vh; width: auto; pointer-events: none; z-index: 10;">
+        <button style="bottom: 12%; left: 5%;" class="bar-btn-simple" onclick="smoothLeave('tables.html')">TO TABLES</button>
+        <button style="bottom: 12%; right: 5%;" class="bar-btn-simple" onclick="smoothLeave('ai_room_retro_base.html')">TO AI ROOM</button>
+        <img src="charlie_bar.png" style="height: 80vh; width: auto; pointer-events: none;">
     </div>
 
     <script>
@@ -144,11 +115,11 @@
         function handleDoor() {
             try { document.getElementById('snd-door').play(); } catch(e){}
             const door = document.getElementById('main-door');
-            door.style.transform = "scale(15)"; door.style.opacity = "0";
+            door.style.transform = "scale(10)"; door.style.opacity = "0";
             try { new Audio('charlie_welcome.mp3').play(); } catch(e){}
             setTimeout(() => {
-                new QRCode(document.getElementById("qr-box-reg"), { text: fullID, width: 85, height: 85 });
-                new QRCode(document.getElementById("h-qr"), { text: fullID, width: 85, height: 85 });
+                new QRCode(document.getElementById("qr-box-reg"), { text: fullID, width: 80, height: 80 });
+                new QRCode(document.getElementById("h-qr"), { text: fullID, width: 90, height: 90 });
                 document.getElementById('id-box').innerText = fullID;
                 document.getElementById('h-id').innerText = fullID;
             }, 100);
@@ -168,7 +139,7 @@
 
         function confirmHall() {
             try { document.getElementById('snd-pour').play(); } catch(e){}
-            document.getElementById('btn-confirm-hall').innerText = 'CONFIRMED';
+            document.getElementById('btn-confirm-hall').innerText = 'VERIFIED';
             document.getElementById('btn-go-bar').classList.remove('btn-sleep');
         }
 
@@ -177,12 +148,8 @@
         function smoothLeave(url) {
             const overlay = document.getElementById('fade-overlay');
             const amb = document.getElementById('snd-ambient');
-            if (amb) {
-                sessionStorage.setItem('gyambient_pos', amb.currentTime);
-                sessionStorage.setItem('gyambient_active', 'true');
-            }
+            if (amb) sessionStorage.setItem('gyambient_pos', amb.currentTime);
             overlay.style.opacity = '1';
-            overlay.style.pointerEvents = 'auto';
             setTimeout(() => { window.location.href = url; }, 600);
         }
 
@@ -210,8 +177,7 @@
 
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({ 
-                pageLanguage: 'en', // Установили английский базовым
-                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                pageLanguage: 'ru', 
                 autoDisplay: false 
             }, 'google_translate_element');
         }
