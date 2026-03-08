@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.213</title>
+    <title>GY-GY Club v4.3.214</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -14,6 +14,7 @@
         
         body, html { width: 100%; height: 100%; background: #000 !important; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; }
 
+        /* ЯЗЫКОВАЯ ПАНЕЛЬ (ПО ВСЕЙ ТЕРРИТОРИИ) */
         #google_translate_element { 
             position: fixed !important; top: 15px !important; left: 15px !important; 
             z-index: 10000000 !important; background: rgba(0,0,0,0.8); border-radius: 5px;
@@ -32,6 +33,9 @@
             text-transform: uppercase; font-weight: 900; margin: 6px 0; transition: 0.3s;
         }
         .btn-sleep { opacity: 0.1 !important; pointer-events: none !important; }
+
+        /* ДВЕРЬ (ПЛАВНОСТЬ) */
+        #main-door { width: 260px; cursor: pointer; transition: transform 2.2s ease-in-out, opacity 1.8s ease-in; }
 
         /* ЗОЛОТАЯ РАМКА */
         .qr-gold-frame { 
@@ -63,18 +67,17 @@
 
     <audio id="snd-door"><source src="door_open.mp3" type="audio/mpeg"></audio>
     <audio id="snd-ambient" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
-    <audio id="snd-jazz" loop><source src="charlie_jazz_duet.mp3" type="audio/mpeg"></audio>
     <audio id="snd-pour"><source src="pour_whisky.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active">
-        <img src="door_1.jpg" style="width:260px; cursor:pointer;" id="main-door" onclick="handleDoor()">
+        <img src="door_1.jpg" id="main-door" onclick="handleDoor()">
     </div>
     
     <div id="block-welcome" class="block">
         <div style="font-family:'Share Tech Mono'; letter-spacing:8px; font-size:16px;">GY-GY PRIVAT</div>
         <img src="charlie.png" style="max-height: 30vh; margin: 10px 0;">
         <h1 style="font-size:38px; font-weight: 900;">WELCOME</h1>
-        <button class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">ПРОХОДИТЕ В ХОЛЛ</button>
+        <button class="btn-gy btn-sleep" id="btn-to-hall" onclick="portalTransition('block-hall')">ПРОХОДИТЕ В ХОЛЛ</button>
         <button class="btn-gy" onclick="portalTransition('block-identity')">ПРОХОДИТЕ НА РЕГИСТРАЦИЮ</button>
     </div>
 
@@ -90,7 +93,7 @@
             </div>
         </div>
         <button id="btn-save" class="btn-gy" onclick="saveReg()">СОХРАНИТЬ</button>
-        <button id="btn-go-hall" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">ПРОХОДИТЕ</button>
+        <button id="btn-go-hall-reg" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">ПРОХОДИТЕ</button>
     </div>
 
     <div id="block-hall" class="block">
@@ -113,11 +116,6 @@
         </div>
     </div>
 
-    <div id="block-bar" class="block">
-        <div style="position: absolute; top: 60px; font-weight: 900; color: var(--gold); text-align: center; width:100%; font-size: 22px;">«Истина не в вине, а в его количестве»</div>
-        <img src="charlie_bar.png" style="height: 80vh; margin-top: auto;">
-    </div>
-
     <script>
         const fullID = `#GY-${Math.floor(1000 + Math.random() * 8999)}`;
         const sndAmbient = document.getElementById('snd-ambient');
@@ -125,8 +123,9 @@
 
         function handleDoor() {
             document.getElementById('snd-door').play().catch(()=>{});
-            document.getElementById('main-door').style.transform = "scale(15)"; 
-            document.getElementById('main-door').style.opacity = "0";
+            const door = document.getElementById('main-door');
+            door.style.transform = "scale(18)"; 
+            door.style.opacity = "0";
             
             new QRCode(document.getElementById("qr-box-reg"), { text: fullID, width: 85, height: 85 });
             new QRCode(document.getElementById("h-qr"), { text: fullID, width: 85, height: 85 });
@@ -142,7 +141,8 @@
         function saveReg() { 
             sndPour.play().catch(()=>{});
             document.getElementById('btn-save').innerText = 'СОХРАНЕНО';
-            document.getElementById('btn-go-hall').classList.remove('btn-sleep');
+            document.getElementById('btn-go-hall-reg').classList.remove('btn-sleep');
+            document.getElementById('btn-to-hall').classList.remove('btn-sleep');
         }
 
         function confirmHall() {
@@ -158,8 +158,10 @@
             setTimeout(() => {
                 document.querySelectorAll('.block').forEach(b => b.style.display = 'none');
                 const t = document.getElementById(id);
-                t.style.display = 'flex';
-                setTimeout(() => t.classList.add('active'), 50);
+                if(t) {
+                    t.style.display = 'flex';
+                    setTimeout(() => t.classList.add('active'), 50);
+                }
             }, 600);
         }
 
@@ -172,6 +174,11 @@
             };
             r.readAsDataURL(i.files[0]);
         }
+
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage: 'ru', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+        }
     </script>
+    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
