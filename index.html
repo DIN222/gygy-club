@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.205</title>
+    <title>GY-GY Club v4.3.206</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -30,7 +31,6 @@
             color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; 
             text-transform: uppercase; font-weight: 900; margin: 6px 0; transition: 0.3s;
         }
-        /* СПЯЩАЯ КНОПКА */
         .btn-sleep { opacity: 0.1; pointer-events: none; }
 
         .qr-gold-frame { 
@@ -43,10 +43,17 @@
             background: #fff; display: flex; align-items: center; justify-content: center; position: relative; 
         }
 
+        /* КАРТОЧКА В ХОЛЛЕ: Сдвинута на уровень дверей */
         .id-card {
-            position: absolute; right: 20px; bottom: 20px; width: 260px; padding: 25px; 
+            position: absolute; 
+            right: 10%; 
+            top: 45%; /* Уровень дверей бара */
+            transform: translateY(-50%);
+            width: 260px; padding: 25px; 
             border: 3px solid var(--gold); background: #fff; border-radius: 15px; 
-            display: flex; flex-direction: column; align-items: center; color:#000; z-index: 500;
+            display: flex; flex-direction: column; align-items: center; color:#000; 
+            z-index: 500;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
         }
 
         .bar-btn-simple {
@@ -95,8 +102,9 @@
     </div>
 
     <div id="block-hall" class="block">
-        <div style="position:absolute; width:100%; height:100%; background:url('hall_bg_jpg.jpg') center/cover; filter:contrast(1.2) brightness(0.65); z-index:-1;"></div>
-        <h2 style="font-size:36px; color:#fff; text-shadow:0 0 20px var(--violet); font-weight: 900;">ВСЕ БУДЕТ GY-GY</h2>
+        <div style="position:absolute; width:100%; height:100%; background:url('hall_bg_jpg.jpg') center/cover; filter:contrast(1.1) brightness(0.75); z-index:-1;"></div>
+        <h2 style="position:absolute; top:10%; font-size:36px; color:#fff; text-shadow:0 0 20px var(--violet); font-weight: 900;">ВСЕ БУДЕТ GY-GY</h2>
+        
         <div class="id-card">
             <div style="display:flex; gap:12px; margin-bottom:12px;">
                 <img id="h-photo" style="width:95px; height:95px; border:1px solid var(--gold); object-fit:cover; background:#eee;">
@@ -141,9 +149,7 @@
         function saveReg() { 
             sndPour.play().catch(()=>{});
             document.getElementById('btn-save').innerText = 'СОХРАНЕНО';
-            // Активируем спящую кнопку
-            const goBtn = document.getElementById('btn-go-hall');
-            goBtn.classList.remove('btn-sleep');
+            document.getElementById('btn-go-hall').classList.remove('btn-sleep');
         }
 
         function goToBar() { 
