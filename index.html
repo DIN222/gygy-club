@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.216</title>
+    <title>GY-GY Club v4.3.218</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -34,29 +34,29 @@
         .btn-sleep { opacity: 0.1 !important; pointer-events: none !important; }
 
         .qr-gold-frame { 
-            width: 105px; height: 105px; border: 3px solid var(--gold); 
-            padding: 5px; background: #fff; display: flex; align-items: center; justify-content: center; 
+            width: 105px; height: 105px; border: 2px solid var(--gold); 
+            padding: 4px; background: #fff; display: flex; align-items: center; justify-content: center; 
             overflow: hidden; flex-shrink: 0; position: relative;
         }
-        
-        .square-box { 
-            width: 105px; height: 105px; border: 3px solid var(--gold); 
-            background: #fff; display: flex; align-items: center; justify-content: center; position: relative; 
-        }
 
+        /* ЭЛЕГАНТНЫЙ СВЕТЛО-БЕЖЕВЫЙ ПРОПУСК */
         .id-card {
             position: absolute; left: 50%; top: 65%; 
             transform: translate(-50%, -50%);
             width: 280px; padding: 20px; 
-            border: 3px solid var(--gold); background: #fff; border-radius: 15px; 
-            display: flex; flex-direction: column; align-items: center; color:#000; 
-            z-index: 500; box-shadow: none;
+            border: 3px solid var(--gold); 
+            background: #F5F5DC; /* Светло-бежевый (Beige) */
+            border-radius: 15px; 
+            display: flex; flex-direction: column; align-items: center; 
+            color: #000; /* Черный текст для контраста */
+            z-index: 500; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
         }
 
         .hall-title {
             position: absolute; top: 15%; 
             font-size: 38px; color: #fff; 
-            text-shadow: 0 0 15px var(--violet), 0 0 30px #000, 0 0 50px #000; 
+            text-shadow: 0 0 15px var(--violet), 0 0 30px #000; 
             font-weight: 900; letter-spacing: 5px; text-align: center; width: 100%; z-index: 400;
         }
 
@@ -89,9 +89,9 @@
     </div>
 
     <div id="block-identity" class="block">
-        <div style="font-family:'Share Tech Mono'; font-size:20px; text-align:center; margin-bottom:25px;">«В КАЖДОЙ ШУТКЕ ЕСТЬ ДОЛЯ ВИСКИ»</div>
+        <div style="font-family:'Share Tech Mono'; font-size:18px; text-align:center; margin-bottom:25px;">«В КАЖДОЙ ШУТКЕ ЕСТЬ ДОЛЯ ВИСКИ»</div>
         <div style="display:flex; gap:15px; margin-bottom:25px;">
-            <div id="id-box" class="square-box" style="background:transparent; color:var(--gold);">ID</div>
+            <div style="width:105px; height:105px; border:2px solid var(--gold); display:flex; align-items:center; justify-content:center; color:var(--gold); font-family:'Share Tech Mono'; font-weight:900;" id="id-box">ID</div>
             <div class="qr-gold-frame"><div id="qr-box-reg"></div></div>
             <div class="qr-gold-frame" id="reg-photo-frame">
                 <input type="file" onchange="preview(this)" style="position:absolute; opacity:0; width:100%; height:100%; cursor:pointer; z-index:10;">
@@ -104,7 +104,7 @@
     </div>
 
     <div id="block-hall" class="block">
-        <div style="position:absolute; width:100%; height:100%; background:url('hall_bg_jpg.jpg') center/cover; filter: contrast(1.4) brightness(0.9); z-index:-1;"></div>
+        <div style="position:absolute; width:100%; height:100%; background:url('hall_bg_jpg.jpg') center/cover; filter: contrast(1.4) brightness(0.95); z-index:-1;"></div>
         <div class="hall-title">ВСЕ БУДЕТ GY-GY</div>
         <div class="id-card">
             <div style="display:flex; gap:12px; margin-bottom:12px;">
@@ -115,9 +115,10 @@
                     <div id="h-qr"></div>
                 </div>
             </div>
-            <div id="h-id" style="font-family:'Share Tech Mono'; font-weight:900; margin-bottom:12px; color:#000; font-size:16px;"></div>
-            <button id="btn-confirm-hall" class="btn-gy" style="min-width:100%; font-size:12px; background:#000; margin: 3px 0;" onclick="confirmHall()">ПОДТВЕРДИТЕ</button>
-            <button id="btn-go-bar" class="btn-gy btn-sleep" style="min-width:100%; font-size:12px; background:#000; margin: 3px 0;" onclick="goToBar()">ВХОД В БАР</button>
+            <div id="h-id" style="font-family:'Share Tech Mono'; font-weight:900; margin-bottom:12px; font-size:16px;"></div>
+            
+            <button id="btn-confirm-hall" class="btn-gy" style="min-width:100%; font-size:12px; margin: 3px 0;" onclick="confirmHall()">ПОДТВЕРДИТЕ</button>
+            <button id="btn-go-bar" class="btn-gy btn-sleep" style="min-width:100%; font-size:12px; margin: 3px 0;" onclick="goToBar()">ВХОД В БАР</button>
         </div>
     </div>
 
@@ -162,6 +163,8 @@
         function confirmHall() {
             sndPour.play().catch(()=>{});
             document.getElementById('btn-confirm-hall').innerText = 'ПОДТВЕРЖДЕНО';
+            document.getElementById('btn-confirm-hall').style.borderColor = "#00ff00"; 
+            document.getElementById('btn-confirm-hall').style.color = "#00ff00"; 
             document.getElementById('btn-go-bar').classList.remove('btn-sleep');
         }
 
@@ -171,8 +174,7 @@
                 else { clearInterval(fadeOut); sndAmbient.pause(); sndAmbient.volume = 1.0; }
             }, 100);
             portalTransition('block-bar'); 
-            const fx = new Audio('charlie_bar_fx.mp3');
-            fx.play().catch(()=>{});
+            const fx = new Audio('charlie_bar_fx.mp3'); fx.play().catch(()=>{});
             fx.onended = () => {
                 sndJazz.volume = 0; sndJazz.play().catch(()=>{});
                 let fadeIn = setInterval(() => {
@@ -195,13 +197,9 @@
         function preview(i) {
             const r = new FileReader();
             r.onload = (e) => { 
-                // Обновляем фото в регистрации
                 const pp = document.getElementById('pp');
-                pp.src = e.target.result; 
-                pp.style.display = "block";
-                document.getElementById('photo-label').style.display = "none"; // Прячем текст "ФОТО"
-                
-                // Дублируем в карточку холла
+                pp.src = e.target.result; pp.style.display = "block";
+                document.getElementById('photo-label').style.display = "none";
                 document.getElementById('h-photo').src = e.target.result;
             };
             r.readAsDataURL(i.files[0]);
