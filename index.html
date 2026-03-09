@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.266</title>
+    <title>GY-GY Club v4.3.267</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -11,28 +11,58 @@
         :root { --gold: #d4af37; --bg: #000000; }
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; outline: none !important; }
         
-        body, html { width: 100%; height: 100%; background: var(--bg) !important; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; position: fixed; }
+        /* Жесткая фиксация фона для борьбы с фиолетом */
+        html { background: #000 !important; }
+        body { 
+            width: 100%; height: 100%; 
+            background: var(--bg) !important; 
+            color: var(--gold); 
+            font-family: 'Playfair Display', serif; 
+            overflow: hidden; 
+            position: fixed;
+        }
 
         #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000001; }
-        .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000000; font-family: 'Share Tech Mono'; font-weight: bold; font-size: 24px; letter-spacing: 5px; color: var(--gold); pointer-events: none; }
+        .ui-header-right { 
+            position: fixed; top: 18px; right: 25px; z-index: 1000000; 
+            font-family: 'Share Tech Mono'; font-weight: bold; font-size: 24px; 
+            letter-spacing: 5px; color: var(--gold); pointer-events: none; 
+        }
 
-        .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: var(--bg) !important; z-index: 10; opacity: 0; transition: opacity 0.6s ease-in-out; }
+        .block { 
+            position: fixed; inset: 0; display: none; flex-direction: column; 
+            align-items: center; justify-content: center; 
+            background: var(--bg) !important; z-index: 10; 
+            opacity: 0; transition: opacity 0.6s ease-in-out; 
+        }
         .block.active { display: flex !important; opacity: 1; }
 
-        .btn-gy { min-width: 270px; padding: 15px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; font-weight: 900; margin: 10px 0; }
+        .btn-gy { 
+            min-width: 270px; padding: 15px; background: transparent; 
+            border: 2px solid var(--gold); color: var(--gold); 
+            cursor: pointer; font-family: 'Share Tech Mono'; 
+            text-transform: uppercase; font-weight: 900; margin: 10px 0; 
+        }
         .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
 
-        /* ЦИТАТА */
-        .whiskey-quote { font-family: 'Share Tech Mono'; font-size: 22px; margin-bottom: 30px; color: var(--gold); font-style: italic; font-weight: 900; text-align: center; padding: 0 15px; letter-spacing: 1px; line-height: 1.2; }
+        .whiskey-quote { 
+            font-family: 'Share Tech Mono'; font-size: 22px; margin-bottom: 30px; 
+            color: var(--gold); font-style: italic; font-weight: 900; 
+            text-align: center; padding: 0 15px; 
+        }
 
-        .id-card { position: absolute; left: 50%; top: 68%; transform: translate(-50%, -50%); width: 280px; padding: 25px; border: 2px solid var(--gold); background: #F5F5DC; border-radius: 15px; display: flex; flex-direction: column; align-items: center; color: #000; }
+        .id-card { 
+            position: absolute; left: 50%; top: 68%; transform: translate(-50%, -50%); 
+            width: 280px; padding: 25px; border: 2px solid var(--gold); 
+            background: #F5F5DC; border-radius: 15px; display: flex; 
+            flex-direction: column; align-items: center; color: #000; 
+        }
         
-        /* БАР И ЧАРЛИ */
         .bar-btn-nav { position: absolute; bottom: 12%; z-index: 1000; min-width: 135px; }
         .charlie-bar-img { height: 82vh; width: auto; pointer-events: none; object-fit: contain; }
         
         #block-ai-room { background: url('OIG2_vintage_tv_room.jpg') center/cover no-repeat !important; }
-        #main-door { width: 280px; cursor: pointer; transition: 1.8s ease-in-out; }
+        #main-door { width: 280px; cursor: pointer; transition: 1.8s ease-in-out; z-index: 50; }
     </style>
 </head>
 <body>
@@ -50,9 +80,9 @@
     </div>
     
     <div id="block-welcome" class="block">
-        <div style="font-family:'Share Tech Mono'; letter-spacing:10px; margin-bottom:20px; font-size:16px; opacity:0.9;">GY-GY PRIVAT</div>
+        <div style="font-family:'Share Tech Mono'; letter-spacing:10px; margin-bottom:20px; font-size:16px;">GY-GY PRIVAT</div>
         <img src="charlie.png" style="max-height: 35vh; margin-bottom: 20px;">
-        <div style="font-size:48px; font-weight:900; margin-bottom:20px; font-style:italic; text-transform:uppercase;">WELCOME</div>
+        <div style="font-size:48px; font-weight:900; margin-bottom:20px; font-style:italic;">WELCOME</div>
         <button id="btn-w-hall" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">ПРОХОДИТЕ В ХОЛЛ</button>
         <button class="btn-gy" onclick="portalTransition('block-identity')">РЕГИСТРАЦИЯ</button>
     </div>
@@ -60,12 +90,12 @@
     <div id="block-identity" class="block">
         <div class="whiskey-quote">«В каждой шутке есть доля виски»</div>
         <div style="display:flex; gap:12px; margin-bottom:30px;">
-            <div style="width:95px; height:95px; border:2px solid var(--gold); display:flex; align-items:center; justify-content:center; font-family:'Share Tech Mono'; font-size:11px; text-align:center;" id="id-label">#ID</div>
+            <div style="width:95px; height:95px; border:2px solid var(--gold); display:flex; align-items:center; justify-content:center; font-family:'Share Tech Mono'; font-size:11px;" id="id-label">#ID</div>
             <div style="width:95px; height:95px; border:2px solid var(--gold); background:#fff; padding:5px;" id="qr-box-reg"></div>
             <div style="width:95px; height:95px; border:2px solid var(--gold); background:#fff; position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center;">
                 <input type="file" onchange="preview(this)" style="position:absolute; inset:0; opacity:0; z-index:10; cursor:pointer;">
                 <img id="pp" style="width:100%; height:100%; object-fit:cover; display:none;">
-                <span id="txt-photo" style="color:#000; font-size:10px; font-weight:900;">ФОТО</span>
+                <span style="color:#000; font-size:10px; font-weight:900;">ФОТО</span>
             </div>
         </div>
         <button id="btn-save" class="btn-gy" onclick="swapButtons('btn-save', 'btn-pass')">СОХРАНИТЬ</button>
@@ -99,13 +129,21 @@
     <script>
         let currentID = "";
 
-        function handleDoor() {
-            // Разблокировка аудио для мобильных
-            [ 'snd-door', 'snd-ambient', 'snd-khe', 'snd-pour' ].forEach(id => {
-                const a = document.getElementById(id); a.play().then(() => a.pause()).catch(() => {});
+        function unlockAudio() {
+            const sounds = ['snd-door', 'snd-ambient', 'snd-khe', 'snd-pour'];
+            sounds.forEach(id => {
+                const s = document.getElementById(id);
+                s.play().then(() => { s.pause(); s.currentTime = 0; }).catch(e => console.log('Audio init blocked'));
             });
+        }
 
-            document.getElementById('snd-door').play().catch(()=>{});
+        function handleDoor() {
+            unlockAudio(); // Принудительная активация звука
+            
+            setTimeout(() => {
+                document.getElementById('snd-door').play();
+            }, 50);
+
             const d = document.getElementById('main-door');
             d.style.transform = "scale(4.5)"; d.style.opacity = "0";
             
@@ -118,7 +156,7 @@
 
             setTimeout(() => {
                 portalTransition('block-welcome');
-                document.getElementById('snd-ambient').play().catch(()=>{});
+                document.getElementById('snd-ambient').play();
             }, 1400);
         }
 
@@ -142,9 +180,8 @@
         function triggerCharlie() {
             const k = document.getElementById('snd-khe');
             const p = document.getElementById('snd-pour');
-            k.currentTime = 0;
             setTimeout(() => {
-                k.play().catch(e => console.log("Sound error: ", e));
+                k.play().catch(() => {});
                 setTimeout(() => { p.play().catch(()=>{}); }, 1200);
             }, 800);
         }
@@ -152,13 +189,13 @@
         function swapButtons(a, s) {
             document.getElementById(a).classList.add('btn-sleep');
             document.getElementById(s).classList.remove('btn-sleep');
-            if(a === 'btn-save') document.getElementById('snd-pour').play().catch(()=>{});
+            if(a === 'btn-save') document.getElementById('snd-pour').play();
         }
 
         function smoothLeave(url) {
-            document.documentElement.style.background = "#000"; 
-            document.body.style.opacity = "0";
-            setTimeout(() => { window.location.href = url; }, 400);
+            document.documentElement.style.background = "#000";
+            document.body.style.visibility = "hidden"; // Мгновенное исчезновение
+            setTimeout(() => { window.location.href = url; }, 300);
         }
 
         function preview(i) {
@@ -167,7 +204,6 @@
                 r.onload = (e) => { 
                     document.getElementById('pp').src = e.target.result; 
                     document.getElementById('pp').style.display = "block";
-                    document.getElementById('txt-photo').style.display = "none";
                     document.getElementById('h-photo').src = e.target.result;
                 };
                 r.readAsDataURL(i.files[0]);
