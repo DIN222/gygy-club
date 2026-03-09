@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.265</title>
+    <title>GY-GY Club v4.3.266</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -11,7 +11,7 @@
         :root { --gold: #d4af37; --bg: #000000; }
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; outline: none !important; }
         
-        body, html { width: 100%; height: 100%; background: var(--bg) !important; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; }
+        body, html { width: 100%; height: 100%; background: var(--bg) !important; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; position: fixed; }
 
         #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000001; }
         .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000000; font-family: 'Share Tech Mono'; font-weight: bold; font-size: 24px; letter-spacing: 5px; color: var(--gold); pointer-events: none; }
@@ -22,8 +22,14 @@
         .btn-gy { min-width: 270px; padding: 15px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; font-weight: 900; margin: 10px 0; }
         .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
 
+        /* ЦИТАТА */
+        .whiskey-quote { font-family: 'Share Tech Mono'; font-size: 22px; margin-bottom: 30px; color: var(--gold); font-style: italic; font-weight: 900; text-align: center; padding: 0 15px; letter-spacing: 1px; line-height: 1.2; }
+
         .id-card { position: absolute; left: 50%; top: 68%; transform: translate(-50%, -50%); width: 280px; padding: 25px; border: 2px solid var(--gold); background: #F5F5DC; border-radius: 15px; display: flex; flex-direction: column; align-items: center; color: #000; }
-        .bar-btn-nav { position: absolute; bottom: 15%; z-index: 1000; min-width: 135px; }
+        
+        /* БАР И ЧАРЛИ */
+        .bar-btn-nav { position: absolute; bottom: 12%; z-index: 1000; min-width: 135px; }
+        .charlie-bar-img { height: 82vh; width: auto; pointer-events: none; object-fit: contain; }
         
         #block-ai-room { background: url('OIG2_vintage_tv_room.jpg') center/cover no-repeat !important; }
         #main-door { width: 280px; cursor: pointer; transition: 1.8s ease-in-out; }
@@ -34,27 +40,25 @@
     <div id="google_translate_element"></div>
     <div class="ui-header-right">GY-GY</div>
 
-    <audio id="snd-door"><source src="door_open.mp3" type="audio/mpeg"></audio>
-    <audio id="snd-ambient" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
-    <audio id="snd-khe"><source src="khe_khe.mp3" type="audio/mpeg"></audio>
-    <audio id="snd-pour"><source src="pour_whisky.mp3" type="audio/mpeg"></audio>
+    <audio id="snd-door" preload="auto"><source src="door_open.mp3" type="audio/mpeg"></audio>
+    <audio id="snd-ambient" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
+    <audio id="snd-khe" preload="auto"><source src="khe_khe.mp3" type="audio/mpeg"></audio>
+    <audio id="snd-pour" preload="auto"><source src="pour_whisky.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active" style="opacity: 1;">
         <img src="door_1.jpg" id="main-door" onclick="handleDoor()">
     </div>
     
     <div id="block-welcome" class="block">
+        <div style="font-family:'Share Tech Mono'; letter-spacing:10px; margin-bottom:20px; font-size:16px; opacity:0.9;">GY-GY PRIVAT</div>
         <img src="charlie.png" style="max-height: 35vh; margin-bottom: 20px;">
-        <div style="font-size:48px; font-weight:900; margin-bottom:5px; font-style:italic; text-transform:uppercase;">WELCOME</div>
-        <div style="font-family:'Share Tech Mono'; letter-spacing:10px; margin-bottom:25px; font-size:14px; opacity:0.8;">GY-GY PRIVAT</div>
+        <div style="font-size:48px; font-weight:900; margin-bottom:20px; font-style:italic; text-transform:uppercase;">WELCOME</div>
         <button id="btn-w-hall" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">ПРОХОДИТЕ В ХОЛЛ</button>
         <button class="btn-gy" onclick="portalTransition('block-identity')">РЕГИСТРАЦИЯ</button>
     </div>
 
     <div id="block-identity" class="block">
-        <div style="font-family:'Share Tech Mono'; font-size:18px; margin-bottom:25px; color:var(--gold); font-style:italic; font-weight:900; text-align:center; padding:0 20px;">
-            «В каждой шутке есть доля виски»
-        </div>
+        <div class="whiskey-quote">«В каждой шутке есть доля виски»</div>
         <div style="display:flex; gap:12px; margin-bottom:30px;">
             <div style="width:95px; height:95px; border:2px solid var(--gold); display:flex; align-items:center; justify-content:center; font-family:'Share Tech Mono'; font-size:11px; text-align:center;" id="id-label">#ID</div>
             <div style="width:95px; height:95px; border:2px solid var(--gold); background:#fff; padding:5px;" id="qr-box-reg"></div>
@@ -85,20 +89,25 @@
     <div id="block-bar" class="block" style="padding:0; justify-content: flex-end;">
         <button style="left:5%;" class="btn-gy bar-btn-nav" onclick="smoothLeave('tables.html')">ЗА СТОЛИКИ</button>
         <button style="right:5%;" class="btn-gy bar-btn-nav" onclick="portalTransition('block-ai-room')">В AI ROOM</button>
-        <img src="charlie_bar.png" style="height: 88vh; width: auto; pointer-events:none;">
+        <img src="charlie_bar.png" class="charlie-bar-img">
     </div>
 
     <div id="block-ai-room" class="block">
-        <button class="btn-gy" style="position:absolute; bottom:10%; background:rgba(0,0,0,0.8);" onclick="portalTransition('block-bar')">НАЗАД В БАР</button>
+        <button class="btn-gy" style="position:absolute; bottom:10%; background:rgba(0,0,0,0.85);" onclick="portalTransition('block-bar')">НАЗАД В БАР</button>
     </div>
 
     <script>
         let currentID = "";
 
         function handleDoor() {
+            // Разблокировка аудио для мобильных
+            [ 'snd-door', 'snd-ambient', 'snd-khe', 'snd-pour' ].forEach(id => {
+                const a = document.getElementById(id); a.play().then(() => a.pause()).catch(() => {});
+            });
+
             document.getElementById('snd-door').play().catch(()=>{});
             const d = document.getElementById('main-door');
-            d.style.transform = "scale(4)"; d.style.opacity = "0";
+            d.style.transform = "scale(4.5)"; d.style.opacity = "0";
             
             currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
             document.getElementById('id-label').innerText = currentID;
@@ -133,11 +142,11 @@
         function triggerCharlie() {
             const k = document.getElementById('snd-khe');
             const p = document.getElementById('snd-pour');
-            k.pause(); k.currentTime = 0; 
+            k.currentTime = 0;
             setTimeout(() => {
-                k.play().catch(e => console.log("Audio kick: ", e));
-                setTimeout(() => { p.play().catch(()=>{}); }, 1100);
-            }, 600);
+                k.play().catch(e => console.log("Sound error: ", e));
+                setTimeout(() => { p.play().catch(()=>{}); }, 1200);
+            }, 800);
         }
 
         function swapButtons(a, s) {
@@ -147,10 +156,9 @@
         }
 
         function smoothLeave(url) {
-            const activeBlock = document.querySelector('.block.active');
-            if(activeBlock) activeBlock.style.opacity = "0";
-            document.body.style.background = "#000";
-            setTimeout(() => { window.location.href = url; }, 600);
+            document.documentElement.style.background = "#000"; 
+            document.body.style.opacity = "0";
+            setTimeout(() => { window.location.href = url; }, 400);
         }
 
         function preview(i) {
