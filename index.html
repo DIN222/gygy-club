@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.278</title>
+    <title>GY-GY Club v4.3.279</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -13,7 +13,6 @@
         
         html, body { width: 100%; height: 100%; background: #000 !important; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; position: fixed; }
 
-        /* HEADER ATTRIBUTES */
         #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000001; }
         .ui-header-right { 
             position: fixed; top: 18px; right: 25px; z-index: 1000000; 
@@ -29,7 +28,7 @@
         }
         .block.active { display: flex !important; opacity: 1; }
 
-        /* REGISTRATION PHOTO FRAME FIX */
+        /* REGISTRATION PHOTO FRAME */
         .reg-photo-container {
             width: 95px; height: 95px; border: 2px solid var(--gold); 
             background: #fff; position: relative; overflow: hidden; 
@@ -37,13 +36,11 @@
         }
         #pp { width: 100%; height: 100%; object-fit: cover; display: none; position: absolute; inset: 0; }
 
-        /* DOOR ANIMATION */
         #main-door { width: 280px; cursor: pointer; transition: transform 1.8s ease-in-out, opacity 1.8s ease-in-out; }
 
         .btn-gy { min-width: 270px; padding: 15px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; font-weight: 900; margin: 10px 0; }
         .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
 
-        /* THE SHIELD AGAINST "DIGITIZE" FRAME */
         #black-veil { position: fixed; inset: 0; background: #000 !important; z-index: 2147483647; display: none; }
         
         .bar-quote { 
@@ -55,7 +52,10 @@
         .charlie-bar-img { height: 82vh; width: auto; pointer-events: none; object-fit: contain; }
         .nav-bar-btns { position: absolute; bottom: 12%; z-index: 1000; width: 100%; display: flex; justify-content: space-around; padding: 0 10px; }
 
-        #block-ai-room { background: url('OIG2_vintage_tv_room.jpg') center/cover no-repeat !important; }
+        /* TV ROOM VISUAL */
+        #block-ai-room { 
+            background: url('OIG2_vintage_tv_room.jpg') center/cover no-repeat !important; 
+        }
     </style>
 </head>
 <body>
@@ -131,19 +131,13 @@
                 const a = document.getElementById(id);
                 a.play().then(() => { if(id !== 'snd-door') { a.pause(); a.currentTime = 0; } }).catch(() => {});
             });
-
             const doorImg = document.getElementById('main-door');
-            setTimeout(() => {
-                doorImg.style.transform = "scale(4.5)";
-                doorImg.style.opacity = "0";
-            }, 50);
-            
+            setTimeout(() => { doorImg.style.transform = "scale(4.5)"; doorImg.style.opacity = "0"; }, 50);
             currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
             document.getElementById('id-label').innerText = currentID;
             document.getElementById('h-id').innerText = currentID;
             new QRCode(document.getElementById("qr-box-reg"), { text: currentID, width: 85, height: 85 });
             new QRCode(document.getElementById("h-qr"), { text: currentID, width: 85, height: 85 });
-
             setTimeout(() => { portalTransition('block-welcome'); document.getElementById('snd-ambient').play(); }, 1400);
         }
 
@@ -167,17 +161,13 @@
         }
 
         function smoothLeave(url) {
-            // Мгновенная блокировка экрана, чтобы избежать "Оцифровать"
-            const veil = document.getElementById('black-veil');
-            veil.style.display = "block";
-            
+            document.getElementById('black-veil').style.display = "block";
             const amb = document.getElementById('snd-ambient');
             let vol = 1.0;
             const interval = setInterval(() => {
                 if (vol > 0.05) { vol -= 0.05; amb.volume = vol; }
                 else { clearInterval(interval); amb.pause(); }
             }, 30);
-            
             setTimeout(() => { window.location.href = url; }, 600);
         }
 
