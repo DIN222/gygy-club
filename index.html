@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.262</title>
+    <title>GY-GY Club v4.3.263</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -18,33 +17,17 @@
             color: var(--gold); 
             font-family: 'Playfair Display', serif; 
             overflow: hidden; 
-            position: fixed;
         }
 
-        /* --- UI ELEMENTS: ОТРАБОТАННЫЙ ВАРИАНТ --- */
-        #google_translate_element { 
-            position: fixed; top: 15px; left: 15px; z-index: 1000001; 
-            min-height: 40px;
-        }
-        /* Логотип справа */
+        /* UI АТРИБУТЫ */
+        #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000001; }
         .ui-header-right { 
             position: fixed; top: 18px; right: 25px; z-index: 1000000; 
             font-family: 'Share Tech Mono'; font-weight: bold; font-size: 24px; 
             letter-spacing: 5px; color: var(--gold); pointer-events: none; 
         }
 
-        /* Системные правки для Google Translate (чтобы не ломали верстку) */
-        .goog-te-banner-frame.skiptranslate { display: none !important; }
-        body { top: 0px !important; }
-        .goog-te-gadget-simple { 
-            background-color: rgba(0,0,0,0.5) !important; 
-            border: 1px solid var(--gold) !important; 
-            padding: 5px !important; 
-            border-radius: 4px !important;
-        }
-        .goog-te-gadget-simple a, .goog-te-gadget-simple span { color: var(--gold) !important; }
-
-        /* --- BLOCKS SYSTEM --- */
+        /* БЛОКИ */
         .block { 
             position: fixed; inset: 0; display: none; flex-direction: column; 
             align-items: center; justify-content: center; 
@@ -53,6 +36,7 @@
         }
         .block.active { display: flex !important; opacity: 1; }
 
+        /* КНОПКИ */
         .btn-gy { 
             min-width: 270px; padding: 15px; background: transparent; 
             border: 2px solid var(--gold); color: var(--gold); 
@@ -61,25 +45,20 @@
         }
         .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
 
-        /* --- HALL CARD --- */
+        /* КАРТОЧКА */
         .id-card { 
             position: absolute; left: 50%; top: 68%; transform: translate(-50%, -50%); 
             width: 280px; padding: 25px; border: 2px solid var(--gold); 
             background: #F5F5DC; border-radius: 15px; display: flex; 
             flex-direction: column; align-items: center; color: #000; 
         }
-        .hall-frame { 
-            width: 90px; height: 90px; border: 3px solid #000 !important; 
-            background: #fff; display: flex; align-items: center; 
-            justify-content: center; overflow: hidden; 
-        }
-        #h-id { font-family: 'Share Tech Mono'; font-weight: 900; font-size: 16px; margin-bottom: 15px; color: #000; }
-
-        /* --- NAVIGATION --- */
+        .hall-frame { width: 90px; height: 90px; border: 3px solid #000 !important; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        
+        /* БАР И AI ROOM */
         .bar-btn-nav { position: absolute; bottom: 15%; z-index: 1000; min-width: 135px; }
         #block-ai-room { background: url('OIG2_vintage_tv_room.jpg') center/cover no-repeat !important; }
 
-        #main-door { width: 280px; cursor: pointer; transition: transform 2s, opacity 1s; }
+        #main-door { width: 280px; cursor: pointer; transition: 2s; }
     </style>
 </head>
 <body>
@@ -97,13 +76,15 @@
     </div>
     
     <div id="block-welcome" class="block">
-        <img src="charlie.png" style="max-height: 35vh; margin-bottom: 25px;">
+        <div style="font-family:'Share Tech Mono'; letter-spacing:10px; margin-bottom:10px; font-size:16px;">GY-GY PRIVAT</div>
+        <div style="font-size:42px; font-weight:900; margin-bottom:20px; font-style:italic;">WELCOME</div>
+        <img src="charlie.png" style="max-height: 30vh; margin-bottom: 25px;">
         <button id="btn-w-hall" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">ПРОХОДИТЕ В ХОЛЛ</button>
         <button class="btn-gy" onclick="portalTransition('block-identity')">РЕГИСТРАЦИЯ</button>
     </div>
 
     <div id="block-identity" class="block">
-        <div style="display:flex; gap:12px; margin-bottom:30px;">
+        <div style="display:flex; gap:12px; margin-bottom:20px;">
             <div style="width:95px; height:95px; border:2px solid var(--gold); display:flex; align-items:center; justify-content:center; font-family:'Share Tech Mono'; font-size:11px; text-align:center;" id="id-label">#ID</div>
             <div style="width:95px; height:95px; border:2px solid var(--gold); background:#fff; padding:5px;" id="qr-box-reg"></div>
             <div style="width:95px; height:95px; border:2px solid var(--gold); background:#fff; position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center;">
@@ -112,6 +93,7 @@
                 <span id="txt-photo" style="color:#000; font-size:10px; font-weight:900;">ФОТО</span>
             </div>
         </div>
+        <div style="font-family:'Share Tech Mono'; font-size:12px; margin-bottom:20px; color:var(--gold); font-style:italic;">«В каждой шутке есть доля виски»</div>
         <button id="btn-save" class="btn-gy" onclick="swapButtons('btn-save', 'btn-pass')">СОХРАНИТЬ</button>
         <button id="btn-pass" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">ПРОХОДИТЕ</button>
     </div>
@@ -120,7 +102,7 @@
         <div style="position:absolute; inset:0; background:url('hall_bg_jpg.jpg') center/cover; z-index:-1;"></div>
         <div style="font-size:38px; color: var(--rich-brown); position:absolute; top:4%; font-weight:900; font-style:italic;">«Все будет GY-GY»</div>
         <div class="id-card">
-            <div id="h-id">#GY-ID-PENDING</div>
+            <div id="h-id" style="font-family:'Share Tech Mono'; font-weight:900; font-size:16px; margin-bottom:15px; color:#000;">#GY-ID-PENDING</div>
             <div style="display:flex; gap:15px; margin-bottom:15px;">
                 <div class="hall-frame"><img id="h-photo" style="width:100%; height:100%; object-fit:cover;"></div>
                 <div id="h-qr" class="hall-frame"></div>
@@ -145,13 +127,15 @@
 
         function handleDoor() {
             document.getElementById('snd-door').play().catch(()=>{});
-            const d = document.getElementById('main-door');
-            d.style.transform = "scale(3.5)"; d.style.opacity = "0";
+            document.getElementById('main-door').style.transform = "scale(3.5)"; 
+            document.getElementById('main-door').style.opacity = "0";
             
             currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
             document.getElementById('id-label').innerText = currentID;
             document.getElementById('h-id').innerText = currentID;
             
+            document.getElementById('qr-box-reg').innerHTML = "";
+            document.getElementById('h-qr').innerHTML = "";
             new QRCode(document.getElementById("qr-box-reg"), { text: currentID, width: 85, height: 85 });
             new QRCode(document.getElementById("h-qr"), { text: currentID, width: 85, height: 85 });
 
@@ -190,10 +174,10 @@
         }
 
         function smoothLeave(url) {
-            const current = document.querySelector('.block.active');
-            if(current) current.style.opacity = "0";
+            // Радикальная борьба с фиолетом
+            document.body.innerHTML = ""; 
             document.body.style.backgroundColor = "#000";
-            setTimeout(() => { window.location.href = url; }, 850);
+            setTimeout(() => { window.location.href = url; }, 100);
         }
 
         function preview(i) {
