@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" style="background: #000;">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.249</title>
+    <title>GY-GY Club v4.3.250</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -13,10 +13,9 @@
         body, html { width: 100%; height: 100%; background: #000 !important; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; }
 
         .ui-header-left { position: fixed; top: 15px; left: 80px; z-index: 10000001; font-family: 'Share Tech Mono'; font-weight: bold; font-size: 24px; letter-spacing: 5px; }
-        #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 10000002; background: rgba(0,0,0,0.7); padding: 5px; border-radius: 4px; }
+        #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 10000002; background: rgba(0,0,0,0.8); padding: 5px; border-radius: 4px; }
 
-        /* КИЛЛЕР ФИОЛЕТА */
-        #final-blackout { position: fixed; inset: 0; background: #000 !important; z-index: 9999999; display: none; }
+        #final-blackout { position: fixed; inset: 0; background: #000 !important; z-index: 99999999; display: none; }
 
         .block { 
             position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; 
@@ -24,11 +23,18 @@
         }
         .block.active { display: flex !important; opacity: 1; transition: opacity 0.4s ease-in; }
 
+        /* ИСПРАВЛЕННЫЙ КОНТЕЙНЕР ID */
+        .id-label-box { 
+            width: 90px; height: 90px; border: 2px solid var(--gold); 
+            display: flex; align-items: center; justify-content: center; 
+            text-align: center; font-family: 'Share Tech Mono'; font-size: 11px; padding: 5px;
+        }
+
         .btn-gy { 
             min-width: 260px; padding: 12px; background: transparent; 
             border: 2px solid var(--gold); color: var(--gold); 
             cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; 
-            font-weight: 900; margin: 6px 0; transition: opacity 0.3s;
+            font-weight: 900; margin: 6px 0;
         }
         .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
         
@@ -56,7 +62,7 @@
     <audio id="snd-pour"><source src="pour_whisky.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active" style="opacity:1;">
-        <img src="door_1.jpg" id="main-door" style="width:280px; cursor:pointer; transition: 1s;" onclick="handleDoor()">
+        <img src="door_1.jpg" id="main-door" style="width:280px; cursor:pointer; transition: 1.2s;" onclick="handleDoor()">
     </div>
     
     <div id="block-welcome" class="block">
@@ -69,10 +75,10 @@
 
     <div id="block-identity" class="block">
         <div style="display:flex; gap:10px; margin-bottom:25px;">
-            <div style="width:90px; height:90px; border:2px solid var(--gold); display:flex; align-items:center; justify-content:center; font-family:'Share Tech Mono';" id="id-label">ID</div>
+            <div class="id-label-box" id="id-label">ID</div>
             <div style="width:90px; height:90px; border:2px solid var(--gold); background:#fff; padding:4px;" id="qr-box-reg"></div>
             <div style="width:90px; height:90px; border:2px solid var(--gold); background:#fff; position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center;">
-                <input type="file" onchange="preview(this)" style="position:absolute; inset:0; opacity:0; z-index:10;">
+                <input type="file" onchange="preview(this)" style="position:absolute; inset:0; opacity:0; z-index:10; cursor:pointer;">
                 <img id="pp" style="width:100%; height:100%; object-fit:cover; display:none;">
                 <span id="photo-text" style="color:#000; font-size:10px; font-weight:900;">ФОТО</span>
             </div>
@@ -108,7 +114,7 @@
         function handleDoor() {
             document.getElementById('snd-door').play().catch(()=>{});
             const d = document.getElementById('main-door');
-            d.style.transform = "scale(3)"; d.style.opacity = "0";
+            d.style.transform = "scale(3.5)"; d.style.opacity = "0";
             currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
             setTimeout(() => {
                 new QRCode(document.getElementById("qr-box-reg"), { text: currentID, width: 80, height: 80 });
@@ -116,14 +122,13 @@
                 document.getElementById('id-label').innerText = currentID;
                 document.getElementById('h-id').innerText = currentID;
             }, 50);
-            setTimeout(() => { portalTransition('block-welcome'); document.getElementById('snd-ambient').play().catch(()=>{}); }, 1100);
+            setTimeout(() => { portalTransition('block-welcome'); document.getElementById('snd-ambient').play().catch(()=>{}); }, 1200);
         }
 
-        // УНИВЕРСАЛЬНЫЙ ПЕРЕКЛЮЧАТЕЛЬ "СПИТ - НЕ СПИТ"
-        function swapButtons(activeId, sleepId) {
-            if (activeId === 'btn-save') document.getElementById('snd-pour').play().catch(()=>{});
-            document.getElementById(activeId).classList.add('btn-sleep');
-            document.getElementById(sleepId).classList.remove('btn-sleep');
+        function swapButtons(a, s) {
+            if (a === 'btn-save') document.getElementById('snd-pour').play().catch(()=>{});
+            document.getElementById(a).classList.add('btn-sleep');
+            document.getElementById(s).classList.remove('btn-sleep');
         }
 
         function portalTransition(nextId) {
@@ -135,25 +140,36 @@
                     current.style.display = "none";
                     const next = document.getElementById(nextId);
                     next.style.display = "flex";
-                    setTimeout(() => { next.classList.add('active'); }, 50);
+                    setTimeout(() => { 
+                        next.classList.add('active'); 
+                        if(nextId === 'block-bar') triggerCharlieEffects();
+                    }, 50);
                 }, 400);
             }
         }
 
-        function goToBar() {
-            portalTransition('block-bar');
-            setTimeout(() => {
-                const k = document.getElementById('snd-khe');
-                const p = document.getElementById('snd-pour');
-                k.currentTime = 0; k.play().then(() => {
-                    setTimeout(() => { p.currentTime = 0; p.play(); }, 1000);
-                }).catch(e => console.log("Audio focus needed"));
-            }, 600);
+        function triggerCharlieEffects() {
+            const k = document.getElementById('snd-khe');
+            const p = document.getElementById('snd-pour');
+            k.currentTime = 0;
+            k.play().then(() => {
+                setTimeout(() => { p.currentTime = 0; p.play(); }, 1200);
+            }).catch(() => {
+                // Если автоплей заблокирован, привязываем к первому клику в баре
+                document.getElementById('block-bar').addEventListener('click', () => {
+                    k.play(); setTimeout(()=>p.play(), 1200);
+                }, {once: true});
+            });
         }
 
+        function goToBar() { portalTransition('block-bar'); }
+
         function smoothLeave(url) {
-            // РАДИКАЛЬНЫЙ МЕТОД: Убираем всё, оставляем черный экран
+            // Мгновенная блокировка через стили документа
+            document.documentElement.style.background = "#000";
+            document.body.style.display = "none"; 
             document.getElementById('final-blackout').style.display = "block";
+            
             const amb = document.getElementById('snd-ambient');
             let vol = 1.0;
             const fade = setInterval(() => {
