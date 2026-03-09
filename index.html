@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.279</title>
+    <title>GY-GY Club v4.3.280</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -24,38 +24,26 @@
             position: fixed; inset: 0; display: none; flex-direction: column; 
             align-items: center; justify-content: center; 
             background: #000 !important; z-index: 10; 
-            opacity: 0; transition: opacity 0.8s ease-in-out; 
+            opacity: 0; transition: opacity 0.6s ease-in-out; 
         }
         .block.active { display: flex !important; opacity: 1; }
 
-        /* REGISTRATION PHOTO FRAME */
-        .reg-photo-container {
-            width: 95px; height: 95px; border: 2px solid var(--gold); 
-            background: #fff; position: relative; overflow: hidden; 
-            display: flex; align-items: center; justify-content: center;
-        }
+        /* REG PHOTO */
+        .reg-photo-container { width: 95px; height: 95px; border: 2px solid var(--gold); background: #fff; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         #pp { width: 100%; height: 100%; object-fit: cover; display: none; position: absolute; inset: 0; }
 
         #main-door { width: 280px; cursor: pointer; transition: transform 1.8s ease-in-out, opacity 1.8s ease-in-out; }
 
-        .btn-gy { min-width: 270px; padding: 15px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; font-weight: 900; margin: 10px 0; }
+        .btn-gy { min-width: 270px; padding: 15px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; font-weight: 900; margin: 10px 0; z-index: 1001; }
         .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
 
         #black-veil { position: fixed; inset: 0; background: #000 !important; z-index: 2147483647; display: none; }
         
-        .bar-quote { 
-            font-family: 'Share Tech Mono'; font-size: 20px; font-weight: 900;
-            position: absolute; top: 8%; text-align: center; width: 100%; 
-            z-index: 100; font-style: italic; padding: 0 10px;
-        }
-        
+        .bar-quote { font-family: 'Share Tech Mono'; font-size: 20px; font-weight: 900; position: absolute; top: 8%; text-align: center; width: 100%; z-index: 100; font-style: italic; padding: 0 10px; }
         .charlie-bar-img { height: 82vh; width: auto; pointer-events: none; object-fit: contain; }
         .nav-bar-btns { position: absolute; bottom: 12%; z-index: 1000; width: 100%; display: flex; justify-content: space-around; padding: 0 10px; }
 
-        /* TV ROOM VISUAL */
-        #block-ai-room { 
-            background: url('OIG2_vintage_tv_room.jpg') center/cover no-repeat !important; 
-        }
+        #block-ai-room { background: url('OIG2_vintage_tv_room.jpg') center/cover no-repeat !important; }
     </style>
 </head>
 <body>
@@ -131,8 +119,8 @@
                 const a = document.getElementById(id);
                 a.play().then(() => { if(id !== 'snd-door') { a.pause(); a.currentTime = 0; } }).catch(() => {});
             });
-            const doorImg = document.getElementById('main-door');
-            setTimeout(() => { doorImg.style.transform = "scale(4.5)"; doorImg.style.opacity = "0"; }, 50);
+            const d = document.getElementById('main-door');
+            setTimeout(() => { d.style.transform = "scale(4.5)"; d.style.opacity = "0"; }, 50);
             currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
             document.getElementById('id-label').innerText = currentID;
             document.getElementById('h-id').innerText = currentID;
@@ -143,6 +131,16 @@
 
         function portalTransition(nextId) {
             const current = document.querySelector('.block.active');
+            const amb = document.getElementById('snd-ambient');
+
+            // Управление звуком при входе/выходе из AI Room
+            if(nextId === 'block-ai-room') {
+                fadeAudio(amb, 0, 500);
+            } else if (current && current.id === 'block-ai-room' && nextId === 'block-bar') {
+                amb.play();
+                fadeAudio(amb, 1, 800);
+            }
+
             if(current) current.style.opacity = "0";
             setTimeout(() => {
                 if(current) { current.classList.remove('active'); current.style.display = "none"; }
@@ -150,25 +148,41 @@
                 next.style.display = "flex";
                 setTimeout(() => { 
                     next.classList.add('active'); 
-                    if(nextId === 'block-bar') {
+                    next.style.opacity = "1";
+                    if(nextId === 'block-bar' && (!current || current.id !== 'block-ai-room')) {
                         setTimeout(() => {
                             document.getElementById('snd-khe').play();
                             setTimeout(() => document.getElementById('snd-pour').play(), 1200);
                         }, 800);
                     }
                 }, 50);
-            }, 800);
+            }, 600);
+        }
+
+        function fadeAudio(audio, target, duration) {
+            let start = audio.volume;
+            let step = (target - start) / (duration / 50);
+            let interval = setInterval(() => {
+                start += step;
+                if ((step > 0 && start >= target) || (step < 0 && start <= target)) {
+                    audio.volume = target;
+                    if(target === 0) audio.pause();
+                    clearInterval(interval);
+                } else {
+                    audio.volume = start;
+                }
+            }, 50);
         }
 
         function smoothLeave(url) {
+            // Радикальная мера против "Оцифровать": вычищаем экран
+            document.getElementById('block-bar').innerHTML = ""; 
             document.getElementById('black-veil').style.display = "block";
+            
             const amb = document.getElementById('snd-ambient');
-            let vol = 1.0;
-            const interval = setInterval(() => {
-                if (vol > 0.05) { vol -= 0.05; amb.volume = vol; }
-                else { clearInterval(interval); amb.pause(); }
-            }, 30);
-            setTimeout(() => { window.location.href = url; }, 600);
+            fadeAudio(amb, 0, 400);
+            
+            setTimeout(() => { window.location.href = url; }, 500);
         }
 
         function preview(i) {
