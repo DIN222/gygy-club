@@ -3,14 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.283</title>
+    <title>GY-GY Club v4.3.285</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
+        /* БАЗОВЫЕ НАСТРОЙКИ И ЗАЩИТА ОТ ОЦИФРОВКИ */
         :root {
             --gold: #d4af37;
             --bg: #000000;
+            --beige: #F5F5DC;
         }
 
         * {
@@ -19,9 +23,11 @@
             margin: 0;
             padding: 0;
             outline: none !important;
-            /* Защита от системной рамки "Оцифровать" */
+            /* ЖЕСТКАЯ БЛОКИРОВКА ВЫДЕЛЕНИЯ */
             user-select: none !important;
             -webkit-user-select: none !important;
+            -ms-user-select: none !important;
+            -moz-user-select: none !important;
             -webkit-touch-callout: none !important;
         }
         
@@ -33,9 +39,12 @@
             font-family: 'Playfair Display', serif;
             overflow: hidden;
             position: fixed;
+            /* ДОПОЛНИТЕЛЬНАЯ ЗАЩИТА */
+            -webkit-text-size-adjust: none;
+            touch-action: manipulation;
         }
 
-        /* HEADER & ATTRIBUTES */
+        /* ГЛОБАЛЬНЫЕ АТРИБУТЫ (ЯЗЫК И ЛОГО) */
         #google_translate_element {
             position: fixed;
             top: 15px;
@@ -43,6 +52,7 @@
             z-index: 1000001;
         }
 
+        /* ЛОГОТИП GY-GY СПРАВА */
         .ui-header-right {
             position: fixed;
             top: 18px;
@@ -54,8 +64,10 @@
             letter-spacing: 5px;
             color: var(--gold);
             pointer-events: none;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
         }
 
+        /* ОСНОВНЫЕ БЛОКИ (ЛОКАЦИИ) */
         .block {
             position: fixed;
             inset: 0;
@@ -74,7 +86,7 @@
             opacity: 1;
         }
 
-        /* REGISTRATION FIXES */
+        /* ЭЛЕМЕНТЫ РЕГИСТРАЦИИ */
         .reg-photo-container {
             width: 95px;
             height: 95px;
@@ -85,6 +97,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
         }
 
         #pp {
@@ -97,15 +110,27 @@
             pointer-events: none;
         }
 
-        #main-door {
-            width: 280px;
-            cursor: pointer;
-            transition: transform 1.8s ease-in-out, opacity 1.8s ease-in-out;
+        #txt-photo {
+            color: #000;
+            font-size: 10px;
+            font-weight: 900;
+            font-family: 'Share Tech Mono';
+            text-align: center;
         }
 
+        /* ГЛАВНАЯ ДВЕРЬ */
+        #main-door {
+            width: 280px;
+            max-width: 80vw;
+            cursor: pointer;
+            transition: transform 1.8s ease-in-out, opacity 1.8s ease-in-out;
+            filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.4));
+        }
+
+        /* КНОПКИ */
         .btn-gy {
             min-width: 270px;
-            padding: 15px;
+            padding: 18px;
             background: transparent;
             border: 2px solid var(--gold);
             color: var(--gold);
@@ -113,15 +138,25 @@
             font-family: 'Share Tech Mono';
             text-transform: uppercase;
             font-weight: 900;
+            font-size: 14px;
+            letter-spacing: 2px;
             margin: 10px 0;
             z-index: 1001;
+            transition: all 0.3s ease;
+        }
+
+        .btn-gy:active {
+            background: var(--gold);
+            color: #000;
         }
 
         .btn-sleep {
             opacity: 0.15 !important;
             pointer-events: none !important;
+            filter: grayscale(1);
         }
 
+        /* ЧЕРНЫЙ ЗАНАВЕС */
         #black-veil {
             position: fixed;
             inset: 0;
@@ -131,6 +166,7 @@
             pointer-events: all;
         }
         
+        /* БАРНЫЕ ЭЛЕМЕНТЫ */
         .bar-quote {
             font-family: 'Share Tech Mono';
             font-size: 20px;
@@ -141,7 +177,8 @@
             width: 100%;
             z-index: 100;
             font-style: italic;
-            padding: 0 10px;
+            padding: 0 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
         }
         
         .charlie-bar-img {
@@ -149,6 +186,7 @@
             width: auto;
             pointer-events: none;
             object-fit: contain;
+            margin-bottom: -2vh;
         }
 
         .nav-bar-btns {
@@ -158,12 +196,30 @@
             width: 100%;
             display: flex;
             justify-content: space-around;
-            padding: 0 10px;
+            padding: 0 15px;
         }
 
-        /* AI ROOM VISUAL */
+        /* AI ROOM - ТРИ ТЕЛЕВИЗОРА */
         #block-ai-room {
             background: url('OIG2_vintage_tv_room.jpg') center/cover no-repeat !important;
+        }
+
+        /* ХОЛЛ И ПРОПУСК */
+        .id-card-wrap {
+            position: absolute;
+            left: 50%;
+            top: 68%;
+            transform: translate(-50%, -50%);
+            width: 280px;
+            padding: 25px;
+            border: 2px solid var(--gold);
+            background: var(--beige);
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
     </style>
 </head>
@@ -179,40 +235,49 @@
     <audio id="snd-pour" preload="auto"><source src="pour_whisky.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active" style="opacity: 1;">
-        <img src="door_1.jpg" id="main-door" onclick="handleDoor()">
+        <img src="door_1.jpg" id="main-door" onclick="handleDoor()" alt="Entrance Door">
     </div>
     
     <div id="block-welcome" class="block">
-        <div style="font-family:'Share Tech Mono'; letter-spacing:10px; margin-bottom:20px; font-size:16px;">GY-GY PRIVAT</div>
-        <img src="charlie.png" style="max-height: 35vh; margin-bottom: 20px;">
-        <div style="font-size:48px; font-weight:900; margin-bottom:20px; font-style:italic;">WELCOME</div>
+        <div style="font-family:'Share Tech Mono'; letter-spacing:10px; margin-bottom:20px; font-size:16px; color:var(--gold);">GY-GY PRIVAT</div>
+        <img src="charlie.png" style="max-height: 35vh; margin-bottom: 25px;" alt="Charlie">
+        <div style="font-size:48px; font-weight:900; margin-bottom:20px; font-style:italic; text-transform: uppercase;">WELCOME</div>
         <button id="btn-w-hall" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">ПРОХОДИТЕ В ХОЛЛ</button>
         <button class="btn-gy" onclick="portalTransition('block-identity')">РЕГИСТРАЦИЯ</button>
     </div>
 
     <div id="block-identity" class="block">
-        <div style="font-family:'Share Tech Mono'; font-size:22px; margin-bottom:30px; font-weight:900; text-align:center;">«В каждой шутке есть доля виски»</div>
+        <div style="font-family:'Share Tech Mono'; font-size:22px; margin-bottom:30px; font-weight:900; text-align:center; padding:0 20px;">«В каждой шутке есть доля виски»</div>
+        
         <div style="display:flex; gap:12px; margin-bottom:30px;">
             <div style="width:95px; height:95px; border:2px solid var(--gold); display:flex; align-items:center; justify-content:center; font-family:'Share Tech Mono'; font-size:11px;" id="id-label">#ID</div>
+            
             <div style="width:95px; height:95px; border:2px solid var(--gold); background:#fff; padding:5px;" id="qr-box-reg"></div>
+            
             <div class="reg-photo-container">
-                <input type="file" onchange="preview(this)" style="position:absolute; inset:0; opacity:0; z-index:10; cursor:pointer;">
+                <input type="file" onchange="preview(this)" style="position:absolute; inset:0; opacity:0; z-index:10; cursor:pointer;" accept="image/*">
                 <img id="pp">
-                <span id="txt-photo" style="color:#000; font-size:10px; font-weight:900;">ФОТО</span>
+                <span id="txt-photo">ЗАГРУЗИТЬ<br>ФОТО</span>
             </div>
         </div>
+        
         <button id="btn-save" class="btn-gy" onclick="swapButtons('btn-save', 'btn-pass')">СОХРАНИТЬ</button>
         <button id="btn-pass" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">ПРОХОДИТЕ</button>
     </div>
 
     <div id="block-hall" class="block">
         <div style="position:absolute; inset:0; background:url('hall_bg_jpg.jpg') center/cover; z-index:-1;"></div>
-        <div style="position:absolute; left:50%; top:68%; transform:translate(-50%, -50%); width:280px; padding:25px; border:2px solid var(--gold); background:#F5F5DC; border-radius:15px; display:flex; flex-direction:column; align-items:center; color:#000;">
-            <div id="h-id" style="font-family:'Share Tech Mono'; font-weight:900; font-size:16px; margin-bottom:15px;">#GY-ID-PENDING</div>
-            <div style="display:flex; gap:15px; margin-bottom:15px;">
-                <div style="width:90px; height:90px; border:3px solid #000; background:#fff; overflow:hidden;"><img id="h-photo" style="width:100%; height:100%; object-fit:cover;"></div>
+        
+        <div class="id-card-wrap">
+            <div id="h-id" style="font-family:'Share Tech Mono'; font-weight:900; font-size:16px; margin-bottom:15px; letter-spacing:1px;">#GY-ID-PENDING</div>
+            
+            <div style="display:flex; gap:15px; margin-bottom:20px;">
+                <div style="width:90px; height:90px; border:3px solid #000; background:#fff; overflow:hidden;">
+                    <img id="h-photo" style="width:100%; height:100%; object-fit:cover;" src="" alt="User Photo">
+                </div>
                 <div id="h-qr" style="width:90px; height:90px; border:3px solid #000; background:#fff;"></div>
             </div>
+            
             <button id="btn-confirm" class="btn-gy" style="min-width:100%; border-color:#000; color:#000;" onclick="swapButtons('btn-confirm', 'btn-enter-bar')">ПОДТВЕРДИТЬ</button>
             <button id="btn-enter-bar" class="btn-gy btn-sleep" style="min-width:100%; border-color:#000; color:#000;" onclick="portalTransition('block-bar')">ВХОД В БАР</button>
         </div>
@@ -220,68 +285,110 @@
 
     <div id="block-bar" class="block" style="padding:0; justify-content: flex-end;">
         <div class="bar-quote">«Истина не в вине, а в его количестве»</div>
+        
         <div class="nav-bar-btns">
             <button class="btn-gy" style="min-width:140px; font-size:12px;" onclick="smoothLeave('tables.html')">ЗА СТОЛИКИ</button>
             <button class="btn-gy" style="min-width:140px; font-size:12px;" onclick="portalTransition('block-ai-room')">В AI ROOM</button>
         </div>
-        <img src="charlie_bar.png" class="charlie-bar-img">
+        
+        <img src="charlie_bar.png" class="charlie-bar-img" alt="Charlie in Bar">
     </div>
 
     <div id="block-ai-room" class="block">
-        <button class="btn-gy" style="position:absolute; bottom:10%; background:rgba(0,0,0,0.85);" onclick="portalTransition('block-bar')">НАЗАД В БАР</button>
+        <button class="btn-gy" style="position:absolute; bottom:10%; background:rgba(0,0,0,0.85); border-width:3px;" onclick="portalTransition('block-bar')">НАЗАД В БАР</button>
     </div>
 
     <script>
         let currentID = "";
 
+        // ОТКРЫТИЕ ДВЕРИ И ЗАПУСК ЗВУКОВОЙ НИТИ
         function handleDoor() {
             const sounds = ['snd-door', 'snd-ambient', 'snd-khe', 'snd-pour'];
+            
+            // Инициализация аудио-движка
             sounds.forEach(id => {
                 const a = document.getElementById(id);
-                a.play().then(() => { if(id !== 'snd-door') { a.pause(); a.currentTime = 0; } }).catch(() => {});
+                a.play().then(() => { 
+                    if(id !== 'snd-door') { 
+                        a.pause(); 
+                        a.currentTime = 0; 
+                    } 
+                }).catch(e => console.log("Audio init blocked"));
             });
+
             const d = document.getElementById('main-door');
-            setTimeout(() => { d.style.transform = "scale(4.5)"; d.style.opacity = "0"; }, 50);
+            setTimeout(() => { 
+                d.style.transform = "scale(4.5)"; 
+                d.style.opacity = "0"; 
+            }, 50);
+
+            // Генерация ID и QR
             currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
             document.getElementById('id-label').innerText = currentID;
             document.getElementById('h-id').innerText = currentID;
+            
             new QRCode(document.getElementById("qr-box-reg"), { text: currentID, width: 85, height: 85 });
             new QRCode(document.getElementById("h-qr"), { text: currentID, width: 85, height: 85 });
-            setTimeout(() => { portalTransition('block-welcome'); document.getElementById('snd-ambient').play(); }, 1400);
+
+            // Переход и включение фона (Звук не выключится до AI рума)
+            setTimeout(() => { 
+                portalTransition('block-welcome'); 
+                const amb = document.getElementById('snd-ambient');
+                amb.volume = 1;
+                amb.play(); 
+            }, 1400);
         }
 
+        // ПЕРЕХОД МЕЖДУ ЛОКАЦИЯМИ
         function portalTransition(nextId) {
             const current = document.querySelector('.block.active');
             
-            // Звук затухает ТОЛЬКО при физическом исчезновении блока
-            if(nextId === 'block-ai-room' || nextId === 'block-hall') {
+            // ЛОГИКА ЗВУКА: затухание ТОЛЬКО при уходе в AI ROOM
+            if(nextId === 'block-ai-room') {
                 setTimeout(() => {
                     ['snd-ambient', 'snd-khe', 'snd-pour'].forEach(id => fadeAudio(document.getElementById(id), 0, 1000));
                 }, 200);
-            } else if (nextId === 'block-bar') {
+            } 
+            // Возврат звука при выходе из AI Room
+            else if (nextId === 'block-bar' && current && current.id === 'block-ai-room') {
                 const amb = document.getElementById('snd-ambient');
                 amb.play();
                 fadeAudio(amb, 1, 1200);
             }
 
+            // Анимация переключения блоков
             if(current) current.style.opacity = "0";
+            
             setTimeout(() => {
-                if(current) { current.classList.remove('active'); current.style.display = "none"; }
+                if(current) { 
+                    current.classList.remove('active'); 
+                    current.style.display = "none"; 
+                }
                 const next = document.getElementById(nextId);
                 next.style.display = "flex";
+                
                 setTimeout(() => { 
                     next.classList.add('active'); 
                     next.style.opacity = "1";
-                    if(nextId === 'block-bar' && (!current || current.id !== 'block-ai-room')) {
+                    
+                    // Эффекты бара срабатывают только при первом входе к стойке
+                    if(nextId === 'block-bar' && current && (current.id === 'block-hall' || current.id === 'block-welcome')) {
                         setTimeout(() => {
-                            const k = document.getElementById('snd-khe'); k.volume = 1; k.play();
-                            setTimeout(() => { const p = document.getElementById('snd-pour'); p.volume = 1; p.play(); }, 1200);
-                        }, 800);
+                            const k = document.getElementById('snd-khe');
+                            k.volume = 1;
+                            k.play();
+                            setTimeout(() => {
+                                const p = document.getElementById('snd-pour');
+                                p.volume = 1;
+                                p.play();
+                            }, 1200);
+                        }, 600);
                     }
                 }, 50);
             }, 800);
         }
 
+        // ПЛАВНОЕ ЗАТУХАНИЕ ЗВУКА
         function fadeAudio(audio, target, duration) {
             if (!audio) return;
             let start = audio.volume;
@@ -298,22 +405,29 @@
             }, 50);
         }
 
+        // УХОД НА ВНЕШНИЕ СТРАНИЦЫ
         function smoothLeave(url) {
             const veil = document.getElementById('black-veil');
             veil.style.display = "block";
             
-            // Звук затихает параллельно с падением занавеса
+            // Гасим всё плавно за 0.8 сек
             ['snd-ambient', 'snd-khe', 'snd-pour'].forEach(id => fadeAudio(document.getElementById(id), 0, 800));
             
-            setTimeout(() => { window.location.href = url; }, 850);
+            setTimeout(() => { 
+                // Предотвращаем оцифровку скрытием контента
+                document.getElementById('block-bar').style.visibility = "hidden";
+                window.location.href = url; 
+            }, 850);
         }
 
+        // ПРЕДПРОСМОТР ФОТО
         function preview(i) {
             if(i.files && i.files[0]) {
                 const r = new FileReader();
                 r.onload = (e) => { 
                     const img = document.getElementById('pp');
-                    img.src = e.target.result; img.style.display = "block";
+                    img.src = e.target.result;
+                    img.style.display = "block";
                     document.getElementById('txt-photo').style.display = "none";
                     document.getElementById('h-photo').src = e.target.result;
                 };
@@ -321,17 +435,25 @@
             }
         }
 
+        // ПЕРЕКЛЮЧЕНИЕ КНОПОК
         function swapButtons(a, s) {
             document.getElementById(a).classList.add('btn-sleep');
             document.getElementById(s).classList.remove('btn-sleep');
+            // При сохранении фото проигрываем звук наливания (как подтверждение)
             if(a === 'btn-save') {
                 const p = document.getElementById('snd-pour');
-                p.volume = 1; p.play();
+                p.volume = 0.5;
+                p.play();
             }
         }
 
+        // GOOGLE TRANSLATE
         function googleTranslateElementInit() {
-            new google.translate.TranslateElement({pageLanguage: 'ru', autoDisplay: false}, 'google_translate_element');
+            new google.translate.TranslateElement({
+                pageLanguage: 'ru',
+                autoDisplay: false,
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
         }
     </script>
     <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
