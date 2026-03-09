@@ -3,16 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.286</title>
+    <title>GY-GY Club v4.3.287</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
         :root { --gold: #d4af37; --bg: #000000; }
-        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; outline: none !important; user-select: none !important; -webkit-user-select: none !important; }
-        html, body { width: 100%; height: 100%; background: #000 !important; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; position: fixed; }
+        
+        /* Блокировка оцифровки и выделения */
+        * { 
+            -webkit-tap-highlight-color: transparent; 
+            box-sizing: border-box; margin: 0; padding: 0; 
+            outline: none !important; 
+            user-select: none !important; 
+            -webkit-user-select: none !important; 
+            -ms-user-select: none !important;
+        }
+        
+        html, body { 
+            width: 100%; height: 100%; background: #000 !important; color: var(--gold); 
+            font-family: 'Playfair Display', serif; overflow: hidden; position: fixed; 
+        }
 
-        /* СКРОЛЛЯЩИЙСЯ ЯЗЫК (ВОЗВРАЩЕНО) */
+        /* Скроллящийся язык */
         #google_translate_element { 
             position: fixed; top: 15px; left: 15px; z-index: 1000001; 
             max-width: 120px; overflow-x: auto; white-space: nowrap; 
@@ -34,30 +47,46 @@
         }
         .block.active { display: flex !important; opacity: 1; }
 
-        .reg-photo-container { width: 95px; height: 95px; border: 2px solid var(--gold); background: #fff; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-        #pp { width: 100%; height: 100%; object-fit: cover; display: none; position: absolute; inset: 0; pointer-events: none; }
+        /* Картинки с защитой от выделения */
+        img { pointer-events: none; -webkit-user-drag: none; }
 
-        #main-door { width: 280px; cursor: pointer; transition: transform 1.8s ease-in-out, opacity 1.8s ease-in-out; }
+        .reg-photo-container { 
+            width: 95px; height: 95px; border: 2px solid var(--gold); 
+            background: #fff; position: relative; overflow: hidden; 
+            display: flex; align-items: center; justify-content: center; 
+        }
+        
+        #pp { width: 100%; height: 100%; object-fit: cover; display: none; position: absolute; inset: 0; }
 
-        /* КНОПКИ (ВОЗВРАЩЕН ОРИГИНАЛЬНЫЙ СТИЛЬ) */
+        #main-door { width: 280px; cursor: pointer; pointer-events: auto !important; transition: transform 1.8s ease-in-out, opacity 1.8s ease-in-out; }
+
         .btn-gy { 
             min-width: 270px; padding: 15px; background: transparent; 
             border: 2px solid var(--gold); color: var(--gold); cursor: pointer; 
             font-family: 'Share Tech Mono'; text-transform: uppercase; font-weight: 900; 
-            margin: 10px 0; z-index: 1001; 
+            margin: 10px 0; z-index: 1001; pointer-events: auto;
         }
         .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
 
         #black-veil { position: fixed; inset: 0; background: #000 !important; z-index: 2147483647; display: none; pointer-events: all; }
         
-        .bar-quote { font-family: 'Share Tech Mono'; font-size: 20px; font-weight: 900; position: absolute; top: 8%; text-align: center; width: 100%; z-index: 100; font-style: italic; padding: 0 10px; }
-        .charlie-bar-img { height: 82vh; width: auto; pointer-events: none; object-fit: contain; }
-        .nav-bar-btns { position: absolute; bottom: 12%; z-index: 1000; width: 100%; display: flex; justify-content: space-around; padding: 0 10px; }
+        .bar-quote { 
+            font-family: 'Share Tech Mono'; font-size: 20px; font-weight: 900; 
+            position: absolute; top: 8%; text-align: center; width: 100%; 
+            z-index: 100; font-style: italic; padding: 0 10px; pointer-events: none;
+        }
+        
+        .charlie-bar-img { height: 82vh; width: auto; object-fit: contain; }
+        
+        .nav-bar-btns { 
+            position: absolute; bottom: 12%; z-index: 1000; width: 100%; 
+            display: flex; justify-content: space-around; padding: 0 10px; 
+        }
 
         #block-ai-room { background: url('OIG2_vintage_tv_room.jpg') center/cover no-repeat !important; }
     </style>
 </head>
-<body contenteditable="false">
+<body contenteditable="false" spellcheck="false">
 
     <div id="black-veil"></div>
     <div id="google_translate_element"></div>
@@ -84,9 +113,9 @@
         <div style="font-family:'Share Tech Mono'; font-size:22px; margin-bottom:30px; font-weight:900; text-align:center;">«В каждой шутке есть доля виски»</div>
         <div style="display:flex; gap:12px; margin-bottom:30px;">
             <div style="width:95px; height:95px; border:2px solid var(--gold); display:flex; align-items:center; justify-content:center; font-family:'Share Tech Mono'; font-size:11px;" id="id-label">#ID</div>
-            <div style="width:95px; height:95px; border:2px solid var(--gold); background:#fff; padding:5px;" id="qr-box-reg"></div>
+            <div style="width:95px; height:95px; border:2px solid var(--gold); background:#fff; padding:5px; pointer-events:auto;" id="qr-box-reg"></div>
             <div class="reg-photo-container">
-                <input type="file" onchange="preview(this)" style="position:absolute; inset:0; opacity:0; z-index:10; cursor:pointer;">
+                <input type="file" onchange="preview(this)" style="position:absolute; inset:0; opacity:0; z-index:10; cursor:pointer; pointer-events:auto;">
                 <img id="pp">
                 <span id="txt-photo" style="color:#000; font-size:10px; font-weight:900;">ФОТО</span>
             </div>
@@ -101,7 +130,7 @@
             <div id="h-id" style="font-family:'Share Tech Mono'; font-weight:900; font-size:16px; margin-bottom:15px;">#GY-ID-PENDING</div>
             <div style="display:flex; gap:15px; margin-bottom:15px;">
                 <div style="width:90px; height:90px; border:3px solid #000; background:#fff; overflow:hidden;"><img id="h-photo" style="width:100%; height:100%; object-fit:cover;"></div>
-                <div id="h-qr" style="width:90px; height:90px; border:3px solid #000; background:#fff;"></div>
+                <div id="h-qr" style="width:90px; height:90px; border:3px solid #000; background:#fff; pointer-events:auto;"></div>
             </div>
             <button id="btn-confirm" class="btn-gy" style="min-width:100%; border-color:#000; color:#000;" onclick="swapButtons('btn-confirm', 'btn-enter-bar')">ПОДТВЕРДИТЬ</button>
             <button id="btn-enter-bar" class="btn-gy btn-sleep" style="min-width:100%; border-color:#000; color:#000;" onclick="portalTransition('block-bar')">ВХОД В БАР</button>
@@ -137,16 +166,11 @@
             document.getElementById('h-id').innerText = currentID;
             new QRCode(document.getElementById("qr-box-reg"), { text: currentID, width: 85, height: 85 });
             new QRCode(document.getElementById("h-qr"), { text: currentID, width: 85, height: 85 });
-            setTimeout(() => { 
-                portalTransition('block-welcome'); 
-                document.getElementById('snd-ambient').play(); 
-            }, 1400);
+            setTimeout(() => { portalTransition('block-welcome'); document.getElementById('snd-ambient').play(); }, 1400);
         }
 
         function portalTransition(nextId) {
             const current = document.querySelector('.block.active');
-            
-            // Звук затихает ТОЛЬКО при уходе в AI ROOM. В Холле звук НЕ прерывается.
             if(nextId === 'block-ai-room') {
                 setTimeout(() => {
                     ['snd-ambient', 'snd-khe', 'snd-pour'].forEach(id => fadeAudio(document.getElementById(id), 0, 1000));
@@ -155,7 +179,6 @@
                 const amb = document.getElementById('snd-ambient');
                 amb.play(); fadeAudio(amb, 1, 1000);
             }
-
             if(current) current.style.opacity = "0";
             setTimeout(() => {
                 if(current) { current.classList.remove('active'); current.style.display = "none"; }
@@ -164,7 +187,6 @@
                 setTimeout(() => { 
                     next.classList.add('active'); 
                     next.style.opacity = "1";
-                    // Эффекты Чарли играют только при входе в бар из Холла
                     if(nextId === 'block-bar' && current && current.id === 'block-hall') {
                         setTimeout(() => {
                             const k = document.getElementById('snd-khe'); k.volume = 1; k.play();
