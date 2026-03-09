@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.247</title>
+    <title>GY-GY Club v4.3.248</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -15,24 +15,33 @@
         .ui-header-left { position: fixed; top: 15px; left: 80px; z-index: 10000001; font-family: 'Share Tech Mono'; font-weight: bold; font-size: 24px; letter-spacing: 5px; color: var(--gold); }
         #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 10000002; background: rgba(0,0,0,0.7); padding: 5px; border-radius: 4px; }
 
-        /* ЖЕСТКИЙ ПЕРЕХОД БЕЗ ФИОЛЕТА */
-        #fade-overlay { position: fixed; inset: 0; background: #000 !important; z-index: 9999999; pointer-events: none; opacity: 0; transition: opacity 0.4s steps(1); }
+        /* ОВЕРЛЕЙ ДЛЯ УДАЛЕНИЯ ФИОЛЕТА */
+        #fade-overlay { position: fixed; inset: 0; background: #000 !important; z-index: 9999999; pointer-events: none; display: none; }
 
         .block { 
             position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; 
-            background: #000 !important; z-index: 10; opacity: 0; visibility: hidden;
+            background: #000 !important; z-index: 10; opacity: 0;
             transition: opacity 0.5s ease-in-out;
         }
-        .block.active { display: flex !important; opacity: 1; visibility: visible; }
+        .block.active { display: flex !important; opacity: 1; }
 
         #main-door { width: 280px; cursor: pointer; transition: transform 1.2s ease-out, opacity 0.8s ease; }
 
-        .btn-gy { min-width: 260px; padding: 12px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; font-weight: 900; margin: 6px 0; }
-        .btn-sleep { opacity: 0.1 !important; pointer-events: none !important; }
+        /* УНИФИЦИРОВАННЫЕ КНОПКИ GY-GY */
+        .btn-gy { 
+            min-width: 260px; padding: 12px; background: transparent !important; 
+            border: 2px solid var(--gold) !important; color: var(--gold) !important; 
+            cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; 
+            font-weight: 900; margin: 6px 0; transition: 0.3s;
+        }
+        .btn-sleep { opacity: 0.1 !important; pointer-events: none !important; filter: grayscale(1); }
         
         .hall-slogan { position: absolute; top: 10%; width: 100%; text-align: center; font-family: 'Playfair Display'; font-style: italic; font-weight: 900; font-size: 34px; color: var(--rich-brown); z-index: 100; }
-        .id-card { position: absolute; left: 50%; top: 70%; transform: translate(-50%, -50%); width: 250px; padding: 15px; border: 2px solid var(--gold); background: #F5F5DC; border-radius: 12px; display: flex; flex-direction: column; align-items: center; color: #000; }
-        .hall-frame { width: 75px; height: 75px; border: 1px solid #000; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .id-card { position: absolute; left: 50%; top: 70%; transform: translate(-50%, -50%); width: 260px; padding: 15px; border: 2px solid var(--gold); background: #F5F5DC; border-radius: 12px; display: flex; flex-direction: column; align-items: center; color: #000; box-shadow: 0 10px 40px #000; }
+        .hall-frame { width: 80px; height: 80px; border: 1px solid #000; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+
+        /* КНОПКА ВНУТРИ ПРОПУСКА (УНИФИКАЦИЯ) */
+        .btn-id-fix { min-width: 100% !important; border-color: #000 !important; color: #000 !important; margin: 4px 0 !important; }
 
         .bar-btn-simple { position: absolute; z-index: 1000; background: transparent; border: 2px solid var(--gold); padding: 12px 20px; color: var(--gold); font-family: 'Share Tech Mono'; font-weight: 900; cursor: pointer; text-transform: uppercase; }
     </style>
@@ -48,7 +57,7 @@
     <audio id="snd-khe"><source src="khe_khe.mp3" type="audio/mpeg"></audio>
     <audio id="snd-pour"><source src="pour_whisky.mp3" type="audio/mpeg"></audio>
 
-    <div id="block-entrance" class="block active" style="opacity: 1; visibility: visible;">
+    <div id="block-entrance" class="block active" style="opacity: 1;">
         <img src="door_1.jpg" id="main-door" onclick="handleDoor()">
     </div>
     
@@ -84,8 +93,8 @@
                 <div class="hall-frame" id="h-qr"></div>
             </div>
             <div id="h-id" style="font-family:'Share Tech Mono'; font-weight:900; font-size:13px; margin-bottom:10px; border-bottom:1px solid #000; width:100%; text-align:center;"></div>
-            <button class="btn-gy" style="min-width:100%; border-color:#000; color:#000;" onclick="confirmHall(this)">ПОДТВЕРДИТЬ</button>
-            <button id="btn-go-bar" class="btn-gy btn-sleep" style="min-width:100%; background:#000; color:var(--gold);" onclick="goToBar()">ВХОД В БАР</button>
+            <button class="btn-gy btn-id-fix" onclick="confirmHall(this)">ПОДТВЕРДИТЬ</button>
+            <button id="btn-go-bar" class="btn-gy btn-id-fix btn-sleep" onclick="goToBar()">ВХОД В БАР</button>
         </div>
     </div>
 
@@ -101,7 +110,7 @@
         function handleDoor() {
             document.getElementById('snd-door').play().catch(()=>{});
             const d = document.getElementById('main-door');
-            d.style.transform = "scale(2)"; d.style.opacity = "0";
+            d.style.transform = "scale(2.5)"; d.style.opacity = "0";
             currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
             
             setTimeout(() => {
@@ -109,12 +118,12 @@
                 new QRCode(document.getElementById("h-qr"), { text: currentID, width: 75, height: 75 });
                 document.getElementById('id-label').innerText = currentID;
                 document.getElementById('h-id').innerText = currentID;
-            }, 100);
+            }, 50);
 
             setTimeout(() => { 
                 portalTransition('block-welcome'); 
-                document.getElementById('snd-ambient').play().catch(()=>{}); // ГУЛ БАРА ТУТ
-            }, 1300);
+                document.getElementById('snd-ambient').play().catch(()=>{});
+            }, 1100);
         }
 
         function portalTransition(nextId) {
@@ -133,35 +142,39 @@
 
         function saveReg() {
             document.getElementById('snd-pour').play().catch(()=>{});
-            document.querySelectorAll('.btn-sleep').forEach(b => b.classList.remove('btn-sleep'));
+            // Активируем кнопку "ПРОХОДИТЕ" в регистрации
+            document.getElementById('btn-go-hall-reg').classList.remove('btn-sleep');
+            // Активируем кнопку перехода в холл на приветственном экране (на всякий случай)
+            document.getElementById('btn-welcome-hall').classList.remove('btn-sleep');
         }
 
         function confirmHall(btn) {
-            btn.innerText = "ПОДТВЕРЖДЕНО";
-            // Активируем кнопку входа в бар на пропуске
+            btn.innerText = "OK";
+            // Активируем кнопку входа в бар ТОЛЬКО после подтверждения
             document.getElementById('btn-go-bar').classList.remove('btn-sleep');
         }
 
         function goToBar() {
             portalTransition('block-bar');
             setTimeout(() => {
-                document.getElementById('snd-khe').play().catch(()=>{});
-                setTimeout(() => { document.getElementById('snd-pour').play().catch(()=>{}); }, 800);
+                const khe = document.getElementById('snd-khe');
+                const pour = document.getElementById('snd-pour');
+                khe.currentTime = 0; khe.play().catch(()=>{});
+                setTimeout(() => { pour.currentTime = 0; pour.play().catch(()=>{}); }, 900);
             }, 600);
         }
 
         function smoothLeave(url) {
+            // Мгновенная блокировка фиолетового фантома
             const overlay = document.getElementById('fade-overlay');
+            overlay.style.display = "block"; 
+            
             const amb = document.getElementById('snd-ambient');
-            overlay.style.opacity = "1"; // Мгновенное черное перекрытие
-
             let vol = 1.0;
             const fade = setInterval(() => {
                 if (vol > 0.1) { vol -= 0.1; amb.volume = vol; } 
-                else { amb.volume = 0; clearInterval(fade); }
-            }, 50);
-
-            setTimeout(() => { window.location.href = url; }, 500);
+                else { amb.volume = 0; clearInterval(fade); window.location.href = url; }
+            }, 40);
         }
 
         function preview(i) {
