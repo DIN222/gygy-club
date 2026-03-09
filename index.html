@@ -1,11 +1,10 @@
 
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.261</title>
+    <title>GY-GY Club v4.3.262</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -22,18 +21,28 @@
             position: fixed;
         }
 
-        /* --- UI ELEMENTS: FIXED & STATIC --- */
+        /* --- UI ELEMENTS: ОТРАБОТАННЫЙ ВАРИАНТ --- */
         #google_translate_element { 
-            position: fixed; top: 15px; left: 15px; z-index: 1000000; 
-            background: rgba(0,0,0,0.8); padding: 4px; border-radius: 4px; 
-            pointer-events: auto;
+            position: fixed; top: 15px; left: 15px; z-index: 1000001; 
+            min-height: 40px;
         }
-        /* GY-GY ПЕРЕНЕСЕН ВПРАВО */
+        /* Логотип справа */
         .ui-header-right { 
             position: fixed; top: 18px; right: 25px; z-index: 1000000; 
             font-family: 'Share Tech Mono'; font-weight: bold; font-size: 24px; 
             letter-spacing: 5px; color: var(--gold); pointer-events: none; 
         }
+
+        /* Системные правки для Google Translate (чтобы не ломали верстку) */
+        .goog-te-banner-frame.skiptranslate { display: none !important; }
+        body { top: 0px !important; }
+        .goog-te-gadget-simple { 
+            background-color: rgba(0,0,0,0.5) !important; 
+            border: 1px solid var(--gold) !important; 
+            padding: 5px !important; 
+            border-radius: 4px !important;
+        }
+        .goog-te-gadget-simple a, .goog-te-gadget-simple span { color: var(--gold) !important; }
 
         /* --- BLOCKS SYSTEM --- */
         .block { 
@@ -44,13 +53,11 @@
         }
         .block.active { display: flex !important; opacity: 1; }
 
-        /* --- BUTTONS --- */
         .btn-gy { 
             min-width: 270px; padding: 15px; background: transparent; 
             border: 2px solid var(--gold); color: var(--gold); 
             cursor: pointer; font-family: 'Share Tech Mono'; 
             text-transform: uppercase; font-weight: 900; margin: 10px 0; 
-            -webkit-appearance: none; appearance: none;
         }
         .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
 
@@ -203,7 +210,7 @@
         }
 
         function googleTranslateElementInit() {
-            new google.translate.TranslateElement({pageLanguage: 'ru', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false}, 'google_translate_element');
+            new google.translate.TranslateElement({pageLanguage: 'ru', autoDisplay: false}, 'google_translate_element');
         }
     </script>
     <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
