@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY Club | Tables v1.3.5</title>
+    <title>GY-GY Club | Tables v1.3.6</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #d4af37; --violet: #8A2BE2; --neon-glow: rgba(138, 43, 226, 0.6); }
@@ -20,31 +20,30 @@
             position: relative; display: none; 
         }
         
-        /* УНИФИЦИРОВАННЫЕ ФИОЛЕТОВЫЕ СВЕТЛЯЧКИ */
+        /* ФИОЛЕТОВЫЕ СВЕТЛЯЧКИ (УНИФИЦИРОВАННЫЕ) */
         .lamp-zone { 
             position: absolute; width: 40px; height: 40px; border-radius: 50%; 
             cursor: pointer; z-index: 100; 
-            /* Фиолетовое свечение как основной акцент */
             background: radial-gradient(circle, var(--neon-glow) 0%, transparent 75%); 
             border: 1px solid var(--violet); 
             box-shadow: 0 0 15px var(--neon-glow);
             transition: all 0.3s ease-in-out;
-            transform: translate(-50%, -50%); /* Центрируем по точке */
+            transform: translate(-50%, -50%); 
         }
         .lamp-zone:hover { 
             background: radial-gradient(circle, var(--violet) 0%, transparent 80%);
             box-shadow: 0 0 25px var(--violet);
-            transform: translate(-50%, -50%) scale(1.2);
+            transform: translate(-50%, -50%) scale(1.1);
         }
 
-        /* УТОЧНЕННЫЕ КООРДИНАТЫ ПО ТВОИМ ЗАМЕРАМ */
-        #table-1 { bottom: 57.2%; left: 49.9%; } /* РИСКИ */
-        #table-2 { bottom: 30.1%; left: 35.7%; } 
-        #table-3 { bottom: 41.1%; left: 43.1%; } 
-        #table-4 { bottom: 44.1%; left: 44.5%; } 
-        #table-5 { bottom: 43.7%; left: 56.2%; } 
-        #table-6 { bottom: 29.9%; left: 63.8%; } 
-        #mic-zone { bottom: 40.4%; left: 58.3%; border-width: 2px; }
+        /* КОРРЕКТИРОВКА: -5% ВНИЗ ОТ ПРЕДЫДУЩИХ ЗНАЧЕНИЙ */
+        #table-1 { bottom: 52.2%; left: 49.9%; } /* РИСКИ (-5%) */
+        #table-2 { bottom: 25.1%; left: 35.7%; } 
+        #table-3 { bottom: 36.1%; left: 43.1%; } 
+        #table-4 { bottom: 39.1%; left: 44.5%; } 
+        #table-5 { bottom: 38.7%; left: 56.2%; } 
+        #table-6 { bottom: 24.9%; left: 63.8%; } 
+        #mic-zone { bottom: 35.4%; left: 58.3%; border-width: 2px; }
 
         #hud { position: fixed; top: 70px; left: 20px; display: flex; align-items: center; gap: 12px; z-index: 1500; }
         .back-btn { background: transparent; border: 1px solid var(--violet); color: var(--violet); padding: 5px 10px; cursor: pointer; font-family: inherit; font-size: 10px; }
@@ -59,7 +58,7 @@
 
     <div id="entry-layer">
         <div style="border: 1px solid var(--violet); padding: 40px; text-align: center; background: #050505;">
-            <p id="charlie-msg">Чарли: "Кхм... Оцифруйте ID."</p>
+            <p id="charlie-msg">Чарли: "Оцифруйте ID для входа в Lounge."</p>
             <button id="gate-btn" class="reg-btn" onclick="Core.register()">Оцифровать</button>
         </div>
     </div>
@@ -102,34 +101,6 @@
         window.onload = () => { if(localStorage.getItem('gygy_id')) Core.enter(); };
         function googleTranslateElementInit() { new google.translate.TranslateElement({pageLanguage: 'ru'}, 'google_translate_element'); }
     </script>
-    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>  
-    <style>
-    /* Простая и строгая кнопка в стиле GY-GY */
-    .btn-simple-back {
-        position: fixed;
-        bottom: 30px;
-        left: 50%;
-        transform: translateX(-50%);
-        padding: 12px 40px;
-        background: #000;
-        border: 1px solid #d4af37;
-        color: #d4af37;
-        font-family: 'Share Tech Mono', monospace;
-        font-size: 14px;
-        text-transform: uppercase;
-        text-decoration: none;
-        z-index: 10000;
-        letter-spacing: 2px;
-        transition: background 0.2s;
-    }
-
-    /* Только при нажатии она слегка подсвечивается, чтобы гость понимал, что кликнул */
-    .btn-simple-back:active {
-        background: #d4af37;
-        color: #000;
-    }
-</style>
-
-<a href="index.html?back=bar" class="btn-simple-back">В БАР</a>
+    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
