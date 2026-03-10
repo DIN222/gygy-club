@@ -3,37 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.01 | CORE</title>
+    <title>GY-GY Club v4.4.02 | CORE-STABLE</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
-        :root { --gold: #d4af37; --brown-dark: #3E2723; }
-        * { -webkit-tap-highlight-color: transparent !important; outline: none !important; box-sizing: border-box; margin: 0; padding: 0; user-select: none !important; -webkit-user-select: none !important; }
-        html, body { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; position: fixed; }
-        img { pointer-events: none !important; -webkit-touch-callout: none !important; }
+        :root { --gold: #d4af37; --door-wood: #3E2723; }
+        
+        /* ГЛОБАЛЬНАЯ ЗАЩИТА И ФИКСЫ */
+        * { 
+            -webkit-tap-highlight-color: transparent !important; 
+            outline: none !important; 
+            box-sizing: border-box; margin: 0; padding: 0; 
+            user-select: none !important; 
+            -webkit-user-select: none !important;
+            -webkit-touch-callout: none !important; /* Полная блокировка контекстного меню */
+        }
 
-        /* ЭЛЕМЕНТЫ ИНТЕРФЕЙСА */
-        #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000001; max-width: 120px; }
+        html, body { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; position: fixed; }
+        img { pointer-events: none !important; -webkit-user-drag: none !important; }
+
+        #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000001; }
         .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000000; font-family: 'Share Tech Mono'; font-weight: bold; font-size: 24px; letter-spacing: 5px; color: var(--gold); }
 
-        /* МОДУЛЬНАЯ СИСТЕМА БЛОКОВ */
-        .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; z-index: 10; opacity: 0; transition: opacity 0.6s ease-in-out; }
+        .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; z-index: 10; opacity: 0; transition: opacity 0.8s ease-in-out; }
         .block.active { display: flex !important; opacity: 1; }
 
-        .btn-gy { min-width: 270px; padding: 15px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; font-weight: 900; margin: 10px 0; z-index: 1001; }
+        .btn-gy { min-width: 270px; padding: 15px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; font-weight: 900; margin: 10px 0; z-index: 1001; transition: 0.3s; }
         .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
 
-        /* КАРТОЧКА ПРОПУСКА */
+        /* ДЕВИЗ: ВЫШЕ, ЦВЕТ ДВЕРИ */
+        .motto-hall {
+            position: absolute; top: 5%; width: 100%; text-align: center; 
+            color: var(--door-wood); font-family: 'Playfair Display', serif; 
+            font-size: 42px; font-weight: 900; font-style: italic; 
+            letter-spacing: 2px; text-shadow: 1px 1px 1px rgba(255,255,255,0.05);
+            z-index: 5;
+        }
+
         .pass-card { position: absolute; top: 72%; left: 50%; transform: translate(-50%, -50%); width: 260px; padding: 15px; border: 2px solid var(--gold); background: #F5F5DC; border-radius: 12px; display: flex; flex-direction: column; align-items: center; color: #000; }
         .pass-media-row { display: flex; gap: 10px; margin-bottom: 12px; }
         .pass-box { width: 85px; height: 85px; border: 2px solid #000; background: #fff; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         
-        #main-door { width: 280px; cursor: pointer; pointer-events: auto !important; transition: transform 1.8s, opacity 1.8s; }
-        #black-veil { position: fixed; inset: 0; background: #000; z-index: 2147483647; display: none; pointer-events: none; opacity: 0; transition: opacity 0.5s; }
+        #main-door { width: 280px; cursor: pointer; pointer-events: auto !important; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s; }
+        
+        /* ПЛАВНАЯ ШТОРА ПРИ УХОДЕ */
+        #black-veil { position: fixed; inset: 0; background: #000; z-index: 2147483647; display: none; pointer-events: none; opacity: 0; transition: opacity 1.2s ease-in-out; }
     </style>
 </head>
-<body>
+<body onload="checkReturn()">
 
     <div id="black-veil"></div>
     <div id="google_translate_element"></div>
@@ -49,22 +67,20 @@
     </div>
 
     <div id="block-welcome" class="block">
-        <div style="font-family:'Share Tech Mono'; letter-spacing:10px; margin-bottom:20px; font-size:16px;">GY-GY PRIVAT</div>
-        <img src="charlie.png" style="max-height: 35vh; margin-bottom: 20px;">
+        <img src="charlie.png" style="max-height: 40vh; margin-bottom: 20px;">
         <div style="font-size:48px; font-weight:900; margin-bottom:20px; font-style:italic;">WELCOME</div>
         <button id="btn-w-hall" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">ПРОХОДИТЕ В ХОЛЛ</button>
         <button class="btn-gy" onclick="portalTransition('block-identity')">РЕГИСТРАЦИЯ</button>
     </div>
 
     <div id="block-identity" class="block">
-        <div style="font-family:'Share Tech Mono'; font-size:22px; margin-bottom:30px; font-weight:900; text-align:center;">«В каждой шутке есть доля виски»</div>
         <div style="display:flex; gap:12px; margin-bottom:30px;">
             <div style="width:95px; height:95px; border:2px solid var(--gold); display:flex; align-items:center; justify-content:center; font-family:'Share Tech Mono'; font-size:11px;" id="id-label">#ID</div>
-            <div style="width:95px; height:95px; border:2px solid var(--gold); background:#fff; padding:5px; display:flex; align-items:center; justify-content:center;" id="qr-box-reg"></div>
+            <div style="width:95px; height:95px; border:2px solid var(--gold); background:#fff; display:flex; align-items:center; justify-content:center;" id="qr-box-reg"></div>
             <div style="width: 95px; height: 95px; border: 2px solid var(--gold); background: #fff; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;">
                 <input type="file" onchange="preview(this)" style="position:absolute; inset:0; opacity:0; z-index:10; cursor:pointer;">
                 <img id="pp" style="width:100%; height:100%; object-fit:cover; display:none;">
-                <span id="txt-photo" style="color:#000; font-size:10px; font-weight:900;">ФОТО</span>
+                <span style="color:#000; font-size:10px; font-weight:900;">ФОТО</span>
             </div>
         </div>
         <button id="btn-save" class="btn-gy" onclick="swapButtons('btn-save', 'btn-pass')">СОХРАНИТЬ</button>
@@ -73,25 +89,19 @@
 
     <div id="block-hall" class="block">
         <div style="position:absolute; inset:0; background:url('hall_bg_jpg.jpg') center/cover; z-index:-1;"></div>
-        
-        <div style="position:absolute; top:15%; width:100%; text-align:center; color:var(--brown-dark); font-family:'Playfair Display', serif; font-size:38px; font-weight:900; font-style:italic; letter-spacing:2px; text-shadow: 1px 1px 0px rgba(255,255,255,0.1);">
-            «Всё будет GY-GY»
-        </div>
-
+        <div class="motto-hall">«Всё будет GY-GY»</div>
         <div class="pass-card">
             <div id="h-id" style="font-family:'Share Tech Mono'; font-weight:900; font-size:14px; margin-bottom:12px;">#GY-ID-PENDING</div>
             <div class="pass-media-row">
                 <div class="pass-box"><img id="h-photo" style="width:100%; height:100%; object-fit:cover;"></div>
                 <div class="pass-box" id="h-qr" style="padding:5px;"></div>
             </div>
-            <button id="btn-confirm" class="btn-gy" style="min-width:100%; border-color:#000; color:#000; padding:10px; margin:4px 0; font-size:14px;" onclick="swapButtons('btn-confirm', 'btn-enter-bar')">ПОДТВЕРДИТЬ</button>
-            <button id="btn-enter-bar" class="btn-gy btn-sleep" style="min-width:100%; border-color:#000; color:#000; padding:10px; margin:4px 0; font-size:14px;" onclick="portalTransition('block-bar')">ВХОД В БАР</button>
+            <button id="btn-confirm" class="btn-gy" style="min-width:100%; border-color:#000; color:#000; padding:10px; margin:4px 0;" onclick="swapButtons('btn-confirm', 'btn-enter-bar')">ПОДТВЕРДИТЬ</button>
+            <button id="btn-enter-bar" class="btn-gy btn-sleep" style="min-width:100%; border-color:#000; color:#000; padding:10px; margin:4px 0;" onclick="portalTransition('block-bar')">ВХОД В БАР</button>
         </div>
     </div>
 
     <div id="block-bar" class="block" style="padding:0; justify-content: flex-end;">
-        <div style="font-family:'Share Tech Mono'; font-size:20px; font-weight:900; position:absolute; top:8%; text-align:center; width:100%; z-index:100; font-style:italic; padding: 0 10px; pointer-events:none;">«Истина не в вине, а в его количестве»</div>
-        
         <div style="position:absolute; bottom:30%; z-index:1000; width:100%; display:flex; justify-content:space-around; padding:0 10px;">
             <button class="btn-gy" style="min-width:145px; font-size:12px; background:rgba(0,0,0,0.6);" onclick="smoothLeave('tables.html')">ЗА СТОЛИКИ</button>
             <button class="btn-gy" style="min-width:145px; font-size:12px; background:rgba(0,0,0,0.6);" onclick="portalTransition('block-ai-room')">В AI ROOM</button>
@@ -106,7 +116,21 @@
     <script>
         let currentID = "";
 
-        // Универсальная функция плавного звука
+        // Проверка возврата из столов
+        function checkReturn() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('back') === 'bar') {
+                document.getElementById('block-entrance').classList.remove('active');
+                document.getElementById('block-entrance').style.display = 'none';
+                const bar = document.getElementById('block-bar');
+                bar.style.display = 'flex';
+                bar.classList.add('active');
+                bar.style.opacity = '1';
+                const amb = document.getElementById('snd-ambient');
+                amb.play(); amb.volume = 1;
+            }
+        }
+
         function fadeAudio(audio, targetVolume, duration, callback) {
             const startVolume = audio.volume;
             const startTime = Date.now();
@@ -125,13 +149,11 @@
         function handleDoor() {
             document.getElementById('snd-door').play();
             const d = document.getElementById('main-door');
-            d.style.transform = "scale(4.5)";
-            d.style.opacity = "0";
+            d.style.transform = "scale(5)"; d.style.opacity = "0";
             
             currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
             document.getElementById('id-label').innerText = currentID;
             document.getElementById('h-id').innerText = currentID;
-            
             document.getElementById('qr-box-reg').innerHTML = "";
             document.getElementById('h-qr').innerHTML = "";
             new QRCode(document.getElementById("qr-box-reg"), { text: currentID, width: 85, height: 85 });
@@ -140,21 +162,17 @@
             setTimeout(() => { 
                 portalTransition('block-welcome'); 
                 const amb = document.getElementById('snd-ambient');
-                amb.volume = 0; amb.play(); fadeAudio(amb, 1, 2000);
-            }, 1400);
+                amb.volume = 0; amb.play(); fadeAudio(amb, 1, 2500);
+            }, 1800);
         }
 
         function portalTransition(nextId) {
             const current = document.querySelector('.block.active');
-            
-            // Логика затихания звука для AI Room
             if (nextId === 'block-ai-room') {
-                fadeAudio(document.getElementById('snd-ambient'), 0, 800);
-                document.getElementById('snd-khe').pause();
-                document.getElementById('snd-pour').pause();
+                fadeAudio(document.getElementById('snd-ambient'), 0, 1200);
             } else if (nextId === 'block-bar' && current && current.id === 'block-ai-room') {
                 const amb = document.getElementById('snd-ambient');
-                amb.play(); fadeAudio(amb, 1, 800);
+                amb.play(); fadeAudio(amb, 1, 1200);
             }
 
             if(current) current.style.opacity = "0";
@@ -165,21 +183,19 @@
                 setTimeout(() => { 
                     next.classList.add('active'); next.style.opacity = "1";
                     if(nextId === 'block-bar') {
-                        setTimeout(() => { document.getElementById('snd-khe').play(); }, 600);
-                        setTimeout(() => { document.getElementById('snd-pour').play(); }, 1800);
+                        setTimeout(() => { document.getElementById('snd-khe').play(); }, 800);
+                        setTimeout(() => { document.getElementById('snd-pour').play(); }, 2200);
                     }
                 }, 50);
-            }, 600);
+            }, 800);
         }
 
         function smoothLeave(url) {
             const veil = document.getElementById('black-veil');
             veil.style.display = "block";
             setTimeout(() => { veil.style.opacity = "1"; }, 10);
-            
-            // Плавное затихание звука перед уходом
-            fadeAudio(document.getElementById('snd-ambient'), 0, 400, () => {
-                setTimeout(() => { window.location.href = url; }, 100);
+            fadeAudio(document.getElementById('snd-ambient'), 0, 1500, () => {
+                setTimeout(() => { window.location.href = url; }, 200);
             });
         }
 
@@ -188,7 +204,6 @@
                 const r = new FileReader();
                 r.onload = (e) => { 
                     document.getElementById('pp').src = e.target.result; document.getElementById('pp').style.display = "block";
-                    document.getElementById('txt-photo').style.display = "none";
                     document.getElementById('h-photo').src = e.target.result;
                 };
                 r.readAsDataURL(i.files[0]);
