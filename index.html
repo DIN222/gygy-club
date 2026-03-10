@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.11 | FIX</title>
+    <title>GY-GY Club v4.4.12 | FINAL-FIX</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -18,7 +18,6 @@
             outline: none !important; 
         }
 
-        /* Убираем фиолетовые рамки и оцифровку */
         a, button, input { -webkit-appearance: none; outline: none !important; pointer-events: auto !important; }
         img { -webkit-user-drag: none !important; pointer-events: none; border: none !important; }
 
@@ -34,6 +33,21 @@
         
         .btn-gy { min-width: 270px; padding: 14px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; font-weight: 900; margin: 8px 0; z-index: 1001; }
         .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
+
+        /* НАДПИСЬ В ХОЛЛЕ */
+        .motto-hall { 
+            position: absolute; 
+            top: 8%; 
+            width: 100%; 
+            text-align: center; 
+            color: var(--door-wood); 
+            font-family: 'Playfair Display', serif; 
+            font-size: 38px; 
+            font-weight: 900; 
+            font-style: italic; 
+            z-index: 20; 
+            pointer-events: none;
+        }
 
         .box-final { width: 85px; height: 85px; border: 2px solid #000; background: #fff; display: flex; align-items: center; justify-content: center; box-sizing: border-box; overflow: hidden; }
         #h-photo { width: 100%; height: 100%; object-fit: cover; }
@@ -77,6 +91,7 @@
 
     <div id="block-hall" class="block">
         <div style="position:absolute; inset:0; background:url('hall_bg_jpg.jpg') center/cover; z-index:-1;"></div>
+        <div class="motto-hall">«Всё будет GY-GY»</div>
         <div style="position:absolute; top:72%; left:50%; transform:translate(-50%,-50%); width:260px; padding:15px; border:2px solid var(--gold); background:#F5F5DC; border-radius:12px; display:flex; flex-direction:column; align-items:center; color:#000;">
             <div id="h-id" style="font-family:'Share Tech Mono'; font-weight:900; font-size:14px; margin-bottom:12px;">#ID</div>
             <div style="display:flex; gap:15px; margin-bottom:12px;">
