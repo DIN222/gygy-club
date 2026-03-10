@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.16 | MASTER</title>
+    <title>GY-GY Club v4.4.17 | MASTER</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -16,8 +16,9 @@
 
         html, body { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; position: fixed; margin:0; }
         
+        /* ИНТЕРФЕЙСНЫЕ КНОПКИ (ЯЗЫКИ И ВОЗВРАТ) */
         #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000001; }
-        .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000000; font-size: 24px; letter-spacing: 5px; font-weight: bold; pointer-events: none; }
+        .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000000; font-size: 24px; letter-spacing: 5px; font-weight: bold; pointer-events: none; color: var(--gold); }
         
         .ui-back-to-bar { 
             position: fixed; top: 65px; left: 15px; z-index: 1000000;
@@ -26,17 +27,27 @@
             font-size: 11px; text-transform: uppercase; letter-spacing: 2px; display: none;
         }
 
+        /* КОНТЕЙНЕРЫ БЛОКОВ */
         .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; z-index: 10; opacity: 0; transition: opacity 0.8s ease-in-out; }
         .block.active { display: flex !important; opacity: 1; }
 
         .btn-gy { min-width: 270px; padding: 14px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; text-transform: uppercase; font-weight: 900; margin: 8px 0; z-index: 1001; text-align: center; font-family: 'Share Tech Mono'; }
         .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
 
-        /* ФОТО В КАРТОЧКЕ */
+        /* ХОЛЛ: НАДПИСЬ И УЗКИЙ ПРОПУСК */
+        .motto-hall { position: absolute; top: 8%; width: 100%; text-align: center; color: var(--door-wood); font-size: 38px; font-weight: 900; font-style: italic; font-family: 'Playfair Display', serif; z-index: 25; pointer-events: none; }
+        
+        .id-card-hall { 
+            position: absolute; top: 72%; left: 50%; transform: translate(-50%,-50%); 
+            width: 210px; padding: 15px; border: 2px solid var(--gold); 
+            background: #F5F5DC; border-radius: 12px; display: flex; 
+            flex-direction: column; align-items: center; color: #000; z-index: 30;
+        }
+
         .box-final { width: 85px; height: 85px; border: 2px solid #000; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
         #h-photo { width: 100% !important; height: 100% !important; object-fit: cover !important; display: block; }
 
-        /* СТОЛИКИ (Lamps) */
+        /* ЗАЛ СТОЛИКОВ (ФИОЛЕТОВЫЙ НЕОН) */
         #block-tables { background: url('lounge.jpg') no-repeat center bottom / contain #000; }
         .lamp-zone { 
             position: absolute; width: 42px; height: 42px; border-radius: 50%; 
@@ -48,7 +59,7 @@
         }
         .lamp-zone:hover { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 0 28px var(--violet); }
         
-        /* Координаты */
+        /* Координаты столов */
         #table-1 { bottom: 49.2%; left: 49.9%; } 
         #table-2 { bottom: 22.1%; left: 35.7%; } 
         #table-3 { bottom: 33.1%; left: 43.1%; } 
@@ -98,8 +109,9 @@
     </div>
 
     <div id="block-hall" class="block">
-        <div style="position:absolute; inset:0; background:url('hall_bg_jpg.jpg') center/cover; z-index:-1;"></div>
-        <div style="position:absolute; top:72%; left:50%; transform:translate(-50%,-50%); width:260px; padding:15px; border:2px solid var(--gold); background:#F5F5DC; border-radius:12px; display:flex; flex-direction:column; align-items:center; color:#000;">
+        <div style="position:absolute; inset:0; background:url('hall_bg_jpg.jpg') center/cover; z-index:15;"></div>
+        <div class="motto-hall">«Всё будет GY-GY»</div>
+        <div class="id-card-hall">
             <div id="h-id" style="font-family:'Share Tech Mono'; font-weight:900; font-size:14px; margin-bottom:12px;">#ID</div>
             <div style="display:flex; gap:15px; margin-bottom:12px;">
                 <div class="box-final"><img id="h-photo"></div>
@@ -138,15 +150,18 @@
             const current = document.querySelector('.block.active');
             const backBtn = document.getElementById('btn-global-back');
 
+            // ЗВУКОВАЯ ЛОГИКА: Полная тишина в 0 при уходе из бара
             if (nextId === 'block-tables' || nextId === 'block-ai-room') {
-                fadeAudio(document.getElementById('snd-ambient'), 0.2, 800);
+                fadeAudio(document.getElementById('snd-ambient'), 0, 800);
                 document.getElementById('snd-khe').pause();
                 document.getElementById('snd-pour').pause();
                 backBtn.style.display = 'block'; 
             } else if (nextId === 'block-bar') {
                 fadeAudio(document.getElementById('snd-ambient'), 1, 800);
                 backBtn.style.display = 'none';
-            } else { backBtn.style.display = 'none'; }
+            } else { 
+                backBtn.style.display = 'none'; 
+            }
 
             if(current) current.style.opacity = "0";
             setTimeout(() => {
@@ -155,6 +170,7 @@
                 next.style.display = "flex";
                 setTimeout(() => { 
                     next.classList.add('active'); next.style.opacity = "1";
+                    // Спецэффекты только при входе со стороны Холла
                     if(nextId === 'block-bar' && (!current || (current.id !== 'block-ai-room' && current.id !== 'block-tables'))) {
                         setTimeout(() => { document.getElementById('snd-khe').play(); }, 800);
                         setTimeout(() => { document.getElementById('snd-pour').play(); }, 2200);
@@ -169,12 +185,17 @@
             d.style.transform = "scale(5)"; d.style.opacity = "0";
             currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
             document.getElementById('id-label').innerText = currentID;
-            const hId = document.getElementById('h-id'); if(hId) hId.innerText = currentID;
+            document.getElementById('h-id').innerText = currentID;
             document.getElementById('qr-box-reg').innerHTML = "";
-            const hQr = document.getElementById('h-qr'); if(hQr) hQr.innerHTML = "";
+            document.getElementById('h-qr').innerHTML = "";
             new QRCode(document.getElementById("qr-box-reg"), { text: currentID, width: 85, height: 85 });
-            if(hQr) new QRCode(hQr, { text: currentID, width: 75, height: 75 });
-            setTimeout(() => { portalTransition('block-welcome'); const amb = document.getElementById('snd-ambient'); amb.volume=0; amb.play(); fadeAudio(amb, 1, 2000); }, 1800);
+            new QRCode(document.getElementById("h-qr"), { text: currentID, width: 75, height: 75 });
+            setTimeout(() => { 
+                portalTransition('block-welcome'); 
+                const amb = document.getElementById('snd-ambient'); 
+                amb.volume = 0; amb.play(); 
+                fadeAudio(amb, 1, 2000); 
+            }, 1800);
         }
 
         function fadeAudio(audio, target, duration) {
@@ -194,8 +215,7 @@
                 r.onload = (e) => { 
                     document.getElementById('pp').src = e.target.result; document.getElementById('pp').style.display = "block";
                     document.getElementById('txt-photo').style.display = "none";
-                    const hPhoto = document.getElementById('h-photo');
-                    if(hPhoto) hPhoto.src = e.target.result;
+                    document.getElementById('h-photo').src = e.target.result;
                 };
                 r.readAsDataURL(i.files[0]);
             }
