@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.14 | MASTER SPA</title>
+    <title>GY-GY Club v4.4.16 | MASTER</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -16,11 +16,9 @@
 
         html, body { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; position: fixed; margin:0; }
         
-        /* ИНТЕРФЕЙС */
         #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000001; }
         .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000000; font-size: 24px; letter-spacing: 5px; font-weight: bold; pointer-events: none; }
         
-        /* КНОПКА ВОЗВРАТА (Стандарт под языками) */
         .ui-back-to-bar { 
             position: fixed; top: 65px; left: 15px; z-index: 1000000;
             background: #000; border: 1px solid var(--gold); color: var(--gold);
@@ -34,11 +32,11 @@
         .btn-gy { min-width: 270px; padding: 14px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; text-transform: uppercase; font-weight: 900; margin: 8px 0; z-index: 1001; text-align: center; font-family: 'Share Tech Mono'; }
         .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
 
-        /* ХОЛЛ */
-        .motto-hall { position: absolute; top: 8%; width: 100%; text-align: center; color: var(--door-wood); font-size: 38px; font-weight: 900; font-style: italic; font-family: 'Playfair Display'; }
-        .box-final { width: 85px; height: 85px; border: 2px solid #000; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        /* ФОТО В КАРТОЧКЕ */
+        .box-final { width: 85px; height: 85px; border: 2px solid #000; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
+        #h-photo { width: 100% !important; height: 100% !important; object-fit: cover !important; display: block; }
 
-        /* ЗОНА СТОЛИКОВ (Твой дизайн v1.3.9) */
+        /* СТОЛИКИ (Lamps) */
         #block-tables { background: url('lounge.jpg') no-repeat center bottom / contain #000; }
         .lamp-zone { 
             position: absolute; width: 42px; height: 42px; border-radius: 50%; 
@@ -50,14 +48,14 @@
         }
         .lamp-zone:hover { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 0 28px var(--violet); }
         
-        /* Твои координаты */
+        /* Координаты */
         #table-1 { bottom: 49.2%; left: 49.9%; } 
         #table-2 { bottom: 22.1%; left: 35.7%; } 
         #table-3 { bottom: 33.1%; left: 43.1%; } 
         #table-4 { bottom: 36.1%; left: 44.5%; } 
         #table-5 { bottom: 35.7%; left: 56.2%; } 
         #table-6 { bottom: 21.9%; left: 63.8%; } 
-        #mic-zone { bottom: 32.4%; left: 58.3%; border-width: 2px; }
+        #mic-zone { bottom: 32.4%; left: 58.3%; }
 
         #main-door { width: 280px; cursor: pointer; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s; pointer-events: auto !important; }
     </style>
@@ -101,7 +99,6 @@
 
     <div id="block-hall" class="block">
         <div style="position:absolute; inset:0; background:url('hall_bg_jpg.jpg') center/cover; z-index:-1;"></div>
-        <div class="motto-hall">«Всё будет GY-GY»</div>
         <div style="position:absolute; top:72%; left:50%; transform:translate(-50%,-50%); width:260px; padding:15px; border:2px solid var(--gold); background:#F5F5DC; border-radius:12px; display:flex; flex-direction:column; align-items:center; color:#000;">
             <div id="h-id" style="font-family:'Share Tech Mono'; font-weight:900; font-size:14px; margin-bottom:12px;">#ID</div>
             <div style="display:flex; gap:15px; margin-bottom:12px;">
@@ -114,7 +111,6 @@
     </div>
 
     <div id="block-bar" class="block" style="padding:0; justify-content: flex-end;">
-        <div style="font-family:'Share Tech Mono'; font-size:18px; font-weight:900; position:absolute; top:8%; text-align:center; width:100%; z-index:100; font-style:italic; color:var(--gold); pointer-events:none;">«Истина не в вине, а в его количестве»</div>
         <div style="position:absolute; bottom:30%; z-index:1000; width:100%; display:flex; justify-content:space-around; padding:0 10px;">
             <button class="btn-gy" style="min-width:145px; font-size:12px; background:rgba(0,0,0,0.6);" onclick="portalTransition('block-tables')">ЗА СТОЛИКИ</button>
             <button class="btn-gy" style="min-width:145px; font-size:12px; background:rgba(0,0,0,0.6);" onclick="portalTransition('block-ai-room')">В AI ROOM</button>
@@ -129,7 +125,7 @@
         <div id="table-4" class="lamp-zone"></div>
         <div id="table-5" class="lamp-zone"></div>
         <div id="table-6" class="lamp-zone"></div>
-        <div id="mic-zone" class="lamp-zone" style="border-color: #fff; box-shadow: 0 0 20px #fff;"></div>
+        <div id="mic-zone" class="lamp-zone"></div>
     </div>
 
     <div id="block-ai-room" class="block" style="background: url('OIG2_vintage_tv_room.jpg') center/cover no-repeat !important;">
@@ -142,16 +138,15 @@
             const current = document.querySelector('.block.active');
             const backBtn = document.getElementById('btn-global-back');
 
-            // Управление музыкой и кнопкой возврата
             if (nextId === 'block-tables' || nextId === 'block-ai-room') {
-                fadeAudio(document.getElementById('snd-ambient'), 0.2, 1000); 
+                fadeAudio(document.getElementById('snd-ambient'), 0.2, 800);
+                document.getElementById('snd-khe').pause();
+                document.getElementById('snd-pour').pause();
                 backBtn.style.display = 'block'; 
             } else if (nextId === 'block-bar') {
-                fadeAudio(document.getElementById('snd-ambient'), 1, 1000);
+                fadeAudio(document.getElementById('snd-ambient'), 1, 800);
                 backBtn.style.display = 'none';
-            } else {
-                backBtn.style.display = 'none';
-            }
+            } else { backBtn.style.display = 'none'; }
 
             if(current) current.style.opacity = "0";
             setTimeout(() => {
@@ -174,11 +169,11 @@
             d.style.transform = "scale(5)"; d.style.opacity = "0";
             currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
             document.getElementById('id-label').innerText = currentID;
-            document.getElementById('h-id').innerText = currentID;
+            const hId = document.getElementById('h-id'); if(hId) hId.innerText = currentID;
             document.getElementById('qr-box-reg').innerHTML = "";
-            document.getElementById('h-qr').innerHTML = "";
+            const hQr = document.getElementById('h-qr'); if(hQr) hQr.innerHTML = "";
             new QRCode(document.getElementById("qr-box-reg"), { text: currentID, width: 85, height: 85 });
-            new QRCode(document.getElementById("h-qr"), { text: currentID, width: 75, height: 75 });
+            if(hQr) new QRCode(hQr, { text: currentID, width: 75, height: 75 });
             setTimeout(() => { portalTransition('block-welcome'); const amb = document.getElementById('snd-ambient'); amb.volume=0; amb.play(); fadeAudio(amb, 1, 2000); }, 1800);
         }
 
@@ -199,7 +194,8 @@
                 r.onload = (e) => { 
                     document.getElementById('pp').src = e.target.result; document.getElementById('pp').style.display = "block";
                     document.getElementById('txt-photo').style.display = "none";
-                    document.getElementById('h-photo').src = e.target.result;
+                    const hPhoto = document.getElementById('h-photo');
+                    if(hPhoto) hPhoto.src = e.target.result;
                 };
                 r.readAsDataURL(i.files[0]);
             }
