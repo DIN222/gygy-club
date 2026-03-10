@@ -3,28 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.304</title>
+    <title>GY-GY Club v4.3.305</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
-        :root { --gold: #d4af37; --brown-light: #A67C52; }
+        :root { --gold: #d4af37; --brown-dark: #5D4037; }
         
-        /* Полная блокировка системных подсветок (борьба с привидениями) */
         * { 
-            -webkit-tap-highlight-color: rgba(0,0,0,0) !important; 
             -webkit-tap-highlight-color: transparent !important;
-            box-sizing: border-box; 
-            margin: 0; padding: 0; 
+            box-sizing: border-box; margin: 0; padding: 0; 
             outline: none !important; 
             user-select: none !important; 
             -webkit-user-select: none !important; 
+            -webkit-touch-callout: none !important; /* УСИЛЕННАЯ ЗАЩИТА ОТ ОЦИФРОВКИ */
         }
 
         html, body { width: 100%; height: 100%; background: #000 !important; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; position: fixed; }
 
-        /* ЗАЩИТА ОТ ОЦИФРОВКИ */
-        img { pointer-events: none !important; -webkit-user-select: none !important; -webkit-user-drag: none !important; }
+        img { pointer-events: none !important; -webkit-user-drag: none !important; }
 
         #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000001; max-width: 120px; overflow-x: auto; }
         #google_translate_element::-webkit-scrollbar { display: none; }
@@ -38,16 +35,15 @@
         .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000 !important; z-index: 10; opacity: 0; transition: opacity 0.8s ease-in-out; }
         .block.active { display: flex !important; opacity: 1; }
 
-        .btn-gy { min-width: 270px; padding: 15px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; font-weight: 900; margin: 10px 0; z-index: 1001; position: relative; }
+        .btn-gy { min-width: 270px; padding: 15px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; font-weight: 900; margin: 10px 0; z-index: 1001; }
         .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
 
         #main-door { width: 280px; cursor: pointer; transition: transform 1.8s ease-in-out, opacity 1.8s ease-in-out; pointer-events: auto !important; }
-        #black-veil { position: fixed; inset: 0; background: #000 !important; z-index: 2147483647; display: none; }
     </style>
 </head>
 <body>
 
-    <div id="black-veil"></div>
+    <div id="black-veil" style="position:fixed; inset:0; background:#000; z-index:2147483647; display:none;"></div>
     <div id="google_translate_element"></div>
     <div class="ui-header-right">GY-GY</div>
 
@@ -86,7 +82,7 @@
     <div id="block-hall" class="block">
         <div style="position:absolute; inset:0; background:url('hall_bg_jpg.jpg') center/cover; z-index:-1;"></div>
         
-        <div style="position:absolute; top:38%; width:100%; text-align:center; color:var(--brown-light); font-family:'Playfair Display', serif; font-size:24px; font-weight:900; font-style:italic; letter-spacing:1px; text-shadow: 1px 1px 2px rgba(0,0,0,0.9);">
+        <div style="position:absolute; top:32%; width:100%; text-align:center; color:var(--brown-dark); font-family:'Playfair Display', serif; font-size:28px; font-weight:900; font-style:italic; letter-spacing:1px; text-shadow: 0.5px 0.5px 1px rgba(255,255,255,0.1);">
             «Всё будет GY-GY»
         </div>
 
@@ -103,9 +99,10 @@
 
     <div id="block-bar" class="block" style="padding:0; justify-content: flex-end;">
         <div style="font-family:'Share Tech Mono'; font-size:20px; font-weight:900; position:absolute; top:8%; text-align:center; width:100%; z-index:100; font-style:italic; padding: 0 10px; pointer-events:none;">«Истина не в вине, а в его количестве»</div>
-        <div style="position:absolute; bottom:12%; z-index:1000; width:100%; display:flex; justify-content:space-around; padding:0 10px;">
-            <button class="btn-gy" style="min-width:140px; font-size:12px;" onclick="smoothLeave('tables.html')">ЗА СТОЛИКИ</button>
-            <button class="btn-gy" style="min-width:140px; font-size:12px;" onclick="portalTransition('block-ai-room')">В AI ROOM</button>
+        
+        <div style="position:absolute; bottom:30%; z-index:1000; width:100%; display:flex; justify-content:space-around; padding:0 10px;">
+            <button class="btn-gy" style="min-width:145px; font-size:12px; background:rgba(0,0,0,0.6);" onclick="smoothLeave('tables.html')">ЗА СТОЛИКИ</button>
+            <button class="btn-gy" style="min-width:145px; font-size:12px; background:rgba(0,0,0,0.6);" onclick="portalTransition('block-ai-room')">В AI ROOM</button>
         </div>
         <img src="charlie_bar.png" style="height: 82vh; width: auto; object-fit: contain;">
     </div>
@@ -116,6 +113,7 @@
 
     <script>
         let currentID = "";
+
         function handleDoor() {
             const sounds = ['snd-door', 'snd-ambient', 'snd-khe', 'snd-pour'];
             sounds.forEach(id => {
@@ -141,6 +139,11 @@
                 next.style.display = "flex";
                 setTimeout(() => { 
                     next.classList.add('active'); next.style.opacity = "1";
+                    // ВОЗВРАТ ЗВУКОВ ЧАРЛИ ПРИ ВХОДЕ В БАР
+                    if(nextId === 'block-bar') {
+                        setTimeout(() => { document.getElementById('snd-khe').play(); }, 600);
+                        setTimeout(() => { document.getElementById('snd-pour').play(); }, 1800);
+                    }
                 }, 50);
             }, 800);
         }
