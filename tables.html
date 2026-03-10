@@ -1,44 +1,47 @@
 
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY Club | Tables v1.3.7</title>
+    <title>GY-GY Club | Tables v1.3.9</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #d4af37; --violet: #8A2BE2; --neon-glow: rgba(138, 43, 226, 0.6); }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; font-family: 'Share Tech Mono', monospace; overflow: hidden; }
 
-        /* ПОСТОЯННЫЕ АТРИБУТЫ */
+        /* ЯЗЫКОВАЯ ПАНЕЛЬ */
         #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 6000; }
+        
+        /* СТАНДАРТНАЯ ЗОЛОТАЯ КНОПКА (ПОД ЯЗЫКАМИ) */
+        .ui-back-to-bar { 
+            position: fixed; top: 65px; left: 15px; z-index: 6000;
+            background: #000; border: 1px solid var(--gold); color: var(--gold);
+            padding: 5px 12px; cursor: pointer; font-family: 'Share Tech Mono', monospace; 
+            font-size: 11px; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s;
+        }
+        .ui-back-to-bar:hover { background: var(--gold); color: #000; box-shadow: 0 0 10px var(--gold); }
+
         #ui-logo { position: fixed; top: 15px; right: 25px; z-index: 5000; color: var(--gold); font-size: 24px; font-weight: bold; letter-spacing: 5px; }
 
-        #hall-layer { 
-            width: 100vw; height: 100vh; 
-            background: url('lounge.jpg') no-repeat center bottom / contain #000; 
-            position: relative; display: none; 
-        }
+        /* СЛОИ */
+        #entry-layer { position: fixed; inset: 0; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2000; }
+        #hall-layer { width: 100vw; height: 100vh; background: url('lounge.jpg') no-repeat center bottom / contain #000; position: relative; display: none; }
         
-        /* УНИФИЦИРОВАННЫЕ ФИОЛЕТОВЫЕ АКЦЕНТЫ */
+        /* ФИОЛЕТОВЫЕ СВЕТЛЯЧКИ */
         .lamp-zone { 
             position: absolute; width: 42px; height: 42px; border-radius: 50%; 
             cursor: pointer; z-index: 100; 
             background: radial-gradient(circle, var(--neon-glow) 0%, transparent 75%); 
             border: 1px solid var(--violet); 
             box-shadow: 0 0 18px var(--neon-glow);
-            transition: all 0.3s ease-in-out;
+            transition: 0.3s;
             transform: translate(-50%, -50%); 
         }
-        .lamp-zone:hover { 
-            background: radial-gradient(circle, var(--violet) 0%, transparent 80%);
-            box-shadow: 0 0 28px var(--violet);
-            transform: translate(-50%, -50%) scale(1.15);
-        }
+        .lamp-zone:hover { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 0 28px var(--violet); }
 
-        /* КОРРЕКТИРОВКА: ЕЩЕ -3% ВНИЗ (ИТОГО -8% ОТ БАЗЫ) */
-        #table-1 { bottom: 49.2%; left: 49.9%; } /* РИСКИ */
+        /* КООРДИНАТЫ (-8% ОТ ЗАМЕРОВ) */
+        #table-1 { bottom: 49.2%; left: 49.9%; } 
         #table-2 { bottom: 22.1%; left: 35.7%; } 
         #table-3 { bottom: 33.1%; left: 43.1%; } 
         #table-4 { bottom: 36.1%; left: 44.5%; } 
@@ -46,28 +49,31 @@
         #table-6 { bottom: 21.9%; left: 63.8%; } 
         #mic-zone { bottom: 32.4%; left: 58.3%; border-width: 2px; }
 
-        #hud { position: fixed; top: 70px; left: 20px; display: flex; align-items: center; gap: 12px; z-index: 1500; }
-        .back-btn { background: transparent; border: 1px solid var(--violet); color: var(--violet); padding: 5px 10px; cursor: pointer; font-family: inherit; font-size: 10px; }
+        /* АВАТАР */
+        #hud { position: fixed; top: 110px; left: 15px; z-index: 1500; display: none; }
+        .user-mini { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--gold); }
 
-        #entry-layer { position: fixed; inset: 0; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2000; }
-        .reg-btn { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 15px 40px; cursor: pointer; margin-top: 20px; font-family: inherit; letter-spacing: 1px; }
+        .reg-btn { background: #000; border: 1px solid var(--gold); color: var(--gold); padding: 15px 40px; cursor: pointer; margin-top: 20px; font-family: inherit; letter-spacing: 2px; }
+        .reg-btn:hover { background: var(--gold); color: #000; }
     </style>
 </head>
 <body>
+
     <div id="google_translate_element"></div>
+    <button class="ui-back-to-bar" onclick="Core.backToBar()">← В БАР</button>
+    
     <div id="ui-logo">GY-GY</div>
 
     <div id="entry-layer">
-        <div style="border: 1px solid var(--violet); padding: 40px; text-align: center; background: #050505; box-shadow: 0 0 30px rgba(138, 43, 226, 0.2);">
-            <p id="charlie-msg">Чарли: "С возвращением в GY-GY. Оцифруйте ID."</p>
+        <div style="border: 1px solid var(--gold); padding: 40px; text-align: center; background: #050505;">
+            <p id="charlie-msg" style="color: #fff;">Чарли: "Добро пожаловать. Оцифруйте ваш ID."</p>
             <button id="gate-btn" class="reg-btn" onclick="Core.register()">ОЦИФРОВАТЬ</button>
         </div>
     </div>
 
     <div id="hall-layer">
         <div id="hud">
-            <img id="user-avatar" style="width:40px; height:40px; border-radius:50%; border:1px solid var(--gold); background:#fff;">
-            <button class="back-btn" onclick="Core.backToBar()">← В БАР</button>
+            <img id="user-avatar" class="user-mini" src="">
         </div>
         <div id="table-1" class="lamp-zone" onclick="location.href='risk.html'"></div>
         <div id="table-2" class="lamp-zone"></div>
@@ -91,10 +97,13 @@
                 document.getElementById('user-avatar').src = localStorage.getItem('gygy_avatar');
                 document.getElementById('entry-layer').style.display = 'none';
                 document.getElementById('hall-layer').style.display = 'block';
+                document.getElementById('hud').style.display = 'block';
             },
             backToBar() {
                 document.getElementById('hall-layer').style.display = 'none';
+                document.getElementById('hud').style.display = 'none';
                 document.getElementById('entry-layer').style.display = 'flex';
+                document.getElementById('charlie-msg').innerText = 'Чарли: "Вы вернулись в бар. Что желаете?"';
                 document.getElementById('gate-btn').innerText = 'К СТОЛАМ';
                 document.getElementById('gate-btn').onclick = () => Core.enter();
             }
@@ -105,3 +114,4 @@
     <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
+
