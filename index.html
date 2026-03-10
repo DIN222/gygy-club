@@ -3,82 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.290</title>
+    <title>GY-GY Club v4.3.291</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
         :root { --gold: #d4af37; --bg: #000000; }
-        
-        * { 
-            -webkit-tap-highlight-color: transparent; 
-            box-sizing: border-box; margin: 0; padding: 0; 
-            outline: none !important; 
-            user-select: none !important; 
-            -webkit-user-select: none !important; 
-            -webkit-touch-callout: none !important;
-        }
-        
-        html, body { 
-            width: 100%; height: 100%; background: #000 !important; color: var(--gold); 
-            font-family: 'Playfair Display', serif; overflow: hidden; position: fixed; 
-        }
+        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; outline: none !important; user-select: none !important; -webkit-user-select: none !important; -webkit-touch-callout: none !important; }
+        html, body { width: 100%; height: 100%; background: #000 !important; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; position: fixed; }
 
-        /* ЯЗЫКИ БЕЗ ПОЛОСЫ */
-        #google_translate_element { 
-            position: fixed; top: 15px; left: 15px; z-index: 1000001; 
-            max-width: 120px; overflow-x: auto; white-space: nowrap;
-        }
+        #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000001; max-width: 120px; overflow-x: auto; white-space: nowrap; }
         #google_translate_element::-webkit-scrollbar { display: none; }
+        .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000000; font-family: 'Share Tech Mono'; font-weight: bold; font-size: 24px; letter-spacing: 5px; color: var(--gold); pointer-events: none; }
 
-        .ui-header-right { 
-            position: fixed; top: 18px; right: 25px; z-index: 1000000; 
-            font-family: 'Share Tech Mono'; font-weight: bold; font-size: 24px; 
-            letter-spacing: 5px; color: var(--gold); pointer-events: none; 
-        }
-
-        .block { 
-            position: fixed; inset: 0; display: none; flex-direction: column; 
-            align-items: center; justify-content: center; 
-            background: #000 !important; z-index: 10; 
-            opacity: 0; transition: opacity 0.8s ease-in-out; 
-        }
+        .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000 !important; z-index: 10; opacity: 0; transition: opacity 0.8s ease-in-out; }
         .block.active { display: flex !important; opacity: 1; }
 
-        /* ВХОДНАЯ ДВЕРЬ КАРТИНКОЙ-ФОНОМ (Защита от оцифровки) */
-        #main-door-trigger { 
-            width: 280px; height: 380px; /* Размер как у door_1.jpg */
-            background: url('door_1.jpg') center/contain no-repeat;
-            cursor: pointer; z-index: 2000; 
-            transition: transform 1.8s ease-in-out, opacity 1.8s ease-in-out; 
-        }
+        /* SVG ЗАЩИТА */
+        .svg-shield { width: 280px; height: 380px; cursor: pointer; z-index: 2000; transition: transform 1.8s ease-in-out, opacity 1.8s ease-in-out; pointer-events: auto; }
+        .charlie-svg { height: 35vh; margin-bottom: 20px; pointer-events: none; }
 
-        .btn-gy { 
-            min-width: 270px; padding: 15px; background: transparent; 
-            border: 2px solid var(--gold); color: var(--gold); cursor: pointer; 
-            font-family: 'Share Tech Mono'; text-transform: uppercase; font-weight: 900; 
-            margin: 10px 0; z-index: 2000;
-        }
-
-        .reg-photo-container { 
-            width: 95px; height: 95px; border: 2px solid var(--gold); 
-            background: #fff; position: relative; overflow: hidden; 
-            display: flex; align-items: center; justify-content: center; z-index: 2000;
-        }
-        
-        #pp { width: 100%; height: 100%; object-fit: cover; display: none; position: absolute; inset: 0; pointer-events: none; }
+        .btn-gy { min-width: 270px; padding: 15px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; font-weight: 900; margin: 10px 0; z-index: 2000; }
         .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
-        #black-veil { position: fixed; inset: 0; background: #000 !important; z-index: 2147483647; display: none; }
-        
-        .bar-quote { font-family: 'Share Tech Mono'; font-size: 20px; font-weight: 900; position: absolute; top: 8%; text-align: center; width: 100%; z-index: 100; font-style: italic; padding: 0 10px; pointer-events: none; }
-        
-        /* ЧАРЛИ В БАРЕ ФОНОМ */
-        .charlie-bg-wrap { 
-            position: absolute; inset: 0; 
-            background: url('charlie_bar.png') bottom center/contain no-repeat; 
-            z-index: 5; pointer-events: none; 
-        }
 
+        .reg-photo-container { width: 95px; height: 95px; border: 2px solid var(--gold); background: #fff; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; z-index: 2000; }
+        #pp { width: 100%; height: 100%; object-fit: cover; display: none; position: absolute; inset: 0; pointer-events: none; }
+        
+        #black-veil { position: fixed; inset: 0; background: #000 !important; z-index: 2147483647; display: none; }
+        .bar-quote { font-family: 'Share Tech Mono'; font-size: 20px; font-weight: 900; position: absolute; top: 8%; text-align: center; width: 100%; z-index: 100; font-style: italic; padding: 0 10px; pointer-events: none; }
         .nav-bar-btns { position: absolute; bottom: 12%; z-index: 2000; width: 100%; display: flex; justify-content: space-around; padding: 0 10px; }
         #block-ai-room { background: url('OIG2_vintage_tv_room.jpg') center/cover no-repeat !important; }
     </style>
@@ -95,12 +47,16 @@
     <audio id="snd-pour" preload="auto"><source src="pour_whisky.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active" style="opacity: 1;">
-        <div id="main-door-trigger" onclick="handleDoor()"></div>
+        <svg class="svg-shield" id="main-door-svg" onclick="handleDoor()" viewBox="0 0 280 380">
+            <image href="door_1.jpg" x="0" y="0" width="100%" height="100%"/>
+        </svg>
     </div>
     
     <div id="block-welcome" class="block">
         <div style="font-family:'Share Tech Mono'; letter-spacing:10px; margin-bottom:20px; font-size:16px;">GY-GY PRIVAT</div>
-        <div style="width: 100%; height: 35vh; background: url('charlie.png') center/contain no-repeat; margin-bottom: 20px; pointer-events: none;"></div>
+        <svg class="charlie-svg" viewBox="0 0 300 400">
+            <image href="charlie.png" x="0" y="0" width="100%" height="100%"/>
+        </svg>
         <div style="font-size:48px; font-weight:900; margin-bottom:20px; font-style:italic;">WELCOME</div>
         <button id="btn-w-hall" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">ПРОХОДИТЕ В ХОЛЛ</button>
         <button class="btn-gy" onclick="portalTransition('block-identity')">РЕГИСТРАЦИЯ</button>
@@ -136,7 +92,9 @@
 
     <div id="block-bar" class="block" style="padding:0; justify-content: flex-end;">
         <div class="bar-quote">«Истина не в вине, а в его количестве»</div>
-        <div class="charlie-bg-wrap"></div>
+        <svg style="height: 82vh; width: 100%; pointer-events: none;" viewBox="0 0 500 800">
+            <image href="charlie_bar.png" x="0" y="0" width="100%" height="100%" preserveAspectRatio="xMidYMax meet"/>
+        </svg>
         <div class="nav-bar-btns">
             <button class="btn-gy" style="min-width:140px; font-size:12px;" onclick="smoothLeave('tables.html')">ЗА СТОЛИКИ</button>
             <button class="btn-gy" style="min-width:140px; font-size:12px;" onclick="portalTransition('block-ai-room')">В AI ROOM</button>
@@ -149,14 +107,13 @@
 
     <script>
         let currentID = "";
-
         function handleDoor() {
             const sounds = ['snd-door', 'snd-ambient', 'snd-khe', 'snd-pour'];
             sounds.forEach(id => {
                 const a = document.getElementById(id);
                 a.play().then(() => { if(id !== 'snd-door') { a.pause(); a.currentTime = 0; } }).catch(() => {});
             });
-            const d = document.getElementById('main-door-trigger');
+            const d = document.getElementById('main-door-svg');
             setTimeout(() => { d.style.transform = "scale(4.5)"; d.style.opacity = "0"; }, 50);
             currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
             document.getElementById('id-label').innerText = currentID;
@@ -169,12 +126,9 @@
         function portalTransition(nextId) {
             const current = document.querySelector('.block.active');
             if(nextId === 'block-ai-room') {
-                setTimeout(() => {
-                    ['snd-ambient', 'snd-khe', 'snd-pour'].forEach(id => fadeAudio(document.getElementById(id), 0, 1000));
-                }, 100);
+                setTimeout(() => { ['snd-ambient', 'snd-khe', 'snd-pour'].forEach(id => fadeAudio(document.getElementById(id), 0, 1000)); }, 100);
             } else if (nextId === 'block-bar' && current && current.id === 'block-ai-room') {
-                const amb = document.getElementById('snd-ambient');
-                amb.play(); fadeAudio(amb, 1, 1000);
+                const amb = document.getElementById('snd-ambient'); amb.play(); fadeAudio(amb, 1, 1000);
             }
             if(current) current.style.opacity = "0";
             setTimeout(() => {
@@ -182,8 +136,7 @@
                 const next = document.getElementById(nextId);
                 next.style.display = "flex";
                 setTimeout(() => { 
-                    next.classList.add('active'); 
-                    next.style.opacity = "1";
+                    next.classList.add('active'); next.style.opacity = "1";
                     if(nextId === 'block-bar' && current && current.id === 'block-hall') {
                         setTimeout(() => {
                             const k = document.getElementById('snd-khe'); k.volume = 1; k.play();
@@ -196,13 +149,11 @@
 
         function fadeAudio(audio, target, duration) {
             if (!audio) return;
-            let start = audio.volume;
-            let step = (target - start) / (duration / 50);
+            let start = audio.volume, step = (target - start) / (duration / 50);
             let interval = setInterval(() => {
                 start += step;
                 if ((step > 0 && start >= target) || (step < 0 && start <= target)) {
-                    audio.volume = target; if(target === 0) audio.pause();
-                    clearInterval(interval);
+                    audio.volume = target; if(target === 0) audio.pause(); clearInterval(interval);
                 } else { audio.volume = Math.max(0, Math.min(1, start)); }
             }, 50);
         }
@@ -224,15 +175,8 @@
                 r.readAsDataURL(i.files[0]);
             }
         }
-
-        function swapButtons(a, s) {
-            document.getElementById(a).classList.add('btn-sleep');
-            document.getElementById(s).classList.remove('btn-sleep');
-        }
-
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({pageLanguage: 'ru', autoDisplay: false}, 'google_translate_element');
-        }
+        function swapButtons(a, s) { document.getElementById(a).classList.add('btn-sleep'); document.getElementById(s).classList.remove('btn-sleep'); }
+        function googleTranslateElementInit() { new google.translate.TranslateElement({pageLanguage: 'ru', autoDisplay: false}, 'google_translate_element'); }
     </script>
     <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
