@@ -103,5 +103,33 @@
         function googleTranslateElementInit() { new google.translate.TranslateElement({pageLanguage: 'ru'}, 'google_translate_element'); }
     </script>
     <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>  
+    <style>
+    /* Простая и строгая кнопка в стиле GY-GY */
+    .btn-simple-back {
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 12px 40px;
+        background: #000;
+        border: 1px solid #d4af37;
+        color: #d4af37;
+        font-family: 'Share Tech Mono', monospace;
+        font-size: 14px;
+        text-transform: uppercase;
+        text-decoration: none;
+        z-index: 10000;
+        letter-spacing: 2px;
+        transition: background 0.2s;
+    }
+
+    /* Только при нажатии она слегка подсвечивается, чтобы гость понимал, что кликнул */
+    .btn-simple-back:active {
+        background: #d4af37;
+        color: #000;
+    }
+</style>
+
+<a href="index.html?back=bar" class="btn-simple-back">В БАР</a>
 </body>
 </html>
