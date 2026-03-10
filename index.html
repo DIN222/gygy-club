@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.06 | CORE-FINAL</title>
+    <title>GY-GY Club v4.4.07 | CORE</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -13,20 +13,14 @@
         * { 
             -webkit-tap-highlight-color: transparent !important; 
             -webkit-touch-callout: none !important; 
-            -webkit-user-select: none !important; 
             user-select: none !important; 
             outline: none !important;
         }
 
         html, body { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; position: fixed; }
         
-        /* Глобальный запрет взаимодействия с изображениями */
-        img { 
-            -webkit-user-drag: none !important; 
-            pointer-events: none !important; 
-            touch-action: none !important;
-        }
-
+        /* Глобальная блокировка системных меню на изображениях */
+        img { -webkit-user-drag: none !important; pointer-events: none !important; }
         #main-door, .btn-gy, input, #google_translate_element { pointer-events: auto !important; }
 
         #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000001; }
@@ -40,14 +34,15 @@
 
         .motto-hall { position: absolute; top: 5%; width: 100%; text-align: center; color: var(--door-wood); font-family: 'Playfair Display', serif; font-size: 42px; font-weight: 900; font-style: italic; z-index: 5; }
 
-        /* ФИКС ПРОПУСКА: ОДИНАКОВЫЕ РАМКИ */
+        /* ЕДИНЫЙ СТИЛЬ РАМОК ДЛЯ ФОТО И QR */
+        .reg-box { width: 95px; height: 95px; border: 2px solid var(--gold); background: #fff; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
         .pass-box-final { width: 85px; height: 85px; border: 2px solid #000; background: #fff; overflow: hidden; display: flex; align-items: center; justify-content: center; }
 
-        #black-veil { position: fixed; inset: 0; background: #000; z-index: 2147483647; display: none; pointer-events: none; opacity: 0; transition: opacity 1.2s ease-in-out; }
+        #black-veil { position: fixed; inset: 0; background: #000; z-index: 2147483647; display: none; pointer-events: none; opacity: 0; transition: opacity 1.5s ease-in-out; }
         #main-door { width: 280px; cursor: pointer; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s; }
     </style>
 </head>
-<body onload="checkReturn()" oncontextmenu="return false;">
+<body onload="checkReturn()">
 
     <div id="black-veil"></div>
     <div id="google_translate_element"></div>
@@ -72,9 +67,9 @@
 
     <div id="block-identity" class="block">
         <div style="display:flex; gap:12px; margin-bottom:25px; align-items:center;">
-            <div style="width:95px; height:95px; border:2px solid var(--gold); display:flex; align-items:center; justify-content:center; font-family:'Share Tech Mono'; font-size:11px;" id="id-label">#ID</div>
-            <div style="width:95px; height:95px; border:2px solid var(--gold); background:#fff;" id="qr-box-reg"></div>
-            <div style="width:95px; height:95px; border:2px solid var(--gold); background:#fff; position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center;">
+            <div class="reg-box" style="background:transparent; color:var(--gold); font-family:'Share Tech Mono'; font-size:11px;" id="id-label">#ID</div>
+            <div class="reg-box" id="qr-box-reg"></div>
+            <div class="reg-box">
                 <input type="file" onchange="preview(this)" style="position:absolute; inset:0; opacity:0; z-index:10; cursor:pointer; pointer-events:auto;">
                 <img id="pp" style="width:100%; height:100%; object-fit:cover; display:none;">
                 <span id="txt-photo" style="color:#000; font-size:10px; font-weight:900;">ФОТО</span>
@@ -114,28 +109,21 @@
     <script>
         let currentID = "";
 
-        // Ультра-запрет системного меню
-        document.addEventListener('touchstart', function(e) {
-            if (e.target.tagName === 'IMG') {
-                e.preventDefault();
-            }
-        }, { passive: false });
+        // Прямая блокировка системного меню
+        window.oncontextmenu = function() { return false; };
+        document.addEventListener('touchstart', function(e) { if(e.target.tagName === 'IMG') e.preventDefault(); }, {passive: false});
 
         function checkReturn() {
             const params = new URLSearchParams(window.location.search);
             if (params.get('back') === 'bar') {
-                document.querySelectorAll('.block').forEach(b => { b.classList.remove('active'); b.style.display = 'none'; });
+                // Скрываем все блоки и принудительно показываем Бар
+                document.querySelectorAll('.block').forEach(b => { b.classList.remove('active'); b.style.display = 'none'; b.style.opacity = '0'; });
                 const bar = document.getElementById('block-bar');
-                bar.style.display = 'flex'; bar.classList.add('active'); bar.style.opacity = '1';
-                document.getElementById('snd-ambient').play();
+                bar.style.display = 'flex';
+                setTimeout(() => { bar.classList.add('active'); bar.style.opacity = '1'; }, 50);
+                const amb = document.getElementById('snd-ambient');
+                amb.play(); amb.volume = 1;
             }
-        }
-
-        function stopAllSounds() {
-            ['snd-ambient', 'snd-khe', 'snd-pour'].forEach(id => {
-                const a = document.getElementById(id);
-                if(a) { a.pause(); a.currentTime = 0; }
-            });
         }
 
         function fadeAudio(audio, target, duration, cb) {
@@ -165,8 +153,14 @@
 
         function portalTransition(nextId) {
             const current = document.querySelector('.block.active');
-            if (nextId === 'block-ai-room') { stopAllSounds(); } 
-            else if (nextId === 'block-bar' && current && current.id === 'block-ai-room') { document.getElementById('snd-ambient').play(); }
+            if (nextId === 'block-ai-room') {
+                fadeAudio(document.getElementById('snd-ambient'), 0, 1000);
+                document.getElementById('snd-khe').pause();
+                document.getElementById('snd-pour').pause();
+            } else if (nextId === 'block-bar' && current && current.id === 'block-ai-room') {
+                const amb = document.getElementById('snd-ambient');
+                amb.play(); fadeAudio(amb, 1, 1000);
+            }
 
             if(current) current.style.opacity = "0";
             setTimeout(() => {
@@ -187,7 +181,10 @@
             const veil = document.getElementById('black-veil');
             veil.style.display = "block";
             setTimeout(() => { veil.style.opacity = "1"; }, 10);
-            fadeAudio(document.getElementById('snd-ambient'), 0, 1500, () => { window.location.href = url; });
+            fadeAudio(document.getElementById('snd-ambient'), 0, 1500, () => {
+                // Выполняем переход только после затухания и затемнения
+                setTimeout(() => { window.location.href = url; }, 500);
+            });
         }
 
         function preview(i) {
