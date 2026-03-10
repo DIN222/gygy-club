@@ -96,6 +96,37 @@
         window.onload = () => { if(localStorage.getItem('gygy_id')) Core.enter(); };
         function googleTranslateElementInit() { new google.translate.TranslateElement({pageLanguage: 'ru'}, 'google_translate_element'); }
     </script>
-    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script> 
+    <style>
+    /* Этот стиль создаст ту самую золотую кнопку, как у Чарли */
+    .gy-back-button {
+        position: fixed;        /* Кнопка всегда на виду внизу экрана */
+        bottom: 30px;           /* Отступ от низа */
+        left: 50%;              /* Центрируем */
+        transform: translateX(-50%); 
+        min-width: 270px;       /* Стандартный размер клуба */
+        padding: 15px;
+        background: rgba(0, 0, 0, 0.9); /* Черный фон с легкой прозрачностью */
+        border: 2px solid #d4af37;      /* Золотая рамка */
+        color: #d4af37;                 /* Золотой текст */
+        font-family: 'Share Tech Mono', monospace; /* Тот самый шрифт */
+        text-transform: uppercase;
+        font-weight: 900;
+        text-decoration: none;  /* Убираем подчеркивание ссылки */
+        text-align: center;
+        z-index: 10000;         /* Чтобы была поверх всех столов */
+        letter-spacing: 2px;
+        box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); /* Легкое свечение */
+        transition: 0.3s;       /* Плавное нажатие */
+    }
+
+    /* Эффект при нажатии на телефоне */
+    .gy-back-button:active {
+        background: #d4af37;
+        color: #000;
+    }
+</style>
+
+<a href="index.html?back=bar" class="gy-back-button">НАЗАД В БАР</a>
 </body>
 </html>
