@@ -1,10 +1,11 @@
 
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY Club | Tables v1.3.6</title>
+    <title>GY-GY Club | Tables v1.3.7</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #d4af37; --violet: #8A2BE2; --neon-glow: rgba(138, 43, 226, 0.6); }
@@ -20,36 +21,36 @@
             position: relative; display: none; 
         }
         
-        /* ФИОЛЕТОВЫЕ СВЕТЛЯЧКИ (УНИФИЦИРОВАННЫЕ) */
+        /* УНИФИЦИРОВАННЫЕ ФИОЛЕТОВЫЕ АКЦЕНТЫ */
         .lamp-zone { 
-            position: absolute; width: 40px; height: 40px; border-radius: 50%; 
+            position: absolute; width: 42px; height: 42px; border-radius: 50%; 
             cursor: pointer; z-index: 100; 
             background: radial-gradient(circle, var(--neon-glow) 0%, transparent 75%); 
             border: 1px solid var(--violet); 
-            box-shadow: 0 0 15px var(--neon-glow);
+            box-shadow: 0 0 18px var(--neon-glow);
             transition: all 0.3s ease-in-out;
             transform: translate(-50%, -50%); 
         }
         .lamp-zone:hover { 
             background: radial-gradient(circle, var(--violet) 0%, transparent 80%);
-            box-shadow: 0 0 25px var(--violet);
-            transform: translate(-50%, -50%) scale(1.1);
+            box-shadow: 0 0 28px var(--violet);
+            transform: translate(-50%, -50%) scale(1.15);
         }
 
-        /* КОРРЕКТИРОВКА: -5% ВНИЗ ОТ ПРЕДЫДУЩИХ ЗНАЧЕНИЙ */
-        #table-1 { bottom: 52.2%; left: 49.9%; } /* РИСКИ (-5%) */
-        #table-2 { bottom: 25.1%; left: 35.7%; } 
-        #table-3 { bottom: 36.1%; left: 43.1%; } 
-        #table-4 { bottom: 39.1%; left: 44.5%; } 
-        #table-5 { bottom: 38.7%; left: 56.2%; } 
-        #table-6 { bottom: 24.9%; left: 63.8%; } 
-        #mic-zone { bottom: 35.4%; left: 58.3%; border-width: 2px; }
+        /* КОРРЕКТИРОВКА: ЕЩЕ -3% ВНИЗ (ИТОГО -8% ОТ БАЗЫ) */
+        #table-1 { bottom: 49.2%; left: 49.9%; } /* РИСКИ */
+        #table-2 { bottom: 22.1%; left: 35.7%; } 
+        #table-3 { bottom: 33.1%; left: 43.1%; } 
+        #table-4 { bottom: 36.1%; left: 44.5%; } 
+        #table-5 { bottom: 35.7%; left: 56.2%; } 
+        #table-6 { bottom: 21.9%; left: 63.8%; } 
+        #mic-zone { bottom: 32.4%; left: 58.3%; border-width: 2px; }
 
         #hud { position: fixed; top: 70px; left: 20px; display: flex; align-items: center; gap: 12px; z-index: 1500; }
         .back-btn { background: transparent; border: 1px solid var(--violet); color: var(--violet); padding: 5px 10px; cursor: pointer; font-family: inherit; font-size: 10px; }
 
         #entry-layer { position: fixed; inset: 0; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2000; }
-        .reg-btn { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 15px 40px; cursor: pointer; margin-top: 20px; font-family: inherit; }
+        .reg-btn { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 15px 40px; cursor: pointer; margin-top: 20px; font-family: inherit; letter-spacing: 1px; }
     </style>
 </head>
 <body>
@@ -57,9 +58,9 @@
     <div id="ui-logo">GY-GY</div>
 
     <div id="entry-layer">
-        <div style="border: 1px solid var(--violet); padding: 40px; text-align: center; background: #050505;">
-            <p id="charlie-msg">Чарли: "Оцифруйте ID для входа в Lounge."</p>
-            <button id="gate-btn" class="reg-btn" onclick="Core.register()">Оцифровать</button>
+        <div style="border: 1px solid var(--violet); padding: 40px; text-align: center; background: #050505; box-shadow: 0 0 30px rgba(138, 43, 226, 0.2);">
+            <p id="charlie-msg">Чарли: "С возвращением в GY-GY. Оцифруйте ID."</p>
+            <button id="gate-btn" class="reg-btn" onclick="Core.register()">ОЦИФРОВАТЬ</button>
         </div>
     </div>
 
