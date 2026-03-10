@@ -3,21 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.3.288</title>
+    <title>GY-GY Club v4.3.289</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
         :root { --gold: #d4af37; --bg: #000000; }
         
-        /* ГЛОБАЛЬНАЯ БЛОКИРОВКА */
         * { 
             -webkit-tap-highlight-color: transparent; 
             box-sizing: border-box; margin: 0; padding: 0; 
             outline: none !important; 
             user-select: none !important; 
             -webkit-user-select: none !important; 
-            -webkit-touch-callout: none !important; /* Убирает контекстное меню на iOS */
+            -webkit-touch-callout: none !important;
         }
         
         html, body { 
@@ -25,18 +24,19 @@
             font-family: 'Playfair Display', serif; overflow: hidden; position: fixed; 
         }
 
-        /* НЕВИДИМЫЙ ЩИТ ОТ ОЦИФРОВКИ */
+        /* ЩИТ (ТОЛЬКО ДЛЯ ФОНА) */
         #touch-shield {
-            position: fixed; inset: 0; z-index: 500; /* Выше картинок, но ниже кнопок */
-            background: transparent; pointer-events: all;
+            position: fixed; inset: 0; z-index: 100; 
+            background: transparent; pointer-events: none;
         }
 
+        /* ЯЗЫКИ БЕЗ ПОЛОСЫ */
         #google_translate_element { 
             position: fixed; top: 15px; left: 15px; z-index: 1000001; 
-            max-width: 120px; overflow-x: auto; white-space: nowrap; 
+            max-width: 120px; overflow-x: auto; white-space: nowrap;
+            scrollbar-width: none; /* Firefox */
         }
-        #google_translate_element::-webkit-scrollbar { height: 2px; }
-        #google_translate_element::-webkit-scrollbar-thumb { background: var(--gold); }
+        #google_translate_element::-webkit-scrollbar { display: none; } /* Chrome/Safari */
 
         .ui-header-right { 
             position: fixed; top: 18px; right: 25px; z-index: 1000000; 
@@ -54,41 +54,37 @@
 
         img { pointer-events: none !important; -webkit-user-drag: none; z-index: 5; }
 
-        .reg-photo-container { 
-            width: 95px; height: 95px; border: 2px solid var(--gold); 
-            background: #fff; position: relative; overflow: hidden; 
-            display: flex; align-items: center; justify-content: center; z-index: 600;
+        /* ИНТЕРАКТИВНЫЕ ЭЛЕМЕНТЫ ПОВЕРХ ВСЕГО */
+        #main-door { 
+            width: 280px; cursor: pointer; position: relative; z-index: 2000 !important; 
+            pointer-events: auto !important; transition: transform 1.8s ease-in-out, opacity 1.8s ease-in-out; 
         }
-        
-        #pp { width: 100%; height: 100%; object-fit: cover; display: none; position: absolute; inset: 0; }
-
-        #main-door { width: 280px; cursor: pointer; transition: transform 1.8s ease-in-out, opacity 1.8s ease-in-out; z-index: 600; pointer-events: auto !important; }
 
         .btn-gy { 
             min-width: 270px; padding: 15px; background: transparent; 
             border: 2px solid var(--gold); color: var(--gold); cursor: pointer; 
             font-family: 'Share Tech Mono'; text-transform: uppercase; font-weight: 900; 
-            margin: 10px 0; z-index: 600; pointer-events: auto !important;
+            margin: 10px 0; z-index: 2000 !important; pointer-events: auto !important;
         }
-        .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
 
-        #black-veil { position: fixed; inset: 0; background: #000 !important; z-index: 2147483647; display: none; }
-        
-        .bar-quote { 
-            font-family: 'Share Tech Mono'; font-size: 20px; font-weight: 900; 
-            position: absolute; top: 8%; text-align: center; width: 100%; 
-            z-index: 100; font-style: italic; padding: 0 10px; pointer-events: none;
+        .reg-photo-container { 
+            width: 95px; height: 95px; border: 2px solid var(--gold); 
+            background: #fff; position: relative; overflow: hidden; 
+            display: flex; align-items: center; justify-content: center; z-index: 2000;
         }
         
+        #pp { width: 100%; height: 100%; object-fit: cover; display: none; position: absolute; inset: 0; }
+        .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
+        #black-veil { position: fixed; inset: 0; background: #000 !important; z-index: 2147483647; display: none; }
+        .bar-quote { font-family: 'Share Tech Mono'; font-size: 20px; font-weight: 900; position: absolute; top: 8%; text-align: center; width: 100%; z-index: 100; font-style: italic; padding: 0 10px; pointer-events: none; }
         .charlie-bar-img { height: 82vh; width: auto; object-fit: contain; }
-        .nav-bar-btns { position: absolute; bottom: 12%; z-index: 1000; width: 100%; display: flex; justify-content: space-around; padding: 0 10px; }
+        .nav-bar-btns { position: absolute; bottom: 12%; z-index: 2000; width: 100%; display: flex; justify-content: space-around; padding: 0 10px; }
         #block-ai-room { background: url('OIG2_vintage_tv_room.jpg') center/cover no-repeat !important; }
     </style>
 </head>
 <body contenteditable="false" spellcheck="false">
 
     <div id="touch-shield"></div>
-
     <div id="black-veil"></div>
     <div id="google_translate_element"></div>
     <div class="ui-header-right">GY-GY</div>
@@ -113,10 +109,10 @@
     <div id="block-identity" class="block">
         <div style="font-family:'Share Tech Mono'; font-size:22px; margin-bottom:30px; font-weight:900; text-align:center;">«В каждой шутке есть доля виски»</div>
         <div style="display:flex; gap:12px; margin-bottom:30px;">
-            <div style="width:95px; height:95px; border:2px solid var(--gold); display:flex; align-items:center; justify-content:center; font-family:'Share Tech Mono'; font-size:11px; z-index:600;" id="id-label">#ID</div>
-            <div style="width:95px; height:95px; border:2px solid var(--gold); background:#fff; padding:5px; z-index:600; pointer-events:auto;" id="qr-box-reg"></div>
+            <div style="width:95px; height:95px; border:2px solid var(--gold); display:flex; align-items:center; justify-content:center; font-family:'Share Tech Mono'; font-size:11px; z-index:2000;" id="id-label">#ID</div>
+            <div style="width:95px; height:95px; border:2px solid var(--gold); background:#fff; padding:5px; z-index:2000; pointer-events:auto;" id="qr-box-reg"></div>
             <div class="reg-photo-container">
-                <input type="file" onchange="preview(this)" style="position:absolute; inset:0; opacity:0; z-index:700; cursor:pointer; pointer-events:auto;">
+                <input type="file" onchange="preview(this)" style="position:absolute; inset:0; opacity:0; z-index:2100; cursor:pointer; pointer-events:auto;">
                 <img id="pp">
                 <span id="txt-photo" style="color:#000; font-size:10px; font-weight:900;">ФОТО</span>
             </div>
@@ -127,7 +123,7 @@
 
     <div id="block-hall" class="block">
         <div style="position:absolute; inset:0; background:url('hall_bg_jpg.jpg') center/cover; z-index:-1;"></div>
-        <div style="position:absolute; left:50%; top:68%; transform:translate(-50%, -50%); width:280px; padding:25px; border:2px solid var(--gold); background:#F5F5DC; border-radius:15px; display:flex; flex-direction:column; align-items:center; color:#000; z-index:600;">
+        <div style="position:absolute; left:50%; top:68%; transform:translate(-50%, -50%); width:280px; padding:25px; border:2px solid var(--gold); background:#F5F5DC; border-radius:15px; display:flex; flex-direction:column; align-items:center; color:#000; z-index:2000;">
             <div id="h-id" style="font-family:'Share Tech Mono'; font-weight:900; font-size:16px; margin-bottom:15px;">#GY-ID-PENDING</div>
             <div style="display:flex; gap:15px; margin-bottom:15px;">
                 <div style="width:90px; height:90px; border:3px solid #000; background:#fff; overflow:hidden;"><img id="h-photo" style="width:100%; height:100%; object-fit:cover;"></div>
