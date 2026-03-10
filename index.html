@@ -3,67 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.12 | FINAL-FIX</title>
+    <title>GY-GY Club v4.4.14 | MASTER SPA</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
-        :root { --gold: #d4af37; --door-wood: #3E2723; }
+        :root { --gold: #d4af37; --door-wood: #3E2723; --violet: #8A2BE2; --neon-glow: rgba(138, 43, 226, 0.6); }
         
-        * { 
-            -webkit-tap-highlight-color: transparent !important; 
-            -webkit-touch-callout: none !important; 
-            -webkit-user-select: none !important; 
-            user-select: none !important; 
-            outline: none !important; 
-        }
-
+        * { -webkit-tap-highlight-color: transparent !important; -webkit-touch-callout: none !important; -webkit-user-select: none !important; user-select: none !important; outline: none !important; }
         a, button, input { -webkit-appearance: none; outline: none !important; pointer-events: auto !important; }
         img { -webkit-user-drag: none !important; pointer-events: none; border: none !important; }
 
-        html, body { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Playfair Display', serif; overflow: hidden; position: fixed; }
+        html, body { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; position: fixed; margin:0; }
         
-        #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000001; pointer-events: auto !important; }
-        .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000000; font-family: 'Share Tech Mono'; font-weight: bold; font-size: 24px; letter-spacing: 5px; color: var(--gold); pointer-events: none; }
+        /* ИНТЕРФЕЙС */
+        #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000001; }
+        .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000000; font-size: 24px; letter-spacing: 5px; font-weight: bold; pointer-events: none; }
+        
+        /* КНОПКА ВОЗВРАТА (Стандарт под языками) */
+        .ui-back-to-bar { 
+            position: fixed; top: 65px; left: 15px; z-index: 1000000;
+            background: #000; border: 1px solid var(--gold); color: var(--gold);
+            padding: 5px 12px; cursor: pointer; font-family: 'Share Tech Mono'; 
+            font-size: 11px; text-transform: uppercase; letter-spacing: 2px; display: none;
+        }
 
         .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; z-index: 10; opacity: 0; transition: opacity 0.8s ease-in-out; }
         .block.active { display: flex !important; opacity: 1; }
 
-        #main-door { width: 280px; cursor: pointer; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s; pointer-events: auto !important; }
-        
-        .btn-gy { min-width: 270px; padding: 14px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: 'Share Tech Mono'; text-transform: uppercase; font-weight: 900; margin: 8px 0; z-index: 1001; }
+        .btn-gy { min-width: 270px; padding: 14px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; text-transform: uppercase; font-weight: 900; margin: 8px 0; z-index: 1001; text-align: center; font-family: 'Share Tech Mono'; }
         .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
 
-        /* НАДПИСЬ В ХОЛЛЕ */
-        .motto-hall { 
-            position: absolute; 
-            top: 8%; 
-            width: 100%; 
-            text-align: center; 
-            color: var(--door-wood); 
-            font-family: 'Playfair Display', serif; 
-            font-size: 38px; 
-            font-weight: 900; 
-            font-style: italic; 
-            z-index: 20; 
-            pointer-events: none;
-        }
+        /* ХОЛЛ */
+        .motto-hall { position: absolute; top: 8%; width: 100%; text-align: center; color: var(--door-wood); font-size: 38px; font-weight: 900; font-style: italic; font-family: 'Playfair Display'; }
+        .box-final { width: 85px; height: 85px; border: 2px solid #000; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 
-        .box-final { width: 85px; height: 85px; border: 2px solid #000; background: #fff; display: flex; align-items: center; justify-content: center; box-sizing: border-box; overflow: hidden; }
-        #h-photo { width: 100%; height: 100%; object-fit: cover; }
+        /* ЗОНА СТОЛИКОВ (Твой дизайн v1.3.9) */
+        #block-tables { background: url('lounge.jpg') no-repeat center bottom / contain #000; }
+        .lamp-zone { 
+            position: absolute; width: 42px; height: 42px; border-radius: 50%; 
+            cursor: pointer; z-index: 100; 
+            background: radial-gradient(circle, var(--neon-glow) 0%, transparent 75%); 
+            border: 1px solid var(--violet); 
+            box-shadow: 0 0 18px var(--neon-glow);
+            transition: 0.3s; transform: translate(-50%, -50%); 
+        }
+        .lamp-zone:hover { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 0 28px var(--violet); }
+        
+        /* Твои координаты */
+        #table-1 { bottom: 49.2%; left: 49.9%; } 
+        #table-2 { bottom: 22.1%; left: 35.7%; } 
+        #table-3 { bottom: 33.1%; left: 43.1%; } 
+        #table-4 { bottom: 36.1%; left: 44.5%; } 
+        #table-5 { bottom: 35.7%; left: 56.2%; } 
+        #table-6 { bottom: 21.9%; left: 63.8%; } 
+        #mic-zone { bottom: 32.4%; left: 58.3%; border-width: 2px; }
+
+        #main-door { width: 280px; cursor: pointer; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s; pointer-events: auto !important; }
     </style>
 </head>
-<body onload="checkReturn()" oncontextmenu="return false;">
+<body oncontextmenu="return false;">
 
     <div id="google_translate_element"></div>
     <div class="ui-header-right">GY-GY</div>
+    <button class="ui-back-to-bar" id="btn-global-back" onclick="portalTransition('block-bar')">Назад в бар</button>
 
     <audio id="snd-door" preload="auto"><source src="door_open.mp3" type="audio/mpeg"></audio>
     <audio id="snd-ambient" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
     <audio id="snd-khe" preload="auto"><source src="charlie_bar_fx.mp3" type="audio/mpeg"></audio>
     <audio id="snd-pour" preload="auto"><source src="pour_whisky.mp3" type="audio/mpeg"></audio>
 
-    <div id="block-entrance" class="block">
+    <div id="block-entrance" class="block active" style="opacity: 1;">
         <img src="door_1.jpg" id="main-door" onclick="handleDoor()">
     </div>
 
@@ -106,29 +116,56 @@
     <div id="block-bar" class="block" style="padding:0; justify-content: flex-end;">
         <div style="font-family:'Share Tech Mono'; font-size:18px; font-weight:900; position:absolute; top:8%; text-align:center; width:100%; z-index:100; font-style:italic; color:var(--gold); pointer-events:none;">«Истина не в вине, а в его количестве»</div>
         <div style="position:absolute; bottom:30%; z-index:1000; width:100%; display:flex; justify-content:space-around; padding:0 10px;">
-            <button class="btn-gy" style="min-width:145px; font-size:12px; background:rgba(0,0,0,0.6);" onclick="window.location.href='tables.html'">ЗА СТОЛИКИ</button>
+            <button class="btn-gy" style="min-width:145px; font-size:12px; background:rgba(0,0,0,0.6);" onclick="portalTransition('block-tables')">ЗА СТОЛИКИ</button>
             <button class="btn-gy" style="min-width:145px; font-size:12px; background:rgba(0,0,0,0.6);" onclick="portalTransition('block-ai-room')">В AI ROOM</button>
         </div>
         <img src="charlie_bar.png" style="height: 82vh; width: auto; object-fit: contain;">
     </div>
 
+    <div id="block-tables" class="block">
+        <div id="table-1" class="lamp-zone"></div>
+        <div id="table-2" class="lamp-zone"></div>
+        <div id="table-3" class="lamp-zone"></div>
+        <div id="table-4" class="lamp-zone"></div>
+        <div id="table-5" class="lamp-zone"></div>
+        <div id="table-6" class="lamp-zone"></div>
+        <div id="mic-zone" class="lamp-zone" style="border-color: #fff; box-shadow: 0 0 20px #fff;"></div>
+    </div>
+
     <div id="block-ai-room" class="block" style="background: url('OIG2_vintage_tv_room.jpg') center/cover no-repeat !important;">
-        <button class="btn-gy" style="position:absolute; bottom:10%; background:rgba(0,0,0,0.85);" onclick="portalTransition('block-bar')">НАЗАД В БАР</button>
     </div>
 
     <script>
         let currentID = "";
 
-        function checkReturn() {
-            const params = new URLSearchParams(window.location.search);
-            if (params.get('back') === 'bar') {
-                const bar = document.getElementById('block-bar');
-                bar.style.display = 'flex'; bar.classList.add('active'); bar.style.opacity = '1';
-                const amb = document.getElementById('snd-ambient'); amb.play(); amb.volume = 1;
+        function portalTransition(nextId) {
+            const current = document.querySelector('.block.active');
+            const backBtn = document.getElementById('btn-global-back');
+
+            // Управление музыкой и кнопкой возврата
+            if (nextId === 'block-tables' || nextId === 'block-ai-room') {
+                fadeAudio(document.getElementById('snd-ambient'), 0.2, 1000); 
+                backBtn.style.display = 'block'; 
+            } else if (nextId === 'block-bar') {
+                fadeAudio(document.getElementById('snd-ambient'), 1, 1000);
+                backBtn.style.display = 'none';
             } else {
-                const ent = document.getElementById('block-entrance');
-                ent.style.display = 'flex'; setTimeout(() => { ent.classList.add('active'); ent.style.opacity = '1'; }, 50);
+                backBtn.style.display = 'none';
             }
+
+            if(current) current.style.opacity = "0";
+            setTimeout(() => {
+                if(current) { current.classList.remove('active'); current.style.display = "none"; }
+                const next = document.getElementById(nextId);
+                next.style.display = "flex";
+                setTimeout(() => { 
+                    next.classList.add('active'); next.style.opacity = "1";
+                    if(nextId === 'block-bar' && (!current || (current.id !== 'block-ai-room' && current.id !== 'block-tables'))) {
+                        setTimeout(() => { document.getElementById('snd-khe').play(); }, 800);
+                        setTimeout(() => { document.getElementById('snd-pour').play(); }, 2200);
+                    }
+                }, 50);
+            }, 800);
         }
 
         function handleDoor() {
@@ -145,35 +182,14 @@
             setTimeout(() => { portalTransition('block-welcome'); const amb = document.getElementById('snd-ambient'); amb.volume=0; amb.play(); fadeAudio(amb, 1, 2000); }, 1800);
         }
 
-        function portalTransition(nextId) {
-            const current = document.querySelector('.block.active');
-            if (nextId === 'block-ai-room') fadeAudio(document.getElementById('snd-ambient'), 0, 1000);
-            if (nextId === 'block-bar' && current && current.id === 'block-ai-room') {
-                const amb = document.getElementById('snd-ambient'); amb.play(); fadeAudio(amb, 1, 1000);
-            }
-            if(current) current.style.opacity = "0";
-            setTimeout(() => {
-                if(current) { current.classList.remove('active'); current.style.display = "none"; }
-                const next = document.getElementById(nextId);
-                next.style.display = "flex";
-                setTimeout(() => { 
-                    next.classList.add('active'); next.style.opacity = "1";
-                    if(nextId === 'block-bar') {
-                        setTimeout(() => { document.getElementById('snd-khe').play(); }, 800);
-                        setTimeout(() => { document.getElementById('snd-pour').play(); }, 2200);
-                    }
-                }, 50);
-            }, 800);
-        }
-
-        function fadeAudio(audio, target, duration, cb) {
+        function fadeAudio(audio, target, duration) {
             const start = audio.volume;
             const startTime = Date.now();
             const interval = setInterval(() => {
                 const elapsed = Date.now() - startTime;
                 const progress = Math.min(elapsed / duration, 1);
                 audio.volume = start + (target - start) * progress;
-                if (progress === 1) { clearInterval(interval); if (target === 0) audio.pause(); if (cb) cb(); }
+                if (progress === 1) clearInterval(interval);
             }, 50);
         }
 
