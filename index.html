@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.29 | MASTER</title>
+    <title>GY-GY Club v4.4.28 | MASTER</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -19,6 +19,7 @@
         #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000001; }
         .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000000; font-size: 24px; letter-spacing: 5px; font-weight: bold; pointer-events: none; color: var(--gold); }
         
+        /* ПЛАВНАЯ КНОПКА НАЗАД */
         .ui-back-to-bar { 
             position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 1000005;
             background: rgba(0,0,0,0.85); border: 1px solid var(--gold); color: var(--gold);
@@ -37,10 +38,10 @@
 
         .motto-bar { position: absolute; top: 8%; width: 100%; text-align: center; color: var(--gold); font-size: 18px; font-weight: 900; font-style: italic; font-family: 'Share Tech Mono'; z-index: 100; pointer-events: none; }
         
-        /* БАР: КНОПКИ СДВИНУТЫ К ЦЕНТРУ (ОТСТУП 35%) */
+        /* БАР: КНОПКИ ПРИДВИНУТЫ К ЧАРЛИ НА МАКСИМУМ */
         .bar-ui-container { position: absolute; inset: 0; z-index: 1000; pointer-events: none; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding-bottom: 5vh; }
-        .bar-side-buttons { width: 100%; display: flex; justify-content: space-between; padding: 0 35%; margin-bottom: 8px; pointer-events: none; }
-        .bar-side-buttons button, .bar-bottom-button button { pointer-events: auto; background: rgba(0,0,0,0.8); margin: 4px; }
+        .bar-side-buttons { width: 100%; display: flex; justify-content: space-between; padding: 0 28%; margin-bottom: 8px; pointer-events: none; }
+        .bar-side-buttons button, .bar-bottom-button button { pointer-events: auto; background: rgba(0,0,0,0.75); margin: 4px; }
 
         .id-card-hall { 
             position: absolute; top: 72%; left: 50%; transform: translate(-50%,-50%); 
@@ -133,15 +134,16 @@
             const backBtn = document.getElementById('btn-global-back');
             const amb = document.getElementById('snd-ambient');
 
-            // Управление звуком и кнопкой "Назад"
             if (nextId === 'block-tables' || nextId === 'block-ai-room') {
                 fadeAudio(amb, 0, 800);
                 fadeAudio(document.getElementById('snd-khe'), 0, 800);
                 fadeAudio(document.getElementById('snd-pour'), 0, 800);
+                // Плавное появление кнопки
                 setTimeout(() => { backBtn.classList.add('visible'); }, 400); 
             } else {
-                if (amb.paused && nextId !== 'block-entrance') amb.play();
+                if (amb.paused) amb.play();
                 if (current && current.id !== 'block-entrance') amb.volume = 1;
+                // Плавное исчезновение кнопки
                 backBtn.classList.remove('visible');
             }
 
@@ -152,7 +154,6 @@
                 next.style.display = "flex";
                 setTimeout(() => { 
                     next.classList.add('active'); next.style.opacity = "1";
-                    // Спецэффекты в баре
                     if(nextId === 'block-bar') {
                         const khe = document.getElementById('snd-khe');
                         const pour = document.getElementById('snd-pour');
