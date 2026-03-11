@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GY-GY AI ROOM | v4.4 [7.1.15-LH]</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
-    
     <style>
         :root {
             --gold: #ffcc00;
@@ -21,20 +20,26 @@
             overflow: hidden; 
         }
 
-        /* НАВИГАЦИЯ v4.4 [cite: 2026-03-07] */
+        /* НАВИГАЦИЯ ОБНОВЛЕНА: КНОПКА ВОЗВРАТА УДАЛЕНА */
         .nav-header {
-            position: fixed; top: 15px; left: 15px; right: 15px;
+            position: fixed; top: 20px; left: 20px; right: 20px;
             display: flex; justify-content: space-between; align-items: center;
             z-index: 2000;
         }
-        .brand-zone { display: flex; gap: 15px; align-items: center; }
-        .logo { color: var(--gold); font-weight: bold; letter-spacing: 2px; font-size: 1.2rem; }
+        .brand-zone { display: flex; align-items: center; }
+        .logo { 
+            color: var(--gold); 
+            font-weight: bold; 
+            letter-spacing: 2px; 
+            font-size: 24px; /* КРУПНЫЕ БУКВЫ */
+            text-shadow: 0 0 10px rgba(255,204,0,0.5);
+        }
         
         .ui-btn { 
-            background: rgba(0,0,0,0.8); border: 1px solid var(--gold); 
-            color: var(--gold); padding: 8px 16px; cursor: pointer; 
-            text-decoration: none; font-size: 11px; transition: 0.3s;
-            text-transform: uppercase;
+            background: rgba(0,0,0,0.8); border: 2px solid var(--gold); 
+            color: var(--gold); padding: 10px 20px; cursor: pointer; 
+            text-decoration: none; font-size: 14px; font-weight: bold;
+            text-transform: uppercase; transition: 0.3s;
         }
         .ui-btn:hover { background: var(--gold); color: #000; box-shadow: 0 0 15px var(--gold); }
 
@@ -64,19 +69,24 @@
 
         .tv-screen:hover { 
             background: rgba(0, 242, 255, 0.1); 
-            box-shadow: inset 0 0 30px var(--neon);
+            box-shadow: inset 0 0 40px var(--neon);
         }
 
         .tv-label {
-            color: #fff; font-weight: bold; text-align: center; 
-            font-size: 1.1vw; text-transform: uppercase;
-            text-shadow: 2px 2px 5px #000; pointer-events: none;
+            color: #fff; 
+            font-weight: bold; 
+            text-align: center; 
+            font-size: 22px; /* НОРМАЛЬНЫЕ КРУПНЫЕ БУКВЫ */
+            text-transform: uppercase;
+            text-shadow: 2px 2px 6px #000; 
+            pointer-events: none;
+            line-height: 1.2;
         }
 
-        /* МЕТКА БИЛДА 7.1.15-LH */
+        /* МЕТКА БИЛДА */
         .build-footer { 
-            position: fixed; bottom: 10px; right: 15px; 
-            font-size: 10px; color: rgba(255,204,0,0.4); 
+            position: fixed; bottom: 10px; right: 20px; 
+            font-size: 12px; color: rgba(255,204,0,0.4); 
             z-index: 2000; letter-spacing: 1px;
         }
     </style>
@@ -85,7 +95,6 @@
 
     <div class="nav-header">
         <div class="brand-zone">
-            <a href="index.html" class="ui-btn">← RETURN</a>
             <div class="logo">GY-GY v4.4</div>
         </div>
         <div class="ui-btn">🌐 LANGUAGE [7.1.15-LH]</div>
@@ -96,20 +105,20 @@
 
         <div class="tv-grid">
             <a href="techpark.html" class="tv-screen">
-                <div class="tv-label">TECHPARK<br>v4.4</div>
+                <div class="tv-label">ТЕХНОПАРК<br>v4.4</div>
             </a>
 
-            <div class="tv-screen" onclick="alert('BUILD 7.1.15-LH: СИСТЕМА СТАБИЛЬНА')">
-                <div class="tv-label" style="font-size: 1.4vw;">ВЕРШИ<br>С ПРИКОЛОМ</div>
-            </div>
+            <a href="tables.html" class="tv-screen">
+                <div class="tv-label">ТАБЛИЦЫ<br>ДАННЫХ</div>
+            </a>
 
-            <div class="tv-screen" onclick="alert('ABSURD v4.4: СЛОТ 15 АКТИВИРОВАН')">
-                <div class="tv-label">ABSURD<br>RESERVE</div>
+            <div class="tv-screen" onclick="alert('РЕЗЕРВНЫЙ КАНАЛ 7.1.15-LH')">
+                <div class="tv-label">ЗАПАСНОЙ<br>ВЫХОД</div>
             </div>
         </div>
     </div>
 
-    <div class="build-footer">BUILD ID: 7.1.15-LH | INTERFACE: v4.4</div>
+    <div class="build-footer">7.1.15-LH | INTERFACE: v4.4</div>
 
 </body>
 </html>
