@@ -2,92 +2,97 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY AI ROOM | v5.7 [7.1.25-LH]</title>
+    <title>GY-GY AI ROOM | v5.8 [7.1.26-LH]</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
-        /* Полный сброс всех блокировок для работы Google Translate */
+        /* ОТКЛЮЧАЕМ ВСЕ ОГРАНИЧЕНИЯ ДЛЯ ЯЗЫКА */
         html, body { 
-            margin: 0; padding: 0; width: 100%; height: 100%;
+            margin: 0; padding: 0; min-height: 100vh;
             background: #000; color: #fff; 
             font-family: 'Share Tech Mono', monospace;
         }
 
-        /* КОРНЕВОЙ ФОН (без оберток) */
-        .main-bg {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover; z-index: -1; /* На самом заднем плане */
+        /* КАРТИНКА - ПРЯМАЯ И ВИДИМАЯ */
+        .base-image {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            z-index: 1; /* Картинка внизу */
         }
 
-        /* НАВИГАЦИЯ: ПРОСТО И НАДЕЖНО */
-        .top-nav {
-            position: absolute; top: 25px; left: 40px; right: 40px;
-            display: flex; justify-content: space-between; align-items: flex-start;
+        /* НАВИГАЦИЯ: ЛОГО СПРАВА, ЯЗЫК СЛЕВА */
+        .top-bar {
+            position: fixed; top: 20px; left: 30px; right: 30px;
+            display: flex; justify-content: space-between; align-items: center;
             z-index: 9999;
         }
 
         .logo { 
-            color: #ffcc00; font-weight: bold; font-size: 32px; 
-            text-transform: uppercase; letter-spacing: 5px;
-            order: 2; /* Лого справа */
-        }
-        
-        #google_translate_element { 
-            order: 1; /* Язык слева */
-            background: rgba(0,0,0,0.5); padding: 5px; border-radius: 4px;
+            color: #ffcc00; font-size: 32px; font-weight: bold; 
+            letter-spacing: 5px; text-transform: uppercase;
+            text-decoration: none;
         }
 
-        /* ТЕЛЕВИЗОРЫ: ГЕОМЕТРИЯ "ОТОДВИНУТО" */
-        .tv-grid {
+        #google_translate_element { 
+            background: rgba(0,0,0,0.6); padding: 5px; border-radius: 4px;
+        }
+
+        /* ЗОНЫ ТЕЛЕВИЗОРОВ (ПРОЗРАЧНЫЕ КНОПКИ) */
+        .tv-container {
             position: absolute; top: 32%; left: 50%;
             transform: translateX(-50%);
             width: 55%; height: 16%;
-            display: flex; gap: 30px;
-            z-index: 100;
-        }
-        
-        .tv-screen {
-            flex: 1; display: flex; align-items: center; justify-content: center;
-            text-decoration: none; border: 1px solid rgba(255,255,255,0.2);
-            background: rgba(0,0,0,0.4); transition: 0.3s;
+            display: flex; gap: 25px;
+            z-index: 1000;
         }
 
-        .tv-screen:hover { 
+        .tv-btn {
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            text-decoration: none; border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.3); transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .tv-btn:hover { 
             border-color: #ffcc00; background: rgba(255,204,0,0.1); 
         }
 
-        .tv-label {
-            color: #fff; font-weight: bold; text-align: center; 
-            font-size: 16px; text-transform: uppercase;
+        .label {
+            color: #fff; font-size: 14px; text-transform: uppercase;
+            text-align: center; font-weight: bold;
+            text-shadow: 1px 1px 3px #000;
         }
 
-        .footer-info { 
-            position: fixed; bottom: 20px; left: 40px; 
-            font-size: 11px; color: rgba(255,204,0,0.5);
+        .footer { 
+            position: fixed; bottom: 15px; left: 30px; 
+            font-size: 11px; color: rgba(255,204,0,0.4); z-index: 9999;
         }
     </style>
 </head>
 <body>
 
-    <img src="OIG2_vintage_tv_room.jpg" class="main-bg" alt="HQ BACKGROUND">
+    <img src="OIG2_vintage_tv_room.jpg" class="base-image" alt="ROOM BACKGROUND">
 
-    <div class="top-nav">
-        <div class="logo">GY-GY</div>
+    <div class="top-bar">
+        <a href="#" class="logo">GY-GY</a>
         <div id="google_translate_element"></div>
     </div>
 
-    <div class="tv-grid">
-        <a href="techpark.html" class="tv-screen">
-            <div class="tv-label">TECHPARK</div>
+    <div class="tv-container">
+        <a href="https://gemini.google.com" target="_blank" class="tv-btn">
+            <div class="label">TECHPARK<br>(GEMINI AI)</div>
         </a>
-        <a href="verses.html" class="tv-screen">
-            <div class="tv-label">GY-GY VERSES</div>
+
+        <a href="verses.html" class="tv-btn">
+            <div class="label">GY-GY<br>VERSES</div>
         </a>
-        <div class="tv-screen">
-            <div class="tv-label">RESERVE</div>
+
+        <div class="tv-btn">
+            <div class="label">RESERVE</div>
         </div>
     </div>
 
-    <div class="footer-info">BUILD: 7.1.25-LH | v5.7</div>
+    <div class="footer">BUILD: 7.1.26-LH | v5.8</div>
 
     <script type="text/javascript">
         function googleTranslateElementInit() {
