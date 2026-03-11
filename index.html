@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.27 | MASTER</title>
+    <title>GY-GY Club v4.4.28 | MASTER</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -19,13 +19,16 @@
         #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000001; }
         .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000000; font-size: 24px; letter-spacing: 5px; font-weight: bold; pointer-events: none; color: var(--gold); }
         
+        /* ПЛАВНАЯ КНОПКА НАЗАД */
         .ui-back-to-bar { 
             position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 1000005;
             background: rgba(0,0,0,0.85); border: 1px solid var(--gold); color: var(--gold);
             padding: 12px 24px; cursor: pointer; font-family: 'Share Tech Mono'; 
-            font-size: 14px; text-transform: uppercase; letter-spacing: 2px; display: none;
-            border-radius: 4px;
+            font-size: 14px; text-transform: uppercase; letter-spacing: 2px;
+            opacity: 0; pointer-events: none; display: block;
+            border-radius: 4px; transition: opacity 1.2s ease-in-out;
         }
+        .ui-back-to-bar.visible { opacity: 1; pointer-events: auto; }
 
         .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; z-index: 10; opacity: 0; transition: opacity 0.8s ease-in-out; }
         .block.active { display: flex !important; opacity: 1; }
@@ -35,9 +38,9 @@
 
         .motto-bar { position: absolute; top: 8%; width: 100%; text-align: center; color: var(--gold); font-size: 18px; font-weight: 900; font-style: italic; font-family: 'Share Tech Mono'; z-index: 100; pointer-events: none; }
         
-        /* БАР: КНОПКИ ЕЩЕ БЛИЖЕ К ЧАРЛИ */
+        /* БАР: КНОПКИ ПРИДВИНУТЫ К ЧАРЛИ НА МАКСИМУМ */
         .bar-ui-container { position: absolute; inset: 0; z-index: 1000; pointer-events: none; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding-bottom: 5vh; }
-        .bar-side-buttons { width: 100%; display: flex; justify-content: space-between; padding: 0 18%; margin-bottom: 8px; pointer-events: none; }
+        .bar-side-buttons { width: 100%; display: flex; justify-content: space-between; padding: 0 28%; margin-bottom: 8px; pointer-events: none; }
         .bar-side-buttons button, .bar-bottom-button button { pointer-events: auto; background: rgba(0,0,0,0.75); margin: 4px; }
 
         .id-card-hall { 
@@ -135,11 +138,13 @@
                 fadeAudio(amb, 0, 800);
                 fadeAudio(document.getElementById('snd-khe'), 0, 800);
                 fadeAudio(document.getElementById('snd-pour'), 0, 800);
-                backBtn.style.display = 'block'; 
+                // Плавное появление кнопки
+                setTimeout(() => { backBtn.classList.add('visible'); }, 400); 
             } else {
                 if (amb.paused) amb.play();
                 if (current && current.id !== 'block-entrance') amb.volume = 1;
-                backBtn.style.display = 'none';
+                // Плавное исчезновение кнопки
+                backBtn.classList.remove('visible');
             }
 
             if(current) current.style.opacity = "0";
@@ -164,8 +169,7 @@
             document.getElementById('snd-door').play();
             const d = document.getElementById('main-door');
             d.style.pointerEvents = "none";
-            d.style.transform = "scale(5)"; 
-            d.style.opacity = "0";
+            d.style.transform = "scale(5)"; d.style.opacity = "0";
             
             currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
             document.getElementById('id-label').innerText = currentID;
@@ -178,8 +182,7 @@
             setTimeout(() => { 
                 portalTransition('block-welcome'); 
                 const amb = document.getElementById('snd-ambient'); 
-                amb.volume = 0;
-                amb.play(); 
+                amb.volume = 0; amb.play(); 
                 fadeAudio(amb, 1, 3000);
             }, 1800);
         }
