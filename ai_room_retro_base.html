@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY AI ROOM | v4.6 [7.1.16-LH]</title>
+    <title>GY-GY AI ROOM | v4.8 [7.1.17-LH]</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -20,40 +19,32 @@
             overflow: hidden; 
         }
 
-        /* НАВИГАЦИЯ: РОКИРОВКА ВЫПОЛНЕНА */
+        /* НАВИГАЦИЯ: ЛОГО СПРАВА, ЯЗЫК СЛЕВА */
         .nav-header {
             position: fixed; top: 30px; left: 30px; right: 30px;
             display: flex; justify-content: space-between; align-items: center;
             z-index: 2000;
-            flex-direction: row-reverse; /* Лого направо, язык налево */
+            flex-direction: row-reverse; 
         }
 
-        /* ЛОГОТИП СПРАВА (КРУПНО) */
+        /* ЛОГОТИП СПРАВА */
         .logo { 
             color: var(--gold); 
             font-weight: bold; 
-            letter-spacing: 6px; 
-            font-size: 36px; /* Еще крупнее */
+            letter-spacing: 8px; 
+            font-size: 38px; /* Максимальная четкость */
             text-shadow: 0 0 20px rgba(255,204,0,0.7);
             text-transform: uppercase;
         }
         
-        /* ЯЗЫК ГУГЛ СЛЕВА */
-        .lang-switcher { 
-            background: rgba(255,255,255,0.1); 
-            border: 2px solid rgba(255,255,255,0.2); 
-            color: #fff; 
-            padding: 12px 24px; 
-            cursor: pointer; 
-            font-size: 18px; 
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            border-radius: 5px;
-            transition: 0.3s;
-            text-transform: uppercase;
+        /* БЛОК ГУГЛ-ПЕРЕВОДЧИКА СЛЕВА */
+        #google_translate_element {
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 4px;
+            min-width: 150px;
         }
-        .lang-switcher:hover { background: rgba(255,255,255,0.2); border-color: #fff; }
 
         .hq-wrapper {
             position: relative; width: 100vw; height: 100vh;
@@ -65,7 +56,7 @@
             object-fit: cover; z-index: 10; opacity: 0.8;
         }
 
-        /* ТЕЛЕВИЗОРЫ: МАКСИМАЛЬНАЯ ЧИТАЕМОСТЬ */
+        /* ТЕЛЕВИЗОРЫ: БОЛЬШИЕ БУКВЫ v4.8 */
         .tv-grid {
             position: absolute; top: 25%; left: 6%; width: 88%; height: 32%;
             display: flex; gap: 4%; z-index: 100;
@@ -78,7 +69,7 @@
 
         .tv-screen:hover { 
             background: rgba(0, 242, 255, 0.15); 
-            box-shadow: inset 0 0 60px var(--neon);
+            box-shadow: inset 0 0 70px var(--neon);
             transform: scale(1.02);
         }
 
@@ -86,21 +77,18 @@
             color: #fff; 
             font-weight: 900; 
             text-align: center; 
-            font-size: 28px; /* БОЛЬШИЕ БУКВЫ */
+            font-size: 30px; /* КРУПНЫЕ БУКВЫ */
             text-transform: uppercase;
-            text-shadow: 3px 3px 10px #000; 
-            pointer-events: none;
+            text-shadow: 4px 4px 12px #000; 
             line-height: 1.4;
-            letter-spacing: 1px;
         }
 
-        /* ТЕХНИЧЕСКИЙ ФУТЕР 16 */
+        /* ТЕХНИЧЕСКИЙ ФУТЕР v4.8 */
         .build-footer { 
-            position: fixed; bottom: 15px; left: 30px; 
-            font-size: 12px; color: rgba(255,204,0,0.4); 
+            position: fixed; bottom: 20px; left: 35px; 
+            font-size: 13px; color: rgba(255,204,0,0.5); 
             z-index: 2000;
-            background: rgba(0,0,0,0.5);
-            padding: 4px 10px;
+            letter-spacing: 2px;
         }
     </style>
 </head>
@@ -109,31 +97,37 @@
     <div class="nav-header">
         <div class="logo">GY-GY</div>
 
-        <div class="lang-switcher" onclick="alert('GOOGLE TRANSLATE: ACTIVE')">
-            <img src="https://www.gstatic.com/images/branding/product/1x/translate_24dp.png" width="22" alt="G">
-            <span>ЯЗЫК / LANGUAGE</span>
-        </div>
+        <div id="google_translate_element"></div>
     </div>
 
     <div class="hq-wrapper">
-        <img src="OIG2_vintage_tv_room.jpg" class="hq-bg" alt="HQ v4.6 Build 16" onerror="this.style.display='none';">
+        <img src="OIG2_vintage_tv_room.jpg" class="hq-bg" alt="HQ v4.8" onerror="this.style.display='none';">
 
         <div class="tv-grid">
             <a href="techpark.html" class="tv-screen">
-                <div class="tv-label">ТЕХНОПАРК<br>v4.6</div>
+                <div class="tv-label">ТЕХНОПАРК<br>v4.8</div>
             </a>
-
             <a href="tables.html" class="tv-screen">
                 <div class="tv-label">ТАБЛИЦЫ<br>ДАННЫХ</div>
             </a>
-
-            <div class="tv-screen" onclick="alert('ВЕРСИЯ 4.6 [16]: СИСТЕМА ГОТОВА')">
+            <div class="tv-screen" onclick="alert('BUILD 17 | v4.8: СИСТЕМА СТАБИЛЬНА')">
                 <div class="tv-label">ЗАПАСНОЙ<br>ВЫХОД</div>
             </div>
         </div>
     </div>
 
-    <div class="build-footer">BUILD: 7.1.16-LH | INTERFACE: v4.6</div>
+    <div class="build-footer">BUILD: 7.1.17-LH | INTERFACE: v4.8</div>
+
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'ru',
+                includedLanguages: 'en,de,fr,es,it,zh-CN,ar',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 </body>
 </html>
