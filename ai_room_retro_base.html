@@ -4,164 +4,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY CLUB v7.1.0 | GATEWAY</title>
+    <title>GY-GY AI ROOM | Build 7.1.3-LH</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root { 
-            --gold: #ffcc00; --neon: #00f2ff; --bg: #000;
-        }
+        :root { --gold: #ffcc00; --neon: #00f2ff; --bg: #000; }
         * { box-sizing: border-box; }
         body, html { 
             margin: 0; padding: 0; width: 100vw; height: 100vh; 
             background: var(--bg); color: #fff; font-family: 'Montserrat', sans-serif; 
-            overflow: hidden;
+            overflow: hidden; opacity: 0; transition: opacity 1s;
         }
 
-        /* ОБЯЗАТЕЛЬНЫЕ АТРИБУТЫ (Принцип 2026-03-07) */
-        .top-ui {
+        /* 1. ПОСТОЯННЫЕ АТРИБУТЫ [cite: 2026-03-07] */
+        .top-nav {
             position: fixed; top: 20px; left: 20px; right: 20px;
             display: flex; justify-content: space-between; align-items: center;
-            z-index: 2000; font-family: 'Share Tech Mono';
+            z-index: 1000; font-family: 'Share Tech Mono';
         }
-        .brand { color: var(--gold); font-weight: 700; letter-spacing: 5px; font-size: 20px; }
-        .lang-panel { 
-            background: rgba(0,0,0,0.8); border: 1px solid var(--gold);
-            padding: 8px 15px; cursor: pointer; color: var(--gold);
-            transition: 0.3s; font-size: 12px;
-        }
-        .lang-panel:hover { background: var(--gold); color: #000; box-shadow: 0 0 15px var(--gold); }
-
-        /* АНИМАЦИЯ ДВЕРЕЙ (Принцип 2026-03-07: плавно уплывают) */
-        .gate-system {
-            position: relative; width: 100vw; height: 100vh;
-            background: #000; overflow: hidden;
-        }
-        .door {
-            position: absolute; width: 50%; height: 100%;
-            background: #111; z-index: 1000;
-            transition: transform 3s cubic-bezier(0.7, 0, 0.3, 1);
-            display: flex; justify-content: center; align-items: center;
-            border: 1px solid #222;
-        }
-        .door-left { left: 0; border-right: 2px solid var(--gold); }
-        .door-right { right: 0; border-left: 2px solid var(--gold); }
-
-        .gate-open .door-left { transform: translateX(-100%); }
-        .gate-open .door-right { transform: translateX(100%); }
-
-        /* ИНТЕРФЕЙС ЧАРЛИ НА ФОНЕ ТЕЛЕВИЗОРОВ (Принцип 2026-02-06) */
-        .charlie-stage {
-            position: absolute; width: 100%; height: 100%;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            z-index: 500;
-        }
-        .vintage-bg {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover; opacity: 0.5; /* Затемняем, чтобы кнопки читались */
-        }
-
-        .charlie-ui {
-            position: relative; z-index: 600; text-align: center;
-            font-family: 'Share Tech Mono';
-        }
-        .scanner {
-            width: 200px; height: 2px; background: var(--neon);
-            margin: 0 auto 30px; box-shadow: 0 0 15px var(--neon);
-            animation: scan 2s infinite ease-in-out;
-        }
-        @keyframes scan { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
-
-        .status-msg { color: var(--gold); margin-bottom: 40px; letter-spacing: 2px; font-size: 14px; }
-
-        /* КНОПКИ */
-        .btn-group { display: flex; flex-direction: column; gap: 20px; align-items: center; }
-        .ui-btn {
-            background: rgba(0,0,0,0.6); border: 1px solid var(--gold);
-            color: var(--gold); padding: 15px 50px; cursor: pointer;
-            font-family: 'Share Tech Mono'; text-transform: uppercase;
-            transition: 0.5s; backdrop-filter: blur(5px);
-        }
-        .ui-btn:hover { background: var(--gold); color: #000; box-shadow: 0 0 25px var(--gold); }
+        .nav-left { display: flex; gap: 15px; align-items: center; }
+        .brand { color: var(--gold); font-weight: 700; letter-spacing: 3px; font-size: 18px; }
         
-        #reg-btn { display: none; border-color: var(--neon); color: var(--neon); }
+        .ui-btn { 
+            background: rgba(0,0,0,0.7); border: 1px solid var(--gold); 
+            color: var(--gold); padding: 8px 15px; cursor: pointer; 
+            font-family: 'Share Tech Mono'; font-size: 12px; text-decoration: none;
+            transition: 0.3s; backdrop-filter: blur(5px);
+        }
+        .ui-btn:hover { background: var(--gold); color: #000; box-shadow: 0 0 15px var(--gold); }
+
+        /* 2. ВИЗУАЛ ШТАБА */
+        .vintage-base {
+            position: relative; width: 100vw; height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .bg-img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* 3. ТРИ ТЕЛЕВИЗОРА [cite: 2026-03-05] */
+        .tv-overlay-grid {
+            position: absolute; top: 24%; left: 5%; width: 90%; height: 35%;
+            display: flex; gap: 3.5%; z-index: 500;
+        }
+        .tv-screen {
+            flex: 1; cursor: pointer; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; transition: 0.4s;
+            border-radius: 20px; text-decoration: none;
+        }
+        .tv-screen:hover { 
+            background: rgba(0, 242, 255, 0.1); 
+            box-shadow: inset 0 0 30px var(--neon); 
+        }
+
+        .label {
+            font-family: 'Share Tech Mono'; font-size: 1.3vw; text-align: center;
+            color: rgba(0,0,0,0.7); font-weight: 900; text-transform: uppercase;
+            line-height: 1.1; pointer-events: none;
+        }
+
+        /* 4. ГЕНЕРАТОР ВЕРШЕЙ (Центральный ТВ) */
+        .poetry-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 2000;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .verse-box {
+            max-width: 500px; padding: 40px; border: 1px solid var(--neon);
+            background: #0a0a0a; text-align: center; font-family: 'Share Tech Mono';
+        }
+        #text-target { color: var(--neon); font-size: 1.2rem; margin-bottom: 30px; min-height: 100px; }
     </style>
 </head>
-<body onload="startGateway()">
+<body onload="document.body.style.opacity='1'">
 
-    <div class="top-ui">
-        <div class="brand">GY-GY</div> <div class="lang-panel">🌐 LANGUAGE [cite: 2026-03-05]</div>
+    <div class="top-nav">
+        <div class="nav-left">
+            <a href="hall.html" class="ui-btn">← КУДА-ТО НАЗАД</a>
+            <div class="brand">GY-GY AI</div>
+        </div>
+        <div class="nav-right">
+            <div class="ui-btn">🌐 ЯЗЫК [cite: 2026-03-05]</div>
+        </div>
     </div>
 
-    <div class="gate-system" id="gate">
-        <div class="door door-left"></div>
-        <div class="door door-right"></div>
+    <div class="vintage-base">
+        <img src="OIG2_vintage_tv_room.jpg" class="bg-img" alt="Vintage Base">
 
-        <div class="charlie-stage">
-            <img src="OIG2_vintage_tv_room.jpg" class="vintage-bg" alt="Charlie Screen">
+        <div class="tv-overlay-grid">
             
-            <div class="charlie-ui">
-                <div class="scanner"></div>
-                <div id="status" class="status-msg">SYSTEM: SCANNING FOR DIGITAL TRACE...</div>
-                
-                <div class="btn-group">
-                    <button id="main-btn" class="ui-btn" onclick="checkIdentity()">ПРОХОДИТЕ</button>
-                    <button id="reg-btn" class="ui-btn" onclick="goReg()">ОСТАВЬТЕ СВОЙ АВТОГРАФ</button>
-                </div>
+            <a href="techpark.html" class="tv-screen">
+                <div class="label">TECHPARK<br>01</div>
+            </a>
+
+            <div class="tv-screen" onclick="showVerses()">
+                <div class="label" style="font-size: 1.6vw;">ВЕРШИ<br>С ПРИКОЛОМ</div>
             </div>
+
+            <div class="tv-screen" onclick="alert('Чарли: Сектор в разработке...')">
+                <div class="label">ABSURD<br>RESERVE</div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="poetry-modal" class="poetry-modal">
+        <div class="verse-box">
+            <h3 style="color:var(--gold)">ЛУННЫЕ ВЕРШИ</h3>
+            <div id="text-target">Нажимай кнопку для генерации...</div>
+            <button class="ui-btn" onclick="generate()">ЕЩЕ ПРИКОЛ</button>
+            <button class="ui-btn" onclick="this.parentElement.parentElement.style.display='none'" style="margin-left:10px; border-color:red; color:red;">ВЫХОД</button>
         </div>
     </div>
 
     <script>
-        let isMember = false;
-
-        function startGateway() {
-            // 1. Двери плавно открываются [cite: 2026-03-07]
-            setTimeout(() => {
-                document.getElementById('gate').classList.add('gate-open');
-            }, 500);
-
-            // 2. Чарли проверяет куки [cite: 2026-02-06]
-            const trace = getCookie("digital_trace_id"); [cite: 2026-02-06]
-            const statusLabel = document.getElementById('status');
-            
-            setTimeout(() => {
-                if (trace) {
-                    isMember = true;
-                    statusLabel.innerText = "CHARLIE: WELCOME BACK, USER_" + trace.substring(0,4);
-                } else {
-                    statusLabel.innerText = "CHARLIE: IDENTIFICATION REQUIRED";
-                }
-            }, 2000);
+        function showVerses() {
+            document.getElementById('poetry-modal').style.display = 'flex';
+            generate();
         }
 
-        function checkIdentity() {
-            if (isMember) {
-                // Своих Чарли пускает в Холл [cite: 2026-02-06]
-                document.body.style.opacity = '0';
-                setTimeout(() => { window.location.href = 'hall.html'; }, 1000);
-            } else {
-                // Новеньким гасим кнопку и просим автограф [cite: 2026-02-06]
-                const mBtn = document.getElementById('main-btn');
-                const rBtn = document.getElementById('reg-btn');
-                mBtn.style.opacity = '0';
-                setTimeout(() => {
-                    mBtn.style.display = 'none';
-                    rBtn.style.display = 'block';
-                }, 400);
-            }
-        }
-
-        function goReg() {
-            document.body.style.opacity = '0';
-            // Переход за цифровым следом (Magic Key) [cite: 2026-02-06]
-            setTimeout(() => { window.location.href = 'registration.html'; }, 1000);
-        }
-
-        function getCookie(name) {
-            let matches = document.cookie.match(new RegExp(
-                "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
-            ));
-            return matches ? decodeURIComponent(matches[1]) : undefined; [cite: 2026-02-06]
+        function generate() {
+            const list = [
+                "Чарли куки воровал,\nВ Технопарк их относил.\nТам Банано их жевал,\nИ про версию спросил.",
+                "Стиль v4.3 — это класс,\nБьет ИИ не в бровь, а в глаз.\nКто автограф не оставил,\nТот в Клубу не развлекался.",
+                "Лунная база, телевизор мигает,\nЧарли в репозиторий файлы кидает.\nЕсли увидишь абсурдный стишок —\nЗначит, попал ты на наш огонек!"
+            ];
+            document.getElementById('text-target').innerText = list[Math.floor(Math.random()*list.length)];
         }
     </script>
 </body>
