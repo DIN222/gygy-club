@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.20 | MASTER</title>
+    <title>GY-GY Club v4.4.21 | MASTER</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -19,13 +19,13 @@
         #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000001; }
         .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000000; font-size: 24px; letter-spacing: 5px; font-weight: bold; pointer-events: none; color: var(--gold); }
         
-        /* КНОПКА НАЗАД: ВНИЗУ ПО ЦЕНТРУ */
+        /* КНОПКА НАЗАД В БАР: СНИЗУ */
         .ui-back-to-bar { 
             position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 1000000;
             background: rgba(0,0,0,0.85); border: 1px solid var(--gold); color: var(--gold);
             padding: 12px 24px; cursor: pointer; font-family: 'Share Tech Mono'; 
             font-size: 14px; text-transform: uppercase; letter-spacing: 2px; display: none;
-            border-radius: 4px; box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            border-radius: 4px;
         }
 
         .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; z-index: 10; opacity: 0; transition: opacity 0.8s ease-in-out; }
@@ -34,13 +34,12 @@
         .btn-gy { min-width: 270px; padding: 14px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; text-transform: uppercase; font-weight: 900; margin: 8px 0; z-index: 1001; text-align: center; font-family: 'Share Tech Mono'; }
         .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
 
-        /* AI ROOM: КАРТИНКА ОПУЩЕНА ВНИЗ НА 85% */
+        /* AI ROOM: ЖЕСТКАЯ ПРИВЯЗКА К НИЗУ */
         #block-ai-room { 
             background: url('OIG2_vintage_tv_room.jpg') no-repeat;
-            background-size: cover;
-            background-position: center 85%; 
-            justify-content: flex-end;
-            padding-bottom: 120px;
+            background-size: contain; /* Чтобы ТВ не обрезались */
+            background-position: center bottom; 
+            background-color: #000;
         }
 
         .motto-bar { position: absolute; top: 8%; width: 100%; text-align: center; color: var(--gold); font-size: 18px; font-weight: 900; font-style: italic; font-family: 'Share Tech Mono'; z-index: 100; pointer-events: none; }
@@ -129,9 +128,12 @@
 
     <div id="block-bar" class="block" style="padding:0; justify-content: flex-end;">
         <div class="motto-bar">«Истина не в вине, а в его количестве»</div>
-        <div style="position:absolute; bottom:30%; z-index:1000; width:100%; display:flex; justify-content:space-around; padding:0 10px;">
-            <button class="btn-gy" style="min-width:145px; font-size:12px; background:rgba(0,0,0,0.6);" onclick="portalTransition('block-tables')">ЗА СТОЛИКИ</button>
-            <button class="btn-gy" style="min-width:145px; font-size:12px; background:rgba(0,0,0,0.6);" onclick="portalTransition('block-ai-room')">В AI ROOM</button>
+        <div style="position:absolute; bottom:25%; z-index:1000; width:100%; display:flex; flex-direction:column; align-items:center;">
+            <div style="display:flex; gap:10px; margin-bottom:15px;">
+                <button class="btn-gy" style="min-width:145px; font-size:12px; background:rgba(0,0,0,0.6);" onclick="portalTransition('block-tables')">ЗА СТОЛИКИ</button>
+                <button class="btn-gy" style="min-width:145px; font-size:12px; background:rgba(0,0,0,0.6);" onclick="portalTransition('block-ai-room')">В AI ROOM</button>
+            </div>
+            <button class="btn-gy" style="min-width:300px; font-size:12px; background:rgba(0,0,0,0.4); border-style:dashed;" onclick="portalTransition('block-hall')">ВЕРНУТЬСЯ В ХОЛЛ</button>
         </div>
         <img src="charlie_bar.png" style="height: 82vh; width: auto; object-fit: contain;">
     </div>
@@ -156,6 +158,7 @@
             const current = document.querySelector('.block.active');
             const backBtn = document.getElementById('btn-global-back');
 
+            // Управление звуком и кнопкой "Назад"
             if (nextId === 'block-tables' || nextId === 'block-ai-room') {
                 fadeAudio(document.getElementById('snd-ambient'), 0, 800);
                 fadeAudio(document.getElementById('snd-khe'), 0, 800);
@@ -166,6 +169,10 @@
                 amb.play(); 
                 fadeAudio(amb, 1, 800);
                 backBtn.style.display = 'none';
+            } else if (nextId === 'block-hall') {
+                // При уходе из бара в холл тоже гасим звук
+                fadeAudio(document.getElementById('snd-ambient'), 0, 800);
+                backBtn.style.display = 'none';
             } else { backBtn.style.display = 'none'; }
 
             if(current) current.style.opacity = "0";
@@ -175,7 +182,8 @@
                 next.style.display = "flex";
                 setTimeout(() => { 
                     next.classList.add('active'); next.style.opacity = "1";
-                    if(nextId === 'block-bar' && (!current || (current.id !== 'block-ai-room' && current.id !== 'block-tables'))) {
+                    // Спецэффекты Чарли
+                    if(nextId === 'block-bar' && (!current || (current.id === 'block-hall' || current.id === 'block-welcome'))) {
                         const khe = document.getElementById('snd-khe');
                         const pour = document.getElementById('snd-pour');
                         khe.volume = 1; pour.volume = 1;
