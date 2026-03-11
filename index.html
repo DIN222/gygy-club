@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.19 | MASTER</title>
+    <title>GY-GY Club v4.4.20 | MASTER</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -19,13 +19,13 @@
         #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000001; }
         .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000000; font-size: 24px; letter-spacing: 5px; font-weight: bold; pointer-events: none; color: var(--gold); }
         
-        /* НОВАЯ ПОЗИЦИЯ КНОПКИ: СНИЗУ ПО ЦЕНТРУ */
+        /* КНОПКА НАЗАД: ВНИЗУ ПО ЦЕНТРУ */
         .ui-back-to-bar { 
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 1000000;
-            background: rgba(0,0,0,0.8); border: 1px solid var(--gold); color: var(--gold);
-            padding: 10px 20px; cursor: pointer; font-family: 'Share Tech Mono'; 
+            position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 1000000;
+            background: rgba(0,0,0,0.85); border: 1px solid var(--gold); color: var(--gold);
+            padding: 12px 24px; cursor: pointer; font-family: 'Share Tech Mono'; 
             font-size: 14px; text-transform: uppercase; letter-spacing: 2px; display: none;
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+            border-radius: 4px; box-shadow: 0 0 20px rgba(0,0,0,0.5);
         }
 
         .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; z-index: 10; opacity: 0; transition: opacity 0.8s ease-in-out; }
@@ -34,12 +34,13 @@
         .btn-gy { min-width: 270px; padding: 14px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; text-transform: uppercase; font-weight: 900; margin: 8px 0; z-index: 1001; text-align: center; font-family: 'Share Tech Mono'; }
         .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
 
-        /* AI ROOM: СМЕЩЕНИЕ ФОНА ВНИЗ */
+        /* AI ROOM: КАРТИНКА ОПУЩЕНА ВНИЗ НА 85% */
         #block-ai-room { 
             background: url('OIG2_vintage_tv_room.jpg') no-repeat;
             background-size: cover;
-            background-position: center 60%; /* Опустили картинку чуть ниже */
-            padding-top: 80px; /* Запас под верхнюю панель */
+            background-position: center 85%; 
+            justify-content: flex-end;
+            padding-bottom: 120px;
         }
 
         .motto-bar { position: absolute; top: 8%; width: 100%; text-align: center; color: var(--gold); font-size: 18px; font-weight: 900; font-style: italic; font-family: 'Share Tech Mono'; z-index: 100; pointer-events: none; }
@@ -161,7 +162,6 @@
                 fadeAudio(document.getElementById('snd-pour'), 0, 800);
                 backBtn.style.display = 'block'; 
             } else if (nextId === 'block-bar') {
-                // ВОССТАНАВЛИВАЕМ ЗВУК ПРИ ВОЗВРАТЕ
                 const amb = document.getElementById('snd-ambient');
                 amb.play(); 
                 fadeAudio(amb, 1, 800);
@@ -175,7 +175,6 @@
                 next.style.display = "flex";
                 setTimeout(() => { 
                     next.classList.add('active'); next.style.opacity = "1";
-                    // Если заходим в бар не из боковых залов (первый вход)
                     if(nextId === 'block-bar' && (!current || (current.id !== 'block-ai-room' && current.id !== 'block-tables'))) {
                         const khe = document.getElementById('snd-khe');
                         const pour = document.getElementById('snd-pour');
@@ -198,12 +197,7 @@
             document.getElementById('h-qr').innerHTML = "";
             new QRCode(document.getElementById("qr-box-reg"), { text: currentID, width: 85, height: 85 });
             new QRCode(document.getElementById("h-qr"), { text: currentID, width: 75, height: 75 });
-            setTimeout(() => { 
-                portalTransition('block-welcome'); 
-                const amb = document.getElementById('snd-ambient'); 
-                amb.volume = 0; amb.play(); 
-                fadeAudio(amb, 1, 2000); 
-            }, 1800);
+            setTimeout(() => { portalTransition('block-welcome'); const amb = document.getElementById('snd-ambient'); amb.volume=0; amb.play(); fadeAudio(amb, 1, 2000); }, 1800);
         }
 
         function fadeAudio(audio, target, duration) {
@@ -215,7 +209,7 @@
                 audio.volume = start + (target - start) * progress;
                 if (progress === 1) {
                     clearInterval(interval);
-                    if(target === 0) { audio.pause(); } // Ставим на паузу только при уходе
+                    if(target === 0) { audio.pause(); }
                 }
             }, 50);
         }
