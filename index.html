@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.27 | MASTER</title>
+    <title>GY-GY Club v4.4.17 | MASTER</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -16,30 +16,27 @@
 
         html, body { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; position: fixed; margin:0; }
         
+        /* ИНТЕРФЕЙСНЫЕ КНОПКИ (ЯЗЫКИ И ВОЗВРАТ) */
         #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000001; }
         .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000000; font-size: 24px; letter-spacing: 5px; font-weight: bold; pointer-events: none; color: var(--gold); }
         
         .ui-back-to-bar { 
-            position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 1000005;
-            background: rgba(0,0,0,0.85); border: 1px solid var(--gold); color: var(--gold);
-            padding: 12px 24px; cursor: pointer; font-family: 'Share Tech Mono'; 
-            font-size: 14px; text-transform: uppercase; letter-spacing: 2px; display: none;
-            border-radius: 4px;
+            position: fixed; top: 65px; left: 15px; z-index: 1000000;
+            background: #000; border: 1px solid var(--gold); color: var(--gold);
+            padding: 5px 12px; cursor: pointer; font-family: 'Share Tech Mono'; 
+            font-size: 11px; text-transform: uppercase; letter-spacing: 2px; display: none;
         }
 
+        /* КОНТЕЙНЕРЫ БЛОКОВ */
         .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; z-index: 10; opacity: 0; transition: opacity 0.8s ease-in-out; }
         .block.active { display: flex !important; opacity: 1; }
 
-        .btn-gy { min-width: 270px; padding: 14px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; text-transform: uppercase; font-weight: 900; margin: 8px 0; z-index: 1001; text-align: center; font-family: 'Share Tech Mono'; transition: 0.3s; }
+        .btn-gy { min-width: 270px; padding: 14px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; text-transform: uppercase; font-weight: 900; margin: 8px 0; z-index: 1001; text-align: center; font-family: 'Share Tech Mono'; }
         .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
 
-        .motto-bar { position: absolute; top: 8%; width: 100%; text-align: center; color: var(--gold); font-size: 18px; font-weight: 900; font-style: italic; font-family: 'Share Tech Mono'; z-index: 100; pointer-events: none; }
+        /* ХОЛЛ: НАДПИСЬ И УЗКИЙ ПРОПУСК */
+        .motto-hall { position: absolute; top: 8%; width: 100%; text-align: center; color: var(--door-wood); font-size: 38px; font-weight: 900; font-style: italic; font-family: 'Playfair Display', serif; z-index: 25; pointer-events: none; }
         
-        /* БАР: КНОПКИ ЕЩЕ БЛИЖЕ К ЧАРЛИ */
-        .bar-ui-container { position: absolute; inset: 0; z-index: 1000; pointer-events: none; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding-bottom: 5vh; }
-        .bar-side-buttons { width: 100%; display: flex; justify-content: space-between; padding: 0 18%; margin-bottom: 8px; pointer-events: none; }
-        .bar-side-buttons button, .bar-bottom-button button { pointer-events: auto; background: rgba(0,0,0,0.75); margin: 4px; }
-
         .id-card-hall { 
             position: absolute; top: 72%; left: 50%; transform: translate(-50%,-50%); 
             width: 210px; padding: 15px; border: 2px solid var(--gold); 
@@ -48,11 +45,30 @@
         }
 
         .box-final { width: 85px; height: 85px; border: 2px solid #000; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
-        .box-final img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
-        
-        #block-ai-room { background: url('OIG2_vintage_tv_room.jpg') no-repeat center bottom / contain #000; }
+        #h-photo { width: 100% !important; height: 100% !important; object-fit: cover !important; display: block; }
+
+        /* ЗАЛ СТОЛИКОВ (ФИОЛЕТОВЫЙ НЕОН) */
         #block-tables { background: url('lounge.jpg') no-repeat center bottom / contain #000; }
-        #main-door { width: 280px; cursor: pointer; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s; pointer-events: auto !important; z-index: 1000; }
+        .lamp-zone { 
+            position: absolute; width: 42px; height: 42px; border-radius: 50%; 
+            cursor: pointer; z-index: 100; 
+            background: radial-gradient(circle, var(--neon-glow) 0%, transparent 75%); 
+            border: 1px solid var(--violet); 
+            box-shadow: 0 0 18px var(--neon-glow);
+            transition: 0.3s; transform: translate(-50%, -50%); 
+        }
+        .lamp-zone:hover { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 0 28px var(--violet); }
+        
+        /* Координаты столов */
+        #table-1 { bottom: 49.2%; left: 49.9%; } 
+        #table-2 { bottom: 22.1%; left: 35.7%; } 
+        #table-3 { bottom: 33.1%; left: 43.1%; } 
+        #table-4 { bottom: 36.1%; left: 44.5%; } 
+        #table-5 { bottom: 35.7%; left: 56.2%; } 
+        #table-6 { bottom: 21.9%; left: 63.8%; } 
+        #mic-zone { bottom: 32.4%; left: 58.3%; }
+
+        #main-door { width: 280px; cursor: pointer; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s; pointer-events: auto !important; }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -66,7 +82,7 @@
     <audio id="snd-khe" preload="auto"><source src="charlie_bar_fx.mp3" type="audio/mpeg"></audio>
     <audio id="snd-pour" preload="auto"><source src="pour_whisky.mp3" type="audio/mpeg"></audio>
 
-    <div id="block-entrance" class="block active" style="opacity: 1; z-index: 1000;">
+    <div id="block-entrance" class="block active" style="opacity: 1;">
         <img src="door_1.jpg" id="main-door" onclick="handleDoor()">
     </div>
 
@@ -84,7 +100,7 @@
             <div class="box-final" id="qr-box-reg" style="border-color:var(--gold);"></div>
             <div class="box-final" style="border-color:var(--gold); position:relative;">
                 <input type="file" onchange="preview(this)" style="position:absolute; inset:0; opacity:0; z-index:10; cursor:pointer;">
-                <img id="pp" style="display:none;">
+                <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
                 <span id="txt-photo" style="color:#000; font-size:10px; font-weight:900;">ФОТО</span>
             </div>
         </div>
@@ -94,7 +110,7 @@
 
     <div id="block-hall" class="block">
         <div style="position:absolute; inset:0; background:url('hall_bg_jpg.jpg') center/cover; z-index:15;"></div>
-        <div style="position:absolute; top:8%; width:100%; text-align:center; color:var(--door-wood); font-size:38px; font-weight:900; font-style:italic; font-family:'Playfair Display', serif; z-index:25; pointer-events:none;">«Всё будет GY-GY»</div>
+        <div class="motto-hall">«Всё будет GY-GY»</div>
         <div class="id-card-hall">
             <div id="h-id" style="font-family:'Share Tech Mono'; font-weight:900; font-size:14px; margin-bottom:12px;">#ID</div>
             <div style="display:flex; gap:15px; margin-bottom:12px;">
@@ -107,21 +123,25 @@
     </div>
 
     <div id="block-bar" class="block" style="padding:0; justify-content: flex-end;">
-        <div class="motto-bar">«Истина не в вине, а в его количестве»</div>
-        <div class="bar-ui-container">
-            <div class="bar-side-buttons">
-                <button class="btn-gy" style="min-width:125px; font-size:10px;" onclick="portalTransition('block-tables')">ЗА СТОЛИКИ</button>
-                <button class="btn-gy" style="min-width:125px; font-size:10px;" onclick="portalTransition('block-ai-room')">В AI ROOM</button>
-            </div>
-            <div class="bar-bottom-button">
-                <button class="btn-gy" style="min-width:125px; font-size:10px;" onclick="portalTransition('block-hall')">В ХОЛЛ</button>
-            </div>
+        <div style="position:absolute; bottom:30%; z-index:1000; width:100%; display:flex; justify-content:space-around; padding:0 10px;">
+            <button class="btn-gy" style="min-width:145px; font-size:12px; background:rgba(0,0,0,0.6);" onclick="portalTransition('block-tables')">ЗА СТОЛИКИ</button>
+            <button class="btn-gy" style="min-width:145px; font-size:12px; background:rgba(0,0,0,0.6);" onclick="portalTransition('block-ai-room')">В AI ROOM</button>
         </div>
-        <img src="charlie_bar.png" style="height: 85vh; width: auto; object-fit: contain;">
+        <img src="charlie_bar.png" style="height: 82vh; width: auto; object-fit: contain;">
     </div>
 
-    <div id="block-tables" class="block"></div>
-    <div id="block-ai-room" class="block"></div>
+    <div id="block-tables" class="block">
+        <div id="table-1" class="lamp-zone"></div>
+        <div id="table-2" class="lamp-zone"></div>
+        <div id="table-3" class="lamp-zone"></div>
+        <div id="table-4" class="lamp-zone"></div>
+        <div id="table-5" class="lamp-zone"></div>
+        <div id="table-6" class="lamp-zone"></div>
+        <div id="mic-zone" class="lamp-zone"></div>
+    </div>
+
+    <div id="block-ai-room" class="block" style="background: url('OIG2_vintage_tv_room.jpg') center/cover no-repeat !important;">
+    </div>
 
     <script>
         let currentID = "";
@@ -129,17 +149,18 @@
         function portalTransition(nextId) {
             const current = document.querySelector('.block.active');
             const backBtn = document.getElementById('btn-global-back');
-            const amb = document.getElementById('snd-ambient');
 
+            // ЗВУКОВАЯ ЛОГИКА: Полная тишина в 0 при уходе из бара
             if (nextId === 'block-tables' || nextId === 'block-ai-room') {
-                fadeAudio(amb, 0, 800);
-                fadeAudio(document.getElementById('snd-khe'), 0, 800);
-                fadeAudio(document.getElementById('snd-pour'), 0, 800);
+                fadeAudio(document.getElementById('snd-ambient'), 0, 800);
+                document.getElementById('snd-khe').pause();
+                document.getElementById('snd-pour').pause();
                 backBtn.style.display = 'block'; 
-            } else {
-                if (amb.paused) amb.play();
-                if (current && current.id !== 'block-entrance') amb.volume = 1;
+            } else if (nextId === 'block-bar') {
+                fadeAudio(document.getElementById('snd-ambient'), 1, 800);
                 backBtn.style.display = 'none';
+            } else { 
+                backBtn.style.display = 'none'; 
             }
 
             if(current) current.style.opacity = "0";
@@ -149,12 +170,10 @@
                 next.style.display = "flex";
                 setTimeout(() => { 
                     next.classList.add('active'); next.style.opacity = "1";
-                    if(nextId === 'block-bar') {
-                        const khe = document.getElementById('snd-khe');
-                        const pour = document.getElementById('snd-pour');
-                        khe.volume = 1; pour.volume = 1;
-                        khe.play();
-                        setTimeout(() => { pour.play(); }, 1500);
+                    // Спецэффекты только при входе со стороны Холла
+                    if(nextId === 'block-bar' && (!current || (current.id !== 'block-ai-room' && current.id !== 'block-tables'))) {
+                        setTimeout(() => { document.getElementById('snd-khe').play(); }, 800);
+                        setTimeout(() => { document.getElementById('snd-pour').play(); }, 2200);
                     }
                 }, 50);
             }, 800);
@@ -163,10 +182,7 @@
         function handleDoor() {
             document.getElementById('snd-door').play();
             const d = document.getElementById('main-door');
-            d.style.pointerEvents = "none";
-            d.style.transform = "scale(5)"; 
-            d.style.opacity = "0";
-            
+            d.style.transform = "scale(5)"; d.style.opacity = "0";
             currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
             document.getElementById('id-label').innerText = currentID;
             document.getElementById('h-id').innerText = currentID;
@@ -174,13 +190,11 @@
             document.getElementById('h-qr').innerHTML = "";
             new QRCode(document.getElementById("qr-box-reg"), { text: currentID, width: 85, height: 85 });
             new QRCode(document.getElementById("h-qr"), { text: currentID, width: 75, height: 75 });
-            
             setTimeout(() => { 
                 portalTransition('block-welcome'); 
                 const amb = document.getElementById('snd-ambient'); 
-                amb.volume = 0;
-                amb.play(); 
-                fadeAudio(amb, 1, 3000);
+                amb.volume = 0; amb.play(); 
+                fadeAudio(amb, 1, 2000); 
             }, 1800);
         }
 
@@ -191,10 +205,7 @@
                 const elapsed = Date.now() - startTime;
                 const progress = Math.min(elapsed / duration, 1);
                 audio.volume = start + (target - start) * progress;
-                if (progress === 1) {
-                    clearInterval(interval);
-                    if(target === 0) { audio.pause(); }
-                }
+                if (progress === 1) clearInterval(interval);
             }, 50);
         }
 
@@ -202,10 +213,9 @@
             if(i.files && i.files[0]) {
                 const r = new FileReader();
                 r.onload = (e) => { 
-                    document.getElementById('pp').src = e.target.result;
-                    document.getElementById('pp').style.display = "block";
-                    document.getElementById('h-photo').src = e.target.result;
+                    document.getElementById('pp').src = e.target.result; document.getElementById('pp').style.display = "block";
                     document.getElementById('txt-photo').style.display = "none";
+                    document.getElementById('h-photo').src = e.target.result;
                 };
                 r.readAsDataURL(i.files[0]);
             }
