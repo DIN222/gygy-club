@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.26 | MASTER</title>
+    <title>GY-GY Club v4.4.27 | MASTER</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -35,10 +35,10 @@
 
         .motto-bar { position: absolute; top: 8%; width: 100%; text-align: center; color: var(--gold); font-size: 18px; font-weight: 900; font-style: italic; font-family: 'Share Tech Mono'; z-index: 100; pointer-events: none; }
         
-        /* БАР: КНОПКИ БЛИЖЕ К ЦЕНТРУ */
+        /* БАР: КНОПКИ ЕЩЕ БЛИЖЕ К ЧАРЛИ */
         .bar-ui-container { position: absolute; inset: 0; z-index: 1000; pointer-events: none; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding-bottom: 5vh; }
-        .bar-side-buttons { width: 100%; display: flex; justify-content: space-between; padding: 0 10%; margin-bottom: 12px; pointer-events: none; }
-        .bar-side-buttons button, .bar-bottom-button button { pointer-events: auto; background: rgba(0,0,0,0.75); margin: 5px; }
+        .bar-side-buttons { width: 100%; display: flex; justify-content: space-between; padding: 0 18%; margin-bottom: 8px; pointer-events: none; }
+        .bar-side-buttons button, .bar-bottom-button button { pointer-events: auto; background: rgba(0,0,0,0.75); margin: 4px; }
 
         .id-card-hall { 
             position: absolute; top: 72%; left: 50%; transform: translate(-50%,-50%); 
@@ -47,13 +47,11 @@
             flex-direction: column; align-items: center; color: #000; z-index: 30;
         }
 
-        /* ФОТО: ТЕПЕРЬ ВСЕГДА В РАМКЕ */
         .box-final { width: 85px; height: 85px; border: 2px solid #000; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
         .box-final img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
         
         #block-ai-room { background: url('OIG2_vintage_tv_room.jpg') no-repeat center bottom / contain #000; }
         #block-tables { background: url('lounge.jpg') no-repeat center bottom / contain #000; }
-        
         #main-door { width: 280px; cursor: pointer; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s; pointer-events: auto !important; z-index: 1000; }
     </style>
 </head>
@@ -112,11 +110,11 @@
         <div class="motto-bar">«Истина не в вине, а в его количестве»</div>
         <div class="bar-ui-container">
             <div class="bar-side-buttons">
-                <button class="btn-gy" style="min-width:130px; font-size:10px;" onclick="portalTransition('block-tables')">ЗА СТОЛИКИ</button>
-                <button class="btn-gy" style="min-width:130px; font-size:10px;" onclick="portalTransition('block-ai-room')">В AI ROOM</button>
+                <button class="btn-gy" style="min-width:125px; font-size:10px;" onclick="portalTransition('block-tables')">ЗА СТОЛИКИ</button>
+                <button class="btn-gy" style="min-width:125px; font-size:10px;" onclick="portalTransition('block-ai-room')">В AI ROOM</button>
             </div>
             <div class="bar-bottom-button">
-                <button class="btn-gy" style="min-width:130px; font-size:10px;" onclick="portalTransition('block-hall')">В ХОЛЛ</button>
+                <button class="btn-gy" style="min-width:125px; font-size:10px;" onclick="portalTransition('block-hall')">В ХОЛЛ</button>
             </div>
         </div>
         <img src="charlie_bar.png" style="height: 85vh; width: auto; object-fit: contain;">
@@ -204,11 +202,9 @@
             if(i.files && i.files[0]) {
                 const r = new FileReader();
                 r.onload = (e) => { 
-                    const pp = document.getElementById('pp');
-                    const hp = document.getElementById('h-photo');
-                    pp.src = e.target.result;
-                    pp.style.display = "block";
-                    hp.src = e.target.result;
+                    document.getElementById('pp').src = e.target.result;
+                    document.getElementById('pp').style.display = "block";
+                    document.getElementById('h-photo').src = e.target.result;
                     document.getElementById('txt-photo').style.display = "none";
                 };
                 r.readAsDataURL(i.files[0]);
