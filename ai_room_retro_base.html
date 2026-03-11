@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY AI ROOM | v5.3 [7.1.21-LH]</title>
+    <title>GY-GY AI ROOM | v5.4 [7.1.22-LH]</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -13,12 +13,12 @@
 
         body, html { 
             margin: 0; padding: 0; width: 100%; height: 100%; 
-            background: var(--dark); color: #fff; 
+            background: #000; color: #fff; 
             font-family: 'Share Tech Mono', monospace;
             overflow: hidden; 
         }
 
-        /* НАВИГАЦИЯ: ПРИЖАТА К КРАЯМ, ЧТОБЫ НЕ ПЕРЕКРЫВАТЬ ЛАМПУ */
+        /* НАВИГАЦИЯ: ЖЕСТКАЯ ФИКСАЦИЯ */
         .nav-header {
             position: fixed; top: 20px; left: 30px; right: 30px;
             display: flex; justify-content: space-between; align-items: center;
@@ -32,72 +32,58 @@
         }
         
         #google_translate_element {
-            background: rgba(255,255,255,0.05);
-            padding: 5px; border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.1);
+            padding: 5px; border: 1px solid rgba(255,255,255,0.3);
             border-radius: 4px;
         }
 
-        /* ОСНОВНОЙ КОНТЕЙНЕР */
         .hq-wrapper {
-            position: relative; 
-            width: 100vw; 
-            height: 100vh;
-            display: flex; 
-            justify-content: center;
-            background: url('image_a8801d.png') no-repeat center center;
-            background-size: cover;
+            position: relative; width: 100vw; height: 100vh;
+            display: flex; justify-content: center;
         }
 
-        /* СЕТКА ТЕЛЕВИЗОРОВ: ЮВЕЛИРНОЕ НАЛОЖЕНИЕ НА ОБРАЗЕЦ */
+        /* ФОНОВАЯ КАРТИНКА (ПРЯМОЙ ТЕГ ДЛЯ СТАБИЛЬНОСТИ) */
+        .hq-bg {
+            position: absolute; width: 100%; height: 100%;
+            object-fit: cover; z-index: 10;
+        }
+
+        /* СЕТКА ТЕЛЕВИЗОРОВ: ТОЧНОЕ НАЛОЖЕНИЕ НА ОБРАЗЕЦ */
         .tv-grid {
             position: absolute; 
-            top: 26%;     /* Точный уровень кинескопов */
-            width: 86.5%; /* Ширина от края левого до края правого ТВ */
-            height: 22%;  /* Высота только белых зон экранов */
+            top: 26%;     /* Уровень белых экранов на фото */
+            width: 86.5%; 
+            height: 22%;  
             display: flex; 
-            gap: 2.2%;    /* Просветы между мониторами */
+            gap: 2.2%;    
             z-index: 100;
         }
         
         .tv-screen {
-            flex: 1; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            text-decoration: none; 
-            cursor: pointer; 
-            transition: 0.3s ease;
-            /* Делаем активную зону прозрачной, чтобы видеть свет экрана */
-            background: rgba(255, 255, 255, 0); 
-            border-radius: 15px;
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            text-decoration: none; cursor: pointer; transition: 0.3s;
+            background: rgba(255, 255, 255, 0.01); 
+            border-radius: 10px;
         }
 
         .tv-screen:hover { 
-            background: rgba(255, 255, 255, 0.1); /* Легкое свечение при наведении */
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: inset 0 0 50px rgba(255, 255, 255, 0.1);
         }
 
         .tv-label {
-            color: #000; /* Темный текст на светлом фоне экрана */
+            color: #fff; /* Вернул белый, чтобы не терялся на черном фоне */
             font-weight: 900; 
             text-align: center; 
-            font-size: clamp(14px, 1.5vw, 22px); 
+            font-size: 20px; 
             text-transform: uppercase;
-            opacity: 0.7; /* Текст слегка вплавлен в картинку */
+            text-shadow: 2px 2px 8px #000;
             transition: 0.3s;
         }
 
-        .tv-screen:hover .tv-label {
-            opacity: 1;
-            transform: scale(1.1);
-        }
-
-        /* ТЕХНИЧЕСКИЙ ФУТЕР */
         .build-footer { 
             position: fixed; bottom: 15px; left: 30px; 
-            font-size: 11px; color: rgba(255,204,0,0.4); 
-            z-index: 2000;
-            letter-spacing: 1px;
+            font-size: 11px; color: rgba(255,204,0,0.5); z-index: 2000;
         }
     </style>
 </head>
@@ -109,20 +95,22 @@
     </div>
 
     <div class="hq-wrapper">
+        <img src="image_a8801d.png" class="hq-bg" alt="HQ" onerror="console.error('Картинка не найдена');">
+
         <div class="tv-grid">
             <a href="techpark.html" class="tv-screen">
-                <div class="tv-label">TECHPARK<br>v5.3</div>
+                <div class="tv-label">TECHPARK<br>v5.4</div>
             </a>
             <a href="verses.html" class="tv-screen">
                 <div class="tv-label">GY-GY<br>POETRY</div>
             </a>
-            <div class="tv-screen" onclick="alert('RESERVE SLOT 21')">
-                <div class="tv-label">RESERVE<br>STORAGE</div>
+            <div class="tv-screen" onclick="alert('BUILD 22')">
+                <div class="tv-label">RESERVE<br>SLOT</div>
             </div>
         </div>
     </div>
 
-    <div class="build-footer">BUILD: 7.1.21-LH | v5.3</div>
+    <div class="build-footer">BUILD: 7.1.22-LH | v5.4</div>
 
     <script type="text/javascript">
         function googleTranslateElementInit() {
