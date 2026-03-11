@@ -4,110 +4,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY AI ROOM | v4.3 [7.1.14-LH]</title>
+    <title>GY-GY AI ROOM | v4.4 [7.1.15-LH]</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     
     <style>
-        /* Принудительный черный фон для исключения белого экрана */
+        :root {
+            --gold: #ffcc00;
+            --neon: #00f2ff;
+            --dark: #000;
+        }
+
         body, html { 
             margin: 0; padding: 0; width: 100%; height: 100%; 
-            background: #000; color: #fff; font-family: 'Share Tech Mono', monospace;
+            background: var(--dark); color: #fff; 
+            font-family: 'Share Tech Mono', monospace;
             overflow: hidden; 
         }
 
-        /* ПОСТОЯННЫЕ АТРИБУТЫ [cite: 2026-03-07] */
-        .top-nav {
+        /* НАВИГАЦИЯ v4.4 [cite: 2026-03-07] */
+        .nav-header {
             position: fixed; top: 15px; left: 15px; right: 15px;
             display: flex; justify-content: space-between; align-items: center;
-            z-index: 1000;
+            z-index: 2000;
         }
         .brand-zone { display: flex; gap: 15px; align-items: center; }
-        .logo { color: #ffcc00; font-weight: bold; letter-spacing: 2px; font-size: 1.2rem; }
+        .logo { color: var(--gold); font-weight: bold; letter-spacing: 2px; font-size: 1.2rem; }
         
         .ui-btn { 
-            background: rgba(0,0,0,0.8); border: 1px solid #ffcc00; 
-            color: #ffcc00; padding: 6px 14px; cursor: pointer; 
-            text-decoration: none; font-size: 11px; transition: 0.2s;
+            background: rgba(0,0,0,0.8); border: 1px solid var(--gold); 
+            color: var(--gold); padding: 8px 16px; cursor: pointer; 
+            text-decoration: none; font-size: 11px; transition: 0.3s;
             text-transform: uppercase;
         }
-        .ui-btn:hover { background: #ffcc00; color: #000; box-shadow: 0 0 10px #ffcc00; }
+        .ui-btn:hover { background: var(--gold); color: #000; box-shadow: 0 0 15px var(--gold); }
 
-        /* ОСНОВНОЙ КОНТЕЙНЕР БАЗЫ */
+        /* КОНТЕЙНЕР ШТАБА */
         .hq-wrapper {
             position: relative; width: 100vw; height: 100vh;
             display: flex; justify-content: center; align-items: center;
+            background: #050505;
         }
+        
         .hq-bg { 
             position: absolute; width: 100%; height: 100%; 
-            object-fit: cover; z-index: 10; opacity: 0.9;
+            object-fit: cover; z-index: 10; opacity: 0.85;
         }
 
-        /* ТРИ ТЕЛЕВИЗОРА [cite: 2026-03-05] */
+        /* ТЕЛЕВИЗОРЫ [cite: 2026-03-05] */
         .tv-grid {
-            position: absolute; top: 24%; left: 5%; width: 90%; height: 36%;
-            display: flex; gap: 4%; z-index: 500;
+            position: absolute; top: 25%; left: 6%; width: 88%; height: 32%;
+            display: flex; gap: 4%; z-index: 100;
         }
-        .tv-link {
+        
+        .tv-screen {
             flex: 1; display: flex; align-items: center; justify-content: center;
-            text-decoration: none; cursor: pointer; border-radius: 15px;
-            transition: 0.4s;
+            text-decoration: none; cursor: pointer; transition: 0.4s ease;
+            position: relative;
         }
-        .tv-link:hover { 
+
+        .tv-screen:hover { 
             background: rgba(0, 242, 255, 0.1); 
-            box-shadow: inset 0 0 30px #00f2ff;
+            box-shadow: inset 0 0 30px var(--neon);
         }
 
         .tv-label {
-            color: #fff; font-weight: 900; text-align: center; 
-            font-size: 1.2vw; text-transform: uppercase;
+            color: #fff; font-weight: bold; text-align: center; 
+            font-size: 1.1vw; text-transform: uppercase;
             text-shadow: 2px 2px 5px #000; pointer-events: none;
         }
 
-        /* ТЕХНИЧЕСКИЙ ФУТЕР БИЛДА 7.1.14-LH */
-        .build-id { 
+        /* МЕТКА БИЛДА 7.1.15-LH */
+        .build-footer { 
             position: fixed; bottom: 10px; right: 15px; 
-            font-size: 10px; color: rgba(255,204,0,0.5); 
-            letter-spacing: 1px; z-index: 2000;
+            font-size: 10px; color: rgba(255,204,0,0.4); 
+            z-index: 2000; letter-spacing: 1px;
         }
     </style>
 </head>
 <body>
 
-    <div class="top-nav">
+    <div class="nav-header">
         <div class="brand-zone">
             <a href="index.html" class="ui-btn">← RETURN</a>
-            <div class="logo">GY-GY v4.3</div> </div>
-        <div class="ui-btn">🌐 LANGUAGE [cite: 2026-03-05]</div>
+            <div class="logo">GY-GY v4.4</div>
+        </div>
+        <div class="ui-btn">🌐 LANGUAGE [7.1.15-LH]</div>
     </div>
 
     <div class="hq-wrapper">
-        <img src="OIG2_vintage_tv_room.jpg" class="hq-bg" alt="HQ 7.1.14-LH" onerror="this.style.display='none';">
+        <img src="OIG2_vintage_tv_room.jpg" class="hq-bg" alt="HQ Build 7.1.15-LH" onerror="this.style.display='none';">
 
         <div class="tv-grid">
-            <a href="techpark.html" class="tv-link">
-                <div class="tv-label">TECHPARK<br>v4.3</div>
+            <a href="techpark.html" class="tv-screen">
+                <div class="tv-label">TECHPARK<br>v4.4</div>
             </a>
 
-            <div class="tv-link" onclick="openVerses()">
-                <div class="tv-label" style="font-size: 1.5vw;">ВЕРШИ<br>GY-GY</div>
+            <div class="tv-screen" onclick="alert('BUILD 7.1.15-LH: СИСТЕМА СТАБИЛЬНА')">
+                <div class="tv-label" style="font-size: 1.4vw;">ВЕРШИ<br>С ПРИКОЛОМ</div>
             </div>
 
-            <div class="tv-link" onclick="alert('BUILD 7.1.14-LH: RESERVE SECTOR')">
+            <div class="tv-screen" onclick="alert('ABSURD v4.4: СЛОТ 15 АКТИВИРОВАН')">
                 <div class="tv-label">ABSURD<br>RESERVE</div>
             </div>
         </div>
     </div>
 
-    <div class="build-id">7.1.14-LH | v4.3</div>
-
-    <script>
-        function openVerses() {
-            const rhymes = [
-                "У Чарли в Шлюзе 7.1.14,\nПомехи стали размножаться.\nОн в Технопарк ID закинул,\nИ Клуб v4.3 не покинул!",
-                "Банано в Баре пил коктейль,\nА на ТВ — ИИ-метель.\nБилд 7.1.14-LH,\nСмешнее, чем в «Поле чудес»!"
-            ];
-            alert(rhymes[Math.floor(Math.random()*rhymes.length)]);
-        }
-    </script>
+    <div class="build-footer">BUILD ID: 7.1.15-LH | INTERFACE: v4.4</div>
 
 </body>
 </html>
