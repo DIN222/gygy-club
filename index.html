@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.24 | MASTER</title>
+    <title>GY-GY Club v4.4.25 | MASTER</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -20,7 +20,7 @@
         .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000000; font-size: 24px; letter-spacing: 5px; font-weight: bold; pointer-events: none; color: var(--gold); }
         
         .ui-back-to-bar { 
-            position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 1000000;
+            position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 1000005;
             background: rgba(0,0,0,0.85); border: 1px solid var(--gold); color: var(--gold);
             padding: 12px 24px; cursor: pointer; font-family: 'Share Tech Mono'; 
             font-size: 14px; text-transform: uppercase; letter-spacing: 2px; display: none;
@@ -51,7 +51,14 @@
         #block-ai-room { background: url('OIG2_vintage_tv_room.jpg') no-repeat center bottom / contain #000; }
         #block-tables { background: url('lounge.jpg') no-repeat center bottom / contain #000; }
         
-        #main-door { width: 280px; cursor: pointer; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s; }
+        /* ГЛАВНАЯ ДВЕРЬ: ТЕПЕРЬ ВСЕГДА КЛИКАБЕЛЬНА */
+        #main-door { 
+            width: 280px; 
+            cursor: pointer; 
+            transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s; 
+            pointer-events: auto !important; 
+            z-index: 1000; 
+        }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -65,7 +72,7 @@
     <audio id="snd-khe" preload="auto"><source src="charlie_bar_fx.mp3" type="audio/mpeg"></audio>
     <audio id="snd-pour" preload="auto"><source src="pour_whisky.mp3" type="audio/mpeg"></audio>
 
-    <div id="block-entrance" class="block active" style="opacity: 1;">
+    <div id="block-entrance" class="block active" style="opacity: 1; z-index: 1000;">
         <img src="door_1.jpg" id="main-door" onclick="handleDoor()">
     </div>
 
@@ -137,7 +144,6 @@
                 backBtn.style.display = 'block'; 
             } else {
                 if (amb.paused) amb.play();
-                // Если мы уже вошли, держим громкость 1, плавное нарастание только у двери
                 if (current && current.id !== 'block-entrance') amb.volume = 1;
                 backBtn.style.display = 'none';
             }
@@ -163,7 +169,9 @@
         function handleDoor() {
             document.getElementById('snd-door').play();
             const d = document.getElementById('main-door');
-            d.style.transform = "scale(5)"; d.style.opacity = "0";
+            d.style.pointerEvents = "none"; // Чтобы не кликать дважды во время анимации
+            d.style.transform = "scale(5)"; 
+            d.style.opacity = "0";
             
             currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
             document.getElementById('id-label').innerText = currentID;
@@ -176,9 +184,9 @@
             setTimeout(() => { 
                 portalTransition('block-welcome'); 
                 const amb = document.getElementById('snd-ambient'); 
-                amb.volume = 0; // Начинаем с нуля
+                amb.volume = 0;
                 amb.play(); 
-                fadeAudio(amb, 1, 3000); // Плавное нарастание за 3 секунды
+                fadeAudio(amb, 1, 3000);
             }, 1800);
         }
 
@@ -200,7 +208,8 @@
             if(i.files && i.files[0]) {
                 const r = new FileReader();
                 r.onload = (e) => { 
-                    document.getElementById('pp').src = e.target.result; document.getElementById('pp').style.display = "block";
+                    document.getElementById('pp').src = e.target.result; 
+                    document.getElementById('pp').style.display = "block";
                     document.getElementById('txt-photo').style.display = "none";
                     document.getElementById('h-photo').src = e.target.result;
                 };
