@@ -96,18 +96,27 @@
         <button id="btn-pass" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">ПРОХОДИТЕ</button>
     </div>
 
-    <div id="block-hall" class="block">
-        <div style="position:absolute; inset:0; background:url('hall_bg_jpg.jpg') center/cover; z-index:15;"></div>
-        <div class="motto-hall">«Всё будет GY-GY»</div>
-        <div class="id-card-hall">
-            <div id="h-id" style="font-weight:900; font-size:14px; margin-bottom:12px;">#ID</div>
-            <div style="display:flex; gap:15px; margin-bottom:12px;">
-                <div class="box-final"><img id="h-photo" style="width:100%; height:100%; object-fit:cover;"></div>
-                <div class="box-final" id="h-qr"></div>
-            </div>
-            <button id="btn-confirm" class="btn-gy" style="min-width:100%; border-color:#000; color:#000; padding:10px;" onclick="swapButtons('btn-confirm', 'btn-enter-bar')">ПОДТВЕРДИТЬ</button>
-            <button id="btn-enter-bar" class="btn-gy btn-sleep" style="min-width:100%; border-color:#000; color:#000; padding:10px;" onclick="portalTransition('block-bar')">ВХОД В БАР</button>
+  <div id="block-identity" class="block">
+        
+        <div class="quote-text" style="font-size: 28px; margin-bottom: 25px; letter-spacing: 1px;">
+            «Шампанского много не бывает»
         </div>
+        
+        <div style="display:flex; gap:12px; margin-bottom:30px; align-items:center;">
+            
+            <div class="box-final" style="background:transparent; border-color:var(--gold); color:var(--gold); font-size:11px; font-family:'Share Tech Mono';" id="id-label">#ID</div>
+            
+            <div class="box-final" id="qr-box-reg" style="border-color:var(--gold);"></div>
+            
+            <div class="box-final" style="border-color:var(--gold); position:relative;">
+                <input type="file" onchange="preview(this)" style="position:absolute; inset:0; opacity:0; z-index:10; cursor:pointer;">
+                <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
+                <span id="txt-photo" style="color:#000; font-size:10px; font-weight:900;">ЛИК</span>
+            </div>
+        </div>
+        
+        <button id="btn-save" class="btn-gy" onclick="swapButtons('btn-save', 'btn-pass')">ОСТАВИТЬ ОТПЕЧАТОК</button>
+        <button id="btn-pass" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">ПРОЙТИ В ХОЛЛ</button>
     </div>
 
     <div id="block-bar" class="block" style="padding:0; justify-content: flex-end;">
