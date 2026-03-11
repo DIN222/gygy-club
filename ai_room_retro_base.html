@@ -3,131 +3,111 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY AI ROOM | Build 7.1.3-LH</title>
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GY-GY AI ROOM | v4.3 [7.1.14-LH]</title>
+    
     <style>
-        :root { --gold: #ffcc00; --neon: #00f2ff; --bg: #000; }
-        * { box-sizing: border-box; }
+        /* Принудительный черный фон для исключения белого экрана */
         body, html { 
-            margin: 0; padding: 0; width: 100vw; height: 100vh; 
-            background: var(--bg); color: #fff; font-family: 'Montserrat', sans-serif; 
-            overflow: hidden; opacity: 0; transition: opacity 1s;
+            margin: 0; padding: 0; width: 100%; height: 100%; 
+            background: #000; color: #fff; font-family: 'Share Tech Mono', monospace;
+            overflow: hidden; 
         }
 
-        /* 1. ПОСТОЯННЫЕ АТРИБУТЫ [cite: 2026-03-07] */
+        /* ПОСТОЯННЫЕ АТРИБУТЫ [cite: 2026-03-07] */
         .top-nav {
-            position: fixed; top: 20px; left: 20px; right: 20px;
+            position: fixed; top: 15px; left: 15px; right: 15px;
             display: flex; justify-content: space-between; align-items: center;
-            z-index: 1000; font-family: 'Share Tech Mono';
+            z-index: 1000;
         }
-        .nav-left { display: flex; gap: 15px; align-items: center; }
-        .brand { color: var(--gold); font-weight: 700; letter-spacing: 3px; font-size: 18px; }
+        .brand-zone { display: flex; gap: 15px; align-items: center; }
+        .logo { color: #ffcc00; font-weight: bold; letter-spacing: 2px; font-size: 1.2rem; }
         
         .ui-btn { 
-            background: rgba(0,0,0,0.7); border: 1px solid var(--gold); 
-            color: var(--gold); padding: 8px 15px; cursor: pointer; 
-            font-family: 'Share Tech Mono'; font-size: 12px; text-decoration: none;
-            transition: 0.3s; backdrop-filter: blur(5px);
+            background: rgba(0,0,0,0.8); border: 1px solid #ffcc00; 
+            color: #ffcc00; padding: 6px 14px; cursor: pointer; 
+            text-decoration: none; font-size: 11px; transition: 0.2s;
+            text-transform: uppercase;
         }
-        .ui-btn:hover { background: var(--gold); color: #000; box-shadow: 0 0 15px var(--gold); }
+        .ui-btn:hover { background: #ffcc00; color: #000; box-shadow: 0 0 10px #ffcc00; }
 
-        /* 2. ВИЗУАЛ ШТАБА */
-        .vintage-base {
+        /* ОСНОВНОЙ КОНТЕЙНЕР БАЗЫ */
+        .hq-wrapper {
             position: relative; width: 100vw; height: 100vh;
             display: flex; justify-content: center; align-items: center;
         }
-        .bg-img { width: 100%; height: 100%; object-fit: cover; }
+        .hq-bg { 
+            position: absolute; width: 100%; height: 100%; 
+            object-fit: cover; z-index: 10; opacity: 0.9;
+        }
 
-        /* 3. ТРИ ТЕЛЕВИЗОРА [cite: 2026-03-05] */
-        .tv-overlay-grid {
-            position: absolute; top: 24%; left: 5%; width: 90%; height: 35%;
-            display: flex; gap: 3.5%; z-index: 500;
+        /* ТРИ ТЕЛЕВИЗОРА [cite: 2026-03-05] */
+        .tv-grid {
+            position: absolute; top: 24%; left: 5%; width: 90%; height: 36%;
+            display: flex; gap: 4%; z-index: 500;
         }
-        .tv-screen {
-            flex: 1; cursor: pointer; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; transition: 0.4s;
-            border-radius: 20px; text-decoration: none;
+        .tv-link {
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            text-decoration: none; cursor: pointer; border-radius: 15px;
+            transition: 0.4s;
         }
-        .tv-screen:hover { 
+        .tv-link:hover { 
             background: rgba(0, 242, 255, 0.1); 
-            box-shadow: inset 0 0 30px var(--neon); 
+            box-shadow: inset 0 0 30px #00f2ff;
         }
 
-        .label {
-            font-family: 'Share Tech Mono'; font-size: 1.3vw; text-align: center;
-            color: rgba(0,0,0,0.7); font-weight: 900; text-transform: uppercase;
-            line-height: 1.1; pointer-events: none;
+        .tv-label {
+            color: #fff; font-weight: 900; text-align: center; 
+            font-size: 1.2vw; text-transform: uppercase;
+            text-shadow: 2px 2px 5px #000; pointer-events: none;
         }
 
-        /* 4. ГЕНЕРАТОР ВЕРШЕЙ (Центральный ТВ) */
-        .poetry-modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 2000;
-            display: none; flex-direction: column; align-items: center; justify-content: center;
+        /* ТЕХНИЧЕСКИЙ ФУТЕР БИЛДА 7.1.14-LH */
+        .build-id { 
+            position: fixed; bottom: 10px; right: 15px; 
+            font-size: 10px; color: rgba(255,204,0,0.5); 
+            letter-spacing: 1px; z-index: 2000;
         }
-        .verse-box {
-            max-width: 500px; padding: 40px; border: 1px solid var(--neon);
-            background: #0a0a0a; text-align: center; font-family: 'Share Tech Mono';
-        }
-        #text-target { color: var(--neon); font-size: 1.2rem; margin-bottom: 30px; min-height: 100px; }
     </style>
 </head>
-<body onload="document.body.style.opacity='1'">
+<body>
 
     <div class="top-nav">
-        <div class="nav-left">
-            <a href="hall.html" class="ui-btn">← КУДА-ТО НАЗАД</a>
-            <div class="brand">GY-GY AI</div>
-        </div>
-        <div class="nav-right">
-            <div class="ui-btn">🌐 ЯЗЫК [cite: 2026-03-05]</div>
-        </div>
+        <div class="brand-zone">
+            <a href="index.html" class="ui-btn">← RETURN</a>
+            <div class="logo">GY-GY v4.3</div> </div>
+        <div class="ui-btn">🌐 LANGUAGE [cite: 2026-03-05]</div>
     </div>
 
-    <div class="vintage-base">
-        <img src="OIG2_vintage_tv_room.jpg" class="bg-img" alt="Vintage Base">
+    <div class="hq-wrapper">
+        <img src="OIG2_vintage_tv_room.jpg" class="hq-bg" alt="HQ 7.1.14-LH" onerror="this.style.display='none';">
 
-        <div class="tv-overlay-grid">
-            
-            <a href="techpark.html" class="tv-screen">
-                <div class="label">TECHPARK<br>01</div>
+        <div class="tv-grid">
+            <a href="techpark.html" class="tv-link">
+                <div class="tv-label">TECHPARK<br>v4.3</div>
             </a>
 
-            <div class="tv-screen" onclick="showVerses()">
-                <div class="label" style="font-size: 1.6vw;">ВЕРШИ<br>С ПРИКОЛОМ</div>
+            <div class="tv-link" onclick="openVerses()">
+                <div class="tv-label" style="font-size: 1.5vw;">ВЕРШИ<br>GY-GY</div>
             </div>
 
-            <div class="tv-screen" onclick="alert('Чарли: Сектор в разработке...')">
-                <div class="label">ABSURD<br>RESERVE</div>
+            <div class="tv-link" onclick="alert('BUILD 7.1.14-LH: RESERVE SECTOR')">
+                <div class="tv-label">ABSURD<br>RESERVE</div>
             </div>
-
         </div>
     </div>
 
-    <div id="poetry-modal" class="poetry-modal">
-        <div class="verse-box">
-            <h3 style="color:var(--gold)">ЛУННЫЕ ВЕРШИ</h3>
-            <div id="text-target">Нажимай кнопку для генерации...</div>
-            <button class="ui-btn" onclick="generate()">ЕЩЕ ПРИКОЛ</button>
-            <button class="ui-btn" onclick="this.parentElement.parentElement.style.display='none'" style="margin-left:10px; border-color:red; color:red;">ВЫХОД</button>
-        </div>
-    </div>
+    <div class="build-id">7.1.14-LH | v4.3</div>
 
     <script>
-        function showVerses() {
-            document.getElementById('poetry-modal').style.display = 'flex';
-            generate();
-        }
-
-        function generate() {
-            const list = [
-                "Чарли куки воровал,\nВ Технопарк их относил.\nТам Банано их жевал,\nИ про версию спросил.",
-                "Стиль v4.3 — это класс,\nБьет ИИ не в бровь, а в глаз.\nКто автограф не оставил,\nТот в Клубу не развлекался.",
-                "Лунная база, телевизор мигает,\nЧарли в репозиторий файлы кидает.\nЕсли увидишь абсурдный стишок —\nЗначит, попал ты на наш огонек!"
+        function openVerses() {
+            const rhymes = [
+                "У Чарли в Шлюзе 7.1.14,\nПомехи стали размножаться.\nОн в Технопарк ID закинул,\nИ Клуб v4.3 не покинул!",
+                "Банано в Баре пил коктейль,\nА на ТВ — ИИ-метель.\nБилд 7.1.14-LH,\nСмешнее, чем в «Поле чудес»!"
             ];
-            document.getElementById('text-target').innerText = list[Math.floor(Math.random()*list.length)];
+            alert(rhymes[Math.floor(Math.random()*rhymes.length)]);
         }
     </script>
+
 </body>
 </html>
