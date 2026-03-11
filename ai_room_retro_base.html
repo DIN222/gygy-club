@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY AI ROOM | v5.4 [7.1.22-LH]</title>
+    <title>GY-GY AI ROOM | v5.6 [7.1.24-LH]</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -11,79 +11,84 @@
             --dark: #000;
         }
 
+        /* КОРРЕКЦИЯ СКРОЛЛА: Разрешаем видимость выпадающих элементов */
         body, html { 
             margin: 0; padding: 0; width: 100%; height: 100%; 
-            background: #000; color: #fff; 
+            background: var(--dark); color: #fff; 
             font-family: 'Share Tech Mono', monospace;
-            overflow: hidden; 
+            overflow-x: hidden;
+            overflow-y: visible !important; 
         }
 
-        /* НАВИГАЦИЯ: ЖЕСТКАЯ ФИКСАЦИЯ */
+        /* СТИЛЬ ГУГЛ-ПАНЕЛИ (ФИКС СКРОЛЛА) */
+        #google_translate_element {
+            background: rgba(255,255,255,0.07);
+            padding: 4px 8px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 4px;
+            z-index: 3000;
+        }
+
         .nav-header {
-            position: fixed; top: 20px; left: 30px; right: 30px;
+            position: fixed; top: 25px; left: 40px; right: 40px;
             display: flex; justify-content: space-between; align-items: center;
             z-index: 2000;
             flex-direction: row-reverse;
         }
 
         .logo { 
-            color: var(--gold); font-weight: bold; letter-spacing: 4px; 
-            font-size: 30px; text-transform: uppercase;
-        }
-        
-        #google_translate_element {
-            background: rgba(255,255,255,0.1);
-            padding: 5px; border: 1px solid rgba(255,255,255,0.3);
-            border-radius: 4px;
+            color: var(--gold); font-weight: bold; letter-spacing: 5px; 
+            font-size: 32px; text-transform: uppercase;
         }
 
         .hq-wrapper {
-            position: relative; width: 100vw; height: 100vh;
-            display: flex; justify-content: center;
+            position: fixed; width: 100vw; height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            z-index: 10;
+        }
+        
+        /* ВОЗВРАТ ОРИГИНАЛЬНОГО ФОНА */
+        .hq-bg { 
+            position: absolute; width: 100%; height: 100%; 
+            object-fit: cover; z-index: 5; opacity: 0.85;
         }
 
-        /* ФОНОВАЯ КАРТИНКА (ПРЯМОЙ ТЕГ ДЛЯ СТАБИЛЬНОСТИ) */
-        .hq-bg {
-            position: absolute; width: 100%; height: 100%;
-            object-fit: cover; z-index: 10;
-        }
-
-        /* СЕТКА ТЕЛЕВИЗОРОВ: ТОЧНОЕ НАЛОЖЕНИЕ НА ОБРАЗЕЦ */
+        /* СЕТКА ТЕЛЕВИЗОРОВ: ОТОДВИНУТАЯ ПЕРСПЕКТИВА (Build 24) */
         .tv-grid {
             position: absolute; 
-            top: 26%;     /* Уровень белых экранов на фото */
-            width: 86.5%; 
-            height: 22%;  
+            top: 30%;    /* Позиция по вертикали */
+            width: 52%;  /* Узкая группа (удаление) */
+            height: 14%; /* Масштаб 1:1 с образцом дистанции */
             display: flex; 
-            gap: 2.2%;    
+            gap: 25px; 
             z-index: 100;
+            left: 50%;
+            transform: translateX(-50%);
         }
         
         .tv-screen {
             flex: 1; display: flex; align-items: center; justify-content: center;
             text-decoration: none; cursor: pointer; transition: 0.3s;
-            background: rgba(255, 255, 255, 0.01); 
-            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.6);
         }
 
         .tv-screen:hover { 
-            background: rgba(255, 255, 255, 0.1);
-            box-shadow: inset 0 0 50px rgba(255, 255, 255, 0.1);
+            border-color: var(--gold);
+            background: rgba(255, 204, 0, 0.05);
+            transform: scale(1.05);
         }
 
         .tv-label {
-            color: #fff; /* Вернул белый, чтобы не терялся на черном фоне */
-            font-weight: 900; 
-            text-align: center; 
-            font-size: 20px; 
-            text-transform: uppercase;
-            text-shadow: 2px 2px 8px #000;
-            transition: 0.3s;
+            color: #fff; font-weight: bold; text-align: center; 
+            font-size: 14px; text-transform: uppercase;
+            text-shadow: 2px 2px 6px #000;
+            line-height: 1.2;
         }
 
         .build-footer { 
-            position: fixed; bottom: 15px; left: 30px; 
-            font-size: 11px; color: rgba(255,204,0,0.5); z-index: 2000;
+            position: fixed; bottom: 20px; left: 40px; 
+            font-size: 11px; color: rgba(255,204,0,0.3); z-index: 2000;
         }
     </style>
 </head>
@@ -95,22 +100,22 @@
     </div>
 
     <div class="hq-wrapper">
-        <img src="image_a8801d.png" class="hq-bg" alt="HQ" onerror="console.error('Картинка не найдена');">
+        <img src="OIG2_vintage_tv_room.jpg" class="hq-bg" alt="Base Room">
 
         <div class="tv-grid">
             <a href="techpark.html" class="tv-screen">
-                <div class="tv-label">TECHPARK<br>v5.4</div>
+                <div class="tv-label">TECHPARK<br>v5.6</div>
             </a>
             <a href="verses.html" class="tv-screen">
-                <div class="tv-label">GY-GY<br>POETRY</div>
+                <div class="tv-label">GY-GY<br>VERSES</div>
             </a>
-            <div class="tv-screen" onclick="alert('BUILD 22')">
-                <div class="tv-label">RESERVE<br>SLOT</div>
+            <div class="tv-screen" onclick="alert('BUILD 24: STANDBY')">
+                <div class="tv-label">RESERVE<br>LINK</div>
             </div>
         </div>
     </div>
 
-    <div class="build-footer">BUILD: 7.1.22-LH | v5.4</div>
+    <div class="build-footer">BUILD: 7.1.24-LH | v5.6</div>
 
     <script type="text/javascript">
         function googleTranslateElementInit() {
