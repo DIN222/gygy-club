@@ -1,137 +1,109 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Room Retro | v6.2 [7.1.33-LH_]</title>
+    <title>GY-GY AI ROOM | v5.8 [7.1.26-LH]</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --accent: #d4af37;
-            --glass: rgba(0, 0, 0, 0.7);
+        /* ОТКЛЮЧАЕМ ВСЕ ОГРАНИЧЕНИЯ ДЛЯ ЯЗЫКА */
+        html, body { 
+            margin: 0; padding: 0; min-height: 100vh;
+            background: #000; color: #fff; 
+            font-family: 'Share Tech Mono', monospace;
         }
 
-        body, html {
-            margin: 0; padding: 0; height: 100%; width: 100%;
-            background-color: #000;
-            color: #fff;
-            font-family: 'Courier New', monospace;
-            overflow: hidden;
+        /* КАРТИНКА - ПРЯМАЯ И ВИДИМАЯ */
+        .base-image {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            z-index: 1; /* Картинка внизу */
         }
 
-        /* ТЕ САМЫЕ ТЕЛЕВИЗОРЫ - используем ваш загруженный файл */
-        #tv-room-viewport {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: url('image_1e07e4.png') no-repeat center center;
-            background-size: cover;
-            filter: brightness(0.5) contrast(1.1);
-            z-index: -2;
+        /* НАВИГАЦИЯ: ЛОГО СПРАВА, ЯЗЫК СЛЕВА */
+        .top-bar {
+            position: fixed; top: 20px; left: 30px; right: 30px;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 9999;
         }
 
-        /* Постоянный атрибут: GY-GY (Верхний левый) */
-        .brand-node {
-            position: fixed; top: 30px; left: 40px;
-            font-size: 26px; font-weight: 900; letter-spacing: 5px;
+        .logo { 
+            color: #ffcc00; font-size: 32px; font-weight: bold; 
+            letter-spacing: 5px; text-transform: uppercase;
+            text-decoration: none;
+        }
+
+        #google_translate_element { 
+            background: rgba(0,0,0,0.6); padding: 5px; border-radius: 4px;
+        }
+
+        /* ЗОНЫ ТЕЛЕВИЗОРОВ (ПРОЗРАЧНЫЕ КНОПКИ) */
+        .tv-container {
+            position: absolute; top: 32%; left: 50%;
+            transform: translateX(-50%);
+            width: 55%; height: 16%;
+            display: flex; gap: 25px;
             z-index: 1000;
         }
 
-        /* Постоянный атрибут: Языки (Верхний правый) */
-        .lang-gate {
-            position: fixed; top: 30px; right: 40px;
-            display: flex; gap: 15px; z-index: 1000;
-        }
-        .lang-btn {
-            background: var(--glass); border: 1px solid rgba(255,255,255,0.2);
-            color: #fff; padding: 6px 14px; cursor: pointer; font-size: 11px;
-            backdrop-filter: blur(5px);
+        .tv-btn {
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            text-decoration: none; border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.3); transition: 0.3s;
+            cursor: pointer;
         }
 
-        /* Постоянный атрибут: Возврат (Нижний левый) */
-        .back-node {
-            position: fixed; bottom: 40px; left: 40px;
-            background: var(--glass); border: 1px solid #fff;
-            color: #fff; padding: 12px 24px; font-size: 10px;
-            letter-spacing: 2px; cursor: pointer; z-index: 1000;
+        .tv-btn:hover { 
+            border-color: #ffcc00; background: rgba(255,204,0,0.1); 
         }
 
-        /* Identity & Magic Key (Нижний правый) */
-        .id-sector {
-            position: fixed; bottom: 40px; right: 40px;
-            display: flex; align-items: center; gap: 20px; z-index: 1000;
-        }
-        .trace-label { text-align: right; }
-        .trace-label span { font-size: 9px; opacity: 0.5; display: block; }
-        .trace-label strong { color: var(--accent); font-size: 14px; }
-
-        .magic-key {
-            width: 55px; height: 55px; border: 1px solid var(--accent);
-            background: rgba(0,0,0,0.8); cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
+        .label {
+            color: #fff; font-size: 14px; text-transform: uppercase;
+            text-align: center; font-weight: bold;
+            text-shadow: 1px 1px 3px #000;
         }
 
-        /* Центральный экранный интерфейс */
-        .monitor-core {
-            height: 100vh; display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            text-align: center;
-        }
-        .ver-counter {
-            font-size: 12px; color: var(--accent);
-            letter-spacing: 5px; margin-top: 15px;
-            font-weight: bold;
+        .footer { 
+            position: fixed; bottom: 15px; left: 30px; 
+            font-size: 11px; color: rgba(255,204,0,0.4); z-index: 9999;
         }
     </style>
 </head>
 <body>
 
-    <div id="tv-room-viewport"></div>
+    <img src="OIG2_vintage_tv_room.jpg" class="base-image" alt="ROOM BACKGROUND">
 
-    <header>
-        <div class="brand-node">GY-GY</div>
-        <nav class="lang-gate">
-            <button class="lang-btn">RU</button>
-            <button class="lang-btn">EN</button>
-        </nav>
-    </header>
+    <div class="top-bar">
+        <a href="#" class="logo">GY-GY</a>
+        <div id="google_translate_element"></div>
+    </div>
 
-    <main class="monitor-core">
-        <h1 style="font-size: 4rem; letter-spacing: 20px; margin: 0; font-weight: 100;">AI ROOM</h1>
-        <div class="ver-counter" id="v-tag">v6.2 [7.1.33-LH_]</div>
-    </main>
+    <div class="tv-container">
+        <a href="https://gemini.google.com" target="_blank" class="tv-btn">
+            <div class="label">TECHPARK<br>(GEMINI AI)</div>
+        </a>
 
-    <button class="back-node" onclick="history.back()">LEVEL_RETURN</button>
+        <a href="verses.html" class="tv-btn">
+            <div class="label">GY-GY<br>VERSES</div>
+        </a>
 
-    <section class="id-sector">
-        <div class="trace-label">
-            <span>UNIQUE DIGITAL TRACE</span>
-            <strong id="trace-display">INITIALIZING...</strong>
+        <div class="tv-btn">
+            <div class="label">RESERVE</div>
         </div>
-        <div class="magic-key" onclick="alert('Magic Key Active: Cookie Recognition Engaged')">
-            <span style="color: var(--accent); font-size: 10px;">M.K.</span>
-        </div>
-    </section>
+    </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const VERSION_BASE = "7.1.33";
-            
-            // Динамический инкремент сессии (счетчик внутри версии)
-            let sessionIdx = localStorage.getItem('gy_session_idx') || 0;
-            sessionIdx++;
-            localStorage.setItem('gy_session_idx', sessionIdx);
+    <div class="footer">BUILD: 7.1.26-LH | v5.8</div>
 
-            document.getElementById('v-tag').innerText = `v6.2 [${VERSION_BASE}.${sessionIdx}-LH_]`;
-
-            // Cookie-recognition Trace ID
-            let trace = localStorage.getItem('gy_trace_33');
-            if (!trace) {
-                trace = 'UX-' + Math.random().toString(36).substr(2, 7).toUpperCase();
-                localStorage.setItem('gy_trace_33', trace);
-            }
-            document.getElementById('trace-display').innerText = trace;
-            
-            console.log(`Build ${VERSION_BASE}.${sessionIdx} synchronized with image_1e07e4.png`);
-        });
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'ru',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
+        }
     </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
 </body>
 </html>
