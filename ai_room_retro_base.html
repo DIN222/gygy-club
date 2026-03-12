@@ -2,10 +2,10 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY AI ROOM | v6.2 [7.1.42-LH]</title>
+    <title>GY-GY AI ROOM | v6.2 [7.1.43-LH]</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
-        /* ЧИСТАЯ БАЗА */
+        /* БАЗА */
         html, body { 
             margin: 0; padding: 0; width: 100%; height: 100%; 
             background: #000; color: #fff; 
@@ -13,72 +13,79 @@
             overflow: hidden;
         }
 
-        /* ТВОЙ ФОН */
+        /* ТВОЙ ФОН: OIG2_vintage_tv_room.jpg */
         .room-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: url('OIG2_vintage_tv_room.jpg') no-repeat center center;
-            background-size: cover;
-            z-index: 1;
+            background-size: cover; z-index: 1;
         }
 
-        /* ХЕДЕР: ПОЛНОСТЬЮ ПРОЗРАЧНЫЙ, БЕЗ ГРАДИЕНТОВ */
+        /* ВЕРХНЯЯ ПАНЕЛЬ: ВОЗВРАТ КЛАССИЧЕСКОГО ВИДА ЯЗЫКА */
         .nav-top {
-            position: fixed; top: 25px; left: 40px; right: 40px;
+            position: fixed; top: 20px; left: 30px; right: 30px;
             display: flex; justify-content: space-between; align-items: center;
-            z-index: 1000;
-        }
-        .logo { 
-            color: #ffcc00; font-size: 22px; font-weight: bold; 
-            letter-spacing: 5px; text-transform: uppercase;
+            z-index: 10000;
         }
 
-        /* ТЕЛЕВИЗОРЫ: МИКРО-МАСШТАБ (УДАЛЕНИЕ) */
+        .logo-club { 
+            color: #ffcc00; font-size: 28px; font-weight: bold; 
+            letter-spacing: 4px; text-transform: uppercase;
+        }
+
+        /* ТОТ САМЫЙ ВАРИАНТ ЯЗЫКА ИЗ ПРОШЛЫХ ВЕРСИЙ */
+        #google_translate_element { 
+            background: rgba(0,0,0,0.8);
+            padding: 5px; border: 1px solid #444;
+            border-radius: 4px;
+        }
+
+        /* ТЕЛЕВИЗОРЫ: РАДИКАЛЬНОЕ УМЕНЬШЕНИЕ (ГЛУБИНА) */
         .tv-horizon {
             position: absolute;
-            top: 52%; /* Точка горизонта на фото */
+            top: 50%; /* Линия горизонта */
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 220px; /* Еще уже для эффекта дали */
-            display: flex; 
-            justify-content: space-between;
+            width: 140px; /* Очень узкий охват */
+            display: flex; justify-content: space-between;
             z-index: 500;
         }
 
-        .tv-micro-unit {
-            width: 60px; /* Микро-размер */
-            height: 45px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            background: rgba(0, 0, 0, 0.85);
+        .tv-nano-unit {
+            width: 35px; /* РАДИКАЛЬНО МАЛЫЙ РАЗМЕР */
+            height: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(0, 0, 0, 0.9);
             display: flex; align-items: center; justify-content: center;
-            text-decoration: none; transition: 0.4s;
+            text-decoration: none; transition: 0.3s;
             cursor: pointer;
-            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            box-shadow: 0 0 10px rgba(0,0,0,1);
         }
 
-        .tv-micro-unit:hover {
+        .tv-nano-unit:hover {
             border-color: #ffcc00;
-            background: rgba(255, 204, 0, 0.1);
-            transform: scale(1.5); /* Приближение при фокусе */
-            z-index: 600;
-        }
-
-        .tv-text { 
-            color: #ffcc00; font-size: 7px; /* Мелкий текст для мелких экранов */
-            font-weight: bold; text-align: center; line-height: 1;
-        }
-
-        /* ФУТЕР */
-        .footer {
-            position: fixed; bottom: 25px; left: 40px; right: 40px;
-            display: flex; justify-content: space-between; align-items: flex-end;
+            background: rgba(255, 204, 0, 0.2);
+            transform: scale(3); /* Сильное увеличение при наведении для клика */
             z-index: 1000;
         }
-        .btn-ret { 
-            background: none; border: 1px solid rgba(255,255,255,0.2); 
-            color: #ccc; padding: 4px 12px; cursor: pointer; font-size: 9px; 
+
+        .tv-hint { 
+            color: #ffcc00; font-size: 5px; /* Микро-текст */
+            font-weight: bold; text-align: center; pointer-events: none;
         }
-        .build { font-size: 9px; color: rgba(255, 204, 0, 0.3); }
-        .trace { color: #ffcc00; font-size: 11px; font-weight: bold; letter-spacing: 1px; }
+
+        /* ФУТЕР: ПОСТОЯННЫЕ АТРИБУТЫ */
+        .footer {
+            position: fixed; bottom: 20px; left: 30px; right: 30px;
+            display: flex; justify-content: space-between; align-items: flex-end;
+            z-index: 2000;
+        }
+        .btn-return {
+            background: rgba(0,0,0,0.8); border: 1px solid #fff;
+            color: #fff; padding: 5px 12px; cursor: pointer;
+            font-size: 10px; text-transform: uppercase;
+        }
+        .build-tag { font-size: 11px; color: rgba(255,204,0,0.4); margin-top: 5px; }
+        .id-trace { text-align: right; color: #ffcc00; font-size: 12px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -87,35 +94,38 @@
 
     <header class="nav-top">
         <div id="google_translate_element"></div>
-        <div class="logo">GY-GY</div>
+        <div class="logo-club">GY-GY</div>
     </header>
 
     <div class="tv-horizon">
-        <a href="techpark.html" class="tv-micro-unit">
-            <div class="tv-text">TECH<br>PARK</div>
+        <a href="techpark.html" class="tv-nano-unit">
+            <div class="tv-hint">TECH</div>
         </a>
-        <a href="verses.html" class="tv-micro-unit">
-            <div class="tv-text">VERSES</div>
+        <a href="verses.html" class="tv-nano-unit">
+            <div class="tv-hint">GY-GY</div>
         </a>
-        <div class="tv-micro-unit" style="opacity: 0.3;">
-            <div class="tv-text">RES</div>
+        <div class="tv-nano-unit" style="opacity: 0.3;">
+            <div class="tv-hint">RES</div>
         </div>
     </div>
 
     <footer class="footer">
         <div>
-            <button class="btn-ret" onclick="history.back()">RETURN</button>
-            <div class="build" style="margin-top:5px;">BUILD: 7.1.42-LH | v6.2</div>
+            <button class="btn-return" onclick="history.back()">← RETURN</button>
+            <div class="build-tag">BUILD: 7.1.43-LH | v6.2</div>
         </div>
-        <div class="trace">
-            <span style="font-size: 7px; opacity: 0.5; display: block; text-align: right;">USER_TRACE</span>
-            <span id="user-id">ID_SYNCING</span>
+        <div class="id-trace">
+            <span style="font-size: 8px; opacity: 0.5; display: block;">DIGITAL TRACE</span>
+            <span id="user-id">SYNCING...</span>
         </div>
     </footer>
 
     <script type="text/javascript">
         function googleTranslateElementInit() {
-            new google.translate.TranslateElement({pageLanguage: 'ru', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+            new google.translate.TranslateElement({
+                pageLanguage: 'ru',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
         }
         document.addEventListener('DOMContentLoaded', () => {
             let trace = localStorage.getItem('gy_trace') || 'GY-' + Math.random().toString(36).substr(2, 7).toUpperCase();
