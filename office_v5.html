@@ -2,38 +2,376 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Офис Клуба v.5.0.0</title>
-    <link rel="stylesheet" href="office_styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GY-GY Office v.5.0.1 | Neural Core</title>
+    <style>
+        :root {
+            --primary: #ffd700; 
+            --bg: #030303;
+            --surface: #0d0d0d;
+            --text: #f0f0f0;
+            --tg-color: #24A1DE;
+            --danger: #ff4444;
+            --glass: rgba(255, 215, 0, 0.03);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- HEADER v.5.0.1 --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            background: rgba(0,0,0,0.9);
+            border-bottom: 1px solid #222;
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+        }
+
+        .back-nav {
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+        .back-nav:hover { color: var(--primary); }
+
+        .gy-brand-central {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--primary);
+            text-decoration: none;
+            letter-spacing: 4px;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+        }
+
+        .lang-node {
+            display: flex;
+            gap: 8px;
+        }
+
+        .node-btn {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #888;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .node-btn.active {
+            border-color: var(--primary);
+            color: var(--primary);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.1);
+        }
+
+        /* --- MAIN LAYOUT --- */
+        main {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 25px;
+            padding: 25px;
+            flex: 1;
+            box-sizing: border-box;
+        }
+
+        /* --- LEFT PANEL: IDENTITY --- */
+        .identity-sector {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .id-card {
+            background: var(--surface);
+            border-radius: 30px;
+            padding: 40px;
+            border: 1px solid #1a1a1a;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .v-tag {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-family: monospace;
+            color: var(--primary);
+            font-size: 0.8rem;
+        }
+
+        .avatar-wrapper {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin-bottom: 20px;
+        }
+
+        #avatar-canvas {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            width: 200px;
+            height: 200px;
+            pointer-events: none;
+        }
+
+        .avatar-main {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            object-fit: cover;
+            background: #000;
+        }
+
+        .nickname { font-size: 2.5rem; margin: 10px 0; font-weight: 800; }
+        .digital-trace { color: #555; font-family: monospace; letter-spacing: 1px; }
+
+        /* --- STABILITY CONTROLS --- */
+        .control-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .control-item {
+            background: #111;
+            padding: 20px;
+            border-radius: 20px;
+            border: 1px solid #222;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .control-item:hover { border-color: var(--primary); background: #161616; }
+
+        /* --- RIGHT PANEL: AI CORE 5.0.1 --- */
+        .ai-core-panel {
+            background: #000;
+            border-radius: 30px;
+            border: 1px solid #222;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .ai-header {
+            padding: 20px;
+            background: #080808;
+            border-bottom: 1px solid #1a1a1a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-dot {
+            width: 8px; height: 8px;
+            background: #00ff00;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #00ff00;
+        }
+
+        #chat-flow {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .bubble {
+            max-width: 85%;
+            padding: 12px 16px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .bubble.ai { background: #1a1a1a; align-self: flex-start; border-bottom-left-radius: 4px; border: 1px solid #222; }
+        .bubble.user { background: var(--primary); color: #000; align-self: flex-end; border-bottom-right-radius: 4px; font-weight: 600; }
+
+        .ai-input-zone {
+            padding: 20px;
+            background: #080808;
+            display: flex;
+            gap: 10px;
+        }
+
+        .ai-input-zone input {
+            flex: 1;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 12px 15px;
+            color: white;
+            outline: none;
+        }
+
+        .send-btn {
+            background: var(--primary);
+            border: none;
+            width: 45px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+    </style>
 </head>
 <body>
 
-<div id="club-office-root" class="office-container">
-    
-    <div class="office-navigation">
-        <div class="brand-gy-gy">GY-GY</div>
-        <div class="language-panel" id="office-lang">
-            <span>RU</span> | <span>EN</span>
+    <header>
+        <div class="back-nav" onclick="history.back()">← НАЗАД</div>
+        <a href="#" class="gy-brand-central">GY-GY</a>
+        <div class="lang-node">
+            <button class="node-btn active">RU</button>
+            <button class="node-btn">EN</button>
+            <button class="node-btn">ES</button>
         </div>
-        <button class="btn-return">↩ НАЗАД</button>
-    </div>
+    </header>
 
-    <div class="office-status">
-        <span class="version-tag">v. 5.0.0</span>
-        <span id="user-identity">ID: Определение...</span>
-    </div>
+    <main>
+        <div class="identity-sector">
+            <section class="id-card">
+                <span class="v-tag">v.5.0.1</span>
+                <div class="avatar-wrapper">
+                    <canvas id="avatar-canvas"></canvas>
+                    <img id="mainAvatar" class="avatar-main" src="" alt="User Avatar">
+                </div>
+                <div class="nickname" id="nickBox">Loading...</div>
+                <div class="digital-trace" id="traceBox">ID: SCANNING_KERNEL</div>
+            </section>
 
-    <div class="agent-interface" id="agent-500-ui">
-        <div id="user-avatar-small"></div>
-        <button id="agent-trigger">Агент 5.0.0 💬</button>
-        
-        <div id="agent-chat-window" class="hidden">
-            <div id="chat-content"></div>
-            <input type="text" placeholder="Запрос к Офису...">
+            <div class="control-grid">
+                <div class="control-item" onclick="downloadMagic()">
+                    <div style="font-size: 1.2rem; color: var(--primary)">🔑 Magic Key</div>
+                    <p style="font-size: 0.75rem; color: #666; margin: 8px 0 0;">Скачать ключ-аватар для входа</p>
+                </div>
+                <div class="control-item" onclick="linkTG()">
+                    <div style="font-size: 1.2rem; color: var(--tg-color)">✈️ Telegram</div>
+                    <p style="font-size: 0.75rem; color: #666; margin: 8px 0 0;">Стабильная связь и логи</p>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
 
-<script src="agent_500.core.js"></script>
+        <aside class="ai-core-panel">
+            <div class="ai-header">
+                <div class="status-dot"></div>
+                <span style="font-weight: bold; font-size: 0.9rem; letter-spacing: 1px;">AI AGENT CORE v.5.0.1</span>
+            </div>
+            <div id="chat-flow">
+                <div class="bubble ai">Ядро 5.0.1 активно. Цифровой след подтвержден. Чем я могу помочь в Офисе сегодня?</div>
+            </div>
+            <div class="ai-input-zone">
+                <input type="text" id="ai-command" placeholder="Введите команду..." onkeypress="if(event.key==='Enter') execute()">
+                <button class="send-btn" onclick="execute()">OK</button>
+            </div>
+        </aside>
+    </main>
 
+    <script>
+        // Инициализация v.5.0.1
+        const GY_CORE = {
+            id: localStorage.getItem('gy_v501_id') || `GY-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
+            nick: localStorage.getItem('gy_v501_nick') || `User_${Math.floor(Math.random()*9999)}`,
+            
+            init() {
+                localStorage.setItem('gy_v501_id', this.id);
+                localStorage.setItem('gy_v501_nick', this.nick);
+                
+                document.getElementById('nickBox').innerText = this.nick;
+                document.getElementById('traceBox').innerText = `TRACE: ${this.id}`;
+                document.getElementById('mainAvatar').src = `https://api.dicebear.com/7.x/pixel-art/svg?seed=${this.id}`;
+                
+                this.startVisuals();
+                console.log("GY-GY Kernel 5.0.1: Online");
+            },
+
+            startVisuals() {
+                const canvas = document.getElementById('avatar-canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = 200; canvas.height = 200;
+                
+                let angle = 0;
+                function animate() {
+                    ctx.clearRect(0, 0, 200, 200);
+                    ctx.strokeStyle = '#ffd700';
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.arc(100, 100, 95, angle, angle + Math.PI * 0.5);
+                    ctx.stroke();
+                    ctx.beginPath();
+                    ctx.arc(100, 100, 95, angle + Math.PI, angle + Math.PI * 1.5);
+                    ctx.stroke();
+                    angle += 0.02;
+                    requestAnimationFrame(animate);
+                }
+                animate();
+            }
+        };
+
+        function execute() {
+            const input = document.getElementById('ai-command');
+            const flow = document.getElementById('chat-flow');
+            if (!input.value.trim()) return;
+
+            // User UI
+            const uDiv = document.createElement('div');
+            uDiv.className = 'bubble user';
+            uDiv.innerText = input.value;
+            flow.appendChild(uDiv);
+            
+            const cmd = input.value.toLowerCase();
+            input.value = '';
+
+            // AI Logic
+            setTimeout(() => {
+                const aDiv = document.createElement('div');
+                aDiv.className = 'bubble ai';
+                
+                if (cmd.includes('id') || cmd.includes('след')) {
+                    aDiv.innerText = `Ваш уникальный идентификатор в версии 5.0.1: ${GY_CORE.id}. Ваше присутствие в клубе легитимно.`;
+                } else if (cmd.includes('magic')) {
+                    aDiv.innerText = "Формирую пакет Magic Key. Это ваш цифровой паспорт в виде аватара. Сохранить?";
+                } else if (cmd.includes('5.0.1')) {
+                    aDiv.innerText = "Версия 5.0.1 включает визуализацию цифрового следа и улучшенную стабильность распознавания Cookie.";
+                } else {
+                    aDiv.innerText = "Запрос принят Агентом. Синхронизирую данные с базой GY-GY...";
+                }
+
+                flow.appendChild(aDiv);
+                flow.scrollTop = flow.scrollHeight;
+            }, 600);
+        }
+
+        function downloadMagic() {
+            alert("Magic Key v.5.0.1 сгенерирован. Ваша личность упакована в цифровой код.");
+        }
+
+        function linkTG() {
+            alert("Переход в Telegram для синхронизации ID...");
+        }
+
+        window.onload = () => GY_CORE.init();
+    </script>
 </body>
 </html>
