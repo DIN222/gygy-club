@@ -3,9 +3,10 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY AI ROOM | v6.2 [7.1.40-LH]</title>
+    <title>GY-GY AI ROOM | v6.2 [7.1.41-LH]</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
+        /* СБРОС ВСЕХ ГРАДИЕНТОВ И ОТСТУПОВ */
         html, body { 
             margin: 0; padding: 0; width: 100%; height: 100%; 
             background: #000; color: #fff; 
@@ -21,58 +22,53 @@
             z-index: 1;
         }
 
-        /* ВЕРХНЯЯ ПАНЕЛЬ (ХЕДЕР) */
+        /* ХЕДЕР: БЕЗ ГРАДИЕНТА, ПРОЗРАЧНЫЙ */
         .nav-top {
-            position: fixed; top: 0; left: 0; right: 0;
-            height: 80px;
+            position: fixed; top: 20px; left: 30px; right: 30px;
             display: flex; justify-content: space-between; align-items: center;
-            padding: 0 40px;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
             z-index: 1000;
+            background: none; /* УБРАНО */
         }
-        .logo { color: #ffcc00; font-size: 28px; font-weight: bold; letter-spacing: 6px; }
+        .logo { color: #ffcc00; font-size: 24px; font-weight: bold; letter-spacing: 4px; }
 
-        /* ТЕЛЕВИЗОРЫ: РАДИКАЛЬНЫЙ СДВИГ ВНИЗ И ВГЛУБЬ */
+        /* ТЕЛЕВИЗОРЫ: РЕАЛЬНОЕ УДАЛЕНИЕ ЧЕРЕЗ ГЕОМЕТРИЮ */
         .tv-system {
             position: absolute;
-            bottom: 25%; /* Сдвинули от центра сильно вниз к "столу" */
+            top: 55%; /* Центровка чуть ниже горизонта */
             left: 50%;
-            transform: translateX(-50%);
-            width: 40%; /* Сузили контейнер, чтобы телевизоры стояли кучнее вдали */
-            display: flex; gap: 20px;
+            transform: translate(-50%, -50%);
+            width: 300px; /* ФИКСИРОВАННАЯ УЗКАЯ ШИРИНА ДЛЯ ЭФФЕКТА ДАЛИ */
+            display: flex; 
+            justify-content: space-between;
             z-index: 500;
         }
 
         .tv-unit {
-            flex: 1; aspect-ratio: 4/3;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background: rgba(0, 0, 0, 0.7);
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            text-decoration: none; transition: 0.4s;
+            width: 80px; /* МАЛЕНЬКИЙ РАЗМЕР ЭКРАНА */
+            height: 60px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.8);
+            display: flex; align-items: center; justify-content: center;
+            text-decoration: none; transition: 0.3s;
             cursor: pointer;
-            box-shadow: 0 0 50px rgba(0,0,0,0.9);
-            /* Эффект удаления через масштаб конкретного блока */
-            transform: scale(0.7); 
         }
 
         .tv-unit:hover {
             border-color: #ffcc00;
-            background: rgba(255, 204, 0, 0.15);
-            transform: scale(0.8) translateY(-10px);
-            box-shadow: 0 0 30px rgba(255, 204, 0, 0.2);
+            background: rgba(255, 204, 0, 0.1);
+            transform: scale(1.2); /* Увеличение при наведении для удобства */
         }
 
-        .tv-title { color: #ffcc00; font-size: 14px; font-weight: bold; text-align: center; }
+        .tv-title { color: #ffcc00; font-size: 9px; font-weight: bold; text-align: center; }
 
         /* ФУТЕР */
         .footer {
-            position: fixed; bottom: 20px; left: 40px; right: 40px;
-            display: flex; justify-content: space-between; align-items: center;
+            position: fixed; bottom: 20px; left: 30px; right: 30px;
+            display: flex; justify-content: space-between; align-items: flex-end;
             z-index: 1000;
         }
-        .btn-back { background: none; border: 1px solid #444; color: #888; padding: 5px 12px; cursor: pointer; font-size: 10px; }
-        .build-tag { font-size: 10px; color: rgba(255, 204, 0, 0.2); }
+        .btn-back { background: none; border: 1px solid #444; color: #fff; padding: 4px 10px; cursor: pointer; font-size: 9px; }
+        .build-tag { font-size: 9px; color: rgba(255, 204, 0, 0.4); }
         .trace-id { color: #ffcc00; font-size: 11px; font-weight: bold; }
     </style>
 </head>
@@ -87,27 +83,27 @@
 
     <div class="tv-system">
         <a href="techpark.html" class="tv-unit">
-            <div class="tv-title">TECHPARK</div>
+            <div class="tv-title">TECH<br>PARK</div>
         </a>
         <a href="verses.html" class="tv-unit">
-            <div class="tv-title">VERSES</div>
+            <div class="tv-title">GY-GY<br>VERSES</div>
         </a>
         <div class="tv-unit" style="opacity: 0.4;">
-            <div class="tv-title">RESERVE</div>
+            <div class="tv-title">RES</div>
         </div>
     </div>
 
     <footer class="footer">
         <div>
             <button class="btn-back" onclick="history.back()">← RETURN</button>
-            <span class="build-tag" style="margin-left: 15px;">BUILD: 7.1.40-LH | v6.2</span>
+            <div class="build-tag">BUILD: 7.1.41-LH | v6.2</div>
         </div>
         <div class="trace-id" id="user-id">ID_SYNC</div>
     </footer>
 
     <script type="text/javascript">
         function googleTranslateElementInit() {
-            new google.translate.TranslateElement({pageLanguage: 'ru'}, 'google_translate_element');
+            new google.translate.TranslateElement({pageLanguage: 'ru', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
         }
         document.addEventListener('DOMContentLoaded', () => {
             let trace = localStorage.getItem('gy_trace') || 'GY-' + Math.random().toString(36).substr(2, 7).toUpperCase();
