@@ -3,10 +3,10 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY AI ROOM | v6.2 [7.1.38-LH]</title>
+    <title>GY-GY AI ROOM | v6.2 [7.1.39-LH]</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
-        /* CORE RESET */
+        /* CORE STANDARDS */
         html, body { 
             margin: 0; padding: 0; width: 100%; height: 100%; 
             background: #000; color: #fff; 
@@ -14,7 +14,7 @@
             overflow: hidden;
         }
 
-        /* [LAYER 1] BACKGROUND - СТРОГО ТВОЙ ФАЙЛ */
+        /* ТВОЙ ФОН: OIG2_vintage_tv_room.jpg */
         .room-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: url('OIG2_vintage_tv_room.jpg') no-repeat center center;
@@ -22,93 +22,111 @@
             z-index: 1;
         }
 
-        /* [LAYER 2] ГРАДИЕНТ ДЛЯ ЧИТАЕМОСТИ */
-        .overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.3);
-            z-index: 2;
+        /* ВЕРХНИЙ ХЕДЕР: Постоянные атрибуты (Языки слева, GY-GY справа) */
+        .nav-top {
+            position: fixed; 
+            top: 0; left: 0; right: 0;
+            height: 70px;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 40px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
+            z-index: 1000;
+        }
+        .logo { 
+            color: #ffcc00; font-size: 32px; font-weight: bold; 
+            letter-spacing: 8px; text-transform: uppercase;
+        }
+        #google_translate_element { 
+            border: 1px solid rgba(255, 204, 0, 0.3); 
+            background: rgba(0,0,0,0.5);
+            padding: 2px;
         }
 
-        /* [LAYER 3] ИНТЕРФЕЙС ТЕЛЕВИЗОРОВ (УДАЛЕНИЕ 0.3) */
+        /* ТЕЛЕВИЗОРЫ: МАКСИМАЛЬНОЕ УДАЛЕНИЕ (Scale 0.25) */
         .tv-console {
             position: absolute; 
-            top: 30%; left: 50%;
-            transform: translateX(-50%) scale(0.35); /* Отодвинуто */
-            width: 80%;
-            display: flex; gap: 30px;
-            z-index: 100; /* Выше фона */
+            top: 45%; /* Спустили ниже, чтобы не мешать хедеру */
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%) scale(0.25); 
+            width: 90%;
+            display: flex; gap: 50px;
+            z-index: 500;
         }
 
         .tv-unit {
             flex: 1; aspect-ratio: 4/3;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(255, 255, 255, 0.05);
+            background: rgba(0, 0, 0, 0.8);
             display: flex; flex-direction: column;
             align-items: center; justify-content: center;
-            text-decoration: none; transition: 0.3s;
+            text-decoration: none; transition: 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
             cursor: pointer;
+            box-shadow: 0 0 100px rgba(0,0,0,1);
         }
 
         .tv-unit:hover {
             border-color: #ffcc00;
             background: rgba(255, 204, 0, 0.1);
-            transform: translateY(-5px);
+            transform: scale(1.1); /* Приближается только при наведении */
+            box-shadow: 0 0 50px rgba(255, 204, 0, 0.2);
         }
 
-        .tv-title { color: #ffcc00; font-size: 24px; font-weight: bold; margin-bottom: 5px; }
-        .tv-meta { color: #888; font-size: 10px; text-transform: uppercase; }
+        .tv-title { color: #ffcc00; font-size: 38px; font-weight: bold; margin-bottom: 10px; }
+        .tv-meta { color: #555; font-size: 14px; text-transform: uppercase; letter-spacing: 2px; }
 
-        /* [LAYER 4] ПОСТОЯННЫЕ АТРИБУТЫ */
-        .nav-top {
-            position: fixed; top: 20px; left: 30px; right: 30px;
-            display: flex; justify-content: space-between; align-items: center;
-            z-index: 1000;
-        }
-        .logo { color: #ffcc00; font-size: 26px; font-weight: bold; letter-spacing: 5px; }
-
+        /* ФУТЕР: Возврат и Trace ID */
         .footer {
-            position: fixed; bottom: 20px; left: 30px; right: 30px;
-            display: flex; justify-content: space-between; align-items: flex-end;
+            position: fixed; bottom: 0; left: 0; right: 0;
+            height: 60px;
+            padding: 0 40px;
+            display: flex; justify-content: space-between; align-items: center;
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
             z-index: 1000;
         }
-        .build-tag { font-size: 10px; color: rgba(255, 204, 0, 0.5); }
-        .trace-id { text-align: right; color: #ffcc00; font-size: 11px; }
+        .btn-back {
+            background: none; border: 1px solid rgba(255,255,255,0.3);
+            color: #fff; padding: 5px 15px; cursor: pointer; font-size: 10px;
+            transition: 0.3s;
+        }
+        .btn-back:hover { border-color: #ffcc00; color: #ffcc00; }
+        .build-tag { font-size: 11px; color: rgba(255, 204, 0, 0.3); }
+        .trace-id { text-align: right; color: #ffcc00; font-size: 12px; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div class="room-bg"></div>
-    <div class="overlay"></div>
 
-    <div class="nav-top">
+    <header class="nav-top">
         <div id="google_translate_element"></div>
         <div class="logo">GY-GY</div>
-    </div>
+    </header>
 
     <div class="tv-console">
-        <a href="#" class="tv-unit">
+        <a href="techpark.html" class="tv-unit">
             <div class="tv-title">TECHPARK</div>
-            <div class="tv-meta">MOON BASE ALPHA</div>
+            <div class="tv-meta">MOON BASE BUILD</div>
         </a>
-        <a href="#" class="tv-unit">
+        <a href="verses.html" class="tv-unit">
             <div class="tv-title">VERSES</div>
-            <div class="tv-meta">MINTING ENGINE</div>
+            <div class="tv-meta">GY-GY MINTING</div>
         </a>
-        <div class="tv-unit" style="opacity: 0.5;">
+        <div class="tv-unit" style="opacity: 0.3;">
             <div class="tv-title">RESERVE</div>
             <div class="tv-meta">LOCKED</div>
         </div>
     </div>
 
-    <div class="footer">
+    <footer class="footer">
         <div>
-            <button onclick="history.back()" style="background:none; border:1px solid #fff; color:#fff; cursor:pointer; font-size: 9px; padding: 4px 10px; margin-bottom: 5px;">LEVEL_RETURN</button>
-            <div class="build-tag" id="build-tag">BUILD: 7.1.38-LH | v6.2</div>
+            <button class="btn-back" onclick="history.back()">← RETURN</button>
+            <span class="build-tag" style="margin-left: 20px;">BUILD: 7.1.39-LH | v6.2</span>
         </div>
-        <div class="id-trace">
-            TRACE_ID: <span id="user-id">...</span>
+        <div class="trace-id">
+            <span style="font-size: 8px; opacity: 0.5; display: block;">DIGITAL TRACE</span>
+            <span id="user-id">ID_LOAD</span>
         </div>
-    </div>
+    </footer>
 
     <script type="text/javascript">
         function googleTranslateElementInit() {
