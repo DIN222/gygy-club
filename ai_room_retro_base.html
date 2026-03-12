@@ -6,199 +6,209 @@
     <title>AI Room Retro | v6.2 [7.1.30-LH_]</title>
     <style>
         :root {
-            --neon-cyan: #00f3ff;
-            --retro-pink: #ff00ff;
-            --deep-space: #050505;
-            --glass: rgba(255, 255, 255, 0.05);
+            --tv-glow: rgba(0, 243, 255, 0.4);
+            --retro-amber: #ffb000;
+            --crt-green: #33ff33;
+            --panel-bg: rgba(0, 0, 0, 0.7);
         }
 
-        body {
-            background-color: var(--deep-space);
-            color: #e0e0e0;
-            font-family: 'Segoe UI', 'Courier New', monospace;
+        body, html {
             margin: 0;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #050505;
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
             overflow: hidden;
         }
 
-        /* [7.1.30-LH_] Постоянные атрибуты */
-        #top-navigation {
+        /* Визуальная база: Фоновое изображение комнаты */
+        #background-layer {
             position: fixed;
             top: 0;
+            left: 0;
             width: 100%;
-            height: 60px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 25px;
-            box-sizing: border-box;
-            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%);
-            z-index: 9999;
+            height: 100%;
+            background: url('OIG2_vintage_tv_room.jpg') no-repeat center center;
+            background-size: cover;
+            filter: brightness(0.6) contrast(1.1);
+            z-index: -1;
         }
 
-        #gy-gy-brand {
-            font-size: 22px;
+        /* Эффект мерцания ЭЛТ-монитора поверх всего */
+        #crt-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 3px, 3px 100%;
+            pointer-events: none;
+            z-index: 10000;
+        }
+
+        /* [7.1.30-LH_] Постоянные атрибуты */
+        #header {
+            position: absolute;
+            top: 0; width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 25px;
+            box-sizing: border-box;
+        }
+
+        #gy-gy {
+            font-size: 28px;
             font-weight: 900;
-            letter-spacing: 3px;
-            color: var(--neon-cyan);
-            text-shadow: 0 0 15px var(--neon-cyan);
+            color: var(--crt-green);
+            text-shadow: 0 0 10px var(--crt-green);
+            letter-spacing: 5px;
         }
 
         .language-gate {
             display: flex;
-            gap: 15px;
+            gap: 10px;
         }
 
-        .lang-node {
-            background: var(--glass);
-            border: 1px solid var(--neon-cyan);
-            color: var(--neon-cyan);
-            padding: 4px 12px;
-            font-size: 12px;
+        .lang-btn {
+            background: var(--panel-bg);
+            border: 1px solid var(--crt-green);
+            color: var(--crt-green);
+            padding: 5px 12px;
             cursor: pointer;
-            backdrop-filter: blur(5px);
-            transition: all 0.2s ease;
+            text-transform: uppercase;
         }
 
-        .lang-node:hover {
-            box-shadow: 0 0 10px var(--neon-cyan);
-            background: var(--neon-cyan);
-            color: black;
-        }
-
-        /* Кнопка возврата (Level Up/Back) */
-        #nav-return {
-            position: fixed;
+        /* Кнопка возврата */
+        #back-btn {
+            position: absolute;
             bottom: 30px;
             left: 30px;
-            padding: 12px 24px;
-            border: 1px solid rgba(255,255,255,0.3);
-            background: var(--glass);
-            color: white;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            background: var(--panel-bg);
+            border: 1px solid #fff;
+            color: #fff;
+            padding: 10px 20px;
             cursor: pointer;
-            z-index: 9999;
+            backdrop-filter: blur(5px);
         }
 
-        /* Identity & Magic Key Area */
-        #identity-sector {
-            position: fixed;
+        /* Сектор идентификации (Magic Key) */
+        #identity-hub {
+            position: absolute;
             bottom: 30px;
             right: 30px;
             display: flex;
-            align-items: center;
-            gap: 15px;
+            flex-direction: column;
+            align-items: flex-end;
         }
 
-        #user-trace-info {
+        #user-info {
+            margin-bottom: 10px;
             text-align: right;
+            font-size: 12px;
+            color: var(--retro-amber);
         }
 
-        .nick-label {
-            font-size: 14px;
-            color: var(--retro-pink);
-            margin-bottom: 4px;
-        }
-
-        .avatar-frame {
-            width: 55px;
-            height: 55px;
-            border: 2px solid var(--retro-pink);
-            border-radius: 12px;
-            background: #1a1a1a;
+        .avatar-container {
+            width: 60px;
+            height: 60px;
+            border: 2px solid var(--retro-amber);
+            background: rgba(0,0,0,0.8);
             position: relative;
-            cursor: help;
+            cursor: pointer;
+            box-shadow: 0 0 15px var(--retro-amber);
         }
 
-        .magic-key-overlay {
+        /* Всплывающее меню Magic Key */
+        .magic-key-menu {
             position: absolute;
-            top: -120px;
+            bottom: 70px;
             right: 0;
-            background: #111;
-            border: 1px solid var(--neon-cyan);
-            padding: 10px;
+            background: var(--panel-bg);
+            border: 1px solid var(--retro-amber);
+            padding: 15px;
+            width: 200px;
             display: none;
-            width: 150px;
-            font-size: 10px;
+            backdrop-filter: blur(10px);
         }
 
-        .avatar-frame:hover .magic-key-overlay {
+        .avatar-container:hover .magic-key-menu {
             display: block;
         }
+
+        .menu-btn {
+            display: block;
+            width: 100%;
+            background: #222;
+            color: #fff;
+            border: 1px solid #444;
+            padding: 8px;
+            margin-top: 5px;
+            font-size: 10px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .tg-btn { border-color: #24A1DE; color: #24A1DE; }
     </style>
 </head>
 <body>
 
-    <header id="top-navigation">
-        <div id="gy-gy-brand">GY-GY</div>
+    <div id="background-layer"></div>
+    <div id="crt-overlay"></div>
+
+    <header id="header">
+        <div id="gy-gy">GY-GY</div>
         <div class="language-gate">
-            <button class="lang-node">EN</button>
-            <button class="lang-node">RU</button>
-            <button class="lang-node">ZH</button>
+            <button class="lang-btn">RU</button>
+            <button class="lang-btn">EN</button>
+            <button class="lang-btn">ZH</button>
         </div>
     </header>
 
-    <main style="flex: 1; display: flex; align-items: center; justify-content: center;">
-        <section id="app-core">
-            <div style="text-align: center;">
-                <h2 style="font-size: 3rem; margin-bottom: 0;">AI ROOM</h2>
-                <p style="color: var(--neon-cyan);">System: [7.1.30-LH_] | Protocol: v6.2</p>
-            </div>
-        </section>
-    </main>
-
-    <button id="nav-return" onclick="goBack()">« REVERSE</button>
-
-    <section id="identity-sector">
-        <div id="user-trace-info">
-            <div class="nick-label" id="display-nick">...detecting trace</div>
-            <div style="font-size: 9px; opacity: 0.6;">Cookie-ID: AUTO_ACTIVE</div>
+    <div style="height: 100%; display: flex; align-items: center; justify-content: center;">
+        <div style="background: var(--panel-bg); padding: 40px; border: 1px solid var(--tv-glow); text-align: center;">
+            <h1 style="margin: 0; font-size: 2.5rem; letter-spacing: 10px;">RETRO ROOM</h1>
+            <p style="color: var(--crt-green);">v6.2 [7.1.30-LH_]</p>
         </div>
-        <div class="avatar-frame" id="main-avatar">
-            <div class="magic-key-overlay" id="magic-key-panel">
-                <p>MAGIC KEY AVAILABLE</p>
-                <button onclick="downloadMagicKey()" style="width:100%; font-size:9px;">DOWNLOAD QR/AVATAR</button>
-                <hr style="border:0; border-top:1px solid #333;">
-                <button style="width:100%; font-size:9px; background:#24A1DE; color:white; border:none;">TELEGRAM STABILITY</button>
+    </div>
+
+    <button id="back-btn" onclick="history.back()">« RETURN</button>
+
+    <section id="identity-hub">
+        <div id="user-info">
+            <div id="trace-id">TRACING DIGITAL ID...</div>
+            <div style="font-size: 9px; opacity: 0.7;">STATUS: COOKIE-RECOGNIZED</div>
+        </div>
+        <div class="avatar-container">
+            <div class="magic-key-menu">
+                <strong style="font-size: 11px; color: var(--retro-amber);">MAGIC KEY SYSTEM</strong>
+                <p style="font-size: 9px;">Download your unique avatar to keep progress across devices.</p>
+                <button class="menu-btn" onclick="saveAvatar()">DOWNLOAD MAGIC KEY</button>
+                <button class="menu-btn tg-btn">STABLE ACCESS VIA TELEGRAM</button>
             </div>
         </div>
     </section>
 
     <script>
-        // Инициализация системы v6.2 [7.1.30-LH_]
-        window.onload = () => {
-            initializeDigitalTrace();
-        };
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("AI Room Retro v6.2 [7.1.30-LH_] Active");
+            initTrace();
+        });
 
-        function initializeDigitalTrace() {
-            // Ищем скрытый ID в браузере
-            let traceId = localStorage.getItem('gy_digital_trace');
-            
-            if (!traceId) {
-                // Первичный вход - автоматическое присвоение
-                traceId = 'UX-' + Math.random().toString(36).substr(2, 7).toUpperCase();
-                localStorage.setItem('gy_digital_trace', traceId);
-                assignNewAvatar();
+        function initTrace() {
+            // Реализация Cookie-recognition
+            let trace = localStorage.getItem('gy_trace_id');
+            if (!trace) {
+                trace = 'RETRO-' + Math.random().toString(36).substr(2, 5).toUpperCase();
+                localStorage.setItem('gy_trace_id', trace);
             }
-            
-            document.getElementById('display-nick').innerText = traceId;
+            document.getElementById('trace-id').innerText = trace;
+            // Здесь должна быть логика отрисовки аватара по ID
         }
 
-        function assignNewAvatar() {
-            const avatar = document.getElementById('main-avatar');
-            // Здесь логика генерации уникального аватара
-            avatar.style.background = `linear-gradient(45deg, #1a1a1a, ${Math.floor(Math.random()*16777215).toString(16)})`;
-        }
-
-        function downloadMagicKey() {
-            alert("Generating Magic Key... Your unique avatar/QR is being prepared for download.");
-        }
-
-        function goBack() {
-            window.history.back();
+        function saveAvatar() {
+            alert("Генерация Magic Key (QR/Avatar)... Сохранение сессии инициировано.");
         }
     </script>
 </body>
