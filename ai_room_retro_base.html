@@ -2,95 +2,133 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY AI ROOM | v6.1 [7.1.29-LH]</title>
+    <title>GY-GY AI ROOM | v6.2 [7.1.30-LH]</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
-        /* БАЗА БЕЗ БЛОКИРОВОК */
-        html { overflow-y: scroll !important; }
-        body { 
+        /* УБИРАЕМ ВСЕ ЖЕСТКИЕ ОГРАНИЧЕНИЯ ДЛЯ РАБОТЫ СКРОЛЛА */
+        html, body { 
             margin: 0; padding: 0; 
-            background: #111; color: #fff; 
+            background: #0a0a0a; color: #fff; 
             font-family: 'Share Tech Mono', monospace;
-            min-height: 100vh;
+            height: auto; 
+            overflow-y: visible !important;
         }
 
-        /* ФОНОВАЯ КАРТИНКА */
-        .room-bg {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover; z-index: 1;
+        /* КОНТЕЙНЕР ДЛЯ РАЦИОНАЛЬНОЙ КОМПОНОВКИ */
+        .page-structure {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
         }
 
-        /* ВЕРХНЯЯ ПАНЕЛЬ: ЯЗЫК СЛЕВА, ЛОГО СПРАВА */
-        .nav-top {
-            position: fixed; top: 20px; left: 30px; right: 30px;
-            display: flex; justify-content: space-between; align-items: center;
-            z-index: 10000; /* ВЫШЕ ВСЕГО */
+        /* 1. ПАНЕЛЬ НАВИГАЦИИ (ВЫШЕ ВСЕГО, В ПОТОКЕ) */
+        .top-navigation {
+            width: 95%;
+            padding: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
         }
 
-        .logo-club { 
-            color: #ffcc00; font-size: 28px; font-weight: bold; 
-            letter-spacing: 4px; text-transform: uppercase;
+        .logo-gy { 
+            order: 2; /* GY-GY СПРАВА */
+            color: #ffcc00; font-size: 30px; font-weight: bold; 
+            letter-spacing: 5px; text-transform: uppercase;
         }
 
         #google_translate_element { 
-            background: rgba(0,0,0,0.8);
-            padding: 5px; border: 1px solid #444;
+            order: 1; /* ЯЗЫК СЛЕВА */
+            background: rgba(255,255,255,0.05);
+            padding: 5px; border: 1px solid #333;
             border-radius: 4px;
         }
 
-        /* ТЕЛЕВИЗОРЫ: УДАЛЕННЫЙ МАСШТАБ (50%) */
-        .tv-wrapper {
-            position: absolute; top: 32%; left: 50%;
-            transform: translateX(-50%);
-            width: 50%; height: 16%;
-            display: flex; gap: 20px;
-            z-index: 500;
-        }
-        
-        .tv-slot {
-            flex: 1; display: flex; align-items: center; justify-content: center;
-            text-decoration: none; border: 1px solid rgba(255,255,255,0.15);
-            background: rgba(0,0,0,0.5); transition: 0.3s;
-            cursor: pointer;
+        /* 2. БЛОК С КАРТИНКОЙ (УМЕНЬШЕННЫЙ МАСШТАБ) */
+        .room-viewport {
+            position: relative;
+            width: 90%;      /* Не на весь экран по ширине */
+            max-width: 1200px;
+            height: 60vh;    /* СЖАТО ПО ВЕРТИКАЛИ (60% от экрана) */
+            margin-top: 10px;
+            border: 2px solid #222;
+            overflow: hidden;
+            background: #000;
         }
 
-        .tv-slot:hover { 
+        .room-img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            opacity: 0.9;
+        }
+
+        /* 3. ИНТЕРАКТИВНЫЕ ТЕЛЕВИЗОРЫ (ВНУТРИ ВЬЮПОРТА) */
+        .tv-grid-overlay {
+            position: absolute;
+            top: 25%; left: 50%;
+            transform: translateX(-50%);
+            width: 55%; height: 25%;
+            display: flex; gap: 15px;
+            z-index: 100;
+        }
+
+        .tv-trigger {
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            text-decoration: none; border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.4); transition: 0.3s;
+        }
+
+        .tv-trigger:hover { 
             border-color: #ffcc00; background: rgba(255,204,0,0.1); 
         }
 
-        .tv-label {
-            color: #fff; font-size: 13px; text-align: center; font-weight: bold;
-            text-transform: uppercase;
+        .tv-name {
+            color: #fff; font-size: 12px; text-align: center; font-weight: bold;
+            text-transform: uppercase; line-height: 1.2;
         }
 
         .build-footer { 
-            position: fixed; bottom: 15px; left: 30px; 
-            font-size: 11px; color: rgba(255,204,0,0.4); z-index: 2000;
+            margin-top: 30px; padding-bottom: 20px;
+            font-size: 11px; color: rgba(255,204,0,0.3); 
+        }
+
+        /* КРИТИЧЕСКИЙ ФИКС ДЛЯ ВЫПАДАЮЩЕГО СПИСКА GOOGLE */
+        .goog-te-menu-frame {
+            position: absolute !important;
+            top: 60px !important;
+            z-index: 99999 !important;
         }
     </style>
 </head>
 <body>
 
-    <img src="OIG2_vintage_tv_room.jpg" class="room-bg" alt="BACKGROUND">
+    <div class="page-structure">
+        
+        <header class="top-navigation">
+            <div id="google_translate_element"></div>
+            <div class="logo-gy">GY-GY</div>
+        </header>
 
-    <div class="nav-top">
-        <div id="google_translate_element"></div>
-        <div class="logo-club">GY-GY</div>
+        <main class="room-viewport">
+            <img src="OIG2_vintage_tv_room.jpg" class="room-img" alt="HQ-ROOM">
+            
+            <div class="tv-grid-overlay">
+                <a href="techpark.html" class="tv-trigger">
+                    <div class="tv-name">TECHPARK</div>
+                </a>
+                <a href="verses.html" class="tv-trigger">
+                    <div class="tv-name">GY-GY<br>VERSES</div>
+                </a>
+                <div class="tv-trigger">
+                    <div class="tv-name">RESERVE</div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="build-footer">BUILD: 7.1.30-LH | v6.2</footer>
+
     </div>
-
-    <div class="tv-wrapper">
-        <a href="techpark.html" class="tv-slot">
-            <div class="tv-label">ТЕХНОПАРК</div>
-        </a>
-        <a href="verses.html" class="tv-slot">
-            <div class="tv-label">GY-GY<br>VERSES</div>
-        </a>
-        <div class="tv-slot">
-            <div class="tv-label">RESERVE</div>
-        </div>
-    </div>
-
-    <div class="build-footer">BUILD: 7.1.29-LH | v6.1</div>
 
     <script type="text/javascript">
         function googleTranslateElementInit() {
