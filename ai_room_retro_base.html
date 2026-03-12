@@ -2,22 +2,23 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY AI ROOM | v6.2 [7.1.35-LH]</title>
+    <title>GY-GY AI ROOM | v6.2 [7.1.36-LH]</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         /* БАЗА */
         html { overflow-y: scroll !important; }
         body { 
             margin: 0; padding: 0; 
-            background: #111; color: #fff; 
+            background: #000; color: #fff; 
             font-family: 'Share Tech Mono', monospace;
             min-height: 100vh;
         }
 
-        /* ФОНОВАЯ КАРТИНКА - СТРОГО ТВОЙ ФАЙЛ */
+        /* ТВОЙ ФАЙЛ: OIG2_vintage_tv_room.jpg */
         .room-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             object-fit: cover; z-index: 1;
+            filter: brightness(0.85);
         }
 
         /* ВЕРХНЯЯ ПАНЕЛЬ: ЯЗЫК СЛЕВА, ЛОГО СПРАВА */
@@ -38,88 +39,57 @@
             border-radius: 4px;
         }
 
-        /* ТЕЛЕВИЗОРЫ: УДАЛЕННЫЙ МАСШТАБ (ОТОДВИНУТЫ) */
-        .tv-wrapper {
-            position: absolute; top: 32%; left: 50%;
-            transform: translateX(-50%) scale(0.4); /* Отодвинуты от зрителя */
-            width: 50%; height: 16%;
-            display: flex; gap: 20px;
+        /* ТЕЛЕВИЗОРЫ: МАКСИМАЛЬНОЕ УДАЛЕНИЕ (Scale 0.3) */
+        .tv-perspective-container {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            perspective: 1200px; /* Эффект глубины */
             z-index: 500;
+            pointer-events: none;
+        }
+
+        .tv-wrapper {
+            transform: translateY(-5%) scale(0.3); /* Сильно отодвинуто */
+            width: 80%; 
+            display: flex; gap: 40px;
+            pointer-events: auto;
         }
         
         .tv-slot {
-            flex: 1; display: flex; align-items: center; justify-content: center;
-            text-decoration: none; border: 1px solid rgba(255,255,255,0.15);
-            background: rgba(0,0,0,0.5); transition: 0.3s;
+            flex: 1; aspect-ratio: 4/3;
+            display: flex; align-items: center; justify-content: center;
+            text-decoration: none; border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.6); transition: 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
             cursor: pointer;
+            box-shadow: 0 0 40px rgba(0,0,0,0.8);
         }
 
         .tv-slot:hover { 
-            border-color: #ffcc00; background: rgba(255,204,0,0.1); 
+            border-color: #ffcc00; 
+            background: rgba(255,204,0,0.1);
+            transform: translateZ(50px); /* Приближается только при наведении */
+            box-shadow: 0 0 60px rgba(255,204,0,0.2);
         }
 
         .tv-label {
-            color: #fff; font-size: 13px; text-align: center; font-weight: bold;
-            text-transform: uppercase;
+            color: #fff; font-size: 24px; text-align: center; font-weight: bold;
+            text-transform: uppercase; letter-spacing: 2px;
         }
 
         /* НИЖНЯЯ ПАНЕЛЬ (ПОСТОЯННАЯ) */
-        .build-footer { 
-            position: fixed; bottom: 15px; left: 30px; 
-            font-size: 11px; color: rgba(255,204,0,0.4); z-index: 2000;
+        .footer-bar {
+            position: fixed; bottom: 15px; left: 30px; right: 30px;
+            display: flex; justify-content: space-between; align-items: flex-end;
+            z-index: 2000;
         }
 
+        .build-footer { font-size: 11px; color: rgba(255,204,0,0.4); }
+
         .id-trace {
-            position: fixed; bottom: 15px; right: 30px;
-            text-align: right; z-index: 2000;
+            text-align: right;
             color: #ffcc00; font-size: 10px;
+            letter-spacing: 1px;
         }
     </style>
 </head>
 <body>
-
-    <img src="OIG2_vintage_tv_room.jpg" class="room-bg" alt="BACKGROUND">
-
-    <div class="nav-top">
-        <div id="google_translate_element"></div>
-        <div class="logo-club">GY-GY</div>
-    </div>
-
-    <div class="tv-wrapper">
-        <a href="techpark.html" class="tv-slot">
-            <div class="tv-label">ТЕХНОПАРК</div>
-        </a>
-        <a href="verses.html" class="tv-slot">
-            <div class="tv-label">GY-GY<br>VERSES</div>
-        </a>
-        <div class="tv-slot">
-            <div class="tv-label">RESERVE</div>
-        </div>
-    </div>
-
-    <div class="build-footer" id="footer-tag">BUILD: 7.1.35-LH | v6.2</div>
-
-    <div class="id-trace">
-        DIGITAL TRACE: <span id="user-id">ID_SYNC</span>
-    </div>
-
-    <script type="text/javascript">
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({
-                pageLanguage: 'ru',
-                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-            }, 'google_translate_element');
-        }
-
-        // Логика нумерации и следа
-        document.addEventListener('DOMContentLoaded', () => {
-            const VERSION = "7.1.35";
-            let trace = localStorage.getItem('gy_trace') || 'GY-' + Math.random().toString(36).substr(2, 7).toUpperCase();
-            localStorage.setItem('gy_trace', trace);
-            document.getElementById('user-id').innerText = trace;
-        });
-    </script>
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
-</body>
-</html>
