@@ -3,162 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Room Retro | v6.2 [7.1.31-LH_]</title>
+    <title>AI Room Retro | v6.2 [7.1.32-LH_]</title>
     <style>
         :root {
-            --accent: #d4af37; /* Цвет латуни/старого освещения */
-            --glass: rgba(0, 0, 0, 0.6);
-            --font-main: 'Courier New', Courier, monospace;
+            --gold-leaf: #d4af37;
+            --crt-white: #fafafa;
+            --glass-dark: rgba(0, 0, 0, 0.8);
         }
 
         body, html {
             margin: 0; padding: 0; height: 100%; width: 100%;
             background-color: #000;
             color: #fff;
-            font-family: var(--font-main);
+            font-family: 'Courier New', Courier, monospace;
             overflow: hidden;
         }
 
-        /* Фоновое изображение (image_1e07e4.png) */
-        #room-bg {
+        /* [ФОН] Обязательный визуал OIG2 */
+        #tv-background {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: url('image_1e07e4.png') no-repeat center center;
+            background: url('OIG2_vintage_tv_room.jpg') no-repeat center center;
             background-size: cover;
+            filter: contrast(1.1) brightness(0.5);
             z-index: -2;
         }
 
-        /* Затемнение для фокуса на экранах */
-        #mask {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.4);
-            z-index: -1;
-        }
-
-        /* [Обязательно] GY-GY и Языковая панель: Видны от входа */
+        /* [АТРИБУТ] GY-GY & ЯЗЫКИ (Верхний эшелон) */
         header {
-            position: fixed;
-            top: 0; width: 100%;
+            position: fixed; top: 0; width: 100%;
             display: flex; justify-content: space-between;
-            padding: 30px 40px; box-sizing: border-box;
-            z-index: 1000;
+            padding: 30px 45px; box-sizing: border-box; z-index: 1000;
         }
-
-        .brand {
-            font-size: 24px; font-weight: bold; letter-spacing: 5px;
-            text-shadow: 0 0 10px rgba(255,255,255,0.5);
-        }
-
+        .gy-gy { font-size: 26px; font-weight: 900; letter-spacing: 6px; }
+        
         .lang-panel { display: flex; gap: 15px; }
         .lang-node {
-            background: var(--glass); border: 1px solid rgba(255,255,255,0.2);
+            background: var(--glass-dark); border: 1px solid rgba(255,255,255,0.1);
             color: #fff; padding: 5px 12px; cursor: pointer; font-size: 11px;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(4px);
         }
 
-        /* [Обязательно] Кнопка возврата: Нижний уровень */
-        .btn-back {
-            position: fixed;
-            bottom: 40px; left: 40px;
-            background: var(--glass); border: 1px solid #fff;
-            color: #fff; padding: 10px 20px; font-size: 10px;
+        /* [ЦЕНТР] Основной монитор и счетчик */
+        .hub-center {
+            height: 100vh; display: flex; align-items: center; justify-content: center;
+        }
+        .monitor-output {
+            text-align: center;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+            box-shadow: 0 0 60px rgba(0,0,0,0.5);
+        }
+        .build-id {
+            font-size: 11px; color: var(--gold-leaf);
+            letter-spacing: 4px; margin-top: 15px;
+            text-transform: uppercase;
+        }
+
+        /* [АТРИБУТ] ВОЗВРАТ (Нижний левый) */
+        .back-node {
+            position: fixed; bottom: 40px; left: 45px;
+            background: var(--glass-dark); border: 1px solid #fff;
+            color: #fff; padding: 12px 24px; font-size: 10px;
             letter-spacing: 2px; cursor: pointer; z-index: 1000;
         }
 
-        /* [Обязательно] Identity: Cookie + Magic Key */
-        .identity-sector {
-            position: fixed;
-            bottom: 40px; right: 40px;
-            display: flex; align-items: center; gap: 20px;
-            z-index: 1000;
+        /* [АТРИБУТ] IDENTITY (Нижний правый) */
+        .identity-hub {
+            position: fixed; bottom: 40px; right: 45px;
+            display: flex; align-items: center; gap: 20px; z-index: 1000;
         }
+        .trace-data { text-align: right; }
+        .trace-data small { font-size: 9px; opacity: 0.4; display: block; }
+        .trace-data strong { color: var(--gold-leaf); font-size: 14px; }
 
-        .id-label { text-align: right; line-height: 1.2; }
-        .id-label small { font-size: 9px; opacity: 0.5; display: block; }
-        .id-label strong { font-size: 14px; color: var(--accent); }
-
-        /* Magic Key ( download-avatar / QR ) */
-        .magic-key-avatar {
+        .magic-key-box {
             width: 55px; height: 55px;
-            border: 1px solid var(--accent);
-            background: rgba(0,0,0,0.8);
+            border: 1px solid var(--gold-leaf);
+            background: rgba(0,0,0,0.9);
             display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: 0.3s;
-        }
-        .magic-key-avatar:hover { box-shadow: 0 0 15px var(--accent); }
-
-        /* Центральный ТВ-интерфейс */
-        .display-system {
-            height: 100vh; display: flex; align-items: center; justify-content: center;
-            pointer-events: none;
-        }
-
-        .screen-text {
-            text-align: center;
-            transform: translateY(-20px); /* Центровка по среднему ТВ */
-        }
-
-        .version-info {
-            font-size: 10px; color: var(--accent); letter-spacing: 4px;
-            margin-top: 15px;
+            cursor: pointer; position: relative;
         }
     </style>
 </head>
 <body>
 
-    <div id="room-bg"></div>
-    <div id="mask"></div>
+    <div id="tv-background"></div>
 
     <header>
-        <div class="brand">GY-GY</div>
+        <div class="gy-gy">GY-GY</div>
         <nav class="lang-panel">
             <button class="lang-node">RU</button>
             <button class="lang-node">EN</button>
         </nav>
     </header>
 
-    <main class="display-system">
-        <div class="screen-text">
-            <h1 style="font-size: 3rem; font-weight: 200; letter-spacing: 15px; margin: 0;">AI ROOM</h1>
-            <div class="version-info" id="sys-version">SYSTEM BOOTING...</div>
+    <main class="hub-center">
+        <div class="monitor-output">
+            <h1 style="font-size: 3rem; font-weight: 100; letter-spacing: 20px; margin: 0;">AI ROOM</h1>
+            <div class="build-id" id="version-counter">v6.2 [7.1.32-LH_]</div>
+            <div style="width: 150px; height: 1px; background: var(--gold-leaf); margin: 20px auto; opacity: 0.3;"></div>
         </div>
     </main>
 
-    <button class="btn-back" onclick="history.back()">LEVEL_UP</button>
+    <button class="back-node" onclick="history.back()">LEVEL_RETURN</button>
 
-    <section class="identity-sector">
-        <div class="id-label">
-            <small>UNIQUE DIGITAL TRACE</small>
-            <strong id="user-id">ID_IDENTIFYING...</strong>
+    <section class="identity-hub">
+        <div class="trace-data">
+            <span>UNIQUE DIGITAL TRACE</span>
+            <strong id="user-trace-display">INITIALIZING...</strong>
         </div>
-        <div class="magic-key-avatar" id="magic-key" title="Magic Key: Continuity & Stability">
-            <span style="font-size: 10px; color: var(--accent);">M.K.</span>
+        <div class="magic-key-box" id="magic-key">
+            <span style="font-size: 10px; color: var(--gold-leaf);">M.K.</span>
         </div>
     </section>
 
     <script>
-        // v6.2 [7.1.31-LH_] Logic
+        /**
+         * v6.2 [7.1.32-LH_] 
+         * Logic: Version Counter + Cookie Recognition
+         */
         document.addEventListener('DOMContentLoaded', () => {
-            const CURRENT_VERSION = "7.1.31-LH_";
-            
-            // 1. Установка версии
-            document.getElementById('sys-version').innerText = `VER: ${CURRENT_VERSION}`;
+            const VERSION_BASE = "7.1.32";
+            const SUFFIX = "LH_";
 
-            // 2. Cookie-recognition / Digital Trace
-            let traceId = localStorage.getItem('gy_trace_v7');
-            if (!traceId) {
-                // Автоматическое создание уникального ID (Cookie-recognition)
-                traceId = 'UX-' + Math.random().toString(36).substr(2, 7).toUpperCase();
-                localStorage.setItem('gy_trace_v7', traceId);
+            // 1. Динамический счетчик (через LocalStorage)
+            let buildVersion = localStorage.getItem('gy_build_idx') || 0;
+            buildVersion++;
+            localStorage.setItem('gy_build_idx', buildVersion);
+
+            // Обновление отображения версии
+            document.getElementById('version-counter').innerText = `v6.2 [${VERSION_BASE}.${buildVersion}-${SUFFIX}]`;
+
+            // 2. Cookie-recognition (Digital Trace)
+            let trace = localStorage.getItem('gy_digital_trace_v7');
+            if (!trace) {
+                trace = 'UX-' + Math.random().toString(36).substr(2, 7).toUpperCase();
+                localStorage.setItem('gy_digital_trace_v7', trace);
             }
-            document.getElementById('user-id').innerText = traceId;
+            document.getElementById('user-trace-display').innerText = trace;
 
-            // 3. Magic Key (Логика аватара/QR будет здесь)
-            document.getElementById('magic-key').onclick = () => {
-                alert(`Magic Key [${traceId}] готов. Предлагаем скачать аватар или подключить Telegram для стабильности.`);
-            };
+            console.log(`System Build ${VERSION_BASE}.${buildVersion} Synchronized.`);
         });
+
+        document.getElementById('magic-key').onclick = () => {
+            alert("Magic Key Status: Active\nSession saved via Cookie-recognition.");
+        };
     </script>
 </body>
 </html>
