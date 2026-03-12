@@ -2,14 +2,14 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY AI ROOM | v6.1 [7.1.29-LH]</title>
+    <title>GY-GY AI ROOM | v6.2 [7.1.34-LH]</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
-        /* БАЗА БЕЗ БЛОКИРОВОК */
+        /* БАЗА */
         html { overflow-y: scroll !important; }
         body { 
             margin: 0; padding: 0; 
-            background: #111; color: #fff; 
+            background: #000; color: #fff; 
             font-family: 'Share Tech Mono', monospace;
             min-height: 100vh;
         }
@@ -18,13 +18,14 @@
         .room-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             object-fit: cover; z-index: 1;
+            filter: brightness(0.7);
         }
 
         /* ВЕРХНЯЯ ПАНЕЛЬ: ЯЗЫК СЛЕВА, ЛОГО СПРАВА */
         .nav-top {
             position: fixed; top: 20px; left: 30px; right: 30px;
             display: flex; justify-content: space-between; align-items: center;
-            z-index: 10000; /* ВЫШЕ ВСЕГО */
+            z-index: 10000;
         }
 
         .logo-club { 
@@ -38,40 +39,77 @@
             border-radius: 4px;
         }
 
-        /* ТЕЛЕВИЗОРЫ: УДАЛЕННЫЙ МАСШТАБ (50%) */
+        /* ТЕЛЕВИЗОРЫ: ЭФФЕКТ УДАЛЕНИЯ (Scale 0.4 + Position Adjust) */
         .tv-wrapper {
-            position: absolute; top: 32%; left: 50%;
-            transform: translateX(-50%);
-            width: 50%; height: 16%;
-            display: flex; gap: 20px;
+            position: absolute; 
+            top: 28%; /* Чуть выше к линии горизонта */
+            left: 50%;
+            transform: translateX(-50%) scale(0.4); /* Уменьшили до 40% для эффекта дали */
+            width: 60%; 
+            height: 20%;
+            display: flex; 
+            gap: 40px;
             z-index: 500;
+            opacity: 0.85;
+            transition: transform 0.5s ease;
         }
         
+        .tv-wrapper:hover {
+            transform: translateX(-50%) scale(0.42); /* Легкий наезд при фокусе */
+        }
+
         .tv-slot {
             flex: 1; display: flex; align-items: center; justify-content: center;
-            text-decoration: none; border: 1px solid rgba(255,255,255,0.15);
-            background: rgba(0,0,0,0.5); transition: 0.3s;
+            text-decoration: none; border: 2px solid rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.6); transition: 0.3s;
             cursor: pointer;
+            box-shadow: 0 0 30px rgba(0,0,0,1);
         }
 
         .tv-slot:hover { 
-            border-color: #ffcc00; background: rgba(255,204,0,0.1); 
+            border-color: #ffcc00; 
+            background: rgba(255,204,0,0.15);
+            box-shadow: 0 0 50px rgba(255,204,0,0.2);
         }
 
         .tv-label {
-            color: #fff; font-size: 13px; text-align: center; font-weight: bold;
-            text-transform: uppercase;
+            color: #fff; font-size: 18px; text-align: center; font-weight: bold;
+            text-transform: uppercase; letter-spacing: 2px;
         }
 
-        .build-footer { 
-            position: fixed; bottom: 15px; left: 30px; 
-            font-size: 11px; color: rgba(255,204,0,0.4); z-index: 2000;
+        /* ФУТЕР: ИДЕНТИФИКАЦИЯ И ВОЗВРАТ */
+        .footer-nav {
+            position: fixed; bottom: 20px; left: 30px; right: 30px;
+            display: flex; justify-content: space-between; align-items: flex-end;
+            z-index: 2000;
+        }
+
+        .control-group { display: flex; flex-direction: column; gap: 10px; }
+        
+        .btn-back {
+            background: rgba(0,0,0,0.8); border: 1px solid #fff;
+            color: #fff; padding: 6px 20px; cursor: pointer;
+            font-size: 10px; text-transform: uppercase;
+        }
+
+        .build-tag { font-size: 11px; color: rgba(255,204,0,0.4); }
+
+        .identity-box { text-align: right; }
+        .id-label { font-size: 9px; opacity: 0.5; letter-spacing: 1px; }
+        .id-value { color: #ffcc00; font-size: 14px; font-weight: bold; display: block; }
+
+        /* Magic Key (Avatar) */
+        .magic-key {
+            width: 45px; height: 45px; border: 1px solid #ffcc00;
+            margin-top: 5px; float: right; background: #111;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-    <img src="OIG2_vintage_tv_room.jpg" class="room-bg" alt="BACKGROUND">
+    <img src="image_1e07e4.png" class="room-bg" alt="BACKGROUND">
 
     <div class="nav-top">
         <div id="google_translate_element"></div>
@@ -80,17 +118,30 @@
 
     <div class="tv-wrapper">
         <a href="techpark.html" class="tv-slot">
-            <div class="tv-label">ТЕХНОПАРК</div>
+            <div class="tv-label">TECHPARK</div>
         </a>
         <a href="verses.html" class="tv-slot">
-            <div class="tv-label">GY-GY<br>VERSES</div>
+            <div class="tv-label">MINTING<br>CORE</div>
         </a>
         <div class="tv-slot">
             <div class="tv-label">RESERVE</div>
         </div>
     </div>
 
-    <div class="build-footer">BUILD: 7.1.29-LH | v6.1</div>
+    <div class="footer-nav">
+        <div class="control-group">
+            <button class="btn-back" onclick="history.back()">LEVEL_RETURN</button>
+            <div class="build-tag" id="build-info">BUILD: 7.1.34-LH | v6.2</div>
+        </div>
+
+        <div class="identity-box">
+            <span class="id-label">DIGITAL TRACE</span>
+            <span class="id-value" id="user-id">SYNCING...</span>
+            <div class="magic-key" id="magic-key" title="Download Magic Key">
+                <span style="font-size: 8px; color: #ffcc00;">KEY</span>
+            </div>
+        </div>
+    </div>
 
     <script type="text/javascript">
         function googleTranslateElementInit() {
@@ -99,6 +150,27 @@
                 layout: google.translate.TranslateElement.InlineLayout.SIMPLE
             }, 'google_translate_element');
         }
+
+        // IDENTITY SYSTEM 7.1.34
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Digital Trace (Cookie-recognition)
+            let trace = localStorage.getItem('gy_trace_34');
+            if (!trace) {
+                trace = 'ID-' + Math.random().toString(36).substr(2, 8).toUpperCase();
+                localStorage.setItem('gy_trace_34', trace);
+            }
+            document.getElementById('user-id').innerText = trace;
+
+            // 2. Build Counter
+            let bCount = localStorage.getItem('gy_build_34') || 0;
+            bCount++;
+            localStorage.setItem('gy_build_34', bCount);
+            document.getElementById('build-info').innerText = `BUILD: 7.1.34.${bCount}-LH | v6.2`;
+        });
+
+        document.getElementById('magic-key').onclick = () => {
+            alert("Magic Key Active. Use this ID for stability across devices.");
+        };
     </script>
     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
