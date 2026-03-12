@@ -6,166 +6,159 @@
     <title>AI Room Retro | v6.2 [7.1.31-LH_]</title>
     <style>
         :root {
-            --accent: #00f3ff;
-            --magic-gold: #ffb000;
-            --bg-dark: #050505;
-            --glass: rgba(0, 0, 0, 0.75);
+            --accent: #d4af37; /* Цвет латуни/старого освещения */
+            --glass: rgba(0, 0, 0, 0.6);
+            --font-main: 'Courier New', Courier, monospace;
         }
 
         body, html {
             margin: 0; padding: 0; height: 100%; width: 100%;
-            background-color: var(--bg-dark);
-            color: #ffffff;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: #000;
+            color: #fff;
+            font-family: var(--font-main);
             overflow: hidden;
         }
 
-        /* [7.1.31] Интеграция визуальной базы OIG2 */
-        #viewport {
+        /* Фоновое изображение (image_1e07e4.png) */
+        #room-bg {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: url('OIG2_vintage_tv_room.jpg') no-repeat center center;
+            background: url('image_1e07e4.png') no-repeat center center;
             background-size: cover;
-            filter: brightness(0.4) saturate(0.8);
+            z-index: -2;
+        }
+
+        /* Затемнение для фокуса на экранах */
+        #mask {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.4);
             z-index: -1;
-            transition: 0.5s filter;
         }
 
-        /* Постоянный атрибут: GY-GY */
-        .brand-node {
+        /* [Обязательно] GY-GY и Языковая панель: Видны от входа */
+        header {
             position: fixed;
-            top: 25px; left: 30px;
-            font-size: 22px; font-weight: 800; letter-spacing: 4px;
-            color: var(--accent);
-            text-shadow: 0 0 15px var(--accent);
+            top: 0; width: 100%;
+            display: flex; justify-content: space-between;
+            padding: 30px 40px; box-sizing: border-box;
             z-index: 1000;
         }
 
-        /* Постоянный атрибут: Языковая панель (visible from entry) */
-        .lang-gate {
-            position: fixed;
-            top: 25px; right: 30px;
-            display: flex; gap: 12px;
-            z-index: 1000;
+        .brand {
+            font-size: 24px; font-weight: bold; letter-spacing: 5px;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
         }
 
+        .lang-panel { display: flex; gap: 15px; }
         .lang-node {
-            background: var(--glass);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #fff; padding: 4px 10px;
-            font-size: 11px; cursor: pointer;
-            backdrop-filter: blur(8px);
+            background: var(--glass); border: 1px solid rgba(255,255,255,0.2);
+            color: #fff; padding: 5px 12px; cursor: pointer; font-size: 11px;
+            backdrop-filter: blur(5px);
         }
 
-        .lang-node:hover { border-color: var(--accent); color: var(--accent); }
-
-        /* Постоянный атрибут: Кнопка возврата на уровень вверх */
-        .nav-reverse {
+        /* [Обязательно] Кнопка возврата: Нижний уровень */
+        .btn-back {
             position: fixed;
-            bottom: 30px; left: 30px;
-            padding: 10px 20px;
-            background: var(--glass);
-            border: 1px solid #fff;
-            color: #fff; font-size: 10px; letter-spacing: 2px;
-            cursor: pointer; backdrop-filter: blur(8px);
+            bottom: 40px; left: 40px;
+            background: var(--glass); border: 1px solid #fff;
+            color: #fff; padding: 10px 20px; font-size: 10px;
+            letter-spacing: 2px; cursor: pointer; z-index: 1000;
+        }
+
+        /* [Обязательно] Identity: Cookie + Magic Key */
+        .identity-sector {
+            position: fixed;
+            bottom: 40px; right: 40px;
+            display: flex; align-items: center; gap: 20px;
             z-index: 1000;
         }
 
-        /* Identity Sector: Cookie + Telegram + Magic Key */
-        .id-anchor {
-            position: fixed;
-            bottom: 30px; right: 30px;
-            display: flex; align-items: center; gap: 15px;
-            z-index: 1000;
-        }
+        .id-label { text-align: right; line-height: 1.2; }
+        .id-label small { font-size: 9px; opacity: 0.5; display: block; }
+        .id-label strong { font-size: 14px; color: var(--accent); }
 
-        .id-meta { text-align: right; }
-        .id-meta span { display: block; font-size: 9px; opacity: 0.5; text-transform: uppercase; }
-        .id-meta strong { font-size: 14px; color: var(--magic-gold); font-family: monospace; }
-
-        .magic-key-box {
+        /* Magic Key ( download-avatar / QR ) */
+        .magic-key-avatar {
             width: 55px; height: 55px;
-            border: 1px solid var(--magic-gold);
+            border: 1px solid var(--accent);
             background: rgba(0,0,0,0.8);
-            border-radius: 4px;
-            cursor: pointer;
             display: flex; align-items: center; justify-content: center;
-            overflow: hidden;
-            box-shadow: 0 0 15px rgba(255, 176, 0, 0.2);
+            cursor: pointer; transition: 0.3s;
+        }
+        .magic-key-avatar:hover { box-shadow: 0 0 15px var(--accent); }
+
+        /* Центральный ТВ-интерфейс */
+        .display-system {
+            height: 100vh; display: flex; align-items: center; justify-content: center;
+            pointer-events: none;
         }
 
-        /* Центральный интерфейс */
-        .core-stage {
-            height: 100vh;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
+        .screen-text {
             text-align: center;
+            transform: translateY(-20px); /* Центровка по среднему ТВ */
         }
 
-        .status-tag {
-            margin-top: 20px;
-            font-size: 11px; letter-spacing: 2px;
-            color: rgba(255,255,255,0.4);
+        .version-info {
+            font-size: 10px; color: var(--accent); letter-spacing: 4px;
+            margin-top: 15px;
         }
     </style>
 </head>
 <body>
 
-    <div id="viewport"></div>
+    <div id="room-bg"></div>
+    <div id="mask"></div>
 
-    <div class="brand-node">GY-GY</div>
+    <header>
+        <div class="brand">GY-GY</div>
+        <nav class="lang-panel">
+            <button class="lang-node">RU</button>
+            <button class="lang-node">EN</button>
+        </nav>
+    </header>
 
-    <nav class="lang-gate">
-        <button class="lang-node">RU</button>
-        <button class="lang-node">EN</button>
-        <button class="lang-node">ZH</button>
-    </nav>
-
-    <main class="core-stage">
-        <h1 style="font-size: 3.5rem; font-weight: 200; letter-spacing: 18px; margin: 0;">AI ROOM</h1>
-        <div class="status-tag">SYSTEM CORE [7.1.31-LH_] | v6.2</div>
+    <main class="display-system">
+        <div class="screen-text">
+            <h1 style="font-size: 3rem; font-weight: 200; letter-spacing: 15px; margin: 0;">AI ROOM</h1>
+            <div class="version-info" id="sys-version">SYSTEM BOOTING...</div>
+        </div>
     </main>
 
-    <button class="nav-reverse" onclick="history.back()">LEVEL REVERSE</button>
+    <button class="btn-back" onclick="history.back()">LEVEL_UP</button>
 
-    <section class="id-anchor">
-        <div class="id-meta">
-            <span>Digital Trace ID</span>
-            <strong id="trace-display">INITIALIZING...</strong>
+    <section class="identity-sector">
+        <div class="id-label">
+            <small>UNIQUE DIGITAL TRACE</small>
+            <strong id="user-id">ID_IDENTIFYING...</strong>
         </div>
-        <div class="magic-key-box" id="magic-key" title="Download Magic Key / Link Telegram">
-            <div style="font-size: 8px; text-align: center; color: var(--magic-gold);">MAGIC<br>KEY</div>
+        <div class="magic-key-avatar" id="magic-key" title="Magic Key: Continuity & Stability">
+            <span style="font-size: 10px; color: var(--accent);">M.K.</span>
         </div>
     </section>
 
     <script>
-        /**
-         * v7.1.31 Architectural Logic
-         * Continuity: Cookie-recognition + Unique Digital Trace
-         */
+        // v6.2 [7.1.31-LH_] Logic
         document.addEventListener('DOMContentLoaded', () => {
-            syncIdentity();
-        });
-
-        function syncIdentity() {
-            // 1. Пытаемся распознать пользователя через Cookie/LocalStorage
-            let traceID = localStorage.getItem('gy_trace_7131');
+            const CURRENT_VERSION = "7.1.31-LH_";
             
-            if (!traceID) {
-                // Первый вход: автоматическое назначение ID
-                traceID = 'UX-' + Math.random().toString(36).substr(2, 7).toUpperCase();
-                localStorage.setItem('gy_trace_7131', traceID);
-                console.log("Trace Identity Created: " + traceID);
+            // 1. Установка версии
+            document.getElementById('sys-version').innerText = `VER: ${CURRENT_VERSION}`;
+
+            // 2. Cookie-recognition / Digital Trace
+            let traceId = localStorage.getItem('gy_trace_v7');
+            if (!traceId) {
+                // Автоматическое создание уникального ID (Cookie-recognition)
+                traceId = 'UX-' + Math.random().toString(36).substr(2, 7).toUpperCase();
+                localStorage.setItem('gy_trace_v7', traceId);
             }
+            document.getElementById('user-id').innerText = traceId;
 
-            // 2. Отображение ID в интерфейсе
-            document.getElementById('trace-display').innerText = traceID;
-
-            // 3. Подготовка Magic Key (здесь может быть генерация QR)
+            // 3. Magic Key (Логика аватара/QR будет здесь)
             document.getElementById('magic-key').onclick = () => {
-                alert(`Magic Key [${traceID}]\n\n1. Download Avatar/QR for Continuity\n2. Link Telegram for Stability`);
+                alert(`Magic Key [${traceId}] готов. Предлагаем скачать аватар или подключить Telegram для стабильности.`);
             };
-        }
+        });
     </script>
 </body>
 </html>
