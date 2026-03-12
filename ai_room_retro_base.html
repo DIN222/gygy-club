@@ -2,143 +2,204 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY AI ROOM | v6.2 [7.1.30-LH]</title>
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Room Retro | v6.2 [7.1.30-LH_]</title>
     <style>
-        /* УБИРАЕМ ВСЕ ЖЕСТКИЕ ОГРАНИЧЕНИЯ ДЛЯ РАБОТЫ СКРОЛЛА */
-        html, body { 
-            margin: 0; padding: 0; 
-            background: #0a0a0a; color: #fff; 
-            font-family: 'Share Tech Mono', monospace;
-            height: auto; 
-            overflow-y: visible !important;
+        :root {
+            --neon-cyan: #00f3ff;
+            --retro-pink: #ff00ff;
+            --deep-space: #050505;
+            --glass: rgba(255, 255, 255, 0.05);
         }
 
-        /* КОНТЕЙНЕР ДЛЯ РАЦИОНАЛЬНОЙ КОМПОНОВКИ */
-        .page-structure {
+        body {
+            background-color: var(--deep-space);
+            color: #e0e0e0;
+            font-family: 'Segoe UI', 'Courier New', monospace;
+            margin: 0;
+            height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            width: 100%;
+            overflow: hidden;
         }
 
-        /* 1. ПАНЕЛЬ НАВИГАЦИИ (ВЫШЕ ВСЕГО, В ПОТОКЕ) */
-        .top-navigation {
-            width: 95%;
-            padding: 20px 0;
+        /* [7.1.30-LH_] Постоянные атрибуты */
+        #top-navigation {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 60px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            z-index: 1000;
+            padding: 0 25px;
+            box-sizing: border-box;
+            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%);
+            z-index: 9999;
         }
 
-        .logo-gy { 
-            order: 2; /* GY-GY СПРАВА */
-            color: #ffcc00; font-size: 30px; font-weight: bold; 
-            letter-spacing: 5px; text-transform: uppercase;
+        #gy-gy-brand {
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: 3px;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 15px var(--neon-cyan);
         }
 
-        #google_translate_element { 
-            order: 1; /* ЯЗЫК СЛЕВА */
-            background: rgba(255,255,255,0.05);
-            padding: 5px; border: 1px solid #333;
-            border-radius: 4px;
+        .language-gate {
+            display: flex;
+            gap: 15px;
         }
 
-        /* 2. БЛОК С КАРТИНКОЙ (УМЕНЬШЕННЫЙ МАСШТАБ) */
-        .room-viewport {
+        .lang-node {
+            background: var(--glass);
+            border: 1px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+            padding: 4px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            transition: all 0.2s ease;
+        }
+
+        .lang-node:hover {
+            box-shadow: 0 0 10px var(--neon-cyan);
+            background: var(--neon-cyan);
+            color: black;
+        }
+
+        /* Кнопка возврата (Level Up/Back) */
+        #nav-return {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            padding: 12px 24px;
+            border: 1px solid rgba(255,255,255,0.3);
+            background: var(--glass);
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            z-index: 9999;
+        }
+
+        /* Identity & Magic Key Area */
+        #identity-sector {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        #user-trace-info {
+            text-align: right;
+        }
+
+        .nick-label {
+            font-size: 14px;
+            color: var(--retro-pink);
+            margin-bottom: 4px;
+        }
+
+        .avatar-frame {
+            width: 55px;
+            height: 55px;
+            border: 2px solid var(--retro-pink);
+            border-radius: 12px;
+            background: #1a1a1a;
             position: relative;
-            width: 90%;      /* Не на весь экран по ширине */
-            max-width: 1200px;
-            height: 60vh;    /* СЖАТО ПО ВЕРТИКАЛИ (60% от экрана) */
-            margin-top: 10px;
-            border: 2px solid #222;
-            overflow: hidden;
-            background: #000;
+            cursor: help;
         }
 
-        .room-img {
-            width: 100%; height: 100%;
-            object-fit: cover;
-            opacity: 0.9;
-        }
-
-        /* 3. ИНТЕРАКТИВНЫЕ ТЕЛЕВИЗОРЫ (ВНУТРИ ВЬЮПОРТА) */
-        .tv-grid-overlay {
+        .magic-key-overlay {
             position: absolute;
-            top: 25%; left: 50%;
-            transform: translateX(-50%);
-            width: 55%; height: 25%;
-            display: flex; gap: 15px;
-            z-index: 100;
+            top: -120px;
+            right: 0;
+            background: #111;
+            border: 1px solid var(--neon-cyan);
+            padding: 10px;
+            display: none;
+            width: 150px;
+            font-size: 10px;
         }
 
-        .tv-trigger {
-            flex: 1; display: flex; align-items: center; justify-content: center;
-            text-decoration: none; border: 1px solid rgba(255,255,255,0.1);
-            background: rgba(0,0,0,0.4); transition: 0.3s;
-        }
-
-        .tv-trigger:hover { 
-            border-color: #ffcc00; background: rgba(255,204,0,0.1); 
-        }
-
-        .tv-name {
-            color: #fff; font-size: 12px; text-align: center; font-weight: bold;
-            text-transform: uppercase; line-height: 1.2;
-        }
-
-        .build-footer { 
-            margin-top: 30px; padding-bottom: 20px;
-            font-size: 11px; color: rgba(255,204,0,0.3); 
-        }
-
-        /* КРИТИЧЕСКИЙ ФИКС ДЛЯ ВЫПАДАЮЩЕГО СПИСКА GOOGLE */
-        .goog-te-menu-frame {
-            position: absolute !important;
-            top: 60px !important;
-            z-index: 99999 !important;
+        .avatar-frame:hover .magic-key-overlay {
+            display: block;
         }
     </style>
 </head>
 <body>
 
-    <div class="page-structure">
-        
-        <header class="top-navigation">
-            <div id="google_translate_element"></div>
-            <div class="logo-gy">GY-GY</div>
-        </header>
+    <header id="top-navigation">
+        <div id="gy-gy-brand">GY-GY</div>
+        <div class="language-gate">
+            <button class="lang-node">EN</button>
+            <button class="lang-node">RU</button>
+            <button class="lang-node">ZH</button>
+        </div>
+    </header>
 
-        <main class="room-viewport">
-            <img src="OIG2_vintage_tv_room.jpg" class="room-img" alt="HQ-ROOM">
-            
-            <div class="tv-grid-overlay">
-                <a href="techpark.html" class="tv-trigger">
-                    <div class="tv-name">TECHPARK</div>
-                </a>
-                <a href="verses.html" class="tv-trigger">
-                    <div class="tv-name">GY-GY<br>VERSES</div>
-                </a>
-                <div class="tv-trigger">
-                    <div class="tv-name">RESERVE</div>
-                </div>
+    <main style="flex: 1; display: flex; align-items: center; justify-content: center;">
+        <section id="app-core">
+            <div style="text-align: center;">
+                <h2 style="font-size: 3rem; margin-bottom: 0;">AI ROOM</h2>
+                <p style="color: var(--neon-cyan);">System: [7.1.30-LH_] | Protocol: v6.2</p>
             </div>
-        </main>
+        </section>
+    </main>
 
-        <footer class="build-footer">BUILD: 7.1.30-LH | v6.2</footer>
+    <button id="nav-return" onclick="goBack()">« REVERSE</button>
 
-    </div>
+    <section id="identity-sector">
+        <div id="user-trace-info">
+            <div class="nick-label" id="display-nick">...detecting trace</div>
+            <div style="font-size: 9px; opacity: 0.6;">Cookie-ID: AUTO_ACTIVE</div>
+        </div>
+        <div class="avatar-frame" id="main-avatar">
+            <div class="magic-key-overlay" id="magic-key-panel">
+                <p>MAGIC KEY AVAILABLE</p>
+                <button onclick="downloadMagicKey()" style="width:100%; font-size:9px;">DOWNLOAD QR/AVATAR</button>
+                <hr style="border:0; border-top:1px solid #333;">
+                <button style="width:100%; font-size:9px; background:#24A1DE; color:white; border:none;">TELEGRAM STABILITY</button>
+            </div>
+        </div>
+    </section>
 
-    <script type="text/javascript">
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({
-                pageLanguage: 'ru',
-                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-            }, 'google_translate_element');
+    <script>
+        // Инициализация системы v6.2 [7.1.30-LH_]
+        window.onload = () => {
+            initializeDigitalTrace();
+        };
+
+        function initializeDigitalTrace() {
+            // Ищем скрытый ID в браузере
+            let traceId = localStorage.getItem('gy_digital_trace');
+            
+            if (!traceId) {
+                // Первичный вход - автоматическое присвоение
+                traceId = 'UX-' + Math.random().toString(36).substr(2, 7).toUpperCase();
+                localStorage.setItem('gy_digital_trace', traceId);
+                assignNewAvatar();
+            }
+            
+            document.getElementById('display-nick').innerText = traceId;
+        }
+
+        function assignNewAvatar() {
+            const avatar = document.getElementById('main-avatar');
+            // Здесь логика генерации уникального аватара
+            avatar.style.background = `linear-gradient(45deg, #1a1a1a, ${Math.floor(Math.random()*16777215).toString(16)})`;
+        }
+
+        function downloadMagicKey() {
+            alert("Generating Magic Key... Your unique avatar/QR is being prepared for download.");
+        }
+
+        function goBack() {
+            window.history.back();
         }
     </script>
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
 </body>
 </html>
