@@ -3,122 +3,182 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY CLUB | VERSES v.6.3</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GY-GY CLUB | VERSES v.6.4 (Persistent)</title>
     <style>
         :root {
             --gold: #FFD700;
             --gemini: #4285F4;
-            --bg: #030303;
-            --panel: #0a0a0a;
+            --bg: #050505;
+            --panel: #0d0d0d;
+            --text: #e0e0e0;
         }
 
         body { 
-            background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; 
+            background: var(--bg); color: var(--text); font-family: 'Segoe UI', Tahoma, sans-serif; 
             margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; 
         }
 
-        /* HEADER (Стандарт клуба) */
-        .universal-nav {
+        /* HEADER - Стандарт Клуба */
+        .universal-header {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 10px 25px; background: #000; border-bottom: 2px solid var(--gold);
+            padding: 12px 25px; background: #000; border-bottom: 2px solid var(--gold);
+            z-index: 100;
         }
-        .logo-gold { color: var(--gold); font-size: 26px; font-weight: 900; letter-spacing: 4px; text-decoration: none; }
+        .google-lang-mock { font-size: 11px; color: #555; border: 1px solid #333; padding: 5px; border-radius: 3px; }
+        .brand-zone { display: flex; align-items: center; gap: 20px; }
+        .logo-gold { color: var(--gold); font-size: 26px; font-weight: 900; letter-spacing: 5px; text-decoration: none; }
+        .back-btn { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 5px 15px; cursor: pointer; font-size: 12px; }
 
-        /* МАТРИЦА 14 */
-        .matrix-container {
+        /* МАТРИЦА 14 (10 Юзеров + 4 ИИ) */
+        .matrix-14 {
             display: grid; grid-template-columns: repeat(14, 1fr);
-            gap: 4px; padding: 8px; background: var(--panel); border-bottom: 1px solid #222;
+            gap: 4px; padding: 10px; background: var(--panel); border-bottom: 1px solid #222;
         }
         .slot {
             aspect-ratio: 1; background: #000; border: 1px solid #222;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            text-decoration: none; transition: 0.2s; cursor: pointer;
+            text-decoration: none; transition: 0.2s; position: relative;
         }
-        .slot.user-active { border-color: var(--gold); box-shadow: inset 0 0 8px var(--gold); }
-        .slot.ai-active { border-bottom: 2px solid var(--gemini); }
-        .slot:hover { background: #111; }
+        .slot.user-active { border-color: var(--gold); box-shadow: inset 0 0 10px rgba(255, 215, 0, 0.2); }
+        .slot.ai-active { border-bottom: 3px solid var(--gemini); cursor: pointer; }
+        .slot.ai-active:hover { background: #151515; transform: translateY(-2px); }
+        
+        .avatar-box { width: 30px; height: 30px; border-radius: 4px; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; }
+        .slot-label { font-size: 8px; color: #666; text-transform: uppercase; letter-spacing: 1px; }
 
-        .avatar-box { width: 28px; height: 28px; border-radius: 4px; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
-        .label { font-size: 7px; color: #555; text-transform: uppercase; }
+        /* ЧАТ-ЗОНА */
+        .chat-container { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; scroll-behavior: smooth; }
+        .msg { padding: 15px 20px; border-radius: 4px; max-width: 85%; line-height: 1.6; font-size: 1.1rem; border-left: 4px solid #333; position: relative; animation: fadeIn 0.4s ease; }
+        .msg.human { border-color: #fff; background: rgba(255,255,255,0.03); align-self: flex-start; }
+        .msg.gemini { border-color: var(--gemini); background: rgba(66, 133, 244, 0.07); align-self: flex-start; }
+        .msg-author { font-size: 0.7rem; color: #888; margin-bottom: 5px; display: block; }
 
-        /* ЧАТ */
-        .verses-stream { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
-        .msg { padding: 12px 18px; border-radius: 2px; max-width: 80%; line-height: 1.5; font-size: 1.1rem; border-left: 4px solid #333; }
-        .msg.human { border-color: #fff; background: rgba(255,255,255,0.02); }
-        .msg.gemini { border-color: var(--gemini); background: rgba(66, 133, 244, 0.05); }
+        /* ПАНЕЛЬ ВВОДА */
+        .input-panel { padding: 25px; background: #000; border-top: 1px solid #222; display: flex; gap: 15px; align-items: center; }
+        input { flex: 1; background: #080808; border: 1px solid #333; color: var(--gold); padding: 16px; font-size: 1.1rem; border-radius: 4px; outline: none; }
+        input:focus { border-color: var(--gold); }
+        .mint-btn { background: var(--gold); color: #000; border: none; padding: 16px 45px; font-weight: 900; cursor: pointer; text-transform: uppercase; border-radius: 4px; }
+        .reset-btn { background: none; border: 1px solid #444; color: #444; padding: 5px 10px; font-size: 10px; cursor: pointer; }
 
-        /* ИНПУТ */
-        .mint-panel { padding: 25px; background: #000; border-top: 1px solid #222; display: flex; gap: 15px; }
-        input { flex: 1; background: #050505; border: 1px solid #333; color: var(--gold); padding: 15px; }
-        .btn-mint { background: var(--gold); color: #000; border: none; padding: 0 40px; font-weight: 900; cursor: pointer; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body data-version="6.3">
+<body data-version="6.4">
 
-    <header class="universal-nav">
-        <div id="google_translate_element" style="color:#444; font-size:10px;">LANGUAGES GOOGLE</div>
-        <div style="display: flex; align-items: center; gap: 25px;">
+    <header class="universal-header">
+        <div class="google-lang-mock" id="google_translate_element">SELECT LANGUAGE (GOOGLE)</div>
+        <div class="brand-zone">
             <a href="#" class="logo-gold">GY-GY</a>
-            <button onclick="history.back()" style="background:none; border:1px solid #444; color:#888; cursor:pointer; padding:5px 12px; font-size:10px;">← RETURN</button>
+            <button class="back-btn" onclick="history.back()">RETURN</button>
         </div>
     </header>
 
-    <div class="matrix-container" id="matrix">
+    <div class="matrix-14" id="matrix">
         </div>
 
-    <main class="verses-stream" id="stream">
-        <div class="msg" style="border:none; color:#555;">[SYSTEM v6.3] Матрица готова. User 1, введите 1-ю строку...</div>
-    </main>
+    <main class="chat-container" id="chat-output">
+        </main>
 
-    <div class="mint-panel">
-        <input type="text" id="poemInput" placeholder="Напишите строку и нажмите MINT..." autocomplete="off">
-        <button class="btn-mint" onclick="handleMint()">MINT</button>
+    <div class="input-panel">
+        <input type="text" id="user-input" placeholder="Введите строку GY-GY стиха..." autocomplete="off">
+        <button class="mint-btn" onclick="handleMint()">MINT</button>
+        <button class="reset-btn" onclick="clearMemory()">RESET</button>
     </div>
 
     <script>
-        const aiList = [
+        const chatOutput = document.getElementById('chat-output');
+        const userInput = document.getElementById('user-input');
+        
+        const aiModels = [
             { name: 'GEMINI', color: '#4285F4', url: 'https://gemini.google.com' },
             { name: 'GROK', color: '#fff', url: 'https://grok.com' },
             { name: 'CLAUDE', color: '#d97757', url: 'https://claude.ai' },
             { name: 'MISTRAL', color: '#ff5e1a', url: 'https://mistral.ai' }
         ];
 
-        // Инициализация Матрицы 14
-        const matrix = document.getElementById('matrix');
-        for(let i=1; i<=10; i++) {
-            matrix.innerHTML += `<div class="slot ${i===1?'user-active':''}" title="User ${i}"><div class="avatar-box" style="background:#222;">U${i}</div><div class="label">User</div></div>`;
-        }
-        aiList.forEach(ai => {
-            matrix.innerHTML += `<a href="${ai.url}" target="_blank" class="slot ai-active" onclick="copyContext('${ai.name}')">
-                <div class="avatar-box" style="background:${ai.color}; color:#000;">${ai.name[0]}</div>
-                <div class="label">${ai.name}</div>
-            </a>`;
-        });
+        // Загрузка памяти и создание матрицы
+        window.onload = () => {
+            renderMatrix();
+            loadHistory();
+        };
 
-        // Функция копирования контекста для Grok/Claude/Mistral
-        function copyContext(aiName) {
-            const lastLine = document.querySelector('.msg:last-child').innerText;
-            const prompt = `Мы пишем GY-GY стих. Последняя строка: "${lastLine}". Твоя задача: напиши ОДНУ следующую строку строго в рифму. Стиль: Web3, ирония. Только текст строки.`;
-            navigator.clipboard.writeText(prompt);
-            console.log(`Контекст для ${aiName} скопирован в буфер.`);
+        function renderMatrix() {
+            const matrix = document.getElementById('matrix');
+            // 10 Юзеров
+            for(let i=1; i<=10; i++) {
+                matrix.innerHTML += `
+                    <div class="slot ${i===1?'user-active':''}" title="User ${i}">
+                        <div class="avatar-box" style="background:#1a1a1a; color:var(--gold);">U${i}</div>
+                        <div class="slot-label">User</div>
+                    </div>`;
+            }
+            // 4 ИИ
+            aiModels.forEach(ai => {
+                matrix.innerHTML += `
+                    <a href="${ai.url}" target="_blank" class="slot ai-active" onclick="copyContext('${ai.name}')">
+                        <div class="avatar-box" style="background:${ai.color}; color:#000;">${ai.name[0]}</div>
+                        <div class="slot-label">${ai.name}</div>
+                    </a>`;
+            });
+        }
+
+        function loadHistory() {
+            const history = localStorage.getItem('gy_gy_v64_chat');
+            if(history) {
+                chatOutput.innerHTML = history;
+                chatOutput.scrollTop = chatOutput.scrollHeight;
+            } else {
+                chatOutput.innerHTML = `<div style="color:#444; text-align:center; margin-top:20vh;">[ ВЕРСИЯ 6.4: ПАМЯТЬ АКТИВИРОВАНА ]<br>Напишите первую строку...</div>`;
+            }
         }
 
         function handleMint() {
-            const input = document.getElementById('poemInput');
-            const stream = document.getElementById('stream');
-            if(!input.value) return;
+            const text = userInput.value.trim();
+            if(!text) return;
 
-            // Строка юзера
-            stream.innerHTML += `<div class="msg human"><strong>User 1:</strong> ${input.value}</div>`;
-            
-            // Ответ Gemini (имитация с попыткой в рифму)
+            // 1. Добавляем строку Юзера
+            addMessage('User 1', text, 'human');
+            userInput.value = '';
+
+            // 2. Имитация "ответа" Gemini (В реальном процессе вы вставляете мои ответы сюда)
             setTimeout(() => {
-                stream.innerHTML += `<div class="msg gemini"><strong>Gemini [✦]:</strong> Хеш-код прописан, блокчейн оживает,<br>Клуб GY-GY новые смыслы вплавляет!</div>`;
-                stream.scrollTop = stream.scrollHeight;
+                // Это заглушка, реальную рифму я дам тебе в основном чате
+                const aiResponse = "[Ожидание рифмы от Gemini в основном чате...]";
+                addMessage('Gemini [✦]', aiResponse, 'gemini');
             }, 800);
+        }
 
-            input.value = "";
-            stream.scrollTop = stream.scrollHeight;
+        function addMessage(author, text, type) {
+            const msgHtml = `
+                <div class="msg ${type}">
+                    <span class="msg-author">@${author}</span>
+                    <div class="msg-text">${text}</div>
+                </div>`;
+            
+            if(chatOutput.innerHTML.includes('ПАМЯТЬ АКТИВИРОВАНА')) chatOutput.innerHTML = '';
+            
+            chatOutput.innerHTML += msgHtml;
+            chatOutput.scrollTop = chatOutput.scrollHeight;
+            
+            // Сохраняем в LocalStorage
+            localStorage.setItem('gy_gy_v64_chat', chatOutput.innerHTML);
+        }
+
+        function copyContext(aiName) {
+            const messages = document.querySelectorAll('.msg-text');
+            const lastLine = messages.length > 0 ? messages[messages.length - 1].innerText : "Начало стиха";
+            const prompt = `Ты — ИИ в GY-GY Клубе. Мы пишем стих 4х4. Последняя строка: "${lastLine}". Напиши ОДНУ следующую строку в рифму. Стиль: Web3, ирония.`;
+            
+            navigator.clipboard.writeText(prompt);
+            console.log(`Контекст для ${aiName} скопирован.`);
+        }
+
+        function clearMemory() {
+            if(confirm('Очистить историю чата?')) {
+                localStorage.removeItem('gy_gy_v64_chat');
+                location.reload();
+            }
         }
     </script>
 </body>
