@@ -2,10 +2,10 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY AI ROOM | v6.1 [7.1.29-LH]</title>
+    <title>GY-GY AI ROOM | v6.2 [7.1.34-LH]</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
-        /* БАЗА БЕЗ БЛОКИРОВОК */
+        /* БАЗА */
         html { overflow-y: scroll !important; }
         body { 
             margin: 0; padding: 0; 
@@ -14,7 +14,7 @@
             min-height: 100vh;
         }
 
-        /* ФОНОВАЯ КАРТИНКА */
+        /* ФОНОВАЯ КАРТИНКА (ТВОЙ ФАЙЛ) */
         .room-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             object-fit: cover; z-index: 1;
@@ -24,7 +24,7 @@
         .nav-top {
             position: fixed; top: 20px; left: 30px; right: 30px;
             display: flex; justify-content: space-between; align-items: center;
-            z-index: 10000; /* ВЫШЕ ВСЕГО */
+            z-index: 10000;
         }
 
         .logo-club { 
@@ -38,7 +38,7 @@
             border-radius: 4px;
         }
 
-        /* ТЕЛЕВИЗОРЫ: УДАЛЕННЫЙ МАСШТАБ (50%) */
+        /* ТЕЛЕВИЗОРЫ: МАСШТАБ 50% */
         .tv-wrapper {
             position: absolute; top: 32%; left: 50%;
             transform: translateX(-50%);
@@ -63,15 +63,27 @@
             text-transform: uppercase;
         }
 
-        .build-footer { 
-            position: fixed; bottom: 15px; left: 30px; 
-            font-size: 11px; color: rgba(255,204,0,0.4); z-index: 2000;
+        /* ФУТЕР С ЦИФРОВЫМ СЛЕДОМ И КНОПКОЙ ВОЗВРАТА */
+        .footer-bar {
+            position: fixed; bottom: 15px; left: 30px; right: 30px;
+            display: flex; justify-content: space-between; align-items: flex-end;
+            z-index: 2000;
+        }
+
+        .build-info { font-size: 11px; color: rgba(255,204,0,0.4); }
+        .id-trace { text-align: right; color: #ffcc00; font-size: 10px; }
+        .id-trace strong { display: block; font-size: 14px; letter-spacing: 1px; }
+
+        .btn-return {
+            background: rgba(0,0,0,0.7); border: 1px solid #fff;
+            color: #fff; padding: 5px 15px; cursor: pointer;
+            font-size: 10px; text-transform: uppercase; margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
 
-    <img src="OIG2_vintage_tv_room.jpg" class="room-bg" alt="BACKGROUND">
+    <img src="image_1e07e4.png" class="room-bg" alt="BACKGROUND">
 
     <div class="nav-top">
         <div id="google_translate_element"></div>
@@ -83,22 +95,52 @@
             <div class="tv-label">ТЕХНОПАРК</div>
         </a>
         <a href="verses.html" class="tv-slot">
-            <div class="tv-label">GY-GY<br>VERSES</div>
+            <div class="tv-label">GY-GY<br>MINTING</div>
         </a>
-        <div class="tv-slot">
-            <div class="tv-label">RESERVE</div>
+        <div class="tv-slot" onclick="location.reload()">
+            <div class="tv-label" id="session-counter">RELOAD</div>
         </div>
     </div>
 
-    <div class="build-footer">BUILD: 7.1.29-LH | v6.1</div>
+    <div class="footer-bar">
+        <div>
+            <button class="btn-return" onclick="history.back()">← RETURN</button>
+            <div class="build-info" id="build-tag">BUILD: 7.1.34-LH | v6.2</div>
+        </div>
+        <div class="id-trace">
+            DIGITAL TRACE
+            <strong id="trace-id">SYNCING...</strong>
+        </div>
+    </div>
 
     <script type="text/javascript">
+        // Google Translate Init
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({
                 pageLanguage: 'ru',
                 layout: google.translate.TranslateElement.InlineLayout.SIMPLE
             }, 'google_translate_element');
         }
+
+        // ARCHITECTURE 7.1.34 LOGIC
+        document.addEventListener('DOMContentLoaded', () => {
+            const VERSION = "7.1.34";
+            
+            // 1. Cookie-recognition (Digital Trace)
+            let trace = localStorage.getItem('gy_trace_v7');
+            if (!trace) {
+                trace = 'ID-' + Math.random().toString(36).substr(2, 7).toUpperCase();
+                localStorage.setItem('gy_trace_v7', trace);
+            }
+            document.getElementById('trace-id').innerText = trace;
+
+            // 2. Session/Build Counter
+            let count = localStorage.getItem('gy_count_34') || 0;
+            count++;
+            localStorage.setItem('gy_count_34', count);
+            document.getElementById('build-tag').innerText = `BUILD: ${VERSION}.${count}-LH | v6.2`;
+            document.getElementById('session-counter').innerText = `SESS: ${count}`;
+        });
     </script>
     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
