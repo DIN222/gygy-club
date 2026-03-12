@@ -3,140 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Room Retro | v6.2.1 [7.1.30-LH_]</title>
+    <title>AI Room Retro | v6.2 [7.1.31-LH_]</title>
     <style>
         :root {
-            --accent: #ffffff;
-            --sub-text: rgba(255, 255, 255, 0.5);
-            --glass-bg: rgba(0, 0, 0, 0.4);
-            --border: rgba(255, 255, 255, 0.15);
+            --accent: #00f3ff;
+            --magic-gold: #ffb000;
+            --bg-dark: #050505;
+            --glass: rgba(0, 0, 0, 0.75);
         }
 
         body, html {
             margin: 0; padding: 0; height: 100%; width: 100%;
-            background-color: #000;
-            color: #fff;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-dark);
+            color: #ffffff;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             overflow: hidden;
         }
 
-        /* Фоновое изображение как глубокий слой */
-        #bg-canvas {
+        /* [7.1.31] Интеграция визуальной базы OIG2 */
+        #viewport {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: url('OIG2_vintage_tv_room.jpg') no-repeat center center;
             background-size: cover;
-            filter: blur(5px) brightness(0.4); /* Смягчаем визуал, чтобы он не мешал */
-            transform: scale(1.1);
+            filter: brightness(0.4) saturate(0.8);
             z-index: -1;
+            transition: 0.5s filter;
         }
 
-        /* GY-GY: Лево Верх (Постоянный атрибут) */
-        .brand-layer {
+        /* Постоянный атрибут: GY-GY */
+        .brand-node {
             position: fixed;
-            top: 30px; left: 40px;
-            z-index: 100;
-        }
-        .brand-layer h1 {
-            margin: 0; font-size: 20px; font-weight: 300; letter-spacing: 0.3em;
+            top: 25px; left: 30px;
+            font-size: 22px; font-weight: 800; letter-spacing: 4px;
             color: var(--accent);
+            text-shadow: 0 0 15px var(--accent);
+            z-index: 1000;
         }
 
-        /* Языковая панель: Право Верх (Постоянный атрибут) */
+        /* Постоянный атрибут: Языковая панель (visible from entry) */
         .lang-gate {
             position: fixed;
-            top: 30px; right: 40px;
-            display: flex; gap: 20px;
-            z-index: 100;
+            top: 25px; right: 30px;
+            display: flex; gap: 12px;
+            z-index: 1000;
         }
-        .lang-node {
-            background: none; border: none; color: var(--sub-text);
-            font-size: 11px; cursor: pointer; letter-spacing: 0.1em;
-            transition: 0.3s;
-        }
-        .lang-node:hover, .lang-node.active { color: var(--accent); }
 
-        /* Кнопка возврата: Лево Низ (Постоянный атрибут) */
+        .lang-node {
+            background: var(--glass);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff; padding: 4px 10px;
+            font-size: 11px; cursor: pointer;
+            backdrop-filter: blur(8px);
+        }
+
+        .lang-node:hover { border-color: var(--accent); color: var(--accent); }
+
+        /* Постоянный атрибут: Кнопка возврата на уровень вверх */
         .nav-reverse {
             position: fixed;
-            bottom: 40px; left: 40px;
-            background: none; border: 1px solid var(--border);
-            color: var(--accent); padding: 10px 25px;
-            font-size: 10px; letter-spacing: 0.2em; cursor: pointer;
-            backdrop-filter: blur(10px);
+            bottom: 30px; left: 30px;
+            padding: 10px 20px;
+            background: var(--glass);
+            border: 1px solid #fff;
+            color: #fff; font-size: 10px; letter-spacing: 2px;
+            cursor: pointer; backdrop-filter: blur(8px);
+            z-index: 1000;
         }
 
-        /* Сектор Идентификации: Право Низ (Magic Key) */
-        .id-sector {
+        /* Identity Sector: Cookie + Telegram + Magic Key */
+        .id-anchor {
             position: fixed;
-            bottom: 40px; right: 40px;
-            display: flex; align-items: center; gap: 20px;
+            bottom: 30px; right: 30px;
+            display: flex; align-items: center; gap: 15px;
+            z-index: 1000;
         }
-        .id-label { text-align: right; }
-        .id-label span { display: block; font-size: 9px; color: var(--sub-text); margin-bottom: 4px; }
-        .id-label strong { font-size: 13px; font-weight: 400; letter-spacing: 1px; }
 
-        .magic-key-avatar {
-            width: 50px; height: 50px;
-            border: 1px solid var(--border);
-            background: var(--glass-bg);
-            border-radius: 4px; /* Квадрат со скруглением для серьезности */
+        .id-meta { text-align: right; }
+        .id-meta span { display: block; font-size: 9px; opacity: 0.5; text-transform: uppercase; }
+        .id-meta strong { font-size: 14px; color: var(--magic-gold); font-family: monospace; }
+
+        .magic-key-box {
+            width: 55px; height: 55px;
+            border: 1px solid var(--magic-gold);
+            background: rgba(0,0,0,0.8);
+            border-radius: 4px;
             cursor: pointer;
-            transition: 0.4s;
-            position: relative;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(255, 176, 0, 0.2);
         }
-        .magic-key-avatar:hover { border-color: var(--accent); transform: translateY(-5px); }
 
-        /* Контентная зона */
-        .main-stage {
-            height: 100vh; display: flex; align-items: center; justify-content: center;
+        /* Центральный интерфейс */
+        .core-stage {
+            height: 100vh;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
             text-align: center;
         }
-        .version-tag {
-            font-size: 10px; color: var(--sub-text); margin-top: 20px;
+
+        .status-tag {
+            margin-top: 20px;
+            font-size: 11px; letter-spacing: 2px;
+            color: rgba(255,255,255,0.4);
         }
     </style>
 </head>
 <body>
 
-    <div id="bg-canvas"></div>
+    <div id="viewport"></div>
 
-    <div class="brand-layer">
-        <h1>GY-GY</h1>
-    </div>
+    <div class="brand-node">GY-GY</div>
 
     <nav class="lang-gate">
-        <button class="lang-node active">RU</button>
+        <button class="lang-node">RU</button>
         <button class="lang-node">EN</button>
         <button class="lang-node">ZH</button>
     </nav>
 
-    <main class="main-stage">
-        <div>
-            <h2 style="font-weight: 200; font-size: 42px; letter-spacing: 15px;">AI ROOM</h2>
-            <div class="version-tag">STABLE BUILD v6.2.1 [7.1.30-LH_]</div>
-        </div>
+    <main class="core-stage">
+        <h1 style="font-size: 3.5rem; font-weight: 200; letter-spacing: 18px; margin: 0;">AI ROOM</h1>
+        <div class="status-tag">SYSTEM CORE [7.1.31-LH_] | v6.2</div>
     </main>
 
-    <button class="nav-reverse" onclick="history.back()">BACK LEVEL</button>
+    <button class="nav-reverse" onclick="history.back()">LEVEL REVERSE</button>
 
-    <section class="id-sector">
-        <div class="id-label">
-            <span>DIGITAL TRACE</span>
-            <strong id="user-id-display">DETECTING...</strong>
+    <section class="id-anchor">
+        <div class="id-meta">
+            <span>Digital Trace ID</span>
+            <strong id="trace-display">INITIALIZING...</strong>
         </div>
-        <div class="magic-key-avatar" title="Magic Key & Telegram Settings">
-            </div>
+        <div class="magic-key-box" id="magic-key" title="Download Magic Key / Link Telegram">
+            <div style="font-size: 8px; text-align: center; color: var(--magic-gold);">MAGIC<br>KEY</div>
+        </div>
     </section>
 
     <script>
-        // Архитектурная логика v6.2.1
+        /**
+         * v7.1.31 Architectural Logic
+         * Continuity: Cookie-recognition + Unique Digital Trace
+         */
         document.addEventListener('DOMContentLoaded', () => {
-            // Cookie-recognition
-            let trace = localStorage.getItem('gy_trace') || 'ID-' + Math.random().toString(36).substr(2, 7).toUpperCase();
-            localStorage.setItem('gy_trace', trace);
-            document.getElementById('user-id-display').innerText = trace;
+            syncIdentity();
         });
+
+        function syncIdentity() {
+            // 1. Пытаемся распознать пользователя через Cookie/LocalStorage
+            let traceID = localStorage.getItem('gy_trace_7131');
+            
+            if (!traceID) {
+                // Первый вход: автоматическое назначение ID
+                traceID = 'UX-' + Math.random().toString(36).substr(2, 7).toUpperCase();
+                localStorage.setItem('gy_trace_7131', traceID);
+                console.log("Trace Identity Created: " + traceID);
+            }
+
+            // 2. Отображение ID в интерфейсе
+            document.getElementById('trace-display').innerText = traceID;
+
+            // 3. Подготовка Magic Key (здесь может быть генерация QR)
+            document.getElementById('magic-key').onclick = () => {
+                alert(`Magic Key [${traceID}]\n\n1. Download Avatar/QR for Continuity\n2. Link Telegram for Stability`);
+            };
+        }
     </script>
 </body>
 </html>
