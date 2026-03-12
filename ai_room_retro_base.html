@@ -1,12 +1,11 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY AI ROOM | v6.2 [7.1.41-LH]</title>
+    <title>GY-GY AI ROOM | v6.2 [7.1.42-LH]</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
-        /* СБРОС ВСЕХ ГРАДИЕНТОВ И ОТСТУПОВ */
+        /* ЧИСТАЯ БАЗА */
         html, body { 
             margin: 0; padding: 0; width: 100%; height: 100%; 
             background: #000; color: #fff; 
@@ -14,7 +13,7 @@
             overflow: hidden;
         }
 
-        /* ФОН: OIG2_vintage_tv_room.jpg */
+        /* ТВОЙ ФОН */
         .room-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: url('OIG2_vintage_tv_room.jpg') no-repeat center center;
@@ -22,54 +21,64 @@
             z-index: 1;
         }
 
-        /* ХЕДЕР: БЕЗ ГРАДИЕНТА, ПРОЗРАЧНЫЙ */
+        /* ХЕДЕР: ПОЛНОСТЬЮ ПРОЗРАЧНЫЙ, БЕЗ ГРАДИЕНТОВ */
         .nav-top {
-            position: fixed; top: 20px; left: 30px; right: 30px;
+            position: fixed; top: 25px; left: 40px; right: 40px;
             display: flex; justify-content: space-between; align-items: center;
             z-index: 1000;
-            background: none; /* УБРАНО */
         }
-        .logo { color: #ffcc00; font-size: 24px; font-weight: bold; letter-spacing: 4px; }
+        .logo { 
+            color: #ffcc00; font-size: 22px; font-weight: bold; 
+            letter-spacing: 5px; text-transform: uppercase;
+        }
 
-        /* ТЕЛЕВИЗОРЫ: РЕАЛЬНОЕ УДАЛЕНИЕ ЧЕРЕЗ ГЕОМЕТРИЮ */
-        .tv-system {
+        /* ТЕЛЕВИЗОРЫ: МИКРО-МАСШТАБ (УДАЛЕНИЕ) */
+        .tv-horizon {
             position: absolute;
-            top: 55%; /* Центровка чуть ниже горизонта */
+            top: 52%; /* Точка горизонта на фото */
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 300px; /* ФИКСИРОВАННАЯ УЗКАЯ ШИРИНА ДЛЯ ЭФФЕКТА ДАЛИ */
+            width: 220px; /* Еще уже для эффекта дали */
             display: flex; 
             justify-content: space-between;
             z-index: 500;
         }
 
-        .tv-unit {
-            width: 80px; /* МАЛЕНЬКИЙ РАЗМЕР ЭКРАНА */
-            height: 60px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(0, 0, 0, 0.8);
+        .tv-micro-unit {
+            width: 60px; /* Микро-размер */
+            height: 45px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(0, 0, 0, 0.85);
             display: flex; align-items: center; justify-content: center;
-            text-decoration: none; transition: 0.3s;
+            text-decoration: none; transition: 0.4s;
             cursor: pointer;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
         }
 
-        .tv-unit:hover {
+        .tv-micro-unit:hover {
             border-color: #ffcc00;
             background: rgba(255, 204, 0, 0.1);
-            transform: scale(1.2); /* Увеличение при наведении для удобства */
+            transform: scale(1.5); /* Приближение при фокусе */
+            z-index: 600;
         }
 
-        .tv-title { color: #ffcc00; font-size: 9px; font-weight: bold; text-align: center; }
+        .tv-text { 
+            color: #ffcc00; font-size: 7px; /* Мелкий текст для мелких экранов */
+            font-weight: bold; text-align: center; line-height: 1;
+        }
 
         /* ФУТЕР */
         .footer {
-            position: fixed; bottom: 20px; left: 30px; right: 30px;
+            position: fixed; bottom: 25px; left: 40px; right: 40px;
             display: flex; justify-content: space-between; align-items: flex-end;
             z-index: 1000;
         }
-        .btn-back { background: none; border: 1px solid #444; color: #fff; padding: 4px 10px; cursor: pointer; font-size: 9px; }
-        .build-tag { font-size: 9px; color: rgba(255, 204, 0, 0.4); }
-        .trace-id { color: #ffcc00; font-size: 11px; font-weight: bold; }
+        .btn-ret { 
+            background: none; border: 1px solid rgba(255,255,255,0.2); 
+            color: #ccc; padding: 4px 12px; cursor: pointer; font-size: 9px; 
+        }
+        .build { font-size: 9px; color: rgba(255, 204, 0, 0.3); }
+        .trace { color: #ffcc00; font-size: 11px; font-weight: bold; letter-spacing: 1px; }
     </style>
 </head>
 <body>
@@ -81,24 +90,27 @@
         <div class="logo">GY-GY</div>
     </header>
 
-    <div class="tv-system">
-        <a href="techpark.html" class="tv-unit">
-            <div class="tv-title">TECH<br>PARK</div>
+    <div class="tv-horizon">
+        <a href="techpark.html" class="tv-micro-unit">
+            <div class="tv-text">TECH<br>PARK</div>
         </a>
-        <a href="verses.html" class="tv-unit">
-            <div class="tv-title">GY-GY<br>VERSES</div>
+        <a href="verses.html" class="tv-micro-unit">
+            <div class="tv-text">VERSES</div>
         </a>
-        <div class="tv-unit" style="opacity: 0.4;">
-            <div class="tv-title">RES</div>
+        <div class="tv-micro-unit" style="opacity: 0.3;">
+            <div class="tv-text">RES</div>
         </div>
     </div>
 
     <footer class="footer">
         <div>
-            <button class="btn-back" onclick="history.back()">← RETURN</button>
-            <div class="build-tag">BUILD: 7.1.41-LH | v6.2</div>
+            <button class="btn-ret" onclick="history.back()">RETURN</button>
+            <div class="build" style="margin-top:5px;">BUILD: 7.1.42-LH | v6.2</div>
         </div>
-        <div class="trace-id" id="user-id">ID_SYNC</div>
+        <div class="trace">
+            <span style="font-size: 7px; opacity: 0.5; display: block; text-align: right;">USER_TRACE</span>
+            <span id="user-id">ID_SYNCING</span>
+        </div>
     </footer>
 
     <script type="text/javascript">
