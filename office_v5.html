@@ -1,1 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Офис Клуба v.5.0.0</title>
+    <link rel="stylesheet" href="office_styles.css">
+</head>
+<body>
 
+<div id="club-office-root" class="office-container">
+    
+    <div class="office-navigation">
+        <div class="brand-gy-gy">GY-GY</div>
+        <div class="language-panel" id="office-lang">
+            <span>RU</span> | <span>EN</span>
+        </div>
+        <button class="btn-return">↩ НАЗАД</button>
+    </div>
+
+    <div class="office-status">
+        <span class="version-tag">v. 5.0.0</span>
+        <span id="user-identity">ID: Определение...</span>
+    </div>
+
+    <div class="agent-interface" id="agent-500-ui">
+        <div id="user-avatar-small"></div>
+        <button id="agent-trigger">Агент 5.0.0 💬</button>
+        
+        <div id="agent-chat-window" class="hidden">
+            <div id="chat-content"></div>
+            <input type="text" placeholder="Запрос к Офису...">
+        </div>
+    </div>
+</div>
+
+<script src="agent_500.core.js"></script>
+
+</body>
+</html>
