@@ -2,10 +2,10 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY AI ROOM | v6.2 [7.1.43-LH]</title>
+    <title>GY-GY AI ROOM | v6.2 [7.1.44-LH]</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
-        /* БАЗА */
+        /* СИСТЕМНЫЙ СБРОС */
         html, body { 
             margin: 0; padding: 0; width: 100%; height: 100%; 
             background: #000; color: #fff; 
@@ -13,79 +13,73 @@
             overflow: hidden;
         }
 
-        /* ТВОЙ ФОН: OIG2_vintage_tv_room.jpg */
+        /* ФОН: OIG2_vintage_tv_room.jpg */
         .room-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: url('OIG2_vintage_tv_room.jpg') no-repeat center center;
             background-size: cover; z-index: 1;
         }
 
-        /* ВЕРХНЯЯ ПАНЕЛЬ: ВОЗВРАТ КЛАССИЧЕСКОГО ВИДА ЯЗЫКА */
+        /* ВЕРХ: КЛАССИЧЕСКАЯ ПАНЕЛЬ ЯЗЫКА (v41-42 style) */
         .nav-top {
             position: fixed; top: 20px; left: 30px; right: 30px;
             display: flex; justify-content: space-between; align-items: center;
             z-index: 10000;
         }
-
-        .logo-club { 
-            color: #ffcc00; font-size: 28px; font-weight: bold; 
-            letter-spacing: 4px; text-transform: uppercase;
-        }
-
-        /* ТОТ САМЫЙ ВАРИАНТ ЯЗЫКА ИЗ ПРОШЛЫХ ВЕРСИЙ */
+        .logo-club { color: #ffcc00; font-size: 26px; font-weight: bold; letter-spacing: 4px; }
         #google_translate_element { 
             background: rgba(0,0,0,0.8);
             padding: 5px; border: 1px solid #444;
             border-radius: 4px;
         }
 
-        /* ТЕЛЕВИЗОРЫ: РАДИКАЛЬНОЕ УМЕНЬШЕНИЕ (ГЛУБИНА) */
-        .tv-horizon {
+        /* ТЕЛЕВИЗОРЫ: МАКСИМАЛЬНОЕ УДАЛЕНИЕ (BUILD 44 SPECIAL) */
+        .tv-cluster {
             position: absolute;
-            top: 50%; /* Линия горизонта */
+            top: 54%; /* Точная привязка к "столу" в глубине фото */
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 140px; /* Очень узкий охват */
+            width: 90px; /* Сверх-узкий контейнер */
             display: flex; justify-content: space-between;
             z-index: 500;
         }
 
-        .tv-nano-unit {
-            width: 35px; /* РАДИКАЛЬНО МАЛЫЙ РАЗМЕР */
-            height: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            background: rgba(0, 0, 0, 0.9);
+        .tv-pixel-unit {
+            width: 24px; /* ТОЧКА В ГЛУБИНЕ */
+            height: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            background: rgba(0, 0, 0, 0.95);
             display: flex; align-items: center; justify-content: center;
-            text-decoration: none; transition: 0.3s;
+            text-decoration: none; transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
-            box-shadow: 0 0 10px rgba(0,0,0,1);
         }
 
-        .tv-nano-unit:hover {
+        .tv-pixel-unit:hover {
             border-color: #ffcc00;
-            background: rgba(255, 204, 0, 0.2);
-            transform: scale(3); /* Сильное увеличение при наведении для клика */
+            background: rgba(255, 204, 0, 0.3);
+            transform: scale(5); /* Мощный зум при наведении, чтобы можно было попасть */
             z-index: 1000;
+            box-shadow: 0 0 15px rgba(255,204,0,0.5);
         }
 
-        .tv-hint { 
-            color: #ffcc00; font-size: 5px; /* Микро-текст */
-            font-weight: bold; text-align: center; pointer-events: none;
+        .tv-label { 
+            color: #ffcc00; font-size: 3px; /* Почти невидимый текст до наведения */
+            font-weight: bold; pointer-events: none;
         }
 
-        /* ФУТЕР: ПОСТОЯННЫЕ АТРИБУТЫ */
+        /* НИЗ: ВОЗВРАТ И TRACE */
         .footer {
             position: fixed; bottom: 20px; left: 30px; right: 30px;
             display: flex; justify-content: space-between; align-items: flex-end;
             z-index: 2000;
         }
-        .btn-return {
+        .btn-back {
             background: rgba(0,0,0,0.8); border: 1px solid #fff;
-            color: #fff; padding: 5px 12px; cursor: pointer;
-            font-size: 10px; text-transform: uppercase;
+            color: #fff; padding: 4px 12px; cursor: pointer;
+            font-size: 9px; text-transform: uppercase;
         }
-        .build-tag { font-size: 11px; color: rgba(255,204,0,0.4); margin-top: 5px; }
-        .id-trace { text-align: right; color: #ffcc00; font-size: 12px; font-weight: bold; }
+        .build-tag { font-size: 10px; color: rgba(255,204,0,0.3); margin-top: 5px; }
+        .id-val { color: #ffcc00; font-size: 11px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -97,35 +91,26 @@
         <div class="logo-club">GY-GY</div>
     </header>
 
-    <div class="tv-horizon">
-        <a href="techpark.html" class="tv-nano-unit">
-            <div class="tv-hint">TECH</div>
-        </a>
-        <a href="verses.html" class="tv-nano-unit">
-            <div class="tv-hint">GY-GY</div>
-        </a>
-        <div class="tv-nano-unit" style="opacity: 0.3;">
-            <div class="tv-hint">RES</div>
-        </div>
+    <div class="tv-cluster">
+        <a href="techpark.html" class="tv-pixel-unit"><div class="tv-label">T</div></a>
+        <a href="verses.html" class="tv-pixel-unit"><div class="tv-label">V</div></a>
+        <div class="tv-pixel-unit" style="opacity: 0.3;"><div class="tv-label">R</div></div>
     </div>
 
     <footer class="footer">
         <div>
-            <button class="btn-return" onclick="history.back()">← RETURN</button>
-            <div class="build-tag">BUILD: 7.1.43-LH | v6.2</div>
+            <button class="btn-back" onclick="history.back()">← RETURN</button>
+            <div class="build-tag">BUILD: 7.1.44-LH | v6.2</div>
         </div>
-        <div class="id-trace">
+        <div style="text-align: right;">
             <span style="font-size: 8px; opacity: 0.5; display: block;">DIGITAL TRACE</span>
-            <span id="user-id">SYNCING...</span>
+            <span class="id-val" id="user-id">ID_LOAD</span>
         </div>
     </footer>
 
     <script type="text/javascript">
         function googleTranslateElementInit() {
-            new google.translate.TranslateElement({
-                pageLanguage: 'ru',
-                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-            }, 'google_translate_element');
+            new google.translate.TranslateElement({pageLanguage: 'ru', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
         }
         document.addEventListener('DOMContentLoaded', () => {
             let trace = localStorage.getItem('gy_trace') || 'GY-' + Math.random().toString(36).substr(2, 7).toUpperCase();
