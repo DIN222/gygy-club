@@ -3,124 +3,119 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY CLUB | VERSES v.6.2</title>
+    <title>GY-GY CLUB | VERSES v.6.3</title>
     <style>
         :root {
             --gold: #FFD700;
             --gemini: #4285F4;
-            --grok: #ffffff;
-            --claude: #d97757;
-            --mistral: #ff5e1a;
             --bg: #030303;
+            --panel: #0a0a0a;
         }
 
-        body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        body { 
+            background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; 
+            margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; 
+        }
 
-        /* HEADER v6.2 (Фиксированные атрибуты) */
+        /* HEADER (Стандарт клуба) */
         .universal-nav {
             display: flex; justify-content: space-between; align-items: center;
             padding: 10px 25px; background: #000; border-bottom: 2px solid var(--gold);
         }
-        .google-lang { width: 150px; height: 30px; background: #111; border: 1px solid #333; font-size: 10px; color: #666; display: flex; align-items: center; justify-content: center; }
         .logo-gold { color: var(--gold); font-size: 26px; font-weight: 900; letter-spacing: 4px; text-decoration: none; }
 
-        /* МАТРИЦА 14 (С активными ИИ-статусами) */
+        /* МАТРИЦА 14 */
         .matrix-container {
             display: grid; grid-template-columns: repeat(14, 1fr);
-            gap: 4px; padding: 8px; background: #0a0a0a; border-bottom: 1px solid #222;
+            gap: 4px; padding: 8px; background: var(--panel); border-bottom: 1px solid #222;
         }
         .slot {
             aspect-ratio: 1; background: #000; border: 1px solid #222;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            text-decoration: none; position: relative; transition: 0.2s;
+            text-decoration: none; transition: 0.2s; cursor: pointer;
         }
         .slot.user-active { border-color: var(--gold); box-shadow: inset 0 0 8px var(--gold); }
-        .slot.ai { cursor: pointer; border-bottom: 2px solid transparent; }
-        .slot.ai:hover { background: #111; }
-        .slot.ai.active-turn { border-bottom-color: var(--gold); animation: pulse 1.5s infinite; }
+        .slot.ai-active { border-bottom: 2px solid var(--gemini); }
+        .slot:hover { background: #111; }
 
-        .avatar-box { width: 28px; height: 28px; border-radius: 4px; margin-bottom: 4px; overflow: hidden; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; }
+        .avatar-box { width: 28px; height: 28px; border-radius: 4px; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
         .label { font-size: 7px; color: #555; text-transform: uppercase; }
 
-        /* ЧАТ-ПОТОК */
+        /* ЧАТ */
         .verses-stream { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
-        .msg { padding: 12px 18px; border-radius: 2px; max-width: 80%; line-height: 1.5; font-size: 1.1rem; border-left: 4px solid #333; background: rgba(255,255,255,0.02); }
-        .msg.human { border-color: #fff; align-self: flex-start; }
+        .msg { padding: 12px 18px; border-radius: 2px; max-width: 80%; line-height: 1.5; font-size: 1.1rem; border-left: 4px solid #333; }
+        .msg.human { border-color: #fff; background: rgba(255,255,255,0.02); }
         .msg.gemini { border-color: var(--gemini); background: rgba(66, 133, 244, 0.05); }
-        .msg.grok { border-color: var(--grok); background: rgba(255, 255, 255, 0.05); color: #fff; }
-        
-        /* ВВОД v6.2 */
-        .mint-panel { padding: 25px; background: #000; border-top: 1px solid #222; display: flex; gap: 15px; }
-        input { flex: 1; background: #050505; border: 1px solid #333; color: var(--gold); padding: 15px; font-size: 1rem; }
-        input:focus { border-color: var(--gold); outline: none; }
-        .btn-mint { background: var(--gold); color: #000; border: none; padding: 0 40px; font-weight: 900; cursor: pointer; text-transform: uppercase; }
 
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        /* ИНПУТ */
+        .mint-panel { padding: 25px; background: #000; border-top: 1px solid #222; display: flex; gap: 15px; }
+        input { flex: 1; background: #050505; border: 1px solid #333; color: var(--gold); padding: 15px; }
+        .btn-mint { background: var(--gold); color: #000; border: none; padding: 0 40px; font-weight: 900; cursor: pointer; }
     </style>
 </head>
-<body data-version="6.2">
+<body data-version="6.3">
 
     <header class="universal-nav">
-        <div class="google-lang">GOOGLE LANGUAGES</div>
+        <div id="google_translate_element" style="color:#444; font-size:10px;">LANGUAGES GOOGLE</div>
         <div style="display: flex; align-items: center; gap: 25px;">
             <a href="#" class="logo-gold">GY-GY</a>
             <button onclick="history.back()" style="background:none; border:1px solid #444; color:#888; cursor:pointer; padding:5px 12px; font-size:10px;">← RETURN</button>
         </div>
     </header>
 
-    <div class="matrix-container">
-        <div class="slot user-active" id="s1"><div class="avatar-box" style="background:var(--gold); color:#000;">U1</div><div class="label">YOU</div></div>
-        <div class="slot"><div class="label">U2</div></div>
-        <div class="slot"><div class="label">U3</div></div>
-        <div class="slot"><div class="label">U4</div></div>
-        <div class="slot"><div class="label">U5</div></div>
-        <div class="slot"><div class="label">U6</div></div>
-        <div class="slot"><div class="label">U7</div></div>
-        <div class="slot"><div class="label">U8</div></div>
-        <div class="slot"><div class="label">U9</div></div>
-        <div class="slot"><div class="label">U10</div></div>
-
-        <a href="https://gemini.google.com" target="_blank" class="slot ai active-turn" id="ai-gemini">
-            <div class="avatar-box" style="background:var(--gemini);">G</div><div class="label">GEMINI</div>
-        </a>
-        <a href="https://grok.com" target="_blank" class="slot ai" id="ai-grok">
-            <div class="avatar-box" style="background:#fff; color:#000;">/</div><div class="label">GROK</div>
-        </a>
-        <a href="https://claude.ai" target="_blank" class="slot ai" id="ai-claude">
-            <div class="avatar-box" style="background:var(--claude);">C</div><div class="label">CLAUDE</div>
-        </a>
-        <a href="https://mistral.ai" target="_blank" class="slot ai" id="ai-mistral">
-            <div class="avatar-box" style="background:var(--mistral);">M</div><div class="label">MISTRAL</div>
-        </a>
-    </div>
+    <div class="matrix-container" id="matrix">
+        </div>
 
     <main class="verses-stream" id="stream">
-        <div class="msg" style="border:none; color:#555;">[SYSTEM] Инициализация сессии 6.2. Ждем первую строку от Участника #1...</div>
+        <div class="msg" style="border:none; color:#555;">[SYSTEM v6.3] Матрица готова. User 1, введите 1-ю строку...</div>
     </main>
 
     <div class="mint-panel">
-        <input type="text" id="poemInput" placeholder="Напишите первую строку..." autocomplete="off">
+        <input type="text" id="poemInput" placeholder="Напишите строку и нажмите MINT..." autocomplete="off">
         <button class="btn-mint" onclick="handleMint()">MINT</button>
     </div>
 
     <script>
+        const aiList = [
+            { name: 'GEMINI', color: '#4285F4', url: 'https://gemini.google.com' },
+            { name: 'GROK', color: '#fff', url: 'https://grok.com' },
+            { name: 'CLAUDE', color: '#d97757', url: 'https://claude.ai' },
+            { name: 'MISTRAL', color: '#ff5e1a', url: 'https://mistral.ai' }
+        ];
+
+        // Инициализация Матрицы 14
+        const matrix = document.getElementById('matrix');
+        for(let i=1; i<=10; i++) {
+            matrix.innerHTML += `<div class="slot ${i===1?'user-active':''}" title="User ${i}"><div class="avatar-box" style="background:#222;">U${i}</div><div class="label">User</div></div>`;
+        }
+        aiList.forEach(ai => {
+            matrix.innerHTML += `<a href="${ai.url}" target="_blank" class="slot ai-active" onclick="copyContext('${ai.name}')">
+                <div class="avatar-box" style="background:${ai.color}; color:#000;">${ai.name[0]}</div>
+                <div class="label">${ai.name}</div>
+            </a>`;
+        });
+
+        // Функция копирования контекста для Grok/Claude/Mistral
+        function copyContext(aiName) {
+            const lastLine = document.querySelector('.msg:last-child').innerText;
+            const prompt = `Мы пишем GY-GY стих. Последняя строка: "${lastLine}". Твоя задача: напиши ОДНУ следующую строку строго в рифму. Стиль: Web3, ирония. Только текст строки.`;
+            navigator.clipboard.writeText(prompt);
+            console.log(`Контекст для ${aiName} скопирован в буфер.`);
+        }
+
         function handleMint() {
             const input = document.getElementById('poemInput');
             const stream = document.getElementById('stream');
             if(!input.value) return;
 
-            // 1. Строка Юзера
+            // Строка юзера
             stream.innerHTML += `<div class="msg human"><strong>User 1:</strong> ${input.value}</div>`;
             
-            // 2. Имитация ответа Gemini (как ИИ №1)
+            // Ответ Gemini (имитация с попыткой в рифму)
             setTimeout(() => {
-                stream.innerHTML += `<div class="msg gemini"><strong>Gemini [✦]:</strong> В GY-GY коде пульсирует вечность, мы минтим мечту в бесконечность.</div>`;
+                stream.innerHTML += `<div class="msg gemini"><strong>Gemini [✦]:</strong> Хеш-код прописан, блокчейн оживает,<br>Клуб GY-GY новые смыслы вплавляет!</div>`;
                 stream.scrollTop = stream.scrollHeight;
-                
-                // Переключаем визуальный фокус на следующего (Grok)
-                document.getElementById('ai-gemini').classList.remove('active-turn');
-                document.getElementById('ai-grok').classList.add('active-turn');
-            }, 1000);
+            }, 800);
 
             input.value = "";
             stream.scrollTop = stream.scrollHeight;
