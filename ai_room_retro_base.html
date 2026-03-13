@@ -2,42 +2,115 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY AI ROOM | v6.2 [7.1.52-LH]</title>
+    <title>GY-GY AI ROOM | v6.2 [7.1.53-LH]</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        /* СВЕТ ВКЛЮЧЕН НА ПОЛНУЮ */
+        html, body { 
+            margin: 0; padding: 0; width: 100vw; height: 100vh; 
+            background: #fff; overflow: hidden; 
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        /* ФОН ИЗ ТВОЕГО РЕПОЗИТОРИЯ */
+        .room-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: url('OIG2_vintage_tv_room.jpg') no-repeat center center;
+            background-size: cover; z-index: 1;
+            /* Никаких фильтров яркости или затемнения */
+        }
+
+        /* HEADER: ПОСТОЯННЫЕ АТРИБУТЫ (GY-GY И ЯЗЫК) */
+        .nav-top {
+            position: fixed; top: 0px; left: 20px; right: 20px;
+            height: 50px; display: flex; justify-content: space-between; 
+            align-items: center; z-index: 10000;
+        }
+        
+        .logo-club { 
+            color: #ffcc00; font-size: 28px; font-weight: bold; 
+            letter-spacing: 5px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); 
+        }
+
+        #google_translate_element { 
+            background: rgba(255,255,255,0.9); border: 1px solid #000; 
+            padding: 2px 5px;
+        }
+
+        /* ТЕЛЕВИЗОРЫ: МАКСИМАЛЬНО УДАЛЕНЫ (НАНО-РАЗМЕР) */
+        .tv-cluster {
+            position: absolute; 
+            top: 55%; /* На уровне стола */
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px; 
+            display: flex; justify-content: space-between; z-index: 500;
+        }
+
+        .nano-tv {
+            width: 18px; height: 14px; 
+            background: rgba(0,0,0,0.9); border: 1px solid #fff;
+            cursor: pointer; transition: 0.2s ease-out;
+            display: flex; align-items: center; justify-content: center;
+            text-decoration: none;
+        }
+
+        .nano-tv:hover {
+            transform: scale(10); /* Зум для клика */
+            background: #ffcc00; border-color: #000; z-index: 1000;
+        }
+
+        .tv-tag { font-size: 4px; color: #ffcc00; font-weight: bold; }
+
+        /* FOOTER (КНОПКА ВОЗВРАТА) */
+        .footer {
+            position: fixed; bottom: 10px; left: 20px; right: 20px;
+            display: flex; justify-content: space-between; align-items: flex-end; z-index: 2000;
+        }
+        
+        .btn-back { 
+            background: #000; color: #fff; border: 1px solid #fff; 
+            padding: 5px 15px; cursor: pointer; font-size: 10px;
+        }
+
+        .info-tag { color: #000; font-size: 10px; font-weight: bold; }
+    </style>
 </head>
-<body style="margin: 0; padding: 0; background: #fff; overflow: hidden; font-family: 'Share Tech Mono', monospace;">
+<body>
 
-    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('OIG2_vintage_tv_room.jpg') no-repeat center center; background-size: cover; z-index: 1;"></div>
+    <div class="room-bg"></div>
 
-    <div style="position: fixed; top: 5px; left: 20px; right: 20px; display: flex; justify-content: space-between; align-items: center; z-index: 10000;">
-        <div id="google_translate_element" style="border: 1px solid #000; background: #fff;"></div>
-        <div style="color: #ffcc00; font-size: 30px; font-weight: bold; letter-spacing: 5px; text-shadow: 2px 2px 0px #000;">GY-GY</div>
+    <header class="nav-top">
+        <div id="google_translate_element"></div>
+        <div class="logo-club">GY-GY</div>
+    </header>
+
+    <div class="tv-cluster">
+        <a href="techpark.html" class="nano-tv" title="TECHPARK"><span class="tv-tag">T</span></a>
+        <a href="verses.html" class="nano-tv" title="VERSES"><span class="tv-tag">V</span></a>
+        <div class="nano-tv" style="opacity: 0.2;"><span class="tv-tag">R</span></div>
     </div>
 
-    <div style="position: absolute; top: 60%; left: 50%; transform: translate(-50%, -50%); width: 80px; display: flex; justify-content: space-between; z-index: 500;">
-        
-        <a href="techpark.html" style="width: 15px; height: 12px; background: #000; border: 1px solid #fff; cursor: pointer; display: block; transition: 0.2s;" onmouseover="this.style.transform='scale(10)'" onmouseout="this.style.transform='scale(1)'"></a>
-        
-        <a href="verses.html" style="width: 15px; height: 12px; background: #000; border: 1px solid #fff; cursor: pointer; display: block; transition: 0.2s;" onmouseover="this.style.transform='scale(10)'" onmouseout="this.style.transform='scale(1)'"></a>
-        
-        <div style="width: 15px; height: 12px; background: #000; border: 1px solid #fff; opacity: 0.2;"></div>
-    </div>
-
-    <div style="position: fixed; bottom: 10px; left: 20px; right: 20px; display: flex; justify-content: space-between; align-items: flex-end; z-index: 2000;">
-        <button onclick="history.back()" style="background: #000; color: #fff; border: 1px solid #fff; padding: 5px 10px; cursor: pointer; font-size: 10px;">RETURN</button>
-        <div style="color: #000; font-size: 10px; font-weight: bold;">
-            BUILD: 7.1.52-LH | v6.2<br>
-            TRACE: <span id="user-id">...</span>
+    <footer class="footer">
+        <div>
+            <button class="btn-back" onclick="history.back()">← RETURN</button>
+            <div class="info-tag" style="margin-top: 5px;">VERSION: v6.2 | BUILD: 7.1.53-LH</div>
         </div>
-    </div>
+        <div class="info-tag" style="text-align: right;">
+            <span style="font-size: 8px; opacity: 0.6;">DIGITAL TRACE</span><br>
+            <span id="user-id">ID_LOAD</span>
+        </div>
+    </footer>
 
     <script type="text/javascript">
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({pageLanguage: 'ru', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
         }
-        let trace = localStorage.getItem('gy_trace') || 'GY-' + Math.random().toString(36).substr(2, 7).toUpperCase();
-        localStorage.setItem('gy_trace', trace);
-        document.getElementById('user-id').innerText = trace;
+        document.addEventListener('DOMContentLoaded', () => {
+            let trace = localStorage.getItem('gy_trace') || 'GY-' + Math.random().toString(36).substr(2, 7).toUpperCase();
+            localStorage.setItem('gy_trace', trace);
+            document.getElementById('user-id').innerText = trace;
+        });
     </script>
     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
