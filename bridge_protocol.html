@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MANIFESTO | v1.2</title>
+    <title>MANIFESTO | v1.3</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -20,12 +20,12 @@
             overflow-x: hidden;
         }
 
-        /* [STAY_FIXED] TOP UI */
+        /* FIXED UI */
         .ui-fixed-top {
             position: fixed; top: 0; left: 0; width: 100%; height: 60px;
             display: flex; justify-content: space-between; align-items: center;
             padding: 0 30px; box-sizing: border-box; z-index: 10000;
-            background: rgba(10, 10, 10, 0.95);
+            background: var(--black);
         }
 
         .lang-panel { display: flex; align-items: center; gap: 15px; }
@@ -36,14 +36,11 @@
             padding: 2px;
         }
 
-        .club-logo { 
-            color: var(--gold); font-size: 28px; font-weight: bold; 
-            letter-spacing: 5px; 
-        }
+        .club-logo { color: var(--gold); font-size: 28px; font-weight: bold; letter-spacing: 5px; }
 
-        /* [SCROLLABLE CONTENT] */
+        /* CONTENT */
         .scroll-content {
-            padding-top: 120px; padding-bottom: 160px;
+            padding-top: 120px; padding-bottom: 180px;
             display: flex; flex-direction: column; align-items: center;
             text-align: center;
         }
@@ -55,7 +52,7 @@
             padding: 50px 0;
         }
 
-        /* DIGNIFIED BUTTON (NO GLOW) */
+        /* DIGNIFIED BUTTON: ABSOLUTELY STATIC */
         .btn-entry {
             display: inline-block;
             background-color: var(--black);
@@ -67,20 +64,21 @@
             text-transform: uppercase;
             letter-spacing: 3px;
             text-decoration: none;
-            transition: 0.3s ease;
+            transition: none; /* Убрали все переходы */
         }
 
         .btn-entry:hover {
             background-color: var(--gold);
             color: var(--black);
+            box-shadow: none; /* Никаких вспышек */
         }
 
-        /* [STAY_FIXED] BOTTOM UI */
+        /* FIXED FOOTER */
         .ui-fixed-bottom {
             position: fixed; bottom: 0; left: 0; width: 100%;
             display: flex; justify-content: space-between; align-items: flex-end;
             padding: 20px 30px; box-sizing: border-box; z-index: 10000;
-            background: linear-gradient(transparent, var(--black) 40%);
+            background: var(--black);
         }
 
         .btn-back {
@@ -93,6 +91,15 @@
             font-size: 9px; color: var(--dim-gold); line-height: 1.5;
             text-transform: uppercase; letter-spacing: 1px;
         }
+
+        .aphorism {
+            color: var(--gold);
+            font-style: italic;
+            text-transform: none;
+            font-size: 11px;
+            margin-top: 5px;
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -100,7 +107,7 @@
     <header class="ui-fixed-top">
         <div class="lang-panel">
             <div id="google_translate_element"></div>
-            <span class="tech-data">SEMANTIC_GROUP_№1 // DATA_PARSING_ACTIVE</span>
+            <span class="tech-data">SEMANTIC_GROUP_№1 // DATA_PARSING</span>
         </div>
         <div class="club-logo">GY-GY</div>
     </header>
@@ -118,14 +125,14 @@
     <footer class="ui-fixed-bottom">
         <div class="tech-data">
             <button class="btn-back" onclick="history.back()">Return</button><br>
-            SYS_BRANCH: BRIDGE.V1.2 // SECTOR_07_ALPHA<br>
-            COGNITIVE_ARRAY_LOADED // BUFFER_SECTOR: CLEAR
+            SYS_BRANCH: BRIDGE.V1.3 // SECTOR_07<br>
+            <span class="aphorism">"Смех — штука серьезная"</span>
         </div>
         
         <div class="tech-data" style="text-align: right;">
-            <span style="opacity: 0.6;">STABLE_VERSION: 1.2 [7.1.53-LH]</span><br>
+            <span style="opacity: 0.6;">STABLE_VERSION: 1.3 [7.1.53-LH]</span><br>
             TRACE_ID: <span id="user-trace" style="color: var(--gold);">...</span><br>
-            NEURAL_LINK: ESTABLISHED // SESSION: ENCRYPTED
+            NEURAL_LINK: ESTABLISHED // BUFFER: CLEAR
         </div>
     </footer>
 
@@ -136,6 +143,13 @@
                 layout: google.translate.TranslateElement.InlineLayout.SIMPLE
             }, 'google_translate_element');
         }
+
+        // Попытка восстановить виджет при возврате (BF Cache)
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        });
 
         document.addEventListener('DOMContentLoaded', () => {
             let trace = localStorage.getItem('gy_trace') || 
