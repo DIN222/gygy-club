@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MANIFESTO | v1.5</title>
+    <title>MANIFESTO | v1.6</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -12,110 +12,111 @@
             --dim-gold: #7a6200;
         }
 
+        /* 1. БЛОКИРУЕМ ВЕСЬ СКРОЛЛ НА УРОВНЕ КОРНЯ */
         html, body { 
-            margin: 0; padding: 0; width: 100%; height: 100%; 
+            margin: 0; padding: 0; width: 100vw; height: 100vh; 
             background: var(--black); 
             font-family: 'Share Tech Mono', monospace;
             color: var(--gold);
+            overflow: hidden; /* Скролла у всей страницы НЕТ */
         }
 
-        /* [NON-SCROLLABLE UI] */
-        .ui-fixed-top {
-            position: fixed; top: 0; left: 0; width: 100%; height: 60px;
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 0 30px; box-sizing: border-box; z-index: 99999;
-            background: var(--black); 
+        /* 2. ЖЕСТКАЯ РАМА ИНТЕРФЕЙСА */
+        .ui-frame {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+            pointer-events: none; /* Пропускаем клики сквозь раму к тексту */
+            z-index: 10000;
+        }
+
+        .top-bar {
+            height: 60px; padding: 0 30px; display: flex; 
+            justify-content: space-between; align-items: center;
+            background: var(--black); pointer-events: auto;
+        }
+
+        .bottom-bar {
+            margin-top: auto; height: 80px; padding: 0 30px 20px 30px;
+            display: flex; justify-content: space-between; align-items: flex-end;
+            background: var(--black); pointer-events: auto;
         }
 
         #google_translate_element { 
-            border: 1px solid var(--gold); 
-            background: var(--black);
-            padding: 2px;
-            height: 30px;
-            overflow: hidden;
+            border: 1px solid var(--gold); background: var(--black);
+            padding: 2px; height: 28px;
         }
 
-        .club-logo { color: var(--gold); font-size: 28px; font-weight: bold; letter-spacing: 5px; }
-
-        /* [SCROLLABLE VIEWPORT] */
-        .main-viewport {
-            height: 100vh;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 120px 20px 200px 20px;
-            box-sizing: border-box;
+        /* 3. СКРОЛЛИРУЕМЫЙ КОНТЕЙНЕР ДЛЯ ТЕКСТА */
+        .content-scroll-layer {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            overflow-y: scroll; /* Скроллится только этот слой */
+            padding: 100px 0 150px 0;
+            display: flex; flex-direction: column; align-items: center;
+            z-index: 5;
         }
 
         .manifesto-box {
-            max-width: 750px; line-height: 1.8; font-size: 20px;
-            text-align: justify; margin: 40px 0;
+            max-width: 700px; line-height: 1.8; font-size: 20px;
+            text-align: justify; margin: 40px 25px;
             border-top: 1px solid var(--gold); border-bottom: 1px solid var(--gold);
             padding: 50px 0;
         }
 
-        /* DIGNIFIED STATIC BUTTON */
+        /* 4. КНОПКА: ПОЛНЫЙ ЗАПРЕТ СВЕЧЕНИЯ */
         .btn-entry {
             display: inline-block;
             background: var(--black) !important;
             color: var(--gold) !important;
             border: 2px solid var(--gold) !important;
-            padding: 15px 45px;
-            font-size: 16px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 3px;
+            padding: 15px 45px; font-size: 16px; font-weight: bold;
+            text-transform: uppercase; letter-spacing: 3px;
             text-decoration: none;
+            /* УБИВАЕМ ВСЁ */
             transition: none !important;
             box-shadow: none !important;
+            outline: none !important;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
         }
 
         .btn-entry:hover {
             background: var(--gold) !important;
             color: var(--black) !important;
+            box-shadow: none !important;
         }
 
-        /* [NON-SCROLLABLE UI] */
-        .ui-fixed-bottom {
-            position: fixed; bottom: 0; left: 0; width: 100%;
-            display: flex; justify-content: space-between; align-items: flex-end;
-            padding: 20px 30px; box-sizing: border-box; z-index: 99999;
-            background: var(--black);
-        }
-
-        .btn-back {
-            background: transparent; border: 1px solid var(--dim-gold); color: var(--dim-gold);
-            padding: 4px 10px; cursor: pointer; font-size: 10px; text-transform: uppercase;
-            margin-bottom: 10px;
-        }
-
-        .tech-data {
-            font-size: 9px; color: var(--dim-gold); line-height: 1.5;
-            text-transform: uppercase; letter-spacing: 1px;
-        }
-
-        .aphorism {
-            color: var(--gold);
-            font-style: italic;
-            text-transform: none;
-            font-size: 11px;
-            margin-top: 5px;
-            display: block;
-        }
+        .tech-data { font-size: 9px; color: var(--dim-gold); line-height: 1.4; text-transform: uppercase; }
+        .aphorism { color: var(--gold); font-style: italic; font-size: 11px; text-transform: none; display: block; margin-top: 4px; }
+        .club-logo { color: var(--gold); font-size: 28px; font-weight: bold; letter-spacing: 5px; }
     </style>
 </head>
 <body>
 
-    <header class="ui-fixed-top">
-        <div style="display: flex; align-items: center; gap: 15px;">
-            <div id="google_translate_element"></div>
-            <span class="tech-data">SEMANTIC_GROUP_№1 // DATA_PARSING</span>
-        </div>
-        <div class="club-logo">GY-GY</div>
-    </header>
+    <div class="ui-frame">
+        <header class="top-bar">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <div id="google_translate_element"></div>
+                <span class="tech-data">SEMANTIC_GROUP_№1 // DATA_PARSING</span>
+            </div>
+            <div class="club-logo">GY-GY</div>
+        </header>
 
-    <div class="main-viewport">
+        <footer class="bottom-bar">
+            <div class="tech-data">
+                <button onclick="history.back()" style="background:none; border:1px solid var(--dim-gold); color:var(--dim-gold); cursor:pointer; font-size:10px; padding:3px 8px;">RETURN</button><br><br>
+                SYS_BRANCH: BRIDGE.V1.6 // SECTOR_07<br>
+                <span class="aphorism">"Смех — штука серьезная"</span>
+            </div>
+            <div class="tech-data" style="text-align: right;">
+                <span style="opacity: 0.6;">STABLE_VERSION: 1.6 [7.1.53-LH]</span><br>
+                TRACE_ID: <span id="user-trace" style="color: var(--gold);">...</span><br>
+                NEURAL_LINK: ESTABLISHED // SESSION: LOCKED
+            </div>
+        </footer>
+    </div>
+
+    <div class="content-scroll-layer">
         <h1 style="letter-spacing: 15px; margin: 0;">MANIFESTO</h1>
         
         <div class="manifesto-box">
@@ -125,20 +126,6 @@
         <a href="ai_room_core_v8.html" class="btn-entry">ENTER AI ROOM</a>
     </div>
 
-    <footer class="ui-fixed-bottom">
-        <div class="tech-data">
-            <button class="btn-back" onclick="history.back()">Return</button><br>
-            SYS_BRANCH: BRIDGE.V1.5 // SECTOR_07<br>
-            <span class="aphorism">"Смех — штука серьезная"</span>
-        </div>
-        
-        <div class="tech-data" style="text-align: right;">
-            <span style="opacity: 0.6;">STABLE_VERSION: 1.5 [7.1.53-LH]</span><br>
-            TRACE_ID: <span id="user-trace" style="color: var(--gold);">...</span><br>
-            NEURAL_LINK: ESTABLISHED // BUFFER: CLEAR
-        </div>
-    </footer>
-
     <script type="text/javascript">
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({
@@ -147,9 +134,7 @@
             }, 'google_translate_element');
         }
 
-        window.onpageshow = function(event) {
-            if (event.persisted) { window.location.reload(); }
-        };
+        window.onpageshow = function(event) { if (event.persisted) { window.location.reload(); } };
 
         document.addEventListener('DOMContentLoaded', () => {
             let trace = localStorage.getItem('gy_trace') || 
