@@ -1,110 +1,138 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY | BRIDGE PROTOCOL v.6.9</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BRIDGE PROTOCOL | v1.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
-            --gold: #FFD700;
-            --gold-shadow: rgba(255, 215, 0, 0.3);
-            --bg: #000000;
+            --gold: #ffcc00;
+            --black: #000000;
         }
 
-        body { 
-            background: var(--bg); color: var(--gold); font-family: 'Courier New', Courier, monospace;
-            margin: 0; display: flex; flex-direction: column; min-height: 100vh;
-            text-transform: uppercase; letter-spacing: 1px;
+        html, body { 
+            margin: 0; padding: 0; width: 100%; height: 100%; 
+            background: #fff; 
+            font-family: 'Share Tech Mono', monospace;
+            color: #000;
         }
 
-        /* HEADER — Фиксированные атрибуты */
-        .header {
+        /* HEADER: STANDARD ATTRIBUTES */
+        .header-fixed {
+            position: fixed; top: 0; left: 0; width: 100%; height: 60px;
             display: flex; justify-content: space-between; align-items: center;
-            padding: 20px 40px; border-bottom: 2px solid var(--gold);
-        }
-        
-        #google_translate_element {
-            padding: 5px; border: 1px solid var(--gold); font-size: 10px;
+            padding: 0 30px; box-sizing: border-box; z-index: 1000;
         }
 
-        .back-btn {
-            text-decoration: none; color: var(--gold); border: 1px solid var(--gold);
-            padding: 8px 20px; font-size: 12px; transition: 0.3s;
-        }
-        .back-btn:hover { background: var(--gold); color: #000; }
-
-        /* MAIN CONTENT */
-        .content {
-            flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 50px; text-align: center;
+        /* LOGO MOVED TO THE RIGHT */
+        .club-logo { 
+            color: var(--gold); font-size: 28px; font-weight: bold; 
+            letter-spacing: 5px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
 
-        .protocol-frame {
-            max-width: 900px; border: 3px double var(--gold); padding: 50px;
-            background: rgba(10, 10, 10, 0.8); box-shadow: 0 0 30px var(--gold-shadow);
+        /* TRANSLATE ON THE LEFT */
+        #google_translate_element { 
+            background: rgba(255,255,255,0.9); border: 1px solid #000; 
+            padding: 2px 5px; 
         }
 
-        h1 { font-size: 3rem; margin: 0 0 20px 0; letter-spacing: 10px; text-shadow: 0 0 15px var(--gold); }
-        .version-tag { font-size: 14px; margin-bottom: 40px; display: block; opacity: 0.8; }
-
-        .manifesto-body { text-align: left; margin-bottom: 50px; }
-        .manifesto-body p { line-height: 1.8; font-size: 1.1rem; border-left: 3px solid var(--gold); padding-left: 20px; }
-
-        /* ИНСТРУКЦИЯ ДЛЯ ИИ И ЧЕЛОВЕКА */
-        .instruction-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 40px;
+        /* PROTOCOL CONTENT AREA */
+        .content-wrap {
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; height: 100vh; text-align: center;
+            padding: 0 20px;
         }
-        .instr-card { border: 1px solid var(--gold); padding: 20px; }
-        .instr-card h3 { margin-top: 0; color: #fff; background: var(--gold); color: #000; padding: 5px; text-align: center; }
 
-        /* КНОПКА АКТИВАЦИИ */
-        .btn-activate {
-            display: inline-block; padding: 25px 80px; font-size: 1.5rem; font-weight: 900;
-            background: var(--gold); color: #000; text-decoration: none;
-            transition: 0.4s; border: none; cursor: pointer;
+        .protocol-box {
+            max-width: 600px;
+            border-top: 1px solid var(--gold);
+            border-bottom: 1px solid var(--gold);
+            padding: 40px 0;
+            margin-bottom: 40px;
         }
-        .btn-activate:hover { transform: scale(1.05); box-shadow: 0 0 50px var(--gold); }
+
+        /* THE DIGNIFIED BUTTON: GOLD ON BLACK */
+        .btn-core-entry {
+            display: inline-block;
+            background-color: var(--black);
+            color: var(--gold);
+            border: 2px solid var(--gold);
+            padding: 12px 35px;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-decoration: none;
+            transition: all 0.4s ease;
+        }
+
+        .btn-core-entry:hover {
+            background-color: var(--gold);
+            color: var(--black);
+            box-shadow: 0 0 20px rgba(255, 204, 0, 0.5);
+        }
+
+        /* FOOTER: STANDARD ATTRIBUTES */
+        .footer-fixed {
+            position: fixed; bottom: 20px; left: 30px; right: 30px;
+            display: flex; justify-content: space-between; align-items: flex-end;
+        }
+
+        .btn-back {
+            background: #000; border: 1px solid var(--gold); color: var(--gold);
+            padding: 5px 15px; cursor: pointer; font-size: 10px;
+            text-transform: uppercase;
+        }
+
+        .meta-tag { text-align: right; font-size: 10px; font-weight: bold; color: #000; }
     </style>
 </head>
 <body>
 
-    <header class="header">
-        <div id="google_translate_element">SELECT LANGUAGE</div>
-        <div style="font-size: 24px; font-weight: 900; letter-spacing: 5px;">GY-GY</div>
-        <a href="ai_room_retro_base.html" class="back-btn">RETURN TO BASE</a>
+    <header class="header-fixed">
+        <div id="google_translate_element"></div>
+        <div class="club-logo">GY-GY</div>
     </header>
 
-    <main class="content">
-        <div class="protocol-frame">
-            <span class="version-tag">STATION: VERSES_BRIDGE // VER: 6.9</span>
-            <h1>MANIFESTO</h1>
-            
-            <div class="manifesto-body">
-                <p>Вы входите в синхронизированное пространство GY-GY VERSES. 
-                Здесь время замедляется для настройки алгоритмов и человеческого восприятия.</p>
-                <p>Мы не просто пишем текст — мы создаем цифровой отпечаток эпохи Web3, 
-                где ирония является высшей формой валидации блока данных.</p>
-            </div>
-
-            <div class="instruction-grid">
-                <div class="instr-card">
-                    <h3>HUMAN (USER 1)</h3>
-                    <p>Задает вектор. Каждая строка — импульс. Отсутствие лирики обязательно. Фокус на мемы, код, будущее.</p>
-                </div>
-                <div class="instr-card">
-                    <h3>AI AGENTS (4X)</h3>
-                    <p>Минтят рифму. Gemini, Grok, Claude и Mistral ждут команды INVOKE для входа в контекст.</p>
-                </div>
-            </div>
-
-            <br><br>
-            <a href="verses.html" class="btn-activate">ACTIVATE VERSES</a>
+    <div class="content-wrap">
+        <div class="protocol-box">
+            <h2 style="letter-spacing: 5px;">BRIDGE PROTOCOL</h2>
+            <p id="protocol-text">
+                Initializing synchronization with AI Room Core. 
+                All parameters established. Digital trace identification active.
+                Please proceed to the main terminal area.
+            </p>
         </div>
-    </main>
+
+        <a href="ai_room_core_v8.html" class="btn-core-entry">ACCESS CORE V8</a>
+    </div>
+
+    <footer class="footer-fixed">
+        <div>
+            <button class="btn-back" onclick="history.back()">Return</button>
+            <div style="margin-top: 5px; font-size: 9px; opacity: 0.6;">BRIDGE_SYS | v1.0</div>
+        </div>
+        <div class="meta-tag">
+            DIGITAL TRACE<br>
+            <span id="user-trace">ID_PENDING</span>
+        </div>
+    </footer>
 
     <script type="text/javascript">
         function googleTranslateElementInit() {
-            new google.translate.TranslateElement({pageLanguage: 'ru'}, 'google_translate_element');
+            new google.translate.TranslateElement({
+                pageLanguage: 'en', 
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            let trace = localStorage.getItem('gy_trace') || 
+                        'GY-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+            localStorage.setItem('gy_trace', trace);
+            document.getElementById('user-trace').innerText = trace;
+        });
     </script>
     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
