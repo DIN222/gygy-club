@@ -2,10 +2,10 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY AI ROOM | v6.2 [7.1.44-LH]</title>
+    <title>GY-GY AI ROOM | v6.2 [7.1.45-LH]</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
-        /* СИСТЕМНЫЙ СБРОС */
+        /* CORE RESET */
         html, body { 
             margin: 0; padding: 0; width: 100%; height: 100%; 
             background: #000; color: #fff; 
@@ -13,61 +13,65 @@
             overflow: hidden;
         }
 
-        /* ФОН: OIG2_vintage_tv_room.jpg */
+        /* BACKGROUND - ТВОЙ ФАЙЛ */
         .room-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: url('OIG2_vintage_tv_room.jpg') no-repeat center center;
             background-size: cover; z-index: 1;
         }
 
-        /* ВЕРХ: КЛАССИЧЕСКАЯ ПАНЕЛЬ ЯЗЫКА (v41-42 style) */
+        /* [HEADER] ЯЗЫКОВАЯ ПАНЕЛЬ И ЛОГО */
         .nav-top {
             position: fixed; top: 20px; left: 30px; right: 30px;
             display: flex; justify-content: space-between; align-items: center;
             z-index: 10000;
         }
-        .logo-club { color: #ffcc00; font-size: 26px; font-weight: bold; letter-spacing: 4px; }
+        .logo-club { color: #ffcc00; font-size: 26px; font-weight: bold; letter-spacing: 5px; }
         #google_translate_element { 
-            background: rgba(0,0,0,0.8);
-            padding: 5px; border: 1px solid #444;
-            border-radius: 4px;
+            background: rgba(0,0,0,0.85); padding: 5px; border: 1px solid #444; border-radius: 4px;
         }
 
-        /* ТЕЛЕВИЗОРЫ: МАКСИМАЛЬНОЕ УДАЛЕНИЕ (BUILD 44 SPECIAL) */
-        .tv-cluster {
-            position: absolute;
-            top: 54%; /* Точная привязка к "столу" в глубине фото */
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 90px; /* Сверх-узкий контейнер */
-            display: flex; justify-content: space-between;
+        /* [TV SYSTEM] - РАДИКАЛЬНОЕ УДАЛЕНИЕ И СДВИГ */
+        .tv-container {
+            position: relative;
             z-index: 500;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
         }
 
-        .tv-pixel-unit {
-            width: 24px; /* ТОЧКА В ГЛУБИНЕ */
-            height: 18px;
+        .tv-cluster {
+            /* СДВИГ: толкаем их вниз, чтобы они "легли" на стол в перспективе */
+            margin-top: 120px; 
+            width: 120px; /* Очень узко */
+            display: flex;
+            justify-content: space-between;
+            pointer-events: auto;
+        }
+
+        .tv-pixel-box {
+            width: 20px; /* Размер "точки" на горизонте */
+            height: 15px;
             border: 1px solid rgba(255, 255, 255, 0.4);
-            background: rgba(0, 0, 0, 0.95);
-            display: flex; align-items: center; justify-content: center;
-            text-decoration: none; transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(0, 0, 0, 0.9);
             cursor: pointer;
+            transition: 0.2s;
+            display: flex; align-items: center; justify-content: center;
         }
 
-        .tv-pixel-unit:hover {
+        .tv-pixel-box:hover {
             border-color: #ffcc00;
-            background: rgba(255, 204, 0, 0.3);
-            transform: scale(5); /* Мощный зум при наведении, чтобы можно было попасть */
+            background: rgba(255, 204, 0, 0.4);
+            transform: scale(6); /* Увеличение для клика */
             z-index: 1000;
-            box-shadow: 0 0 15px rgba(255,204,0,0.5);
         }
 
-        .tv-label { 
-            color: #ffcc00; font-size: 3px; /* Почти невидимый текст до наведения */
-            font-weight: bold; pointer-events: none;
-        }
+        .tv-mini-label { font-size: 3px; color: #ffcc00; font-weight: bold; }
 
-        /* НИЗ: ВОЗВРАТ И TRACE */
+        /* [FOOTER] */
         .footer {
             position: fixed; bottom: 20px; left: 30px; right: 30px;
             display: flex; justify-content: space-between; align-items: flex-end;
@@ -75,11 +79,9 @@
         }
         .btn-back {
             background: rgba(0,0,0,0.8); border: 1px solid #fff;
-            color: #fff; padding: 4px 12px; cursor: pointer;
-            font-size: 9px; text-transform: uppercase;
+            color: #fff; padding: 5px 15px; cursor: pointer; font-size: 9px;
         }
-        .build-tag { font-size: 10px; color: rgba(255,204,0,0.3); margin-top: 5px; }
-        .id-val { color: #ffcc00; font-size: 11px; font-weight: bold; }
+        .id-trace { text-align: right; color: #ffcc00; font-size: 11px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -91,20 +93,22 @@
         <div class="logo-club">GY-GY</div>
     </header>
 
-    <div class="tv-cluster">
-        <a href="techpark.html" class="tv-pixel-unit"><div class="tv-label">T</div></a>
-        <a href="verses.html" class="tv-pixel-unit"><div class="tv-label">V</div></a>
-        <div class="tv-pixel-unit" style="opacity: 0.3;"><div class="tv-label">R</div></div>
+    <div class="tv-container">
+        <div class="tv-cluster">
+            <a href="techpark.html" class="tv-pixel-box"><div class="tv-mini-label">T</div></a>
+            <a href="verses.html" class="tv-pixel-box"><div class="tv-mini-label">V</div></a>
+            <div class="tv-pixel-box" style="opacity: 0.3;"><div class="tv-mini-label">R</div></div>
+        </div>
     </div>
 
     <footer class="footer">
         <div>
             <button class="btn-back" onclick="history.back()">← RETURN</button>
-            <div class="build-tag">BUILD: 7.1.44-LH | v6.2</div>
+            <div style="font-size: 10px; color: rgba(255,204,0,0.3); margin-top: 5px;">BUILD: 7.1.45-LH | v6.2</div>
         </div>
-        <div style="text-align: right;">
+        <div class="id-trace">
             <span style="font-size: 8px; opacity: 0.5; display: block;">DIGITAL TRACE</span>
-            <span class="id-val" id="user-id">ID_LOAD</span>
+            <span id="user-id">ID_LOAD</span>
         </div>
     </footer>
 
