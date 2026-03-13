@@ -2,110 +2,42 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY AI ROOM | v6.2 [7.1.51-LH]</title>
+    <title>GY-GY AI ROOM | v6.2 [7.1.52-LH]</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
-    <style>
-        /* ПОЛНЫЙ СВЕТ И СТРОГАЯ ГЕОМЕТРИЯ */
-        html, body { 
-            margin: 0; padding: 0; width: 100vw; height: 100vh; 
-            background: #fff; overflow: hidden; 
-            font-family: 'Share Tech Mono', monospace;
-        }
-
-        /* ФОТО БЕЗ ФИЛЬТРОВ */
-        .room-bg {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: url('OIG2_vintage_tv_room.jpg') no-repeat center center;
-            background-size: cover; z-index: 1;
-        }
-
-        /* HEADER: ПОДНЯТ МАКСИМАЛЬНО ВВЕРХ (10px) */
-        .nav-top {
-            position: fixed; top: 10px; left: 25px; right: 25px;
-            display: flex; justify-content: space-between; align-items: flex-start; 
-            z-index: 10000;
-        }
-
-        .logo-club { 
-            color: #ffcc00; font-size: 32px; font-weight: bold; letter-spacing: 6px;
-            line-height: 1; text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
-        }
-
-        #google_translate_element { 
-            background: rgba(255,255,255,0.95); 
-            padding: 2px 6px; border: 1px solid #000; border-radius: 2px;
-        }
-
-        /* ТЕЛЕВИЗОРЫ: ПРИЖАТЫ К СТОЛУ */
-        .tv-horizon {
-            position: absolute; top: 54%; /* Сдвинуто вниз на уровень стола */
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100px; z-index: 500;
-            display: flex; justify-content: space-between;
-        }
-
-        .nano-monitor {
-            width: 22px; height: 16px;
-            background: rgba(0,0,0,0.85); border: 1px solid #fff;
-            cursor: pointer; transition: 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex; align-items: center; justify-content: center;
-        }
-
-        .nano-monitor:hover {
-            border-color: #ffcc00; transform: scale(5); 
-            z-index: 1000; background: #000;
-        }
-
-        .label { font-size: 4px; color: #ffcc00; font-weight: bold; }
-
-        /* FOOTER */
-        .footer {
-            position: fixed; bottom: 15px; left: 25px; right: 25px;
-            display: flex; justify-content: space-between; align-items: flex-end; z-index: 2000;
-        }
-        .btn-back { 
-            background: #000; border: 1px solid #fff; color: #fff; 
-            padding: 4px 12px; cursor: pointer; font-size: 9px;
-        }
-        .id-trace { text-align: right; color: #000; font-size: 11px; font-weight: bold; }
-    </style>
 </head>
-<body>
+<body style="margin: 0; padding: 0; background: #fff; overflow: hidden; font-family: 'Share Tech Mono', monospace;">
 
-    <div class="room-bg"></div>
+    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: url('OIG2_vintage_tv_room.jpg') no-repeat center center; background-size: cover; z-index: 1;"></div>
 
-    <header class="nav-top">
-        <div id="google_translate_element"></div>
-        <div class="logo-club">GY-GY</div>
-    </header>
-
-    <div class="tv-horizon">
-        <a href="techpark.html" class="nano-monitor" title="TECHPARK"><span class="label">T</span></a>
-        <a href="verses.html" class="nano-monitor" title="VERSES"><span class="label">V</span></a>
-        <div class="nano-monitor" style="opacity: 0.3;"><span class="label">R</span></div>
+    <div style="position: fixed; top: 5px; left: 20px; right: 20px; display: flex; justify-content: space-between; align-items: center; z-index: 10000;">
+        <div id="google_translate_element" style="border: 1px solid #000; background: #fff;"></div>
+        <div style="color: #ffcc00; font-size: 30px; font-weight: bold; letter-spacing: 5px; text-shadow: 2px 2px 0px #000;">GY-GY</div>
     </div>
 
-    <footer class="footer">
-        <div>
-            <button class="btn-back" onclick="history.back()">← RETURN</button>
-            <div style="font-size: 9px; color: #000; margin-top: 4px; opacity: 0.6;">BUILD: 7.1.51-LH | v6.2</div>
+    <div style="position: absolute; top: 60%; left: 50%; transform: translate(-50%, -50%); width: 80px; display: flex; justify-content: space-between; z-index: 500;">
+        
+        <a href="techpark.html" style="width: 15px; height: 12px; background: #000; border: 1px solid #fff; cursor: pointer; display: block; transition: 0.2s;" onmouseover="this.style.transform='scale(10)'" onmouseout="this.style.transform='scale(1)'"></a>
+        
+        <a href="verses.html" style="width: 15px; height: 12px; background: #000; border: 1px solid #fff; cursor: pointer; display: block; transition: 0.2s;" onmouseover="this.style.transform='scale(10)'" onmouseout="this.style.transform='scale(1)'"></a>
+        
+        <div style="width: 15px; height: 12px; background: #000; border: 1px solid #fff; opacity: 0.2;"></div>
+    </div>
+
+    <div style="position: fixed; bottom: 10px; left: 20px; right: 20px; display: flex; justify-content: space-between; align-items: flex-end; z-index: 2000;">
+        <button onclick="history.back()" style="background: #000; color: #fff; border: 1px solid #fff; padding: 5px 10px; cursor: pointer; font-size: 10px;">RETURN</button>
+        <div style="color: #000; font-size: 10px; font-weight: bold;">
+            BUILD: 7.1.52-LH | v6.2<br>
+            TRACE: <span id="user-id">...</span>
         </div>
-        <div class="id-trace">
-            <span style="font-size: 7px; display: block; opacity: 0.6;">DIGITAL TRACE</span>
-            <span id="user-id">SYNC...</span>
-        </div>
-    </footer>
+    </div>
 
     <script type="text/javascript">
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({pageLanguage: 'ru', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
         }
-        document.addEventListener('DOMContentLoaded', () => {
-            let trace = localStorage.getItem('gy_trace') || 'GY-' + Math.random().toString(36).substr(2, 7).toUpperCase();
-            localStorage.setItem('gy_trace', trace);
-            document.getElementById('user-id').innerText = trace;
-        });
+        let trace = localStorage.getItem('gy_trace') || 'GY-' + Math.random().toString(36).substr(2, 7).toUpperCase();
+        localStorage.setItem('gy_trace', trace);
+        document.getElementById('user-id').innerText = trace;
     </script>
     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
