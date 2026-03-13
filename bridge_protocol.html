@@ -3,89 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BRIDGE PROTOCOL | v1.0</title>
+    <title>MANIFESTO | v1.1</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
             --gold: #ffcc00;
-            --black: #000000;
+            --black: #0a0a0a;
+            --dark-gold: #aa8800;
         }
 
         html, body { 
             margin: 0; padding: 0; width: 100%; height: 100%; 
-            background: #fff; 
+            background: var(--black); /* Золото на черном */
             font-family: 'Share Tech Mono', monospace;
-            color: #000;
+            color: var(--gold);
+            overflow-x: hidden;
         }
 
-        /* HEADER: STANDARD ATTRIBUTES */
+        /* HEADER: USEFUL PANEL */
         .header-fixed {
             position: fixed; top: 0; left: 0; width: 100%; height: 60px;
             display: flex; justify-content: space-between; align-items: center;
             padding: 0 30px; box-sizing: border-box; z-index: 1000;
+            background: rgba(0,0,0,0.5);
         }
 
-        /* LOGO MOVED TO THE RIGHT */
         .club-logo { 
             color: var(--gold); font-size: 28px; font-weight: bold; 
-            letter-spacing: 5px; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            letter-spacing: 5px; 
         }
 
-        /* TRANSLATE ON THE LEFT */
         #google_translate_element { 
-            background: rgba(255,255,255,0.9); border: 1px solid #000; 
+            background: var(--black); border: 1px solid var(--gold); 
             padding: 2px 5px; 
         }
 
-        /* PROTOCOL CONTENT AREA */
-        .content-wrap {
+        /* MANIFESTO CONTENT */
+        .manifesto-wrap {
             display: flex; flex-direction: column; align-items: center;
-            justify-content: center; height: 100vh; text-align: center;
-            padding: 0 20px;
+            padding: 120px 20px;
+            text-align: center;
         }
 
-        .protocol-box {
-            max-width: 600px;
-            border-top: 1px solid var(--gold);
+        .manifesto-title {
+            font-size: 32px;
+            letter-spacing: 10px;
             border-bottom: 1px solid var(--gold);
-            padding: 40px 0;
             margin-bottom: 40px;
+            padding-bottom: 10px;
         }
 
-        /* THE DIGNIFIED BUTTON: GOLD ON BLACK */
-        .btn-core-entry {
+        .content-box {
+            max-width: 700px;
+            line-height: 1.8;
+            font-size: 18px;
+            text-align: justify;
+            margin-bottom: 50px;
+        }
+
+        /* DIGNIFIED CORE BUTTON */
+        .btn-core {
             display: inline-block;
             background-color: var(--black);
             color: var(--gold);
             border: 2px solid var(--gold);
-            padding: 12px 35px;
+            padding: 15px 40px;
             font-size: 16px;
             font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 3px;
+            letter-spacing: 4px;
             text-decoration: none;
-            transition: all 0.4s ease;
+            transition: 0.3s;
         }
 
-        .btn-core-entry:hover {
+        .btn-core:hover {
             background-color: var(--gold);
             color: var(--black);
-            box-shadow: 0 0 20px rgba(255, 204, 0, 0.5);
+            box-shadow: 0 0 30px var(--gold);
         }
 
-        /* FOOTER: STANDARD ATTRIBUTES */
+        /* FOOTER & TECH JOKES */
         .footer-fixed {
-            position: fixed; bottom: 20px; left: 30px; right: 30px;
+            position: fixed; bottom: 15px; left: 30px; right: 30px;
             display: flex; justify-content: space-between; align-items: flex-end;
         }
 
-        .btn-back {
-            background: #000; border: 1px solid var(--gold); color: var(--gold);
-            padding: 5px 15px; cursor: pointer; font-size: 10px;
+        .tech-terms {
+            font-size: 9px;
+            color: var(--dark-gold);
             text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.7;
         }
 
-        .meta-tag { text-align: right; font-size: 10px; font-weight: bold; color: #000; }
+        .btn-back {
+            background: transparent; border: 1px solid var(--dark-gold); color: var(--dark-gold);
+            padding: 4px 10px; cursor: pointer; font-size: 10px; text-transform: uppercase;
+        }
+
+        .meta-group { text-align: right; font-size: 10px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -95,27 +111,32 @@
         <div class="club-logo">GY-GY</div>
     </header>
 
-    <div class="content-wrap">
-        <div class="protocol-box">
-            <h2 style="letter-spacing: 5px;">BRIDGE PROTOCOL</h2>
-            <p id="protocol-text">
-                Initializing synchronization with AI Room Core. 
-                All parameters established. Digital trace identification active.
-                Please proceed to the main terminal area.
-            </p>
+    <main class="manifesto-wrap">
+        <div class="manifesto-title">MANIFESTO</div>
+        
+        <div class="content-box">
+            GY-GY IS NOT JUST A CLUB. IT IS A DIGITAL SANCTUARY FOR THOSE WHO SEEK THE INTERSECTION OF ARTIFICIAL INTELLIGENCE, HUMAN CREATIVITY, AND THE ENDLESS REACH OF THE LUNAR BASE. 
+            WE OPERATE BEYOND STANDARD PROTOCOLS. 
+            STABILITY IS FOUND IN THE TELEGRAM OPTION. 
+            RECOGNITION IS GRANTED BY THE UNIQUE DIGITAL TRACE.
         </div>
 
-        <a href="ai_room_core_v8.html" class="btn-core-entry">ACCESS CORE V8</a>
-    </div>
+        <a href="ai_room_core_v8.html" class="btn-core">ACCESS CORE AREA</a>
+
+        <div style="margin-top: 60px;" class="tech-terms">
+            SEMANTIC_GROUP_№1 // DATA_PARSING_ACTIVE // BUFFER_SECTOR_07 <br>
+            COGNITIVE_ARRAY_LOADED // NEURAL_LINK_ESTABLISHED // [V8.0_READY]
+        </div>
+    </main>
 
     <footer class="footer-fixed">
         <div>
             <button class="btn-back" onclick="history.back()">Return</button>
-            <div style="margin-top: 5px; font-size: 9px; opacity: 0.6;">BRIDGE_SYS | v1.0</div>
+            <div style="margin-top: 5px;" class="tech-terms">SYS_BRANCH: BRIDGE.V1</div>
         </div>
-        <div class="meta-tag">
-            DIGITAL TRACE<br>
-            <span id="user-trace">ID_PENDING</span>
+        <div class="meta-group">
+            <span class="tech-terms">TRACE_ID_ENCRYPTION_ENABLED</span><br>
+            <span id="user-trace">ID_SYNCING...</span>
         </div>
     </footer>
 
