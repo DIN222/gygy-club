@@ -2,64 +2,73 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY AI ROOM | v6.2 [7.1.46-LH]</title>
+    <title>GY-GY AI ROOM | v6.2 [7.1.51-LH]</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
-        html, body { margin: 0; padding: 0; width: 100vw; height: 100vh; background: #000; overflow: hidden; }
+        /* ПОЛНЫЙ СВЕТ И СТРОГАЯ ГЕОМЕТРИЯ */
+        html, body { 
+            margin: 0; padding: 0; width: 100vw; height: 100vh; 
+            background: #fff; overflow: hidden; 
+            font-family: 'Share Tech Mono', monospace;
+        }
 
-        /* ФОН: OIG2_vintage_tv_room.jpg */
+        /* ФОТО БЕЗ ФИЛЬТРОВ */
         .room-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: url('OIG2_vintage_tv_room.jpg') no-repeat center center;
             background-size: cover; z-index: 1;
         }
 
-        /* [HEADER] */
+        /* HEADER: ПОДНЯТ МАКСИМАЛЬНО ВВЕРХ (10px) */
         .nav-top {
-            position: fixed; top: 20px; left: 30px; right: 30px;
-            display: flex; justify-content: space-between; align-items: center; z-index: 10000;
+            position: fixed; top: 10px; left: 25px; right: 25px;
+            display: flex; justify-content: space-between; align-items: flex-start; 
+            z-index: 10000;
         }
-        .logo-club { color: #ffcc00; font-size: 24px; font-weight: bold; letter-spacing: 5px; }
-        #google_translate_element { background: rgba(0,0,0,0.8); padding: 4px; border: 1px solid #444; border-radius: 4px; }
 
-        /* [TV SYSTEM] - РАДИКАЛЬНОЕ УМЕНЬШЕНИЕ И ПРИНУДИТЕЛЬНЫЙ СДВИГ */
-        .tv-station {
-            position: absolute;
-            top: 55%; /* Глубина */
+        .logo-club { 
+            color: #ffcc00; font-size: 32px; font-weight: bold; letter-spacing: 6px;
+            line-height: 1; text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+        }
+
+        #google_translate_element { 
+            background: rgba(255,255,255,0.95); 
+            padding: 2px 6px; border: 1px solid #000; border-radius: 2px;
+        }
+
+        /* ТЕЛЕВИЗОРЫ: ПРИЖАТЫ К СТОЛУ */
+        .tv-horizon {
+            position: absolute; top: 54%; /* Сдвинуто вниз на уровень стола */
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 100px; /* Весь блок теперь всего 100 пикселей в ширину */
-            height: 20px;
-            z-index: 500;
-            display: flex;
-            justify-content: space-between;
+            width: 100px; z-index: 500;
+            display: flex; justify-content: space-between;
         }
 
         .nano-monitor {
-            width: 18px !important; /* Жестко фиксируем микро-размер */
-            height: 12px !important;
-            background: rgba(0, 255, 255, 0.2); /* Легкое свечение для поиска */
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            cursor: pointer;
-            transition: 0.2s;
-            text-decoration: none;
-            display: block;
+            width: 22px; height: 16px;
+            background: rgba(0,0,0,0.85); border: 1px solid #fff;
+            cursor: pointer; transition: 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex; align-items: center; justify-content: center;
         }
 
         .nano-monitor:hover {
-            background: #ffcc00;
-            transform: scale(8); /* Огромный зум, чтобы понять, что это ОНО */
-            z-index: 1000;
-            box-shadow: 0 0 20px #ffcc00;
+            border-color: #ffcc00; transform: scale(5); 
+            z-index: 1000; background: #000;
         }
 
-        /* [FOOTER] */
+        .label { font-size: 4px; color: #ffcc00; font-weight: bold; }
+
+        /* FOOTER */
         .footer {
-            position: fixed; bottom: 20px; left: 30px; right: 30px;
+            position: fixed; bottom: 15px; left: 25px; right: 25px;
             display: flex; justify-content: space-between; align-items: flex-end; z-index: 2000;
         }
-        .btn-back { background: rgba(0,0,0,0.8); border: 1px solid #fff; color: #fff; padding: 5px 15px; cursor: pointer; font-size: 9px; }
-        .id-trace { text-align: right; color: #ffcc00; font-size: 11px; font-weight: bold; }
+        .btn-back { 
+            background: #000; border: 1px solid #fff; color: #fff; 
+            padding: 4px 12px; cursor: pointer; font-size: 9px;
+        }
+        .id-trace { text-align: right; color: #000; font-size: 11px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -71,20 +80,20 @@
         <div class="logo-club">GY-GY</div>
     </header>
 
-    <div class="tv-station">
-        <a href="techpark.html" class="nano-monitor" title="TECHPARK"></a>
-        <a href="verses.html" class="nano-monitor" title="VERSES"></a>
-        <div class="nano-monitor" style="opacity: 0.3;" title="RESERVE"></div>
+    <div class="tv-horizon">
+        <a href="techpark.html" class="nano-monitor" title="TECHPARK"><span class="label">T</span></a>
+        <a href="verses.html" class="nano-monitor" title="VERSES"><span class="label">V</span></a>
+        <div class="nano-monitor" style="opacity: 0.3;"><span class="label">R</span></div>
     </div>
 
     <footer class="footer">
         <div>
             <button class="btn-back" onclick="history.back()">← RETURN</button>
-            <div style="font-size: 10px; color: rgba(255,204,0,0.3); margin-top: 5px;">BUILD: 7.1.46-LH | v6.2</div>
+            <div style="font-size: 9px; color: #000; margin-top: 4px; opacity: 0.6;">BUILD: 7.1.51-LH | v6.2</div>
         </div>
         <div class="id-trace">
-            <span style="font-size: 8px; opacity: 0.5; display: block;">DIGITAL TRACE</span>
-            <span id="user-id">ID_LOAD</span>
+            <span style="font-size: 7px; display: block; opacity: 0.6;">DIGITAL TRACE</span>
+            <span id="user-id">SYNC...</span>
         </div>
     </footer>
 
