@@ -3,110 +3,143 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY MINTING ENGINE v.6.5</title>
+    <title>GY-GY | VERSES TERMINAL v.7.0</title>
     <style>
-        :root { --gold: #FFD700; --bg: #050505; --panel: #111; --gemini: #4285F4; }
-        body { background: var(--bg); color: #fff; font-family: 'Courier New', monospace; margin: 0; display: flex; flex-direction: column; height: 100vh; }
-        
-        /* HEADER */
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; border-bottom: 2px solid var(--gold); background: #000; }
-        .logo { color: var(--gold); font-size: 24px; font-weight: 900; letter-spacing: 5px; }
+        :root {
+            --gold: #FFD700;
+            --bg: #000000;
+            --panel: #0a0a0a;
+        }
+
+        body { 
+            background: var(--bg); color: var(--gold); font-family: 'Courier New', Courier, monospace;
+            margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden;
+            text-transform: uppercase;
+        }
+
+        /* HEADER — СТАНДАРТ КЛУБА */
+        .universal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 25px; border-bottom: 2px solid var(--gold); background: #000;
+        }
+        #google_translate_element { border: 1px solid var(--gold); padding: 5px; font-size: 10px; }
+        .logo-center { font-size: 28px; font-weight: 900; letter-spacing: 6px; position: absolute; left: 50%; transform: translateX(-50%); }
+        .back-btn { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 5px 15px; cursor: pointer; text-decoration: none; font-size: 12px; transition: 0.3s; }
+        .back-btn:hover { background: var(--gold); color: #000; }
 
         /* MATRIX 14 */
-        .matrix { display: grid; grid-template-columns: repeat(14, 1fr); gap: 4px; padding: 10px; background: var(--panel); }
-        .slot { border: 1px solid #333; aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 8px; cursor: pointer; position: relative; transition: 0.3s; }
-        .slot.active { border-color: var(--gold); box-shadow: 0 0 10px var(--gold); }
-        .slot:hover { background: #222; }
-        .invoke-btn { position: absolute; bottom: 2px; font-size: 7px; background: var(--gold); color: #000; border: none; padding: 1px 3px; border-radius: 2px; opacity: 0; }
-        .slot:hover .invoke-btn { opacity: 1; }
+        .matrix {
+            display: grid; grid-template-columns: repeat(14, 1fr);
+            gap: 2px; background: var(--gold); padding: 1px; border-bottom: 1px solid var(--gold);
+        }
+        .slot {
+            aspect-ratio: 1; background: #000; display: flex; align-items: center; justify-content: center;
+            font-size: 9px; text-decoration: none; color: var(--gold); transition: 0.2s;
+        }
+        .slot:hover { background: #111; }
+        .slot.user-active { box-shadow: inset 0 0 10px var(--gold); border: 1px solid var(--gold); }
 
-        /* CHAT AREA */
-        .chat-flow { flex: 1; overflow-y: auto; padding: 40px; display: flex; flex-direction: column; gap: 20px; }
-        .stanza { border-left: 2px solid #222; padding-left: 20px; margin-bottom: 20px; }
-        .line { font-size: 1.2rem; margin: 5px 0; display: flex; gap: 10px; }
-        .author { color: var(--gold); font-weight: bold; width: 100px; font-size: 0.8rem; }
+        /* ЧАТ-ПОТОК */
+        .stream { 
+            flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px;
+            background: radial-gradient(circle at center, #050500 0%, #000 100%);
+        }
+        .msg { border-left: 2px solid var(--gold); padding: 10px 20px; animation: fadeIn 0.4s ease; }
+        .author { font-size: 0.7rem; opacity: 0.7; margin-bottom: 5px; display: block; }
+        .text { font-size: 1.2rem; line-height: 1.4; }
 
-        /* INPUT */
-        .input-zone { padding: 30px; background: #000; border-top: 1px solid #222; display: flex; gap: 20px; }
-        input { flex: 1; background: #0a0a0a; border: 1px solid #333; color: var(--gold); padding: 15px; font-size: 1.1rem; outline: none; }
-        input:focus { border-color: var(--gold); }
-        .btn-main { background: var(--gold); color: #000; border: none; padding: 0 40px; font-weight: 900; cursor: pointer; }
+        /* ВВОД */
+        .input-zone { padding: 30px; background: #000; border-top: 2px solid var(--gold); display: flex; gap: 20px; }
+        input { 
+            flex: 1; background: #000; border: 1px solid var(--gold); color: var(--gold); 
+            padding: 15px; font-family: 'Courier New'; font-size: 1.2rem; outline: none;
+        }
+        .mint-btn { background: var(--gold); color: #000; border: none; padding: 0 50px; font-weight: 900; cursor: pointer; font-size: 1.2rem; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
     </style>
 </head>
-<body data-version="6.5">
+<body data-version="7.0">
 
-    <header class="header">
-        <div id="google_translate_element">LANG</div>
-        <div class="logo">GY-GY</div>
-        <button onclick="resetAll()" style="background:none; border:1px solid #444; color:#444; cursor:pointer;">RESET</button>
+    <header class="universal-header">
+        <div id="google_translate_element"></div>
+        <div class="logo-center">GY-GY</div>
+        <a href="ai_room_retro_base.html" class="back-btn">RETURN TO BASE</a>
     </header>
 
-    <div class="matrix" id="matrix"></div>
+    <div class="matrix" id="matrix-container"></div>
 
-    <main class="chat-flow" id="flow"></main>
+    <main class="stream" id="chat-stream"></main>
 
     <div class="input-zone">
-        <input type="text" id="userInput" placeholder="START MINTING..." autofocus>
-        <button class="btn-main" onclick="pushLine('User 1')">MINT</button>
+        <input type="text" id="userInput" placeholder="MINT YOUR LINE..." autocomplete="off">
+        <button class="mint-btn" onclick="mintLine()">MINT</button>
     </div>
 
     <script>
-        const flow = document.getElementById('flow');
-        const input = document.getElementById('userInput');
-        const models = ['GEMINI', 'GROK', 'CLAUDE', 'MISTRAL'];
+        const chatStream = document.getElementById('chat-stream');
+        const userInput = document.getElementById('userInput');
 
-        // Инициализация Матрицы
-        function init() {
-            let html = '';
-            for(let i=1; i<=10; i++) html += `<div class="slot" id="u${i}">U${i}<div class="slot-label">USER</div></div>`;
-            models.forEach(m => {
-                html += `<div class="slot" style="color:var(--gemini)" onclick="invokeAI('${m}')">
-                            ${m[0]}<div class="slot-label">${m}</div>
-                            <button class="invoke-btn">INVOKE</button>
-                         </div>`;
-            });
-            document.getElementById('matrix').innerHTML = html;
-            load();
-        }
-
-        function pushLine(author) {
-            const val = input.value.trim();
-            if(!val) return;
-            renderLine(author, val);
-            input.value = '';
-            save();
-        }
-
-        function renderLine(author, text) {
-            if(flow.children.length === 0 || flow.lastChild.children.length >= 4) {
-                const stanza = document.createElement('div');
-                stanza.className = 'stanza';
-                flow.appendChild(stanza);
+        // Инициализация Матрицы 14
+        function initMatrix() {
+            const container = document.getElementById('matrix-container');
+            const aiNames = ['GEMINI', 'GROK', 'CLAUDE', 'MISTRAL'];
+            
+            for(let i=1; i<=10; i++) {
+                container.innerHTML += `<div class="slot ${i===1?'user-active':''}">U${i}</div>`;
             }
-            const line = document.createElement('div');
-            line.className = 'line';
-            line.innerHTML = `<span class="author">@${author}:</span><span>${text}</span>`;
-            flow.lastChild.appendChild(line);
-            flow.scrollTop = flow.scrollHeight;
+            aiNames.forEach(name => {
+                container.innerHTML += `<div class="slot" onclick="invokeAI('${name}')">${name}</div>`;
+            });
+        }
+
+        // Загрузка памяти
+        window.onload = () => {
+            initMatrix();
+            const history = localStorage.getItem('gy70_history');
+            if(history) chatStream.innerHTML = history;
+            else chatStream.innerHTML = '<div class="msg" style="border:none; opacity:0.5;">[ СИСТЕМА: ОЖИДАНИЕ ПЕРВОЙ СТРОКИ ]</div>';
+            chatStream.scrollTop = chatStream.scrollHeight;
+        };
+
+        function mintLine() {
+            const val = userInput.value.trim().toUpperCase();
+            if(!val) return;
+
+            addMessage('USER_1', val);
+            userInput.value = '';
+
+            // Автоматическая заглушка для Gemini в чате (пока ты не вставишь мой реальный ответ)
+            setTimeout(() => {
+                addMessage('GEMINI [✦]', '[ ОЖИДАНИЕ РИФМЫ В ОСНОВНОМ ДИАЛОГЕ... ]');
+            }, 800);
+        }
+
+        function addMessage(author, text) {
+            if(chatStream.innerText.includes('ОЖИДАНИЕ ПЕРВОЙ СТРОКИ')) chatStream.innerHTML = '';
+            
+            const msgHtml = `
+                <div class="msg">
+                    <span class="author">@${author}</span>
+                    <div class="text">${text}</div>
+                </div>`;
+            chatStream.innerHTML += msgHtml;
+            chatStream.scrollTop = chatStream.scrollHeight;
+            localStorage.setItem('gy70_history', chatStream.innerHTML);
         }
 
         function invokeAI(name) {
-            const lines = Array.from(document.querySelectorAll('.line'));
-            const context = lines.map(l => l.innerText).join('\n');
-            const prompt = `GY-GY PROTOCOL v6.5\nCONTEXT:\n${context}\n\nTASK: Write 1 next rhyming line. NO prose. NO chat. Just 1 line of poetry.`;
-            
+            const lastMsg = document.querySelector('.msg:last-child .text').innerText;
+            const prompt = `ПРОТОКОЛ GY-GY v.7.0. ПОСЛЕДНЯЯ СТРОКА: "${lastMsg}". НАПИШИ ОДНУ СЛЕДУЮЩУЮ СТРОКУ В РИФМУ. СТИЛЬ: WEB3, ИРОНИЯ.`;
             navigator.clipboard.writeText(prompt);
-            alert(`${name} INVOKED! Prompt copied to clipboard. Paste it in their chat.`);
+            alert(`КОНТЕКСТ ДЛЯ ${name} В БУФЕРЕ ОБМЕНА!`);
         }
 
-        function save() { localStorage.setItem('gy65', flow.innerHTML); }
-        function load() { 
-            const data = localStorage.getItem('gy65');
-            if(data) flow.innerHTML = data; 
+        // Google Translate
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage: 'ru'}, 'google_translate_element');
         }
-        function resetAll() { localStorage.removeItem('gy65'); location.reload(); }
-
-        init();
     </script>
+    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
