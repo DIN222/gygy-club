@@ -19,72 +19,86 @@
             overflow: hidden;
         }
 
+        /* ОСНОВНОЙ КОНТЕЙНЕР ДЛЯ ФОНА */
         .viewport {
             position: relative;
             width: 100vw;
             height: 100vh;
             background: url('OIG2_vintage_tv_room_v2.jpg') no-repeat center center;
-            background-size: cover;
+            background-size: cover; /* Заполняет весь экран */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
+        /* Блок Google Translate */
         #google_translate_element {
             position: absolute;
-            top: 20px;
-            left: 20px;
+            top: 25px;
+            left: 30px;
             z-index: 1000;
         }
 
+        /* Логотип GY-GY */
         .brand-logo {
             position: absolute;
-            top: 20px;
+            top: 25px;
             right: 40px;
             color: var(--gold);
-            font-size: 2.5rem;
-            font-weight: bold;
+            font-size: 2.2rem;
+            font-weight: 900;
             letter-spacing: 5px;
+            z-index: 1000;
         }
 
-        /* Кнопка: приглушенная по умолчанию, яркая при наведении */
+        /* КНОПКА: Приглушенная, без заливки, становится яркой при наведении */
         .std-btn {
-            position: absolute;
-            bottom: 60px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.7);
-            border: 2px solid rgba(0, 242, 255, 0.4); /* Приглушенная */
-            color: rgba(0, 242, 255, 0.4); /* Приглушенная */
-            padding: 15px 40px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(0, 242, 255, 0.4); /* Приглушенный неон */
+            color: rgba(0, 242, 255, 0.5);
+            padding: 18px 50px;
             font-size: 1.1rem;
             cursor: pointer;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             transition: all 0.3s ease;
+            text-decoration: none;
+            z-index: 100;
         }
 
         .std-btn:hover {
             border-color: var(--neon-blue);
             color: var(--neon-blue);
-            box-shadow: 0 0 15px var(--neon-blue);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
+            background: rgba(0, 0, 0, 0.8);
         }
 
+        /* Кнопка возврата */
         .back-btn {
             position: absolute;
-            bottom: 20px;
-            left: 20px;
+            bottom: 30px;
+            left: 30px;
             background: none;
-            border: 1px solid #fff;
-            color: #fff;
-            padding: 5px 15px;
+            border: 1px solid rgba(255,255,255,0.5);
+            color: rgba(255,255,255,0.5);
+            padding: 8px 20px;
             cursor: pointer;
             text-transform: uppercase;
             font-size: 0.8rem;
+            transition: 0.3s;
         }
 
-        .ver-tag {
+        .back-btn:hover {
+            border-color: #fff;
+            color: #fff;
+        }
+
+        .version-tag {
             position: absolute;
-            bottom: 10px;
-            right: 15px;
-            color: rgba(255,255,255,0.3);
+            bottom: 20px;
+            right: 30px;
+            color: rgba(255,255,255,0.2);
             font-size: 0.7rem;
         }
     </style>
@@ -98,7 +112,7 @@
     <button class="std-btn" onclick="window.location.href='ai_room_core_v9.html'">Initiate Bridge</button>
 
     <button class="back-btn" onclick="history.back()">← BACK</button>
-    <div class="ver-tag">v 4.3 (8.1.6)</div>
+    <div class="version-tag">v 4.3 | BRIDGE PROTOCOL</div>
 </div>
 
 <script type="text/javascript">
