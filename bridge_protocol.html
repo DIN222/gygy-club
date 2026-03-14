@@ -1,146 +1,187 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MANIFESTO | v2.1</title>
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <title>MANIFESTO | v2.2 (Internal 4.3)</title>
     <style>
         :root {
-            --gold: #ffcc00;
-            --black: #000000;
-            --dim-gold: #7a6200;
+            --neon-blue: #00f2ff;
+            --gold: #ffd700;
+            --bg-glass: rgba(0, 0, 0, 0.85);
         }
 
-        body { 
-            margin: 0; padding: 0; 
-            background: var(--black); 
-            font-family: 'Share Tech Mono', monospace;
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background: #000 url('OIG2_vintage_tv_room_v2.jpg') no-repeat center center;
+            background-size: cover;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        /* --- СТАНДАРТНЫЙ БЛОК ЯЗЫКОВ (GOOGLE STYLE) --- */
+        .google-lang-container {
+            position: absolute;
+            top: 25px;
+            left: 30px;
+            z-index: 10000;
+        }
+
+        #google_lang_select {
+            background: rgba(0, 0, 0, 0.8);
             color: var(--gold);
-            overflow-y: auto;
+            border: 1px solid var(--gold);
+            padding: 8px 12px;
+            font-size: 14px;
+            outline: none;
+            cursor: pointer;
+            width: 160px;
+            /* Убираем стандартную стрелку для чистоты стиля, если нужно, или оставляем нативную */
+            appearance: none; 
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffd700' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 12px;
         }
 
-        /* --- ФИКСИРОВАННАЯ ШАПКА --- */
-        .header-ui {
-            position: fixed; top: 0; left: 0; width: 100%; height: 60px;
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 0 30px; box-sizing: border-box; z-index: 10000;
-            background: var(--black);
+        #google_lang_select option {
+            background: #111;
+            color: #fff;
         }
 
-        /* --- ЕДИНЫЙ БЛОК ЯЗЫКОВ (GOOGLE СТАНДАРТ) --- */
-        #google_translate_element { 
-            border: 1px solid var(--gold); 
-            background: var(--black);
-            padding: 2px;
-            z-index: 10001;
+        /* --- ОБЯЗАТЕЛЬНЫЕ АТРИБУТЫ --- */
+        .brand-header {
+            position: absolute;
+            top: 25px;
+            right: 40px;
+            color: var(--gold);
+            font-size: 2.2rem;
+            font-weight: 900;
+            letter-spacing: 5px;
+            z-index: 100;
         }
 
-        /* ГЛАВНЫЙ ХАК: ЗАСТАВЛЯЕМ СПИСОК ЯЗЫКОВ СКРОЛЛИТЬСЯ */
-        /* Google создает фрейм в конце body, мы управляем им через глобальные селекторы */
-        iframe.goog-te-menu-frame {
-            max-height: 50vh !important; /* Ограничиваем высоту на пол-экрана */
-            overflow-y: auto !important;
+        .btn-return {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid #fff;
+            color: #fff;
+            padding: 10px 25px;
+            cursor: pointer;
+            z-index: 100;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            transition: 0.3s;
         }
+        .btn-return:hover { background: #fff; color: #000; }
 
         /* --- КОНТЕНТ МАНИФЕСТА --- */
-        .manifesto-body {
-            padding: 120px 20px 180px 20px;
-            display: flex; flex-direction: column; align-items: center;
-            text-align: center;
+        .manifesto-box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 55%;
+            background: var(--bg-glass);
+            padding: 50px;
+            border-left: 4px solid var(--gold);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
 
-        .text-frame {
-            max-width: 750px; line-height: 1.8; font-size: 20px;
-            text-align: justify; margin: 40px 0;
-            border-top: 1px solid var(--gold); border-bottom: 1px solid var(--gold);
-            padding: 50px 0;
+        h1 { 
+            margin-top: 0;
+            color: var(--gold); 
+            letter-spacing: 3px; 
+            text-transform: uppercase;
+            font-size: 2.5rem;
         }
 
-        /* --- КНОПКА: ПОЛНОЕ ОТСУТСТВИЕ ВСПЫШКИ --- */
-        .btn-entry {
+        p { 
+            line-height: 1.8; 
+            font-size: 1.15rem; 
+            color: #eee;
+            margin-bottom: 30px;
+        }
+
+        /* --- КНОПКА (БЕЗ ВСПЫШКИ) --- */
+        .confirm-btn {
             display: inline-block;
-            background: var(--black) !important;
-            color: var(--gold) !important;
-            border: 2px solid var(--gold) !important;
-            padding: 16px 45px;
-            font-size: 17px; font-weight: bold;
-            text-transform: uppercase; letter-spacing: 3px;
+            background: none;
+            border: 2px solid var(--neon-blue);
+            color: var(--neon-blue);
+            padding: 15px 45px;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 2px;
+            cursor: pointer;
             text-decoration: none;
-            /* Радикальное отключение всех эффектов */
-            transition: none !important;
-            box-shadow: none !important;
-            outline: none !important;
-            animation: none !important;
+            transition: all 0.4s ease; /* Плавный ховер, без резких вспышек */
         }
 
-        .btn-entry:hover {
-            background: var(--gold) !important;
-            color: var(--black) !important;
-            box-shadow: none !important;
+        .confirm-btn:hover {
+            background: var(--neon-blue);
+            color: #000;
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.6);
         }
 
-        /* --- ПОДВАЛ --- */
-        .footer-ui {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 85px;
-            display: flex; justify-content: space-between; align-items: flex-end;
-            padding: 0 30px 15px 30px; box-sizing: border-box; z-index: 10000;
-            background: var(--black);
+        .footer-info {
+            position: absolute;
+            bottom: 15px;
+            right: 20px;
+            color: rgba(255,255,255,0.3);
+            font-size: 0.7rem;
+            letter-spacing: 1px;
         }
-
-        .tech-info { font-size: 9px; color: var(--dim-gold); line-height: 1.4; text-transform: uppercase; }
-        .club-logo { color: var(--gold); font-size: 28px; font-weight: bold; letter-spacing: 5px; }
-
-        /* Убираем лишние элементы Google */
-        .goog-te-banner-frame { display: none !important; }
-        body { top: 0 !important; }
     </style>
 </head>
 <body>
 
-    <header class="header-ui">
-        <div id="google_translate_element"></div>
-        <div class="club-logo">GY-GY</div>
-    </header>
+    <div class="google-lang-container">
+        <select id="google_lang_select">
+            <option value="ru" selected>Русский</option>
+            <option value="en">English</option>
+            <option value="de">Deutsch</option>
+            <option value="fr">Français</option>
+            <option value="es">Español</option>
+            <option value="ja">日本語</option>
+            <option value="ko">한국어</option>
+            <option value="it">Italiano</option>
+            <option value="pt">Português</option>
+            <option value="zh">中文</option>
+            <option value="ar">العربية</option>
+        </select>
+    </div>
 
-    <main class="manifesto-body">
-        <h1 style="letter-spacing: 15px; margin: 0;">MANIFESTO</h1>
-        
-        <div class="text-frame">
-            THE DIGITAL LANDSCAPE IS EVOLVING. GY-GY STANDS AT THE FOREFRONT OF THIS TRANSFORMATION, MERGING ARTIFICIAL INTELLIGENCE WITH HUMAN INTUITION. OUR MISSION IS THE ESTABLISHMENT OF A PERMANENT LUNAR BASE WITHIN THE VIRTUAL DOMAIN. WE ARE GUIDED BY THE PROTOCOL, RECOGNIZED BY THE TRACE, AND POWERED BY THE COLLECTIVE COGNITION.
-        </div>
+    <div class="brand-header">GY-GY</div>
 
-        <a href="ai_room_core_v8.html" class="btn-entry">ENTER AI ROOM</a>
-    </main>
+    <div class="manifesto-box">
+        <h1>MANIFESTO</h1>
+        <p>
+            Добро пожаловать в v4.3. Здесь время течет иначе, а каждый цифровой след 
+            оставляет неизгладимый ID в ткани нашей системы. Мы не просто пишем код, 
+            мы создаем мост между реальностями. Принимая протокол, вы становитесь 
+            частью экосистемы GY-GY.
+        </p>
+        <a href="bridge_protocol.html" class="confirm-btn">ACCEPT PROTOCOL</a>
+    </div>
 
-    <footer class="footer-ui">
-        <div class="tech-info">
-            <button onclick="history.back()" style="background:none; border:1px solid var(--dim-gold); color:var(--dim-gold); cursor:pointer; font-size:10px; padding:3px 8px;">RETURN</button><br><br>
-            SYS_BRANCH: BRIDGE.V2.1<br>
-            <span style="color:var(--gold); font-style:italic; text-transform:none;">"Смех — штука серьезная"</span>
-        </div>
-        <div class="tech-info" style="text-align: right;">
-            STANDARDIZED INTERFACE // SYNC: OK<br>
-            TRACE_ID: <span id="user-trace" style="color:var(--gold)">...</span>
-        </div>
-    </footer>
-
-    <script type="text/javascript">
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({
-                pageLanguage: 'en', 
-                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-            }, 'google_translate_element');
-        }
-    </script>
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <button class="btn-return" onclick="window.history.back()">Вернуться</button>
     
+    <div class="footer-info">MANIFESTO v2.2 | CORE v4.3 | ID: IDENTIFIED</div>
+
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            let trace = localStorage.getItem('gy_trace') || 'GY-' + Math.random().toString(36).substr(2, 9).toUpperCase();
-            localStorage.setItem('gy_trace', trace);
-            document.getElementById('user-trace').innerText = trace;
-        });
+        // Инициализация при загрузке
+        window.onload = () => {
+            console.log("Manifesto v2.2 loaded. System version: 4.3");
+        };
     </script>
 </body>
 </html>
