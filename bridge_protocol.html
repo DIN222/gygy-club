@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MANIFESTO | v1.7</title>
+    <title>MANIFESTO | v2.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -17,113 +17,127 @@
             background: var(--black); 
             font-family: 'Share Tech Mono', monospace;
             color: var(--gold);
-            min-height: 100vh;
+            overflow-y: auto;
         }
 
-        /* HEADER: ПРИБИТ НАМЕРТВО */
+        /* [1. ФИКСИРОВАННАЯ ШАПКА] */
         .header-fixed {
-            position: fixed; top: 0; left: 0; width: 100%; height: 60px;
+            position: fixed; top: 0; left: 0; width: 100%; height: 65px;
             display: flex; justify-content: space-between; align-items: center;
             padding: 0 30px; box-sizing: border-box; z-index: 10000;
             background: var(--black);
         }
 
+        /* [2. ЛЕЧЕНИЕ ВЫПАДАЮЩЕГО СПИСКА ЯЗЫКОВ] */
         #google_translate_element { 
-            border: 1px solid var(--gold); background: var(--black);
+            border: 1px solid var(--gold); 
+            background: var(--black);
             padding: 2px;
         }
 
-        /* КОНТЕНТ: С ОБЫЧНЫМ СКРОЛЛОМ */
-        .manifesto-content {
+        /* Этот блок заставляет само меню Google Translate скроллиться */
+        .goog-te-menu-frame {
+            max-height: 400px !important; /* Ограничиваем высоту */
+            box-shadow: 0 0 10px var(--gold) !important;
+        }
+
+        .goog-te-menu2 {
+            overflow-y: auto !important; /* Включаем скролл внутри меню */
+            max-height: 400px !important;
+        }
+
+        /* [3. ТЕКСТ МАНИФЕСТА] */
+        .manifesto-container {
             padding: 120px 20px 180px 20px;
             display: flex; flex-direction: column; align-items: center;
             text-align: center;
         }
 
-        .manifesto-box {
+        .text-block {
             max-width: 750px; line-height: 1.8; font-size: 20px;
             text-align: justify; margin: 40px 0;
             border-top: 1px solid var(--gold); border-bottom: 1px solid var(--gold);
             padding: 50px 0;
         }
 
-        /* КНОПКА: БЕЗ ХОВЕР-ЭФФЕКТОВ И СВЕЧЕНИЯ */
-        .btn-entry {
+        /* [4. КНОПКА: МАТОВАЯ, БЕЗ ВСПЫШЕК] */
+        .btn-access {
             display: inline-block;
             background: var(--black);
             color: var(--gold);
             border: 2px solid var(--gold);
-            padding: 15px 45px;
-            font-size: 16px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 3px;
+            padding: 16px 45px;
+            font-size: 17px; font-weight: bold;
+            text-transform: uppercase; letter-spacing: 3px;
             text-decoration: none;
-            transition: none; /* Никакой анимации */
+            transition: none !important; /* Убираем плавность = убираем вспышку */
         }
 
-        .btn-entry:hover {
+        .btn-access:hover {
             background: var(--gold);
             color: var(--black);
-            box-shadow: none;
         }
 
-        /* FOOTER: ПРИБИТ НАМЕРТВО */
+        /* [5. ФИКСИРОВАННЫЙ ПОДВАЛ] */
         .footer-fixed {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 80px;
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 85px;
             display: flex; justify-content: space-between; align-items: flex-end;
             padding: 0 30px 15px 30px; box-sizing: border-box; z-index: 10000;
             background: var(--black);
         }
 
-        .tech-data { font-size: 9px; color: var(--dim-gold); line-height: 1.4; text-transform: uppercase; }
-        .aphorism { color: var(--gold); font-style: italic; font-size: 11px; text-transform: none; }
+        .tech-text { font-size: 9px; color: var(--dim-gold); line-height: 1.4; text-transform: uppercase; }
         .club-logo { color: var(--gold); font-size: 28px; font-weight: bold; letter-spacing: 5px; }
+
+        /* Убираем верхнюю полоску Google Translate, если она появится */
+        .goog-te-banner-frame { display: none !important; }
+        body { top: 0 !important; }
     </style>
 </head>
 <body>
 
     <header class="header-fixed">
-        <div style="display: flex; align-items: center; gap: 15px;">
-            <div id="google_translate_element"></div>
-            <span class="tech-data">SEMANTIC_GROUP_№1 // DATA_PARSING</span>
-        </div>
+        <div id="google_translate_element"></div>
         <div class="club-logo">GY-GY</div>
     </header>
 
-    <main class="manifesto-content">
+    <main class="manifesto-container">
         <h1 style="letter-spacing: 15px; margin: 0;">MANIFESTO</h1>
         
-        <div class="manifesto-box">
+        <div class="text-block">
             THE DIGITAL LANDSCAPE IS EVOLVING. GY-GY STANDS AT THE FOREFRONT OF THIS TRANSFORMATION, MERGING ARTIFICIAL INTELLIGENCE WITH HUMAN INTUITION. OUR MISSION IS THE ESTABLISHMENT OF A PERMANENT LUNAR BASE WITHIN THE VIRTUAL DOMAIN. WE ARE GUIDED BY THE PROTOCOL, RECOGNIZED BY THE TRACE, AND POWERED BY THE COLLECTIVE COGNITION.
         </div>
 
-        <a href="ai_room_core_v8.html" class="btn-entry">ENTER AI ROOM</a>
+        <a href="ai_room_core_v8.html" class="btn-access">ENTER AI ROOM</a>
     </main>
 
     <footer class="footer-fixed">
-        <div class="tech-data">
+        <div class="tech-text">
             <button onclick="history.back()" style="background:none; border:1px solid var(--dim-gold); color:var(--dim-gold); cursor:pointer; font-size:10px; padding:3px 8px;">RETURN</button><br><br>
-            SYS_BRANCH: BRIDGE.V1.7 // SECTOR_07<br>
-            <span class="aphorism">"Смех — штука серьезная"</span>
+            SYS_BRANCH: BRIDGE.V2.0<br>
+            <span style="color:var(--gold); font-style:italic; text-transform:none;">"Смех — штука серьезная"</span>
         </div>
-        <div class="tech-data" style="text-align: right;">
-            <span style="opacity: 0.6;">STABLE_VERSION: 1.7 [7.1.53-LH]</span><br>
-            TRACE_ID: <span id="user-trace" style="color: var(--gold);">...</span><br>
-            NEURAL_LINK: ESTABLISHED // SESSION: ENCRYPTED
+        <div class="tech-text" style="text-align: right;">
+            SEMANTIC_GROUP_№1 // PARSING ACTIVE<br>
+            TRACE_ID: <span id="user-trace" style="color:var(--gold)">...</span>
         </div>
     </footer>
 
     <script type="text/javascript">
         function googleTranslateElementInit() {
-            new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+            new google.translate.TranslateElement({
+                pageLanguage: 'en', 
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+            }, 'google_translate_element');
         }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <script>
         document.addEventListener('DOMContentLoaded', () => {
             let trace = localStorage.getItem('gy_trace') || 'GY-' + Math.random().toString(36).substr(2, 9).toUpperCase();
             localStorage.setItem('gy_trace', trace);
             document.getElementById('user-trace').innerText = trace;
         });
     </script>
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
