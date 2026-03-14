@@ -6,8 +6,8 @@
     <title>MANIFESTO | v2.3 (Internal 4.3)</title>
     <style>
         :root {
-            --gold: #ffd700;
-            --neon-blue: #00f2ff;
+            --gold-bright: #ffd700;
+            --gold-dim: rgba(255, 215, 0, 0.4); /* Приглушенное золото */
         }
 
         body, html {
@@ -30,7 +30,6 @@
             box-sizing: border-box;
         }
 
-        /* Фиксированные атрибуты */
         #google_translate_element {
             position: fixed;
             top: 25px;
@@ -42,63 +41,60 @@
             position: fixed;
             top: 25px;
             right: 40px;
-            color: var(--gold);
+            color: var(--gold-bright);
             font-size: 2.2rem;
             font-weight: 900;
             letter-spacing: 5px;
             z-index: 1000;
         }
 
-        /* Заголовок над серединой текста */
         h1 { 
-            color: var(--gold); 
+            color: var(--gold-bright); 
             text-transform: uppercase; 
             letter-spacing: 6px; 
             font-size: 3rem;
             margin-bottom: 40px;
-            text-align: center; /* Центрирование */
+            text-align: center;
         }
 
-        /* Текстовый блок (без полосы слева) */
         .manifesto-text {
             max-width: 800px;
             width: 100%;
             line-height: 1.8;
             font-size: 1.2rem;
             color: #ccc;
-            padding: 0; /* Убрал отступ и границу */
             margin-bottom: 50px;
-            text-align: justify; /* Для красоты блока текста */
+            text-align: justify;
         }
 
-        /* СТАНДАРТНАЯ ЗОЛОТАЯ КНОПКА (ЗОЛОТО НА ЧЕРНОМ) */
+        /* СТРОГАЯ КНОПКА: ПРИГЛУШЕННАЯ -> ЯРКАЯ */
         .std-gold-btn {
             display: inline-block;
-            background: #000;
-            border: 2px solid var(--gold);
-            color: var(--gold);
+            background: transparent; /* Без заливки */
+            border: 1px solid var(--gold-dim); /* Приглушенная рамка */
+            color: var(--gold-dim); /* Приглушенные буквы */
             padding: 15px 50px;
             text-decoration: none;
             text-transform: uppercase;
             font-weight: bold;
             letter-spacing: 2px;
-            transition: all 0.3s ease;
             cursor: pointer;
             margin-bottom: 100px;
+            transition: all 0.3s ease;
         }
 
         .std-gold-btn:hover {
-            background: var(--gold);
-            color: #000;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+            background: transparent; /* Остается черной внутри */
+            border-color: var(--gold-bright); /* Рамка становится яркой */
+            color: var(--gold-bright); /* Буквы становятся яркими */
+            box-shadow: none; /* Никакого лишнего свечения */
         }
 
-        /* Навигация */
         .btn-back {
             position: fixed;
             bottom: 25px;
             left: 30px;
-            background: rgba(255, 255, 255, 0.1);
+            background: none;
             border: 1px solid #fff;
             color: #fff;
             padding: 8px 20px;
@@ -106,6 +102,12 @@
             z-index: 1000;
             text-transform: uppercase;
             font-size: 0.8rem;
+            opacity: 0.5;
+            transition: 0.3s;
+        }
+
+        .btn-back:hover {
+            opacity: 1;
         }
 
         .version-tag {
@@ -146,7 +148,7 @@
             </p>
         </div>
 
-        <a href="bridge_protocol.html" class="std-gold-btn">Accept Protocol</a>
+        <a href="bridge_protocol.html" class="std-gold-btn">проходите в АИ рум</a>
     </div>
 
 <script type="text/javascript">
