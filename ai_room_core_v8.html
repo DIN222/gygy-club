@@ -1,53 +1,75 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI ROOM CORE | v8.1.0</title>
+    <title>AI ROOM CORE | v8.1.5</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #ffcc00; }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #fff; overflow: hidden; font-family: 'Share Tech Mono', monospace; }
+        :root {
+            --gold: #ffcc00;
+            --black: #000;
+        }
 
-        /* КАРТИНКА УВЕЛИЧЕНА */
+        /* Общий фон страницы — черный, чтобы закрыть бока */
+        body, html { 
+            margin: 0; padding: 0; width: 100%; height: 100%; 
+            background: var(--black); 
+            overflow: hidden; 
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        /* КАРТИНКА: ЗАПОЛНЯЕТ ВЕРХ И НИЗ, БОКА ОСТАЮТСЯ ЧЕРНЫМИ */
         .room-bg {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background: url('OIG2_vintage_tv_room.jpg') no-repeat center center;
-            background-size: cover; 
+            background-size: contain; /* Картинка вписывается, не теряя пропорций */
             z-index: 1;
         }
 
+        /* HEADER: СТАНДАРТ КЛУБА (ФИКСИРОВАН) */
         .header-core {
             position: fixed; top: 0; left: 0; width: 100%; height: 60px;
             display: flex; justify-content: space-between; align-items: center;
             padding: 0 30px; box-sizing: border-box; z-index: 1000;
-            background: rgba(255,255,255,0.8); /* Легкая прозрачность для стиля */
+            background: rgba(0, 0, 0, 0.5); /* Чтобы не перекрывать верх картинки намертво */
         }
 
-        .tv-grid {
-            position: absolute; top: 58%; left: 50%;
-            transform: translate(-50%, -50%);
-            display: flex; gap: 40px; z-index: 500;
+        #google_translate_element { border: 1px solid var(--gold); background: var(--black); padding: 2px; }
+        .club-logo { color: var(--gold); font-size: 28px; font-weight: bold; letter-spacing: 5px; }
+
+        /* ИНТЕРАКТИВНАЯ ЗОНА ТЕЛЕВИЗОРА */
+        .tv-trigger {
+            position: absolute; 
+            top: 54%; left: 43%; /* Координаты первого ТВ (центральный/левый) */
+            width: 14%; height: 18%; /* Относительные размеры зоны */
+            z-index: 500;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: border 0.2s;
         }
 
-        .tv-unit {
-            width: 25px; height: 18px; background: #000; border: 1px solid #fff;
-            cursor: pointer; text-decoration: none; display: flex; align-items: center; justify-content: center;
+        .tv-trigger:hover {
+            border: 1px solid var(--gold);
+            background: rgba(255, 204, 0, 0.05);
         }
 
-        .tv-unit:hover { background: var(--gold); transform: scale(8); z-index: 1000; }
-
+        /* FOOTER: СТАНДАРТ КЛУБА (ФИКСИРОВАН) */
         .footer-core {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 70px;
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 80px;
             display: flex; justify-content: space-between; align-items: flex-end;
-            padding: 0 30px 10px 30px; box-sizing: border-box; z-index: 1000;
+            padding: 0 30px 15px 30px; box-sizing: border-box; z-index: 1000;
         }
 
-        .club-logo { color: var(--gold); font-size: 28px; font-weight: bold; letter-spacing: 5px; text-shadow: 2px 2px 2px #000; }
-        .tech-label { font-size: 9px; color: #000; font-weight: bold; background: rgba(255,255,255,0.7); padding: 2px 5px; }
+        .btn-back { background: var(--black); color: var(--gold); border: 1px solid var(--gold); padding: 5px 15px; cursor: pointer; font-size: 10px; text-transform: uppercase; }
+        .tech-label { font-size: 9px; color: var(--gold); text-transform: uppercase; background: rgba(0,0,0,0.6); padding: 4px; line-height: 1.5; }
     </style>
 </head>
 <body>
+
     <div class="room-bg"></div>
 
     <header class="header-core">
@@ -55,24 +77,30 @@
         <div class="club-logo">GY-GY</div>
     </header>
 
-    <div class="tv-grid">
-        <a href="verses.html" class="tv-unit" title="VERSES">
-            <span style="font-size:4px; color:var(--gold)">V</span>
-        </a>
-        <div class="tv-unit" style="opacity: 0.5;"></div>
-        <div class="tv-unit" style="opacity: 0.5;"></div>
-    </div>
+    <a href="verses.html" class="tv-trigger" title="ENTER VERSES"></a>
 
     <footer class="footer-core">
-        <div class="tech-label">CORE_V8.1 // SECTOR_07</div>
-        <div class="tech-label">VERSION: 8.1.0 [7.1.53-LH]</div>
+        <div class="tech-label">
+            <button class="btn-back" onclick="history.back()">Return</button><br><br>
+            CORE_ID: AI_ROOM_8 // STATUS: STABLE
+        </div>
+        <div class="tech-label" style="text-align: right;">
+            SYS_BRANCH: v8.1.5<br>
+            TRACE_ID: <span id="user-trace">GY-XXXXXX</span>
+        </div>
     </footer>
 
     <script type="text/javascript">
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
         }
+        document.addEventListener('DOMContentLoaded', () => {
+            let trace = localStorage.getItem('gy_trace') || 'GY-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+            localStorage.setItem('gy_trace', trace);
+            document.getElementById('user-trace').innerText = trace;
+        });
     </script>
     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
 </body>
 </html>
