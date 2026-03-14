@@ -3,7 +3,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY | TERMINAL v.7.7</title>
+    <title>GY-GY | TERMINAL v.7.8</title>
     <style>
         :root { --gold: #FFD700; --bg: #000; }
         body { 
@@ -32,50 +32,47 @@
         .slot.active-u { border-color: var(--gold); color: var(--gold); box-shadow: inset 0 0 5px var(--gold); }
         .slot.active-ai { border-color: #4285F4; color: #4285F4; }
 
-        /* CHAT STREAM */
-        .stream { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
-        .msg { border-left: 2px solid var(--gold); padding: 8px 15px; background: rgba(255,215,0,0.02); }
+        /* CHAT STREAM (Где рождается шедевр) */
+        .stream { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+        .msg { border-left: 2px solid var(--gold); padding: 10px 20px; background: rgba(255,215,0,0.03); }
 
-        /* INPUT PANEL v.7.7 (Сложная сегментация) */
-        .input-panel-77 {
+        /* INPUT PANEL v.7.8 (Оптимизированная) */
+        .input-panel-78 {
             display: grid; grid-template-columns: 1fr 1fr;
             border-top: 2px solid var(--gold); background: #000;
-            height: 200px;
+            height: 80px; /* Компактная высота для одной строки */
         }
 
-        /* Основные блоки (Юзер и ИИ) */
         .participant-zone { display: flex; border-right: 2px solid var(--gold); }
         .participant-zone:last-child { border-right: none; }
 
-        /* Левая колонка управления (Аватар + Кнопка) */
+        /* Колонна управления */
         .control-col {
-            width: 100px; display: flex; flex-direction: column;
-            border-right: 1px solid var(--gold); /* ТА САМАЯ ВЕРТИКАЛЬНАЯ ЛИНИЯ */
+            width: 120px; display: flex; flex-direction: column;
+            border-right: 1px solid var(--gold); justify-content: space-around;
+            padding: 5px; background: rgba(255,215,0,0.05);
         }
 
-        .avatar-box { 
-            padding: 10px 5px; font-size: 10px; font-weight: 900; text-align: center;
-            background: rgba(255,215,0,0.1); border-bottom: 1px solid var(--gold);
-        }
+        .avatar-label { font-size: 10px; font-weight: 900; text-align: center; }
 
-        .mint-btn-side {
-            flex: 1; background: var(--gold); color: #000; border: none;
-            cursor: pointer; font-weight: 900; font-size: 12px; writing-mode: vertical-rl;
-            text-orientation: upright; letter-spacing: 2px; transition: 0.2s;
+        .mint-btn-std {
+            background: var(--gold); color: #000; border: none;
+            cursor: pointer; font-weight: 900; font-size: 10px;
+            padding: 4px 0; border-radius: 2px; transition: 0.2s;
         }
-        .mint-btn-side:hover { background: #fff; }
+        .mint-btn-std:hover { background: #fff; }
 
-        /* Правая колонка ввода (Поле) */
-        .input-col { flex: 1; }
+        /* Колонна ввода */
+        .input-col { flex: 1; display: flex; align-items: center; }
         
-        textarea { 
-            width: 100%; height: 100%; background: transparent; border: none; color: var(--gold); 
-            font-family: 'Courier New'; font-size: 1.1rem; outline: none; 
-            padding: 15px; resize: none; box-sizing: border-box;
+        input { 
+            width: 100%; background: transparent; border: none; color: var(--gold); 
+            font-family: 'Courier New'; font-size: 1.2rem; outline: none; 
+            padding: 0 20px; box-sizing: border-box;
         }
     </style>
 </head>
-<body data-version="7.7">
+<body data-version="7.8">
 
     <header class="header">
         <div id="google_translate_element"></div>
@@ -87,28 +84,26 @@
 
     <main class="stream" id="chat-stream"></main>
 
-    <div class="input-panel-77">
-        
+    <div class="input-panel-78">
         <div class="participant-zone">
             <div class="control-col">
-                <div class="avatar-box">USER_1</div>
-                <button class="mint-btn-side" onclick="mint('u_text')">MINT</button>
+                <div class="avatar-label">USER_1</div>
+                <button class="mint-btn-std" onclick="mint('u_line')">MINT</button>
             </div>
             <div class="input-col">
-                <textarea id="u_text" placeholder="RU_VERSE..."></textarea>
+                <input type="text" id="u_line" placeholder="TYPE YOUR LINE..." onkeydown="if(event.key==='Enter') mint('u_line')">
             </div>
         </div>
 
         <div class="participant-zone">
             <div class="control-col">
-                <div class="avatar-box" style="color:#4285F4;">GEMINI</div>
-                <button class="mint-btn-side" onclick="mint('g_text')">MINT</button>
+                <div class="avatar-label" style="color:#4285F4;">GEMINI</div>
+                <button class="mint-btn-std" onclick="mint('g_line')">MINT</button>
             </div>
             <div class="input-col">
-                <textarea id="g_text" placeholder="AI_RESPONSE..."></textarea>
+                <input type="text" id="g_line" placeholder="AI RESPONSE..." onkeydown="if(event.key==='Enter') mint('g_line')">
             </div>
         </div>
-
     </div>
 
     <script>
@@ -130,18 +125,18 @@
             const author = id.startsWith('u') ? 'USER_1' : 'GEMINI';
             chatStream.innerHTML += `
                 <div class="msg">
-                    <span style="font-size: 0.65rem; opacity: 0.5;">@${author}</span><br>
+                    <span style="font-size: 0.7rem; opacity: 0.5;">@${author}</span><br>
                     ${val}
                 </div>`;
             
             input.value = '';
             chatStream.scrollTop = chatStream.scrollHeight;
-            localStorage.setItem('gy77_history', chatStream.innerHTML);
+            localStorage.setItem('gy78_history', chatStream.innerHTML);
         }
 
         window.onload = () => {
             initMatrix();
-            const saved = localStorage.getItem('gy77_history');
+            const saved = localStorage.getItem('gy78_history');
             if(saved) chatStream.innerHTML = saved;
         };
 
