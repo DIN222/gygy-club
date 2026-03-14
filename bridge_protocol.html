@@ -6,33 +6,31 @@
     <title>MANIFESTO | v2.3 (Internal 4.3)</title>
     <style>
         :root {
-            --neon-blue: #00f2ff;
             --gold: #ffd700;
+            --neon-blue: #00f2ff;
         }
 
-        /* Настройки для скролла страницы */
         body, html {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
-            background-color: #000; /* Строгий черный фон */
+            background-color: #000;
             font-family: Arial, sans-serif;
             color: #fff;
-            overflow-y: auto; /* Позволяем скроллить текст */
+            overflow-y: auto;
         }
 
-        /* Контейнер с отступами для контента */
         .manifesto-wrapper {
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 100px 20px; /* Место сверху для языков и снизу для кнопок */
+            padding: 100px 20px;
             min-height: 100vh;
             box-sizing: border-box;
         }
 
-        /* Фиксированные элементы */
+        /* Фиксированные атрибуты */
         #google_translate_element {
             position: fixed;
             top: 25px;
@@ -46,53 +44,56 @@
             right: 40px;
             color: var(--gold);
             font-size: 2.2rem;
-            font-weight: bold;
+            font-weight: 900;
             letter-spacing: 5px;
             z-index: 1000;
         }
 
-        /* Текстовый блок */
+        /* Заголовок над серединой текста */
+        h1 { 
+            color: var(--gold); 
+            text-transform: uppercase; 
+            letter-spacing: 6px; 
+            font-size: 3rem;
+            margin-bottom: 40px;
+            text-align: center; /* Центрирование */
+        }
+
+        /* Текстовый блок (без полосы слева) */
         .manifesto-text {
             max-width: 800px;
             width: 100%;
             line-height: 1.8;
             font-size: 1.2rem;
             color: #ccc;
-            border-left: 2px solid var(--gold);
-            padding-left: 30px;
+            padding: 0; /* Убрал отступ и границу */
             margin-bottom: 50px;
+            text-align: justify; /* Для красоты блока текста */
         }
 
-        h1 { 
-            color: var(--gold); 
-            text-transform: uppercase; 
-            letter-spacing: 4px; 
-            font-size: 3rem;
-            margin-bottom: 40px;
-        }
-
-        /* Стандартная кнопка (БЕЗ ВСПЫШКИ) */
-        .std-btn {
+        /* СТАНДАРТНАЯ ЗОЛОТАЯ КНОПКА (ЗОЛОТО НА ЧЕРНОМ) */
+        .std-gold-btn {
             display: inline-block;
-            background: none;
-            border: 1px solid var(--neon-blue);
-            color: var(--neon-blue);
-            padding: 15px 45px;
+            background: #000;
+            border: 2px solid var(--gold);
+            color: var(--gold);
+            padding: 15px 50px;
             text-decoration: none;
             text-transform: uppercase;
             font-weight: bold;
             letter-spacing: 2px;
-            transition: 0.3s;
+            transition: all 0.3s ease;
+            cursor: pointer;
             margin-bottom: 100px;
         }
 
-        .std-btn:hover {
-            background: var(--neon-blue);
+        .std-gold-btn:hover {
+            background: var(--gold);
             color: #000;
-            box-shadow: 0 0 15px var(--neon-blue);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
         }
 
-        /* Кнопка возврата */
+        /* Навигация */
         .btn-back {
             position: fixed;
             bottom: 25px;
@@ -103,6 +104,8 @@
             padding: 8px 20px;
             cursor: pointer;
             z-index: 1000;
+            text-transform: uppercase;
+            font-size: 0.8rem;
         }
 
         .version-tag {
@@ -122,8 +125,9 @@
     <div class="version-tag">MANIFESTO v2.3 | CORE v4.3</div>
 
     <div class="manifesto-wrapper">
+        <h1>Manifesto</h1>
+        
         <div class="manifesto-text">
-            <h1>Manifesto</h1>
             <p>
                 Мы существуем в пространстве, где цифровая идентичность важнее физического присутствия. 
                 Ваш уникальный ID — это не просто номер, это ваш след в вечности.
@@ -135,14 +139,14 @@
             </p>
             <p>
                 Наш интерфейс — это зеркало ваших намерений. Здесь нет лишнего шума, только чистота кода 
-                и яркость неона. Мы уважаем ваш выбор языка и вашу приватность.
+                и строгость линий. Мы уважаем ваш выбор языка и вашу приватность.
             </p>
             <p>
                 Добро пожаловать домой. Добро пожаловать в GY-GY.
             </p>
         </div>
 
-        <a href="bridge_protocol.html" class="std-btn">Accept Protocol</a>
+        <a href="bridge_protocol.html" class="std-gold-btn">Accept Protocol</a>
     </div>
 
 <script type="text/javascript">
