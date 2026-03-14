@@ -17,11 +17,11 @@
             width: 100%;
             height: 100%;
             background: #000;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             overflow: hidden;
         }
 
-        /* Фон с твоим интерьером */
+        /* Фоновое изображение с широким углом */
         .viewport {
             position: relative;
             width: 100vw;
@@ -32,39 +32,41 @@
             flex-direction: column;
         }
 
-        /* Верхняя панель: Языки и GY-GY */
+        /* Обязательные атрибуты: Языковая панель и GY-GY */
         .top-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 40px;
+            padding: 25px 50px;
             z-index: 10;
         }
 
-        .lang-selector {
-            visibility: visible; /* Видна от входа */
-            background: rgba(0, 0, 0, 0.7);
+        .lang-panel {
+            visibility: visible;
+            background: rgba(0, 0, 0, 0.6);
             border: 1px solid var(--gold);
-            color: var(--gold);
             padding: 5px 15px;
-            cursor: pointer;
-            text-transform: uppercase;
-            font-size: 0.9rem;
-            transition: 0.3s;
         }
 
-        .lang-selector:hover { background: var(--gold); color: #000; }
-
-        .brand {
+        .lang-panel button {
+            background: none;
+            border: none;
             color: var(--gold);
-            font-size: 2rem;
-            font-weight: 900;
-            letter-spacing: 5px;
-            text-shadow: 2px 2px 5px rgba(0,0,0,0.8);
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
         }
 
-        /* Активные зоны экранов */
-        .tv-screen {
+        .brand-logo {
+            color: var(--gold);
+            font-size: 2.2rem;
+            font-weight: 900;
+            letter-spacing: 4px;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.9);
+        }
+
+        /* Активные зоны экранов (координаты под широкий угол) */
+        .screen-link {
             position: absolute;
             display: flex;
             align-items: center;
@@ -72,95 +74,106 @@
             text-decoration: none;
             color: var(--neon-blue);
             font-family: 'Courier New', monospace;
-            font-weight: bold;
             text-shadow: var(--neon-glow);
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.3s ease, filter 0.3s ease;
+            /* border: 1px solid rgba(0, 242, 255, 0.2); // Раскомментировать для отладки */
         }
 
-        .tv-screen:hover {
-            transform: scale(1.05);
-            filter: brightness(1.3);
+        .screen-link:hover {
+            transform: scale(1.1);
+            filter: brightness(1.2);
         }
 
-        #screen-1 { top: 25%; left: 14%; width: 20%; height: 35%; font-size: 2.2vw; }
-        #screen-2 { top: 22%; left: 37.5%; width: 25%; height: 42%; font-size: 3vw; }
-        #screen-3 { top: 25%; left: 66%; width: 20%; height: 35%; cursor: default; }
+        /* Позиции для "отдаленной" картинки */
+        #verses-zone {
+            top: 32%;
+            left: 21%;
+            width: 14%;
+            height: 18%;
+            font-size: 1.8vw;
+        }
 
-        /* Нижняя панель: Назад и версия */
+        #techpark-zone {
+            top: 30%;
+            left: 42%;
+            width: 16%;
+            height: 22%;
+            font-size: 2.2vw;
+        }
+
+        #empty-zone {
+            top: 32%;
+            left: 65%;
+            width: 14%;
+            height: 18%;
+        }
+
+        /* Нижняя панель: Назад и мета-данные */
         .bottom-bar {
             position: absolute;
-            bottom: 0;
+            bottom: 30px;
             width: 100%;
-            padding: 20px;
+            padding: 0 50px;
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
             box-sizing: border-box;
         }
 
-        .btn-back {
-            background: rgba(255, 255, 255, 0.1);
+        .back-nav button {
+            background: rgba(0,0,0,0.5);
             border: 1px solid #fff;
             color: #fff;
-            padding: 10px 25px;
+            padding: 12px 30px;
             cursor: pointer;
-            backdrop-filter: blur(5px);
-            transition: 0.3s;
+            backdrop-filter: blur(4px);
         }
 
-        .btn-back:hover { background: #fff; color: #000; }
-
-        .meta-info {
+        .system-meta {
             text-align: right;
-            color: rgba(255,255,255,0.4);
-            font-size: 0.7rem;
-            line-height: 1.4;
+            color: rgba(255,255,255,0.5);
+            font-size: 0.75rem;
+            line-height: 1.5;
         }
 
-        /* Скрытый цифровой след (ID) */
-        #digital-trace { display: none; }
+        #trace-id { color: var(--neon-blue); }
     </style>
 </head>
 <body>
 
 <div class="viewport">
     <div class="top-bar">
-        <button class="lang-selector">Language: RU</button>
-        <div class="brand">GY-GY</div>
+        <div class="lang-panel">
+            <button>Язык: RU</button>
+        </div>
+        <div class="brand-logo">GY-GY</div>
     </div>
 
-    <a href="verses.html" class="tv-screen" id="screen-1">verses</a>
-    <a href="techpark.html" class="tv-screen" id="screen-2">techpark</a>
-    <div class="tv-screen" id="screen-3"></div>
+    <a href="verses.html" class="screen-link" id="verses-zone">verses</a>
+    <a href="techpark.html" class="screen-link" id="techpark-zone">techpark</a>
+    <div class="screen-link" id="empty-zone"></div>
 
     <div class="bottom-bar">
-        <button class="btn-back" onclick="window.history.back()">← BACK</button>
-        <div class="meta-info">
-            CORE_VER: 4.3 (Build 8.1.6)<br>
-            TRACE_ID: <span id="user-id">GENERATING...</span>
+        <div class="back-nav">
+            <button onclick="window.history.back()">← НАЗАД</button>
+        </div>
+        <div class="system-meta">
+            CORE: 4.3 | BUILD: 8.1.6<br>
+            USER_ID: <span id="trace-id">IDENTIFYING...</span>
         </div>
     </div>
 </div>
 
-<div id="digital-trace"></div>
-
 <script>
-    // Cookie-recognition & Digital Trace Logic
-    (function() {
-        function getUniqueTrace() {
-            let id = localStorage.getItem('gy_trace_id');
-            if (!id) {
-                id = 'TR-' + Math.random().toString(36).substr(2, 9).toUpperCase();
-                localStorage.setItem('gy_trace_id', id);
-                // Здесь можно добавить логику присвоения дефолтного аватара/ника
-            }
-            return id;
+    // Cookie-recognition & ID Trace Logic
+    (function initUser() {
+        let traceId = localStorage.getItem('gy_digital_trace');
+        if (!traceId) {
+            traceId = 'ID-' + Math.random().toString(36).substring(2, 11).toUpperCase();
+            localStorage.setItem('gy_digital_trace', traceId);
         }
-
-        document.getElementById('user-id').innerText = getUniqueTrace();
-        
-        // Логика автоматического входа (имитация)
-        console.log("Cookie-recognition active. Version 4.3 ready.");
+        document.getElementById('trace-id').innerText = traceId;
+        console.log("System 4.3: Unique trace confirmed.");
     })();
 </script>
 
