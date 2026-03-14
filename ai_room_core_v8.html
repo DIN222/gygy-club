@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI ROOM CORE | v9.0.1 (Internal 4.3)</title>
+    <title>AI ROOM CORE | v8.1.6 (Internal 4.3)</title>
     <style>
         :root {
             --neon-blue: #00f2ff;
@@ -24,12 +24,12 @@
             justify-content: center;
         }
 
-        /* ВОЗВРАЩАЕМ ВИНТАЖНЫЙ ФОН */
         .viewport {
             position: relative;
             width: 100vw;
             height: 100vh;
-            background: url('OIG2_vintage_tv_room_v2.jpg') no-repeat center center;
+            /* ПРОВЕРЬ РАСШИРЕНИЕ ЗДЕСЬ: jpg или png */
+            background: url('OIG2_vintage_tv_room_v2.png') no-repeat center center;
             background-size: contain; 
         }
 
@@ -51,7 +51,6 @@
             letter-spacing: 5px;
         }
 
-        /* Общий стиль для надписей */
         .screen-label {
             position: absolute;
             color: var(--neon-blue);
@@ -66,7 +65,7 @@
             text-transform: lowercase;
         }
 
-        /* VERSES: В один ряд с techpark, сдвинуто вправо и вниз по твоим последним правкам */
+        /* VERSES: координаты из последних правок */
         #verses-zone {
             top: 48%; 
             left: 31%; 
@@ -75,7 +74,7 @@
             font-size: 1.6vw;
         }
 
-        /* TECHPARK: Центральный экран */
+        /* TECHPARK */
         #techpark-zone {
             top: 44%; 
             left: 44.5%;
@@ -134,7 +133,7 @@
     <div class="bottom-nav">
         <button class="btn-back" onclick="history.back()">← RETURN</button>
         <div class="meta-data">
-            CORE_VER: 4.3 (v9.0.1)<br>
+            CORE_VER: 4.3 (Build 8.1.6)<br>
             TRACE_ID: <span id="digital-trace">...</span>
         </div>
     </div>
@@ -149,7 +148,6 @@
 
 <script>
     (function() {
-        // Уникальный цифровой след (ID) согласно инструкциям v4.3
         let id = localStorage.getItem('gy_trace') || 'ID-' + Math.random().toString(36).substr(2, 9).toUpperCase();
         localStorage.setItem('gy_trace', id);
         document.getElementById('digital-trace').innerText = id;
