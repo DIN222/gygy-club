@@ -3,114 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MANIFESTO | v1.8</title>
+    <title>AI ROOM CORE | v8.1.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --gold: #ffcc00;
-            --black: #000000;
-            --dim-gold: #7a6200;
+        :root { --gold: #ffcc00; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #fff; overflow: hidden; font-family: 'Share Tech Mono', monospace; }
+
+        /* КАРТИНКА УВЕЛИЧЕНА */
+        .room-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: url('OIG2_vintage_tv_room.jpg') no-repeat center center;
+            background-size: cover; 
+            z-index: 1;
         }
 
-        body { 
-            margin: 0; padding: 0; 
-            background: var(--black); 
-            font-family: 'Share Tech Mono', monospace;
-            color: var(--gold);
-            min-height: 100vh;
-            /* Убираем блокировку скролла */
-            overflow-y: auto; 
-        }
-
-        /* HEADER: ТЕПЕРЬ ОН ТОЧНО НЕ СКРОЛЛИТСЯ */
-        .ui-fixed-header {
+        .header-core {
             position: fixed; top: 0; left: 0; width: 100%; height: 60px;
             display: flex; justify-content: space-between; align-items: center;
-            padding: 0 30px; box-sizing: border-box; z-index: 9999;
-            background: var(--black);
+            padding: 0 30px; box-sizing: border-box; z-index: 1000;
+            background: rgba(255,255,255,0.8); /* Легкая прозрачность для стиля */
         }
 
-        #google_translate_element { 
-            border: 1px solid var(--gold); background: var(--black);
-            padding: 2px;
+        .tv-grid {
+            position: absolute; top: 58%; left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex; gap: 40px; z-index: 500;
         }
 
-        /* CONTENT: ПРОСТОЙ И ПОНЯТНЫЙ СКРОЛЛ */
-        .manifesto-scroll-area {
-            padding: 100px 20px 150px 20px;
-            display: flex; flex-direction: column; align-items: center;
-            text-align: center;
+        .tv-unit {
+            width: 25px; height: 18px; background: #000; border: 1px solid #fff;
+            cursor: pointer; text-decoration: none; display: flex; align-items: center; justify-content: center;
         }
 
-        .manifesto-box {
-            max-width: 750px; line-height: 1.8; font-size: 20px;
-            text-align: justify; margin: 40px 0;
-            border-top: 1px solid var(--gold); border-bottom: 1px solid var(--gold);
-            padding: 50px 0;
-        }
+        .tv-unit:hover { background: var(--gold); transform: scale(8); z-index: 1000; }
 
-        /* КНОПКА: СТАТИЧНАЯ (БЕЗ СВЕЧЕНИЯ) */
-        .btn-entry {
-            display: inline-block;
-            background: var(--black);
-            color: var(--gold);
-            border: 2px solid var(--gold);
-            padding: 15px 45px;
-            font-size: 16px; font-weight: bold;
-            text-transform: uppercase; letter-spacing: 3px;
-            text-decoration: none;
-            transition: none; /* Убираем искры */
-        }
-
-        .btn-entry:hover {
-            background: var(--gold);
-            color: var(--black);
-        }
-
-        /* FOOTER: ТОЖЕ ПРИБИТ К НИЗУ */
-        .ui-fixed-footer {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 80px;
+        .footer-core {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 70px;
             display: flex; justify-content: space-between; align-items: flex-end;
-            padding: 0 30px 15px 30px; box-sizing: border-box; z-index: 9999;
-            background: var(--black);
+            padding: 0 30px 10px 30px; box-sizing: border-box; z-index: 1000;
         }
 
-        .tech-data { font-size: 9px; color: var(--dim-gold); line-height: 1.4; text-transform: uppercase; }
-        .aphorism { color: var(--gold); font-style: italic; font-size: 11px; text-transform: none; }
-        .club-logo { color: var(--gold); font-size: 28px; font-weight: bold; letter-spacing: 5px; }
+        .club-logo { color: var(--gold); font-size: 28px; font-weight: bold; letter-spacing: 5px; text-shadow: 2px 2px 2px #000; }
+        .tech-label { font-size: 9px; color: #000; font-weight: bold; background: rgba(255,255,255,0.7); padding: 2px 5px; }
     </style>
 </head>
 <body>
+    <div class="room-bg"></div>
 
-    <header class="ui-fixed-header">
-        <div style="display: flex; align-items: center; gap: 15px;">
-            <div id="google_translate_element"></div>
-            <span class="tech-data">SEMANTIC_GROUP_№1 // SYNC_ACTIVE</span>
-        </div>
+    <header class="header-core">
+        <div id="google_translate_element"></div>
         <div class="club-logo">GY-GY</div>
     </header>
 
-    <main class="manifesto-scroll-area">
-        <h1 style="letter-spacing: 15px; margin: 0;">MANIFESTO</h1>
-        
-        <div class="manifesto-box">
-            THE DIGITAL LANDSCAPE IS EVOLVING. GY-GY STANDS AT THE FOREFRONT OF THIS TRANSFORMATION, MERGING ARTIFICIAL INTELLIGENCE WITH HUMAN INTUITION. OUR MISSION IS THE ESTABLISHMENT OF A PERMANENT LUNAR BASE WITHIN THE VIRTUAL DOMAIN. WE ARE GUIDED BY THE PROTOCOL, RECOGNIZED BY THE TRACE, AND POWERED BY THE COLLECTIVE COGNITION.
-        </div>
+    <div class="tv-grid">
+        <a href="verses.html" class="tv-unit" title="VERSES">
+            <span style="font-size:4px; color:var(--gold)">V</span>
+        </a>
+        <div class="tv-unit" style="opacity: 0.5;"></div>
+        <div class="tv-unit" style="opacity: 0.5;"></div>
+    </div>
 
-        <a href="ai_room_core_v8.html" class="btn-entry">ENTER AI ROOM</a>
-    </main>
-
-    <footer class="ui-fixed-footer">
-        <div class="tech-data">
-            <button onclick="history.back()" style="background:none; border:1px solid var(--dim-gold); color:var(--dim-gold); cursor:pointer; font-size:10px; padding:3px 8px;">RETURN</button><br><br>
-            SYS_BRANCH: BRIDGE.V1.8 // SECTOR_07<br>
-            <span class="aphorism">"Смех — штука серьезная"</span>
-        </div>
-        <div class="tech-data" style="text-align: right;">
-            <span style="opacity: 0.6;">STABLE_VERSION: 1.8 [7.1.53-LH]</span><br>
-            TRACE_ID: <span id="user-trace" style="color: var(--gold);">...</span><br>
-            NEURAL_LINK: ESTABLISHED
-        </div>
+    <footer class="footer-core">
+        <div class="tech-label">CORE_V8.1 // SECTOR_07</div>
+        <div class="tech-label">VERSION: 8.1.0 [7.1.53-LH]</div>
     </footer>
 
     <script type="text/javascript">
@@ -119,12 +74,5 @@
         }
     </script>
     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            let trace = localStorage.getItem('gy_trace') || 'GY-' + Math.random().toString(36).substr(2, 9).toUpperCase();
-            localStorage.setItem('gy_trace', trace);
-            document.getElementById('user-trace').innerText = trace;
-        });
-    </script>
 </body>
 </html>
