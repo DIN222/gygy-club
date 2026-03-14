@@ -1,106 +1,168 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI ROOM CORE | v8.1.5</title>
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <title>AI ROOM CORE | v8.1.6 (Internal 4.3)</title>
     <style>
         :root {
-            --gold: #ffcc00;
-            --black: #000;
+            --neon-blue: #00f2ff;
+            --neon-glow: 0 0 15px rgba(0, 242, 255, 0.8), 0 0 25px rgba(0, 242, 255, 0.4);
+            --gold: #ffd700;
         }
 
-        /* Общий фон страницы — черный, чтобы закрыть бока */
-        body, html { 
-            margin: 0; padding: 0; width: 100%; height: 100%; 
-            background: var(--black); 
-            overflow: hidden; 
-            font-family: 'Share Tech Mono', monospace;
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
         }
 
-        /* КАРТИНКА: ЗАПОЛНЯЕТ ВЕРХ И НИЗ, БОКА ОСТАЮТСЯ ЧЕРНЫМИ */
-        .room-bg {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: url('OIG2_vintage_tv_room.jpg') no-repeat center center;
-            background-size: contain; /* Картинка вписывается, не теряя пропорций */
-            z-index: 1;
+        /* Фон с твоим интерьером */
+        .viewport {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: url('OIG2_vintage_tv_room_v2.jpg') no-repeat center center;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* HEADER: СТАНДАРТ КЛУБА (ФИКСИРОВАН) */
-        .header-core {
-            position: fixed; top: 0; left: 0; width: 100%; height: 60px;
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 0 30px; box-sizing: border-box; z-index: 1000;
-            background: rgba(0, 0, 0, 0.5); /* Чтобы не перекрывать верх картинки намертво */
+        /* Верхняя панель: Языки и GY-GY */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            z-index: 10;
         }
 
-        #google_translate_element { border: 1px solid var(--gold); background: var(--black); padding: 2px; }
-        .club-logo { color: var(--gold); font-size: 28px; font-weight: bold; letter-spacing: 5px; }
-
-        /* ИНТЕРАКТИВНАЯ ЗОНА ТЕЛЕВИЗОРА */
-        .tv-trigger {
-            position: absolute; 
-            top: 54%; left: 43%; /* Координаты первого ТВ (центральный/левый) */
-            width: 14%; height: 18%; /* Относительные размеры зоны */
-            z-index: 500;
-            cursor: pointer;
-            border: 1px solid transparent;
-            transition: border 0.2s;
-        }
-
-        .tv-trigger:hover {
+        .lang-selector {
+            visibility: visible; /* Видна от входа */
+            background: rgba(0, 0, 0, 0.7);
             border: 1px solid var(--gold);
-            background: rgba(255, 204, 0, 0.05);
+            color: var(--gold);
+            padding: 5px 15px;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            transition: 0.3s;
         }
 
-        /* FOOTER: СТАНДАРТ КЛУБА (ФИКСИРОВАН) */
-        .footer-core {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 80px;
-            display: flex; justify-content: space-between; align-items: flex-end;
-            padding: 0 30px 15px 30px; box-sizing: border-box; z-index: 1000;
+        .lang-selector:hover { background: var(--gold); color: #000; }
+
+        .brand {
+            color: var(--gold);
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: 5px;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.8);
         }
 
-        .btn-back { background: var(--black); color: var(--gold); border: 1px solid var(--gold); padding: 5px 15px; cursor: pointer; font-size: 10px; text-transform: uppercase; }
-        .tech-label { font-size: 9px; color: var(--gold); text-transform: uppercase; background: rgba(0,0,0,0.6); padding: 4px; line-height: 1.5; }
+        /* Активные зоны экранов */
+        .tv-screen {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: var(--neon-blue);
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            text-shadow: var(--neon-glow);
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .tv-screen:hover {
+            transform: scale(1.05);
+            filter: brightness(1.3);
+        }
+
+        #screen-1 { top: 25%; left: 14%; width: 20%; height: 35%; font-size: 2.2vw; }
+        #screen-2 { top: 22%; left: 37.5%; width: 25%; height: 42%; font-size: 3vw; }
+        #screen-3 { top: 25%; left: 66%; width: 20%; height: 35%; cursor: default; }
+
+        /* Нижняя панель: Назад и версия */
+        .bottom-bar {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            box-sizing: border-box;
+        }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #fff;
+            color: #fff;
+            padding: 10px 25px;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            transition: 0.3s;
+        }
+
+        .btn-back:hover { background: #fff; color: #000; }
+
+        .meta-info {
+            text-align: right;
+            color: rgba(255,255,255,0.4);
+            font-size: 0.7rem;
+            line-height: 1.4;
+        }
+
+        /* Скрытый цифровой след (ID) */
+        #digital-trace { display: none; }
     </style>
 </head>
 <body>
 
-    <div class="room-bg"></div>
+<div class="viewport">
+    <div class="top-bar">
+        <button class="lang-selector">Language: RU</button>
+        <div class="brand">GY-GY</div>
+    </div>
 
-    <header class="header-core">
-        <div id="google_translate_element"></div>
-        <div class="club-logo">GY-GY</div>
-    </header>
+    <a href="verses.html" class="tv-screen" id="screen-1">verses</a>
+    <a href="techpark.html" class="tv-screen" id="screen-2">techpark</a>
+    <div class="tv-screen" id="screen-3"></div>
 
-    <a href="verses.html" class="tv-trigger" title="ENTER VERSES"></a>
-
-    <footer class="footer-core">
-        <div class="tech-label">
-            <button class="btn-back" onclick="history.back()">Return</button><br><br>
-            CORE_ID: AI_ROOM_8 // STATUS: STABLE
+    <div class="bottom-bar">
+        <button class="btn-back" onclick="window.history.back()">← BACK</button>
+        <div class="meta-info">
+            CORE_VER: 4.3 (Build 8.1.6)<br>
+            TRACE_ID: <span id="user-id">GENERATING...</span>
         </div>
-        <div class="tech-label" style="text-align: right;">
-            SYS_BRANCH: v8.1.5<br>
-            TRACE_ID: <span id="user-trace">GY-XXXXXX</span>
-        </div>
-    </footer>
+    </div>
+</div>
 
-    <script type="text/javascript">
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+<div id="digital-trace"></div>
+
+<script>
+    // Cookie-recognition & Digital Trace Logic
+    (function() {
+        function getUniqueTrace() {
+            let id = localStorage.getItem('gy_trace_id');
+            if (!id) {
+                id = 'TR-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+                localStorage.setItem('gy_trace_id', id);
+                // Здесь можно добавить логику присвоения дефолтного аватара/ника
+            }
+            return id;
         }
-        document.addEventListener('DOMContentLoaded', () => {
-            let trace = localStorage.getItem('gy_trace') || 'GY-' + Math.random().toString(36).substr(2, 9).toUpperCase();
-            localStorage.setItem('gy_trace', trace);
-            document.getElementById('user-trace').innerText = trace;
-        });
-    </script>
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+        document.getElementById('user-id').innerText = getUniqueTrace();
+        
+        // Логика автоматического входа (имитация)
+        console.log("Cookie-recognition active. Version 4.3 ready.");
+    })();
+</script>
 
 </body>
 </html>
