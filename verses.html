@@ -3,7 +3,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY | VERSES TERMINAL v.7.3</title>
+    <title>GY-GY | TERMINAL v.7.4</title>
     <style>
         :root { --gold: #FFD700; --bg: #000; }
         body { 
@@ -11,7 +11,7 @@
             margin: 0; display: flex; flex-direction: column; height: 100vh; text-transform: uppercase;
         }
 
-        /* HEADER — Триада */
+        /* HEADER */
         .header {
             display: grid; grid-template-columns: 1fr 1fr 1fr; align-items: center;
             padding: 8px 25px; border-bottom: 1px solid var(--gold); background: #000;
@@ -19,53 +19,58 @@
         #google_translate_element { border: 1px solid var(--gold); padding: 2px; font-size: 9px; width: fit-content; }
         .back-btn { 
             justify-self: center; color: var(--gold); text-decoration: none; border: 1px solid var(--gold); 
-            padding: 3px 20px; font-size: 11px; transition: 0.3s;
+            padding: 3px 20px; font-size: 11px;
         }
-        .back-btn:hover { background: var(--gold); color: #000; }
         .logo-right { justify-self: end; font-size: 20px; font-weight: 900; letter-spacing: 4px; }
 
-        /* MICRO-MATRIX 14 (Компактная) */
+        /* MATRIX STRIP */
         .matrix-strip {
             display: grid; grid-template-columns: repeat(14, 1fr);
             background: #000; border-bottom: 2px solid var(--gold); padding: 2px; gap: 2px;
         }
-        .slot {
-            padding: 4px 0; border: 1px solid #222; text-align: center; font-size: 9px;
-            color: #444; cursor: pointer; transition: 0.3s;
-        }
+        .slot { padding: 4px 0; border: 1px solid #222; text-align: center; font-size: 9px; color: #444; }
         .slot.active-u { border-color: var(--gold); color: var(--gold); box-shadow: inset 0 0 5px var(--gold); }
         .slot.active-ai { border-color: #4285F4; color: #4285F4; }
-        .slot:hover { background: #111; }
 
         /* CHAT STREAM */
         .stream { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
         .msg { border-left: 2px solid var(--gold); padding: 8px 15px; background: rgba(255,215,0,0.02); }
 
-        /* INPUT BLOCK — Дуэльная Рамка */
-        .input-complex {
-            border-top: 2px solid var(--gold); background: #000; display: grid; grid-template-columns: 1fr 1fr;
+        /* INPUT PANEL v.7.4 (Вертикальные стеки) */
+        .input-panel-74 {
+            display: grid; grid-template-columns: 1fr 1fr;
+            border-top: 2px solid var(--gold); background: #000;
         }
-        .user-block { border-right: 1px solid var(--gold); display: flex; flex-direction: column; }
-        .block-header { 
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 4px 10px; background: rgba(255,215,0,0.1); border-bottom: 1px solid var(--gold);
-            font-size: 9px; font-weight: 900;
+
+        .input-stack { 
+            display: flex; flex-direction: column; 
+            border-right: 2px solid var(--gold); /* Вертикальная линия разделения */
         }
-        .lang-grid { display: grid; grid-template-columns: 1fr 1fr; }
-        .lang-cell { border-right: 1px solid rgba(255,215,0,0.2); }
-        .lang-cell:last-child { border-right: none; }
+        .input-stack:last-child { border-right: none; }
+
+        .stack-header { 
+            padding: 5px 10px; background: rgba(255,215,0,0.1); 
+            font-size: 10px; font-weight: 900; border-bottom: 1px solid rgba(255,215,0,0.3);
+        }
+
+        .stack-body { display: flex; flex-direction: column; }
         
         input { 
             width: 100%; background: transparent; border: none; color: var(--gold); 
-            font-family: 'Courier New'; font-size: 0.8rem; outline: none; padding: 10px;
+            font-family: 'Courier New'; font-size: 1rem; outline: none; 
+            padding: 15px 10px; border-bottom: 1px solid rgba(255,215,0,0.3);
         }
-        .mint-inline { 
-            background: var(--gold); color: #000; border: none; font-size: 9px; 
-            font-weight: 900; padding: 1px 6px; cursor: pointer;
+
+        .mint-btn-stack { 
+            background: var(--gold); color: #000; border: none; 
+            padding: 8px; font-weight: 900; cursor: pointer; font-size: 10px;
+            transition: 0.2s;
         }
+        .mint-btn-stack:hover { background: #fff; }
+
     </style>
 </head>
-<body data-version="7.3">
+<body data-version="7.4">
 
     <header class="header">
         <div id="google_translate_element"></div>
@@ -73,31 +78,24 @@
         <div class="logo-right">GY-GY</div>
     </header>
 
-    <div class="matrix-strip" id="matrix">
-        </div>
+    <div class="matrix-strip" id="matrix"></div>
 
     <main class="stream" id="chat-stream"></main>
 
-    <div class="input-complex">
-        <div class="user-block">
-            <div class="block-header">
-                <span>[U1] USER_1</span>
-                <button class="mint-inline" onclick="mint('u_ru')">MINT RU</button>
-            </div>
-            <div class="lang-grid">
-                <div class="lang-cell"><input type="text" id="u_ru" placeholder="RU_VERSE..."></div>
-                <div class="lang-cell"><input type="text" id="u_en" placeholder="EN_VERSE..."></div>
+    <div class="input-panel-74">
+        <div class="input-stack">
+            <div class="stack-header">[U1] USER_1</div>
+            <div class="stack-body">
+                <input type="text" id="u_ru" placeholder="RU: Введите строку..." autocomplete="off">
+                <button class="mint-btn-stack" onclick="mint('u_ru')">MINT USER BLOCK</button>
             </div>
         </div>
 
-        <div class="ai-block">
-            <div class="block-header" style="border-bottom: 1px solid var(--gold);">
-                <span style="color:#4285F4;">[G✦] GEMINI</span>
-                <button class="mint-inline" onclick="mint('g_ru')">MINT RU</button>
-            </div>
-            <div class="lang-grid">
-                <div class="lang-cell"><input type="text" id="g_ru" placeholder="RU_RESPONSE..."></div>
-                <div class="lang-cell"><input type="text" id="g_en" placeholder="EN_RESPONSE..."></div>
+        <div class="input-stack">
+            <div class="stack-header" style="color:#4285F4;">[G✦] GEMINI AI</div>
+            <div class="stack-body">
+                <input type="text" id="g_ru" placeholder="RU: Ответ ИИ..." autocomplete="off">
+                <button class="mint-btn-stack" onclick="mint('g_ru')">MINT GEMINI BLOCK</button>
             </div>
         </div>
     </div>
@@ -108,13 +106,8 @@
         function initMatrix() {
             const matrix = document.getElementById('matrix');
             let html = '';
-            for(let i=1; i<=10; i++) {
-                html += `<div class="slot ${i===1?'active-u':''}">U${i}</div>`;
-            }
-            const ai = ['G', 'GR', 'CL', 'MS'];
-            ai.forEach(n => {
-                html += `<div class="slot active-ai">${n}</div>`;
-            });
+            for(let i=1; i<=10; i++) html += `<div class="slot ${i===1?'active-u':''}">U${i}</div>`;
+            ['G', 'GR', 'CL', 'MS'].forEach(n => html += `<div class="slot active-ai">${n}</div>`);
             matrix.innerHTML = html;
         }
 
@@ -132,12 +125,12 @@
             
             input.value = '';
             chatStream.scrollTop = chatStream.scrollHeight;
-            localStorage.setItem('gy73_history', chatStream.innerHTML);
+            localStorage.setItem('gy74_history', chatStream.innerHTML);
         }
 
         window.onload = () => {
             initMatrix();
-            const saved = localStorage.getItem('gy73_history');
+            const saved = localStorage.getItem('gy74_history');
             if(saved) chatStream.innerHTML = saved;
         };
 
