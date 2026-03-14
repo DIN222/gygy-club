@@ -3,7 +3,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY | TERMINAL v.7.4</title>
+    <title>GY-GY | TERMINAL v.7.7</title>
     <style>
         :root { --gold: #FFD700; --bg: #000; }
         body { 
@@ -36,41 +36,46 @@
         .stream { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
         .msg { border-left: 2px solid var(--gold); padding: 8px 15px; background: rgba(255,215,0,0.02); }
 
-        /* INPUT PANEL v.7.4 (Вертикальные стеки) */
-        .input-panel-74 {
+        /* INPUT PANEL v.7.7 (Сложная сегментация) */
+        .input-panel-77 {
             display: grid; grid-template-columns: 1fr 1fr;
             border-top: 2px solid var(--gold); background: #000;
+            height: 200px;
         }
 
-        .input-stack { 
-            display: flex; flex-direction: column; 
-            border-right: 2px solid var(--gold); /* Вертикальная линия разделения */
-        }
-        .input-stack:last-child { border-right: none; }
+        /* Основные блоки (Юзер и ИИ) */
+        .participant-zone { display: flex; border-right: 2px solid var(--gold); }
+        .participant-zone:last-child { border-right: none; }
 
-        .stack-header { 
-            padding: 5px 10px; background: rgba(255,215,0,0.1); 
-            font-size: 10px; font-weight: 900; border-bottom: 1px solid rgba(255,215,0,0.3);
+        /* Левая колонка управления (Аватар + Кнопка) */
+        .control-col {
+            width: 100px; display: flex; flex-direction: column;
+            border-right: 1px solid var(--gold); /* ТА САМАЯ ВЕРТИКАЛЬНАЯ ЛИНИЯ */
         }
 
-        .stack-body { display: flex; flex-direction: column; }
+        .avatar-box { 
+            padding: 10px 5px; font-size: 10px; font-weight: 900; text-align: center;
+            background: rgba(255,215,0,0.1); border-bottom: 1px solid var(--gold);
+        }
+
+        .mint-btn-side {
+            flex: 1; background: var(--gold); color: #000; border: none;
+            cursor: pointer; font-weight: 900; font-size: 12px; writing-mode: vertical-rl;
+            text-orientation: upright; letter-spacing: 2px; transition: 0.2s;
+        }
+        .mint-btn-side:hover { background: #fff; }
+
+        /* Правая колонка ввода (Поле) */
+        .input-col { flex: 1; }
         
-        input { 
-            width: 100%; background: transparent; border: none; color: var(--gold); 
-            font-family: 'Courier New'; font-size: 1rem; outline: none; 
-            padding: 15px 10px; border-bottom: 1px solid rgba(255,215,0,0.3);
+        textarea { 
+            width: 100%; height: 100%; background: transparent; border: none; color: var(--gold); 
+            font-family: 'Courier New'; font-size: 1.1rem; outline: none; 
+            padding: 15px; resize: none; box-sizing: border-box;
         }
-
-        .mint-btn-stack { 
-            background: var(--gold); color: #000; border: none; 
-            padding: 8px; font-weight: 900; cursor: pointer; font-size: 10px;
-            transition: 0.2s;
-        }
-        .mint-btn-stack:hover { background: #fff; }
-
     </style>
 </head>
-<body data-version="7.4">
+<body data-version="7.7">
 
     <header class="header">
         <div id="google_translate_element"></div>
@@ -82,22 +87,28 @@
 
     <main class="stream" id="chat-stream"></main>
 
-    <div class="input-panel-74">
-        <div class="input-stack">
-            <div class="stack-header">[U1] USER_1</div>
-            <div class="stack-body">
-                <input type="text" id="u_ru" placeholder="RU: Введите строку..." autocomplete="off">
-                <button class="mint-btn-stack" onclick="mint('u_ru')">MINT USER BLOCK</button>
+    <div class="input-panel-77">
+        
+        <div class="participant-zone">
+            <div class="control-col">
+                <div class="avatar-box">USER_1</div>
+                <button class="mint-btn-side" onclick="mint('u_text')">MINT</button>
+            </div>
+            <div class="input-col">
+                <textarea id="u_text" placeholder="RU_VERSE..."></textarea>
             </div>
         </div>
 
-        <div class="input-stack">
-            <div class="stack-header" style="color:#4285F4;">[G✦] GEMINI AI</div>
-            <div class="stack-body">
-                <input type="text" id="g_ru" placeholder="RU: Ответ ИИ..." autocomplete="off">
-                <button class="mint-btn-stack" onclick="mint('g_ru')">MINT GEMINI BLOCK</button>
+        <div class="participant-zone">
+            <div class="control-col">
+                <div class="avatar-box" style="color:#4285F4;">GEMINI</div>
+                <button class="mint-btn-side" onclick="mint('g_text')">MINT</button>
+            </div>
+            <div class="input-col">
+                <textarea id="g_text" placeholder="AI_RESPONSE..."></textarea>
             </div>
         </div>
+
     </div>
 
     <script>
@@ -125,12 +136,12 @@
             
             input.value = '';
             chatStream.scrollTop = chatStream.scrollHeight;
-            localStorage.setItem('gy74_history', chatStream.innerHTML);
+            localStorage.setItem('gy77_history', chatStream.innerHTML);
         }
 
         window.onload = () => {
             initMatrix();
-            const saved = localStorage.getItem('gy74_history');
+            const saved = localStorage.getItem('gy77_history');
             if(saved) chatStream.innerHTML = saved;
         };
 
