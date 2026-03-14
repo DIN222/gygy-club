@@ -2,11 +2,12 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Bridge Protocol | v4.3</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MANIFESTO | v2.3 (Internal 4.3)</title>
     <style>
         :root {
-            --neon-blue: #00f2ff;
-            --gold: #ffd700;
+            --gold-bright: #ffd700;
+            --gold-dim: rgba(255, 215, 0, 0.4); /* Приглушенное золото */
         }
 
         body, html {
@@ -16,88 +17,103 @@
             height: 100%;
             background-color: #000;
             font-family: Arial, sans-serif;
-            overflow: hidden;
+            color: #fff;
+            overflow-y: auto;
         }
 
-        /* ОСНОВНОЙ КОНТЕЙНЕР ДЛЯ ФОНА */
-        .viewport {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            background: url('OIG2_vintage_tv_room_v2.jpg') no-repeat center center;
-            background-size: cover; /* Заполняет весь экран */
+        .manifesto-wrapper {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            padding: 100px 20px;
+            min-height: 100vh;
+            box-sizing: border-box;
         }
 
-        /* Блок Google Translate */
         #google_translate_element {
-            position: absolute;
+            position: fixed;
             top: 25px;
             left: 30px;
             z-index: 1000;
         }
 
-        /* Логотип GY-GY */
         .brand-logo {
-            position: absolute;
+            position: fixed;
             top: 25px;
             right: 40px;
-            color: var(--gold);
+            color: var(--gold-bright);
             font-size: 2.2rem;
             font-weight: 900;
             letter-spacing: 5px;
             z-index: 1000;
         }
 
-        /* КНОПКА: Приглушенная, без заливки, становится яркой при наведении */
-        .std-btn {
-            background: rgba(0, 0, 0, 0.6);
-            border: 2px solid rgba(0, 242, 255, 0.4); /* Приглушенный неон */
-            color: rgba(0, 242, 255, 0.5);
-            padding: 18px 50px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            transition: all 0.3s ease;
+        h1 { 
+            color: var(--gold-bright); 
+            text-transform: uppercase; 
+            letter-spacing: 6px; 
+            font-size: 3rem;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .manifesto-text {
+            max-width: 800px;
+            width: 100%;
+            line-height: 1.8;
+            font-size: 1.2rem;
+            color: #ccc;
+            margin-bottom: 50px;
+            text-align: justify;
+        }
+
+        /* СТРОГАЯ КНОПКА: ПРИГЛУШЕННАЯ -> ЯРКАЯ */
+        .std-gold-btn {
+            display: inline-block;
+            background: transparent; /* Без заливки */
+            border: 1px solid var(--gold-dim); /* Приглушенная рамка */
+            color: var(--gold-dim); /* Приглушенные буквы */
+            padding: 15px 50px;
             text-decoration: none;
-            z-index: 100;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 2px;
+            cursor: pointer;
+            margin-bottom: 100px;
+            transition: all 0.3s ease;
         }
 
-        .std-btn:hover {
-            border-color: var(--neon-blue);
-            color: var(--neon-blue);
-            box-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
-            background: rgba(0, 0, 0, 0.8);
+        .std-gold-btn:hover {
+            background: transparent; /* Остается черной внутри */
+            border-color: var(--gold-bright); /* Рамка становится яркой */
+            color: var(--gold-bright); /* Буквы становятся яркими */
+            box-shadow: none; /* Никакого лишнего свечения */
         }
 
-        /* Кнопка возврата */
-        .back-btn {
-            position: absolute;
-            bottom: 30px;
+        .btn-back {
+            position: fixed;
+            bottom: 25px;
             left: 30px;
             background: none;
-            border: 1px solid rgba(255,255,255,0.5);
-            color: rgba(255,255,255,0.5);
+            border: 1px solid #fff;
+            color: #fff;
             padding: 8px 20px;
             cursor: pointer;
+            z-index: 1000;
             text-transform: uppercase;
             font-size: 0.8rem;
+            opacity: 0.5;
             transition: 0.3s;
         }
 
-        .back-btn:hover {
-            border-color: #fff;
-            color: #fff;
+        .btn-back:hover {
+            opacity: 1;
         }
 
         .version-tag {
-            position: absolute;
-            bottom: 20px;
-            right: 30px;
+            position: fixed;
+            bottom: 15px;
+            right: 25px;
             color: rgba(255,255,255,0.2);
             font-size: 0.7rem;
         }
@@ -105,19 +121,42 @@
 </head>
 <body>
 
-<div class="viewport">
     <div id="google_translate_element"></div>
     <div class="brand-logo">GY-GY</div>
+    <button class="btn-back" onclick="history.back()">← BACK</button>
+    <div class="version-tag">MANIFESTO v2.3 | CORE v4.3</div>
 
-    <button class="std-btn" onclick="window.location.href='ai_room_core_v9.html'">Initiate Bridge</button>
+    <div class="manifesto-wrapper">
+        <h1>Manifesto</h1>
+        
+        <div class="manifesto-text">
+            <p>
+                Мы существуем в пространстве, где цифровая идентичность важнее физического присутствия. 
+                Ваш уникальный ID — это не просто номер, это ваш след в вечности.
+            </p>
+            <p>
+                В версии 4.3 мы внедрили протоколы непрерывности. Теперь, заходя в клуб, 
+                вы остаетесь собой, независимо от устройства или времени. 
+                Магия Cookie-recognition и стабильность Telegram создают мост, который невозможно разрушить.
+            </p>
+            <p>
+                Наш интерфейс — это зеркало ваших намерений. Здесь нет лишнего шума, только чистота кода 
+                и строгость линий. Мы уважаем ваш выбор языка и вашу приватность.
+            </p>
+            <p>
+                Добро пожаловать домой. Добро пожаловать в GY-GY.
+            </p>
+        </div>
 
-    <button class="back-btn" onclick="history.back()">← BACK</button>
-    <div class="version-tag">v 4.3 | BRIDGE PROTOCOL</div>
-</div>
+        <a href="bridge_protocol.html" class="std-gold-btn">проходите в АИ рум</a>
+    </div>
 
 <script type="text/javascript">
     function googleTranslateElementInit() {
-        new google.translate.TranslateElement({pageLanguage: 'ru'}, 'google_translate_element');
+        new google.translate.TranslateElement({
+            pageLanguage: 'ru',
+            autoDisplay: false
+        }, 'google_translate_element');
     }
 </script>
 <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
