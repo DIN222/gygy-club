@@ -170,6 +170,26 @@
             new google.translate.TranslateElement({pageLanguage: 'ru'}, 'google_translate_element');
         }
     </script>
-    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script> 
+    async function askAI(userPrompt) {
+    const display = document.getElementById('ai-output'); // Элемент, где появится текст
+    display.innerText = "Инициализация контакта...";
+
+    try {
+        const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                prompt: userPrompt,
+                user_id: localStorage.getItem('gy_trace')
+            })
+        });
+
+        const data = await response.json();
+        display.innerText = data.text; // Выставляем ответ на витрину
+    } catch (e) {
+        display.innerText = "Ошибка протокола 4.3. Попробуйте позже.";
+    }
+}
 </body>
 </html>
