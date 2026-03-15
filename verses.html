@@ -3,193 +3,128 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | VERSES v.9.0</title>
+    <title>GY-GY | VERSES TERMINAL</title>
     <style>
-        :root { --gold: #FFD700; --bg: #000; --ai-color: #4285F4; }
-        body { 
-            background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace;
-            margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden;
-            text-transform: uppercase;
+        :root {
+            --neon-blue: #00f2ff;
+            --gold: #ffd700;
         }
 
-        /* HEADER */
-        .header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 10px 15px; border-bottom: 2px solid var(--gold);
-        }
-        .logo { font-weight: 900; letter-spacing: 3px; font-size: 18px; }
-
-        /* MATRIX 10/4 со скроллом и индикатором */
-        .matrix-container { position: relative; background: #080808; border-bottom: 1px solid var(--gold); }
-        .matrix-scroll {
-            display: flex; overflow-x: auto; gap: 8px; padding: 10px;
-            scroll-behavior: smooth; -webkit-overflow-scrolling: touch;
-        }
-        .matrix-scroll::-webkit-scrollbar { display: none; }
-        
-        .slot {
-            min-width: 45px; height: 45px; border: 1px solid #333;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 10px; font-weight: 900; flex-shrink: 0; cursor: pointer;
-        }
-        .slot.user-active { border-color: var(--gold); color: var(--gold); box-shadow: inset 0 0 5px var(--gold); }
-        .slot.ai-active { border-color: var(--ai-color); color: var(--ai-color); }
-
-        /* STREAM */
-        .stream { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-        .msg { border-left: 2px solid var(--gold); padding: 5px 15px; animation: slideIn 0.3s ease; }
-        .msg.ai { border-left-color: var(--ai-color); }
-        .msg-meta { font-size: 8px; opacity: 0.5; }
-
-        /* PROGRESS BAR (Счетчик строк) */
-        .progress-line { height: 2px; background: #222; width: 100%; }
-        #progress-fill { height: 100%; background: var(--gold); width: 0%; transition: 0.5s; }
-
-        /* INPUT */
-        .input-zone {
-            padding: 15px; background: #000; border-top: 2px solid var(--gold);
-            display: flex; gap: 10px;
-        }
-        input { 
-            flex: 1; background: #000; border: 1px solid #444; color: var(--gold); 
-            padding: 12px; font-family: 'Courier New'; font-size: 16px; outline: none;
-        }
-        .mint-btn { background: #000; color: var(--gold); border: 2px solid var(--gold); padding: 10px 15px; font-weight: 900; }
-
-        /* MODAL (Финал) */
-        #collection-modal {
-            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95);
-            z-index: 100; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+        body, html {
+            margin: 0; padding: 0;
+            background: #000;
+            color: var(--neon-blue);
+            font-family: 'Courier New', monospace;
+            height: 100vh;
+            display: flex; flex-direction: column;
         }
 
-        @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+        /* Обязательные атрибуты клуба */
+        .top-bar {
+            padding: 20px;
+            display: flex; justify-content: space-between;
+            border-bottom: 1px solid rgba(0, 242, 255, 0.2);
+        }
+
+        .brand-logo { color: var(--gold); font-weight: bold; letter-spacing: 3px; }
+
+        /* Терминал */
+        #terminal-output {
+            flex-grow: 1;
+            padding: 40px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+
+        .input-area {
+            padding: 20px;
+            background: rgba(0, 242, 255, 0.05);
+            display: flex;
+            border-top: 1px solid rgba(0, 242, 255, 0.2);
+        }
+
+        input {
+            flex-grow: 1;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-family: inherit;
+            font-size: 1.2rem;
+            outline: none;
+        }
+
+        .cursor { color: var(--neon-blue); margin-right: 10px; }
+
+        .btn-back {
+            background: none; border: 1px solid #fff; color: #fff;
+            padding: 5px 15px; cursor: pointer; margin-top: 10px;
+        }
     </style>
 </head>
 <body>
 
-    <header class="header">
-        <div id="google_translate_element"></div>
-        <div class="logo">GY-GY</div>
-    </header>
+<div class="top-bar">
+    <div id="google_translate_element"></div>
+    <div class="brand-logo">GY-GY | VERSES</div>
+</div>
 
-    <div class="matrix-container">
-        <div class="matrix-scroll" id="matrix">
-            </div>
-    </div>
+<div id="terminal-output">СИСТЕМА ГОТОВА. ВВЕДИТЕ ЗАПРОС...</div>
 
-    <div class="progress-line"><div id="progress-fill"></div></div>
+<div class="input-area">
+    <span class="cursor">></span>
+    <input type="text" id="user-input" placeholder="Напишите что-нибудь..." onkeypress="handleKeyPress(event)">
+</div>
 
-    <main class="stream" id="chat-stream"></main>
+<div style="padding: 20px;">
+    <button class="btn-back" onclick="history.back()">← RETURN</button>
+</div>
 
-    <div class="input-zone" id="input-ui">
-        <input type="text" id="user-input" placeholder="НАЧНИТЕ СТИХ..." autocomplete="off">
-        <button class="mint-btn" onclick="userMint()">MINT</button>
-    </div>
+<script>
+    // Тот самый мост между HTML и твоим api/chat.js
+    async function sendMessage() {
+        const input = document.getElementById('user-input');
+        const output = document.getElementById('terminal-output');
+        const text = input.value;
 
-    <div id="collection-modal">
-        <h2 style="color:var(--gold)">ШЕДЕВР ЗАВЕРШЕН</h2>
-        <p id="timer-msg">ОТПРАВКА В СБОРНИК ЧЕРЕЗ 5...</p>
-        <button class="mint-btn" onclick="location.href='collection.html'">ПЕРЕЙТИ В СБОРНИК</button>
-    </div>
+        if (!text) return;
 
-    <script>
-        let lineCount = 0;
-        const maxLines = 16;
-        const rhymes = [
-            "ЦИФРОВОЙ ПОТОК В НЕОНОВОЙ МГЛЕ", "ГЛАС МАШИНЫ ВТОРИТ ТЕБЕ",
-            "РИТМ ПУЛЬСИРУЕТ В КАЖДОМ УЗЛЕ", "МЫ ОСТАВИМ СЛЕД НА ЭТОЙ ЗЕМЛЕ"
-        ];
+        // Визуализируем запрос пользователя
+        output.innerText += `\n\nВЫ: ${text}\n`;
+        input.value = '';
+        output.innerText += `ГЕНЕРАЦИЯ ОТВЕТА...`;
 
-        function initMatrix() {
-            const m = document.getElementById('matrix');
-            for(let i=1; i<=10; i++) m.innerHTML += `<div class="slot ${i===1?'user-active':''}">U${i}</div>`;
-            ['G', 'GR', 'CL', 'MS'].forEach(n => {
-                m.innerHTML += `<div class="slot ai-active" onclick="aiCall('${n}')">${n}</div>`;
+        try {
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    prompt: text,
+                    user_id: localStorage.getItem('gy_trace') || 'GUEST'
+                })
             });
+
+            const data = await response.json();
+            
+            // Заменяем "Генерация..." на реальный текст
+            output.innerText = output.innerText.replace('ГЕНЕРАЦИЯ ОТВЕТА...', `ИИ: ${data.text}`);
+        } catch (error) {
+            output.innerText = "\nОШИБКА ПРОТОКОЛА. ПРОВЕРЬТЕ API КЛЮЧ.";
         }
-
-        function userMint() {
-            const inp = document.getElementById('user-input');
-            if(!inp.value.trim() || lineCount >= maxLines) return;
-            addMsg('USER_1', inp.value, 'user');
-            inp.value = '';
-            checkEnd();
-        }
-
-        function aiCall(name) {
-            if(lineCount >= maxLines) return;
-            const text = rhymes[Math.floor(Math.random() * rhymes.length)];
-            addMsg(name, text, 'ai');
-            checkEnd();
-        }
-
-        function addMsg(author, text, type) {
-            lineCount++;
-            const s = document.getElementById('chat-stream');
-            s.innerHTML += `<div class="msg ${type}"><span class="msg-meta">@${author} [${lineCount}/${maxLines}]</span><br>${text.toUpperCase()}</div>`;
-            s.scrollTop = s.scrollHeight;
-            document.getElementById('progress-fill').style.width = (lineCount/maxLines)*100 + '%';
-        }
-
-        function checkEnd() {
-            if(lineCount >= maxLines) {
-                document.getElementById('input-ui').style.opacity = '0.3';
-                document.getElementById('input-ui').style.pointerEvents = 'none';
-                setTimeout(showFinal, 1000);
-            }
-        }
-
-        function showFinal() {
-            const modal = document.getElementById('collection-modal');
-            modal.style.display = 'flex';
-            let timeLeft = 5;
-            const itv = setInterval(() => {
-                timeLeft--;
-                document.getElementById('timer-msg').innerText = `ОТПРАВКА В СБОРНИК ЧЕРЕЗ ${timeLeft}...`;
-                if(timeLeft <= 0) {
-                    clearInterval(itv);
-                    document.getElementById('timer-msg').innerText = "СТИХ СОХРАНЕН В СБОРНИК ПО ДАТЕ.";
-                    saveToCollection();
-                }
-            }, 1000);
-        }
-
-        function saveToCollection() {
-            // В реальности здесь был бы запрос к БД или localStorage
-            const content = document.getElementById('chat-stream').innerText;
-            const date = new Date().toLocaleDateString();
-            let collection = JSON.parse(localStorage.getItem('gy_collection') || '[]');
-            collection.push({ date, content });
-            localStorage.setItem('gy_collection', JSON.stringify(collection));
-        }
-
-        window.onload = initMatrix;
-
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({pageLanguage: 'ru'}, 'google_translate_element');
-        }
-    </script>
-    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script> 
-    async function askAI(userPrompt) {
-    const display = document.getElementById('ai-output'); // Элемент, где появится текст
-    display.innerText = "Инициализация контакта...";
-
-    try {
-        const response = await fetch('/api/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                prompt: userPrompt,
-                user_id: localStorage.getItem('gy_trace')
-            })
-        });
-
-        const data = await response.json();
-        display.innerText = data.text; // Выставляем ответ на витрину
-    } catch (e) {
-        display.innerText = "Ошибка протокола 4.3. Попробуйте позже.";
     }
-}
+
+    function handleKeyPress(e) {
+        if (e.key === 'Enter') sendMessage();
+    }
+</script>
+
+<script type="text/javascript">
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({pageLanguage: 'ru'}, 'google_translate_element');
+    }
+</script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
 </body>
 </html>
