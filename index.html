@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.54 | FULL MASTER</title>
+    <title>GY-GY Club v4.4.55 | FULL MASTER</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -113,7 +113,7 @@
         <div class="bar-ui-container">
             <div class="bar-side-buttons">
                 <button class="btn-gy" style="font-size:12px;" onclick="portalTransition('block-tables')">ЗА СТОЛИКИ</button>
-                <button class="btn-gy" style="font-size:12px;" onclick="portalTransition('block-ai-room')">В AI ROOM</button>
+               <button class="btn-gy" style="font-size:12px;" onclick="deepDive()">В AI ROOM</button>
             </div>
             <div class="bar-bottom-button">
                 <button class="btn-gy" style="font-size:12px;" onclick="portalTransition('block-hall')">В ХОЛЛ</button>
@@ -131,7 +131,18 @@
 
     <script>
         let currentID = "";
-
+        
+function deepDive() {
+/* Строка 136 */        document.body.style.transition = "opacity 1.2s ease, filter 1.2s ease";
+/* Строка 137 */        document.body.style.opacity = "0";
+/* Строка 138 */        document.body.style.filter = "blur(10px) brightness(0)";
+/* Строка 139 */
+/* Строка 140 */        setTimeout(() => {
+/* Строка 141 */            window.location.href = 'bridge_protocol.html';
+/* Строка 142 */        }, 1200);
+/* Строка 143 */    }
+/* Строка 144 */
+/* Строка 145 */    function portalTransition(nextId) {
         function portalTransition(nextId) {
             const current = document.querySelector('.block.active');
             const backBtn = document.getElementById('btn-global-back');
