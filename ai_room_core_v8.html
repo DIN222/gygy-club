@@ -1,13 +1,14 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI ROOM CORE | v8.1.6 (Internal 4.3)</title>
+    <title>AI ROOM CORE | v8.1.7 (Internal 4.3)</title>
     <style>
         :root {
             --neon-blue: #00f2ff;
-            --neon-glow: 0 0 15px rgba(0, 242, 255, 0.8);
+            --neon-glow: 0 0 20px rgba(0, 242, 255, 0.9), 0 0 40px rgba(0, 242, 255, 0.4);
             --gold: #ffd700;
         }
 
@@ -28,12 +29,10 @@
             position: relative;
             width: 100vw;
             height: 100vh;
-            /* ПРИВЯЗКА К НОВОМУ ФАЙЛУ .PNG */
             background: url('OIG2_vintage_tv_room_v2.png') no-repeat center center;
             background-size: contain; 
         }
 
-        /* Обязательные атрибуты GY-GY и Языки */
         .top-bar {
             position: absolute;
             top: 25px;
@@ -52,7 +51,6 @@
             letter-spacing: 5px;
         }
 
-        /* Стили зон на мониторах */
         .screen-label {
             position: absolute;
             color: var(--neon-blue);
@@ -67,28 +65,29 @@
             text-transform: lowercase;
         }
 
+        /* Выровнены в одну строку по top: 45% */
         #verses-zone {
-            top: 48%; 
-            left: 31%; 
-            width: 10%;
-            height: 8%;
-            font-size: 1.6vw;
+            top: 45%; 
+            left: 28%; 
+            width: 15%;
+            height: 12%;
+            font-size: 2.2vw;
         }
 
         #techpark-zone {
-            top: 44%; 
-            left: 44.5%;
-            width: 11%;
-            height: 10%;
-            font-size: 1.6vw;
+            top: 45%; 
+            left: 43.5%;
+            width: 15%;
+            height: 12%;
+            font-size: 2.2vw;
         }
 
         .screen-label:hover {
-            filter: brightness(1.3);
+            filter: brightness(1.5);
             transform: scale(1.05);
+            text-shadow: 0 0 30px var(--neon-blue);
         }
 
-        /* Нижняя панель навигации */
         .bottom-nav {
             position: absolute;
             bottom: 30px;
@@ -108,19 +107,12 @@
             cursor: pointer;
             text-transform: uppercase;
             font-size: 0.8rem;
-            transition: 0.3s;
-        }
-
-        .btn-back:hover {
-            border-color: #fff;
-            background: rgba(255,255,255,0.1);
         }
 
         .meta-data {
             text-align: right;
             color: rgba(255,255,255,0.3);
             font-size: 0.7rem;
-            line-height: 1.4;
         }
 
         #digital-trace { color: var(--neon-blue); }
@@ -140,7 +132,7 @@
     <div class="bottom-nav">
         <button class="btn-back" onclick="history.back()">← RETURN</button>
         <div class="meta-data">
-            CORE_VER: 4.3 (Build 8.1.6)<br>
+            CORE_VER: 4.3 (Build 8.1.7)<br>
             TRACE_ID: <span id="digital-trace">...</span>
         </div>
     </div>
@@ -148,16 +140,12 @@
 
 <script type="text/javascript">
     function googleTranslateElementInit() {
-        new google.translate.TranslateElement({
-            pageLanguage: 'ru',
-            autoDisplay: false
-        }, 'google_translate_element');
+        new google.translate.TranslateElement({pageLanguage: 'ru'}, 'google_translate_element');
     }
 </script>
 <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 <script>
-    /* Генерация/хранение уникального ID согласно протоколу 4.3 */
     (function() {
         let id = localStorage.getItem('gy_trace') || 'ID-' + Math.random().toString(36).substr(2, 9).toUpperCase();
         localStorage.setItem('gy_trace', id);
