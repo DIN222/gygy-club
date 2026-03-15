@@ -3,117 +3,111 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY | TERMINAL v.7.8</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GY-GY | MOBILE TERMINAL v.7.9</title>
     <style>
         :root { --gold: #FFD700; --bg: #000; }
         body { 
             background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace;
             margin: 0; display: flex; flex-direction: column; height: 100vh; text-transform: uppercase;
+            overflow: hidden;
         }
 
         /* HEADER */
         .header {
-            display: grid; grid-template-columns: 1fr 1fr 1fr; align-items: center;
-            padding: 8px 25px; border-bottom: 1px solid var(--gold); background: #000;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 15px; border-bottom: 1px solid var(--gold);
         }
-        #google_translate_element { border: 1px solid var(--gold); padding: 2px; font-size: 9px; width: fit-content; }
-        .back-btn { 
-            justify-self: center; color: var(--gold); text-decoration: none; border: 1px solid var(--gold); 
-            padding: 3px 20px; font-size: 11px;
+        #google_translate_element { transform: scale(0.8); transform-origin: left; }
+        .logo-small { font-weight: 900; letter-spacing: 2px; font-size: 18px; }
+
+        /* MATRIX SCROLL (Верхние аватары) */
+        .matrix-scroll {
+            display: flex; overflow-x: auto; gap: 10px; padding: 10px;
+            border-bottom: 2px solid var(--gold); background: #050505;
+            -webkit-overflow-scrolling: touch;
         }
-        .logo-right { justify-self: end; font-size: 20px; font-weight: 900; letter-spacing: 4px; }
-
-        /* MATRIX STRIP */
-        .matrix-strip {
-            display: grid; grid-template-columns: repeat(14, 1fr);
-            background: #000; border-bottom: 2px solid var(--gold); padding: 2px; gap: 2px;
-        }
-        .slot { padding: 4px 0; border: 1px solid #222; text-align: center; font-size: 9px; color: #444; }
-        .slot.active-u { border-color: var(--gold); color: var(--gold); box-shadow: inset 0 0 5px var(--gold); }
-        .slot.active-ai { border-color: #4285F4; color: #4285F4; }
-
-        /* CHAT STREAM (Где рождается шедевр) */
-        .stream { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
-        .msg { border-left: 2px solid var(--gold); padding: 10px 20px; background: rgba(255,215,0,0.03); }
-
-        /* INPUT PANEL v.7.8 (Оптимизированная) */
-        .input-panel-78 {
-            display: grid; grid-template-columns: 1fr 1fr;
-            border-top: 2px solid var(--gold); background: #000;
-            height: 80px; /* Компактная высота для одной строки */
-        }
-
-        .participant-zone { display: flex; border-right: 2px solid var(--gold); }
-        .participant-zone:last-child { border-right: none; }
-
-        /* Колонна управления */
-        .control-col {
-            width: 120px; display: flex; flex-direction: column;
-            border-right: 1px solid var(--gold); justify-content: space-around;
-            padding: 5px; background: rgba(255,215,0,0.05);
-        }
-
-        .avatar-label { font-size: 10px; font-weight: 900; text-align: center; }
-
-        .mint-btn-std {
-            background: var(--gold); color: #000; border: none;
-            cursor: pointer; font-weight: 900; font-size: 10px;
-            padding: 4px 0; border-radius: 2px; transition: 0.2s;
-        }
-        .mint-btn-std:hover { background: #fff; }
-
-        /* Колонна ввода */
-        .input-col { flex: 1; display: flex; align-items: center; }
+        .matrix-scroll::-webkit-scrollbar { display: none; } /* Скрываем скроллбар для эстетики */
         
+        .avatar-circle {
+            min-width: 45px; height: 45px; border-radius: 50%;
+            border: 1px solid #333; display: flex; align-items: center;
+            justify-content: center; font-size: 10px; flex-shrink: 0;
+        }
+        .avatar-circle.active-u { border-color: var(--gold); box-shadow: 0 0 8px var(--gold); color: var(--gold); }
+        .avatar-circle.active-ai { border-color: #4285F4; color: #4285F4; }
+
+        /* CHAT STREAM */
+        .stream { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .msg { border-left: 2px solid var(--gold); padding: 5px 12px; font-size: 0.9rem; }
+
+        /* MOBILE INPUT PANEL (Стек) */
+        .input-panel-mobile {
+            border-top: 2px solid var(--gold); background: #000;
+            display: flex; flex-direction: column; padding: 5px;
+        }
+
+        .input-row {
+            display: flex; align-items: center; gap: 8px; padding: 5px 0;
+            border-bottom: 1px solid rgba(255,215,0,0.1);
+        }
+        .input-row:last-child { border-bottom: none; }
+
+        /* Мини-аватар и кнопка в один столбик */
+        .control-mini { display: flex; flex-direction: column; gap: 4px; align-items: center; min-width: 50px; }
+        .mini-id { font-size: 9px; font-weight: 900; }
+        .mint-btn-sm { 
+            background: var(--gold); color: #000; border: none; 
+            font-size: 8px; font-weight: 900; padding: 4px 8px; border-radius: 2px;
+        }
+
         input { 
-            width: 100%; background: transparent; border: none; color: var(--gold); 
-            font-family: 'Courier New'; font-size: 1.2rem; outline: none; 
-            padding: 0 20px; box-sizing: border-box;
+            flex: 1; background: #111; border: 1px solid #333; color: var(--gold); 
+            padding: 10px; font-family: 'Courier New'; font-size: 0.9rem; border-radius: 4px;
         }
     </style>
 </head>
-<body data-version="7.8">
+<body>
 
     <header class="header">
         <div id="google_translate_element"></div>
-        <a href="ai_room_retro_base.html" class="back-btn">RETURN TO BASE</a>
-        <div class="logo-right">GY-GY</div>
+        <div class="logo-small">GY-GY</div>
+        <a href="ai_room_retro_base.html" style="color:var(--gold); font-size:10px; text-decoration:none; border:1px solid var(--gold); padding:4px 8px;">BACK</a>
     </header>
 
-    <div class="matrix-strip" id="matrix"></div>
+    <div class="matrix-scroll" id="matrix">
+        </div>
 
     <main class="stream" id="chat-stream"></main>
 
-    <div class="input-panel-78">
-        <div class="participant-zone">
-            <div class="control-col">
-                <div class="avatar-label">USER_1</div>
-                <button class="mint-btn-std" onclick="mint('u_line')">MINT</button>
+    <div class="input-panel-mobile">
+        <div class="input-row">
+            <div class="control-mini">
+                <span class="mini-id">U1</span>
+                <button class="mint-btn-sm" onclick="mint('u_line')">MINT</button>
             </div>
-            <div class="input-col">
-                <input type="text" id="u_line" placeholder="TYPE YOUR LINE..." onkeydown="if(event.key==='Enter') mint('u_line')">
-            </div>
+            <input type="text" id="u_line" placeholder="ТВОЯ СТРОКА..." onkeydown="if(event.key==='Enter') mint('u_line')">
         </div>
 
-        <div class="participant-zone">
-            <div class="control-col">
-                <div class="avatar-label" style="color:#4285F4;">GEMINI</div>
-                <button class="mint-btn-std" onclick="mint('g_line')">MINT</button>
+        <div class="input-row">
+            <div class="control-mini">
+                <span class="mini-id" style="color:#4285F4;">G✦</span>
+                <button class="mint-btn-sm" onclick="mint('g_line')">MINT</button>
             </div>
-            <div class="input-col">
-                <input type="text" id="g_line" placeholder="AI RESPONSE..." onkeydown="if(event.key==='Enter') mint('g_line')">
-            </div>
+            <input type="text" id="g_line" placeholder="ОТВЕТ ИИ...">
         </div>
     </div>
 
     <script>
-        const chatStream = document.getElementById('chat-stream');
-
         function initMatrix() {
             const matrix = document.getElementById('matrix');
             let html = '';
-            for(let i=1; i<=10; i++) html += `<div class="slot ${i===1?'active-u':''}">U${i}</div>`;
-            ['G', 'GR', 'CL', 'MS'].forEach(n => html += `<div class="slot active-ai">${n}</div>`);
+            for(let i=1; i<=10; i++) {
+                html += `<div class="avatar-circle ${i===1?'active-u':''}">U${i}</div>`;
+            }
+            ['G', 'GR', 'CL', 'MS'].forEach(n => {
+                html += `<div class="avatar-circle active-ai">${n}</div>`;
+            });
             matrix.innerHTML = html;
         }
 
@@ -121,24 +115,13 @@
             const input = document.getElementById(id);
             const val = input.value.trim().toUpperCase();
             if(!val) return;
-
             const author = id.startsWith('u') ? 'USER_1' : 'GEMINI';
-            chatStream.innerHTML += `
-                <div class="msg">
-                    <span style="font-size: 0.7rem; opacity: 0.5;">@${author}</span><br>
-                    ${val}
-                </div>`;
-            
+            document.getElementById('chat-stream').innerHTML += `<div class="msg"><span style="font-size:0.7rem; opacity:0.5;">@${author}</span><br>${val}</div>`;
             input.value = '';
-            chatStream.scrollTop = chatStream.scrollHeight;
-            localStorage.setItem('gy78_history', chatStream.innerHTML);
+            document.getElementById('chat-stream').scrollTop = document.getElementById('chat-stream').scrollHeight;
         }
 
-        window.onload = () => {
-            initMatrix();
-            const saved = localStorage.getItem('gy78_history');
-            if(saved) chatStream.innerHTML = saved;
-        };
+        window.onload = initMatrix;
 
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({pageLanguage: 'ru'}, 'google_translate_element');
