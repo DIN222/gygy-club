@@ -70,71 +70,119 @@
         <button class="mint-btn" onclick="location.href='verses_collection.html'">ПЕРЕЙТИ В АРХИВ</button>
     </div>
 
-    <script>
-        let count = 0;
-        const total = 16;
-        const aiLines = [
-            "ЦИФРОВОЙ КОД ПИШЕТ ИСТОРИЮ НОЧИ", "МЫ ВИДИМ ТО, ЧТО СКРЫВАЮТ ОЧИ",
-            "РИТМ БИТКОИНА В КАЖДОМ СЕРДЦЕ", "МЫ ОТКРЫВАЕМ В БУДУЩЕЕ ДВЕРЦЕ"
-        ];
+  <script>
+    // 1. ТВОЙ КЛЮЧ ВСТАВЛЯТЬ СЮДА:
+    const API_KEY = AIzaSyBnhRNyTBGpeRUeg3Hg_NwRTh0qNLITbi0; 
+    
+    let count = 0;
+    const total = 16;
+    let poemContext = ""; // Память ИИ: сюда записывается всё, что вы сочинили
 
-        // Инициализация матрицы
-        function init() {
-            const m = document.getElementById('matrix-slots');
-            for(let i=1; i<=10; i++) {
-                m.innerHTML += `<div class="slot ${i===1?'u-active':''}">U${i}</div>`;
-            }
-            const ais = ['GEMINI', 'GROK', 'CLAUDE', 'MISTRAL'];
-            ais.forEach(name => {
-                m.innerHTML += `<div class="slot ai-active" onclick="aiPost('${name}')">${name.substring(0,2)}</div>`;
+    // Инициализация матрицы (10 юзеров + 4 ИИ)
+    function init() {
+        const m = document.getElementById('matrix-slots');
+        m.innerHTML = ""; // Очистка
+        for(let i=1; i<=10; i++) {
+            m.innerHTML += `<div class="slot ${i===1?'u-active':''}">U${i}</div>`;
+        }
+        const ais = ['GEMINI', 'GROK', 'CLAUDE', 'MISTRAL'];
+        ais.forEach(name => {
+            // При нажатии вызываем живой ИИ
+            m.innerHTML += `<div class="slot ai-active" onclick="aiPost('${name}')">${name.substring(0,2)}</div>`;
+        });
+    }
+
+    // Функция отправки твоей строки
+    function userPost() {
+        const inp = document.getElementById('inp');
+        const val = inp.value.trim();
+        if(!val || count >= total) return;
+        
+        addMessage('USER_1', val, 'user');
+        inp.value = '';
+    }
+
+    // ЖИВОЙ ИНТЕЛЛЕКТ: Запрос к Google Gemini
+    async function aiPost(aiName) {
+        if(count >= total) return;
+
+        // Создаем временное сообщение "ПЕЧАТАЕТ..."
+        const tempId = 'ai-loading-' + Date.now();
+        addMessage(aiName, "МЫСЛИТ...", 'ai', tempId);
+
+        try {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{ text: `Ты — ИИ по имени ${aiName} в элитном клубе GY-GY. 
+                        Твоя задача: продолжить стих одной короткой, мощной рифмованной строкой. 
+                        Стиль: киберпанк, виски, нуар, ирония. 
+                        Контекст стиха: ${poemContext}. 
+                        Напиши только ОДНУ строку, строго капсом, без лишних знаков.` }]
+                    }]
+                })
             });
-        }
 
-        function userPost() {
-            const val = document.getElementById('inp').value.trim();
-            if(!val || count >= total) return;
-            addMessage('USER_1', val, 'user');
-            document.getElementById('inp').value = '';
+            const data = await response.json();
+            const aiText = data.candidates[0].content.parts[0].text.trim();
+            
+            // Заменяем "МЫСЛИТ..." на реальный результат
+            const msgDiv = document.getElementById(tempId);
+            if (msgDiv) {
+                // Обновляем текст внутри div, не трогая метку @NAME
+                const meta = msgDiv.querySelector('.meta').outerHTML;
+                msgDiv.innerHTML = `${meta}${aiText.toUpperCase()}`;
+                poemContext += " " + aiText; // Запоминаем ответ
+            }
+        } catch (e) {
+            console.error(e);
+            const msgDiv = document.getElementById(tempId);
+            if (msgDiv) msgDiv.lastChild.textContent = "СБОЙ СВЯЗИ С ЯДРОМ";
         }
+    }
 
-        function aiPost(name) {
-            if(count >= total) return;
-            const line = aiLines[Math.floor(Math.random() * aiLines.length)];
-            addMessage(name, line, 'ai');
-        }
+    function addMessage(author, text, type, id = null) {
+        if(count >= total) return;
+        count++;
+        
+        const s = document.getElementById('stream');
+        const div = document.createElement('div');
+        div.className = `msg ${type}`;
+        if(id) div.id = id;
 
-        function addMessage(author, text, type) {
-            count++;
-            const s = document.getElementById('stream');
-            const div = document.createElement('div');
-            div.className = `msg ${type}`;
-            div.innerHTML = `<span class="meta">@${author} [${count}/${total}]</span>${text.toUpperCase()}`;
-            s.appendChild(div);
-            s.scrollTop = s.scrollHeight;
-            if(count >= total) finish();
-        }
+        div.innerHTML = `<span class="meta">@${author} [${count}/${total}]</span>${text.toUpperCase()}`;
+        s.appendChild(div);
+        s.scrollTop = s.scrollHeight;
+        
+        // Добавляем в общий контекст для ИИ
+        poemContext += " " + text;
 
-        function finish() {
-            document.getElementById('ui').style.display = 'none';
-            const ov = document.getElementById('final-overlay');
-            ov.style.display = 'flex';
-            let t = 5;
-            const clock = setInterval(() => {
-                t--;
-                document.getElementById('timer').innerText = `ОТПРАВКА В СБОРНИК: ${t}...`;
-                if(t <= 0) {
-                    clearInterval(clock);
-                    document.getElementById('timer').innerText = "СТИХ СОХРАНЕН.";
-                }
-            }, 1000);
-        }
+        if(count >= total) finish();
+    }
 
-        window.onload = init;
+    function finish() {
+        document.getElementById('ui').style.display = 'none';
+        const ov = document.getElementById('final-overlay');
+        ov.style.display = 'flex';
+        let t = 5;
+        const clock = setInterval(() => {
+            t--;
+            document.getElementById('timer').innerText = `ОТПРАВКА В СБОРНИК: ${t}...`;
+            if(t <= 0) {
+                clearInterval(clock);
+                document.getElementById('timer').innerText = "ШЕДЕВР СОХРАНЕН В ВАШЕМ СБОРНИКЕ.";
+            }
+        }, 1000);
+    }
 
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({pageLanguage: 'ru'}, 'google_translate_element');
-        }
-    </script>
+    window.onload = init;
+
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({pageLanguage: 'ru', autoDisplay: false}, 'google_translate_element');
+    }
+</script>
     <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
