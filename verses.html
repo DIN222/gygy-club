@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>GY-GY | VERSES v.9.17</title>
+    <title>GY-GY | VERSES v.9.18</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #d4af37; --bg: #000; --ai: #8A2BE2; }
@@ -81,10 +81,14 @@
     </div>
 <script>
     // 1. КОНФИГУРАЦИЯ
-const API_KEY = "AIzaSyBad3sytQEioSnNW8keoqcvKBMA5U56zZM"; 
+    const API_KEY = "AIzaSyBad3sytQEioSnNW8keoqcvKBMA5U56zZM"; 
     
-    // ВНИМАНИЕ: Это самый стабильный URL на текущий момент
-    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${API_KEY}`;
+    // Список имен моделей для перебора, если первая не сработает
+    const modelVariants = [
+        "gemini-1.5-flash",
+        "gemini-pro",
+        "gemini-1.0-pro"
+    ];
 
     let count = 0;
     const total = 16;
@@ -136,41 +140,43 @@ const API_KEY = "AIzaSyBad3sytQEioSnNW8keoqcvKBMA5U56zZM";
     async function aiPost(aiName) {
         if(count >= total) return;
         const tempId = 'ai-' + Date.now();
-        addMessage(aiName, "СИНХРОНИЗАЦИЯ...", 'ai', tempId);
+        addMessage(aiName, "ПОИСК КАНАЛА...", 'ai', tempId);
 
-        try {
-            const response = await fetch(API_URL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: `Ты ИИ ${aiName}. Продолжи стих ОДНОЙ короткой строкой капсом. Контекст: ${poemContext}` }] }]
-                })
-            });
+        let success = false;
 
-            const data = await response.json();
-            
-            if (data.error) {
-                // Если снова ошибка, выводим её кратко
-                updateMsg(tempId, "ОШИБКА: " + data.error.message);
-                return;
+        // Перебираем варианты имен моделей
+        for (let modelName of modelVariants) {
+            try {
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${API_KEY}`;
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: `Ты ИИ ${aiName}. Продолжи стих ОДНОЙ короткой строкой капсом: ${poemContext}` }] }]
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!data.error && data.candidates) {
+                    const text = data.candidates[0].content.parts[0].text.trim();
+                    updateMsg(tempId, text);
+                    success = true;
+                    break; // Если сработало, выходим из цикла
+                }
+            } catch (e) {
+                console.log(`Модель ${modelName} недоступна, пробую следующую...`);
             }
+        }
 
-            // Пытаемся извлечь текст (учитываем возможную разную структуру)
-            const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-            if (text) {
-                updateMsg(tempId, text.trim());
-            } else {
-                updateMsg(tempId, "ОШИБКА: ПУСТОЙ ОТВЕТ");
-            }
-        } catch (e) {
-            updateMsg(tempId, "СЕТЕВОЙ СБОЙ.");
+        if (!success) {
+            updateMsg(tempId, "ОШИБКА: НИ ОДНА МОДЕЛЬ НЕ ОТВЕТИЛА. ПРОВЕРЬТЕ КЛЮЧ.");
         }
     }
 
     function addMessage(author, text, type, id = null) {
         if(count >= total && type !== 'system') return;
         if(type !== 'system') count++;
-        
         const s = document.getElementById('stream');
         if(!s) return;
         const div = document.createElement('div');
@@ -179,7 +185,6 @@ const API_KEY = "AIzaSyBad3sytQEioSnNW8keoqcvKBMA5U56zZM";
         div.innerHTML = `<span class="meta">@${author} [${count}/${total}]</span>${text.toUpperCase()}`;
         s.appendChild(div);
         s.scrollTop = s.scrollHeight;
-        
         poemContext += " " + text;
         if(count >= total) {
             const ui = document.getElementById('ui');
