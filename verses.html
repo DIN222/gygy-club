@@ -81,16 +81,15 @@
     </div>
 <script>
     // 1. КОНФИГУРАЦИЯ
-   const API_KEY = "AIzaSyBad3sytQEioSnNW8keoqcvKBMA5U56zZM"; 
+const API_KEY = "AIzaSyBad3sytQEioSnNW8keoqcvKBMA5U56zZM"; 
     
-    // Используем стабильную модель gemini-pro, так как flash может быть недоступен в v1beta
-    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`;
+    // ВНИМАНИЕ: Это самый стабильный URL на текущий момент
+    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${API_KEY}`;
 
     let count = 0;
     const total = 16;
     let poemContext = "";
 
-    // --- ИНИЦИАЛИЗАЦИЯ ---
     function init() {
         initMatrix();
         initSync();
@@ -101,12 +100,11 @@
         if(!m) return;
         m.innerHTML = "";
         for(let i=1; i<=10; i++) m.innerHTML += `<div class="slot ${i===1?'u-active':''}">U${i}</div>`;
-        
-        ['GEMINI', 'GROK', 'CLAUDE', 'MISTRAL'].forEach(name => {
+        ['GE', 'GR', 'CL', 'MI'].forEach(name => {
             const div = document.createElement('div');
             div.className = 'slot ai-active';
-            div.innerText = name.substring(0,2);
-            div.onclick = () => aiPost(name);
+            div.innerText = name;
+            div.onclick = () => aiPost(name === 'GE' ? 'GEMINI' : name);
             m.appendChild(div);
         });
     }
@@ -127,7 +125,6 @@
         localStorage.setItem('sync_verses', isActive);
     }
 
-    // --- ЛОГИКА ПОСТОВ ---
     function userPost() {
         const input = document.getElementById('inp');
         const val = input.value.trim();
@@ -146,25 +143,27 @@
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    contents: [{ parts: [{ text: `Ты ИИ по имени ${aiName}. Продолжи стих ОДНОЙ короткой строкой капсом. Контекст: ${poemContext}` }] }]
+                    contents: [{ parts: [{ text: `Ты ИИ ${aiName}. Продолжи стих ОДНОЙ короткой строкой капсом. Контекст: ${poemContext}` }] }]
                 })
             });
 
             const data = await response.json();
             
             if (data.error) {
+                // Если снова ошибка, выводим её кратко
                 updateMsg(tempId, "ОШИБКА: " + data.error.message);
                 return;
             }
 
-            if (data.candidates && data.candidates[0].content) {
-                const text = data.candidates[0].content.parts[0].text.trim();
-                updateMsg(tempId, text);
+            // Пытаемся извлечь текст (учитываем возможную разную структуру)
+            const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (text) {
+                updateMsg(tempId, text.trim());
             } else {
                 updateMsg(tempId, "ОШИБКА: ПУСТОЙ ОТВЕТ");
             }
         } catch (e) {
-            updateMsg(tempId, "СЕТЕВОЙ СБОЙ. ПРОВЕРЬТЕ КОНСОЛЬ.");
+            updateMsg(tempId, "СЕТЕВОЙ СБОЙ.");
         }
     }
 
@@ -173,6 +172,7 @@
         if(type !== 'system') count++;
         
         const s = document.getElementById('stream');
+        if(!s) return;
         const div = document.createElement('div');
         div.className = `msg ${type}`;
         if(id) div.id = id;
@@ -197,7 +197,6 @@
             poemContext += " " + text;
         }
     }
-
     window.onload = init;
 </script>
 </body>
