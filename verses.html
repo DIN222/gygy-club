@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>GY-GY | VERSES v.9.15</title>
+    <title>GY-GY | VERSES v.9.16</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #d4af37; --bg: #000; --ai: #8A2BE2; }
@@ -81,17 +81,16 @@
     </div>
 <script>
     // 1. КОНФИГУРАЦИЯ
-    const API_KEY = "AIzaSyBad3sytQEioSnNW8keoqcvKBMA5U56zZM"; 
+   const API_KEY = "AIzaSyBad3sytQEioSnNW8keoqcvKBMA5U56zZM"; 
     
-    // Используем прокси, чтобы обойти блокировку браузера (CORS) при запуске с диска
-    const BASE_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
-    const API_URL = `https://corsproxy.io/?` + encodeURIComponent(BASE_URL);
+    // Используем стабильную модель gemini-pro, так как flash может быть недоступен в v1beta
+    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`;
 
     let count = 0;
     const total = 16;
     let poemContext = "";
 
-    // 2. ИНИЦИАЛИЗАЦИЯ
+    // --- ИНИЦИАЛИЗАЦИЯ ---
     function init() {
         initMatrix();
         initSync();
@@ -103,8 +102,7 @@
         m.innerHTML = "";
         for(let i=1; i<=10; i++) m.innerHTML += `<div class="slot ${i===1?'u-active':''}">U${i}</div>`;
         
-        const ais = ['GEMINI', 'GROK', 'CLAUDE', 'MISTRAL'];
-        ais.forEach(name => {
+        ['GEMINI', 'GROK', 'CLAUDE', 'MISTRAL'].forEach(name => {
             const div = document.createElement('div');
             div.className = 'slot ai-active';
             div.innerText = name.substring(0,2);
@@ -115,7 +113,7 @@
 
     function initSync() {
         const btn = document.getElementById('neural-link');
-        if (localStorage.getItem('sync_verses') === 'true') {
+        if (localStorage.getItem('sync_verses') === 'true' && btn) {
             btn.classList.add('active');
             btn.innerText = "VERSES LINK: ON";
         }
@@ -123,82 +121,71 @@
 
     function toggleSync() {
         const btn = document.getElementById('neural-link');
+        if(!btn) return;
         const isActive = btn.classList.toggle('active');
         btn.innerText = isActive ? "VERSES LINK: ON" : "VERSES LINK: OFF";
         localStorage.setItem('sync_verses', isActive);
     }
 
-    // 3. ФУНКЦИИ ПОСТОВ (MINT)
+    // --- ЛОГИКА ПОСТОВ ---
     function userPost() {
         const input = document.getElementById('inp');
         const val = input.value.trim();
-        
-        // Если поле пустое или лимит исчерпан — ничего не делаем
         if(!val || count >= total) return;
-
         addMessage('USER_1', val, 'user');
-        input.value = ""; // Очищаем поле
+        input.value = "";
     }
 
- async function aiPost(aiName) {
+    async function aiPost(aiName) {
         if(count >= total) return;
-        
         const tempId = 'ai-' + Date.now();
-        addMessage(aiName, "ПОДКЛЮЧЕНИЕ К ИНТЕЛЛЕКТУ...", 'ai', tempId);
-
-        // Используем стабильную версию v1 вместо v1beta
-        const STABLE_URL = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+        addMessage(aiName, "СИНХРОНИЗАЦИЯ...", 'ai', tempId);
 
         try {
-            const response = await fetch(STABLE_URL, {
+            const response = await fetch(API_URL, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                contents: [{ 
-                    role: "user", // Добавили роль
-                    parts: [{ text: `ТЫ ИИ ПО ИМЕНИ ${aiName}. ПРОДОЛЖИ СТИХ ОДНОЙ КОРОТКОЙ СТРОКОЙ КАПСОМ. КОНТЕКСТ: ${poemContext}` }] 
-                }]
-            })
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: `Ты ИИ по имени ${aiName}. Продолжи стих ОДНОЙ короткой строкой капсом. Контекст: ${poemContext}` }] }]
+                })
             });
 
             const data = await response.json();
             
-            // Вывод ошибки для нас, если она есть
             if (data.error) {
-                console.error("STABLE API ERROR:", data.error);
                 updateMsg(tempId, "ОШИБКА: " + data.error.message);
                 return;
             }
 
-            // Проверка пути к тексту в ответе v1
-            if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts) {
+            if (data.candidates && data.candidates[0].content) {
                 const text = data.candidates[0].content.parts[0].text.trim();
                 updateMsg(tempId, text);
             } else {
-                updateMsg(tempId, "ОШИБКА: НЕОЖИДАННЫЙ ФОРМАТ ОТВЕТА");
+                updateMsg(tempId, "ОШИБКА: ПУСТОЙ ОТВЕТ");
             }
-
         } catch (e) {
-            console.error("CONNECTION ERROR:", e);
             updateMsg(tempId, "СЕТЕВОЙ СБОЙ. ПРОВЕРЬТЕ КОНСОЛЬ.");
         }
     }
+
     function addMessage(author, text, type, id = null) {
-        count++;
+        if(count >= total && type !== 'system') return;
+        if(type !== 'system') count++;
+        
         const s = document.getElementById('stream');
         const div = document.createElement('div');
         div.className = `msg ${type}`;
         if(id) div.id = id;
-        
         div.innerHTML = `<span class="meta">@${author} [${count}/${total}]</span>${text.toUpperCase()}`;
         s.appendChild(div);
         s.scrollTop = s.scrollHeight;
         
         poemContext += " " + text;
-        
         if(count >= total) {
-            document.getElementById('ui').style.display = 'none';
-            document.getElementById('final-overlay').style.display = 'flex';
+            const ui = document.getElementById('ui');
+            if(ui) ui.style.display = 'none';
+            const overlay = document.getElementById('final-overlay');
+            if(overlay) overlay.style.display = 'flex';
         }
     }
 
