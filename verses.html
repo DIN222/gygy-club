@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>GY-GY | VERSES v.9.21</title>
+    <title>GY-GY | VERSES v.9.22</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #d4af37; --bg: #000; --ai: #8A2BE2; }
@@ -81,8 +81,10 @@
     </div>
 <script>
     // 1. КОНФИГУРАЦИЯ
-  const API_KEY = "AIzaSyBad3sytQEioSnNW8keoqcvKBMA5U56zZM"; 
-    const API_URL = `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${API_KEY}`;
+ const API_KEY = "AIzaSyBad3sytQEioSnNW8keoqcvKBMA5U56zZM"; 
+    // Используем максимально стабильный URL для v1
+    const API_URL = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+
     let count = 0;
     const total = 16;
     let poemContext = "";
@@ -97,6 +99,7 @@
         if(!m) return;
         m.innerHTML = "";
         for(let i=1; i<=10; i++) m.innerHTML += `<div class="slot ${i===1?'u-active':''}">U${i}</div>`;
+        
         ['GE', 'GR', 'CL', 'MI'].forEach(name => {
             const div = document.createElement('div');
             div.className = 'slot ai-active';
@@ -133,14 +136,17 @@
     async function aiPost(aiName) {
         if(count >= total) return;
         const tempId = 'ai-' + Date.now();
-        addMessage(aiName, "СВЯЗЬ С ЯДРОМ...", 'ai', tempId);
+        addMessage(aiName, "СИНХРОНИЗАЦИЯ...", 'ai', tempId);
 
         try {
             const response = await fetch(API_URL, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    contents: [{ parts: [{ text: `ТЫ ИИ ${aiName}. ПРОДОЛЖИ СТИХ ОДНОЙ СТРОКОЙ КАПСОМ. ТЕМА: ${poemContext}` }] }]
+                    contents: [{ 
+                        role: "user", 
+                        parts: [{ text: `ТЫ ИИ ${aiName}. ПРОДОЛЖИ СТИХ ОДНОЙ КОРОТКОЙ СТРОКОЙ КАПСОМ. КОНТЕКСТ: ${poemContext}` }] 
+                    }]
                 })
             });
 
@@ -151,9 +157,9 @@
                 return;
             }
 
-            const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-            if (text) {
-                updateMsg(tempId, text.trim());
+            if (data.candidates && data.candidates[0].content) {
+                const text = data.candidates[0].content.parts[0].text.trim();
+                updateMsg(tempId, text);
             } else {
                 updateMsg(tempId, "ПУСТОЙ ОТВЕТ");
             }
@@ -165,6 +171,7 @@
     function addMessage(author, text, type, id = null) {
         if(count >= total && type !== 'system') return;
         if(type !== 'system') count++;
+        
         const s = document.getElementById('stream');
         if(!s) return;
         const div = document.createElement('div');
@@ -173,6 +180,7 @@
         div.innerHTML = `<span class="meta">@${author} [${count}/${total}]</span>${text.toUpperCase()}`;
         s.appendChild(div);
         s.scrollTop = s.scrollHeight;
+        
         poemContext += " " + text;
         if(count >= total) {
             const ui = document.getElementById('ui');
@@ -190,6 +198,8 @@
             poemContext += " " + text;
         }
     }
+
+    // Запуск при загрузке
     window.onload = init;
 </script>
 </body>
