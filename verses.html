@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>GY-GY | VERSES v.9.14</title>
+    <title>GY-GY | VERSES v.9.15</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #d4af37; --bg: #000; --ai: #8A2BE2; }
@@ -153,11 +153,12 @@
             const response = await fetch(STABLE_URL, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    contents: [{ 
-                        parts: [{ text: `Ты ИИ по имени ${aiName}. Продолжи стих ОДНОЙ короткой строкой капсом. Контекст: ${poemContext}` }] 
-                    }]
-                })
+              body: JSON.stringify({
+                contents: [{ 
+                    role: "user", // Добавили роль
+                    parts: [{ text: `ТЫ ИИ ПО ИМЕНИ ${aiName}. ПРОДОЛЖИ СТИХ ОДНОЙ КОРОТКОЙ СТРОКОЙ КАПСОМ. КОНТЕКСТ: ${poemContext}` }] 
+                }]
+            })
             });
 
             const data = await response.json();
