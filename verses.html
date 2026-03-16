@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>GY-GY | VERSES v.9.25</title>
+    <title>GY-GY | VERSES v.9.27</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #d4af37; --bg: #000; --ai: #8A2BE2; }
@@ -81,7 +81,7 @@
     </div>
 <script>
     // 1. КОНФИГУРАЦИЯ
-const API_KEY = "AIzaSyBad3sytQEioSnNW8keoqcvKBMA5U56zZM"; 
+const API_KEY = "AIzaSyAKnkT8m_cZUk2Y6yiJ--Kp0JBCHvFF_rE"; 
     let count = 0;
     const total = 16;
     let poemContext = "";
@@ -135,40 +135,39 @@ const API_KEY = "AIzaSyBad3sytQEioSnNW8keoqcvKBMA5U56zZM";
     async function aiPost(aiName) {
         if(count >= total) return;
         const tempId = 'ai-' + Date.now();
-        addMessage(aiName, "ПОИСК КАНАЛА...", 'ai', tempId);
+        addMessage(aiName, "СИНХРОНИЗАЦИЯ...", 'ai', tempId);
+
+        // ВОТ ОН, ЭТОТ АДРЕС:
+        const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + API_KEY;
 
         try {
-            // Спрашиваем список моделей
-            const listRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${API_KEY}`);
-            const listData = await listRes.json();
-            const model = listData.models?.find(m => m.supportedGenerationMethods.includes('generateContent'))?.name;
-
-            if (!model) {
-                updateMsg(tempId, "ОШИБКА: НЕТ КАНАЛА");
-                return;
-            }
-
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/${model}:generateContent?key=${API_KEY}`, {
+            const response = await fetch(url, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    contents: [{ parts: [{ text: `ТЫ ИИ ${aiName}. ПРОДОЛЖИ СТИХ ОДНОЙ СТРОКОЙ КАПСОМ: ${poemContext}` }] }]
+                    contents: [{ parts: [{ text: `ТЫ ИИ ${aiName}. ПРОДОЛЖИ СТИХ ОДНОЙ СТРОКОЙ КАПСОМ. ТЕМА: ${poemContext}` }] }]
                 })
             });
 
             const data = await response.json();
-            const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
             
+            if (data.error) {
+                // Если ключ не работает, мы увидим статус ошибки (например, 403)
+                updateMsg(tempId, "ОТКАЗ: " + data.error.status);
+                console.error("GOOGLE ERROR:", data.error.message);
+                return;
+            }
+
+            const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
             if (text) {
                 updateMsg(tempId, text.trim());
             } else {
-                updateMsg(tempId, "ОШИБКА API");
+                updateMsg(tempId, "ПУСТОЙ ОТВЕТ");
             }
         } catch (e) {
             updateMsg(tempId, "СБОЙ СЕТИ");
         }
     }
-
     // 4. ОТРИСОВКА
     function addMessage(author, text, type, id = null) {
         if(count >= total && type !== 'system') return;
