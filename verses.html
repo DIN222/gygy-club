@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>GY-GY | VERSES v.9.11</title>
+    <title>GY-GY | VERSES v.9.12</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #d4af37; --bg: #000; --ai: #8A2BE2; }
@@ -79,16 +79,19 @@
         <h2 style="font-family:'Playfair Display';">ШЕДЕВР СОХРАНЕН</h2>
         <button class="mint-btn" onclick="location.reload()">НОВАЯ СЕССИЯ</button>
     </div>
-
 <script>
-    // --- НАСТРОЙКИ ---
+    // 1. КОНФИГУРАЦИЯ
     const API_KEY = "AIzaSyBad3sytQEioSnNW8keoqcvKBMA5U56zZM"; 
-    // Мы используем модель gemini-1.5-flash через v1beta путь
-   const API_URL = `https://corsproxy.io/?` + encodeURIComponent(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`);
+    
+    // Используем прокси, чтобы обойти блокировку браузера (CORS) при запуске с диска
+    const BASE_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+    const API_URL = `https://corsproxy.io/?` + encodeURIComponent(BASE_URL);
+
+    let count = 0;
     const total = 16;
     let poemContext = "";
 
-    // --- ИНИЦИАЛИЗАЦИЯ ---
+    // 2. ИНИЦИАЛИЗАЦИЯ
     function init() {
         initMatrix();
         initSync();
@@ -96,9 +99,12 @@
 
     function initMatrix() {
         const m = document.getElementById('matrix-slots');
+        if(!m) return;
         m.innerHTML = "";
         for(let i=1; i<=10; i++) m.innerHTML += `<div class="slot ${i===1?'u-active':''}">U${i}</div>`;
-        ['GEMINI', 'GROK', 'CLAUDE', 'MISTRAL'].forEach(name => {
+        
+        const ais = ['GEMINI', 'GROK', 'CLAUDE', 'MISTRAL'];
+        ais.forEach(name => {
             const div = document.createElement('div');
             div.className = 'slot ai-active';
             div.innerText = name.substring(0,2);
@@ -107,12 +113,11 @@
         });
     }
 
-    // --- ЛОГИКА УВЕДОМЛЕНИЙ (VERSES LINK) ---
     function initSync() {
         const btn = document.getElementById('neural-link');
         if (localStorage.getItem('sync_verses') === 'true') {
-            btn.innerText = "VERSES LINK: ON";
             btn.classList.add('active');
+            btn.innerText = "VERSES LINK: ON";
         }
     }
 
@@ -121,28 +126,32 @@
         const isActive = btn.classList.toggle('active');
         btn.innerText = isActive ? "VERSES LINK: ON" : "VERSES LINK: OFF";
         localStorage.setItem('sync_verses', isActive);
-        addMessage('SYSTEM', isActive ? "НЕЙРОСВЯЗЬ VERSES УСТАНОВЛЕНА" : "НЕЙРОСВЯЗЬ ПРЕРВАНА", 'system');
     }
 
-    // --- ПОСТЫ ---
+    // 3. ФУНКЦИИ ПОСТОВ (MINT)
     function userPost() {
-        const i = document.getElementById('inp');
-        if(!i.value.trim() || count >= total) return;
-        addMessage('USER_1', i.value, 'user');
-        i.value = "";
+        const input = document.getElementById('inp');
+        const val = input.value.trim();
+        
+        // Если поле пустое или лимит исчерпан — ничего не делаем
+        if(!val || count >= total) return;
+
+        addMessage('USER_1', val, 'user');
+        input.value = ""; // Очищаем поле
     }
 
     async function aiPost(aiName) {
         if(count >= total) return;
+        
         const tempId = 'ai-' + Date.now();
-        addMessage(aiName, "СИНХРОНИЗАЦИЯ СМЫСЛА...", 'ai', tempId);
+        addMessage(aiName, "СИНХРОНИЗАЦИЯ...", 'ai', tempId);
 
         try {
             const response = await fetch(API_URL, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    contents: [{ parts: [{ text: `Ты ИИ ${aiName} в клубе GY-GY. Напиши одну короткую рифмованную строку капсом к этому стиху: ${poemContext}` }] }]
+                    contents: [{ parts: [{ text: `Ты ИИ ${aiName}. Напиши одну короткую рифмованную строку капсом к этому стиху: ${poemContext}` }] }]
                 })
             });
 
@@ -153,24 +162,28 @@
             const text = data.candidates[0].content.parts[0].text.trim();
             updateMsg(tempId, text);
         } catch (e) {
-            updateMsg(tempId, "ОШИБКА ОБЛАКА. ПРОВЕРЬТЕ КЛЮЧ.");
-            console.error(e);
+            console.error("ОШИБКА:", e);
+            updateMsg(tempId, "СБОЙ СВЯЗИ. ПРОВЕРЬТЕ КЛЮЧ ИЛИ ПРОКСИ.");
         }
     }
 
     function addMessage(author, text, type, id = null) {
-        if(count >= total && type !== 'system') return;
-        if(type !== 'system') count++;
-        
+        count++;
         const s = document.getElementById('stream');
         const div = document.createElement('div');
         div.className = `msg ${type}`;
         if(id) div.id = id;
+        
         div.innerHTML = `<span class="meta">@${author} [${count}/${total}]</span>${text.toUpperCase()}`;
         s.appendChild(div);
         s.scrollTop = s.scrollHeight;
+        
         poemContext += " " + text;
-        if(count >= total) document.getElementById('final-overlay').style.display = 'flex';
+        
+        if(count >= total) {
+            document.getElementById('ui').style.display = 'none';
+            document.getElementById('final-overlay').style.display = 'flex';
+        }
     }
 
     function updateMsg(id, text) {
