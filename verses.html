@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>GY-GY | VERSES v.9.37</title>
+    <title>GY-GY | VERSES v.9.38</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #d4af37; --bg: #000; --ai: #8A2BE2; }
@@ -145,13 +145,13 @@
     }
 
     // 3. ЛОГИКА ИИ
- async function aiPost(aiName) {
+async function aiPost(aiName) {
         if(count >= total) return;
         const tempId = 'ai-' + Date.now();
         addMessage(aiName, "СИНХРОНИЗАЦИЯ...", 'ai', tempId);
 
-        // Используем стабильную версию v1 и модель gemini-1.5-flash
-        const url = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=" + getKey();
+        // Переключаемся на базовую модель Pro, которая точно есть в проекте
+        const url = "https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=" + getKey();
 
         try {
             const response = await fetch(url, {
@@ -165,8 +165,8 @@
             const data = await response.json();
 
             if (data.error) {
-                // Если v1 не сработает, пробуем gemini-pro (старый стандарт)
-                updateMsg(tempId, "SYSTEM: " + data.error.message);
+                // Если и это не сработает, выводим технический код ошибки
+                updateMsg(tempId, "SYSTEM: " + data.error.status);
                 return;
             }
 
@@ -179,8 +179,7 @@
         } catch (e) {
             updateMsg(tempId, "СЕТЕВАЯ ОШИБКА");
         }
-    } 
-
+    }
     // 4. ОТРИСОВКА
     function addMessage(author, text, type, id = null) {
         if(count >= total && type !== 'system') return;
