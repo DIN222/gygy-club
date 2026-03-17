@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>GY-GY | VERSES v.9.44</title>
+    <title>GY-GY | VERSES v.9.45</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #d4af37; --bg: #000; --ai: #8A2BE2; }
@@ -150,22 +150,24 @@ async function aiPost(aiName) {
         const tempId = 'ai-' + Date.now();
         addMessage(aiName, "СИНХРОНИЗАЦИЯ...", 'ai', tempId);
 
-        // Используем конкретную европейскую сборку -001
-        const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-001:generateContent?key=" + getKey();
+        // Используем ПРЯМОЙ ПОЛНЫЙ ПУТЬ к модели (Standard 2026)
+        const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + getKey();
 
         try {
             const response = await fetch(url, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    contents: [{ parts: [{ text: `ТЫ ИИ ${aiName}. ПРОДОЛЖИ СТИХ ОДНОЙ СТРОКОЙ КАПСОМ: ${poemContext}` }] }]
+                    contents: [{ 
+                        parts: [{ text: `ТЫ ИИ ${aiName}. ПРОДОЛЖИ СТИХ ОДНОЙ СТРОКОЙ КАПСОМ: ${poemContext}` }] 
+                    }]
                 })
             });
 
             const data = await response.json();
 
             if (data.error) {
-                // Если и это не сработает, выводим ПОЛНЫЙ текст для финальной отладки
+                // Это ВАЖНО: Если тут опять NOT_FOUND, значит ключ еще НЕ АКТИВИРОВАН в облаке
                 updateMsg(tempId, "SYSTEM: " + data.error.message);
                 return;
             }
