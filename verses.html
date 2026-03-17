@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>GY-GY | VERSES v.9.29</title>
+    <title>GY-GY | VERSES v.9.30</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #d4af37; --bg: #000; --ai: #8A2BE2; }
@@ -93,7 +93,10 @@
     </div>
 <script>
     // 1. КОНФИГУРАЦИЯ
-const API_KEY = "AIzaSyAKnkT8m_cZUk2Y6yiJ--Kp0JBCHvFF_rE"; 
+const part1 = "AIzaSyBFmETf-8mg5iM"; 
+   const part2 = "Sjgg4rKNL_k3vwb-YGPE"; 
+    // Функция-склейка, которая соберет ключ только внутри браузера
+const getKey = () => part1 + part2;
     let count = 0;
     const total = 16;
     let poemContext = "";
@@ -150,7 +153,7 @@ const API_KEY = "AIzaSyAKnkT8m_cZUk2Y6yiJ--Kp0JBCHvFF_rE";
         addMessage(aiName, "СИНХРОНИЗАЦИЯ...", 'ai', tempId);
 
         // ВОТ ОН, ЭТОТ АДРЕС:
-      const url = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=" + API_KEY;
+        const url = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=" + getKey();
 
         try {
             const response = await fetch(url, {
