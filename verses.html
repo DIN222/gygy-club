@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>GY-GY | VERSES v.9.30</title>
+    <title>GY-GY | VERSES v.9.31</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #d4af37; --bg: #000; --ai: #8A2BE2; }
@@ -152,36 +152,51 @@ const getKey = () => part1 + part2;
         const tempId = 'ai-' + Date.now();
         addMessage(aiName, "СИНХРОНИЗАЦИЯ...", 'ai', tempId);
 
-        // ВОТ ОН, ЭТОТ АДРЕС:
-        const url = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=" + getKey();
+        // Список адресов для перебора (от новых к старым)
+        const endpoints = [
+            "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=",
+            "https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key="
+        ];
 
-        try {
-            const response = await fetch(url, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: `ТЫ ИИ ${aiName}. ПРОДОЛЖИ СТИХ ОДНОЙ СТРОКОЙ КАПСОМ. ТЕМА: ${poemContext}` }] }]
-                })
-            });
-
-            const data = await response.json();
-            
-            if (data.error) {
-                // Если ключ не работает, мы увидим статус ошибки (например, 403)
-                updateMsg(tempId, "ОТКАЗ: " + data.error.status);
-                console.error("GOOGLE ERROR:", data.error.message);
+        async function tryEndpoint(index) {
+            if (index >= endpoints.length) {
+                updateMsg(tempId, "ОТКАЗ: ВСЕ КАНАЛЫ ЗАНЯТЫ");
                 return;
             }
 
-            const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-            if (text) {
-                updateMsg(tempId, text.trim());
-            } else {
-                updateMsg(tempId, "ПУСТОЙ ОТВЕТ");
+            try {
+                const response = await fetch(endpoints[index] + getKey(), {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        contents: [{ role: "user", parts: [{ text: `ТЫ ИИ ${aiName}. ПРОДОЛЖИ СТИХ ОДНОЙ СТРОКОЙ КАПСОМ: ${poemContext}` }] }]
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.status === 404) {
+                    console.log(`Endpoint ${index} not found, trying next...`);
+                    return tryEndpoint(index + 1);
+                }
+
+                if (data.error) {
+                    updateMsg(tempId, "ОШИБКА: " + data.error.status);
+                    return;
+                }
+
+                const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (text) {
+                    updateMsg(tempId, text.trim());
+                } else {
+                    updateMsg(tempId, "ПУСТОЙ ОТВЕТ");
+                }
+            } catch (e) {
+                updateMsg(tempId, "СБОЙ СЕТИ");
             }
-        } catch (e) {
-            updateMsg(tempId, "СБОЙ СЕТИ");
         }
+
+        tryEndpoint(0);
     }
     // 4. ОТРИСОВКА
     function addMessage(author, text, type, id = null) {
