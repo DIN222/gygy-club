@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>GY-GY | VERSES v.9.38</title>
+    <title>GY-GY | VERSES v.9.39</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #d4af37; --bg: #000; --ai: #8A2BE2; }
@@ -150,8 +150,8 @@ async function aiPost(aiName) {
         const tempId = 'ai-' + Date.now();
         addMessage(aiName, "СИНХРОНИЗАЦИЯ...", 'ai', tempId);
 
-        // Переключаемся на базовую модель Pro, которая точно есть в проекте
-        const url = "https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=" + getKey();
+        // Финальная комбинация: v1beta + gemini-1.5-flash
+        const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + getKey();
 
         try {
             const response = await fetch(url, {
@@ -165,8 +165,7 @@ async function aiPost(aiName) {
             const data = await response.json();
 
             if (data.error) {
-                // Если и это не сработает, выводим технический код ошибки
-                updateMsg(tempId, "SYSTEM: " + data.error.status);
+                updateMsg(tempId, "SYSTEM: " + data.error.message);
                 return;
             }
 
