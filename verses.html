@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>GY-GY | VERSES v.9.41</title>
+    <title>GY-GY | VERSES v.9.42</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #d4af37; --bg: #000; --ai: #8A2BE2; }
@@ -150,29 +150,24 @@ async function aiPost(aiName) {
         const tempId = 'ai-' + Date.now();
         addMessage(aiName, "СИНХРОНИЗАЦИЯ...", 'ai', tempId);
 
-        // Используем модель gemini-1.5-flash через стабильный эндпоинт v1beta
-        // Если это не сработает, значит Google временно ограничил доступ для новых Free-ключей во Франции
-        const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + getKey();
+        // Переходим на стабильный v1 и ПРЯМОЙ вызов модели
+        const url = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=" + getKey();
 
         try {
             const response = await fetch(url, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    contents: [{ 
-                        role: "user", 
-                        parts: [{ text: `ПРОДОЛЖИ СТИХ ОДНОЙ СТРОКОЙ КАПСОМ: ${poemContext}` }] 
-                    }],
-                    generationConfig: {
-                        maxOutputTokens: 20,
-                        temperature: 0.7
-                    }
+                    contents: [{
+                        parts: [{ text: `ТЫ ИИ ${aiName}. ПРОДОЛЖИ СТИХ ОДНОЙ СТРОКОЙ КАПСОМ: ${poemContext}` }]
+                    }]
                 })
             });
 
             const data = await response.json();
 
             if (data.error) {
+                // Если v1 все еще капризничает, мы увидим точный код ошибки
                 updateMsg(tempId, "SYSTEM: " + data.error.message);
                 return;
             }
