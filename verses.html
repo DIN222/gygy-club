@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>GY-GY | VERSES v.9.31</title>
+    <title>GY-GY | VERSES v.9.32</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #d4af37; --bg: #000; --ai: #8A2BE2; }
@@ -145,17 +145,10 @@ const getKey = () => part1 + part2;
         addMessage('USER_1', val, 'user');
         input.value = ""; // Очищаем поле
     }
-
-    // 3. ЛОГИКА ИИ
-    async function aiPost(aiName) {
-        if(count >= total) return;
-        const tempId = 'ai-' + Date.now();
-        addMessage(aiName, "СИНХРОНИЗАЦИЯ...", 'ai', tempId);
-
-        // Список адресов для перебора (от новых к старым)
+// 3. ЛОГИКА ИИ
         const endpoints = [
-            "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=",
-            "https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key="
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=",
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key="
         ];
 
         async function tryEndpoint(index) {
@@ -165,6 +158,7 @@ const getKey = () => part1 + part2;
             }
 
             try {
+                // ОБРАТИ ВНИМАНИЕ: тут вызывается твоя функция getKey()
                 const response = await fetch(endpoints[index] + getKey(), {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -176,18 +170,17 @@ const getKey = () => part1 + part2;
                 const data = await response.json();
 
                 if (response.status === 404) {
-                    console.log(`Endpoint ${index} not found, trying next...`);
                     return tryEndpoint(index + 1);
                 }
 
                 if (data.error) {
-                    updateMsg(tempId, "ОШИБКА: " + data.error.status);
+                    updateMsg(tempId, "ОШИБКА: " + data.error.message);
                     return;
                 }
 
                 const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
                 if (text) {
-                    updateMsg(tempId, text.trim());
+                    updateMsg(tempId, text.trim().toUpperCase());
                 } else {
                     updateMsg(tempId, "ПУСТОЙ ОТВЕТ");
                 }
