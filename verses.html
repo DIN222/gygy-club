@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>GY-GY | VERSES v.9.55</title>
+    <title>GY-GY | VERSES v.9.56</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #d4af37; --bg: #000; --ai: #8A2BE2; }
@@ -201,11 +201,10 @@ async function aiPost(aiName) {
 function updateMsg(id, text) {
     const el = document.getElementById(id);
     if (el) {
-        // Если пришла ошибка лимита — пишем коротко
-        if (text.includes("QUOTA EXCEEDED")) {
-            el.innerText = "ПАУЗА: ЛИМИТ ЗАПРОСОВ ИСЧЕРПАН. ПОДОЖДИТЕ 30 СЕК.";
-            el.style.color = "#ff0000"; // Делаем текст ошибки красным
-            return;
+        // Если ловим квоту — не выводим весь этот лог, пишем коротко
+        if (text.includes("QUOTA EXCEEDED") || text.includes("EXCEEDED YOUR CURRENT QUOTA")) {
+            el.innerHTML = `<span style="color: #ff4444; font-size: 0.8em;">[ПАУЗА: ЛИМИТ API. ЖДЕМ 60 СЕК...]</span>`;
+            return; 
         }
 
         const clean = text.replace(/СИНХРОНИЗАЦИЯ|V2\.5|SYSTEM|ERROR|ПОЭТ|КЛУБА/gi, '').trim();
@@ -216,7 +215,6 @@ function updateMsg(id, text) {
         }
     }
 }
-
 // --- [ЗАВЕРШЕНИЕ] 4. ОТРИСОВКА И ИНТЕРФЕЙС ---
 
 function addMessage(name, text, type, id) {
