@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>GY-GY | VERSES v.9.45</title>
+    <title>GY-GY | VERSES v.9.46</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #d4af37; --bg: #000; --ai: #8A2BE2; }
@@ -150,37 +150,50 @@ async function aiPost(aiName) {
         const tempId = 'ai-' + Date.now();
         addMessage(aiName, "СИНХРОНИЗАЦИЯ...", 'ai', tempId);
 
-        // Используем ПРЯМОЙ ПОЛНЫЙ ПУТЬ к модели (Standard 2026)
-        const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + getKey();
+        // Список адресов для "пробива" (v4.3 Standard)
+        const variants = [
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=",
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=",
+            "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key="
+        ];
 
-        try {
-            const response = await fetch(url, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    contents: [{ 
-                        parts: [{ text: `ТЫ ИИ ${aiName}. ПРОДОЛЖИ СТИХ ОДНОЙ СТРОКОЙ КАПСОМ: ${poemContext}` }] 
-                    }]
-                })
-            });
-
-            const data = await response.json();
-
-            if (data.error) {
-                // Это ВАЖНО: Если тут опять NOT_FOUND, значит ключ еще НЕ АКТИВИРОВАН в облаке
-                updateMsg(tempId, "SYSTEM: " + data.error.message);
+        async function tryVariant(index) {
+            if (index >= variants.length) {
+                updateMsg(tempId, "SYSTEM: NOT FOUND (ALL ENDPOINTS)");
                 return;
             }
 
-            if (data.candidates && data.candidates[0].content) {
-                const text = data.candidates[0].content.parts[0].text;
-                updateMsg(tempId, text.trim().toUpperCase());
-            } else {
-                updateMsg(tempId, "ОТВЕТ ПУСТ");
+            try {
+                const response = await fetch(variants[index] + getKey(), {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: `ТЫ ИИ ${aiName}. ПРОДОЛЖИ СТИХ ОДНОЙ СТРОКОЙ КАПСОМ: ${poemContext}` }] }]
+                    })
+                });
+
+                const data = await response.json();
+
+                // Если модель не найдена (404), пробуем следующий вариант
+                if (response.status === 404) return tryVariant(index + 1);
+
+                if (data.error) {
+                    updateMsg(tempId, "SYSTEM ERROR: " + data.error.message);
+                    return;
+                }
+
+                const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (text) {
+                    updateMsg(tempId, text.trim().toUpperCase());
+                } else {
+                    updateMsg(tempId, "ОТВЕТ ПУСТ");
+                }
+            } catch (e) {
+                updateMsg(tempId, "СЕТЕВОЙ СБОЙ");
             }
-        } catch (e) {
-            updateMsg(tempId, "СЕТЕВАЯ ОШИБКА");
         }
+
+        tryVariant(0);
     }
     // 4. ОТРИСОВКА
     function addMessage(author, text, type, id = null) {
