@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>GY-GY | VERSES v.9.53</title>
+    <title>GY-GY | VERSES v.9.54</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #d4af37; --bg: #000; --ai: #8A2BE2; }
@@ -199,11 +199,16 @@ async function aiPost(aiName) {
 function updateMsg(id, text) {
     const el = document.getElementById(id);
     if (el) {
-        // Фильтр v4.3: вырезаем системный шум из визуального вывода
+        // Если пришла ошибка лимита — пишем коротко
+        if (text.includes("QUOTA EXCEEDED")) {
+            el.innerText = "ПАУЗА: ЛИМИТ ЗАПРОСОВ ИСЧЕРПАН. ПОДОЖДИТЕ 30 СЕК.";
+            el.style.color = "#ff0000"; // Делаем текст ошибки красным
+            return;
+        }
+
         const clean = text.replace(/СИНХРОНИЗАЦИЯ|V2\.5|SYSTEM|ERROR|ПОЭТ|КЛУБА/gi, '').trim();
         el.innerText = clean;
 
-        // Записываем в контекст только чистый стих (для следующего ИИ в цепочке)
         if (clean && !clean.includes("ОШИБКА") && !clean.includes("ПУСТ")) {
             poemContext += clean + '\n';
         }
