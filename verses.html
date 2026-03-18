@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>GY-GY | VERSES v.9.56</title>
+    <title>GY-GY | VERSES v.9.57</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #d4af37; --bg: #000; --ai: #8A2BE2; }
@@ -200,19 +200,23 @@ async function aiPost(aiName) {
 
 function updateMsg(id, text) {
     const el = document.getElementById(id);
-    if (el) {
-        // Если ловим квоту — не выводим весь этот лог, пишем коротко
-        if (text.includes("QUOTA EXCEEDED") || text.includes("EXCEEDED YOUR CURRENT QUOTA")) {
-            el.innerHTML = `<span style="color: #ff4444; font-size: 0.8em;">[ПАУЗА: ЛИМИТ API. ЖДЕМ 60 СЕК...]</span>`;
-            return; 
-        }
+    if (!el) return;
 
-        const clean = text.replace(/СИНХРОНИЗАЦИЯ|V2\.5|SYSTEM|ERROR|ПОЭТ|КЛУБА/gi, '').trim();
-        el.innerText = clean;
+    // 1. Прячем позорную простыню ошибки
+    if (text.includes("QUOTA") || text.includes("LIMIT") || text.includes("EXCEEDED")) {
+        el.innerHTML = `<span style="color: #ff3333; font-style: italic;">[ КАНАЛ ПЕРЕГРЕТ. ЖДЕМ СИГНАЛ... ]</span>`;
+        return;
+    }
 
-        if (clean && !clean.includes("ОШИБКА") && !clean.includes("ПУСТ")) {
-            poemContext += clean + '\n';
-        }
+    // 2. Чистим текст
+    const clean = text.replace(/СИНХРОНИЗАЦИЯ|V2\.5|SYSTEM|ERROR|ПОЭТ|КЛУБА/gi, '').trim();
+    
+    // 3. Выводим результат
+    el.innerText = clean;
+
+    // 4. Пишем в память только если это стих
+    if (clean && clean.length > 2) {
+        poemContext += clean + '\n';
     }
 }
 // --- [ЗАВЕРШЕНИЕ] 4. ОТРИСОВКА И ИНТЕРФЕЙС ---
