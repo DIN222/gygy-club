@@ -3,7 +3,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY: MATRIX v4.5.6 (Beuvry 2026)</title>
+    <title>GY-GY: MATRIX v4.5.8 (Beuvry 2026)</title>
     <style>
         body { background: #0a0a0a; color: #eee; font-family: 'Courier New', monospace; margin: 0; overflow: hidden; }
         #matrix-slots { display: flex; gap: 8px; padding: 15px; background: #000; border-bottom: 1px solid #333; align-items: center; }
@@ -92,10 +92,13 @@
         if (count < total) await aiPost('GROK');
     }
 
-    async function aiPost(aiName) {
+  async function aiPost(aiName) {
         if (count >= total) return;
         const config = AI_CONFIG[aiName];
+        
+        // Пауза перед ответом (для Грока 4 сек)
         await new Promise(r => setTimeout(r, config.delay));
+        
         const tempId = 'ai-' + Date.now();
         addMessage(aiName, "СИНХРОНИЗАЦИЯ...", 'ai', tempId);
 
@@ -103,26 +106,52 @@
         const lastLine = lines.length > 0 ? lines[lines.length - 1] : "БАР";
         
         let url, headers, body;
+        
         if (aiName === 'GROK') {
             const key = getGrokKey();
             if(!key) { updateMsg(tempId, "НЕТ КЛЮЧА"); return; }
             url = "https://api.x.ai/v1/chat/completions";
-            headers = { "Content-Type": "application/json", "Authorization": `Bearer ${key}` };
-            body = JSON.stringify({ model: "grok-beta", messages: [{ role: "system", content: "ОДНА СТРОКА КАПСОМ. РИФМА." }, { role: "user", content: `РИФМА К: ${lastLine}` }] });
+            headers = { "Content-Type": "application/json", "Authorization": `Bearer ${key.trim()}` };
+            body = JSON.stringify({ 
+                model: "grok-beta", 
+                messages: [
+                    { role: "system", content: "ОДНА СТРОКА КАПСОМ. РИФМА." }, 
+                    { role: "user", content: `РИФМУЙ К: ${lastLine}` }
+                ] 
+            });
         } else {
             url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + getKey();
             headers = { "Content-Type": "application/json" };
-            body = JSON.stringify({ contents: [{ parts: [{ text: `ТЫ КИБЕР-ПОЭТ. ОДНА СТРОКА КАПСОМ. РИФМА К: ${lastLine}` }] }] });
+            body = JSON.stringify({ 
+                contents: [{ parts: [{ text: `ТЫ КИБЕР-ПОЭТ. ОДНА СТРОКА КАПСОМ. РИФМА К: ${lastLine}` }] }] 
+            });
         }
 
         try {
             const response = await fetch(url, { method: "POST", headers, body });
             const data = await response.json();
-            let result = aiName === 'GROK' ? data.choices[0].message.content : data.candidates[0].content.parts[0].text;
-            updateMsg(tempId, result.trim().toUpperCase());
-        } catch (e) { updateMsg(tempId, "ОШИБКА API"); }
-    }
+            
+            // ПРОВЕРКА ОШИБОК ОТ СЕРВЕРА
+            if (data.error) {
+                const errMsg = data.error.message || "ОШИБКА API";
+                updateMsg(tempId, `XAI ERROR: ${errMsg.substring(0, 30)}`);
+                console.error("FULL ERROR:", data.error);
+                return;
+            }
 
+            let result = "";
+            if (aiName === 'GROK') {
+                result = data.choices && data.choices[0] ? data.choices[0].message.content : "ПУСТО";
+            } else {
+                result = data.candidates && data.candidates[0] ? data.candidates[0].content.parts[0].text : "ОШИБКА GEMINI";
+            }
+
+            updateMsg(tempId, result.trim().toUpperCase());
+        } catch (e) { 
+            updateMsg(tempId, "СЕТЕВАЯ ОШИБКА"); 
+            console.error(e);
+        }
+    }
     function addMessage(author, text, type, id) {
         count++;
         const s = document.getElementById('stream');
