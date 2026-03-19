@@ -3,7 +3,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY: MATRIX v4.5.11</title>
+    <title>GY-GY: MATRIX v4.5.12</title>
     <style>
         body { background: #0a0a0a; color: #eee; font-family: 'Courier New', monospace; margin: 0; overflow: hidden; }
         #matrix-slots { display: flex; gap: 8px; padding: 15px; background: #000; border-bottom: 1px solid #333; align-items: center; min-height: 50px; }
@@ -131,7 +131,7 @@
             url = "https://api.x.ai/v1/chat/completions";
             headers = { "Content-Type": "application/json", "Authorization": `Bearer ${key}` };
             body = JSON.stringify({ 
-                model: "grok-beta", 
+                model: "grok-2", 
                 messages: [
                     { role: "system", content: "ОДНА СТРОКА КАПСОМ. РИФМА." }, 
                     { role: "user", content: `РИФМУЙ К: ${lastLine}` }
