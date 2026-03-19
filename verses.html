@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>GY-GY | VERSES v.9.57</title>
+    <title>GY-GY | VERSES v.9.59</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #d4af37; --bg: #000; --ai: #8A2BE2; }
@@ -92,18 +92,29 @@
         <button class="mint-btn" onclick="location.reload()">НОВАЯ СЕССИЯ</button>
     </div>
 <script>
- // 1. КОНФИГУРАЦИЯ
+    <script src="dispatcher.js"></script> 
+<script>
+    // Твой текущий код с функцией aiPost и остальным...
+<script>
+    // 1. КОНФИГУРАЦИЯ (Ключи)
     const part1 = "AIzaSyBFmETf-8mg5iM"; 
     const part2 = "Sjgg4rKNL_k3vwb-YGPE"; 
     const getKey = () => part1 + part2;
+
 
     let count = 0;
     const total = 16;
     let poemContext = "";
 
-    // 1. ИНИЦИАЛИЗАЦИЯ
+    // Настройки для Диспетчера
+    const AI_CONFIG = {
+        'GEMINI': { color: '#00f2ff', delay: 0,    style: 'СЮРРЕАЛИЗМ' },
+        'GROK':   { color: '#ccff00', delay: 4000, style: 'ИРОНИЯ И ТРЭШ' }
+    };
+
+    // 2. ИНИЦИАЛИЗАЦИЯ
     function init() {
-        console.log("GY-GY CORE: START");
+        console.log("GY-GY CORE v4.5: START");
         initMatrix();
         const input = document.getElementById('inp');
         if(input) {
@@ -123,12 +134,22 @@
             const div = document.createElement('div');
             div.className = 'slot ai-active';
             div.innerText = name;
-            div.onclick = () => aiPost(name === 'GE' ? 'GEMINI' : name);
+            div.onclick = () => aiPost(name === 'GE' ? 'GEMINI' : name === 'GR' ? 'GROK' : name);
             m.appendChild(div);
         });
     }
 
-    // 2. ЛОГИКА МИНТА
+    // 3. ЦЕНТРАЛЬНЫЙ ДИСПЕТЧЕР (Твоя новая логика Ч-ИИ-ИИ)
+    async function startCycle(val) {
+        // Сначала отвечает Gemini
+        await aiPost('GEMINI');
+        // Потом автоматически вступает Грок через паузу
+        if (count < total) {
+            await aiPost('GROK');
+        }
+    }
+
+    // 4. ЛОГИКА ОТПРАВКИ АВТОРОМ
     function userPost() {
         const input = document.getElementById('inp');
         if(!input) return;
@@ -142,99 +163,61 @@
 
         addMessage('USER_1', val, 'user');
         input.value = ""; 
+        
+        // ЗАПУСК ЦЕПОЧКИ ИИ
+        startCycle(val);
     }
 
-  // --- [СТАРТ] 3. БЛОК ЛОГИКИ ИИ v4.3 ---
+    // 5. БЛОК ЛОГИКИ ИИ (Мультиагентный)
+    async function aiPost(aiName) {
+        if (count >= total) return;
 
-async function aiPost(aiName) {
-    if (count >= total) return;
-    // РАЗНОСИМ ЗАПРОСЫ: @GR ждет 3с, @CL - 6с, @MI - 9с
-    const ms = aiName === 'GR' ? 3000 : aiName === 'CL' ? 6000 : aiName === 'MI' ? 9000 : 0;
-    await new Promise(r => setTimeout(r, ms));
-    // Генерируем уникальный ID для текущего сообщения
-    const tempId = 'ai-' + Date.now();
-    addMessage(aiName, "СИНХРОНИЗАЦИЯ (v2.5)...", 'ai', tempId);
+        const ms = AI_CONFIG[aiName]?.delay || 0;
+        await new Promise(r => setTimeout(r, ms));
 
-    // Подготовка контекста: берем только последнюю осмысленную строку
-    const lines = poemContext.trim().split('\n').filter(Boolean);
-    const lastLine = lines.length > 0 ? lines.pop() : "БАР";
-    
-    // API URL для Gemini 2.5 Flash (актуально для Beuvry 2026)
-    const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + getKey();
+        const tempId = 'ai-' + Date.now();
+        addMessage(aiName, "СИНХРОНИЗАЦИЯ...", 'ai', tempId);
 
-    try {
-        const response = await fetch(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                contents: [{ 
-                    parts: [{ 
-                        text: `ТЫ КИБЕР-ПОЭТ КЛУБА GY-GY. ДОБАВЬ ОДНУ СТРОКУ В РИФМУ. СТИЛЬ: ТЕМНЫЙ НЕОН. ТОЛЬКО КАПСОМ. РИФМУЙ К: ${lastLine}` 
-                    }] 
-                }]
-            })
-        });
+        const lines = poemContext.trim().split('\n').filter(Boolean);
+        const lastLine = lines.length > 0 ? lines[lines.length - 1] : "БАР";
+        
+        let url, headers, body;
 
-        const data = await response.json();
-
-        // Проверка на системные ошибки Google
-        if (data.error) {
-            updateMsg(tempId, "SYSTEM ERROR: " + data.error.message);
-            return;
-        }
-
-        // Извлекаем текст ответа
-        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (text) {
-            updateMsg(tempId, text.trim().toUpperCase());
+        if (aiName === 'GROK') {
+            url = "https://api.x.ai/v1/chat/completions";
+            headers = { 
+                "Content-Type": "application/json", 
+                "Authorization": `Bearer ${getGrokKey()}` 
+            };
+            body = JSON.stringify({
+                model: "grok-beta",
+                messages: [
+                    { role: "system", content: "ТЫ GROK В КЛУБЕ GY-GY. СТИЛЬ: ТРЭШ И САРКАЗМ. ОДНА СТРОКА КАПСОМ." },
+                    { role: "user", content: `РИФМУЙ К: ${lastLine}` }
+                ]
+            });
         } else {
-            updateMsg(tempId, "ОТВЕТ ПУСТ");
+            url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + getKey();
+            headers = { "Content-Type": "application/json" };
+            body = JSON.stringify({
+                contents: [{ parts: [{ text: `ТЫ КИБЕР-ПОЭТ. СТИЛЬ: НЕОН. ОДНА СТРОКА КАПСОМ. РИФМА К: ${lastLine}` }] }]
+            });
         }
-    } catch (e) {
-        updateMsg(tempId, "СЕТЕВАЯ ОШИБКА");
-        console.error("AI_POST_ERROR:", e);
-    }
-}
 
-// --- [ПЕРЕХОД] ФУНКЦИЯ ОБНОВЛЕНИЯ ТЕКСТА ---
+        try {
+            const response = await fetch(url, { method: "POST", headers, body });
+            const data = await response.json();
+            let result = aiName === 'GROK' ? data.choices[0].message.content : data?.candidates?.[0]?.content?.parts?.[0]?.text;
 
-function updateMsg(id, text) {
-    const el = document.getElementById(id);
-    if (!el) return;
-
-    // 1. Прячем позорную простыню ошибки
-    if (text.includes("QUOTA") || text.includes("LIMIT") || text.includes("EXCEEDED")) {
-        el.innerHTML = `<span style="color: #ff3333; font-style: italic;">[ КАНАЛ ПЕРЕГРЕТ. ЖДЕМ СИГНАЛ... ]</span>`;
-        return;
+            if (result) {
+                updateMsg(tempId, result.trim().toUpperCase());
+            }
+        } catch (e) {
+            updateMsg(tempId, "ОШИБКА СВЯЗИ: " + aiName);
+        }
     }
 
-    // 2. Чистим текст
-    const clean = text.replace(/СИНХРОНИЗАЦИЯ|V2\.5|SYSTEM|ERROR|ПОЭТ|КЛУБА/gi, '').trim();
-    
-    // 3. Выводим результат
-    el.innerText = clean;
-
-    // 4. Пишем в память только если это стих
-    if (clean && clean.length > 2) {
-        poemContext += clean + '\n';
-    }
-}
-// --- [ЗАВЕРШЕНИЕ] 4. ОТРИСОВКА И ИНТЕРФЕЙС ---
-
-function addMessage(name, text, type, id) {
-    const chat = document.getElementById('chat');
-    const msg = document.createElement('div');
-    msg.className = 'message ' + type;
-    if (id) msg.id = id;
-    
-    // Порядковый номер строки [X/16] для регламента v4.3
-    const index = ++count;
-    msg.innerHTML = `<span class="meta">${name} [${index}/16]</span><br>${text}`;
-    
-    chat.appendChild(msg);
-    chat.scrollTop = chat.scrollHeight; // Автопрокрутка вниз
-}
-    // 4. ОТРИСОВКА
+    // 6. ИНТЕРФЕЙСНЫЕ ФУНКЦИИ (Чистые)
     function addMessage(author, text, type, id = null) {
         if(count >= total && type !== 'system') return;
         if(type !== 'system') count++;
@@ -245,25 +228,34 @@ function addMessage(name, text, type, id) {
         const div = document.createElement('div');
         div.className = `msg ${type}`;
         if(id) div.id = id;
-        div.innerHTML = `<span class="meta">@${author} [${count}/${total}]</span>${text.toUpperCase()}`;
+        
+        // Цветовое кодирование
+        if(author === 'GROK') div.style.borderLeft = "4px solid #ccff00";
+        if(author === 'GEMINI') div.style.borderLeft = "4px solid #00f2ff";
+
+        div.innerHTML = `<span class="meta">@${author} [${count}/${total}]</span><br>${text.toUpperCase()}`;
         
         s.appendChild(div);
         s.scrollTop = s.scrollHeight;
-        poemContext += " " + text;
-
-        if(count >= total) {
-            const ui = document.getElementById('ui'); if(ui) ui.style.display = 'none';
-            const final = document.getElementById('final-overlay'); if(final) final.style.display = 'flex';
-        }
+        poemContext += text + "\n";
     }
 
-    function updateMsg(id, text) {
+   function updateMsg(id, text) {
         const m = document.getElementById(id);
         if(m) {
             const meta = m.querySelector('.meta').outerHTML;
-            m.innerHTML = `${meta}${text.toUpperCase()}`;
-            poemContext += " " + text;
+            m.innerHTML = `${meta}<br>${text.toUpperCase()}`;
+            poemContext += text + "\n";
         }
+    }
+
+    // --- ДОБАВЛЯЕМ БЕЗОПАСНЫЙ ХРАНИТЕЛЬ КЛЮЧА ГРОКА ---
+    let GROK_STORAGE = ""; 
+    function getGrokKey() {
+        if (!GROK_STORAGE) {
+            GROK_STORAGE = prompt("ВВЕДИТЕ НОВЫЙ xAI API KEY (GROK):", "");
+        }
+        return GROK_STORAGE;
     }
 
     window.onload = init;
