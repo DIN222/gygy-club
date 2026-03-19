@@ -3,10 +3,10 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY: MATRIX v4.5.10 (Beuvry 2026)</title>
+    <title>GY-GY: MATRIX v4.5.11</title>
     <style>
         body { background: #0a0a0a; color: #eee; font-family: 'Courier New', monospace; margin: 0; overflow: hidden; }
-        #matrix-slots { display: flex; gap: 8px; padding: 15px; background: #000; border-bottom: 1px solid #333; align-items: center; }
+        #matrix-slots { display: flex; gap: 8px; padding: 15px; background: #000; border-bottom: 1px solid #333; align-items: center; min-height: 50px; }
         .slot { min-width: 45px; height: 45px; border: 1px solid #444; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #666; cursor: pointer; transition: 0.3s; }
         .u-active { border-color: #fff; color: #fff; box-shadow: 0 0 10px #fff; }
         .ai-active { border-color: #00f2ff; color: #00f2ff; font-weight: bold; }
@@ -17,31 +17,36 @@
         .ai { border-left-color: #00f2ff; }
         .meta { font-size: 0.7em; opacity: 0.5; margin-bottom: 5px; display: block; }
         #ui { position: fixed; bottom: 0; width: 100%; padding: 20px; background: #000; border-top: 1px solid #333; display: flex; }
-        #inp { background: #111; border: 1px solid #444; color: #fff; padding: 10px; width: 80%; outline: none; }
+        #inp { background: #111; border: 1px solid #444; color: #fff; padding: 10px; width: 85%; outline: none; font-size: 16px; }
     </style>
 </head>
 <body>
 
 <div id="matrix-slots"></div>
 <div id="stream"></div>
-<div id="ui"><input type="text" id="inp" placeholder="ПАКЕТ НАСТОЙ РАКЕТ..." autocomplete="off"></div>
+<div id="ui"><input type="text" id="inp" placeholder="ВВЕДИТЕ СЛОВА..." autocomplete="off"></div>
 
 <script>
-    // 1. БЕЗОПАСНОСТЬ
+    // 1. КОНФИГУРАЦИЯ БЕЗОПАСНОСТИ
     const part1 = "AIzaSyBFmETf-8mg5iM"; 
     const part2 = "Sjgg4rKNL_k3vwb-YGPE"; 
     const getKey = () => part1 + part2;
 
     function getGrokKey() {
         let savedKey = localStorage.getItem('GY_GY_GROK_KEY');
-        if (!savedKey || savedKey === "null") {
-            savedKey = prompt("ВВЕДИТЕ КЛЮЧ ГРОКА (xai-...):", "");
-            if (savedKey) localStorage.setItem('GY_GY_GROK_KEY', savedKey.trim());
+        if (!savedKey || savedKey === "null" || savedKey === "") {
+            savedKey = prompt("ВВЕДИТЕ ВАШ xAI API KEY (ГРОК):", "");
+            if (savedKey) {
+                // Чистим от пробелов и кавычек сразу при вводе
+                const cleanKey = savedKey.trim().replace(/["']/g, "");
+                localStorage.setItem('GY_GY_GROK_KEY', cleanKey);
+                return cleanKey;
+            }
         }
         return savedKey;
     }
 
-    // 2. ЛОГИКА
+    // 2. ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
     let count = 0;
     const total = 16;
     let poemContext = "";
@@ -51,17 +56,17 @@
         'GROK':   { color: '#ccff00', delay: 4000, style: 'ДЕРЗКИЙ ТРЭШ' }
     };
 
+    // 3. ИНИЦИАЛИЗАЦИЯ ИНТЕРФЕЙСА
     function init() {
-        initMatrix();
-        const input = document.getElementById('inp');
-        input.focus();
-        input.addEventListener('keypress', (e) => { if (e.key === 'Enter') userPost(); });
-    }
-
-    function initMatrix() {
         const m = document.getElementById('matrix-slots');
         m.innerHTML = "";
-        for(let i=1; i<=10; i++) m.innerHTML += `<div class="slot ${i===1?'u-active':''}">U${i}</div>`;
+        
+        // Рисуем аватарки пользователей
+        for(let i=1; i<=10; i++) {
+            m.innerHTML += `<div class="slot ${i===1?'u-active':''}">U${i}</div>`;
+        }
+        
+        // Рисуем аватарки ботов
         ['GE', 'GR', 'CL', 'MI'].forEach(name => {
             const div = document.createElement('div');
             div.className = 'slot ai-active';
@@ -69,22 +74,36 @@
             div.onclick = () => aiPost(name === 'GE' ? 'GEMINI' : 'GROK');
             m.appendChild(div);
         });
-        // КНОПКА СБРОСА ВМЕСТО F12
+
+        // КРАСНАЯ КНОПКА СБРОСА
         const reset = document.createElement('div');
         reset.className = 'slot reset-btn';
         reset.innerText = '[X]';
-        reset.title = 'ОЧИСТИТЬ КЛЮЧ ГРОКА';
-        reset.onclick = () => { localStorage.removeItem('GY_GY_GROK_KEY'); location.reload(); };
+        reset.title = 'СБРОСИТЬ КЛЮЧИ';
+        reset.onclick = () => { 
+            if(confirm("ОЧИСТИТЬ ПАМЯТЬ КЛЮЧЕЙ?")) {
+                localStorage.removeItem('GY_GY_GROK_KEY'); 
+                location.reload(); 
+            }
+        };
         m.appendChild(reset);
+
+        const input = document.getElementById('inp');
+        input.focus();
+        input.onkeypress = (e) => { if (e.key === 'Enter') userPost(); };
     }
 
+    // 4. ЛОГИКА ПОСТОВ
     function userPost() {
         const input = document.getElementById('inp');
         const val = input.value.trim();
         if(!val || count >= total) return;
+        
         addMessage('АВТОР', val, 'user');
         input.value = ""; 
-        startCycle(val);
+        
+        // Запуск автоматического цикла
+        startCycle();
     }
 
     async function startCycle() {
@@ -92,11 +111,10 @@
         if (count < total) await aiPost('GROK');
     }
 
-  async function aiPost(aiName) {
+    async function aiPost(aiName) {
         if (count >= total) return;
-        const config = AI_CONFIG[aiName];
+        const config = AI_CONFIG[aiName] || { delay: 0, style: 'NEON' };
         
-        // Пауза перед ответом (для Грока 4 сек)
         await new Promise(r => setTimeout(r, config.delay));
         
         const tempId = 'ai-' + Date.now();
@@ -108,25 +126,17 @@
         let url, headers, body;
         
         if (aiName === 'GROK') {
-            let key = getGrokKey();
+            const key = getGrokKey();
             if(!key) { updateMsg(tempId, "НЕТ КЛЮЧА"); return; }
-            
-            // Чистим ключ от всего лишнего (пробелы, кавычки, невидимые знаки)
-            key = key.trim().replace(/["']/g, ""); 
-            
             url = "https://api.x.ai/v1/chat/completions";
-            headers = { 
-                "Content-Type": "application/json", 
-                "Authorization": `Bearer ${key}` 
-            };
+            headers = { "Content-Type": "application/json", "Authorization": `Bearer ${key}` };
             body = JSON.stringify({ 
                 model: "grok-beta", 
                 messages: [
-                    { role: "system", content: "ТЫ КИБЕР-ПОЭТ. ОДНА СТРОКА КАПСОМ. РИФМА." }, 
+                    { role: "system", content: "ОДНА СТРОКА КАПСОМ. РИФМА." }, 
                     { role: "user", content: `РИФМУЙ К: ${lastLine}` }
-                ]
+                ] 
             });
-        }
         } else {
             url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + getKey();
             headers = { "Content-Type": "application/json" };
@@ -139,27 +149,24 @@
             const response = await fetch(url, { method: "POST", headers, body });
             const data = await response.json();
             
-            // ПРОВЕРКА ОШИБОК ОТ СЕРВЕРА
             if (data.error) {
-                const errMsg = data.error.message || "ОШИБКА API";
-                updateMsg(tempId, `XAI ERROR: ${errMsg.substring(0, 30)}`);
-                console.error("FULL ERROR:", data.error);
+                updateMsg(tempId, "XAI ERROR: " + (data.error.message || "ОШИБКА"));
                 return;
             }
 
             let result = "";
             if (aiName === 'GROK') {
-                result = data.choices && data.choices[0] ? data.choices[0].message.content : "ПУСТО";
+                result = data.choices ? data.choices[0].message.content : "ПУСТО";
             } else {
-                result = data.candidates && data.candidates[0] ? data.candidates[0].content.parts[0].text : "ОШИБКА GEMINI";
+                result = data.candidates ? data.candidates[0].content.parts[0].text : "ОШИБКА GE";
             }
 
             updateMsg(tempId, result.trim().toUpperCase());
         } catch (e) { 
             updateMsg(tempId, "СЕТЕВАЯ ОШИБКА"); 
-            console.error(e);
         }
     }
+
     function addMessage(author, text, type, id) {
         count++;
         const s = document.getElementById('stream');
@@ -181,6 +188,7 @@
             poemContext = poemContext.replace("СИНХРОНИЗАЦИЯ...", "") + text + "\n";
         }
     }
+
     window.onload = init;
 </script>
 </body>
