@@ -3,7 +3,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY: MATRIX v4.5.8 (Beuvry 2026)</title>
+    <title>GY-GY: MATRIX v4.5.9 (Beuvry 2026)</title>
     <style>
         body { background: #0a0a0a; color: #eee; font-family: 'Courier New', monospace; margin: 0; overflow: hidden; }
         #matrix-slots { display: flex; gap: 8px; padding: 15px; background: #000; border-bottom: 1px solid #333; align-items: center; }
@@ -110,14 +110,20 @@
         if (aiName === 'GROK') {
             const key = getGrokKey();
             if(!key) { updateMsg(tempId, "НЕТ КЛЮЧА"); return; }
+            
             url = "https://api.x.ai/v1/chat/completions";
-            headers = { "Content-Type": "application/json", "Authorization": `Bearer ${key.trim()}` };
+            headers = { 
+                "Content-Type": "application/json", 
+                "Authorization": `Bearer ${key.trim()}` 
+            };
             body = JSON.stringify({ 
-                model: "grok-beta", 
+                // Попробуем самую стабильную модель сейчас
+                model: "grok-2-1212", 
                 messages: [
-                    { role: "system", content: "ОДНА СТРОКА КАПСОМ. РИФМА." }, 
-                    { role: "user", content: `РИФМУЙ К: ${lastLine}` }
-                ] 
+                    { role: "system", content: "ТЫ КИБЕР-ПОЭТ. ОТВЕЧАЙ СТРОГО ОДНОЙ СТРОКОЙ КАПСОМ. РИФМА." }, 
+                    { role: "user", content: `НАПИШИ ОДНУ РИФМОВАННУЮ СТРОКУ К: ${lastLine}` }
+                ],
+                temperature: 0.7
             });
         } else {
             url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + getKey();
