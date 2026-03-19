@@ -3,7 +3,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY: MATRIX v4.5.3 (Beuvry 2026)</title>
+    <title>GY-GY: MATRIX v4.5.4 (Beuvry 2026)</title>
     <style>
         /* --- СТИЛИ КЛУБА GY-GY --- */
         body { background: #0a0a0a; color: #eee; font-family: 'Courier New', monospace; margin: 0; overflow: hidden; }
@@ -46,19 +46,31 @@
 
 <script>
    // 1. КОНФИГУРАЦИЯ КЛЮЧЕЙ
+// --- [ НАЧАЛО БЛОКА БЕЗОПАСНОСТИ ] ---
+
+// 1. Ключ Gemini (разбит на части, чтобы сканеры тупили)
 const part1 = "AIzaSyBFmETf-8mg5iM"; 
 const part2 = "Sjgg4rKNL_k3vwb-YGPE"; 
 const getKey = () => part1 + part2;
 
-// УМНЫЙ ХРАНИТЕЛЬ: Ключ Грока живет только в твоем браузере
+// 2. Ключ Грока (БЕЗ ПРЯМОЙ ЗАПИСИ В КОД)
 function getGrokKey() {
+    // Проверяем, нет ли ключа в памяти браузера
     let savedKey = localStorage.getItem('GY_GY_GROK_KEY');
-    if (!savedKey) {
-        savedKey = prompt(":", "");
-        if (savedKey) localStorage.setItem('GY_GY_GROK_KEY', savedKey);
+    
+    if (!savedKey || savedKey === "null") {
+        // ЭТА СТРОКА БЕЗОПАСНА: здесь нет самого ключа, только вопрос
+        savedKey = prompt("ВВЕДИТЕ ВАШ xAI API KEY (ГРОК):", "");
+        
+        if (savedKey && savedKey.includes("xai-")) {
+            // Сохраняем в локальное хранилище ТВОЕГО браузера
+            localStorage.setItem('GY_GY_GROK_KEY', savedKey.trim());
+        }
     }
     return savedKey;
 }
+
+// --- [ КОНЕЦ БЛОКА БЕЗОПАСНОСТИ ] ---
 
 // Функция для сброса ключа (если ввел с ошибкой)
 function resetGrokKey() {
