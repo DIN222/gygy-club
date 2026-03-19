@@ -3,133 +3,89 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>GY-GY | VERSES v.9.60</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <title>GY-GY: MATRIX v4.5.1 (Beuvry 2026)</title>
     <style>
-        :root { --gold: #d4af37; --bg: #000; --ai: #8A2BE2; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { 
-            background: var(--bg); color: var(--gold); font-family: 'Share Tech Mono', monospace;
-            margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden;
+        /* --- СТИЛИ КЛУБА GY-GY --- */
+        body { background: #0a0a0a; color: #eee; font-family: 'Courier New', monospace; margin: 0; overflow: hidden; }
+        
+        /* Контейнер аватаров */
+        #matrix-slots { 
+            display: flex; gap: 8px; padding: 15px; background: #000; 
+            border-bottom: 1px solid #333; overflow-x: auto; 
         }
-
-        /* HEADER */
-        .header { 
-            display: flex; justify-content: space-between; padding: 15px; 
-            border-bottom: 1px solid var(--gold); align-items: center; background: #050505;
+        .slot { 
+            min-width: 45px; height: 45px; border: 1px solid #444; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 10px; color: #666; cursor: pointer; transition: 0.3s;
         }
-        .logo { font-family: 'Playfair Display', serif; font-weight: 900; letter-spacing: 2px; font-style: italic; }
+        .u-active { border-color: #fff; color: #fff; box-shadow: 0 0 10px #fff; }
+        .ai-active { border-color: #00f2ff; color: #00f2ff; font-weight: bold; }
 
-        /* NEURAL LINK BUTTON */
-        .sync-btn {
-            font-family: 'Share Tech Mono', monospace; font-size: 10px;
-            border: 1px solid var(--gold); padding: 5px 10px; cursor: pointer;
-            background: transparent; color: var(--gold); transition: 0.3s;
-        }
-        .sync-btn.active { background: var(--gold); color: #000; box-shadow: 0 0 10px var(--gold); }
-
-        /* MATRIX */
-        .matrix-container { background: #0a0a0a; border-bottom: 1px solid #222; }
-        .matrix-scroll { display: flex; overflow-x: auto; gap: 10px; padding: 12px; scrollbar-width: none; }
-        .slot {
-            min-width: 45px; height: 45px; border: 1px solid #333;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 11px; flex-shrink: 0; transition: 0.3s; color: #444;
-        }
-        .slot.u-active { border-color: var(--gold); color: var(--gold); }
-        .slot.ai-active { border-color: var(--ai); color: var(--ai); cursor: pointer; }
-
-        /* STREAM */
-        .stream { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
-        .msg { border-left: 2px solid var(--gold); padding: 8px 15px; background: rgba(212, 175, 55, 0.02); }
-        .msg.ai { border-left-color: var(--ai); background: rgba(138, 43, 226, 0.02); }
-        .msg.system { border-left-color: #555; opacity: 0.7; font-size: 12px; }
-        .meta { font-size: 9px; opacity: 0.5; margin-bottom: 4px; display: block; }
-
-        /* INPUT */
-        .input-zone { padding: 20px; background: #000; border-top: 1px solid var(--gold); display: flex; gap: 10px; }
-        input { flex: 1; background: #0a0a0a; border: 1px solid #333; color: var(--gold); padding: 12px; font-family: 'Share Tech Mono'; outline: none; }
-        .mint-btn { background: transparent; color: var(--gold); border: 1px solid var(--gold); padding: 10px 20px; cursor: pointer; }
-
-        #final-overlay { display: none; position: fixed; inset: 0; background: #000; z-index: 1000; flex-direction: column; align-items: center; justify-content: center; }
+        /* Чат и сообщения */
+        #stream { height: calc(100vh - 160px); overflow-y: auto; padding: 20px; }
+        .msg { margin-bottom: 15px; padding: 10px; border-left: 3px solid #444; background: rgba(255,255,255,0.02); }
+        .user { border-left-color: #fff; }
+        .ai { border-left-color: #00f2ff; }
+        .meta { font-size: 0.7em; opacity: 0.5; margin-bottom: 5px; display: block; }
+        
+        /* Поле ввода */
+        #ui { position: fixed; bottom: 0; width: 100%; padding: 20px; background: #000; border-top: 1px solid #333; display: flex; }
+        #inp { background: #111; border: 1px solid #444; color: #fff; padding: 10px; width: 80%; outline: none; }
+        #inp:focus { border-color: #00f2ff; }
     </style>
 </head>
 <body>
-<div class="club-header" style="display: flex; justify-content: space-between; padding: 10px; background: rgba(0,0,0,0.8); border-bottom: 1px solid #0f0; font-family: monospace;">
-    <div class="left-nav">
-        <a href="index.html" style="color: #0f0; text-decoration: none;">◄ BACK</a>
-    </div>
-    <div class="center-logo" style="color: #0f0; font-weight: bold; letter-spacing: 5px;">
-        GY-GY CLUB
-    </div>
-    <div class="right-lang">
-        <span style="color: #0f0; cursor: pointer; border: 1px solid #0f0; padding: 2px 5px;">EN</span>
-        <span style="color: #0f0; margin-left: 10px; cursor: pointer; opacity: 0.5;">RU</span>
-        <span style="color: #0f0; margin-left: 10px; cursor: pointer; opacity: 0.5;">FR</span>
-    </div>
+
+<div id="matrix-slots"></div>
+
+<div id="stream"></div>
+
+<div id="ui">
+    <input type="text" id="inp" placeholder="ВВЕДИТЕ СТРОКУ ДЛЯ АБСУРДНОГО РЕЗОНАНСА..." autocomplete="off">
 </div>
-    <header class="header">
-        <button id="neural-link" class="sync-btn" onclick="toggleSync()">VERSES LINK: OFF</button>
-        <div class="logo">GY-GY</div>
-    </header>
 
-    <div class="matrix-container">
-        <div id="matrix-slots" class="matrix-scroll"></div>
-    </div>
-
-    <main class="stream" id="stream">
-        <div class="msg system"><span class="meta">@SYSTEM</span>ЯДРО АКТИВИРОВАНО. ОЖИДАНИЕ ПЕРВОЙ СТРОКИ...</div>
-    </main>
-
-    <div class="input-zone" id="ui">
-        <input type="text" id="inp" placeholder="ПИШИТЕ ЗДЕСЬ..." onkeypress="if(event.key==='Enter') userPost()">
-        <button class="mint-btn" onclick="userPost()">MINT</button>
-    </div>
-
-    <div id="final-overlay">
-        <h2 style="font-family:'Playfair Display';">ШЕДЕВР СОХРАНЕН</h2>
-        <button class="mint-btn" onclick="location.reload()">НОВАЯ СЕССИЯ</button>
-    </div>
 <script>
-    <script src="dispatcher.js"></script> 
-<script>
-    // Твой текущий код с функцией aiPost и остальным...
-<script>
-    // 1. КОНФИГУРАЦИЯ (Ключи)
+    // --- [ КОНФИГУРАЦИЯ v4.5 ] ---
     const part1 = "AIzaSyBFmETf-8mg5iM"; 
     const part2 = "Sjgg4rKNL_k3vwb-YGPE"; 
     const getKey = () => part1 + part2;
-
+    
+    let GROK_STORAGE = ""; // Ключ Грока будет здесь после ввода через prompt
+    function getGrokKey() {
+        if (!GROK_STORAGE) {
+            GROK_STORAGE = prompt("ВВЕДИТЕ ВАШ xAI API KEY (ГРОК):", "");
+        }
+        return GROK_STORAGE;
+    }
 
     let count = 0;
     const total = 16;
     let poemContext = "";
 
-    // Настройки для Диспетчера
+    // Настройки стилей и задержек
     const AI_CONFIG = {
-        'GEMINI': { color: '#00f2ff', delay: 0,    style: 'СЮРРЕАЛИЗМ' },
-        'GROK':   { color: '#ccff00', delay: 4000, style: 'ИРОНИЯ И ТРЭШ' }
+        'GEMINI': { color: '#00f2ff', delay: 0,    style: 'СЮРРЕАЛИЗМ И НЕОН' },
+        'GROK':   { color: '#ccff00', delay: 4000, style: 'ДЕРЗКИЙ ТРЭШ И САРКАЗМ' }
     };
 
-    // 2. ИНИЦИАЛИЗАЦИЯ
+    // --- [ ИНИЦИАЛИЗАЦИЯ ] ---
     function init() {
-        console.log("GY-GY CORE v4.5: START");
         initMatrix();
         const input = document.getElementById('inp');
-        if(input) {
-            input.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') userPost();
-            });
-        }
+        input.focus();
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') userPost();
+        });
     }
 
     function initMatrix() {
         const m = document.getElementById('matrix-slots');
-        if(!m) return;
         m.innerHTML = "";
-        for(let i=1; i<=10; i++) m.innerHTML += `<div class="slot ${i===1?'u-active':''}">U${i}</div>`;
-        
+        // Слоты пользователей U1-U10
+        for(let i=1; i<=10; i++) {
+            m.innerHTML += `<div class="slot ${i===1?'u-active':''}">U${i}</div>`;
+        }
+        // Слоты ИИ
         ['GE', 'GR', 'CL', 'MI'].forEach(name => {
             const div = document.createElement('div');
             div.className = 'slot ai-active';
@@ -139,36 +95,27 @@
         });
     }
 
-    // 3. ЦЕНТРАЛЬНЫЙ ДИСПЕТЧЕР (Твоя новая логика Ч-ИИ-ИИ)
+    // --- [ ЛОГИКА ОЧЕРЕДНОСТИ ] ---
     async function startCycle(val) {
-        // Сначала отвечает Gemini
+        // 1. Сначала отвечает Gemini
         await aiPost('GEMINI');
-        // Потом автоматически вступает Грок через паузу
+        // 2. Через 4 сек вступает Грок
         if (count < total) {
             await aiPost('GROK');
         }
     }
 
-    // 4. ЛОГИКА ОТПРАВКИ АВТОРОМ
     function userPost() {
         const input = document.getElementById('inp');
-        if(!input) return;
         const val = input.value.trim();
-        
-        if(!val) return; 
-        if(count >= total) {
-            alert("MATRIX FULL [16/16]");
-            return;
-        }
+        if(!val || count >= total) return;
 
-        addMessage('USER_1', val, 'user');
+        addMessage('АВТОР', val, 'user');
         input.value = ""; 
-        
-        // ЗАПУСК ЦЕПОЧКИ ИИ
-        startCycle(val);
+        startCycle(val); // Запуск цепочки ИИ
     }
 
-    // 5. БЛОК ЛОГИКИ ИИ (Мультиагентный)
+    // --- [ ЯДРО ИИ (MULTI-AGENT) ] ---
     async function aiPost(aiName) {
         if (count >= total) return;
 
@@ -192,70 +139,67 @@
             body = JSON.stringify({
                 model: "grok-beta",
                 messages: [
-                    { role: "system", content: "ТЫ GROK В КЛУБЕ GY-GY. СТИЛЬ: ТРЭШ И САРКАЗМ. ОДНА СТРОКА КАПСОМ." },
-                    { role: "user", content: `РИФМУЙ К: ${lastLine}` }
+                    { role: "system", content: `ТЫ ${aiName}. СТИЛЬ: ${AI_CONFIG[aiName].style}. ОДНА СТРОКА КАПСОМ.` },
+                    { role: "user", content: `ПРОДОЛЖИ РИФМУ К: ${lastLine}` }
                 ]
             });
         } else {
             url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + getKey();
             headers = { "Content-Type": "application/json" };
             body = JSON.stringify({
-                contents: [{ parts: [{ text: `ТЫ КИБЕР-ПОЭТ. СТИЛЬ: НЕОН. ОДНА СТРОКА КАПСОМ. РИФМА К: ${lastLine}` }] }]
+                contents: [{ parts: [{ text: `ТЫ КИБЕР-ПОЭТ. СТИЛЬ: ${AI_CONFIG[aiName].style}. ОДНА СТРОКА КАПСОМ. РИФМА К: ${lastLine}` }] }]
             });
         }
 
         try {
             const response = await fetch(url, { method: "POST", headers, body });
             const data = await response.json();
-            let result = aiName === 'GROK' ? data.choices[0].message.content : data?.candidates?.[0]?.content?.parts?.[0]?.text;
+            
+            let result = "";
+            if (aiName === 'GROK') {
+                result = data.choices[0].message.content;
+            } else {
+                result = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+            }
 
             if (result) {
                 updateMsg(tempId, result.trim().toUpperCase());
             }
         } catch (e) {
             updateMsg(tempId, "ОШИБКА СВЯЗИ: " + aiName);
+            console.error(e);
         }
     }
 
-    // 6. ИНТЕРФЕЙСНЫЕ ФУНКЦИИ (Чистые)
+    // --- [ ИНТЕРФЕЙСНЫЕ ФУНКЦИИ ] ---
     function addMessage(author, text, type, id = null) {
-        if(count >= total && type !== 'system') return;
-        if(type !== 'system') count++;
+        if(count >= total) return;
+        count++;
         
         const s = document.getElementById('stream');
-        if(!s) return;
-        
         const div = document.createElement('div');
         div.className = `msg ${type}`;
         if(id) div.id = id;
         
-        // Цветовое кодирование
-        if(author === 'GROK') div.style.borderLeft = "4px solid #ccff00";
-        if(author === 'GEMINI') div.style.borderLeft = "4px solid #00f2ff";
+        // Красим боковую линию
+        if(author === 'GROK') div.style.borderLeftColor = "#ccff00";
+        if(author === 'GEMINI') div.style.borderLeftColor = "#00f2ff";
 
-        div.innerHTML = `<span class="meta">@${author} [${count}/${total}]</span><br>${text.toUpperCase()}`;
+        div.innerHTML = `<span class="meta">@${author} [${count}/${total}]</span>${text.toUpperCase()}`;
         
         s.appendChild(div);
         s.scrollTop = s.scrollHeight;
         poemContext += text + "\n";
     }
 
-   function updateMsg(id, text) {
+    function updateMsg(id, text) {
         const m = document.getElementById(id);
         if(m) {
             const meta = m.querySelector('.meta').outerHTML;
-            m.innerHTML = `${meta}<br>${text.toUpperCase()}`;
-            poemContext += text + "\n";
+            m.innerHTML = `${meta}${text.toUpperCase()}`;
+            // Добавляем финальный текст в контекст вместо заглушки
+            poemContext = poemContext.replace("СИНХРОНИЗАЦИЯ...", "") + text + "\n";
         }
-    }
-
-    // --- ДОБАВЛЯЕМ БЕЗОПАСНЫЙ ХРАНИТЕЛЬ КЛЮЧА ГРОКА ---
-    let GROK_STORAGE = ""; 
-    function getGrokKey() {
-        if (!GROK_STORAGE) {
-            GROK_STORAGE = prompt("ВВЕДИТЕ НОВЫЙ xAI API KEY (GROK):", "");
-        }
-        return GROK_STORAGE;
     }
 
     window.onload = init;
