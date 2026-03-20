@@ -4,123 +4,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY v4.32: GOLDEN AUTH</title>
-    <style>
-        :root {
-            --gold: #FFD700;
-            --gold-dark: #B8860B;
-            --bg: #000000;
-            --btn-size: 60px;
-        }
+    <title>GY-GY v4.33: GOLDEN AUTH</title>
+   <style>
+    :root {
+        --gold: #FFD700;
+        --gold-dark: #B8860B;
+        --bg: #000000;
+        --btn-size: 60px;
+    }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-        body {
-            margin: 0; padding: 0;
-            background: var(--bg);
-            font-family: 'Georgia', serif;
-            color: var(--gold);
-            display: flex; flex-direction: column;
-            height: 100vh; overflow: hidden;
-            top: 0px !important; /* Фикс для Google Translate */
-        }
+    body {
+        margin: 0; padding: 0;
+        background: var(--bg);
+        font-family: 'Georgia', serif;
+        color: var(--gold);
+        display: flex; flex-direction: column;
+        height: 100vh; overflow: hidden;
+        top: 0px !important;
+    }
 
-        /* ШАПКА: ЗОЛОТОЙ КОРДОН С GOOGLE СТАТУСОМ */
-        header {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 10px 15px;
-            border-bottom: 3px solid var(--gold);
-            background: #000;
-            z-index: 100;
-        }
+    /* ШАПКА */
+    header {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 10px 15px;
+        border-bottom: 3px solid var(--gold);
+        background: #000;
+        z-index: 1000;
+    }
 
-        .nav-box { display: flex; align-items: center; gap: 8px; }
+    .nav-box { display: flex; align-items: center; gap: 8px; flex: 1; }
 
-        .btn-nav {
-            width: var(--btn-size); height: var(--btn-size);
-            background: var(--bg); border: 3px solid var(--gold);
-            color: var(--gold); font-size: 30px; font-weight: 900;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer;
-        }
+    .btn-nav {
+        width: var(--btn-size); height: var(--btn-size);
+        background: var(--bg); border: 3px solid var(--gold);
+        color: var(--gold); font-size: 30px; font-weight: 900;
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer;
+    }
 
-        /* КОНТЕЙНЕР GOOGLE TRANSLATE */
-        #google_translate_element {
-            border: 3px solid var(--gold);
-            height: var(--btn-size);
-            background: #000;
-            display: flex;
-            align-items: center;
-            padding: 0 5px;
-            min-width: 100px;
-        }
+    /* ЖЕСТКАЯ КОРРЕКЦИЯ GOOGLE */
+    #google_translate_element {
+        border: 3px solid var(--gold) !important;
+        height: var(--btn-size) !important;
+        background: #000 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        overflow: hidden !important;
+        min-width: 80px;
+    }
 
-        /* Кастомизация виджета Google под Золото */
-        .goog-te-gadget-simple {
-            background-color: transparent !important;
-            border: none !important;
-            font-size: 16px !important;
-        }
-        .goog-te-menu-value { color: var(--gold) !important; font-weight: bold !important; text-decoration: none !important; }
-        .goog-te-gadget-icon { display: none !important; }
-        .goog-te-banner-frame.skiptranslate { display: none !important; }
-        .goog-logo-link { display: none !important; }
+    /* Убираем мусор Google внутри виджета */
+    .goog-te-gadget-simple {
+        background-color: transparent !important;
+        border: none !important;
+        padding: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+    }
 
-        .logo { font-size: 20px; font-weight: 900; letter-spacing: 3px; text-align: right; }
+    .goog-te-gadget-simple img {
+        display: inline-block !important;
+        filter: sepia(100%) saturate(500%) brightness(100%) hue-rotate(10deg) !important;
+        width: 24px !important;
+        height: 24px !important;
+    }
 
-        /* ОКНО ПОТОКА */
-        #stream {
-            flex: 1; overflow-y: auto; padding: 20px;
-            font-size: 22px; line-height: 1.6;
-            background: radial-gradient(circle at 50% 50%, #111 0%, #000 100%);
-        }
+    /* Скрываем текст "Выбрать язык", оставляя только стрелочку или код */
+    .goog-te-menu-value span:first-child { display: none !important; }
+    .goog-te-menu-value span:nth-child(3) { color: var(--gold) !important; font-size: 18px; font-weight: 900; }
+    .goog-te-menu-value img { display: none !important; }
 
-        .msg { margin-bottom: 30px; display: flex; animation: fadeIn 0.4s ease-out; }
-        .avatar {
-            width: 50px; height: 50px; border: 2px solid var(--gold);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 24px; font-weight: bold; margin-right: 15px; flex-shrink: 0;
-        }
+    /* Удаляем всплывающие панели Google сверху */
+    .goog-te-banner-frame.skiptranslate, .goog-te-banner-frame { display: none !important; }
+    .goog-tooltip, .goog-tooltip:hover { display: none !important; }
+    .goog-text-highlight { background-color: transparent !important; box-shadow: none !important; }
 
-        .msg-body-wrapper { flex: 1; border-left: 2px solid var(--gold-dark); padding-left: 15px; }
-        .badge {
-            font-size: 10px; color: var(--gold-dark); border: 1px solid var(--gold-dark); 
-            padding: 2px 5px; margin-bottom: 8px; display: inline-block;
-        }
+    .logo { font-size: 20px; font-weight: 900; letter-spacing: 2px; text-align: right; line-height: 1; }
 
-        .input-zone { padding: 20px; background: #000; border-top: 3px solid var(--gold); }
-        #inp {
-            width: 100%; background: #111; border: 2px solid var(--gold-dark);
-            color: var(--gold); font-size: 24px; padding: 18px; outline: none;
-        }
+    /* ОКНО ПОТОКА */
+    #stream {
+        flex: 1; overflow-y: auto; padding: 20px;
+        font-size: 22px; line-height: 1.6;
+        background: #000;
+    }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        /* ... твой старый код ... */
+    .msg { margin-bottom: 30px; display: flex; animation: fadeIn 0.4s ease-out; }
+    .avatar {
+        width: 50px; height: 50px; border: 2px solid var(--gold);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 24px; font-weight: bold; margin-right: 15px; flex-shrink: 0;
+    }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .msg-body-wrapper { flex: 1; border-left: 2px solid var(--gold-dark); padding-left: 15px; }
 
-        /* ВСТАВЛЯЙ СЮДА --> ТЮНИНГ GOOGLE */
-        .goog-te-gadget-simple {
-            background-color: transparent !important;
-            border: 2px solid var(--gold) !important; 
-            padding: 8px !important;
-            border-radius: 0 !important;
-            display: flex !important;
-            align-items: center;
-        }
-        .goog-te-gadget-simple img {
-            display: inline-block !important; 
-            filter: sepia(100%) saturate(200%) hue-rotate(10deg); 
-            margin-right: 5px;
-        }
-        .goog-te-menu-value span {
-            color: var(--gold) !important;
-            font-weight: bold;
-            text-decoration: none !important;
-        }
-        /* КОНЕЦ ВСТАВКИ */
+    .input-zone { padding: 20px; background: #000; border-top: 3px solid var(--gold); }
+    #inp {
+        width: 100%; background: #111; border: 2px solid var(--gold-dark);
+        color: var(--gold); font-size: 24px; padding: 18px; outline: none;
+    }
 
-    </style>
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+</style>
 </head>
 <body>
 
