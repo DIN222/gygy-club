@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY v4.33: GOLDEN AUTH</title>
+    <title>GY-GY v4.35: GOLDEN AUTH</title>
    <style>
     :root {
         --gold: #FFD700;
@@ -44,7 +44,7 @@
         cursor: pointer;
     }
 
-    /* ЖЕСТКАЯ КОРРЕКЦИЯ GOOGLE */
+    /* МЯГКАЯ КОРРЕКЦИЯ GOOGLE — ДАЕМ ИКОНКЕ ВЫЙТИ */
     #google_translate_element {
         border: 3px solid var(--gold) !important;
         height: var(--btn-size) !important;
@@ -52,39 +52,44 @@
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
-        overflow: hidden !important;
         min-width: 80px;
+        overflow: visible !important; /* ВАЖНО: разрешаем показ элементов */
     }
 
-    /* Убираем мусор Google внутри виджета */
+    /* Сам виджет внутри нашей рамки */
     .goog-te-gadget-simple {
         background-color: transparent !important;
         border: none !important;
-        padding: 0 !important;
+        padding: 5px !important;
         display: flex !important;
         align-items: center !important;
+        cursor: pointer;
     }
 
-    .goog-te-gadget-simple img {
+    /* Возвращаем иконку-планету, если она была скрыта */
+    .goog-te-gadget-icon {
         display: inline-block !important;
-        filter: sepia(100%) saturate(500%) brightness(100%) hue-rotate(10deg) !important;
         width: 24px !important;
         height: 24px !important;
+        filter: sepia(100%) saturate(500%) brightness(120%) !important; /* Делаем ЗОЛОТОЙ */
+        margin-right: 5px !important;
     }
 
-    /* Скрываем текст "Выбрать язык", оставляя только стрелочку или код */
-    .goog-te-menu-value span:first-child { display: none !important; }
-    .goog-te-menu-value span:nth-child(3) { color: var(--gold) !important; font-size: 18px; font-weight: 900; }
-    .goog-te-menu-value img { display: none !important; }
+    /* Текст внутри (RU/EN) */
+    .goog-te-menu-value span {
+        color: var(--gold) !important;
+        font-weight: bold !important;
+        font-size: 18px !important;
+        text-decoration: none !important;
+    }
 
-    /* Удаляем всплывающие панели Google сверху */
+    /* Прячем только то, что реально мешает — верхние панели */
     .goog-te-banner-frame.skiptranslate, .goog-te-banner-frame { display: none !important; }
-    .goog-tooltip, .goog-tooltip:hover { display: none !important; }
-    .goog-text-highlight { background-color: transparent !important; box-shadow: none !important; }
+    body { top: 0px !important; }
 
+    /* ОСТАЛЬНОЕ ОСТАВЛЯЕМ (ЛОГО И СТРИМ) */
     .logo { font-size: 20px; font-weight: 900; letter-spacing: 2px; text-align: right; line-height: 1; }
 
-    /* ОКНО ПОТОКА */
     #stream {
         flex: 1; overflow-y: auto; padding: 20px;
         font-size: 22px; line-height: 1.6;
