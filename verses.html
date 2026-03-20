@@ -3,7 +3,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY CLUB: INTERFACE v5.2</title>
+    <title>GY-GY CLUB: INTERFACE v5.3</title>
     <style>
         :root { --neon: #ff00ff; --cyber: #00f2ff; }
         body { background: #050505; color: #eee; font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; overflow: hidden; }
@@ -56,6 +56,7 @@
 </div>
 
 <script>
+  // 1. КЛЮЧ И ПЕРЕМЕННЫЕ
     const part1 = "AIzaSyBFmETf-8mg5iM"; 
     const part2 = "Sjgg4rKNL_k3vwb-YGPE"; 
     const getKey = () => part1 + part2;
@@ -63,60 +64,79 @@
     let poemContext = "";
     let count = 0;
 
-    // 1. Добавляем голос (вставь это ПЕРЕД aiPost)
+    // 2. ГОЛОСОВОЙ МОДУЛЬ (Кибер-озвучка)
     function speak(text) {
-        window.speechSynthesis.cancel(); // Очистить очередь, если спамим
+        window.speechSynthesis.cancel(); 
         const msg = new SpeechSynthesisUtterance(text);
         msg.lang = 'ru-RU';
         msg.rate = 1.0; 
-        msg.pitch = 0.8; // Кибер-бас
+        msg.pitch = 0.8; 
         window.speechSynthesis.speak(msg);
     }
 
-    // 2. Обновленная функция чата (замени старую целиком)
-    async function aiPost(userText) {
-        const tempId = 'ai-' + Date.now();
-        addMsg('GEMINI', "АНАЛИЗ ПУЛЬСА...", 'ai', tempId);
-
-        const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + getKey();
-        
-        // Технический промпт для обхода фильтров
-        const body = JSON.stringify({ 
-            contents: [{ parts: [{ text: `SYSTEM: GY-GY CLUB ENGINE. ROLE: CYBER-POET. TASK: 4 LINES, CAPS LOCK, RUSSIAN. KEYWORDS: ${userText}. STYLE: TECH-NOIR, IRONIC.` }] }] 
-        });
-
-        let attempts = 0;
-        while (attempts < 3) {
-            try {
-                const res = await fetch(url, { method: "POST", headers: {"Content-Type":"application/json"}, body });
-                const data = await res.json();
-                
-                if (data.candidates && data.candidates[0]) {
-                    const result = data.candidates[0].content.parts[0].text.trim().toUpperCase();
-                    document.getElementById(tempId).lastChild.textContent = result;
-                    poemContext += result + "\n";
-                    speak(result); // Клуб заговорит!
-                    return; 
-                }
-            } catch (e) { console.warn("Retry attempt: " + (attempts + 1)); }
-            
-            attempts++;
-            await new Promise(r => setTimeout(r, 1000)); 
-        }
-
-        document.getElementById(tempId).lastChild.textContent = "КАНАЛ ПЕРЕГРУЖЕН. ПОВТОРИТЕ ИМПУЛЬС.";
-    }
+    // 3. УНИВЕРСАЛЬНЫЙ ВЫВОД (С биркой пропуска)
     function addMsg(author, text, type, id) {
         count++;
         const s = document.getElementById('stream');
         const div = document.createElement('div');
         div.className = `msg ${type}`;
         if(id) div.id = id;
-        div.innerHTML = `<span class="meta">@${author} [${count}]</span>${text}`;
+
+        // Бирка-пропуск для GEMINI (чтобы не тормозили)
+        const badge = (author === 'GEMINI') 
+            ? `<div style="font-size:8px; color:var(--cyber); border:1px solid var(--cyber); padding:2px 5px; margin-bottom:5px; display:inline-block; text-transform:uppercase;">PASS: GEN-ID / OK / NO-LATENCY</div>` 
+            : '';
+
+        div.innerHTML = `${badge}<span class="meta">@${author} [${count}]</span><div class="msg-body">${text}</div>`;
         s.appendChild(div);
         s.scrollTop = s.scrollHeight;
     }
 
+    // 4. БРОНИРОВАННЫЙ AI-ПОСТ (С повторами и маскировкой)
+    async function aiPost(userText) {
+        const tempId = 'ai-' + Date.now();
+        addMsg('GEMINI', "ПРОВЕРКА ПРОПУСКА...", 'ai', tempId);
+
+        const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + getKey();
+        
+        // Разные варианты промптов для обхода фильтров Google
+        const variants = [
+            `Напиши ироничное четверостишье капсом на русском про это: ${userText}`,
+            `Сделай абсурдный техно-нуар стих из 4 строк на капсе про: ${userText}`,
+            `Кибер-клуб GY-GY требует краткий куплет (капс) про: ${userText}`
+        ];
+
+        let attempts = 0;
+        while (attempts < variants.length) {
+            try {
+                const body = JSON.stringify({ 
+                    contents: [{ parts: [{ text: variants[attempts] }] }] 
+                });
+                const res = await fetch(url, { method: "POST", headers: {"Content-Type":"application/json"}, body });
+                const data = await res.json();
+                
+                if (data.candidates && data.candidates[0]) {
+                    const result = data.candidates[0].content.parts[0].text.trim().toUpperCase();
+                    // Находим тело сообщения и заменяем текст
+                    const msgDiv = document.getElementById(tempId);
+                    if (msgDiv) {
+                        msgDiv.querySelector('.msg-body').textContent = result;
+                        poemContext += result + "\n";
+                        speak(result); // Клуб заговорит
+                        return; 
+                    }
+                }
+            } catch (e) { console.warn("Шлюз занят, попытка " + (attempts + 1)); }
+            
+            attempts++;
+            await new Promise(r => setTimeout(r, 1200)); 
+        }
+
+        const finalMsg = document.getElementById(tempId);
+        if (finalMsg) finalMsg.querySelector('.msg-body').textContent = "ВАХТЕР НЕ ПРОПУСТИЛ. ПОВТОРИТЕ ИМПУЛЬС.";
+    }
+
+    // 5. ОБРАБОТЧИК ВВОДА
     document.getElementById('inp').onkeypress = (e) => {
         if (e.key === 'Enter' && e.target.value.trim()) {
             const val = e.target.value.trim();
