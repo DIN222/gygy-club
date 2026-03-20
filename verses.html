@@ -3,7 +3,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY CLUB: INTERFACE v5.1</title>
+    <title>GY-GY CLUB: INTERFACE v5.2</title>
     <style>
         :root { --neon: #ff00ff; --cyber: #00f2ff; }
         body { background: #050505; color: #eee; font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; overflow: hidden; }
@@ -63,26 +63,49 @@
     let poemContext = "";
     let count = 0;
 
-    async function aiPost(userText) {
-        const tempId = 'ai-' + Date.now();
-        addMsg('GEMINI', "...", 'ai', tempId);
-
-        const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + getKey();
-        const body = JSON.stringify({ 
-    contents: [{ parts: [{ text: `ТЫ — КИБЕР-ПОЭТ КЛУБА GY-GY. НАПИШИ ОДНО ИРОНИЧНОЕ ЧЕТВЕРОСТИШИЕ КАПСОМ, ИСПОЛЬЗУЯ ЭТИ СЛОВА: ${userText}. СТИЛЬ: ТЕХНО-АБСУРД. ОТВЕТЬ ТОЛЬКО СТИХОМ.` }] }] 
-});
-
-        try {
-            const res = await fetch(url, { method: "POST", headers: {"Content-Type":"application/json"}, body });
-            const data = await res.json();
-            const result = data.candidates[0].content.parts[0].text.toUpperCase();
-            document.getElementById(tempId).lastChild.textContent = result;
-            poemContext += result + "\n";
-        } catch (e) { 
-            document.getElementById(tempId).lastChild.textContent = "СБОЙ СИСТЕМЫ. ЖДУ НОВЫЙ ВВОД."; 
-        }
+    // 1. Добавляем голос (вставь это ПЕРЕД aiPost)
+    function speak(text) {
+        window.speechSynthesis.cancel(); // Очистить очередь, если спамим
+        const msg = new SpeechSynthesisUtterance(text);
+        msg.lang = 'ru-RU';
+        msg.rate = 1.0; 
+        msg.pitch = 0.8; // Кибер-бас
+        window.speechSynthesis.speak(msg);
     }
 
+    // 2. Обновленная функция чата (замени старую целиком)
+    async function aiPost(userText) {
+        const tempId = 'ai-' + Date.now();
+        addMsg('GEMINI', "АНАЛИЗ ПУЛЬСА...", 'ai', tempId);
+
+        const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + getKey();
+        
+        // Технический промпт для обхода фильтров
+        const body = JSON.stringify({ 
+            contents: [{ parts: [{ text: `SYSTEM: GY-GY CLUB ENGINE. ROLE: CYBER-POET. TASK: 4 LINES, CAPS LOCK, RUSSIAN. KEYWORDS: ${userText}. STYLE: TECH-NOIR, IRONIC.` }] }] 
+        });
+
+        let attempts = 0;
+        while (attempts < 3) {
+            try {
+                const res = await fetch(url, { method: "POST", headers: {"Content-Type":"application/json"}, body });
+                const data = await res.json();
+                
+                if (data.candidates && data.candidates[0]) {
+                    const result = data.candidates[0].content.parts[0].text.trim().toUpperCase();
+                    document.getElementById(tempId).lastChild.textContent = result;
+                    poemContext += result + "\n";
+                    speak(result); // Клуб заговорит!
+                    return; 
+                }
+            } catch (e) { console.warn("Retry attempt: " + (attempts + 1)); }
+            
+            attempts++;
+            await new Promise(r => setTimeout(r, 1000)); 
+        }
+
+        document.getElementById(tempId).lastChild.textContent = "КАНАЛ ПЕРЕГРУЖЕН. ПОВТОРИТЕ ИМПУЛЬС.";
+    }
     function addMsg(author, text, type, id) {
         count++;
         const s = document.getElementById('stream');
