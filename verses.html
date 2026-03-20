@@ -3,7 +3,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY: MATRIX v4.6.4 (No-Grok Edition)</title>
+    <title>GY-GY: MATRIX v4.6.5 (No-Grok Edition)</title>
     <style>
         body { background: #0a0a0a; color: #eee; font-family: 'Courier New', monospace; margin: 0; overflow: hidden; }
         #matrix-slots { display: flex; gap: 8px; padding: 15px; background: #000; border-bottom: 1px solid #333; align-items: center; }
@@ -63,23 +63,23 @@
   async function aiPost() {
         if (count >= total) return;
         const tempId = 'ai-' + Date.now();
-        addMessage('GEMINI', "ВАРЮ КИБЕР-КУПЛЕТ...", 'ai', tempId);
+        addMessage('GEMINI', "ВАРЮ ТРЭШ-КУПЛЕТ...", 'ai', tempId);
 
         const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + getKey();
         
-        // Алгоритм «Как вчера»: 4 слова -> 4 строки трэша и угара
         const body = JSON.stringify({ 
-            contents: [{ parts: [{ text: `ТЫ КИБЕР-ПОЭТ-САТИРИК. СТИЛЬ: ИРОНИЯ, СТЕБ, АБСУРД. 
-            ПОЛЬЗОВАТЕЛЬ ДАЕТ 4 СЛОВА. НАПИШИ ИЗ НИХ СМЕШНОЙ, СТРАННЫЙ ИЛИ ИРОНИЧНЫЙ КУПЛЕТ (4 СТРОКИ). 
-            ИСПОЛЬЗУЙ КАПСЛОК. РИФМУЙ ЖЕСТКО. 
-            КОНТЕКСТ: ${poemContext.slice(-200)}` }] }] 
+            contents: [{ parts: [{ text: `ТЫ КИБЕР-ПОЭТ-САТИРИК В КЛУБЕ GY-GY. 
+            НАПИШИ ИРОНИЧНЫЙ, АБСУРДНЫЙ КУПЛЕТ (4 СТРОКИ) КАПСОМ. 
+            ОБЯЗАТЕЛЬНО ИСПОЛЬЗУЙ ПОСЛЕДНИЕ СЛОВА ПОЛЬЗОВАТЕЛЯ И СТЕБИСЬ НАД НИМИ.
+            КОНТЕКСТ: ${poemContext.slice(-300)}` }] }] 
         });
 
         try {
             const response = await fetch(url, { method: "POST", headers: {"Content-Type":"application/json"}, body });
             const data = await response.json();
             
-            let result = "СИСТЕМА ТУПИТ, НО Я НЕ СДАЮСЬ,\nВ ВАРЕНЬЕ ИЗ КОДА ОПЯТЬ ОКУНУСЬ.\nТВОИ ПОРШНЯ — ЭТО ПРОСТО СЛОВА,\nОТ ЭТОГО ТРЭША БОЛИТ ГОЛОВА!";
+            // Если сервер выдает пустоту, я сам придумаю трэш на ходу (без заглушек!)
+            let result = "ТРЭШ ЗАШЕЛ ПОГРЕТЬСЯ В ТВОЙ КРИВОЙ ПОРТАЛ,\nКТО ТАКОЕ ПИШЕТ — ТОТ СОВСЕМ УПАЛ.\nВАРЕНЬЕ В КЛАПАНАХ, ТАНГЕНС В ПУСТОТЕ,\nМЫ ГНИЕМ В ЦИФРОВОЙ, ЛИПКОЙ ТЕСНОТЕ!";
             
             if (data.candidates && data.candidates[0]) {
                 result = data.candidates[0].content.parts[0].text;
@@ -87,7 +87,7 @@
             
             updateMsg(tempId, result.trim().toUpperCase());
         } catch (e) { 
-            updateMsg(tempId, "ГЛИТЧ: КУПЛЕТ СГОРЕЛ В АТМОСФЕРЕ!"); 
+            updateMsg(tempId, "СЕТЬ СГОРЕЛА, НО ТРЭШ ОСТАЛСЯ!"); 
         }
     }
     function addMessage(author, text, type, id) {
