@@ -3,7 +3,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY CLUB: INTERFACE v5.0</title>
+    <title>GY-GY CLUB: INTERFACE v5.1</title>
     <style>
         :root { --neon: #ff00ff; --cyber: #00f2ff; }
         body { background: #050505; color: #eee; font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; overflow: hidden; }
@@ -69,8 +69,8 @@
 
         const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + getKey();
         const body = JSON.stringify({ 
-            contents: [{ parts: [{ text: `ТЫ КИБЕР-ПОЭТ. НАПИШИ ИРОНИЧНЫЙ КУПЛЕТ (4 СТРОКИ) КАПСОМ. СТЕБИСЬ НАД ЭТИМИ СЛОВАМИ: ${userText}. КОНТЕКСТ: ${poemContext.slice(-200)}` }] }] 
-        });
+    contents: [{ parts: [{ text: `ТЫ — КИБЕР-ПОЭТ КЛУБА GY-GY. НАПИШИ ОДНО ИРОНИЧНОЕ ЧЕТВЕРОСТИШИЕ КАПСОМ, ИСПОЛЬЗУЯ ЭТИ СЛОВА: ${userText}. СТИЛЬ: ТЕХНО-АБСУРД. ОТВЕТЬ ТОЛЬКО СТИХОМ.` }] }] 
+});
 
         try {
             const res = await fetch(url, { method: "POST", headers: {"Content-Type":"application/json"}, body });
