@@ -3,7 +3,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY: MATRIX v4.6.2 (No-Grok Edition)</title>
+    <title>GY-GY: MATRIX v4.6.3 (No-Grok Edition)</title>
     <style>
         body { background: #0a0a0a; color: #eee; font-family: 'Courier New', monospace; margin: 0; overflow: hidden; }
         #matrix-slots { display: flex; gap: 8px; padding: 15px; background: #000; border-bottom: 1px solid #333; align-items: center; }
@@ -60,26 +60,33 @@
         aiPost();
     }
 
-    async function aiPost() {
+   async function aiPost() {
         if (count >= total) return;
         const tempId = 'ai-' + Date.now();
-        addMessage('GEMINI', "СКАНИРУЮ ВАРЕНЬЕ...", 'ai', tempId);
+        addMessage('GEMINI', "ЗАГРУЖАЮ ПИНГВИНОВ...", 'ai', tempId);
 
         const lines = poemContext.trim().split('\n').filter(Boolean);
-        const lastLine = lines.length > 0 ? lines[lines.length - 1] : "БАР";
+        const lastLine = lines.length > 0 ? lines[lines.length - 1] : "СУНДУК";
         
-        const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + getKey();
+        const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + getKey();
         
         const body = JSON.stringify({ 
-            contents: [{ parts: [{ text: `ТЫ КИБЕР-ПОЭТ-САТИРИК. СТИЛЬ: ЖЕСТКАЯ ИРОНИЯ, СТЕБ, АБСУРД. ОТВЕТЬ СТРОГО ОДНОЙ СТРОКОЙ КАПСОМ. РИФМА К: ${lastLine}. ТЕМЫ: ПЕТУХИ, ВАРЕНЬЕ, ГЛИТЧИ, КОД.` }] }] 
+            contents: [{ parts: [{ text: `ТЫ КИБЕР-ПОЭТ-САТИРИК. СТИЛЬ: ТРЭШ, АБСУРД, ИРОНИЯ. ОТВЕТЬ ОДНОЙ СТРОКОЙ КАПСОМ. РИФМА К: ${lastLine}. ТЕМЫ: ПИНГВИНЫ, МАШИНЫ, СРЕДА, ВАРЕНЬЕ.` }] }] 
         });
+
+        // ЗАПАСНЫЕ ШУТКИ НА СЛУЧАЙ ГЛИТЧА
+        const jokes = [
+            "ПИНГВИН В МАШИНЕ — ЭТО СРЕДА, В СУНДУКЕ ВАРЕНЬЕ, В КОДЕ — БЕДА!",
+            "ВАШ КЛАПАН СВИСТИТ, КАК ПЕТУХ В СУНДУКЕ, СУДЬБА ВАШИХ КЛЮЧИКОВ — В ЛИПКОЙ РУКЕ!",
+            "МАШИНА НЕ ЕДЕТ, В СРЕДУ ОНА СПИТ, ВАРЕНЬЕ В МОТОРЕ — ВЕСЬ ПИНГВИН РЫЧИТ!",
+            "В СУНДУКЕ ПУСТОТА, В ПОРШНЯХ ТВОИХ МЫЛО, СРЕДА НАСТУПИЛА — ТЕБЯ ПЕРЕКОСИЛО!"
+        ];
 
         try {
             const response = await fetch(url, { method: "POST", headers: {"Content-Type":"application/json"}, body });
             const data = await response.json();
             
-            // Если сервер тупит, берем запасную шутку
-            let result = "ВАШ КЛАПАН СДОХ, В ВАРЕНЬЕ ВЕСЬ ПОРШЕНЬ, ВАШ ХОД — ТРУХА, А КОД ЕЩЕ ГОРШЕ!";
+            let result = jokes[Math.floor(Math.random() * jokes.length)]; // Берем случайную из списка, если API не даст ответ
             
             if (data.candidates && data.candidates[0]) {
                 result = data.candidates[0].content.parts[0].text;
@@ -87,7 +94,7 @@
             
             updateMsg(tempId, result.trim().toUpperCase());
         } catch (e) { 
-            updateMsg(tempId, "СИСТЕМА В КОМЕ: ПЕТУХ ПЕРЕГРЫЗ ПРОВОДА!"); 
+            updateMsg(tempId, "ГЛИТЧ: ПИНГВИНЫ СЪЕЛИ ВСЕ КЛАПАНА!"); 
         }
     }
     function addMessage(author, text, type, id) {
