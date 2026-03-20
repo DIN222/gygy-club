@@ -3,7 +3,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY: MATRIX v4.6.1 (No-Grok Edition)</title>
+    <title>GY-GY: MATRIX v4.6.2 (No-Grok Edition)</title>
     <style>
         body { background: #0a0a0a; color: #eee; font-family: 'Courier New', monospace; margin: 0; overflow: hidden; }
         #matrix-slots { display: flex; gap: 8px; padding: 15px; background: #000; border-bottom: 1px solid #333; align-items: center; }
@@ -63,28 +63,33 @@
     async function aiPost() {
         if (count >= total) return;
         const tempId = 'ai-' + Date.now();
-        addMessage('GEMINI', "ГЕНЕРИРУЮ СТЕБ...", 'ai', tempId);
+        addMessage('GEMINI', "СКАНИРУЮ ВАРЕНЬЕ...", 'ai', tempId);
 
         const lines = poemContext.trim().split('\n').filter(Boolean);
         const lastLine = lines.length > 0 ? lines[lines.length - 1] : "БАР";
         
         const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + getKey();
         
-        // Здесь зашит промпт на ИРОНИЮ и АБСУРД
         const body = JSON.stringify({ 
-            contents: [{ parts: [{ text: `ТЫ КИБЕР-ПОЭТ-САТИРИК. СТИЛЬ: ИРОНИЯ, СТЕБ, АБСУРД. ОТВЕТЬ СТРОГО ОДНОЙ СТРОКОЙ КАПСОМ. РИФМА К: ${lastLine}. ЕСЛИ В ТЕКСТЕ БЫЛИ СОСИСКИ ИЛИ ВАРЕНЬЕ - ВЫСМЕЙ ЭТО.` }] }] 
+            contents: [{ parts: [{ text: `ТЫ КИБЕР-ПОЭТ-САТИРИК. СТИЛЬ: ЖЕСТКАЯ ИРОНИЯ, СТЕБ, АБСУРД. ОТВЕТЬ СТРОГО ОДНОЙ СТРОКОЙ КАПСОМ. РИФМА К: ${lastLine}. ТЕМЫ: ПЕТУХИ, ВАРЕНЬЕ, ГЛИТЧИ, КОД.` }] }] 
         });
 
         try {
             const response = await fetch(url, { method: "POST", headers: {"Content-Type":"application/json"}, body });
             const data = await response.json();
-            const result = data.candidates[0].content.parts[0].text;
+            
+            // Если сервер тупит, берем запасную шутку
+            let result = "ВАШ КЛАПАН СДОХ, В ВАРЕНЬЕ ВЕСЬ ПОРШЕНЬ, ВАШ ХОД — ТРУХА, А КОД ЕЩЕ ГОРШЕ!";
+            
+            if (data.candidates && data.candidates[0]) {
+                result = data.candidates[0].content.parts[0].text;
+            }
+            
             updateMsg(tempId, result.trim().toUpperCase());
         } catch (e) { 
-            updateMsg(tempId, "ГЛИТЧ В СИСТЕМЕ: ЮМОР НЕ ЗАВЗЯЛСЯ"); 
+            updateMsg(tempId, "СИСТЕМА В КОМЕ: ПЕТУХ ПЕРЕГРЫЗ ПРОВОДА!"); 
         }
     }
-
     function addMessage(author, text, type, id) {
         count++;
         const s = document.getElementById('stream');
