@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY v4.35: GOLDEN AUTH</title>
+    <title>GY-GY v4.36: GOLDEN AUTH</title>
    <style>
     :root {
         --gold: #FFD700;
@@ -116,22 +116,21 @@
 </head>
 <body>
 
-    <header>
-        <div class="nav-box">
-            <button class="btn-nav" onclick="history.back()">«</button>
-            
-            <div id="google_translate_element"></div>
-            
-            <button class="btn-nav" onclick="history.forward()">»</button>
-        </div>
-        <div class="logo">GY-GY <br><span style="font-size:10px; color:var(--gold-dark);">v4.3</span></div>
-    </header>
-
-    <div id="stream"></div>
-
-    <div class="input-zone">
-        <input type="text" id="inp" placeholder="ВАШ ИМПУЛЬС..." autocomplete="off">
+   <header>
+    <div class="nav-box" style="flex: 1;">
+        <button class="btn-nav" onclick="goBackOrHome()">«</button>
+        
+        <div id="google_translate_element" style="min-width: 80px; height: 60px; display: flex; align-items: center; justify-content: center; overflow: visible !important;"></div>
+        
+        <button class="btn-nav" onclick="history.forward()">»</button>
     </div>
+    <div class="logo">GY-GY <br><span style="font-size:10px; color:var(--gold-dark);">v4.3</span></div>
+</header>
+
+<div class="input-zone" style="display: flex; gap: 10px;">
+    <input type="text" id="inp" placeholder="ВАШ ИМПУЛЬС..." autocomplete="off" style="flex: 1;">
+    <button id="sendBtn" class="btn-nav" style="width: 70px; font-size: 24px;">OK</button>
+</div>
 
     <script type="text/javascript">
         function googleTranslateElementInit() {
