@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY v5.0.1: ABSURD STUDIO</title>
+    <title>GY-GY v5.0.2: ABSURD STUDIO</title>
     <style>
         :root { --gold: #ffcf00; --gold-dark: #b8860b; --bg: #000; }
         body { background: var(--bg); color: #fff; font-family: 'Courier New', monospace; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
@@ -47,6 +47,37 @@ body {
 #google_translate_element {
     display: none;
 }
+        /* 1. Полная блокировка серой верхней панели Google */
+.goog-te-banner-frame.skiptranslate, 
+.goog-te-banner-frame, 
+#goog-gt-tt { 
+    display: none !important; 
+}
+
+/* 2. Запрещаем странице "прыгать" вниз при активации перевода */
+body { 
+    top: 0 !important; 
+}
+
+/* 3. Делаем саму "абракадабру" (виджет) невидимой и убираем из потока */
+#google_translate_element {
+    position: absolute;
+    top: -999px;
+    left: -999px;
+    visibility: hidden;
+}
+
+/* 4. Стили для выпадающего списка языков (когда мы его вызовем кликом) */
+/* Мы делаем его в стиле нашего клуба: черным с золотом */
+select.goog-te-combo {
+    background: #000 !important;
+    color: #ffd700 !important; /* Наше золото --gold */
+    border: 1px solid #ff8c00 !important; /* Наш оранжевый --orange-neon */
+    padding: 5px;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    border-radius: 4px;
+}
     </style>
 </head>
 <body>
@@ -54,7 +85,11 @@ body {
     <header>
         <div class="nav-box">
             <button class="btn-nav" id="backBtn">«</button>
-            <div id="google_translate_element"></div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+    <div onclick="changeLang()" style="cursor:pointer; color:var(--gold); font-weight:bold; font-size:1.2rem; padding: 0 10px;">文A</div>
+    
+    <div id="google_translate_element" style="display:none;"></div>
+</div>
             <button class="btn-nav" onclick="location.reload()">↺</button>
         </div>
         <div style="text-align: center; color: var(--gold); letter-spacing: 5px; font-weight: bold;">GY-GY v5.0</div>
@@ -72,6 +107,20 @@ body {
             <button class="btn-alt" id="publishBtn" disabled>ОПУБЛИКОВАТЬ</button>
         </div>
         <button class="btn-alt" id="clipBtn" style="width: 100%; margin-top: 10px; display: none;">СДЕЛАТЬ КЛИП →</button>
+        /* Прячем верхний баннер Google навсегда */
+.goog-te-banner-frame.skiptranslate, .goog-te-banner-frame { 
+    display: none !important; 
+}
+body { top: 0 !important; }
+
+/* Делаем выпадающий список аккуратным */
+select.goog-te-combo {
+    position: fixed;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10000;
+}
     </div>
 
     <script type="text/javascript">
@@ -83,15 +132,17 @@ body {
         autoDisplay: false 
     }, 'google_translate_element');
 }
-        function changeLang() {
-    // Находим скрытый выпадающий список Google
+       function changeLang() {
     var select = document.querySelector('select.goog-te-combo');
     if (select) {
-        // Если он есть, просто показываем его пользователю как системное меню
+        // Делаем список видимым и переносим его под руку
         select.style.display = 'block';
+        select.style.position = 'fixed';
+        select.style.top = '70px'; // Чуть ниже твоей панели
+        select.style.left = '20px';
         select.focus();
     } else {
-        alert("Загрузка лингво-модуля...");
+        alert("Лингво-модуль загружается... Попробуйте через секунду.");
     }
 }
     </script>
@@ -153,7 +204,19 @@ body {
             localStorage.setItem('current_poem', stanzas.join('\n\n'));
             alert("ПЕРЕХОД В МАСТЕРСКУЮ КЛИПОВ...");
             // Здесь будет переход: window.location.href = 'clips.html';
-        };
+        }
+        function changeLang() {
+    // Ищем выпадающий список Google
+    var select = document.querySelector('select.goog-te-combo');
+    if (select) {
+        select.style.display = 'block'; 
+        select.style.background = '#000';
+        select.style.color = 'var(--gold)';
+        select.focus();
+    } else {
+        alert("Лингво-модуль загружается...");
+    }
+}
     </script>
 
 </body>
