@@ -4,141 +4,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY v5.8: THE MONOLITH</title>
+    <title>GY-GY v5.9: ABSURD REALITY</title>
     <style>
-        :root { --gold: #ffcf00; --orange-neon: #ff8c00; --bg: #000; }
+        :root { --gold: #ffcf00; --orange: #ff8c00; --bg: #000; }
         body { background: var(--bg); color: #fff; font-family: 'Courier New', monospace; margin: 0; overflow: hidden; }
 
-        /* ИНТЕРЬЕР AI ROOM */
+        /* ИНТЕРЬЕР AI ROOM (ASCII ART & NEON) */
         #ai-room { 
-            height: 100vh; width: 100vw; 
-            background: 
-                radial-gradient(circle at 50% 120%, #1a1a1a 0%, #000 70%),
-                linear-gradient(to bottom, #050505 0%, #000 100%);
-            display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative;
+            height: 100vh; width: 100vw; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; position: relative;
+            background: radial-gradient(circle at 50% 150%, #111 0%, #000 80%);
         }
 
-        /* Кресло и Стол (Визуальные якоря) */
-        .interior-element { position: absolute; opacity: 0.1; pointer-events: none; }
-        .chair { bottom: 10%; width: 200px; height: 150px; border: 2px solid var(--gold); border-radius: 40% 40% 10% 10%; }
-
-        .neon-display {
-            color: var(--orange-neon); font-size: 28px; font-weight: 900;
-            text-shadow: 0 0 15px var(--orange-neon);
-            cursor: pointer; letter-spacing: 8px; margin: 20px; transition: 0.4s;
-            text-decoration: none; border-bottom: 1px transparent;
+        .ascii-furniture { 
+            position: absolute; color: #1a1a1a; font-size: 8px; white-space: pre; 
+            pointer-events: none; line-height: 1; z-index: 0; 
         }
-        .neon-display:hover { color: #fff; text-shadow: 0 0 25px #fff; border-bottom: 1px solid var(--gold); }
 
-        /* ИНТЕРФЕЙС СТУДИИ */
-        #studio { display: none; flex-direction: column; height: 100vh; background: #000; }
+        .neon-link {
+            color: var(--orange); font-size: 30px; font-weight: 900;
+            text-shadow: 0 0 15px var(--orange); text-decoration: none;
+            letter-spacing: 10px; margin: 25px; cursor: pointer; z-index: 10;
+        }
+        .neon-link:hover { color: #fff; text-shadow: 0 0 30px var(--gold); }
+
+        /* СТУДИЯ */
+        #studio { display: none; flex-direction: column; height: 100vh; background: #000; z-index: 20; }
         
         header { 
             display: flex; align-items: center; border-bottom: 1px solid #222; 
-            padding: 5px 15px; background: #050505; height: 60px;
+            padding: 10px 15px; background: #050505; height: 50px;
         }
 
-        .nav-btn { color: var(--gold); font-size: 24px; background: none; border: none; cursor: pointer; }
-        .tools-row { display: flex; align-items: center; gap: 15px; flex: 1; padding: 0 15px; overflow-x: auto; }
+        .nav-btn { color: var(--gold); font-size: 24px; background: none; border: none; cursor: pointer; font-weight: bold; }
+        .tools-row { display: flex; align-items: center; gap: 15px; flex: 1; padding-left: 15px; }
+        
+        /* ЯЗЫКОВАЯ КНОПКА */
+        #google_translate_element { border: 1px solid var(--gold); padding: 2px; border-radius: 3px; max-width: 80px; overflow: hidden; }
+
         .tool { color: var(--gold); font-size: 11px; font-weight: 900; background: none; border: none; cursor: pointer; letter-spacing: 1px; }
 
-        .stream-zone { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 20px; }
-        .msg { padding: 10px; border-left: 2px solid var(--gold); max-width: 80%; line-height: 1.5; font-style: italic; }
-        .msg.user { align-self: flex-end; border-left: none; border-right: 2px solid #555; text-align: right; color: #888; }
+        .chat-zone { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; }
+        .poem-line { padding: 8px 15px; margin: 5px 0; border-left: 2px solid var(--gold); font-size: 18px; line-height: 1.4; opacity: 0; animation: fade 0.8s forwards; }
+        .user-line { border-left: none; border-right: 2px solid #444; text-align: right; color: #888; font-style: italic; }
+
+        @keyframes fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .input-bar { display: flex; padding: 15px; background: #080808; border-top: 1px solid #222; gap: 10px; }
-        input { flex: 1; background: none; border: none; border-bottom: 1px solid #333; color: #fff; font-size: 16px; outline: none; }
-        .btn-ok { color: var(--gold); font-weight: 900; background: none; border: 1px solid var(--gold); padding: 5px 20px; cursor: pointer; }
+        #inp { flex: 1; background: none; border: none; border-bottom: 1px solid #333; color: #fff; font-size: 18px; outline: none; text-align: center; }
+        .btn-ok { color: var(--gold); font-weight: 900; background: none; border: 1px solid var(--gold); padding: 5px 25px; cursor: pointer; }
 
-        #road-sign { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); border: 2px solid var(--gold); background: #000; color: var(--gold); padding: 20px; display: none; z-index: 999; }
+        #road-sign { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); border: 2px solid var(--gold); background: #000; color: var(--gold); padding: 30px; display: none; z-index: 9999; text-align: center; font-weight: 900; }
     </style>
 </head>
 <body>
 
-    <div id="road-sign">🛑 ТУПИК</div>
+    <div id="road-sign">⛔<br><br>ПРОЕЗД ЗАКРЫТ</div>
 
     <div id="ai-room">
-        <div class="interior-element chair"></div>
-        <div class="neon-display" onclick="toggleView('studio')">VERSES</div>
-        <div class="neon-display" onclick="alert('TECHPARK В РАЗРАБОТКЕ')">TECHPARK</div>
-        <div style="color: #222; margin-top: 40px; font-size: 10px; letter-spacing: 5px;">ARCHIVE ACCESS</div>
+        <div class="ascii-furniture" style="top: 20%;">
+            ___________________________________________________
+           |  _______________________________________________  |
+           | |                                               | |
+           | |         [ DIGITAL HORIZON v4.3.2 ]            | |
+           | |_______________________________________________| |
+           |___________________________________________________|
+        </div>
+        
+        <div class="neon-link" onclick="toggleView('studio')">VERSES</div>
+        <div class="neon-link" style="opacity: 0.3;">TECHPARK</div>
+
+        <div class="ascii-furniture" style="bottom: 5%;">
+             _______
+            /       \
+           |  [CHAIR]|
+           |_________|
+            | |   | |
+        </div>
     </div>
 
     <div id="studio">
         <header>
             <button class="nav-btn" onclick="toggleView('room')">«</button>
             <div class="tools-row">
-                <div class="tool" style="border: 1px solid var(--gold); padding: 4px;">文A</div>
+                <div id="google_translate_element"></div>
                 <div id="userID" style="color:var(--gold); font-size:10px;">ID-000</div>
-                <button class="tool" onclick="publish()">В ЭФИР</button>
-                <button class="tool" onclick="share()">SHARE</button>
-                <button class="tool">КЛИП</button>
+                <button class="tool" onclick="alert('ЭФИР ПОДГОТОВЛЕН')">В ЭФИР</button>
+                <button class="tool">SHARE</button>
+                <button class="tool" style="color:#fff">КЛИП</button>
             </div>
-            <div style="color:var(--gold); font-weight:900; margin-left:auto;">GY-GY</div>
+            <div style="color:var(--gold); font-weight:900; margin-left:auto; letter-spacing:3px;">GY-GY</div>
             <button class="nav-btn" onclick="showSign()">»</button>
         </header>
 
-        <div class="stream-zone" id="stream">
-            <div class="msg">Я жду твой импульс... Каким будет первый куплет?</div>
+        <div class="chat-zone" id="chat">
+            <div class="poem-line">Зал ожидания пуст... Шепни первую строку.</div>
         </div>
 
         <div class="input-bar">
-            <input type="text" id="inp" placeholder="НАПИШИТЕ СТРОКУ..." autocomplete="off">
+            <input type="text" id="inp" placeholder="ВАШ ИМПУЛЬС..." autocomplete="off">
             <button class="btn-ok" onclick="send()">OK</button>
         </div>
     </div>
 
-    <script>
-        let stanzas = 0;
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage:'ru', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-        function toggleView(view) {
-            document.getElementById('ai-room').style.display = view === 'room' ? 'flex' : 'none';
-            document.getElementById('studio').style.display = view === 'studio' ? 'flex' : 'none';
+    <script>
+        let lineCount = 0;
+
+        function toggleView(v) {
+            document.getElementById('ai-room').style.display = v === 'room' ? 'flex' : 'none';
+            document.getElementById('studio').style.display = v === 'studio' ? 'flex' : 'none';
         }
 
         function showSign() {
             const s = document.getElementById('road-sign');
             s.style.display = 'block';
-            setTimeout(() => s.style.display = 'none', 1200);
+            setTimeout(() => s.style.display = 'none', 1500);
         }
 
         function send() {
             const inp = document.getElementById('inp');
-            const stream = document.getElementById('stream');
-            if (!inp.value.trim() || stanzas >= 4) return;
+            const chat = document.getElementById('chat');
+            const text = inp.value.trim();
 
-            // Сообщение пользователя
-            let uMsg = document.createElement('div');
-            uMsg.className = 'msg user';
-            uMsg.innerText = inp.value;
-            stream.appendChild(uMsg);
+            if (!text || lineCount >= 8) return; // 4 твоих + 4 моих = 8 строк
 
-            // Мой абсурдный ответ (ИИ)
-            setTimeout(() => {
-                let aiMsg = document.createElement('div');
-                aiMsg.className = 'msg';
-                aiMsg.innerText = generateAbsurdResponse(inp.value);
-                stream.appendChild(aiMsg);
-                stream.scrollTop = stream.scrollHeight;
-                stanzas++;
-                if(stanzas >= 4) {
-                    aiMsg.innerText += "\n\n(Лимит 4 куплетов достигнут. Время Опубликовать или начать Поэму?)";
-                }
-            }, 600);
-
+            // Твоя строка
+            addLine(text, 'user-line');
             inp.value = "";
+
+            // Моя абсурдная рифма
+            setTimeout(() => {
+                const aiResponse = generatePoemResponse(text);
+                addLine(aiResponse, '');
+                lineCount += 2;
+                
+                if (lineCount >= 8) {
+                    addLine("--- КУПЛЕТ ЗАВЕРШЕН. В ЭФИР? ---", 'tool');
+                }
+            }, 800);
         }
 
-        function generateAbsurdResponse(input) {
-            const endings = [
-                "Тень упала на оранжевый стол.",
-                "Механический соловей проглотил ключ.",
-                "Цифровой шелк рвется там, где тонко.",
-                "Кресло помнит тех, кто не вернулся.",
-                "В Беври сейчас идет дождь из байтов.",
-                "Абсурд — это единственная логика GY-GY."
+        function addLine(txt, cls) {
+            const div = document.createElement('div');
+            div.className = 'poem-line ' + cls;
+            div.innerText = txt;
+            document.getElementById('chat').appendChild(div);
+            document.getElementById('chat').scrollTop = document.getElementById('chat').scrollHeight;
+        }
+
+        function generatePoemResponse(input) {
+            // Матрица абсурда (имитация логики Gemini)
+            if (input.includes('айсберг')) return "Кот на дне нашел комод.";
+            if (input.includes('кот')) return "Айсберг в чай упал, как плот.";
+            
+            const randoms = [
+                "Зеркала молчат в ответ.",
+                "Цифра съела мой обед.",
+                "Тень сплетает лунный свет.",
+                "Логики здесь больше нет."
             ];
-            return "Твой импульс принят... " + endings[Math.floor(Math.random() * endings.length)];
+            return randoms[Math.floor(Math.random() * randoms.length)];
         }
 
         window.onload = () => {
