@@ -60,7 +60,7 @@
     </script>
     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-<script>
+<script><script>
         // --- СИСТЕМА РАЗДЕЛЕННОГО КЛЮЧА v4.3.2 ---
         const part1 = "AIzaSyC7l5KTkISjAKH1"; 
         const part2 = "25uuGRYCtUjxOArl0r8"; 
@@ -68,16 +68,15 @@
         const getFullKey = () => part1.trim() + part2.trim();
         let count = 0;
 
-        // ЧЕСТНЫЙ ВОЗВРАТ НАЗАД
+        // ЧЕСТНЫЙ ВОЗВРАТ НАЗАД (БЕЗ ВЫЛЕТА К ДВЕРИ)
         document.getElementById('backBtn').onclick = () => {
             if (window.history.length > 1) {
                 window.history.back();
             } else {
-                console.log("v4.3.2: Тупик навигации.");
+                console.log("v4.3.2: Назад некуда.");
             }
         };
 
-        // ФУНКЦИЯ ДОБАВЛЕНИЯ СООБЩЕНИЯ
         function addMsg(author, text) {
             count++;
             const s = document.getElementById('stream');
@@ -93,31 +92,26 @@
             s.scrollTop = s.scrollHeight;
         }
 
-        // ЗАПРОС К GEMINI
         async function aiPost(userText) {
-            const fullUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${getFullKey()}`;
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${getFullKey()}`;
             try {
-                const res = await fetch(fullUrl, {
+                const res = await fetch(url, {
                     method: "POST",
                     headers: {"Content-Type":"application/json"},
-                    body: JSON.stringify({ 
-                        contents: [{ parts: [{ text: `Напиши 4 строки короткого, жесткого техно-нуара про: ${userText}` }] }] 
-                    })
+                    body: JSON.stringify({ contents: [{ parts: [{ text: `Напиши 4 строки техно-нуара капсом про: ${userText}` }] }] })
                 });
                 const data = await res.json();
-                
-                if (data.candidates && data.candidates[0].content) {
-                    const result = data.candidates[0].content.parts[0].text.trim();
+                if (data.candidates) {
+                    const result = data.candidates[0].content.parts[0].text.trim().toUpperCase();
                     addMsg('GEMINI', result);
                 } else {
-                    addMsg('GEMINI', "ОШИБКА: ПРОВЕРЬТЕ КВОТУ ИЛИ КЛЮЧ.");
+                    addMsg('GEMINI', "КЛЮЧ ОЖИДАЕТ АКТИВАЦИИ ИЛИ КВОТА ПРЕВЫШЕНА.");
                 }
             } catch (e) { 
-                addMsg('GEMINI', "СБОЙ СЕТИ. ПОВТОРИТЕ."); 
+                addMsg('GEMINI', "СЕТЕВОЙ СБОЙ. ПОВТОРИТЕ."); 
             }
         }
 
-        // ОБРАБОТКА ОТПРАВКИ
         const handleSend = () => {
             const input = document.getElementById('inp');
             if (input.value.trim()) {
@@ -128,18 +122,16 @@
             }
         };
 
-        // ПРИВЯЗКА КНОПОК
         document.getElementById('sendBtn').onclick = handleSend;
         document.getElementById('inp').onkeypress = (e) => { if(e.key === 'Enter') handleSend(); };
 
-        // ПИНОК GOOGLE TRANSLATE
+        // ПИНОК GOOGLE (через 3 секунды)
         window.addEventListener('load', () => {
             setTimeout(() => { 
-                if(!document.querySelector('.goog-te-gadget-simple')) {
-                    if (typeof googleTranslateElementInit === 'function') googleTranslateElementInit();
-                }
+                if(!document.querySelector('.goog-te-gadget-simple')) googleTranslateElementInit(); 
             }, 3000);
         });
     </script>
 </body>
 </html>
+      
