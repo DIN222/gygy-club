@@ -4,127 +4,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY v5.6: GOLD & NEON</title>
+    <title>GY-GY v5.7: THE ARCHIVE</title>
     <style>
         :root { --gold: #ffcf00; --orange-neon: #ff8c00; --bg: #000; }
-        body { background: var(--bg); color: #fff; font-family: 'Courier New', monospace; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        body { background: var(--bg); color: #fff; font-family: 'Courier New', monospace; margin: 0; overflow: hidden; }
 
         /* ВЕРХНЯЯ ПАНЕЛЬ */
         .control-panel {
-            display: flex;
-            align-items: center;
-            border-bottom: 1px solid #222;
-            padding: 0 15px;
-            background: #050505;
-            height: 60px;
-            gap: 15px;
+            display: flex; align-items: center; border-bottom: 1px solid #222;
+            padding: 0 15px; background: #050505; height: 60px; gap: 10px;
         }
 
-        .nav-arrow { color: var(--gold); font-size: 28px; background: none; border: none; cursor: pointer; font-weight: bold; padding: 0 10px; }
+        .nav-arrow { color: var(--gold); font-size: 28px; background: none; border: none; cursor: pointer; font-weight: bold; }
+        .tools-row { display: flex; align-items: center; gap: 15px; flex: 1; overflow-x: auto; scrollbar-width: none; }
         
-        .tools-row { display: flex; align-items: center; gap: 20px; flex: 1; overflow-x: auto; scrollbar-width: none; }
-        .tools-row::-webkit-scrollbar { display: none; }
-
-        /* ИКОНКА ПЕРЕВОДА */
-        .lang-icon { font-size: 22px; color: var(--gold); cursor: pointer; min-width: 35px; }
-
-        .tool-item { color: var(--gold); text-transform: uppercase; font-size: 12px; font-weight: 900; white-space: nowrap; cursor: pointer; letter-spacing: 1px; background: none; border: none; }
+        /* ЯЗЫКОВАЯ ПАНЕЛЬ (Делаем видимой для работы) */
+        #google_translate_element { min-width: 100px; height: 30px; border: 1px solid var(--gold); border-radius: 4px; overflow: hidden; }
         
-        /* ЛОГО В ПРАВОМ КРАЮ */
-        .logo-end { margin-left: auto; color: var(--gold); font-weight: 900; letter-spacing: 2px; font-size: 14px; opacity: 0.8; }
+        .tool-item { color: var(--gold); text-transform: uppercase; font-size: 11px; font-weight: 900; cursor: pointer; background: none; border: none; white-space: nowrap; }
+        .logo-end { margin-left: auto; color: var(--gold); font-weight: 900; letter-spacing: 2px; font-size: 14px; }
+        .user-avatar { width: 30px; height: 30px; border: 1px solid var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; flex-shrink: 0; }
 
-        .user-avatar { width: 32px; height: 32px; border: 1px solid var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; color: var(--gold); flex-shrink: 0; }
-
-        /* AI ROOM NEON (Экраны) */
-        .ai-screen-word {
-            color: var(--orange-neon) !important;
+        /* ЭКРАНЫ AI ROOM (Оранжевый Неон) */
+        #ai-room { 
+            display: none; height: 100vh; width: 100vw; 
+            background: radial-gradient(circle at center, #111 0%, #000 100%);
+            flex-direction: column; align-items: center; justify-content: center; gap: 30px;
+        }
+        .neon-screen {
+            color: var(--orange-neon); font-size: 24px; font-weight: 900;
             text-shadow: 0 0 10px var(--orange-neon), 0 0 20px var(--orange-neon);
-            cursor: pointer;
-            text-transform: uppercase;
-            font-weight: 900;
+            cursor: pointer; letter-spacing: 5px; transition: 0.3s;
         }
+        .neon-screen:hover { color: #fff; }
 
-        /* ЗОНА ТЕКСТА */
+        /* СТУДИЯ СТИХОВ */
+        #studio { display: flex; flex-direction: column; height: 100vh; }
         .studio-zone { flex: 1; overflow-y: auto; padding: 40px 20px; text-align: center; }
-        .poem-paper { font-size: 22px; line-height: 1.6; color: #fff; font-style: italic; white-space: pre-wrap; }
+        .poem-paper { font-size: 22px; line-height: 1.6; font-style: italic; white-space: pre-wrap; }
         
-        /* ВВОД В ОДНУ СТРОКУ */
-        .input-bar { 
-            display: flex; 
-            padding: 15px; 
-            background: #080808; 
-            border-top: 1px solid #222; 
-            align-items: center;
-            gap: 10px;
-        }
-        #poemInput { 
-            flex: 1; 
-            background: none; 
-            border: none; 
-            border-bottom: 1px solid #444; 
-            color: #fff; 
-            font-size: 16px; 
-            padding: 8px; 
-            outline: none; 
-        }
-        #poemInput:focus { border-bottom-color: var(--gold); }
-        .btn-add-inline { color: var(--gold); background: none; border: 1px solid var(--gold); padding: 8px 15px; cursor: pointer; font-weight: 900; font-size: 12px; border-radius: 4px; }
+        /* ВВОД В СТРОКУ */
+        .input-bar { display: flex; padding: 15px; background: #080808; border-top: 1px solid #222; gap: 10px; }
+        #poemInput { flex: 1; background: none; border: none; border-bottom: 1px solid #444; color: #fff; font-size: 16px; outline: none; }
+        .btn-ok { color: var(--gold); background: none; border: 1px solid var(--gold); padding: 5px 15px; cursor: pointer; font-weight: 900; }
 
-        /* ЗНАК ТУПИКА */
-        #road-sign { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #000; border: 2px solid var(--gold); color: var(--gold); padding: 30px; display: none; z-index: 1000; text-align: center; font-weight: bold; }
-
-        /* Прячем мусор от Гугла */
-        .goog-te-banner-frame { display: none !important; }
-        body { top: 0 !important; }
-        #google_translate_element { height: 0; overflow: hidden; opacity: 0; }
+        #road-sign { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); border: 2px solid var(--gold); background: #000; color: var(--gold); padding: 20px; display: none; z-index: 2000; }
     </style>
 </head>
 <body>
 
-    <div id="road-sign">⛔<br><br>ПРОЕЗД ЗАКРЫТ</div>
+    <div id="road-sign">🛑 ТУПИК</div>
 
-    <header class="control-panel">
-        <button class="nav-arrow" onclick="goNav('back')">«</button>
-        
-        <div class="tools-row">
-            <div class="lang-icon" onclick="openLang()">文A</div>
-            <div class="user-avatar" id="userIcon">ID</div>
-            <button class="tool-item" id="publishBtn">В ЭФИР</button>
-            <button class="tool-item" onclick="shareFriend()">SHARE</button>
-            <button class="tool-item" id="clipBtn">КЛИП</button>
+    <div id="ai-room">
+        <div class="neon-screen" onclick="enterStudio()">VERSES</div>
+        <div class="neon-screen">TECHPARK</div>
+        <div style="color: #333; font-size: 10px;">[ СТОЛ / КРЕСЛО / ЭКРАНЫ ]</div>
+    </div>
+
+    <div id="studio">
+        <header class="control-panel">
+            <button class="nav-arrow" onclick="exitToRoom()">«</button>
+            <div class="tools-row">
+                <div id="google_translate_element"></div>
+                <div class="user-avatar" id="userIcon">ID</div>
+                <button class="tool-item" onclick="alert('В ЭФИРЕ...')">В ЭФИР</button>
+                <button class="tool-item" onclick="shareFriend()">SHARE</button>
+                <button class="tool-item" id="clipBtn">КЛИП</button>
+            </div>
+            <div class="logo-end">GY-GY</div>
+            <button class="nav-arrow" onclick="showSign()">»</button>
+        </header>
+
+        <div class="studio-zone">
+            <div id="poemDisplay" class="poem-paper">Начните свой абсурд...</div>
         </div>
 
-        <div class="logo-end">GY-GY</div>
-        <button class="nav-arrow" onclick="goNav('forward')">»</button>
-    </header>
-
-    <div class="studio-zone">
-        <div id="poemDisplay" class="poem-paper">...</div>
-        <p style="margin-top:50px; font-size:10px; color:#444;">DEMO AI ROOM:<br><span class="ai-screen-word">VERSES</span> & <span class="ai-screen-word">TECHPARK</span></p>
+        <div class="input-bar">
+            <input type="text" id="poemInput" placeholder="ВАШ ИМПУЛЬС..." autocomplete="off">
+            <button class="btn-ok" id="addBtn">OK</button>
+        </div>
     </div>
-
-    <div class="input-bar">
-        <input type="text" id="poemInput" placeholder="ВАШ ИМПУЛЬС..." autocomplete="off">
-        <button class="btn-add-inline" id="addBtn">OK</button>
-    </div>
-
-    <div id="google_translate_element"></div>
 
     <script type="text/javascript">
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({pageLanguage:'ru', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false}, 'google_translate_element');
-        }
-
-        function openLang() {
-            // Пытаемся вызвать клик по скрытому меню Гугла
-            const combo = document.querySelector('.goog-te-combo');
-            if (combo) {
-                combo.style.display = 'block'; 
-                combo.focus();
-                alert("ВЫБЕРИТЕ ЯЗЫК В МЕНЮ");
-            } else {
-                alert("ПЕРЕВОДЧИК ЗАГРУЖАЕТСЯ...");
-            }
         }
     </script>
     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
@@ -132,31 +95,29 @@
     <script>
         let stanzas = [];
 
-        // Аватар (Цифровой след)
+        // Переключение экранов
+        function exitToRoom() {
+            document.getElementById('studio').style.display = 'none';
+            document.getElementById('ai-room').style.display = 'flex';
+        }
+
+        function enterStudio() {
+            document.getElementById('ai-room').style.display = 'none';
+            document.getElementById('studio').style.display = 'flex';
+        }
+
+        function showSign() {
+            const s = document.getElementById('road-sign');
+            s.style.display = 'block';
+            setTimeout(() => s.style.display = 'none', 1500);
+        }
+
+        // Аватар
         window.onload = () => {
-            let id = localStorage.getItem('gy_id') || 'ID-' + Math.floor(Math.random()*999);
-            localStorage.setItem('gy_id', id);
-            document.getElementById('userIcon').innerText = id;
+            document.getElementById('userIcon').innerText = 'ID-' + Math.floor(Math.random()*999);
         };
 
-        // Навигация
-        function goNav(dir) {
-            if (dir === 'back') {
-                if (window.history.length > 1) history.back();
-                else showSign("⛔ ПРОЕЗД ЗАКРЫТ");
-            } else {
-                showSign("🛑 ТУПИК");
-            }
-        }
-
-        function showSign(txt) {
-            const sign = document.getElementById('road-sign');
-            sign.innerHTML = txt;
-            sign.style.display = 'block';
-            setTimeout(() => { sign.style.display = 'none'; }, 1500);
-        }
-
-        // Добавление строк (OK в строке)
+        // Добавление строк
         document.getElementById('addBtn').onclick = () => {
             const inp = document.getElementById('poemInput');
             if(inp.value.trim()) {
@@ -166,8 +127,12 @@
             }
         };
 
+        // Телеграм (открытие в новом окне)
         function shareFriend() {
-            window.open(`https://t.me/share/url?url=GY-GY&text=${encodeURIComponent(stanzas.join('\n\n'))}`);
+            const text = stanzas.join('\n\n');
+            if (!text) return alert("ПУСТО");
+            const url = `https://t.me/share/url?url=GY-GY&text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
         }
     </script>
 </body>
