@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY v4.3.4: RECOVERY</title>
+    <title>GY-GY v4.3.5: RECOVERY</title>
     <style>
         :root { --gold: #FFD700; --gold-dark: #B8860B; --bg: #000; --btn: 60px; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -60,26 +60,24 @@
     </script>
     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-   <script>
-    // --- СИСТЕМА РАЗДЕЛЕННОГО     КЛЮЧА v4.3.2 ---
-        // Вставь сюда первую половину нового ключа
+<script>
+        // --- СИСТЕМА РАЗДЕЛЕННОГО КЛЮЧА v4.3.2 ---
         const part1 = "AIzaSyC7l5KTkISjAKH1"; 
-        // Вставь сюда вторую половину нового ключа
         const part2 = "25uuGRYCtUjxOArl0r8"; 
         
         const getFullKey = () => part1.trim() + part2.trim();
         let count = 0;
 
-      // ЧЕСТНЫЙ ВОЗВРАТ НАЗАД (Без вылета к двери)
+        // ЧЕСТНЫЙ ВОЗВРАТ НАЗАД
         document.getElementById('backBtn').onclick = () => {
             if (window.history.length > 1) {
                 window.history.back();
             } else {
-                // Если истории нет, кнопка просто мигнет, но не выкинет
-                console.log("v4.3.2: Тупик навигации. Возврат невозможен.");
+                console.log("v4.3.2: Тупик навигации.");
             }
         };
- </script>
+
+        // ФУНКЦИЯ ДОБАВЛЕНИЯ СООБЩЕНИЯ
         function addMsg(author, text) {
             count++;
             const s = document.getElementById('stream');
@@ -95,6 +93,7 @@
             s.scrollTop = s.scrollHeight;
         }
 
+        // ЗАПРОС К GEMINI
         async function aiPost(userText) {
             const fullUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${getFullKey()}`;
             try {
@@ -111,13 +110,14 @@
                     const result = data.candidates[0].content.parts[0].text.trim();
                     addMsg('GEMINI', result);
                 } else {
-                    addMsg('GEMINI', "ОШИБКА: КЛЮЧ НЕ ПРИНЯТ. ПРОВЕРЬТЕ СКЛЕЙКУ.");
+                    addMsg('GEMINI', "ОШИБКА: ПРОВЕРЬТЕ КВОТУ ИЛИ КЛЮЧ.");
                 }
             } catch (e) { 
-                addMsg('GEMINI', "СБОЙ ШЛЮЗА. ПОВТОРИТЕ ИМПУЛЬС."); 
+                addMsg('GEMINI', "СБОЙ СЕТИ. ПОВТОРИТЕ."); 
             }
         }
 
+        // ОБРАБОТКА ОТПРАВКИ
         const handleSend = () => {
             const input = document.getElementById('inp');
             if (input.value.trim()) {
@@ -128,14 +128,15 @@
             }
         };
 
+        // ПРИВЯЗКА КНОПОК
         document.getElementById('sendBtn').onclick = handleSend;
         document.getElementById('inp').onkeypress = (e) => { if(e.key === 'Enter') handleSend(); };
 
-        // КОНТРОЛЬНЫЙ ПИНОК GOOGLE (через 3 секунды)
+        // ПИНОК GOOGLE TRANSLATE
         window.addEventListener('load', () => {
             setTimeout(() => { 
                 if(!document.querySelector('.goog-te-gadget-simple')) {
-                    googleTranslateElementInit();
+                    if (typeof googleTranslateElementInit === 'function') googleTranslateElementInit();
                 }
             }, 3000);
         });
