@@ -1,16 +1,17 @@
 
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY VERSES | v5.0</title>
+    <title>GY-GY VERSES | КУЗНИЦА v5.0</title>
     <style>
         :root {
             --orange-neon: #ff8c00;
             --neon-glow: 0 0 15px rgba(255, 140, 0, 0.8), 0 0 30px rgba(255, 69, 0, 0.5);
             --gold: #ffd700;
-            --bg: #0a0a0a;
+            --bg: #050505;
         }
 
         body, html {
@@ -20,19 +21,19 @@
             height: 100%;
             background: var(--bg);
             color: #fff;
-            font-family: 'Segoe UI', sans-serif;
-            overflow-x: hidden;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
         }
 
-        /* --- ПАНЕЛЬ УПРАВЛЕНИЯ v5.0 --- */
+        /* --- ЗОЛОТАЯ ПАНЕЛЬ v5.0 --- */
         header {
-            position: sticky;
+            position: fixed;
             top: 0;
             width: 100%;
             padding: 15px 25px;
             box-sizing: border-box;
             border-bottom: 1px solid var(--gold);
-            background: rgba(10, 10, 10, 0.95);
+            background: rgba(0, 0, 0, 0.9);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -48,11 +49,8 @@
             cursor: pointer;
             padding: 5px 12px;
             font-weight: bold;
-            transition: 0.3s;
             text-decoration: none;
-            font-size: 0.9rem;
         }
-        .btn-nav:hover { background: var(--gold); color: #000; }
 
         .lang-trigger {
             cursor: pointer;
@@ -62,103 +60,83 @@
             text-shadow: var(--neon-glow);
         }
 
-        /* --- МАСТЕРСКАЯ (STUDIO ZONE) --- */
-        .studio-container {
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 20px;
+        /* --- РАБОЧАЯ ЗОНА --- */
+        .main-stage {
+            height: 100vh;
             display: flex;
             flex-direction: column;
-            gap: 30px;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+            background: radial-gradient(circle at center, #111 0%, #000 100%);
         }
 
-        .poem-paper {
-            background: #111;
-            border: 1px solid #333;
-            padding: 40px;
-            min-height: 200px;
-            box-shadow: inset 0 0 20px rgba(0,0,0,1);
-            position: relative;
-            line-height: 1.8;
-            font-family: 'Courier New', monospace;
-            font-size: 1.2rem;
+        /* Экранизация стиха */
+        #poem-monitor {
+            width: 100%;
+            max-width: 600px;
+            height: 300px;
+            background: rgba(10, 10, 10, 0.8);
+            border: 2px solid #222;
+            padding: 30px;
+            overflow-y: auto;
             color: var(--gold);
-            white-space: pre-wrap;
+            font-size: 1.5rem;
+            line-height: 1.4;
+            box-shadow: inset 0 0 50px #000;
+            margin-bottom: 20px;
+            border-radius: 10px;
         }
 
-        .poem-paper::before {
-            content: "VERSES_LOG:";
-            position: absolute;
-            top: 10px;
-            left: 15px;
-            font-size: 0.7rem;
-            color: rgba(255,255,255,0.2);
-        }
-
-        /* --- ЗОНА ВВОДА --- */
-        .input-box {
+        /* Поле ввода как в чате Беври */
+        .input-area {
+            width: 100%;
+            max-width: 600px;
             display: flex;
             flex-direction: column;
             gap: 15px;
         }
 
         textarea {
-            width: 100%;
-            height: 120px;
-            background: #1a1a1a;
-            border: 1px solid #444;
-            color: #fff;
-            padding: 15px;
-            box-sizing: border-box;
-            font-family: inherit;
-            resize: none;
-            outline: none;
-            transition: 0.3s;
-        }
-
-        textarea:focus { border-color: var(--orange-neon); box-shadow: 0 0 10px rgba(255, 140, 0, 0.2); }
-
-        .actions { display: flex; gap: 10px; }
-
-        .btn-main {
-            flex: 2;
-            background: var(--orange-neon);
-            border: none;
-            color: #000;
-            padding: 15px;
-            font-weight: 900;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .btn-main:disabled { background: #333; color: #666; cursor: not-allowed; }
-
-        .btn-alt {
-            flex: 1;
-            background: none;
+            background: #000;
             border: 1px solid var(--orange-neon);
             color: var(--orange-neon);
             padding: 15px;
-            cursor: pointer;
-            font-weight: bold;
+            font-family: inherit;
+            font-size: 1.1rem;
+            resize: none;
+            outline: none;
+            box-shadow: inset 0 0 10px rgba(255, 140, 0, 0.1);
         }
 
-        /* --- GOOGLE CLEANUP --- */
-        .goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame { display: none !important; }
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: 0.3s;
+        }
+
+        #add-stanza { background: var(--orange-neon); color: #000; }
+        #open-audio { background: #222; color: var(--gold); border: 1px solid var(--gold); }
+
+        /* СКРЫТЫЙ GOOGLE */
+        .goog-te-banner-frame, #goog-gt-tt { display: none !important; }
         body { top: 0 !important; }
         #google_translate_element { display: none; }
-        
         select.goog-te-combo {
-            position: fixed;
-            top: 70px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 10000;
-            background: #111 !important;
-            color: var(--gold) !important;
-            border: 2px solid var(--orange-neon) !important;
-            padding: 10px;
+            position: fixed; top: 70px; left: 50%; transform: translateX(-50%);
+            z-index: 10000; background: #000 !important; color: var(--gold) !important;
+            border: 2px solid var(--orange-neon) !important; padding: 10px;
         }
     </style>
 </head>
@@ -166,30 +144,56 @@
 
 <header>
     <div class="nav-group">
-        <a href="index.html" class="btn-nav">« К ВХОДУ</a>
+        <a href="index.html" class="btn-nav">« К ТЕЛЕВИЗОРАМ</a>
         <div class="lang-trigger" onclick="changeLang()">文A</div>
     </div>
     <div style="color: var(--gold); letter-spacing: 5px; font-weight: bold;">GY-GY v5.0</div>
     <button class="btn-nav" onclick="location.reload()">↺</button>
 </header>
 
-<div class="studio-container">
-    <div id="poemDisplay" class="poem-paper">Айсберг дно приехал кот,
-Кресло помнит тех, кто не вернулся...</div>
+<div class="main-stage">
+    <div id="poem-monitor">
+        Айсберг дно приехал кот,<br>
+        Кресло помнит тех, кто не вернулся...
+    </div>
 
-    <div class="input-box">
-        <textarea id="poemInput" placeholder="Введите следующий куплет абсурда..."></textarea>
-        <div class="actions">
-            <button class="btn-main" onclick="addStanza()">ДОБАВИТЬ КУПЛЕТ</button>
-            <button class="btn-alt" onclick="clearPoem()">ОЧИСТИТЬ</button>
+    <div class="input-area">
+        <textarea id="poem-input" placeholder="Следующий виток абсурда..."></textarea>
+        <div class="controls">
+            <button id="add-stanza" class="btn-action" onclick="pushText()">В ПЕЧАТЬ</button>
+            <button id="open-audio" class="btn-action" onclick="toggleAudioMenu()">ОЗВУЧИТЬ →</button>
         </div>
-        <button id="clipBtn" class="btn-main" style="margin-top: 10px; display: none; background: var(--gold);">СДЕЛАТЬ КЛИП →</button>
     </div>
 </div>
 
 <div id="google_translate_element"></div>
 
 <script>
+    // 1. ЛОГИКА ТЕКСТА
+    function pushText() {
+        const input = document.getElementById('poem-input');
+        const monitor = document.getElementById('poem-monitor');
+        if(input.value.trim() !== "") {
+            // Плавное добавление новой строки
+            const newLine = document.createElement('div');
+            newLine.style.opacity = '0';
+            newLine.style.transition = '1s';
+            newLine.innerHTML = input.value;
+            monitor.appendChild(newLine);
+            setTimeout(() => newLine.style.opacity = '1', 10);
+            
+            input.value = "";
+            monitor.scrollTop = monitor.scrollHeight;
+        }
+    }
+
+    // 2. ПОДГОТОВКА К АУДИО (СЛЕДУЮЩИЙ ШАГ)
+    function toggleAudioMenu() {
+        alert("Переходим к этапу ОЗВУЧКИ: Голос ИИ или Микрофон?");
+        // Здесь мы развернем меню выбора вокала в следующем обновлении
+    }
+
+    // 3. ТВОЙ ГУГЛ-ПЕРЕВОДЧИК
     function googleTranslateElementInit() {
         new google.translate.TranslateElement({pageLanguage: 'ru', autoDisplay: false}, 'google_translate_element');
     }
@@ -200,21 +204,6 @@
             select.style.display = (select.style.display === 'block') ? 'none' : 'block';
             select.focus();
         }
-    }
-
-    function addStanza() {
-        const input = document.getElementById('poemInput');
-        const display = document.getElementById('poemDisplay');
-        if (input.value.trim() !== "") {
-            display.innerText += "\n" + input.value;
-            input.value = "";
-            document.getElementById('clipBtn').style.display = 'block';
-        }
-    }
-
-    function clearPoem() {
-        document.getElementById('poemDisplay').innerText = "";
-        document.getElementById('clipBtn').style.display = 'none';
     }
 </script>
 <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
