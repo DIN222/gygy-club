@@ -4,220 +4,186 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY v5.0.2: ABSURD STUDIO</title>
+    <title>AI ROOM CORE | v8.1.8 (Internal 4.3)</title>
     <style>
-        :root { --gold: #ffcf00; --gold-dark: #b8860b; --bg: #000; }
-        body { background: var(--bg); color: #fff; font-family: 'Courier New', monospace; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        :root {
+            --orange-neon: #ff8c00;
+            --neon-glow: 0 0 15px rgba(255, 140, 0, 0.8), 0 0 30px rgba(255, 69, 0, 0.5);
+            --gold: #ffd700;
+            --bg: #000;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg);
+            font-family: 'Segoe UI', sans-serif;
+            overflow: hidden;
+            color: #fff;
+        }
+
+        /* --- ВЕРХНЯЯ ПАНЕЛЬ (GOLD v4.3) --- */
+        header {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            padding: 15px 25px;
+            box-sizing: border-box;
+            border-bottom: 1px solid var(--gold);
+            background: rgba(10, 10, 10, 0.9);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .nav-group { display: flex; align-items: center; gap: 20px; }
         
-        header { border-bottom: 2px solid var(--gold); padding: 10px; background: #050505; }
-        .nav-box { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .btn-nav { background: none; border: 1px solid var(--gold-dark); color: var(--gold); padding: 5px 15px; cursor: pointer; border-radius: 5px; }
+        .btn-nav {
+            background: none;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            cursor: pointer;
+            padding: 5px 12px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .btn-nav:hover { background: var(--gold); color: #000; }
+
+        .lang-trigger {
+            cursor: pointer;
+            color: var(--orange-neon);
+            font-weight: bold;
+            font-size: 1.4rem;
+            text-shadow: var(--neon-glow);
+            transition: 0.3s;
+        }
+        .lang-trigger:hover { transform: scale(1.1); filter: brightness(1.3); }
+
+        /* --- ГЛАВНЫЙ ЭКРАН С ТЕЛЕВИЗОРАМИ --- */
+        .viewport {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: url('OIG2_vintage_tv_room_v2.png') no-repeat center center;
+            background-size: contain;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .screen-label {
+            position: absolute;
+            color: var(--orange-neon);
+            text-shadow: var(--neon-glow);
+            font-family: 'Courier New', monospace;
+            font-weight: 900;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            text-transform: lowercase;
+            /* Адаптивный размер шрифта */
+            font-size: clamp(18px, 2.5vw, 45px);
+        }
+
+        #verses-zone { top: 45%; left: 28%; width: 15%; height: 12%; }
+        #techpark-zone { top: 45%; left: 43.5%; width: 15%; height: 12%; }
+
+        .screen-label:hover {
+            filter: brightness(1.5);
+            transform: scale(1.1);
+            text-shadow: 0 0 30px var(--orange-neon);
+        }
+
+        /* --- НИЖНЯЯ ПАНЕЛЬ ДАННЫХ --- */
+        footer {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 30px;
+            box-sizing: border-box;
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.3);
+        }
+
+        #digital-trace { color: var(--orange-neon); font-weight: bold; }
+
+        /* --- СКРЫТИЕ ГРЯЗИ GOOGLE --- */
+        .goog-te-banner-frame.skiptranslate, .goog-te-banner-frame, #goog-gt-tt { display: none !important; }
+        body { top: 0 !important; }
+        #google_translate_element { display: none; }
         
-        #google_translate_element { border: 1px solid var(--gold-dark); padding: 2px; border-radius: 5px; min-width: 100px; height: 25px; }
-        
-        .studio-zone { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-        .poem-paper { border-left: 3px solid var(--gold); padding-left: 15px; font-style: italic; color: #ddd; white-space: pre-wrap; }
-        
-        .counter { color: var(--gold-dark); font-size: 12px; text-align: right; margin-top: 5px; }
-
-        .input-zone { padding: 15px; background: #080808; border-top: 1px solid #222; }
-        textarea { width: 100%; background: #111; border: 1px solid var(--gold-dark); color: #fff; padding: 10px; box-sizing: border-box; resize: none; border-radius: 5px; height: 80px; }
-        
-        .actions { display: flex; gap: 10px; margin-top: 10px; }
-        .btn-main { flex: 1; padding: 10px; border: none; background: var(--gold); color: #000; font-weight: bold; cursor: pointer; border-radius: 5px; }
-        .btn-main:disabled { background: #333; color: #666; }
-        .btn-alt { flex: 1; padding: 10px; border: 1px solid var(--gold); background: none; color: var(--gold); border-radius: 5px; }
-        /* Прячем верхнюю панель Google Translate */
-.goog-te-banner-frame.skiptranslate, 
-.goog-te-banner-frame { 
-    display: none !important; 
-}
-
-body { 
-    top: 0 !important; 
-}
-
-/* Прячем всплывающие подсказки при наведении на слова */
-.goog-text-highlight {
-    background: none !important;
-    box-shadow: none !important;
-}
-
-/* Скрываем сам виджет, оставляя его функционал в коде */
-#google_translate_element {
-    display: none;
-}
-        /* 1. Полная блокировка серой верхней панели Google */
-.goog-te-banner-frame.skiptranslate, 
-.goog-te-banner-frame, 
-#goog-gt-tt { 
-    display: none !important; 
-}
-
-/* 2. Запрещаем странице "прыгать" вниз при активации перевода */
-body { 
-    top: 0 !important; 
-}
-
-/* 3. Делаем саму "абракадабру" (виджет) невидимой и убираем из потока */
-#google_translate_element {
-    position: absolute;
-    top: -999px;
-    left: -999px;
-    visibility: hidden;
-}
-
-/* 4. Стили для выпадающего списка языков (когда мы его вызовем кликом) */
-/* Мы делаем его в стиле нашего клуба: черным с золотом */
-select.goog-te-combo {
-    background: #000 !important;
-    color: #ffd700 !important; /* Наше золото --gold */
-    border: 1px solid #ff8c00 !important; /* Наш оранжевый --orange-neon */
-    padding: 5px;
-    font-family: 'Courier New', monospace;
-    font-size: 14px;
-    border-radius: 4px;
-}
+        select.goog-te-combo {
+            position: fixed;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10000;
+            background: #111 !important;
+            color: var(--gold) !important;
+            border: 2px solid var(--orange-neon) !important;
+            padding: 8px;
+            font-family: 'Courier New', monospace;
+        }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="nav-box">
-            <button class="btn-nav" id="backBtn">«</button>
-            <div style="display: flex; align-items: center; gap: 10px;">
-    <div onclick="changeLang()" style="cursor:pointer; color:var(--gold); font-weight:bold; font-size:1.2rem; padding: 0 10px;">文A</div>
-    
-    <div id="google_translate_element" style="display:none;"></div>
+<header>
+    <div class="nav-group">
+        <button class="btn-nav" onclick="history.back()">«</button>
+        <div class="lang-trigger" onclick="changeLang()">文A</div>
+    </div>
+    <div style="color: var(--gold); letter-spacing: 5px; font-weight: bold;">GY-GY v5.0</div>
+    <button class="btn-nav" onclick="location.reload()">↺</button>
+</header>
+
+<div class="viewport">
+    <a href="verses.html" class="screen-label" id="verses-zone">verses</a>
+    <a href="techpark.html" class="screen-label" id="techpark-zone">techpark</a>
 </div>
-            <button class="btn-nav" onclick="location.reload()">↺</button>
-        </div>
-        <div style="text-align: center; color: var(--gold); letter-spacing: 5px; font-weight: bold;">GY-GY v5.0</div>
-    </header>
 
-    <div class="studio-zone">
-        <div id="poemDisplay" class="poem-paper">Начните свой абсурдный стих...</div>
-        <div class="counter" id="stanzaCount">Куплетов: 0 / 4</div>
+<footer>
+    <div>AI ROOM CORE | BEUVRY STATION</div>
+    <div style="text-align: right;">
+        VER: 4.3 (Build 8.1.8)<br>
+        TRACE_ID: <span id="digital-trace">...</span>
     </div>
+</footer>
 
-    <div class="input-zone">
-        <textarea id="poemInput" placeholder="Введите куплет..."></textarea>
-        <div class="actions">
-            <button class="btn-main" id="addBtn">ДОБАВИТЬ КУПЛЕТ</button>
-            <button class="btn-alt" id="publishBtn" disabled>ОПУБЛИКОВАТЬ</button>
-        </div>
-        <button class="btn-alt" id="clipBtn" style="width: 100%; margin-top: 10px; display: none;">СДЕЛАТЬ КЛИП →</button>
-        /* Прячем верхний баннер Google навсегда */
-.goog-te-banner-frame.skiptranslate, .goog-te-banner-frame { 
-    display: none !important; 
-}
-body { top: 0 !important; }
+<div id="google_translate_element"></div>
 
-/* Делаем выпадающий список аккуратным */
-select.goog-te-combo {
-    position: fixed;
-    top: 50px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10000;
-}
-    </div>
-
-    <script type="text/javascript">
-       function googleTranslateElementInit() {
-    new google.translate.TranslateElement({
-        pageLanguage: 'ru', 
-        includedLanguages: 'en,fr,de,zh-CN', // Выбери нужные
-        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-        autoDisplay: false 
-    }, 'google_translate_element');
-}
-       function changeLang() {
-    var select = document.querySelector('select.goog-te-combo');
-    if (select) {
-        // Делаем список видимым и переносим его под руку
-        select.style.display = 'block';
-        select.style.position = 'fixed';
-        select.style.top = '70px'; // Чуть ниже твоей панели
-        select.style.left = '20px';
-        select.focus();
-    } else {
-        alert("Лингво-модуль загружается... Попробуйте через секунду.");
+<script>
+    // Инициализация перевода
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({pageLanguage: 'ru', autoDisplay: false}, 'google_translate_element');
     }
-}
-    </script>
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-    <script>
-        let stanzas = [];
-        const maxStanzas = 4;
-
-        const input = document.getElementById('poemInput');
-        const display = document.getElementById('poemDisplay');
-        const counter = document.getElementById('stanzaCount');
-        const addBtn = document.getElementById('addBtn');
-        const publishBtn = document.getElementById('publishBtn');
-        const clipBtn = document.getElementById('clipBtn');
-
-        // КНОПКА НАЗАД (Честный возврат)
-        document.getElementById('backBtn').onclick = () => {
-            if (window.history.length > 1) history.back();
-        };
-
-        // ЛОГИКА ДОБАВЛЕНИЯ
-        addBtn.onclick = () => {
-            const text = input.value.trim();
-            if (text && stanzas.length < maxStanzas) {
-                stanzas.push(text);
-                input.value = "";
-                updatePoem();
-            }
-        };
-
-        function updatePoem() {
-            display.innerText = stanzas.join('\n\n');
-            counter.innerText = `Куплетов: ${stanzas.length} / ${maxStanzas}`;
-            
-            if (stanzas.length >= 1) {
-                publishBtn.disabled = false;
-                clipBtn.style.display = 'block';
-            }
-            if (stanzas.length >= maxStanzas) {
-                addBtn.disabled = true;
-                input.disabled = true;
-                input.placeholder = "Лимит достигнут.";
-            }
+    // Вызов меню языков
+    function changeLang() {
+        var select = document.querySelector('select.goog-te-combo');
+        if (select) {
+            select.style.display = (select.style.display === 'block') ? 'none' : 'block';
+            select.focus();
+        } else {
+            console.log("Ждем лингво-модуль...");
         }
-
-        // ПУБЛИКАЦИЯ В ЖУРНАЛ
-        publishBtn.onclick = () => {
-            const date = new Date().toLocaleString();
-            let journal = JSON.parse(localStorage.getItem('absurd_journal') || "[]");
-            journal.push({ date: date, text: stanzas.join('\n\n') });
-            localStorage.setItem('absurd_journal', JSON.stringify(journal));
-            alert("СТИХ СОХРАНЕН В ЖУРНАЛЕ!");
-            location.reload(); // Начинаем новый стих
-        };
-
-        // ПЕРЕХОД К КЛИПУ (Вторая страница)
-        clipBtn.onclick = () => {
-            localStorage.setItem('current_poem', stanzas.join('\n\n'));
-            alert("ПЕРЕХОД В МАСТЕРСКУЮ КЛИПОВ...");
-            // Здесь будет переход: window.location.href = 'clips.html';
-        }
-        function changeLang() {
-    // Ищем выпадающий список Google
-    var select = document.querySelector('select.goog-te-combo');
-    if (select) {
-        select.style.display = 'block'; 
-        select.style.background = '#000';
-        select.style.color = 'var(--gold)';
-        select.focus();
-    } else {
-        alert("Лингво-модуль загружается...");
     }
-}
-    </script>
+
+    // Генерация ID
+    (function() {
+        let id = localStorage.getItem('gy_trace') || 'ID-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+        localStorage.setItem('gy_trace', id);
+        document.getElementById('digital-trace').innerText = id;
+    })();
+</script>
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 </body>
 </html>
