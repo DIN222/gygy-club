@@ -4,75 +4,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY v6.2: THE ORIGIN</title>
+    <title>GY-GY v5.0: ABSURD STUDIO</title>
     <style>
-        :root { --gold: #ffcf00; --gold-dark: #b8860b; --orange: #ff8c00; --bg: #000; }
+        :root { --gold: #ffcf00; --gold-dark: #b8860b; --bg: #000; }
         body { background: var(--bg); color: #fff; font-family: 'Courier New', monospace; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         
-        /* ПАНЕЛЬ ИНСТРУМЕНТОВ */
-        header { border-bottom: 2px solid var(--gold); padding: 5px 10px; background: #050505; display: flex; align-items: center; gap: 10px; }
-        .btn-nav { background: none; border: 1px solid var(--gold-dark); color: var(--gold); padding: 5px 10px; cursor: pointer; font-weight: bold; }
-        .tools-row { display: flex; align-items: center; gap: 15px; flex: 1; overflow-x: auto; scrollbar-width: none; }
-        .tools-row::-webkit-scrollbar { display: none; }
-        .tool-link { color: var(--gold); font-size: 11px; text-transform: uppercase; cursor: pointer; font-weight: bold; background: none; border: none; white-space: nowrap; }
-        #google_translate_element { min-width: 40px; height: 20px; overflow: hidden; }
-
-        /* ИНТЕРЬЕР AI ROOM */
-        #ai-room { flex: 1; display: flex; align-items: center; justify-content: center; gap: 40px; background: radial-gradient(circle at center, #111, #000); }
-        .neon-screen { 
-            width: 140px; height: 200px; border: 1px solid #222; 
-            display: flex; align-items: center; justify-content: center; 
-            color: var(--orange); font-weight: 900; font-size: 20px;
-            text-shadow: 0 0 10px var(--orange); cursor: pointer; letter-spacing: 3px;
-        }
-
-        /* СТУДИЯ СТИХОВ (Изначально скрыта) */
-        #studio { display: none; flex: 1; flex-direction: column; overflow: hidden; }
-        .studio-zone { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
-        .line { border-left: 3px solid var(--gold); padding-left: 15px; font-style: italic; color: #ddd; font-size: 18px; line-height: 1.4; }
-        .user-line { border-left: none; border-right: 3px solid #444; text-align: right; color: #888; }
+        header { border-bottom: 2px solid var(--gold); padding: 10px; background: #050505; }
+        .nav-box { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .btn-nav { background: none; border: 1px solid var(--gold-dark); color: var(--gold); padding: 5px 15px; cursor: pointer; border-radius: 5px; }
         
-        .input-zone { padding: 15px; background: #080808; border-top: 1px solid #222; }
-        .input-bar { display: flex; gap: 10px; }
-        input { flex: 1; background: #111; border: 1px solid var(--gold-dark); color: #fff; padding: 12px; outline: none; }
-        .btn-ok { background: var(--gold); color: #000; font-weight: bold; border: none; padding: 0 25px; cursor: pointer; }
+        #google_translate_element { border: 1px solid var(--gold-dark); padding: 2px; border-radius: 5px; min-width: 100px; height: 25px; }
+        
+        .studio-zone { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+        .poem-paper { border-left: 3px solid var(--gold); padding-left: 15px; font-style: italic; color: #ddd; white-space: pre-wrap; }
+        
+        .counter { color: var(--gold-dark); font-size: 12px; text-align: right; margin-top: 5px; }
 
-        #road-sign { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); border: 2px solid var(--gold); background: #000; color: var(--gold); padding: 20px; display: none; z-index: 100; text-align: center; }
+        .input-zone { padding: 15px; background: #080808; border-top: 1px solid #222; }
+        textarea { width: 100%; background: #111; border: 1px solid var(--gold-dark); color: #fff; padding: 10px; box-sizing: border-box; resize: none; border-radius: 5px; height: 80px; }
+        
+        .actions { display: flex; gap: 10px; margin-top: 10px; }
+        .btn-main { flex: 1; padding: 10px; border: none; background: var(--gold); color: #000; font-weight: bold; cursor: pointer; border-radius: 5px; }
+        .btn-main:disabled { background: #333; color: #666; }
+        .btn-alt { flex: 1; padding: 10px; border: 1px solid var(--gold); background: none; color: var(--gold); border-radius: 5px; }
     </style>
 </head>
 <body>
 
-    <div id="road-sign">⛔ ТУПИК</div>
-
     <header>
-        <button class="btn-nav" onclick="goBack()">«</button>
-        <div class="tools-row">
+        <div class="nav-box">
+            <button class="btn-nav" id="backBtn">«</button>
             <div id="google_translate_element"></div>
-            <div id="userID" style="color:var(--gold-dark); font-size:10px;">ID-000</div>
-            <button class="tool-link" onclick="publish()">В ЭФИР</button>
-            <button class="tool-link" onclick="share()">SHARE</button>
-            <button class="tool-link" id="clipBtn" style="display:none; color:#fff;">КЛИП</button>
+            <button class="btn-nav" onclick="location.reload()">↺</button>
         </div>
-        <div style="color: var(--gold); font-weight: bold; letter-spacing: 2px;">GY-GY</div>
-        <button class="btn-nav" onclick="showSign()">»</button>
+        <div style="text-align: center; color: var(--gold); letter-spacing: 5px; font-weight: bold;">GY-GY v5.0</div>
     </header>
 
-    <div id="ai-room">
-        <div class="neon-screen" onclick="enterStudio()">VERSES</div>
-        <div class="neon-screen" style="opacity:0.2">TECHPARK</div>
+    <div class="studio-zone">
+        <div id="poemDisplay" class="poem-paper">Начните свой абсурдный стих...</div>
+        <div class="counter" id="stanzaCount">Куплетов: 0 / 4</div>
     </div>
 
-    <div id="studio">
-        <div class="studio-zone" id="chat">
-            <div class="line">Кресло ждет. Начни первый куплет...</div>
+    <div class="input-zone">
+        <textarea id="poemInput" placeholder="Введите куплет..."></textarea>
+        <div class="actions">
+            <button class="btn-main" id="addBtn">ДОБАВИТЬ КУПЛЕТ</button>
+            <button class="btn-alt" id="publishBtn" disabled>ОПУБЛИКОВАТЬ</button>
         </div>
-        <div class="input-zone">
-            <div class="input-bar">
-                <input type="text" id="poemInput" placeholder="Введите строку..." autocomplete="off">
-                <button class="btn-ok" id="addBtn">OK</button>
-            </div>
-            <div style="color:var(--gold-dark); font-size:10px; margin-top:5px;" id="counter">Куплетов: 0 / 4</div>
-        </div>
+        <button class="btn-alt" id="clipBtn" style="width: 100%; margin-top: 10px; display: none;">СДЕЛАТЬ КЛИП →</button>
     </div>
 
     <script type="text/javascript">
@@ -86,76 +65,60 @@
         let stanzas = [];
         const maxStanzas = 4;
 
-        function enterStudio() {
-            document.getElementById('ai-room').style.display = 'none';
-            document.getElementById('studio').style.display = 'flex';
-        }
+        const input = document.getElementById('poemInput');
+        const display = document.getElementById('poemDisplay');
+        const counter = document.getElementById('stanzaCount');
+        const addBtn = document.getElementById('addBtn');
+        const publishBtn = document.getElementById('publishBtn');
+        const clipBtn = document.getElementById('clipBtn');
 
-        function goBack() {
-            if (document.getElementById('studio').style.display === 'flex') {
-                document.getElementById('studio').style.display = 'none';
-                document.getElementById('ai-room').style.display = 'flex';
-            }
-        }
+        // КНОПКА НАЗАД (Честный возврат)
+        document.getElementById('backBtn').onclick = () => {
+            if (window.history.length > 1) history.back();
+        };
 
-        function showSign() {
-            const s = document.getElementById('road-sign');
-            s.style.display = 'block';
-            setTimeout(() => s.style.display = 'none', 1200);
-        }
-
-        // ЛОГИКА СОАВТОРСТВА
-        document.getElementById('addBtn').onclick = () => {
-            const input = document.getElementById('poemInput');
-            const chat = document.getElementById('chat');
-            const val = input.value.trim();
-
-            if (val && stanzas.length < maxStanzas) {
-                // Твоя строка
-                addMsg(val, 'user-line');
-                stanzas.push(val);
+        // ЛОГИКА ДОБАВЛЕНИЯ
+        addBtn.onclick = () => {
+            const text = input.value.trim();
+            if (text && stanzas.length < maxStanzas) {
+                stanzas.push(text);
                 input.value = "";
-
-                // Моя рифма
-                setTimeout(() => {
-                    let reply = "Абсурд принят... Что дальше?";
-                    let lowerVal = val.toLowerCase();
-                    if (lowerVal.includes('айсберг') || lowerVal.includes('кот')) {
-                        reply = "Кот приехал — айсберг в рот.";
-                    } else if (lowerVal.includes('дно')) {
-                        reply = "На дне коту тепло и темно.";
-                    }
-                    addMsg(reply, '');
-                    updateUI();
-                }, 600);
+                updatePoem();
             }
         };
 
-        function addMsg(txt, cls) {
-            const d = document.createElement('div');
-            d.className = 'line ' + cls;
-            d.innerText = txt;
-            document.getElementById('chat').appendChild(d);
-            document.getElementById('chat').scrollTop = document.getElementById('chat').scrollHeight;
-        }
-
-        function updateUI() {
-            document.getElementById('counter').innerText = `Куплетов: ${stanzas.length} / ${maxStanzas}`;
-            if (stanzas.length >= 1) document.getElementById('clipBtn').style.display = 'block';
+        function updatePoem() {
+            display.innerText = stanzas.join('\n\n');
+            counter.innerText = `Куплетов: ${stanzas.length} / ${maxStanzas}`;
+            
+            if (stanzas.length >= 1) {
+                publishBtn.disabled = false;
+                clipBtn.style.display = 'block';
+            }
             if (stanzas.length >= maxStanzas) {
-                document.getElementById('addBtn').disabled = true;
-                document.getElementById('poemInput').placeholder = "Лимит достигнут.";
+                addBtn.disabled = true;
+                input.disabled = true;
+                input.placeholder = "Лимит достигнут.";
             }
         }
 
-        function share() {
-            const text = stanzas.join('\n\n');
-            window.open(`https://t.me/share/url?url=GY-GY&text=${encodeURIComponent(text)}`, '_blank');
-        }
+        // ПУБЛИКАЦИЯ В ЖУРНАЛ
+        publishBtn.onclick = () => {
+            const date = new Date().toLocaleString();
+            let journal = JSON.parse(localStorage.getItem('absurd_journal') || "[]");
+            journal.push({ date: date, text: stanzas.join('\n\n') });
+            localStorage.setItem('absurd_journal', JSON.stringify(journal));
+            alert("СТИХ СОХРАНЕН В ЖУРНАЛЕ!");
+            location.reload(); // Начинаем новый стих
+        };
 
-        window.onload = () => {
-            document.getElementById('userID').innerText = 'ID-' + Math.floor(Math.random()*999);
+        // ПЕРЕХОД К КЛИПУ (Вторая страница)
+        clipBtn.onclick = () => {
+            localStorage.setItem('current_poem', stanzas.join('\n\n'));
+            alert("ПЕРЕХОД В МАСТЕРСКУЮ КЛИПОВ...");
+            // Здесь будет переход: window.location.href = 'clips.html';
         };
     </script>
+
 </body>
 </html>
