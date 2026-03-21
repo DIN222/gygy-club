@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI ROOM CORE | v8.1.8 (Internal 4.3)</title>
     <style>
-        :root {
+       :root {
             --orange-neon: #ff8c00;
-            --neon-glow: 0 0 20px rgba(0, 242, 255, 0.9), 0 0 40px rgba(0, 242, 255, 0.4);
+            --neon-glow: 0 0 20px rgba(255, 140, 0, 0.9), 0 0 40px rgba(255, 140, 0, 0.4);
             --gold: #ffd700;
         }
 
@@ -51,9 +51,9 @@
             letter-spacing: 5px;
         }
 
-        .screen-label {
+       .screen-label {
             position: absolute;
-            color: var(--neon-blue);
+            color: var(--orange-neon); /* Теперь здесь оранжевый */
             text-shadow: var(--neon-glow);
             font-family: 'Courier New', monospace;
             font-weight: bold;
@@ -82,10 +82,10 @@
             font-size: 2.2vw;
         }
 
-        .screen-label:hover {
+    .screen-label:hover {
             filter: brightness(1.5);
             transform: scale(1.05);
-            text-shadow: 0 0 30px var(--neon-blue);
+            text-shadow: 0 0 30px var(--orange-neon);
         }
 
         .bottom-nav {
@@ -115,7 +115,7 @@
             font-size: 0.7rem;
         }
 
-        #digital-trace { color: var(--neon-blue); }
+       #digital-trace { color: var(--orange-neon); }
     </style>
 </head>
 <body>
