@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI ROOM CORE | v8.1.8 (Internal 4.3)</title>
+    <title>GY-GY VERSES | v5.0</title>
     <style>
         :root {
             --orange-neon: #ff8c00;
             --neon-glow: 0 0 15px rgba(255, 140, 0, 0.8), 0 0 30px rgba(255, 69, 0, 0.5);
             --gold: #ffd700;
-            --bg: #000;
+            --bg: #0a0a0a;
         }
 
         body, html {
@@ -19,20 +19,20 @@
             width: 100%;
             height: 100%;
             background: var(--bg);
-            font-family: 'Segoe UI', sans-serif;
-            overflow: hidden;
             color: #fff;
+            font-family: 'Segoe UI', sans-serif;
+            overflow-x: hidden;
         }
 
-        /* --- ВЕРХНЯЯ ПАНЕЛЬ (GOLD v4.3) --- */
+        /* --- ПАНЕЛЬ УПРАВЛЕНИЯ v5.0 --- */
         header {
-            position: absolute;
+            position: sticky;
             top: 0;
             width: 100%;
             padding: 15px 25px;
             box-sizing: border-box;
             border-bottom: 1px solid var(--gold);
-            background: rgba(10, 10, 10, 0.9);
+            background: rgba(10, 10, 10, 0.95);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -49,6 +49,8 @@
             padding: 5px 12px;
             font-weight: bold;
             transition: 0.3s;
+            text-decoration: none;
+            font-size: 0.9rem;
         }
         .btn-nav:hover { background: var(--gold); color: #000; }
 
@@ -58,64 +60,92 @@
             font-weight: bold;
             font-size: 1.4rem;
             text-shadow: var(--neon-glow);
+        }
+
+        /* --- МАСТЕРСКАЯ (STUDIO ZONE) --- */
+        .studio-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .poem-paper {
+            background: #111;
+            border: 1px solid #333;
+            padding: 40px;
+            min-height: 200px;
+            box-shadow: inset 0 0 20px rgba(0,0,0,1);
+            position: relative;
+            line-height: 1.8;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            color: var(--gold);
+            white-space: pre-wrap;
+        }
+
+        .poem-paper::before {
+            content: "VERSES_LOG:";
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.2);
+        }
+
+        /* --- ЗОНА ВВОДА --- */
+        .input-box {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            background: #1a1a1a;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 15px;
+            box-sizing: border-box;
+            font-family: inherit;
+            resize: none;
+            outline: none;
             transition: 0.3s;
         }
-        .lang-trigger:hover { transform: scale(1.1); filter: brightness(1.3); }
 
-        /* --- ГЛАВНЫЙ ЭКРАН С ТЕЛЕВИЗОРАМИ --- */
-        .viewport {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            background: url('OIG2_vintage_tv_room_v2.png') no-repeat center center;
-            background-size: contain;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        textarea:focus { border-color: var(--orange-neon); box-shadow: 0 0 10px rgba(255, 140, 0, 0.2); }
 
-        .screen-label {
-            position: absolute;
-            color: var(--orange-neon);
-            text-shadow: var(--neon-glow);
-            font-family: 'Courier New', monospace;
+        .actions { display: flex; gap: 10px; }
+
+        .btn-main {
+            flex: 2;
+            background: var(--orange-neon);
+            border: none;
+            color: #000;
+            padding: 15px;
             font-weight: 900;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            text-transform: lowercase;
-            /* Адаптивный размер шрифта */
-            font-size: clamp(18px, 2.5vw, 45px);
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
-        #verses-zone { top: 45%; left: 28%; width: 15%; height: 12%; }
-        #techpark-zone { top: 45%; left: 43.5%; width: 15%; height: 12%; }
+        .btn-main:disabled { background: #333; color: #666; cursor: not-allowed; }
 
-        .screen-label:hover {
-            filter: brightness(1.5);
-            transform: scale(1.1);
-            text-shadow: 0 0 30px var(--orange-neon);
+        .btn-alt {
+            flex: 1;
+            background: none;
+            border: 1px solid var(--orange-neon);
+            color: var(--orange-neon);
+            padding: 15px;
+            cursor: pointer;
+            font-weight: bold;
         }
 
-        /* --- НИЖНЯЯ ПАНЕЛЬ ДАННЫХ --- */
-        footer {
-            position: absolute;
-            bottom: 20px;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            padding: 0 30px;
-            box-sizing: border-box;
-            font-size: 0.7rem;
-            color: rgba(255,255,255,0.3);
-        }
-
-        #digital-trace { color: var(--orange-neon); font-weight: bold; }
-
-        /* --- СКРЫТИЕ ГРЯЗИ GOOGLE --- */
-        .goog-te-banner-frame.skiptranslate, .goog-te-banner-frame, #goog-gt-tt { display: none !important; }
+        /* --- GOOGLE CLEANUP --- */
+        .goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame { display: none !important; }
         body { top: 0 !important; }
         #google_translate_element { display: none; }
         
@@ -128,8 +158,7 @@
             background: #111 !important;
             color: var(--gold) !important;
             border: 2px solid var(--orange-neon) !important;
-            padding: 8px;
-            font-family: 'Courier New', monospace;
+            padding: 10px;
         }
     </style>
 </head>
@@ -137,51 +166,56 @@
 
 <header>
     <div class="nav-group">
-        <button class="btn-nav" onclick="history.back()">«</button>
+        <a href="index.html" class="btn-nav">« К ВХОДУ</a>
         <div class="lang-trigger" onclick="changeLang()">文A</div>
     </div>
     <div style="color: var(--gold); letter-spacing: 5px; font-weight: bold;">GY-GY v5.0</div>
     <button class="btn-nav" onclick="location.reload()">↺</button>
 </header>
 
-<div class="viewport">
-    <a href="verses.html" class="screen-label" id="verses-zone">verses</a>
-    <a href="techpark.html" class="screen-label" id="techpark-zone">techpark</a>
-</div>
+<div class="studio-container">
+    <div id="poemDisplay" class="poem-paper">Айсберг дно приехал кот,
+Кресло помнит тех, кто не вернулся...</div>
 
-<footer>
-    <div>AI ROOM CORE | BEUVRY STATION</div>
-    <div style="text-align: right;">
-        VER: 4.3 (Build 8.1.8)<br>
-        TRACE_ID: <span id="digital-trace">...</span>
+    <div class="input-box">
+        <textarea id="poemInput" placeholder="Введите следующий куплет абсурда..."></textarea>
+        <div class="actions">
+            <button class="btn-main" onclick="addStanza()">ДОБАВИТЬ КУПЛЕТ</button>
+            <button class="btn-alt" onclick="clearPoem()">ОЧИСТИТЬ</button>
+        </div>
+        <button id="clipBtn" class="btn-main" style="margin-top: 10px; display: none; background: var(--gold);">СДЕЛАТЬ КЛИП →</button>
     </div>
-</footer>
+</div>
 
 <div id="google_translate_element"></div>
 
 <script>
-    // Инициализация перевода
     function googleTranslateElementInit() {
         new google.translate.TranslateElement({pageLanguage: 'ru', autoDisplay: false}, 'google_translate_element');
     }
 
-    // Вызов меню языков
     function changeLang() {
         var select = document.querySelector('select.goog-te-combo');
         if (select) {
             select.style.display = (select.style.display === 'block') ? 'none' : 'block';
             select.focus();
-        } else {
-            console.log("Ждем лингво-модуль...");
         }
     }
 
-    // Генерация ID
-    (function() {
-        let id = localStorage.getItem('gy_trace') || 'ID-' + Math.random().toString(36).substr(2, 9).toUpperCase();
-        localStorage.setItem('gy_trace', id);
-        document.getElementById('digital-trace').innerText = id;
-    })();
+    function addStanza() {
+        const input = document.getElementById('poemInput');
+        const display = document.getElementById('poemDisplay');
+        if (input.value.trim() !== "") {
+            display.innerText += "\n" + input.value;
+            input.value = "";
+            document.getElementById('clipBtn').style.display = 'block';
+        }
+    }
+
+    function clearPoem() {
+        document.getElementById('poemDisplay').innerText = "";
+        document.getElementById('clipBtn').style.display = 'none';
+    }
 </script>
 <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
