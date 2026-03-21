@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY VERSES | v5.1.4</title>
+    <title>GY-GY VERSES | v5.1.5</title>
     <style>
         :root {
             --orange-neon: #ff8c00;
@@ -23,7 +23,7 @@
             overflow: hidden;
         }
 
-        /* --- ВЕРХНЯЯ ПАНЕЛЬ: ЧИСТАЯ НАВИГАЦИЯ --- */
+        /* --- ВЕРХНЯЯ ПАНЕЛЬ: ЖЕСТКАЯ НАВИГАЦИЯ --- */
         header {
             height: 60px;
             display: flex;
@@ -35,7 +35,9 @@
             background: #000;
         }
 
-        .nav-btn {
+        /* Стиль для обеих кнопок (ссылка и button) */
+        .nav-control {
+            text-decoration: none;
             background: none; 
             border: 1px solid var(--gold);
             color: var(--gold); 
@@ -47,9 +49,10 @@
             align-items: center;
             justify-content: center;
             outline: none;
+            box-sizing: border-box;
         }
 
-        /* --- ПОЛЕ ЧАТА: СТРОКИ АБСУРДА --- */
+        /* --- ПОЛЕ ЧАТА --- */
         #chat-wall {
             flex-grow: 1; 
             overflow-y: auto;
@@ -109,9 +112,9 @@
 <body>
 
 <header>
-    <button class="nav-btn" onclick="window.history.back()">«</button>
+    <a href="ai_room_core_v8.html" class="nav-control">«</a>
     
-    <div></div> <button class="nav-btn" onclick="window.history.forward()">»</button>
+    <div></div> <button class="nav-control" onclick="window.history.forward()">»</button>
 </header>
 
 <div id="chat-wall">
@@ -121,7 +124,7 @@
 
 <footer>
     <input type="text" id="user-input" placeholder="Введите текст..." onkeypress="if(event.key==='Enter') pushMsg()">
-    <button id="send-btn" onclick="pushMsg()">В ПЕЧАТЬ</button>
+    <button id="send-btn" onclick="pushMsg()">ОТПРАВИТЬ</button>
 </footer>
 
 <script>
