@@ -4,147 +4,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY v5.1: ABSURD MANIFESTO</title>
+    <title>GY-GY v6.0: THE CORE</title>
     <style>
-        :root { --gold: #ffcf00; --gold-dark: #b8860b; --bg: #000; }
-        body { background: var(--bg); color: #fff; font-family: 'Courier New', monospace; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-        
-        header { border-bottom: 2px solid var(--gold); padding: 10px; background: #050505; position: relative; }
-        .nav-box { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .btn-nav { background: none; border: 1px solid var(--gold-dark); color: var(--gold); padding: 5px 12px; cursor: pointer; border-radius: 5px; font-size: 18px; }
-        
-        #google_translate_element { border: 1px solid var(--gold-dark); padding: 2px; border-radius: 5px; height: 26px; overflow: hidden; }
-        
-        .studio-zone { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; background: radial-gradient(circle at center, #0a0a0a 0%, #000 100%); }
-        .poem-paper { border-left: 2px solid var(--gold); padding-left: 15px; font-style: italic; color: #eee; white-space: pre-wrap; font-size: 16px; line-height: 1.4; }
-        
-        .counter { color: var(--gold-dark); font-size: 11px; text-align: right; margin-top: 5px; letter-spacing: 1px; }
+        :root { --gold: #ffcf00; --orange: #ff8c00; --bg: #000; }
+        * { box-sizing: border-box; }
+        body, html { margin: 0; padding: 0; background: #000; color: #fff; font-family: 'Courier New', monospace; height: 100vh; overflow: hidden; }
 
-        .input-zone { padding: 15px; background: #080808; border-top: 1px solid #222; box-shadow: 0 -5px 15px rgba(0,0,0,0.5); }
-        textarea { width: 100%; background: #111; border: 1px solid var(--gold-dark); color: #fff; padding: 12px; box-sizing: border-box; resize: none; border-radius: 5px; height: 70px; font-size: 14px; outline: none; }
-        textarea:focus { border-color: var(--gold); box-shadow: 0 0 5px var(--gold-dark); }
+        /* ЭКРАНЫ И КОМНАТА */
+        #room { 
+            display: flex; height: 100vh; width: 100vw; 
+            background: linear-gradient(to bottom, #050505, #000);
+            position: relative; align-items: center; justify-content: center;
+        }
+
+        /* Геометрия пространства */
+        .floor { position: absolute; bottom: 0; width: 100%; height: 20%; background: #080808; border-top: 1px solid #1a1a1a; }
         
-        .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
-        .btn-main { padding: 12px; border: none; background: var(--gold); color: #000; font-weight: bold; cursor: pointer; border-radius: 5px; text-transform: uppercase; font-size: 12px; }
-        .btn-alt { padding: 12px; border: 1px solid var(--gold-dark); background: none; color: var(--gold); border-radius: 5px; font-size: 11px; cursor: pointer; text-transform: uppercase; }
-        .btn-main:disabled { background: #333; color: #666; cursor: not-allowed; }
+        .screen-left, .screen-right {
+            width: 35%; height: 60%; border: 1px solid #222;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(10, 10, 10, 0.9); box-shadow: 0 0 20px rgba(0,0,0,1);
+        }
+
+        .neon-btn {
+            color: var(--orange); font-size: clamp(20px, 5vw, 40px); font-weight: 900;
+            text-shadow: 0 0 15px var(--orange); cursor: pointer;
+            letter-spacing: 5px; text-decoration: none; transition: 0.3s;
+        }
+        .neon-btn:hover { color: #fff; text-shadow: 0 0 30px var(--gold); transform: scale(1.1); }
+
+        /* ИНТЕРФЕЙС СТУДИИ */
+        #studio { display: none; flex-direction: column; height: 100vh; background: #000; }
         
-        .full-width { grid-column: span 2; margin-top: 5px; border-color: var(--gold); color: var(--gold); font-weight: bold; }
+        header { 
+            display: flex; align-items: center; border-bottom: 1px solid #222; 
+            padding: 10px; background: #050505; height: 60px; justify-content: space-between;
+        }
+
+        .nav-link { color: var(--gold); font-size: 24px; text-decoration: none; cursor: pointer; font-weight: bold; padding: 0 10px; }
+        
+        .tools { display: flex; gap: 15px; align-items: center; }
+        .tool-text { color: var(--gold); font-size: 10px; font-weight: 900; letter-spacing: 1px; cursor: pointer; text-transform: uppercase; }
+
+        /* ЧАТ */
+        #chat { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .line { padding: 10px; border-left: 2px solid var(--gold); font-size: 18px; max-width: 85%; }
+        .user { align-self: flex-end; border-left: none; border-right: 2px solid #444; text-align: right; color: #888; }
+
+        /* ВВОД */
+        .input-bar { display: flex; padding: 15px; background: #080808; border-top: 1px solid #222; gap: 10px; }
+        input { flex: 1; background: none; border: none; border-bottom: 1px solid #333; color: #fff; font-size: 18px; outline: none; }
+        .ok-btn { color: var(--gold); border: 1px solid var(--gold); background: none; padding: 5px 20px; font-weight: 900; cursor: pointer; }
+
+        #sign { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); border: 2px solid var(--gold); background: #000; color: var(--gold); padding: 20px; display: none; z-index: 100; text-align: center; font-weight: 900; }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="nav-box">
-            <button class="btn-nav" id="backBtn" title="Назад">«</button>
-            <div id="google_translate_element"></div>
-            <button class="btn-nav" onclick="location.reload()" title="Сброс">↺</button>
+    <div id="sign">⛔<br>ТУПИК</div>
+
+    <div id="room">
+        <div class="floor"></div>
+        <div class="screen-left">
+            <div class="neon-btn" onclick="openStudio()">VERSES</div>
         </div>
-        <div style="text-align: center; color: var(--gold); letter-spacing: 4px; font-size: 14px; font-weight: bold;">GY-GY v5.1</div>
-    </header>
-
-    <div class="studio-zone">
-        <div id="poemDisplay" class="poem-paper">Начните диктовать реальность...</div>
-        <div class="counter" id="stanzaCount">КУПЛЕТОВ: 0</div>
-    </div>
-
-    <div class="input-zone">
-        <textarea id="poemInput" placeholder="Введите строки абсурда..."></textarea>
-        
-        <div class="actions">
-            <button class="btn-main" id="addBtn">ДОБАВИТЬ КУПЛЕТ</button>
-            <button class="btn-main" id="publishBtn" disabled style="background: #fff; color: #000;">ОПУБЛИКОВАТЬ</button>
-            <button class="btn-alt" onclick="shareFriend()">ДРУГУ</button>
-            <button class="btn-alt" id="clipBtn" style="display: none;">СДЕЛАТЬ КЛИП</button>
+        <div style="width: 10%;"></div> <div class="screen-right">
+            <div class="neon-btn" style="opacity:0.3">TECHPARK</div>
         </div>
     </div>
 
-    <script type="text/javascript">
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({pageLanguage:'ru', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false}, 'google_translate_element');
-        }
-    </script>
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <div id="studio">
+        <header>
+            <div class="nav-link" onclick="closeStudio()">«</div>
+            <div class="tools">
+                <div class="tool-text" id="langBtn">文A</div>
+                <div class="tool-text" id="uid">ID-000</div>
+                <div class="tool-text">В ЭФИР</div>
+                <div class="tool-text">SHARE</div>
+                <div class="tool-text" style="color:#fff">КЛИП</div>
+            </div>
+            <div style="color:var(--gold); font-weight:900; letter-spacing:2px;">GY-GY</div>
+            <div class="nav-link" onclick="alert('ТУПИК')">»</div>
+        </header>
+
+        <div id="chat">
+            <div class="line">Кресло готово. Жду твой куплет...</div>
+        </div>
+
+        <div class="input-bar">
+            <input type="text" id="msgInp" placeholder="ИМПУЛЬС..." autocomplete="off">
+            <button class="ok-btn" onclick="send()">OK</button>
+        </div>
+    </div>
 
     <script>
-        let stanzas = [];
-        let isPoemMode = false;
-        const maxStandard = 4;
+        let count = 0;
 
-        const input = document.getElementById('poemInput');
-        const display = document.getElementById('poemDisplay');
-        const counter = document.getElementById('stanzaCount');
-        const addBtn = document.getElementById('addBtn');
-        const publishBtn = document.getElementById('publishBtn');
-        const clipBtn = document.getElementById('clipBtn');
+        function openStudio() {
+            document.getElementById('room').style.display = 'none';
+            document.getElementById('studio').style.display = 'flex';
+        }
 
-        // 1. НАВИГАЦИЯ
-        document.getElementById('backBtn').onclick = () => {
-            if (window.history.length > 1) history.back();
-            else alert("Вы в начале пути.");
-        };
+        function closeStudio() {
+            document.getElementById('room').style.display = 'flex';
+            document.getElementById('studio').style.display = 'none';
+        }
 
-        // 2. МОНИТОРИНГ ТЕКСТА (Кнопки оживают сразу)
-        input.oninput = () => {
-            const hasText = input.value.trim().length > 0 || stanzas.length > 0;
-            publishBtn.disabled = !hasText;
-            clipBtn.style.display = hasText ? 'block' : 'none';
-        };
+        function send() {
+            const inp = document.getElementById('msgInp');
+            const chat = document.getElementById('chat');
+            const val = inp.value.trim().toLowerCase();
 
-        // 3. ЛОГИКА ДОБАВЛЕНИЯ
-        addBtn.onclick = () => {
-            const text = input.value.trim();
-            if (text) {
-                stanzas.push(text);
-                input.value = "";
-                updateUI();
-            }
-        };
+            if (!val || count >= 8) return;
 
-        function updateUI() {
-            display.innerText = stanzas.join('\n\n');
-            const count = stanzas.length;
-            counter.innerText = isPoemMode ? `РЕЖИМ ПОЭМА: ${count} КУПЛЕТОВ` : `КУПЛЕТОВ: ${count}`;
-
-            // ПРОВЕРКА НА ПЕРЕХОД В ПОЭМУ
-            if (count === maxStandard && !isPoemMode) {
-                if (confirm("Уже 4 куплета! Продолжим как ПОЭМУ? (Если нет - время публиковать)")) {
-                    isPoemMode = true;
-                    counter.style.color = "var(--gold)";
-                    counter.innerText = `РЕЖИМ ПОЭМА: ${count}`;
+            // Твоё
+            addMsg(inp.value, 'user');
+            
+            // Моё (Рифма)
+            setTimeout(() => {
+                let reply = "Абсурд принят. Жду продолжения...";
+                if (val.includes('айсберг') || val.includes('кот')) {
+                    reply = "Кот приехал — айсберг в рот.";
+                } else if (val.includes('дно')) {
+                    reply = "На дне коту тепло и темно.";
                 }
-            }
+                
+                addMsg(reply, '');
+                count += 2;
+                if (count >= 8) addMsg("--- 4 КУПЛЕТА ЕСТЬ. В ЭФИР? ---", 'tool-text');
+            }, 600);
+
+            inp.value = "";
         }
 
-        // 4. ПУБЛИКАЦИЯ (В память устройства)
-        publishBtn.onclick = () => {
-            const finalContent = stanzas.join('\n\n') + (input.value ? '\n\n' + input.value : '');
-            const date = new Date().toLocaleString('ru-RU');
-            
-            let journal = JSON.parse(localStorage.getItem('absurd_journal') || "[]");
-            journal.push({ date, text: finalContent });
-            localStorage.setItem('absurd_journal', JSON.stringify(journal));
-            
-            alert("ШЕДЕВР СОХРАНЕН В ЖУРНАЛЕ!");
-            location.reload(); 
-        };
-
-        // 5. ОТПРАВИТЬ ДРУГУ (Telegram)
-        function shareFriend() {
-            const text = stanzas.join('\n\n') + (input.value ? '\n\n' + input.value : '');
-            if (!text) return alert("Сначала напишите хоть что-то!");
-            const url = `https://t.me/share/url?url=GY-GY&text=${encodeURIComponent(text + "\n\n(c) GY-GY Absurd Studio")}`;
-            window.open(url, '_blank');
+        function addMsg(txt, cls) {
+            const d = document.createElement('div');
+            d.className = 'line ' + cls;
+            d.innerText = txt;
+            const c = document.getElementById('chat');
+            c.appendChild(d);
+            c.scrollTop = c.scrollHeight;
         }
 
-        // 6. МАСТЕРСКАЯ КЛИПОВ (Заготовка)
-        clipBtn.onclick = () => {
-            const text = stanzas.join('\n\n') + (input.value ? '\n\n' + input.value : '');
-            localStorage.setItem('current_poem', text);
-            alert("ПЕРЕХОД В МАСТЕРСКУЮ КЛИПОВ (Микрофон и Вокал ИИ)...");
-            // Здесь будет код открытия второй страницы
+        window.onload = () => {
+            document.getElementById('uid').innerText = 'ID-' + Math.floor(Math.random()*999);
         };
     </script>
-
 </body>
 </html>
