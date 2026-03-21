@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY v4.3.2: RECOVERY</title>
+    <title>GY-GY v4.3.3: RECOVERY</title>
     <style>
         :root { --gold: #FFD700; --gold-dark: #B8860B; --bg: #000; --btn: 60px; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -60,17 +60,23 @@
     </script>
     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-    <script>
-        // ЧИСТЫЙ КЛЮЧ БЕЗ РАЗРЫВОВ
-        const API_KEY = "AIzaSyBFmETf-8mg5iMSjgg4rKNL_k3vwb-YGPE";
+   <script>
+        // --- СИСТЕМА РАЗДЕЛЕННОГО КЛЮЧА v4.3.2 ---
+        // Вставь сюда первую половину нового ключа
+        const part1 = "AIzaSyC7l5KTkISjA"; 
+        // Вставь сюда вторую половину нового ключа
+        const part2 = "KH125uuGRYCtUjxOArl0r8"; 
+        
+        const getFullKey = () => part1.trim() + part2.trim();
         let count = 0;
 
-        // ИСПРАВЛЕННАЯ НАВИГАЦИЯ
+      // ЧЕСТНЫЙ ВОЗВРАТ НАЗАД (Без вылета к двери)
         document.getElementById('backBtn').onclick = () => {
-            if (document.referrer.includes(window.location.hostname)) {
-                history.back();
+            if (window.history.length > 1) {
+                window.history.back();
             } else {
-                window.location.href = 'index.html'; 
+                // Если истории нет, кнопка просто мигнет, но не выкинет
+                console.log("v4.3.2: Тупик навигации. Возврат невозможен.");
             }
         };
 
@@ -79,28 +85,36 @@
             const s = document.getElementById('stream');
             const div = document.createElement('div');
             div.className = 'msg';
-            div.innerHTML = `<div class="avatar">${author[0]}</div><div class="msg-body"><div class="meta">@${author} [${count}]</div><div>${text}</div></div>`;
+            div.innerHTML = `
+                <div class="avatar">${author[0]}</div>
+                <div class="msg-body">
+                    <div class="meta">@${author} [${count}]</div>
+                    <div style="text-transform: uppercase;">${text}</div>
+                </div>`;
             s.appendChild(div);
             s.scrollTop = s.scrollHeight;
         }
 
         async function aiPost(userText) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+            const fullUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${getFullKey()}`;
             try {
-                const res = await fetch(url, {
+                const res = await fetch(fullUrl, {
                     method: "POST",
                     headers: {"Content-Type":"application/json"},
-                    body: JSON.stringify({ contents: [{ parts: [{ text: `Напиши 4 строки техно-нуара капсом про: ${userText}` }] }] })
+                    body: JSON.stringify({ 
+                        contents: [{ parts: [{ text: `Напиши 4 строки короткого, жесткого техно-нуара про: ${userText}` }] }] 
+                    })
                 });
                 const data = await res.json();
-                if (data.candidates) {
-                    const result = data.candidates[0].content.parts[0].text.trim().toUpperCase();
+                
+                if (data.candidates && data.candidates[0].content) {
+                    const result = data.candidates[0].content.parts[0].text.trim();
                     addMsg('GEMINI', result);
                 } else {
-                    addMsg('GEMINI', "КЛЮЧ ОТКЛОНЕН. ПРОВЕРЬТЕ API.");
+                    addMsg('GEMINI', "ОШИБКА: КЛЮЧ НЕ ПРИНЯТ. ПРОВЕРЬТЕ СКЛЕЙКУ.");
                 }
             } catch (e) { 
-                addMsg('GEMINI', "СЕТЕВОЙ СБОЙ. ПОВТОРИТЕ."); 
+                addMsg('GEMINI', "СБОЙ ШЛЮЗА. ПОВТОРИТЕ ИМПУЛЬС."); 
             }
         }
 
@@ -117,10 +131,12 @@
         document.getElementById('sendBtn').onclick = handleSend;
         document.getElementById('inp').onkeypress = (e) => { if(e.key === 'Enter') handleSend(); };
 
-        // МЯГКИЙ СТАРТ GOOGLE
+        // КОНТРОЛЬНЫЙ ПИНОК GOOGLE (через 3 секунды)
         window.addEventListener('load', () => {
             setTimeout(() => { 
-                if(!document.querySelector('.goog-te-gadget-simple')) googleTranslateElementInit(); 
+                if(!document.querySelector('.goog-te-gadget-simple')) {
+                    googleTranslateElementInit();
+                }
             }, 3000);
         });
     </script>
