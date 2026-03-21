@@ -4,81 +4,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY v5.5: GOLDEN STUDIO</title>
+    <title>GY-GY v5.6: GOLD & NEON</title>
     <style>
-        :root { --gold: #ffcf00; --gold-dark: #b8860b; --bg: #000; }
+        :root { --gold: #ffcf00; --orange-neon: #ff8c00; --bg: #000; }
         body { background: var(--bg); color: #fff; font-family: 'Courier New', monospace; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 
         /* ВЕРХНЯЯ ПАНЕЛЬ */
         .control-panel {
             display: flex;
             align-items: center;
-            justify-content: space-between;
             border-bottom: 1px solid #222;
-            padding: 5px 10px;
+            padding: 0 15px;
             background: #050505;
             height: 60px;
+            gap: 15px;
         }
 
-        .nav-arrow { color: var(--gold); font-size: 28px; background: none; border: none; cursor: pointer; font-weight: bold; }
+        .nav-arrow { color: var(--gold); font-size: 28px; background: none; border: none; cursor: pointer; font-weight: bold; padding: 0 10px; }
         
-        .tools-scroll {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            overflow-x: auto;
-            flex: 1;
-            padding: 0 15px;
-            scrollbar-width: none;
-        }
-        .tools-scroll::-webkit-scrollbar { display: none; }
+        .tools-row { display: flex; align-items: center; gap: 20px; flex: 1; overflow-x: auto; scrollbar-width: none; }
+        .tools-row::-webkit-scrollbar { display: none; }
 
-        /* ИКОНКА ПЕРЕВОДА (Абракадабра) */
-        .lang-icon {
-            font-size: 20px;
-            color: var(--gold);
+        /* ИКОНКА ПЕРЕВОДА */
+        .lang-icon { font-size: 22px; color: var(--gold); cursor: pointer; min-width: 35px; }
+
+        .tool-item { color: var(--gold); text-transform: uppercase; font-size: 12px; font-weight: 900; white-space: nowrap; cursor: pointer; letter-spacing: 1px; background: none; border: none; }
+        
+        /* ЛОГО В ПРАВОМ КРАЮ */
+        .logo-end { margin-left: auto; color: var(--gold); font-weight: 900; letter-spacing: 2px; font-size: 14px; opacity: 0.8; }
+
+        .user-avatar { width: 32px; height: 32px; border: 1px solid var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; color: var(--gold); flex-shrink: 0; }
+
+        /* AI ROOM NEON (Экраны) */
+        .ai-screen-word {
+            color: var(--orange-neon) !important;
+            text-shadow: 0 0 10px var(--orange-neon), 0 0 20px var(--orange-neon);
             cursor: pointer;
-            min-width: 30px;
-            text-align: center;
-        }
-
-        .tool-item {
-            color: var(--gold);
             text-transform: uppercase;
-            font-size: 12px;
             font-weight: 900;
-            white-space: nowrap;
-            cursor: pointer;
-            letter-spacing: 2px;
-            background: none;
-            border: none;
-        }
-
-        .user-avatar {
-            width: 32px; height: 32px;
-            border: 1px solid var(--gold-dark);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 9px; color: var(--gold); flex-shrink: 0;
         }
 
         /* ЗОНА ТЕКСТА */
-        .studio-zone { flex: 1; overflow-y: auto; padding: 30px 20px; text-align: center; }
-        .poem-paper { font-size: 24px; line-height: 1.6; color: #fff; font-style: italic; white-space: pre-wrap; transition: 0.5s; }
+        .studio-zone { flex: 1; overflow-y: auto; padding: 40px 20px; text-align: center; }
+        .poem-paper { font-size: 22px; line-height: 1.6; color: #fff; font-style: italic; white-space: pre-wrap; }
         
-        /* ВВОД */
-        .input-area { padding: 20px; background: #000; border-top: 1px solid #111; }
-        textarea { width: 100%; background: none; border: none; border-bottom: 1px solid #333; color: #fff; text-align: center; font-size: 18px; padding: 10px; outline: none; }
-        textarea:focus { border-bottom-color: var(--gold); }
-
-        .btn-gold { color: var(--gold); background: none; border: none; font-weight: 900; font-size: 16px; cursor: pointer; text-transform: uppercase; width: 100%; letter-spacing: 4px; padding: 15px; }
+        /* ВВОД В ОДНУ СТРОКУ */
+        .input-bar { 
+            display: flex; 
+            padding: 15px; 
+            background: #080808; 
+            border-top: 1px solid #222; 
+            align-items: center;
+            gap: 10px;
+        }
+        #poemInput { 
+            flex: 1; 
+            background: none; 
+            border: none; 
+            border-bottom: 1px solid #444; 
+            color: #fff; 
+            font-size: 16px; 
+            padding: 8px; 
+            outline: none; 
+        }
+        #poemInput:focus { border-bottom-color: var(--gold); }
+        .btn-add-inline { color: var(--gold); background: none; border: 1px solid var(--gold); padding: 8px 15px; cursor: pointer; font-weight: 900; font-size: 12px; border-radius: 4px; }
 
         /* ЗНАК ТУПИКА */
-        #road-sign {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: #000; border: 2px solid var(--gold); color: var(--gold);
-            padding: 30px; display: none; z-index: 1000; text-align: center; font-weight: bold;
-        }
+        #road-sign { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #000; border: 2px solid var(--gold); color: var(--gold); padding: 30px; display: none; z-index: 1000; text-align: center; font-weight: bold; }
+
+        /* Прячем мусор от Гугла */
+        .goog-te-banner-frame { display: none !important; }
+        body { top: 0 !important; }
+        #google_translate_element { height: 0; overflow: hidden; opacity: 0; }
     </style>
 </head>
 <body>
@@ -88,46 +86,44 @@
     <header class="control-panel">
         <button class="nav-arrow" onclick="goNav('back')">«</button>
         
-        <div class="tools-scroll">
-            <div class="lang-icon" onclick="triggerTranslate()" title="Перевести">文A</div>
-            
+        <div class="tools-row">
+            <div class="lang-icon" onclick="openLang()">文A</div>
             <div class="user-avatar" id="userIcon">ID</div>
-
             <button class="tool-item" id="publishBtn">В ЭФИР</button>
             <button class="tool-item" onclick="shareFriend()">SHARE</button>
             <button class="tool-item" id="clipBtn">КЛИП</button>
-            
-            <div class="tool-item" style="opacity:0.3;">GY-GY</div>
         </div>
 
+        <div class="logo-end">GY-GY</div>
         <button class="nav-arrow" onclick="goNav('forward')">»</button>
     </header>
 
     <div class="studio-zone">
         <div id="poemDisplay" class="poem-paper">...</div>
+        <p style="margin-top:50px; font-size:10px; color:#444;">DEMO AI ROOM:<br><span class="ai-screen-word">VERSES</span> & <span class="ai-screen-word">TECHPARK</span></p>
     </div>
 
-    <div class="input-area" id="inputZone">
-        <textarea id="poemInput" placeholder="ВАШ ИМПУЛЬС..."></textarea>
-        <button class="btn-gold" id="addBtn">ДОБАВИТЬ</button>
+    <div class="input-bar">
+        <input type="text" id="poemInput" placeholder="ВАШ ИМПУЛЬС..." autocomplete="off">
+        <button class="btn-add-inline" id="addBtn">OK</button>
     </div>
 
-    <div id="google_translate_element" style="display:none;"></div>
+    <div id="google_translate_element"></div>
 
     <script type="text/javascript">
         function googleTranslateElementInit() {
-            new google.translate.TranslateElement({pageLanguage:'ru', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+            new google.translate.TranslateElement({pageLanguage:'ru', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false}, 'google_translate_element');
         }
-        
-        // Вызов перевода через нашу иконку
-        function triggerTranslate() {
-            const googCombo = document.querySelector('.goog-te-combo');
-            if (googCombo) {
-                alert("Выберите язык в появившемся меню");
-                // Можно заставить его открыться или просто показать скрытый виджет
-                document.getElementById('google_translate_element').style.display = 'block';
+
+        function openLang() {
+            // Пытаемся вызвать клик по скрытому меню Гугла
+            const combo = document.querySelector('.goog-te-combo');
+            if (combo) {
+                combo.style.display = 'block'; 
+                combo.focus();
+                alert("ВЫБЕРИТЕ ЯЗЫК В МЕНЮ");
             } else {
-                alert("Система перевода загружается...");
+                alert("ПЕРЕВОДЧИК ЗАГРУЖАЕТСЯ...");
             }
         }
     </script>
@@ -136,7 +132,7 @@
     <script>
         let stanzas = [];
 
-        // Аватар
+        // Аватар (Цифровой след)
         window.onload = () => {
             let id = localStorage.getItem('gy_id') || 'ID-' + Math.floor(Math.random()*999);
             localStorage.setItem('gy_id', id);
@@ -145,12 +141,22 @@
 
         // Навигация
         function goNav(dir) {
-            const sign = document.getElementById('road-sign');
-            sign.style.display = 'block';
-            setTimeout(() => { sign.style.display = 'none'; }, 1200);
+            if (dir === 'back') {
+                if (window.history.length > 1) history.back();
+                else showSign("⛔ ПРОЕЗД ЗАКРЫТ");
+            } else {
+                showSign("🛑 ТУПИК");
+            }
         }
 
-        // Добавление строк
+        function showSign(txt) {
+            const sign = document.getElementById('road-sign');
+            sign.innerHTML = txt;
+            sign.style.display = 'block';
+            setTimeout(() => { sign.style.display = 'none'; }, 1500);
+        }
+
+        // Добавление строк (OK в строке)
         document.getElementById('addBtn').onclick = () => {
             const inp = document.getElementById('poemInput');
             if(inp.value.trim()) {
