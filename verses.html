@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY VERSES | v5.1.5</title>
+    <title>GY-GY VERSES | v5.1.6</title>
     <style>
         :root {
             --orange-neon: #ff8c00;
@@ -23,34 +23,46 @@
             overflow: hidden;
         }
 
-        /* --- ВЕРХНЯЯ ПАНЕЛЬ: ЖЕСТКАЯ НАВИГАЦИЯ --- */
+        /* --- ВЕРХНЯЯ ПАНЕЛЬ v5.1.6 (ПОЛНЫЙ КОНТРОЛЬ) --- */
         header {
             height: 60px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 15px;
+            padding: 0 10px;
             border-bottom: 1px solid var(--gold);
             flex-shrink: 0;
             background: #000;
+            z-index: 1000;
         }
 
-        /* Стиль для обеих кнопок (ссылка и button) */
-        .nav-control {
-            text-decoration: none;
-            background: none; 
-            border: 1px solid var(--gold);
-            color: var(--gold); 
-            cursor: pointer;
-            width: 50px;
-            height: 40px;
-            font-size: 1.5rem;
+        /* Общий стиль для кнопок, ссылок и логотипов в панели */
+        .panel-item {
             display: flex;
             align-items: center;
             justify-content: center;
-            outline: none;
+            height: 40px;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            font-family: inherit;
             box-sizing: border-box;
+            background: none;
+            cursor: pointer;
+            text-decoration: none;
+            outline: none;
         }
+
+        .left-group, .right-group {
+            display: flex;
+            gap: 5px; /* Минимальный отступ между элементами */
+        }
+
+        /* Размеры для стрелок */
+        .nav-arrow { width: 50px; font-size: 1.5rem; }
+
+        /* Размеры для иконки перевода и логотипа */
+        .lang-trigger { width: 45px; font-size: 1.2rem; font-weight: bold; color: var(--orange-neon); }
+        .logo-item { width: 65px; font-size: 0.9rem; font-weight: bold; }
 
         /* --- ПОЛЕ ЧАТА --- */
         #chat-wall {
@@ -94,9 +106,7 @@
             outline: none;
         }
 
-        #user-input:focus {
-            border-color: var(--orange-neon);
-        }
+        #user-input:focus { border-color: var(--orange-neon); }
 
         #send-btn {
             background: var(--orange-neon);
@@ -107,14 +117,40 @@
             cursor: pointer;
             text-transform: uppercase;
         }
+
+        /* --- СКРЫТИЕ МУСОРА GOOGLE --- */
+        #google_translate_element, .goog-te-banner-frame { display: none !important; }
+        body { top: 0 !important; }
+        
+        /* Стилизация самого выпадающего меню Google */
+        select.goog-te-combo {
+            position: fixed;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10000;
+            background: #000 !important;
+            color: var(--gold) !important;
+            border: 2px solid var(--orange-neon) !important;
+            padding: 10px;
+            font-family: inherit;
+        }
     </style>
 </head>
 <body>
 
 <header>
-    <a href="ai_room_core_v8.html" class="nav-control">«</a>
+    <div class="left-group">
+        <a href="ai_room_core_v8.html" class="panel-item nav-arrow">«</a>
+        <button class="panel-item lang-trigger" onclick="changeLang()">文A</button>
+    </div>
     
-    <div></div> <button class="nav-control" onclick="window.history.forward()">»</button>
+    <div></div>
+
+    <div class="right-group">
+        <div class="panel-item logo-item">GY-GY</div>
+        <button class="panel-item nav-arrow" onclick="window.history.forward()">»</button>
+    </div>
 </header>
 
 <div id="chat-wall">
@@ -124,10 +160,13 @@
 
 <footer>
     <input type="text" id="user-input" placeholder="Введите текст..." onkeypress="if(event.key==='Enter') pushMsg()">
-    <button id="send-btn" onclick="pushMsg()">ОТПРАВИТЬ</button>
+    <button id="send-btn" onclick="pushMsg()">В ПЕЧАТЬ</button>
 </footer>
 
+<div id="google_translate_element"></div>
+
 <script>
+    // 1. ЧАТ ЛОГИКА
     function pushMsg() {
         const input = document.getElementById('user-input');
         const wall = document.getElementById('chat-wall');
@@ -142,7 +181,25 @@
             wall.scrollTop = wall.scrollHeight;
         }
     }
+
+    // 2. GOOGLE TRANSLATE ЛОГИКА
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({pageLanguage: 'ru', autoDisplay: false}, 'google_translate_element');
+    }
+
+    function changeLang() {
+        // Ищем выпадающий список Google
+        var select = document.querySelector('select.goog-te-combo');
+        if (select) {
+            // Переключаем видимость
+            select.style.display = (select.style.display === 'block') ? 'none' : 'block';
+            select.focus(); // Сразу открываем список
+        } else {
+            console.log("Ждем инициализацию модуля перевода...");
+        }
+    }
 </script>
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 </body>
 </html>
