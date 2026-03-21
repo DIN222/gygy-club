@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY v5.0: ABSURD STUDIO</title>
+    <title>GY-GY v5.0.1: ABSURD STUDIO</title>
     <style>
         :root { --gold: #ffcf00; --gold-dark: #b8860b; --bg: #000; }
         body { background: var(--bg); color: #fff; font-family: 'Courier New', monospace; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
@@ -27,6 +27,26 @@
         .btn-main { flex: 1; padding: 10px; border: none; background: var(--gold); color: #000; font-weight: bold; cursor: pointer; border-radius: 5px; }
         .btn-main:disabled { background: #333; color: #666; }
         .btn-alt { flex: 1; padding: 10px; border: 1px solid var(--gold); background: none; color: var(--gold); border-radius: 5px; }
+        /* Прячем верхнюю панель Google Translate */
+.goog-te-banner-frame.skiptranslate, 
+.goog-te-banner-frame { 
+    display: none !important; 
+}
+
+body { 
+    top: 0 !important; 
+}
+
+/* Прячем всплывающие подсказки при наведении на слова */
+.goog-text-highlight {
+    background: none !important;
+    box-shadow: none !important;
+}
+
+/* Скрываем сам виджет, оставляя его функционал в коде */
+#google_translate_element {
+    display: none;
+}
     </style>
 </head>
 <body>
@@ -55,9 +75,25 @@
     </div>
 
     <script type="text/javascript">
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({pageLanguage:'ru', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
-        }
+       function googleTranslateElementInit() {
+    new google.translate.TranslateElement({
+        pageLanguage: 'ru', 
+        includedLanguages: 'en,fr,de,zh-CN', // Выбери нужные
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+        autoDisplay: false 
+    }, 'google_translate_element');
+}
+        function changeLang() {
+    // Находим скрытый выпадающий список Google
+    var select = document.querySelector('select.goog-te-combo');
+    if (select) {
+        // Если он есть, просто показываем его пользователю как системное меню
+        select.style.display = 'block';
+        select.focus();
+    } else {
+        alert("Загрузка лингво-модуля...");
+    }
+}
     </script>
     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
