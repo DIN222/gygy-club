@@ -4,11 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY VERSES | v5.1</title>
+    <title>GY-GY VERSES | v5.1.2</title>
     <style>
         :root {
             --orange-neon: #ff8c00;
-            --neon-glow: 0 0 10px rgba(255, 140, 0, 0.5);
             --gold: #ffd700;
             --bg: #000;
             --panel-bg: rgba(15, 15, 15, 0.98);
@@ -21,39 +20,40 @@
             color: #fff;
             font-family: 'Courier New', monospace;
             display: flex;
-            flex-direction: column; /* Вертикальный стек: Топ -> Час -> Низ */
+            flex-direction: column;
             overflow: hidden;
         }
 
-        /* --- 1. ВЕРХНЯЯ ПАНЕЛЬ v5.1 --- */
+        /* --- ВЕРХНЯЯ ПАНЕЛЬ v5.1.2 (ЧИСТАЯ НАВИГАЦИЯ) --- */
         header {
             height: 60px;
             display: flex;
-            justify-content: space-between;
+            justify-content: space-between; /* Стрелки по краям */
             align-items: center;
-            padding: 0 20px;
+            padding: 0 15px;
             border-bottom: 1px solid var(--gold);
             background: var(--panel-bg);
             flex-shrink: 0;
             z-index: 1000;
         }
 
-        .btn-nav {
-            background: none; border: 1px solid var(--gold);
-            color: var(--gold); cursor: pointer;
-            padding: 5px 15px; font-weight: bold;
+        .nav-btn {
+            background: none; 
+            border: 1px solid var(--gold);
+            color: var(--gold); 
+            cursor: pointer;
+            width: 50px;
+            height: 40px;
+            font-weight: bold;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             transition: 0.3s;
         }
-        .btn-nav:hover { background: var(--gold); color: #000; }
+        .nav-btn:hover { background: var(--gold); color: #000; }
 
-        .lang-icon {
-            color: var(--orange-neon);
-            font-size: 1.5rem; cursor: pointer;
-            text-shadow: var(--neon-glow);
-            font-weight: bold;
-        }
-
-        /* --- 2. ПОЛЕ ДЛЯ ЧАТА (SCROLL ZONE) --- */
+        /* --- ПОЛЕ ЧАТА --- */
         #chat-wall {
             flex-grow: 1; 
             overflow-y: auto;
@@ -61,10 +61,7 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
-            background: radial-gradient(circle at center, #0a0a0a 0%, #000 100%);
-            /* Кастомный скроллбар */
-            scrollbar-width: thin;
-            scrollbar-color: var(--gold) transparent;
+            background: #000;
         }
 
         .message {
@@ -74,21 +71,14 @@
             background: rgba(255, 140, 0, 0.05);
             color: var(--gold);
             font-size: 1.2rem;
-            animation: slideIn 0.3s ease-out;
-            line-height: 1.4;
         }
 
-        @keyframes slideIn { 
-            from { opacity: 0; transform: translateX(-20px); } 
-            to { opacity: 1; transform: translateX(0); } 
-        }
-
-        /* --- 3. НИЖНЯЯ СТРОКА ВВОДА --- */
+        /* --- НИЖНЯЯ СТРОКА ВВОДА --- */
         footer {
-            min-height: 80px;
+            height: 80px;
             display: flex;
             align-items: center;
-            padding: 10px 15px;
+            padding: 0 15px;
             gap: 10px;
             border-top: 1px solid #222;
             background: var(--panel-bg);
@@ -102,44 +92,29 @@
             color: #fff;
             padding: 15px;
             font-family: inherit;
-            font-size: 1rem;
             outline: none;
-            border-radius: 5px;
-            transition: 0.3s;
+            border-radius: 4px;
         }
-
-        #user-input:focus { border-color: var(--orange-neon); box-shadow: 0 0 10px rgba(255, 140, 0, 0.2); }
 
         #send-btn {
             background: var(--orange-neon);
             color: #000;
             border: none;
-            padding: 15px 25px;
+            padding: 15px 20px;
             font-weight: 900;
             cursor: pointer;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            border-radius: 5px;
-        }
-
-        #send-btn:hover { filter: brightness(1.2); }
-
-        /* --- GOOGLE TRANSLATE FIX --- */
-        #google_translate_element, .goog-te-banner-frame { display: none !important; }
-        body { top: 0 !important; }
-        select.goog-te-combo {
-            position: fixed; top: 70px; left: 50%; transform: translateX(-50%);
-            z-index: 10000; background: #000 !important; color: var(--gold) !important;
-            border: 2px solid var(--orange-neon) !important; padding: 10px;
         }
     </style>
 </head>
 <body>
 
 <header>
-    <button class="btn-nav" onclick="history.back()">« НАЗАД</button>
-    <div style="color: var(--gold); font-weight: bold; letter-spacing: 4px; font-size: 1.1rem;">GY-GY v5.1</div>
-    <div class="lang-icon" onclick="changeLang()">文A</div>
+    <button class="nav-btn" onclick="history.back()">«</button>
+
+    <div></div>
+
+    <button class="nav-btn" onclick="history.forward()">»</button>
 </header>
 
 <div id="chat-wall">
@@ -148,42 +123,24 @@
 </div>
 
 <footer>
-    <input type="text" id="user-input" placeholder="Добавьте куплет абсурда..." onkeypress="if(event.key==='Enter') pushMsg()">
+    <input type="text" id="user-input" placeholder="Введите абсурд..." onkeypress="if(event.key==='Enter') pushMsg()">
     <button id="send-btn" onclick="pushMsg()">В ПЕЧАТЬ</button>
 </footer>
-
-<div id="google_translate_element"></div>
 
 <script>
     function pushMsg() {
         const input = document.getElementById('user-input');
         const wall = document.getElementById('chat-wall');
-        
         if(input.value.trim() !== "") {
             const msg = document.createElement('div');
             msg.className = 'message';
             msg.innerText = input.value;
             wall.appendChild(msg);
-            
             input.value = "";
-            wall.scrollTop = wall.scrollHeight; // Автоматическая прокрутка вниз
-        }
-    }
-
-    // Google Translate Initialization
-    function googleTranslateElementInit() {
-        new google.translate.TranslateElement({pageLanguage: 'ru', autoDisplay: false}, 'google_translate_element');
-    }
-
-    function changeLang() {
-        var select = document.querySelector('select.goog-te-combo');
-        if (select) {
-            select.style.display = (select.style.display === 'block') ? 'none' : 'block';
-            select.focus();
+            wall.scrollTop = wall.scrollHeight;
         }
     }
 </script>
-<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 </body>
 </html>
