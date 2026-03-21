@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY VERSES | v5.1.6</title>
+    <title>GY-GY VERSES | v5.2.0</title>
     <style>
         :root {
             --orange-neon: #ff8c00;
@@ -23,7 +23,7 @@
             overflow: hidden;
         }
 
-        /* --- ВЕРХНЯЯ ПАНЕЛЬ v5.1.6 (ПОЛНЫЙ КОНТРОЛЬ) --- */
+        /* --- ВЕРХНЯЯ ПАНЕЛЬ v5.2.0 --- */
         header {
             height: 60px;
             display: flex;
@@ -31,12 +31,13 @@
             align-items: center;
             padding: 0 10px;
             border-bottom: 1px solid var(--gold);
-            flex-shrink: 0;
             background: #000;
+            flex-shrink: 0;
             z-index: 1000;
         }
 
-        /* Общий стиль для кнопок, ссылок и логотипов в панели */
+        .panel-group { display: flex; gap: 8px; align-items: center; }
+
         .panel-item {
             display: flex;
             align-items: center;
@@ -44,25 +45,50 @@
             height: 40px;
             border: 1px solid var(--gold);
             color: var(--gold);
-            font-family: inherit;
-            box-sizing: border-box;
             background: none;
             cursor: pointer;
             text-decoration: none;
+            font-weight: bold;
+            box-sizing: border-box;
             outline: none;
         }
 
-        .left-group, .right-group {
-            display: flex;
-            gap: 5px; /* Минимальный отступ между элементами */
+        .nav-arrow { width: 45px; font-size: 1.5rem; }
+        
+        /* Фирменная иконка 文A */
+        .lang-trigger { 
+            width: 50px; 
+            font-size: 1.2rem; 
+            color: var(--orange-neon); 
+            border-color: var(--orange-neon);
         }
 
-        /* Размеры для стрелок */
-        .nav-arrow { width: 50px; font-size: 1.5rem; }
+        .archive-btn { padding: 0 12px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
+        .logo-item { width: 65px; font-size: 0.9rem; border-color: var(--gold); color: var(--gold); }
 
-        /* Размеры для иконки перевода и логотипа */
-        .lang-trigger { width: 45px; font-size: 1.2rem; font-weight: bold; color: var(--orange-neon); }
-        .logo-item { width: 65px; font-size: 0.9rem; font-weight: bold; }
+        /* --- КАСТОМНОЕ МЕНЮ ЯЗЫКОВ --- */
+        #lang-menu {
+            position: absolute;
+            top: 60px;
+            left: 63px; 
+            background: #000;
+            border: 1px solid var(--orange-neon);
+            display: none;
+            flex-direction: column;
+            z-index: 2000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.9);
+        }
+
+        .lang-option {
+            padding: 12px 25px;
+            color: var(--gold);
+            cursor: pointer;
+            border-bottom: 1px solid #222;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            transition: 0.2s;
+        }
+        .lang-option:hover { background: var(--orange-neon); color: #000; }
 
         /* --- ПОЛЕ ЧАТА --- */
         #chat-wall {
@@ -72,11 +98,10 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-            background: #000;
         }
 
         .message {
-            padding: 5px 15px;
+            padding: 8px 15px;
             border-left: 2px solid var(--orange-neon);
             color: var(--gold);
             font-size: 1.2rem;
@@ -91,67 +116,49 @@
             padding: 0 15px;
             gap: 10px;
             border-top: 1px solid #222;
-            background: #000;
             flex-shrink: 0;
         }
 
         #user-input {
-            flex-grow: 1;
-            background: #000;
-            border: 1px solid #333;
-            color: #fff;
-            padding: 15px;
-            font-family: inherit;
-            font-size: 1rem;
-            outline: none;
+            flex-grow: 1; background: #000; border: 1px solid #333;
+            color: #fff; padding: 15px; outline: none; font-size: 1rem;
         }
 
-        #user-input:focus { border-color: var(--orange-neon); }
-
         #send-btn {
-            background: var(--orange-neon);
-            color: #000;
-            border: none;
-            padding: 15px 20px;
-            font-weight: bold;
-            cursor: pointer;
+            background: var(--orange-neon); color: #000;
+            border: none; padding: 15px 20px; font-weight: bold; cursor: pointer;
             text-transform: uppercase;
         }
 
-        /* --- СКРЫТИЕ МУСОРА GOOGLE --- */
-        #google_translate_element, .goog-te-banner-frame { display: none !important; }
+        /* Скрытие Google-стандарта */
+        .goog-te-banner-frame, #google_translate_element { display: none !important; }
         body { top: 0 !important; }
-        
-        /* Стилизация самого выпадающего меню Google */
-        select.goog-te-combo {
-            position: fixed;
-            top: 70px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 10000;
-            background: #000 !important;
-            color: var(--gold) !important;
-            border: 2px solid var(--orange-neon) !important;
-            padding: 10px;
-            font-family: inherit;
-        }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="left-group">
+    <div class="panel-group">
         <a href="ai_room_core_v8.html" class="panel-item nav-arrow">«</a>
-        <button class="panel-item lang-trigger" onclick="changeLang()">文A</button>
+        
+        <button class="panel-item lang-trigger" onclick="toggleLangMenu()">文A</button>
+
+        <button class="panel-item archive-btn" onclick="openArchive()">Сборник</button>
     </div>
     
-    <div></div>
-
-    <div class="right-group">
+    <div class="panel-group">
         <div class="panel-item logo-item">GY-GY</div>
         <button class="panel-item nav-arrow" onclick="window.history.forward()">»</button>
     </div>
 </header>
+
+<div id="lang-menu">
+    <div class="lang-option" onclick="setLanguage('ru')">Русский</div>
+    <div class="lang-option" onclick="setLanguage('en')">English</div>
+    <div class="lang-option" onclick="setLanguage('de')">Deutsch</div>
+    <div class="lang-option" onclick="setLanguage('fr')">Français</div>
+    <div class="lang-option" onclick="setLanguage('zh-CN')">简体中文</div>
+</div>
 
 <div id="chat-wall">
     <div class="message">Айсберг дно приехал кот,</div>
@@ -166,37 +173,40 @@
 <div id="google_translate_element"></div>
 
 <script>
-    // 1. ЧАТ ЛОГИКА
     function pushMsg() {
         const input = document.getElementById('user-input');
         const wall = document.getElementById('chat-wall');
-        
         if(input.value.trim() !== "") {
             const msg = document.createElement('div');
             msg.className = 'message';
             msg.innerText = input.value;
             wall.appendChild(msg);
-            
             input.value = "";
             wall.scrollTop = wall.scrollHeight;
         }
     }
 
-    // 2. GOOGLE TRANSLATE ЛОГИКА
-    function googleTranslateElementInit() {
-        new google.translate.TranslateElement({pageLanguage: 'ru', autoDisplay: false}, 'google_translate_element');
+    function toggleLangMenu() {
+        const menu = document.getElementById('lang-menu');
+        menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex';
     }
 
-    function changeLang() {
-        // Ищем выпадающий список Google
-        var select = document.querySelector('select.goog-te-combo');
+    function setLanguage(langCode) {
+        const select = document.querySelector('select.goog-te-combo');
         if (select) {
-            // Переключаем видимость
-            select.style.display = (select.style.display === 'block') ? 'none' : 'block';
-            select.focus(); // Сразу открываем список
-        } else {
-            console.log("Ждем инициализацию модуля перевода...");
+            select.value = langCode;
+            select.dispatchEvent(new Event('change'));
         }
+        toggleLangMenu();
+    }
+
+    function openArchive() {
+        const messages = document.querySelectorAll('.message').length;
+        alert("В Сборнике зафиксировано " + messages + " строк абсурда.");
+    }
+
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({pageLanguage: 'ru', autoDisplay: false}, 'google_translate_element');
     }
 </script>
 <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
