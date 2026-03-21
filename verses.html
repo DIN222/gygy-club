@@ -4,147 +4,188 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY v5.2: ABSURD MANIFESTO</title>
+    <title>GY-GY v5.3: CONTROL PANEL</title>
     <style>
-        :root { --gold: #ffcf00; --gold-dark: #b8860b; --bg: #000; }
+        :root { --orange: #ff8c00; --bg: #000; }
         body { background: var(--bg); color: #fff; font-family: 'Courier New', monospace; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-        
-        header { border-bottom: 2px solid var(--gold); padding: 10px; background: #050505; position: relative; }
-        .nav-box { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .btn-nav { background: none; border: 1px solid var(--gold-dark); color: var(--gold); padding: 5px 12px; cursor: pointer; border-radius: 5px; font-size: 18px; }
-        
-        #google_translate_element { border: 1px solid var(--gold-dark); padding: 2px; border-radius: 5px; height: 26px; overflow: hidden; }
-        
-        .studio-zone { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; background: radial-gradient(circle at center, #0a0a0a 0%, #000 100%); }
-        .poem-paper { border-left: 2px solid var(--gold); padding-left: 15px; font-style: italic; color: #eee; white-space: pre-wrap; font-size: 16px; line-height: 1.4; }
-        
-        .counter { color: var(--gold-dark); font-size: 11px; text-align: right; margin-top: 5px; letter-spacing: 1px; }
 
-        .input-zone { padding: 15px; background: #080808; border-top: 1px solid #222; box-shadow: 0 -5px 15px rgba(0,0,0,0.5); }
-        textarea { width: 100%; background: #111; border: 1px solid var(--gold-dark); color: #fff; padding: 12px; box-sizing: border-box; resize: none; border-radius: 5px; height: 70px; font-size: 14px; outline: none; }
-        textarea:focus { border-color: var(--gold); box-shadow: 0 0 5px var(--gold-dark); }
+        /* ВЕРХНЯЯ ПАНЕЛЬ ИНСТРУМЕНТОВ */
+        .control-panel {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #222;
+            padding: 5px;
+            background: #050505;
+            height: 50px;
+        }
+
+        .nav-arrow { 
+            color: var(--orange); 
+            font-size: 24px; 
+            background: none; 
+            border: none; 
+            cursor: pointer; 
+            padding: 0 10px;
+            font-weight: bold;
+        }
+
+        /* Контейнер для инструментов со скроллом для мобилок */
+        .tools-scroll {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            overflow-x: auto;
+            scrollbar-width: none; /* Скрываем скроллбар */
+            padding: 0 10px;
+            flex: 1;
+        }
+        .tools-scroll::-webkit-scrollbar { display: none; }
+
+        .tool-item {
+            color: var(--orange);
+            text-transform: uppercase;
+            font-size: 11px;
+            font-weight: 900;
+            white-space: nowrap;
+            cursor: pointer;
+            letter-spacing: 1px;
+            background: none;
+            border: none;
+        }
+
+        /* АВАТАР */
+        .user-avatar {
+            width: 30px;
+            height: 30px;
+            border: 1px solid var(--orange);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            flex-shrink: 0;
+        }
+
+        /* ЯЗЫКОВАЯ ПАНЕЛЬ (Гугл-мини) */
+        #google_translate_element { min-width: 40px; overflow: hidden; }
+        .goog-te-gadget-simple { background: none !important; border: none !important; color: var(--orange) !important; }
+
+        /* ЗОНА ТВОРЧЕСТВА */
+        .studio-zone { flex: 1; overflow-y: auto; padding: 20px; text-align: center; display: flex; flex-direction: column; justify-content: center; }
+        .poem-paper { font-size: 22px; line-height: 1.4; color: #eee; font-style: italic; white-space: pre-wrap; }
         
-        .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
-        .btn-main { padding: 12px; border: none; background: var(--gold); color: #000; font-weight: bold; cursor: pointer; border-radius: 5px; text-transform: uppercase; font-size: 12px; }
-        .btn-alt { padding: 12px; border: 1px solid var(--gold-dark); background: none; color: var(--gold); border-radius: 5px; font-size: 11px; cursor: pointer; text-transform: uppercase; }
-        .btn-main:disabled { background: #333; color: #666; cursor: not-allowed; }
+        /* ВВОД */
+        .input-area { padding: 20px; background: #000; border-top: 1px solid #111; }
+        textarea { width: 100%; background: none; border: none; border-bottom: 1px solid #333; color: #fff; text-align: center; font-size: 18px; padding: 10px; outline: none; margin-bottom: 10px; }
+        textarea:focus { border-bottom-color: var(--orange); }
+
+        .btn-add { color: var(--orange); background: none; border: none; font-weight: 900; font-size: 16px; cursor: pointer; text-transform: uppercase; width: 100%; letter-spacing: 5px; padding: 10px; }
         
-        .full-width { grid-column: span 2; margin-top: 5px; border-color: var(--gold); color: var(--gold); font-weight: bold; }
+        /* СИГНАЛЬНЫЙ ЗНАК */
+        #road-sign {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 60px;
+            background: rgba(0,0,0,0.9);
+            padding: 20px;
+            border: 2px solid red;
+            display: none;
+            z-index: 1000;
+            text-align: center;
+            color: white;
+        }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="nav-box">
-            <button class="btn-nav" id="backBtn" title="Назад">«</button>
+    <div id="road-sign">⛔<br><span style="font-size:14px; color:red;">ПРОЕЗД ЗАКРЫТ</span></div>
+
+    <header class="control-panel">
+        <button class="nav-arrow" onclick="goNav('back')">«</button>
+        
+        <div class="tools-scroll">
             <div id="google_translate_element"></div>
-            <button class="btn-nav" onclick="location.reload()" title="Сброс">↺</button>
+            
+            <div class="user-avatar" id="userIcon">ID</div>
+
+            <button class="tool-item" id="publishBtn">В ЭФИР</button>
+            <button class="tool-item" onclick="shareFriend()">SHARE</button>
+            <button class="tool-item" id="clipBtn">КЛИП</button>
+            
+            <div class="tool-item" style="color:#fff; opacity:0.5;">GY-GY</div>
         </div>
-        <div style="text-align: center; color: var(--gold); letter-spacing: 4px; font-size: 14px; font-weight: bold;">GY-GY v5.1</div>
+
+        <button class="nav-arrow" onclick="goNav('forward')">»</button>
     </header>
 
     <div class="studio-zone">
-        <div id="poemDisplay" class="poem-paper">Начните диктовать реальность...</div>
-        <div class="counter" id="stanzaCount">КУПЛЕТОВ: 0</div>
+        <div id="poemDisplay" class="poem-paper">...</div>
+        <div style="color: #444; font-size: 10px; margin-top: 20px;" id="countText">КУПЛЕТОВ: 0</div>
     </div>
 
-    <div class="input-zone">
-        <textarea id="poemInput" placeholder="Введите строки абсурда..."></textarea>
-        
-        <div class="actions">
-            <button class="btn-main" id="addBtn">ДОБАВИТЬ КУПЛЕТ</button>
-            <button class="btn-main" id="publishBtn" disabled style="background: #fff; color: #000;">ОПУБЛИКОВАТЬ</button>
-            <button class="btn-alt" onclick="shareFriend()">ДРУГУ</button>
-            <button class="btn-alt" id="clipBtn" style="display: none;">СДЕЛАТЬ КЛИП</button>
-        </div>
+    <div class="input-area">
+        <textarea id="poemInput" placeholder="ИМПУЛЬС..."></textarea>
+        <button class="btn-add" id="addBtn">ДОБАВИТЬ</button>
     </div>
 
     <script type="text/javascript">
         function googleTranslateElementInit() {
-            new google.translate.TranslateElement({pageLanguage:'ru', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false}, 'google_translate_element');
+            new google.translate.TranslateElement({pageLanguage:'ru', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
         }
     </script>
     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
     <script>
         let stanzas = [];
-        let isPoemMode = false;
-        const maxStandard = 4;
+        
+        // НАВИГАЦИЯ СО ЗНАКОМ
+        function goNav(dir) {
+            const sign = document.getElementById('road-sign');
+            if (dir === 'back') {
+                if (window.history.length > 1) history.back();
+                else showSign("⛔ ПРОЕЗД ЗАКРЫТ");
+            } else {
+                // Вперед обычно некуда, если мы только зашли
+                showSign("🛑 ТУПИК");
+            }
+        }
 
+        function showSign(text) {
+            const sign = document.getElementById('road-sign');
+            sign.innerHTML = text;
+            sign.style.display = 'block';
+            setTimeout(() => { sign.style.display = 'none'; }, 1500);
+        }
+
+        // ЛОГИКА СТИХА
         const input = document.getElementById('poemInput');
         const display = document.getElementById('poemDisplay');
-        const counter = document.getElementById('stanzaCount');
         const addBtn = document.getElementById('addBtn');
-        const publishBtn = document.getElementById('publishBtn');
-        const clipBtn = document.getElementById('clipBtn');
 
-        // 1. НАВИГАЦИЯ
-        document.getElementById('backBtn').onclick = () => {
-            if (window.history.length > 1) history.back();
-            else alert("Вы в начале пути.");
-        };
-
-        // 2. МОНИТОРИНГ ТЕКСТА (Кнопки оживают сразу)
-        input.oninput = () => {
-            const hasText = input.value.trim().length > 0 || stanzas.length > 0;
-            publishBtn.disabled = !hasText;
-            clipBtn.style.display = hasText ? 'block' : 'none';
-        };
-
-        // 3. ЛОГИКА ДОБАВЛЕНИЯ
         addBtn.onclick = () => {
             const text = input.value.trim();
             if (text) {
                 stanzas.push(text);
                 input.value = "";
-                updateUI();
+                display.innerText = stanzas.join('\n\n');
+                document.getElementById('countText').innerText = `КУПЛЕТОВ: ${stanzas.length}`;
             }
         };
 
-        function updateUI() {
-            display.innerText = stanzas.join('\n\n');
-            const count = stanzas.length;
-            counter.innerText = isPoemMode ? `РЕЖИМ ПОЭМА: ${count} КУПЛЕТОВ` : `КУПЛЕТОВ: ${count}`;
-
-            // ПРОВЕРКА НА ПЕРЕХОД В ПОЭМУ
-            if (count === maxStandard && !isPoemMode) {
-                if (confirm("Уже 4 куплета! Продолжим как ПОЭМУ? (Если нет - время публиковать)")) {
-                    isPoemMode = true;
-                    counter.style.color = "var(--gold)";
-                    counter.innerText = `РЕЖИМ ПОЭМА: ${count}`;
-                }
-            }
-        }
-
-        // 4. ПУБЛИКАЦИЯ (В память устройства)
-        publishBtn.onclick = () => {
-            const finalContent = stanzas.join('\n\n') + (input.value ? '\n\n' + input.value : '');
-            const date = new Date().toLocaleString('ru-RU');
-            
-            let journal = JSON.parse(localStorage.getItem('absurd_journal') || "[]");
-            journal.push({ date, text: finalContent });
-            localStorage.setItem('absurd_journal', JSON.stringify(journal));
-            
-            alert("ШЕДЕВР СОХРАНЕН В ЖУРНАЛЕ!");
-            location.reload(); 
-        };
-
-        // 5. ОТПРАВИТЬ ДРУГУ (Telegram)
+        // ТЕЛЕГРАМ ШЕРИНГ
         function shareFriend() {
-            const text = stanzas.join('\n\n') + (input.value ? '\n\n' + input.value : '');
-            if (!text) return alert("Сначала напишите хоть что-то!");
-            const url = `https://t.me/share/url?url=GY-GY&text=${encodeURIComponent(text + "\n\n(c) GY-GY Absurd Studio")}`;
-            window.open(url, '_blank');
+            const text = stanzas.join('\n\n');
+            if (!text) return alert("ПУСТО");
+            window.open(`https://t.me/share/url?url=GY-GY&text=${encodeURIComponent(text)}`, '_blank');
         }
 
-        // 6. МАСТЕРСКАЯ КЛИПОВ (Заготовка)
-        clipBtn.onclick = () => {
-            const text = stanzas.join('\n\n') + (input.value ? '\n\n' + input.value : '');
-            localStorage.setItem('current_poem', text);
-            alert("ПЕРЕХОД В МАСТЕРСКУЮ КЛИПОВ (Микрофон и Вокал ИИ)...");
-            // Здесь будет код открытия второй страницы
-        };
-    </script>
+        // ОСТАЛЬНЫЕ КНОПКИ (ЗАГЛУШКИ)
+        document.getElementById('publishBtn').onclick = () => alert("СОХРАНЕНО В ЖУРНАЛ");
+        document.getElementById('clipBtn').onclick = () => alert("ПЕРЕХОД В МАСТЕРСКУЮ...");
 
+    </script>
 </body>
 </html>
