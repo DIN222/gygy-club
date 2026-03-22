@@ -40,31 +40,33 @@
     <button class="btn-action" onclick="alert('Сохранено')">В СБОРНИК</button>
 </footer>
 <script>
-    async function aiAction(t) {
+  async function aiAction(t) {
         const w = document.getElementById('chat-wall');
         const m = document.createElement('div');
-        m.className = 'msg ai-msg'; m.innerHTML = "<i>...</i>";
+        m.className = 'msg ai-msg'; m.innerHTML = "<i>Смена частоты...</i>";
         w.appendChild(m); w.scrollTop = w.scrollHeight;
         
-        const k = "AIzaSyBEFtdVg9fJVoBpeUqyx64Q4X4LTxOGfm4";
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${k}`;
+        // ШЕФ, ВСТАВЬ НОВЫЙ КЛЮЧ СЮДА:
+        const k = "AIzaSyC_QpKvWE39uKUvXRpNfWtGHHsXVTXs-ws"; 
 
         try {
-            const r = await fetch(url, {
+            const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${k}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: [{ parts: [{ text: "Ты нуарный поэт Клуба Беври. Ответь 4-стишием на русском на эти 4 слова: " + t }] }] })
+                body: JSON.stringify({ contents: [{ parts: [{ text: "Ты нуарный поэт Клуба Беври. Ответь 4-стишием на русском на: " + t }] }] })
             });
             const d = await r.json();
-            if (d.candidates && d.candidates[0].content) {
+            
+            if (d.error) {
+                // Прямая диагностика в чате
+                m.innerHTML = "Ошибка API: " + d.error.message;
+            } else if (d.candidates && d.candidates[0].content) {
                 m.innerHTML = d.candidates[0].content.parts[0].text.replace(/\n/g, '<br>');
             } else {
-                m.innerHTML = "Беври молчит. Проверь консоль.";
-                console.error("API Error:", d);
+                m.innerHTML = "Беври молчит. Пустой ответ.";
             }
         } catch (e) {
-            m.innerHTML = "Ошибка сети.";
-            console.error("Fetch Error:", e);
+            m.innerHTML = "Ошибка сети. Проверь VPN.";
         }
         w.scrollTop = w.scrollHeight;
     }
