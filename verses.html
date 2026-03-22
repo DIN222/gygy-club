@@ -4,72 +4,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY VERSES | v5.2.8 Gold</title>
+    <title>GY-GY VERSES | v5.2.9 Stable</title>
     <style>
-        :root {
-            --gold: #ffd700;
-            --bg: #000;
-            --border: 1px solid #ffd700;
-        }
+        :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; display: flex; flex-direction: column; overflow: hidden; }
 
-        body, html {
-            margin: 0; padding: 0;
-            width: 100%; height: 100%;
-            background: var(--bg);
-            color: var(--gold);
-            font-family: 'Courier New', monospace;
-            display: flex; flex-direction: column;
-            overflow: hidden;
-        }
+        header { height: 60px; display: flex; align-items: center; border-bottom: var(--border); background: #000; flex-shrink: 0; z-index: 1000; }
+        .anchor-btn { width: 55px; height: 100%; display: flex; align-items: center; justify-content: center; border: none; background: none; color: var(--gold); font-size: 1.5rem; cursor: pointer; text-decoration: none; flex-shrink: 0; }
 
-        /* --- ВЕРХНЯЯ ПАНЕЛЬ --- */
-        header {
-            height: 60px; display: flex; align-items: center;
-            border-bottom: var(--border); background: #000;
-            flex-shrink: 0; z-index: 1000;
-        }
-
-        .anchor-btn {
-            width: 55px; height: 100%; display: flex; align-items: center;
-            justify-content: center; border: none; background: none;
-            color: var(--gold); font-size: 1.5rem; cursor: pointer; text-decoration: none;
-            flex-shrink: 0;
-        }
-
-        .scroll-container {
-            flex-grow: 1; display: flex; align-items: center;
-            gap: 15px; overflow-x: auto; padding: 0 10px;
-            scrollbar-width: none;
-        }
+        .scroll-container { flex-grow: 1; display: flex; align-items: center; gap: 10px; overflow-x: auto; padding: 0 10px; scrollbar-width: none; }
         .scroll-container::-webkit-scrollbar { display: none; }
 
-        .panel-item {
-            height: 36px; border: var(--border); color: var(--gold);
-            background: none; cursor: pointer; font-weight: bold;
-            display: flex; align-items: center; justify-content: center;
-            padding: 0 12px; white-space: nowrap; flex-shrink: 0; font-size: 0.8rem;
-        }
+        .panel-item { height: 36px; border: var(--border); color: var(--gold); background: none; cursor: pointer; display: flex; align-items: center; padding: 0 12px; white-space: nowrap; flex-shrink: 0; font-size: 0.8rem; }
 
-        /* Кнопка Google Иконка */
-        .lang-btn { width: 40px; padding: 0; border: var(--border); }
-        .lang-btn svg { width: 22px; height: 22px; fill: var(--gold); }
+        /* РОДНОЙ ВИДЖЕТ GOOGLE — ДЛЯ СТАБИЛЬНОСТИ */
+        #google_translate_element { display: inline-block; vertical-align: middle; }
+        .goog-te-gadget-simple { background-color: transparent !important; border: var(--border) !important; padding: 5px !important; border-radius: 0 !important; }
+        .goog-te-gadget-simple span { color: var(--gold) !important; font-size: 0.8rem !important; }
+        .goog-te-banner-frame, #goog-gt-tt { display: none !important; }
+        body { top: 0 !important; }
 
         .right-anchor { display: flex; align-items: center; height: 100%; }
         .logo-text { font-size: 0.8rem; font-weight: 900; padding: 0 10px; border-left: 1px solid #222; }
 
-        /* --- СКРЫТЫЙ GOOGLE (ДЛЯ МАГИИ) --- */
-        #google_translate_element { display: none; }
-        .goog-te-banner-frame, #goog-gt-tt { display: none !important; }
-        body { top: 0 !important; }
-
-        /* --- ЧАТ --- */
         #chat-wall { flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
-        .message { padding: 10px 15px; border-left: 2px solid var(--gold); font-size: 1.2rem; line-height: 1.4; }
+        .message { padding: 10px 15px; border-left: 2px solid var(--gold); font-size: 1.2rem; }
 
-        /* --- НИЖНЯЯ ПАНЕЛЬ --- */
         footer { height: 85px; display: flex; align-items: center; padding: 0 12px; gap: 8px; border-top: 1px solid #222; }
         #user-input { flex-grow: 1; background: #000; border: var(--border); color: var(--gold); padding: 14px; outline: none; font-size: 1rem; }
-        .footer-btn { height: 48px; cursor: pointer; font-weight: 900; display: flex; align-items: center; justify-content: center; text-transform: uppercase; }
+        .footer-btn { height: 48px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .btn-up { width: 48px; background: var(--gold); color: #000; border: none; font-size: 1.6rem; }
         .btn-to-archive { background: none; color: var(--gold); border: var(--border); padding: 0 12px; font-size: 0.7rem; }
     </style>
@@ -78,53 +41,34 @@
 
 <header>
     <a href="ai_room_core_v8.html" class="anchor-btn">«</a>
-
     <div class="scroll-container">
-        <button class="panel-item lang-btn" onclick="triggerGoogle()">
-            <svg viewBox="0 0 24 24"><path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/></svg>
-        </button>
+        <div id="google_translate_element"></div>
         <button class="panel-item" onclick="openArchive()">Сборник</button>
         <div class="panel-item">ID: 007</div>
-        <div class="panel-item">AVATAR</div>
     </div>
-
     <div class="right-anchor">
         <div class="logo-text">GY-GY</div>
         <button class="anchor-btn" onclick="window.history.forward()">»</button>
     </div>
 </header>
 
-<div id="google_translate_element"></div>
-
 <div id="chat-wall">
-    <div class="message">Снег ложится на антенны,</div>
-    <div class="message">Кот крадется по стене...</div>
+    <div class="message">Стена ждет...</div>
 </div>
 
 <footer>
-    <input type="text" id="user-input" placeholder="Четыре любых слова..." onkeypress="if(event.key==='Enter') pushMsg()">
+    <input type="text" id="user-input" placeholder="Напиши что-нибудь..." onkeypress="if(event.key==='Enter') pushMsg()">
     <button class="footer-btn btn-up" onclick="pushMsg()">↑</button>
     <button class="footer-btn btn-to-archive" onclick="saveToArchive()">В СБОРНИК</button>
 </footer>
 
 <script>
     function googleTranslateElementInit() {
-        new google.translate.TranslateElement({pageLanguage: 'ru', autoDisplay: false}, 'google_translate_element');
-    }
-
-    // ТА САМАЯ МАГИЯ: Клик по иконке вызывает скрытое меню Google
-    function triggerGoogle() {
-        const frame = document.querySelector('.goog-te-menu-value img') || document.querySelector('.goog-te-gadget-simple');
-        if (frame) {
-            frame.click();
-        } else {
-            // Если упрощенный виджет не сработал, ищем стандартный select
-            const combo = document.querySelector('.goog-te-combo');
-            if (combo) {
-                combo.style.display = 'block';
-                combo.focus();
-            }
-        }
+        new google.translate.TranslateElement({
+            pageLanguage: 'ru',
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+            autoDisplay: false
+        }, 'google_translate_element');
     }
 
     function pushMsg() {
@@ -138,11 +82,6 @@
             input.value = "";
             wall.scrollTop = wall.scrollHeight;
         }
-    }
-
-    function saveToArchive() {
-        const val = document.getElementById('user-input').value;
-        if(val) { console.log("В сборник: " + val); document.getElementById('user-input').value = ""; }
     }
 </script>
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
