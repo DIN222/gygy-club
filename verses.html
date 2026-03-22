@@ -4,69 +4,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY VERSES | v5.3.4 FIX</title>
+    <title>GY-GY VERSES | v5.3.5 Avatar</title>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; display: flex; flex-direction: column; overflow: hidden; }
 
-        /* --- ВЕРХНЯЯ ПАНЕЛЬ: ЖЕСТКАЯ ГЕОМЕТРИЯ --- */
-        header { 
-            height: 65px; display: flex; align-items: center; 
-            border-bottom: var(--border); background: #000; flex-shrink: 0; 
-            padding: 0 5px; box-sizing: border-box;
-        }
+        header { height: 65px; display: flex; align-items: center; border-bottom: var(--border); background: #000; flex-shrink: 0; padding: 0 5px; box-sizing: border-box; }
+        .btn-header { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border: var(--border); color: var(--gold); background: none; cursor: pointer; text-decoration: none; flex-shrink: 0; font-size: 1.2rem; font-weight: bold; }
 
-        .btn-header {
-            width: 44px; height: 44px; 
-            display: flex; align-items: center; justify-content: center; 
-            border: var(--border); color: var(--gold); 
-            background: none; cursor: pointer; text-decoration: none;
-            flex-shrink: 0; font-size: 1.2rem; font-weight: bold;
-            box-sizing: border-box;
-        }
-
-        .scroll-zone { 
-            flex-grow: 1; display: flex; align-items: center; 
-            gap: 8px; overflow-x: auto; padding: 0 10px; 
-            scrollbar-width: none; height: 100%;
-        }
+        .scroll-zone { flex-grow: 1; display: flex; align-items: center; gap: 8px; overflow-x: auto; padding: 0 10px; scrollbar-width: none; }
         .scroll-zone::-webkit-scrollbar { display: none; }
 
-        /* Элементы внутри скролла строго одной высоты */
-        .item-fix {
-            height: 44px; min-width: 60px; padding: 0 10px;
-            border: var(--border); color: var(--gold);
-            background: none; font-size: 0.75rem; font-weight: bold;
-            display: flex; align-items: center; justify-content: center;
-            white-space: nowrap; flex-shrink: 0; box-sizing: border-box;
-        }
+        .item-fix { height: 44px; min-width: 60px; padding: 0 10px; border: var(--border); color: var(--gold); background: none; font-size: 0.75rem; font-weight: bold; display: flex; align-items: center; justify-content: center; white-space: nowrap; flex-shrink: 0; box-sizing: border-box; cursor: pointer; }
 
-        /* Виджет Google: вписываем в 44px */
-        #google_translate_element { 
-            height: 44px; flex-shrink: 0; display: flex; align-items: center;
-            border: var(--border); box-sizing: border-box;
-        }
-        .goog-te-gadget { font-size: 0 !important; }
-        .goog-te-gadget-simple { 
-            background: transparent !important; border: none !important; 
-            padding: 5px !important; display: flex !important; align-items: center;
-        }
+        /* АВАТАР ИИ (СФИНКС) */
+        .avatar-ai { width: 44px; padding: 0; border-radius: 0; position: relative; overflow: hidden; }
+        .avatar-ai svg { width: 30px; height: 30px; fill: var(--gold); }
+
+        #google_translate_element { height: 44px; flex-shrink: 0; display: flex; align-items: center; border: var(--border); box-sizing: border-box; }
+        .goog-te-gadget-simple { background: transparent !important; border: none !important; padding: 5px !important; display: flex !important; align-items: center; }
         .goog-te-gadget-simple span { color: var(--gold) !important; font-size: 0.8rem !important; }
 
-        .logo-static { font-size: 0.85rem; font-weight: 900; padding: 0 10px; flex-shrink: 0; }
-
-        /* --- ЧАТ --- */
         #chat-wall { flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
         .msg { padding: 12px; border-left: 2px solid var(--gold); font-size: 1.2rem; background: rgba(255, 215, 0, 0.05); }
+        .ai-msg { border-left-color: #fff; color: #fff; background: rgba(255, 255, 255, 0.05); }
 
-        /* --- НИЖНЯЯ ПАНЕЛЬ --- */
         footer { height: 85px; display: flex; align-items: center; padding: 0 10px; gap: 8px; border-top: 1px solid #333; }
         #user-in { flex-grow: 1; background: #000; border: var(--border); color: var(--gold); padding: 14px; outline: none; font-size: 1rem; font-family: inherit; }
         .btn-up { width: 50px; height: 50px; background: var(--gold); color: #000; border: none; font-size: 1.8rem; cursor: pointer; }
-        .btn-arch { background: none; color: var(--gold); border: var(--border); height: 50px; padding: 0 15px; font-size: 0.7rem; text-transform: uppercase; cursor: pointer; }
 
-        /* Чистка мусора Google */
-        .goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame { display: none !important; }
+        .goog-te-banner-frame, #goog-gt-tt { display: none !important; }
         body { top: 0 !important; }
     </style>
 </head>
@@ -74,34 +41,49 @@
 
 <header>
     <a href="ai_room_core_v8.html" class="btn-header">«</a>
-
     <div class="scroll-zone">
         <div id="google_translate_element"></div>
-        <button class="item-fix" onclick="alert('СБОРНИК ОТКРЫТ')">СБОРНИК</button>
+        <button class="item-fix" onclick="alert('Архив Клуба')">СБОРНИК</button>
         <div class="item-fix">ID: 001</div>
-        <div class="item-fix">AVATAR</div>
+        
+        <div class="item-fix avatar-ai" onclick="aiTalk()" title="Вызвать ИИ">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5-9h10v2H7z"/></svg>
+        </div>
     </div>
-
-    <div class="logo-static">GY-GY</div>
+    <div style="font-size: 0.8rem; padding: 0 10px;">GY-GY</div>
     <button class="btn-header" onclick="window.history.forward()">»</button>
 </header>
 
 <div id="chat-wall">
-    <div class="msg"><b>[System]:</b> Линия выровнена. Печать готова.</div>
+    <div class="msg"><b>[System]:</b> Тишина — это тоже код. Но аватар готов к диалогу.</div>
 </div>
 
 <footer>
     <input type="text" id="user-in" placeholder="Четыре любых слова..." onkeypress="if(event.key==='Enter') send()">
     <button class="btn-up" onclick="send()">↑</button>
-    <button class="btn-arch" onclick="saveToArchive()">В СБОРНИК</button>
 </footer>
 
 <script>
     function googleTranslateElementInit() {
-        new google.translate.TranslateElement({
-            pageLanguage: 'ru',
-            autoDisplay: false
-        }, 'google_translate_element');
+        new google.translate.TranslateElement({pageLanguage: 'ru', autoDisplay: false}, 'google_translate_element');
+    }
+
+    const aiQuotes = [
+        "Четыре слова? Или побоишься?",
+        "Стихи — это яд. Ты готов принять дозу?",
+        "Золото не блестит там, где нет тени.",
+        "Тихо... Слышишь, как скрипит твой код?",
+        "Я вижу твои мысли. Они квадратные."
+    ];
+
+    function aiTalk() {
+        const wall = document.getElementById('chat-wall');
+        const quote = aiQuotes[Math.floor(Math.random() * aiQuotes.length)];
+        const m = document.createElement('div');
+        m.className = 'msg ai-msg';
+        m.innerHTML = `<b>[Gemini]:</b> ${quote}`;
+        wall.appendChild(m);
+        wall.scrollTop = wall.scrollHeight;
     }
 
     function send() {
@@ -114,10 +96,6 @@
             input.value = "";
             document.getElementById('chat-wall').scrollTop = 99999;
         }
-    }
-
-    function saveToArchive() {
-        alert("Запись сохранена в анналы Клуба.");
     }
 </script>
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
