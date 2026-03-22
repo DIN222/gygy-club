@@ -2,7 +2,7 @@
 <!DOCTYPE html><html lang="ru"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY VERSES | v5.5.7 WORKING</title>
+    <title>GY-GY VERSES | v5.5.8 Fixed Path</title>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; display: flex; flex-direction: column; overflow: hidden; }
@@ -24,50 +24,45 @@
     <div class="btn-header" onclick="location.href='ai_room_core_v8.html'">«</div>
     <div class="scroll-zone">
         <div id="google_translate_element"></div>
-        <button class="item-fix" onclick="alert('Вход в Сборник...')">СБОРНИК</button>
+        <button class="item-fix" onclick="alert('Архив...')">СБОРНИК</button>
         <div class="item-fix">ID: 001</div>
         <div class="item-fix" onclick="aiAction('Проверка связи')">
             <svg viewBox="0 0 24 24" style="width:24px; height:24px; fill:var(--gold);"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5-9h10v2H7z"/></svg>
         </div>
     </div>
     <div style="font-size: 0.8rem; padding: 0 10px; font-weight: 900;">GY-GY</div>
-    <div class="btn-header" onclick="window.history.forward()">»</div>
 </header>
-<div id="chat-wall"><div class="msg user-msg">v5.5.6. Чат активирован. Навигация в v8.</div></div>
+<div id="chat-wall"><div class="msg user-msg">v5.5.7. Модель: models/gemini-1.5-flash.</div></div>
 <footer>
     <input type="text" id="user-in" placeholder="Введите 4 слова..." onkeypress="if(event.key==='Enter') send()">
     <button class="btn-up" onclick="send()">↑</button>
     <button class="btn-action" onclick="alert('Сохранено')">В СБОРНИК</button>
 </footer>
 <script>
-  async function aiAction(t) {
+    async function aiAction(t) {
         const w = document.getElementById('chat-wall');
         const m = document.createElement('div');
-        m.className = 'msg ai-msg'; m.innerHTML = "<i>Смена частоты...</i>";
+        m.className = 'msg ai-msg'; m.innerHTML = "<i>...</i>";
         w.appendChild(m); w.scrollTop = w.scrollHeight;
         
         // ШЕФ, ВСТАВЬ НОВЫЙ КЛЮЧ СЮДА:
         const k = "AIzaSyC_QpKvWE39uKUvXRpNfWtGHHsXVTXs-ws"; 
+        // ИСПРАВЛЕННЫЙ URL (с префиксом models/)
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${k}`;
 
         try {
-            const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${k}`, {
+            const r = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ contents: [{ parts: [{ text: "Ты нуарный поэт Клуба Беври. Ответь 4-стишием на русском на: " + t }] }] })
             });
             const d = await r.json();
-            
             if (d.error) {
-                // Прямая диагностика в чате
-                m.innerHTML = "Ошибка API: " + d.error.message;
-            } else if (d.candidates && d.candidates[0].content) {
+                m.innerHTML = "Ошибка: " + d.error.message;
+            } else if (d.candidates) {
                 m.innerHTML = d.candidates[0].content.parts[0].text.replace(/\n/g, '<br>');
-            } else {
-                m.innerHTML = "Беври молчит. Пустой ответ.";
             }
-        } catch (e) {
-            m.innerHTML = "Ошибка сети. Проверь VPN.";
-        }
+        } catch (e) { m.innerHTML = "Ошибка сети."; }
         w.scrollTop = w.scrollHeight;
     }
     function send() {
