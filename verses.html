@@ -1,52 +1,45 @@
 
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY VERSES | v5.4.5 Monolith</title>
+    <title>GY-GY VERSES | v5.4.6 Browser-Trigger</title>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; display: flex; flex-direction: column; overflow: hidden; }
 
-        /* ШАПКА */
-        header { height: 65px; display: flex; align-items: center; border-bottom: var(--border); background: #000; flex-shrink: 0; padding: 0 5px; box-sizing: border-box; }
-        
-        .btn-header { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border: var(--border); color: var(--gold); background: none; cursor: pointer; flex-shrink: 0; font-size: 1.2rem; text-decoration: none; }
+        header { height: 65px; display: flex; align-items: center; border-bottom: var(--border); background: #000; flex-shrink: 0; padding: 0 5px; }
+        .btn-header { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border: var(--border); color: var(--gold); background: none; cursor: pointer; flex-shrink: 0; font-size: 1.2rem; }
 
         .scroll-zone { flex-grow: 1; display: flex; align-items: center; gap: 8px; overflow-x: auto; padding: 0 10px; scrollbar-width: none; }
         .scroll-zone::-webkit-scrollbar { display: none; }
 
-        .item-fix { height: 44px; min-width: 60px; border: var(--border); color: var(--gold); background: none; font-size: 0.7rem; font-weight: bold; display: flex; align-items: center; justify-content: center; white-space: nowrap; flex-shrink: 0; cursor: pointer; text-transform: uppercase; }
+        /* Иконка "Абракадабра" для красоты, раз теперь работает браузерный перевод */
+        .icon-lang { width: 44px; height: 44px; border: var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: bold; font-size: 0.8rem; }
 
-        #google_translate_element { height: 44px; border: var(--border); display: flex; align-items: center; overflow: hidden; background: #000; }
+        .item-fix { height: 44px; min-width: 60px; border: var(--border); color: var(--gold); background: none; font-size: 0.7rem; font-weight: bold; display: flex; align-items: center; justify-content: center; white-space: nowrap; flex-shrink: 0; cursor: pointer; }
 
-        /* ЧАТ */
         #chat-wall { flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 20px; }
-        .msg { padding: 12px; max-width: 80%; font-size: 1.2rem; line-height: 1.4; border-radius: 2px; }
+        .msg { padding: 12px; max-width: 80%; font-size: 1.2rem; line-height: 1.4; }
         .user-msg { align-self: flex-start; border-left: 3px solid var(--gold); color: var(--gold); background: rgba(255, 215, 0, 0.05); }
         .ai-msg { align-self: flex-end; border-right: 3px solid #fff; color: #eee; background: rgba(255, 255, 255, 0.08); font-style: italic; text-align: right; }
 
-        /* ФУТЕР */
-        footer { height: 85px; display: flex; align-items: center; padding: 0 10px; gap: 8px; border-top: 1px solid #333; background: #000; flex-shrink: 0; }
-        #user-in { flex-grow: 1; background: #000; border: var(--border); color: var(--gold); padding: 14px; outline: none; font-size: 1rem; font-family: inherit; }
+        footer { height: 85px; display: flex; align-items: center; padding: 0 10px; gap: 8px; border-top: 1px solid #333; background: #000; }
+        #user-in { flex-grow: 1; background: #000; border: var(--border); color: var(--gold); padding: 14px; outline: none; font-size: 1rem; }
         .btn-up { width: 50px; height: 50px; background: var(--gold); color: #000; border: none; font-size: 1.8rem; cursor: pointer; font-weight: 900; }
-
-        /* Скрытие мусора Google */
-        .goog-te-banner-frame, #goog-gt-tt { display: none !important; }
-        body { top: 0 !important; }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="btn-header" onclick="history.length > 1 ? history.back() : window.location.href='index.html'">«</div>
+    <div class="btn-header" onclick="history.back()">«</div>
     
     <div class="scroll-zone">
-        <div id="google_translate_element"></div>
-        <button class="item-fix" onclick="alert('Записано в Сборник')">СБОРНИК</button>
+        <div class="icon-lang">文/A</div>
+        <button class="item-fix">СБОРНИК</button>
         <div class="item-fix">ID: 001</div>
-        <div class="item-fix" onclick="aiAction('Проснись, Беври!')">
+        <div class="item-fix" onclick="aiAction('Status check')">
             <svg viewBox="0 0 24 24" style="width:24px; height:24px; fill:var(--gold);"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5-9h10v2H7z"/></svg>
         </div>
     </div>
@@ -56,32 +49,24 @@
 </header>
 
 <div id="chat-wall">
-    <div class="msg user-msg">Монолит v5.4.5. Все системы зациклены в один файл.</div>
+    <div class="msg user-msg">System initialized. Check the address bar for the translation icon.</div>
 </div>
 
 <footer>
-    <input type="text" id="user-in" placeholder="Четыре слова по-русски..." onkeypress="if(event.key==='Enter') send()">
+    <input type="text" id="user-in" placeholder="Type here..." onkeypress="if(event.key==='Enter') send()">
     <button class="btn-up" onclick="send()">↑</button>
 </footer>
 
 <script>
-    // --- СЕЙФ ВНУТРИ КОДА (ФРАГМЕНТАЦИЯ) ---
     const _P1 = "AIzaSyDLQrvoPx4A";
     const _P2 = "YyfSKD0BWvl3-zc2ROfCa-E";
-    const _STYLE = "Ты ИИ в нуарном клубе. Пиши только жесткий стих в 4 строки на русском. Темы: тьма, золото, фатум. Без лишних слов.";
-
-    function googleTranslateElementInit() {
-        new google.translate.TranslateElement({
-            pageLanguage: 'ru',
-            layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-        }, 'google_translate_element');
-    }
+    const _STYLE = "You are an AI in a noir club. Write only a tough 4-line poem in Russian. Themes: darkness, gold, fate. No extra words.";
 
     async function aiAction(text) {
         const wall = document.getElementById('chat-wall');
         const m = document.createElement('div');
         m.className = 'msg ai-msg';
-        m.innerHTML = "<i>Сварка...</i>";
+        m.innerHTML = "<i>Processing...</i>";
         wall.appendChild(m);
         wall.scrollTop = wall.scrollHeight;
 
@@ -90,14 +75,14 @@
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    contents: [{ parts: [{ text: `${_STYLE} Твои слова: ${text}` }] }]
+                    contents: [{ parts: [{ text: `${_STYLE} Words: ${text}` }] }]
                 })
             });
             const data = await response.json();
             const result = data.candidates[0].content.parts[0].text;
             m.innerHTML = result.replace(/\n/g, '<br>');
         } catch (e) {
-            m.innerHTML = "Ошибка: Стык не прошел. Проверь сеть.";
+            m.innerHTML = "Connection error. Check API key fragments.";
         }
         wall.scrollTop = wall.scrollHeight;
     }
@@ -116,6 +101,5 @@
         }
     }
 </script>
-<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
