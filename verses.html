@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY VERSES | v5.2.4 Gold</title>
+    <title>GY-GY VERSES | v5.2.7 Anchor</title>
     <style>
         :root {
             --gold: #ffd700;
@@ -22,132 +22,154 @@
             overflow: hidden;
         }
 
-        /* --- ВЕРХНЯЯ ПАНЕЛЬ: ВЕС И СТИЛЬ --- */
+        /* --- ВЕРХНЯЯ ПАНЕЛЬ: ФИКСИРОВАННЫЕ КРАЯ --- */
         header {
-            height: 60px; display: flex; justify-content: space-between; align-items: center;
-            padding: 0 10px; border-bottom: var(--border); background: #000;
-            flex-shrink: 0; z-index: 1000;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            border-bottom: var(--border);
+            background: #000;
+            flex-shrink: 0;
+            z-index: 1000;
         }
 
-        .panel-group { display: flex; gap: 8px; align-items: center; }
+        /* Кнопки-якоря */
+        .anchor-btn {
+            width: 55px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: none;
+            color: var(--gold);
+            font-size: 1.5rem;
+            cursor: pointer;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+
+        /* Центральная зона скролла */
+        .scroll-container {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 0 10px;
+            scrollbar-width: none;
+        }
+        .scroll-container::-webkit-scrollbar { display: none; }
 
         .panel-item {
-            display: flex; align-items: center; justify-content: center;
-            height: 40px; border: var(--border); color: var(--gold);
-            background: none; cursor: pointer; text-decoration: none;
-            font-weight: bold; box-sizing: border-box; outline: none;
+            height: 36px;
+            border: var(--border);
+            color: var(--gold);
+            background: none;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 12px;
+            white-space: nowrap;
+            flex-shrink: 0;
+            font-size: 0.8rem;
         }
 
-        .nav-arrow { width: 45px; font-size: 1.5rem; }
-        
-        /* Фирменная иконка Google Translate */
-        .lang-trigger { width: 50px; }
-        .lang-trigger svg { 
-            width: 26px; height: 26px; 
-            fill: var(--gold); /* Монохромное золото */
-            display: block;
+        /* Правый блок (Лого + Стрелка) */
+        .right-anchor {
+            display: flex;
+            align-items: center;
+            border-left: 1px solid #222;
+            height: 100%;
         }
 
-        .archive-btn { padding: 0 12px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
-        .logo-item { width: 65px; font-size: 0.9rem; border-color: var(--gold); color: var(--gold); }
+        .logo-text {
+            font-size: 0.8rem;
+            font-weight: 900;
+            padding: 0 10px;
+            border-right: 1px solid #222;
+        }
 
-        /* --- СТИЛИЗАЦИЯ РОДНОГО DROPDOWN GOOGLE --- */
-        .goog-te-gadget { color: transparent !important; font-size: 0 !important; }
-        
+        /* --- GOOGLE STYLE --- */
+        #google_translate_element { display: inline-block; }
         select.goog-te-combo {
-            position: absolute;
-            top: 60px;
-            left: 63px; /* Смещение под иконку Google */
             background: #000 !important;
             color: var(--gold) !important;
             border: var(--border) !important;
-            padding: 10px;
-            font-family: 'Courier New', monospace;
+            font-family: inherit;
             outline: none;
-            z-index: 2000;
-            display: none; /* Скрыт по умолчанию */
-            width: 180px; /* Фиксированная ширина */
-            appearance: none; /* Убираем стандартную стрелочку браузера */
-            cursor: pointer;
+            font-size: 0.8rem;
         }
 
-        /* Скрытие мусора Google */
-        .goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame { display: none !important; }
-        body { top: 0 !important; }
+        /* --- ЧАТ --- */
+        #chat-wall { flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+        .message { padding: 8px 15px; border-left: 2px solid var(--gold); font-size: 1.2rem; }
 
-        /* --- ПОЛЕ ЧАТА --- */
-        #chat-wall { flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
-        .message { padding: 8px 15px; border-left: 2px solid var(--gold); font-size: 1.2rem; word-wrap: break-word; }
+        /* --- НИЖНЯЯ ПАНЕЛЬ --- */
+        footer {
+            height: 85px; display: flex; align-items: center;
+            padding: 0 12px; gap: 8px; border-top: 1px solid #222; flex-shrink: 0;
+        }
 
-        /* --- НИЖНЯЯ ПАНЕЛЬ: ЧЕРНО-ЗОЛОТАЯ СТРОГОСТЬ --- */
-        footer { height: 80px; display: flex; align-items: center; padding: 0 15px; gap: 10px; border-top: 1px solid #333; flex-shrink: 0; }
-        #user-input { flex-grow: 1; background: #000; border: var(--border); color: var(--gold); padding: 15px; outline: none; font-size: 1rem; }
-        
-        .footer-btn { 
-            background: var(--gold); color: #000; border: none; height: 48px; 
-            padding: 0 15px; font-weight: 900; cursor: pointer; text-transform: uppercase; 
+        #user-input {
+            flex-grow: 1; background: #000; border: var(--border);
+            color: var(--gold); padding: 14px; outline: none; font-size: 1rem;
+        }
+
+        .footer-btn {
+            height: 48px; cursor: pointer; font-weight: 900;
             display: flex; align-items: center; justify-content: center;
+            text-transform: uppercase;
         }
+
+        .btn-up { width: 48px; background: var(--gold); color: #000; border: none; font-size: 1.6rem; }
+        .btn-to-archive { background: none; color: var(--gold); border: var(--border); padding: 0 12px; font-size: 0.7rem; }
+
+        /* Скрываем мусор */
+        .goog-te-banner-frame, #goog-gt-tt { display: none !important; }
+        body { top: 0 !important; }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="panel-group">
-        <a href="ai_room_core_v8.html" class="panel-item nav-arrow">«</a>
-        
-        <button class="panel-item lang-trigger" onclick="toggleGoogleMenu()" title="Перевести страницу">
-            <svg viewBox="0 0 24 24">
-                <path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/>
-            </svg>
-        </button>
+    <a href="ai_room_core_v8.html" class="anchor-btn">«</a>
 
-        <button class="panel-item archive-btn" onclick="openArchive()">Сборник</button>
+    <div class="scroll-container">
+        <div id="google_translate_element"></div>
+        <button class="panel-item" onclick="openArchive()">Сборник</button>
+        <div class="panel-item">ID: 007</div>
+        <div class="panel-item">AVATAR</div>
     </div>
-    <div class="panel-group">
-        <div class="panel-item logo-item">GY-GY</div>
-        <button class="panel-item nav-arrow" onclick="window.history.forward()">»</button>
+
+    <div class="right-anchor">
+        <div class="logo-text">GY-GY</div>
+        <button class="anchor-btn" onclick="window.history.forward()">»</button>
     </div>
 </header>
 
-<div id="google_translate_element" style="display: none;"></div>
-
 <div id="chat-wall">
-    <div class="message">Айсберг дно приехал кот...</div>
-    <div class="message">Кресло помнит тех, кто не вернулся...</div>
+    <div class="message">Четыре слова — это код...</div>
 </div>
 
 <footer>
-    <input type="text" id="user-input" placeholder="Введите текст..." onkeypress="if(event.key==='Enter') pushMsg()">
-    <button class="footer-btn" onclick="pushMsg()">ОК</button>
-    <button class="footer-btn" onclick="saveToArchive()">В СБОРНИК</button>
+    <input type="text" id="user-input" placeholder="Четыре любых слова..." onkeypress="if(event.key==='Enter') pushMsg()">
+    <button class="footer-btn btn-up" onclick="pushMsg()">↑</button>
+    <button class="footer-btn btn-to-archive" onclick="saveToArchive()">В СБОРНИК</button>
 </footer>
 
 <script>
-    // 1. ИНИЦИАЛИЗАЦИЯ GOOGLE TRANSLATE
     function googleTranslateElementInit() {
         new google.translate.TranslateElement({
             pageLanguage: 'ru',
-            // Выбираем только основные языки для чистоты dropdown
-            includedLanguages: 'ru,en,de,fr,it,es,zh-CN', 
+            includedLanguages: 'en,de,fr,zh-CN',
             layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
             autoDisplay: false
         }, 'google_translate_element');
     }
 
-    // 2. ЛОГИКА ПЕРЕКЛЮЧЕНИЯ РОДНОГО МЕНЮ GOOGLE
-    function toggleGoogleMenu() {
-        const combo = document.querySelector('.goog-te-combo');
-        if (combo) {
-            combo.style.display = (combo.style.display === 'block') ? 'none' : 'block';
-            // Если открыли, сразу фокусируемся
-            if (combo.style.display === 'block') combo.focus();
-        } else {
-            console.log("Ждем загрузки движка Google...");
-        }
-    }
-
-    // 3. ЧАТ И ВВОД
     function pushMsg() {
         const input = document.getElementById('user-input');
         const wall = document.getElementById('chat-wall');
@@ -163,10 +185,13 @@
 
     function saveToArchive() {
         const val = document.getElementById('user-input').value;
-        if(val) alert("Сохранено в Сборник: " + val);
+        if(val) {
+            console.log("Сохранено в архив: " + val);
+            document.getElementById('user-input').value = "";
+        }
     }
 
-    function openArchive() { alert("Сборник открыт."); }
+    function openArchive() { alert("Архив Клуба"); }
 </script>
 
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
