@@ -2,7 +2,7 @@
 <!DOCTYPE html><html lang="ru"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY VERSES | v5.6.5 - 2.0 Core</title>
+    <title>GY-GY VERSES | v5.6.6 - KEY CHECK</title>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; display: flex; flex-direction: column; overflow: hidden; }
@@ -23,13 +23,14 @@
     <div class="scroll-zone"><div class="item-fix">ID: 001</div></div>
     <div style="font-size: 0.8rem; padding: 0 10px; font-weight: 900;">GY-GY 2.0</div>
 </header>
-<div id="chat-wall"><div class="msg user-msg">v5.6.5. Переход на ядро Gemini 2.0 Flash.</div></div>
+<div id="chat-wall"><div class="msg user-msg">v5.6.6. Детектор ключа активирован.</div></div>
 <footer>
     <input type="text" id="user-in" placeholder="Введите 4 слова..." onkeypress="if(event.key==='Enter') send()">
     <button class="btn-up" onclick="send()">↑</button>
 </footer>
 <script>
-    const MY_KEY = "ВСТАВЬ_НОВЫЙ_КЛЮЧ_ЗДЕСЬ"; 
+    // ЖМИ СВОЮ КНОПКУ ТУТ:
+    const MY_KEY = "ВСТАВЬ_КЛЮЧ"; 
 
     async function aiAction(t) {
         const w = document.getElementById('chat-wall');
@@ -37,22 +38,22 @@
         m.className = 'msg ai-msg'; m.innerHTML = "<i>...</i>";
         w.appendChild(m); w.scrollTop = w.scrollHeight;
         
-        // Прямой удар через v1beta по новой модели 2.0
+        // Показываем маску ключа для проверки
+        const keyMask = MY_KEY.substring(0,5) + "..." + MY_KEY.slice(-5);
+        
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${MY_KEY}`;
 
         try {
             const r = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: [{ parts: [{ text: "Ты нуарный поэт. Ответь только жестким 4-стишием на русском на: " + t }] }] })
+                body: JSON.stringify({ contents: [{ parts: [{ text: "Нуарный поэт, ответь 4-стишием: " + t }] }] })
             });
             const d = await r.json();
             if (d.error) {
-                m.innerHTML = "Ошибка: " + d.error.message;
-            } else if (d.candidates && d.candidates[0].content) {
+                m.innerHTML = `Ошибка: ${d.error.message}<br><small>Key: ${keyMask}</small>`;
+            } else if (d.candidates) {
                 m.innerHTML = d.candidates[0].content.parts[0].text.replace(/\n/g, '<br>');
-            } else {
-                m.innerHTML = "Беври молчит. Ключ?";
             }
         } catch (e) { m.innerHTML = "Сбой сети."; }
         w.scrollTop = w.scrollHeight;
