@@ -2,7 +2,7 @@
 <!DOCTYPE html><html lang="ru"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY VERSES | v5.6.3</title>
+    <title>GY-GY VERSES | v5.6.4 Final</title>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; display: flex; flex-direction: column; overflow: hidden; }
@@ -16,7 +16,7 @@
         .ai-msg { align-self: flex-end; border-right: 3px solid #fff; color: #eee; background: rgba(255, 255, 255, 0.1); font-style: italic; text-align: right; }
         footer { height: 85px; display: flex; align-items: center; padding: 0 10px; gap: 8px; border-top: 1px solid #333; background: #000; flex-shrink: 0; }
         #user-in { flex-grow: 1; background: #000; border: var(--border); color: var(--gold); padding: 14px; outline: none; font-size: 1rem; font-family: inherit; }
-        .btn-up { width: 50px; height: 50px; background: var(--gold); color: #000; border: none; font-size: 1.8rem; cursor: pointer; font-weight: 900; }
+        .btn-up { width: 50px; height: 50px; background: var(--gold); color: #000; border: none; font-size: 1.8rem; cursor: pointer; }
     </style></head><body>
 <header>
     <div class="btn-header" onclick="location.href='ai_room_core_v8.html'">«</div>
@@ -26,14 +26,14 @@
     </div>
     <div style="font-size: 0.8rem; padding: 0 10px; font-weight: 900;">GY-GY</div>
 </header>
-<div id="chat-wall"><div class="msg user-msg">v5.6.3. Используйте сервис для вставки ключа.</div></div>
+<div id="chat-wall"><div class="msg user-msg">v5.6.4. Беври ждет 4 слова.</div></div>
 <footer>
     <input type="text" id="user-in" placeholder="Введите 4 слова..." onkeypress="if(event.key==='Enter') send()">
     <button class="btn-up" onclick="send()">↑</button>
 </footer>
 <script>
-    // Сюда сервис должен нажать кнопку "Вставить"
-    const MY_KEY = "AIzaSyCm2XDK4XQnvIRoG5nxfgFOz6HvlNs5oJg"; 
+    // Сюда сервис вставляет ключ
+    const MY_KEY = "ТВОЙ_НОВЫЙ_КЛЮЧ"; 
 
     async function aiAction(t) {
         const w = document.getElementById('chat-wall');
@@ -41,24 +41,24 @@
         m.className = 'msg ai-msg'; m.innerHTML = "<i>...</i>";
         w.appendChild(m); w.scrollTop = w.scrollHeight;
         
-        // Самый прямой путь к Gemini 1.5 Flash через API v1
-        const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${MY_KEY}`;
+        // Переход на v1beta — там модель gemini-1.5-flash точно жива
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${MY_KEY}`;
 
         try {
             const r = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: [{ parts: [{ text: "Ты нуарный поэт Клуба Беври. Коротко ответь 4-стишием на русском на: " + t }] }] })
+                body: JSON.stringify({ contents: [{ parts: [{ text: "Ты нуарный поэт Клуба Беври. Ответь 4-стишием на русском на: " + t }] }] })
             });
             const d = await r.json();
             if (d.error) {
-                m.innerHTML = "Ошибка: " + d.error.message;
+                m.innerHTML = "Ошибка API: " + d.error.message;
             } else if (d.candidates && d.candidates[0].content) {
                 m.innerHTML = d.candidates[0].content.parts[0].text.replace(/\n/g, '<br>');
             } else {
-                m.innerHTML = "Беври молчит. Перезапусти ключ.";
+                m.innerHTML = "Беври молчит. Проверь лимиты.";
             }
-        } catch (e) { m.innerHTML = "Ошибка сети."; }
+        } catch (e) { m.innerHTML = "Сбой сети."; }
         w.scrollTop = w.scrollHeight;
     }
     function send() {
