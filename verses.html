@@ -2,71 +2,72 @@
 <!DOCTYPE html><html lang="ru"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY VERSES | v5.9.1</title>
+    <title>GY-GY VERSES | v5.9.2 Reset</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; display: flex; flex-direction: column; overflow: hidden; }
         header { height: 65px; display: flex; align-items: center; border-bottom: var(--border); background: #000; padding: 0 10px; box-sizing: border-box; justify-content: space-between; position: relative; }
         .btn-header { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border: var(--border); color: var(--gold); background: none; cursor: pointer; font-size: 1.5rem; }
-        .logo-gy { font-weight: 900; font-size: 1.2rem; letter-spacing: 3px; position: absolute; left: 50%; transform: translateX(-50%); }
-        .lang-btn { border: var(--border); padding: 5px 10px; font-size: 0.8rem; }
+        .logo-gy { font-weight: 900; font-size: 1.2rem; letter-spacing: 3px; position: absolute; left: 50%; transform: translateX(-50%); cursor: pointer; }
+        .key-trigger { font-size: 0.6rem; border: 1px solid red; padding: 2px 5px; color: red; cursor: pointer; text-transform: uppercase; }
+        
         #chat-wall { flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
         .msg { padding: 12px; max-width: 80%; font-size: 1.1rem; border-radius: 2px; }
         .user-msg { align-self: flex-start; border-left: 3px solid var(--gold); background: rgba(255, 215, 0, 0.05); }
         .ai-msg { align-self: flex-end; border-right: 3px solid #fff; color: #eee; background: rgba(255, 255, 255, 0.1); text-align: right; }
+        
         footer { height: 85px; display: flex; align-items: center; padding: 0 10px; gap: 8px; border-top: 1px solid #333; }
         #user-in { flex-grow: 1; background: #000; border: var(--border); color: var(--gold); padding: 14px; outline: none; }
         .btn-up { width: 50px; height: 50px; background: var(--gold); border: none; font-size: 1.8rem; cursor: pointer; }
-        #key-guard { position: fixed; top: 70px; left: 10px; right: 10px; background: #111; border: 2px solid red; padding: 15px; z-index: 999; display: none; }
+        
+        #modal-key { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; display: none; align-items: center; justify-content: center; flex-direction: column; padding: 20px; box-sizing: border-box; }
     </style></head><body>
 
 <header>
     <div class="btn-header" onclick="location.href='ai_room_core_v8.html'">«</div>
-    <div class="logo-gy">GY-GY</div>
-    <div class="lang-btn">RU</div>
+    <div class="logo-gy" onclick="location.reload()">GY-GY</div>
+    <div class="key-trigger" onclick="document.getElementById('modal-key').style.display='flex'">Key</div>
 </header>
 
-<div id="key-guard">
-    <div style="color: red; font-weight: bold; margin-bottom: 10px;">КЛЮЧ ЗАБЛОКИРОВАН ИЛИ УТЕК</div>
-    <input type="password" id="new-key" placeholder="Вставьте новый API Key..." style="width:100%; background:#000; border:1px solid var(--gold); color:var(--gold); padding:10px;">
-    <button onclick="activateNewKey()" style="width:100%; margin-top:10px; background:var(--gold); border:none; padding:10px; cursor:pointer;">ОБНОВИТЬ СИСТЕМУ</button>
+<div id="modal-key">
+    <div style="margin-bottom: 20px; text-align: center;">ВВЕДИТЕ НОВЫЙ API KEY<br><small>(он сохранится только в этом браузере)</small></div>
+    <input type="password" id="manual-key-input" style="width: 100%; max-width: 400px; background: #000; border: 1px solid var(--gold); color: var(--gold); padding: 15px; margin-bottom: 20px;">
+    <button onclick="saveManualKey()" style="width: 100%; max-width: 400px; background: var(--gold); padding: 15px; border: none; font-weight: bold; cursor: pointer;">АКТИВИРОВАТЬ</button>
+    <div onclick="document.getElementById('modal-key').style.display='none'" style="margin-top: 20px; cursor: pointer; text-decoration: underline;">ОТМЕНА</div>
 </div>
 
 <div id="chat-wall">
-    <div class="msg user-msg">v5.9.1. Система защиты от утечек активна.</div>
+    <div class="msg user-msg">v5.9.2. Если старый ключ забанен, нажми красную кнопку "KEY" вверху.</div>
 </div>
 
 <footer>
-    <input type="text" id="user-in" placeholder="Буря мгла..." onkeypress="if(event.key==='Enter') send()">
+    <input type="text" id="user-in" placeholder="Ваши 4 слова..." onkeypress="if(event.key==='Enter') send()">
     <button class="btn-up" onclick="send()">↑</button>
 </footer>
 
 <script>
-    let ACTIVE_KEY = localStorage.getItem('safe_gemini_key');
-    
-    // Если в конфиге есть фрагменты, пробуем их склеить (но они могут быть забанены)
-    if (!ACTIVE_KEY && typeof BEUVRY_CONFIG !== 'undefined') {
-        ACTIVE_KEY = BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2;
+    // Приоритет: 1. LocalStorage (ручной ввод), 2. Config.js (фрагменты)
+    let FINAL_KEY = localStorage.getItem('user_gemini_key');
+    if (!FINAL_KEY && typeof BEUVRY_CONFIG !== 'undefined') {
+        FINAL_KEY = BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2;
     }
 
-    function activateNewKey() {
-        const k = document.getElementById('new-key').value.trim();
-        if(k) {
-            localStorage.setItem('safe_gemini_key', k);
-            ACTIVE_KEY = k;
-            document.getElementById('key-guard').style.display = 'none';
-            alert("Ключ обновлен локально!");
+    function saveManualKey() {
+        const val = document.getElementById('manual-key-input').value.trim();
+        if(val) {
+            localStorage.setItem('user_gemini_key', val);
+            location.reload(); // Перезагружаем, чтобы ключ подхватился
         }
     }
 
     async function aiAction(t) {
         const wall = document.getElementById('chat-wall');
         const m = document.createElement('div');
-        m.className = 'msg ai-msg'; m.innerHTML = "<i>...</i>";
+        m.className = 'ai-msg msg'; m.innerHTML = "<i>...</i>";
         wall.appendChild(m);
 
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${ACTIVE_KEY}`;
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${FINAL_KEY}`;
 
         try {
             const r = await fetch(url, {
@@ -76,10 +77,8 @@
             });
             const d = await r.json();
             if (d.error) {
-                if (d.error.message.includes("leaked") || d.error.message.includes("API key not valid")) {
-                    document.getElementById('key-guard').style.display = 'block';
-                }
                 m.innerHTML = "Ошибка: " + d.error.message;
+                if(d.error.message.includes("leaked")) document.getElementById('modal-key').style.display='flex';
             } else {
                 m.innerHTML = d.candidates[0].content.parts[0].text.replace(/\n/g, '<br>');
             }
@@ -90,7 +89,7 @@
     function send() {
         const i = document.getElementById('user-in');
         if(i.value.trim()){
-            const m = document.createElement('div'); m.className = 'msg user-msg'; m.innerText = i.value;
+            const m = document.createElement('div'); m.className = 'user-msg msg'; m.innerText = i.value;
             document.getElementById('chat-wall').appendChild(m);
             aiAction(i.value); i.value = "";
         }
