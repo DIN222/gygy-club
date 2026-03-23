@@ -2,7 +2,7 @@
 <!DOCTYPE html><html lang="ru"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY VERSES | v5.6.4 Final</title>
+    <title>GY-GY VERSES | v5.6.5 - 2.0 Core</title>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; display: flex; flex-direction: column; overflow: hidden; }
@@ -20,20 +20,16 @@
     </style></head><body>
 <header>
     <div class="btn-header" onclick="location.href='ai_room_core_v8.html'">«</div>
-    <div class="scroll-zone">
-        <div class="item-fix">ID: 001</div>
-        <div class="item-fix" onclick="aiAction('Проверка связи')">⚡ TEST</div>
-    </div>
-    <div style="font-size: 0.8rem; padding: 0 10px; font-weight: 900;">GY-GY</div>
+    <div class="scroll-zone"><div class="item-fix">ID: 001</div></div>
+    <div style="font-size: 0.8rem; padding: 0 10px; font-weight: 900;">GY-GY 2.0</div>
 </header>
-<div id="chat-wall"><div class="msg user-msg">v5.6.4. Беври ждет 4 слова.</div></div>
+<div id="chat-wall"><div class="msg user-msg">v5.6.5. Переход на ядро Gemini 2.0 Flash.</div></div>
 <footer>
     <input type="text" id="user-in" placeholder="Введите 4 слова..." onkeypress="if(event.key==='Enter') send()">
     <button class="btn-up" onclick="send()">↑</button>
 </footer>
 <script>
-    // Сюда сервис вставляет ключ
-    const MY_KEY = "ТВОЙ_НОВЫЙ_КЛЮЧ"; 
+    const MY_KEY = "ВСТАВЬ_НОВЫЙ_КЛЮЧ_ЗДЕСЬ"; 
 
     async function aiAction(t) {
         const w = document.getElementById('chat-wall');
@@ -41,22 +37,22 @@
         m.className = 'msg ai-msg'; m.innerHTML = "<i>...</i>";
         w.appendChild(m); w.scrollTop = w.scrollHeight;
         
-        // Переход на v1beta — там модель gemini-1.5-flash точно жива
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${MY_KEY}`;
+        // Прямой удар через v1beta по новой модели 2.0
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${MY_KEY}`;
 
         try {
             const r = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: [{ parts: [{ text: "Ты нуарный поэт Клуба Беври. Ответь 4-стишием на русском на: " + t }] }] })
+                body: JSON.stringify({ contents: [{ parts: [{ text: "Ты нуарный поэт. Ответь только жестким 4-стишием на русском на: " + t }] }] })
             });
             const d = await r.json();
             if (d.error) {
-                m.innerHTML = "Ошибка API: " + d.error.message;
+                m.innerHTML = "Ошибка: " + d.error.message;
             } else if (d.candidates && d.candidates[0].content) {
                 m.innerHTML = d.candidates[0].content.parts[0].text.replace(/\n/g, '<br>');
             } else {
-                m.innerHTML = "Беври молчит. Проверь лимиты.";
+                m.innerHTML = "Беври молчит. Ключ?";
             }
         } catch (e) { m.innerHTML = "Сбой сети."; }
         w.scrollTop = w.scrollHeight;
