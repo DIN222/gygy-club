@@ -2,7 +2,7 @@
 <!DOCTYPE html><html lang="ru"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY VERSES | v5.5.8 Fixed Path</title>
+    <title>GY-GY VERSES | v5.5.9</title>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; display: flex; flex-direction: column; overflow: hidden; }
@@ -16,7 +16,7 @@
         .ai-msg { align-self: flex-end; border-right: 3px solid #fff; color: #eee; background: rgba(255, 255, 255, 0.1); font-style: italic; text-align: right; }
         footer { height: 85px; display: flex; align-items: center; padding: 0 10px; gap: 8px; border-top: 1px solid #333; background: #000; flex-shrink: 0; }
         #user-in { flex-grow: 1; background: #000; border: var(--border); color: var(--gold); padding: 14px; outline: none; font-size: 1rem; font-family: inherit; }
-        .btn-up { width: 50px; height: 50px; background: var(--gold); color: #000; border: none; font-size: 1.8rem; cursor: pointer; }
+        .btn-up { width: 50px; height: 50px; background: var(--gold); color: #000; border: none; font-size: 1.8rem; cursor: pointer; font-weight: 900; }
         .btn-action { height: 50px; padding: 0 15px; border: var(--border); color: var(--gold); background: none; font-size: 0.7rem; font-weight: bold; cursor: pointer; text-transform: uppercase; }
         #google_translate_element { height: 44px; border: var(--border); display: flex; align-items: center; overflow: hidden; }
     </style></head><body>
@@ -32,7 +32,7 @@
     </div>
     <div style="font-size: 0.8rem; padding: 0 10px; font-weight: 900;">GY-GY</div>
 </header>
-<div id="chat-wall"><div class="msg user-msg">v5.5.7. Модель: models/gemini-1.5-flash.</div></div>
+<div id="chat-wall"><div class="msg user-msg">v5.5.9. Модель прописана по стандарту Google.</div></div>
 <footer>
     <input type="text" id="user-in" placeholder="Введите 4 слова..." onkeypress="if(event.key==='Enter') send()">
     <button class="btn-up" onclick="send()">↑</button>
@@ -45,16 +45,16 @@
         m.className = 'msg ai-msg'; m.innerHTML = "<i>...</i>";
         w.appendChild(m); w.scrollTop = w.scrollHeight;
         
-        // ШЕФ, ВСТАВЬ НОВЫЙ КЛЮЧ СЮДА:
-        const k = "AIzaSyC_QpKvWE39uKUvXRpNfWtGHHsXVTXs-ws"; 
-        // ИСПРАВЛЕННЫЙ URL (с префиксом models/)
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${k}`;
+        const k = "AIzaSyDLQrvoPx4AYyfSKD0BWvl3-zc2ROfCa-E"; 
+        
+        // ШЕФ, ЭТО ПРАВИЛЬНЫЙ ФОРМАТ ПО ДОКУМЕНТАЦИИ:
+        const url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + k;
 
         try {
             const r = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: [{ parts: [{ text: "Ты нуарный поэт Клуба Беври. Ответь 4-стишием на русском на: " + t }] }] })
+                body: JSON.stringify({ contents: [{ parts: [{ text: "Ты нуарный поэт Беври. Коротко и жестко ответь 4-стишием на русском на: " + t }] }] })
             });
             const d = await r.json();
             if (d.error) {
@@ -62,7 +62,7 @@
             } else if (d.candidates) {
                 m.innerHTML = d.candidates[0].content.parts[0].text.replace(/\n/g, '<br>');
             }
-        } catch (e) { m.innerHTML = "Ошибка сети."; }
+        } catch (e) { m.innerHTML = "Сбой сети."; }
         w.scrollTop = w.scrollHeight;
     }
     function send() {
