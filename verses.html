@@ -2,7 +2,7 @@
 <!DOCTYPE html><html lang="ru"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY VERSES | v5.9.4 Auto-Fix</title>
+    <title>GY-GY VERSES | v5.9.5 Last Shot</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
@@ -18,23 +18,16 @@
         footer { height: 85px; display: flex; align-items: center; padding: 0 10px; gap: 8px; border-top: 1px solid #333; }
         #user-in { flex-grow: 1; background: #000; border: var(--border); color: var(--gold); padding: 14px; outline: none; font-size: 1rem; }
         .btn-up { width: 50px; height: 50px; background: var(--gold); border: none; font-size: 1.8rem; cursor: pointer; }
-        #key-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; display: none; align-items: center; justify-content: center; flex-direction: column; padding: 20px; }
     </style></head><body>
 
 <header>
     <div class="btn-header" onclick="location.href='ai_room_core_v8.html'">«</div>
     <div class="logo-gy">GY-GY</div>
-    <div class="key-btn" onclick="document.getElementById('key-modal').style.display='flex'">KEY</div>
+    <div class="key-btn" onclick="let k=prompt('New Key:'); if(k){localStorage.setItem('user_gemini_key',k); location.reload();}">KEY</div>
 </header>
 
-<div id="key-modal">
-    <div style="margin-bottom: 20px;">ВСТАВЬ НОВЫЙ КЛЮЧ</div>
-    <input type="password" id="k-in" style="width:100%; max-width:300px; background:#000; border:1px solid var(--gold); color:var(--gold); padding:10px;">
-    <button onclick="saveK()" style="margin-top:20px; width:100%; max-width:300px; background:var(--gold); padding:10px; border:none; font-weight:900;">OK</button>
-</div>
-
 <div id="chat-wall">
-    <div class="msg user-msg">v5.9.4. Система авто-подбора модели активна. Жду 4 слова.</div>
+    <div class="msg user-msg">v5.9.5. Пробуем модель 'gemini-1.5-flash-latest'. Это должно сработать.</div>
 </div>
 
 <footer>
@@ -44,32 +37,28 @@
 
 <script>
     function getK() { return localStorage.getItem('user_gemini_key') || (typeof BEUVRY_CONFIG !== 'undefined' ? BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2 : ""); }
-    function saveK() { const v = document.getElementById('k-in').value.trim(); if(v){ localStorage.setItem('user_gemini_key', v); location.reload(); } }
 
     async function aiAction(t) {
         const wall = document.getElementById('chat-wall');
-        const m = document.createElement('div'); m.className = 'ai-msg msg'; m.innerHTML = "<i>...</i>";
+        const m = document.createElement('div'); m.className = 'ai-msg msg'; m.innerHTML = "<i>Пишу...</i>";
         wall.appendChild(m);
 
         const key = getK();
-        // Пытаемся использовать стабильную версию v1 и модель gemini-1.5-flash (самая безотказная)
-        const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${key}`;
+        // Используем суффикс -latest, который Google рекомендует для всех v1beta
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${key}`;
 
         try {
             const r = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: [{ parts: [{ text: (typeof BEUVRY_CONFIG !== 'undefined' ? BEUVRY_CONFIG.PROMPT : "Пиши нуарные стихи.") + "\nТема: " + t }] }] })
+                body: JSON.stringify({ contents: [{ parts: [{ text: (typeof BEUVRY_CONFIG !== 'undefined' ? BEUVRY_CONFIG.PROMPT : "Пиши нуар.") + "\nТема: " + t }] }] })
             });
             const d = await r.json();
             
             if (d.error) {
-                // Если gemini-1.5-flash не сработала, выдаем подробную ошибку для отладки
-                m.innerHTML = "Беври молчит. Ошибка: " + d.error.message;
-            } else if (d.candidates && d.candidates[0].content) {
+                m.innerHTML = "<b>Ошибка:</b> " + d.error.message;
+            } else if (d.candidates) {
                 m.innerHTML = d.candidates[0].content.parts[0].text.replace(/\n/g, '<br>');
-            } else {
-                m.innerHTML = "Google вернул пустой ответ. Попробуй другое слово.";
             }
         } catch (e) { m.innerHTML = "Сбой связи."; }
         wall.scrollTop = wall.scrollHeight;
