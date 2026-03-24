@@ -42,6 +42,12 @@ const models = [
     'gemini-2.0-flash-lite-001',
     'gemini-2.0-flash'
 ];
+    // Вставляем Gemma как "последний бастион" в твой список моделей:
+const models = [
+    'gemini-3.1-flash-lite-preview', 
+    'gemini-2.0-flash',
+    'gemma-3-27b-it' // Этот парень не подведет, когда все остальные "задумались"
+];
     
     function getK() { return localStorage.getItem('user_gemini_key') || (typeof BEUVRY_CONFIG !== 'undefined' ? BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2 : ""); }
 
