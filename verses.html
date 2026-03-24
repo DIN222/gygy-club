@@ -1,8 +1,7 @@
-
 <!DOCTYPE html><html lang="ru"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY VERSES | v5.9.6 Explorer</title>
+    <title>GY-GY BEUVRY | v6.0.0 Future</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
@@ -22,46 +21,40 @@
 <header>
     <div class="btn-header" onclick="location.href='ai_room_core_v8.html'">«</div>
     <div class="logo-gy">GY-GY</div>
-    <div style="font-size:0.6rem; color:red; cursor:pointer;" onclick="checkModels()">LIST</div>
+    <div style="font-size:0.5rem; color:red">GEN 3.1</div>
 </header>
 
 <div id="chat-wall">
-    <div class="msg user-msg">v5.9.6. Иду на штурм через 'gemini-1.5-pro'.</div>
+    <div class="msg user-msg">Шеф, калибровка завершена. Использую Gemini 3.1 Flash Lite. Давай свои 4 слова.</div>
 </div>
 
 <footer>
-    <input type="text" id="user-in" placeholder="Ночь лед стекло пистолет..." onkeypress="if(event.key==='Enter') send()">
+    <input type="text" id="user-in" placeholder="Дождь дым пуля финал..." onkeypress="if(event.key==='Enter') send()">
     <button class="btn-up" onclick="send()">↑</button>
 </footer>
 
 <script>
     function getK() { return localStorage.getItem('user_gemini_key') || (typeof BEUVRY_CONFIG !== 'undefined' ? BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2 : ""); }
 
-    async function checkModels() {
-        const key = getK();
-        window.open(`https://generativelanguage.googleapis.com/v1beta/models?key=${key}`, '_blank');
-    }
-
     async function aiAction(t) {
         const wall = document.getElementById('chat-wall');
-        const m = document.createElement('div'); m.className = 'ai-msg msg'; m.innerHTML = "<i>Ищу вход...</i>";
+        const m = document.createElement('div'); m.className = 'ai-msg msg'; m.innerHTML = "<i>Генерация...</i>";
         wall.appendChild(m);
 
         const key = getK();
-        // Пытаемся через PRO версию, она часто стабильнее в v1beta
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${key}`;
+        // Используем самую мощную модель из твоего списка
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-preview:generateContent?key=${key}`;
 
         try {
             const r = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: [{ parts: [{ text: (typeof BEUVRY_CONFIG !== 'undefined' ? BEUVRY_CONFIG.PROMPT : "Нуар.") + "\nТема: " + t }] }] })
+                body: JSON.stringify({ contents: [{ parts: [{ text: (typeof BEUVRY_CONFIG !== 'undefined' ? BEUVRY_CONFIG.PROMPT : "Пиши нуарный стих.") + "\nТема: " + t }] }] })
             });
             const d = await r.json();
             
             if (d.error) {
-                m.innerHTML = `<b>Ошибка:</b> ${d.error.message}<br><br>
-                               <small>Нажми <b>LIST</b> вверху, чтобы увидеть список доступных тебе моделей.</small>`;
+                m.innerHTML = "<b>Ошибка:</b> " + d.error.message;
             } else if (d.candidates) {
                 m.innerHTML = d.candidates[0].content.parts[0].text.replace(/\n/g, '<br>');
             }
