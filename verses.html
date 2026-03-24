@@ -3,132 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | v6.5.0 Snarky</title>
+    <title>GY-GY | v6.6.0 Schematic</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; display: flex; flex-direction: column; overflow: hidden; }
         
-        /* Статичный Хедер */
         header { height: 65px; display: flex; align-items: center; border-bottom: var(--border); background: #000; padding: 0 15px; box-sizing: border-box; justify-content: space-between; position: sticky; top: 0; z-index: 1000; }
-        .btn-top { width: 42px; height: 42px; border: var(--border); color: var(--gold); background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; text-decoration: none; font-weight: bold; }
-        .logo-gy { font-weight: 900; font-size: 1.4rem; letter-spacing: 5px; position: absolute; left: 50%; transform: translateX(-50%); }
+        .btn-top { width: 45px; height: 45px; border: var(--border); color: var(--gold); background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; text-decoration: none; font-weight: bold; font-size: 0.7rem; }
+        .logo-gy { font-weight: 900; font-size: 1.4rem; letter-spacing: 5px; position: absolute; left: 50%; transform: translateX(-50%); cursor: pointer; }
         
-        /* Скролл-зона */
         #chat-wall { flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 20px; scroll-behavior: smooth; }
         
-        /* Сообщения */
-        .msg { padding: 15px; max-width: 85%; font-size: 1.1rem; line-height: 1.4; border-radius: 2px; position: relative; }
+        .msg { padding: 15px; max-width: 85%; font-size: 1.1rem; border-radius: 2px; position: relative; border: 1px solid transparent; }
         .user-msg { align-self: flex-start; border-left: 3px solid var(--gold); background: rgba(255, 215, 0, 0.05); }
         .ai-msg { align-self: flex-end; border-right: 3px solid #fff; color: #eee; background: rgba(255, 255, 255, 0.08); text-align: right; }
 
-        /* Выпадающее меню ⋮ */
-        .menu-wrap { position: relative; margin-top: 8px; }
-        .dots-btn { cursor: pointer; font-size: 1.4rem; opacity: 0.6; padding: 5px; }
-        .dots-btn:hover { opacity: 1; }
-        .drop-menu { display: none; position: absolute; right: 0; top: 100%; background: #111; border: var(--border); z-index: 2000; width: 170px; box-shadow: 0 10px 30px #000; }
-        .drop-menu div { padding: 12px; font-size: 0.8rem; border-bottom: 1px solid #222; cursor: pointer; text-align: left; }
+        .menu-dots { cursor: pointer; font-size: 1.5rem; line-height: 1; margin-top: 10px; opacity: 0.5; transition: 0.3s; }
+        .menu-dots:hover { opacity: 1; color: #fff; }
+
+        .drop-menu { display: none; position: absolute; right: 0; top: 100%; background: #111; border: var(--border); z-index: 2000; width: 180px; box-shadow: 0 10px 40px #000; }
+        .drop-menu div { padding: 12px; font-size: 0.75rem; border-bottom: 1px solid #222; cursor: pointer; text-align: left; transition: 0.2s; }
         .drop-menu div:hover { background: var(--gold); color: #000; }
 
-        /* Футер */
-        footer { height: 90px; display: flex; align-items: center; padding: 0 15px; gap: 10px; border-top: 1px solid #333; background: #000; z-index: 1000; }
+        footer { height: 90px; display: flex; align-items: center; padding: 0 15px; gap: 10px; border-top: 1px solid #333; background: #000; }
         #user-in { flex-grow: 1; background: #000; border: var(--border); color: var(--gold); padding: 15px; outline: none; font-size: 1rem; }
-        .btn-up { width: 55px; height: 55px; background: var(--gold); border: none; font-size: 2.2rem; cursor: pointer; color: #000; }
+        .btn-up { width: 55px; height: 55px; background: var(--gold); border: none; font-size: 2.2rem; cursor: pointer; color: #000; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <header>
-    <a href="ai_room_core_v8.html" class="btn-top">«</a>
-    <div class="logo-gy">GY-GY</div>
+    <a href="ai_room_core_v8.html" class="btn-top">BACK</a>
+    <div class="logo-gy" onclick="location.reload()">GY-GY</div>
     <div style="display:flex; gap:8px;">
-        <div class="btn-top" onclick="showBox()">BOX</div>
+        <div class="btn-top" onclick="openBox()">BOX</div>
         <div class="btn-top">RU</div>
     </div>
 </header>
 
 <div id="chat-wall">
-    <div class="msg user-msg">Система 6.5.0: Юмор включен, нуар под контролем. Жги, шеф!</div>
+    <div class="msg user-msg">v6.6.0 Online. Юмор на 70%. <br>Жду твои слова, чтобы превратить их в схему... или в стёб.</div>
 </div>
 
 <footer>
-    <input type="text" id="user-in" placeholder="Твои 4 слова..." autocomplete="off">
+    <input type="text" id="user-in" placeholder="Застряли руль очей..." autocomplete="off">
     <button id="send-btn" class="btn-up">↑</button>
 </footer>
 
 <script>
-    const MODELS = ['gemini-3.1-flash-lite-preview', 'gemini-2.5-flash-lite', 'gemini-2.0-flash', 'gemma-3-27b-it'];
-    
+    const MODELS = ['gemini-3.1-flash-lite-preview', 'gemini-2.5-flash-lite', 'gemini-2.0-flash'];
+    const wall = document.getElementById('chat-wall');
+    const input = document.getElementById('user-in');
+    const btn = document.getElementById('send-btn');
+
     function getApiKey() { return localStorage.getItem('user_gemini_key') || (typeof BEUVRY_CONFIG !== 'undefined' ? BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2 : ""); }
 
-    async function callAI(text, modelIdx = 0) {
-        if (modelIdx >= MODELS.length) return "Даже роботы устали от твоих слов. Дай нам минуту.";
+    async function callAI(text, systemPrompt = "") {
         const key = getApiKey();
-        try {
-            const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODELS[modelIdx]}:generateContent?key=${key}`, {
-                method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: [{ parts: [{ text: (typeof BEUVRY_CONFIG !== 'undefined' ? BEUVRY_CONFIG.PROMPT : "Пиши ироничный нуар.") + "\nСлова: " + text }] }] })
-            });
-            const d = await r.json();
-            if (d.error) return await callAI(text, modelIdx + 1);
-            return d.candidates[0].content.parts[0].text;
-        } catch (e) { return await callAI(text, modelIdx + 1); }
+        const basePrompt = (typeof BEUVRY_CONFIG !== 'undefined' ? BEUVRY_CONFIG.PROMPT : "Пиши ироничный нуар.");
+        const finalPrompt = systemPrompt ? systemPrompt + "\nТекст: " + text : basePrompt + "\nСлова: " + text;
+        
+        for (let model of MODELS) {
+            try {
+                const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: finalPrompt }] }] })
+                });
+                const d = await r.json();
+                if (!d.error) return d.candidates[0].content.parts[0].text;
+            } catch (e) { console.error("Model failed: " + model); }
+        }
+        return "Все модели заняты самолюбованием. Попробуй позже.";
     }
 
-    function addMessageWithMenu(text, isAi = true) {
+    function addMessage(text, isAi = true) {
         const div = document.createElement('div');
         div.className = `msg ${isAi ? 'ai-msg' : 'user-msg'}`;
-        div.innerHTML = isAi ? text.replace(/\n/g, '<br>') : text;
+        div.innerHTML = text.replace(/\n/g, '<br>');
 
         if (isAi) {
-            const wrap = document.createElement('div');
-            wrap.className = 'menu-wrap';
-            wrap.innerHTML = `<div class="dots-btn">⋮</div>
-                <div class="drop-menu">
-                    <div onclick="saveToBox(\`${text}\`)">★ В СБОРНИК</div>
-                    <div onclick="alert('Генерирую Veo-клип...')">🎬 СДЕЛАТЬ КЛИП</div>
-                    <div onclick="copyTxt(\`${text}\`)">🔗 ДРУГУ</div>
-                    <div onclick="this.closest('.msg').remove()" style="color:red">✖ УДАЛИТЬ</div>
-                </div>`;
+            const menuBtn = document.createElement('div');
+            menuBtn.className = 'menu-dots'; menuBtn.innerText = '⋮';
             
-            wrap.querySelector('.dots-btn').onclick = (e) => {
+            const menu = document.createElement('div');
+            menu.className = 'drop-menu';
+            menu.innerHTML = `
+                <div onclick="saveItem(\`${text}\`)">★ СОХРАНИТЬ В BOX</div>
+                <div onclick="makeClip(\`${text}\`)">🎬 СДЕЛАТЬ КЛИП (СХЕМА)</div>
+                <div onclick="copyItem(\`${text}\`)">🔗 ПЕРЕСЛАТЬ</div>
+                <div onclick="this.closest('.msg').remove()" style="color:#ff4444">✖ УДАЛИТЬ К ЧЕРТЯМ</div>
+            `;
+            
+            menuBtn.onclick = (e) => {
                 e.stopPropagation();
                 document.querySelectorAll('.drop-menu').forEach(m => m.style.display = 'none');
-                wrap.querySelector('.drop-menu').style.display = 'block';
+                menu.style.display = 'block';
             };
-            div.appendChild(wrap);
+            div.appendChild(menuBtn);
+            div.appendChild(menu);
         }
-        
         wall.appendChild(div);
         wall.scrollTop = wall.scrollHeight;
     }
 
-    window.saveToBox = (t) => {
+    window.saveItem = (t) => {
         let b = JSON.parse(localStorage.getItem('gy_collection') || "[]");
         b.push(t); localStorage.setItem('gy_collection', JSON.stringify(b));
-        alert('Стих в BOX-е. Не потеряй.');
+        alert('Шедевр в BOX! Теперь ты коллекционер.');
     };
 
-    window.copyTxt = (t) => { navigator.clipboard.writeText(t); alert('Скопировано!'); };
+    window.copyItem = (t) => { navigator.clipboard.writeText(t); alert('Скопировано в буфер.'); };
 
-    window.showBox = () => {
+    window.makeClip = async (t) => {
+        const btn = document.querySelector('.drop-menu'); if(btn) btn.style.display='none';
+        addMessage("<i>Генерирую визуальную схему клипа...</i>", true);
+        const scheme = await callAI(t, "Преврати этот стих в ироничную раскадровку для клипа. Распиши 3 кадра: свет, действие, эмоция. Добавь немного стеба над нуарными штампами.");
+        addMessage("<b>СХЕМА КЛИПА:</b>\n" + scheme, true);
+    };
+
+    window.openBox = () => {
         let b = JSON.parse(localStorage.getItem('gy_collection') || "[]");
-        alert(b.length ? "В Сборнике " + b.length + " шедевров." : "BOX пуст, как кошелек поэта.");
+        alert(b.length ? "В твоем BOX " + b.length + " записей. Скоро сделаем для них отдельную витрину." : "BOX пуст. Начни творить!");
     };
-
-    const input = document.getElementById('user-in');
-    const btn = document.getElementById('send-btn');
-    const wall = document.getElementById('chat-wall');
 
     async function send() {
-        const val = input.value.trim();
-        if (!val || btn.disabled) return;
+        const val = input.value.trim(); if (!val || btn.disabled) return;
         btn.disabled = true;
-        addMessageWithMenu(val, false);
-        input.value = "";
-
-        const aiRes = await callAI(val);
-        addMessageWithMenu(aiRes, true);
+        addMessage(val, false); input.value = "";
+        const res = await callAI(val);
+        addMessage(res, true);
         btn.disabled = false;
     }
 
