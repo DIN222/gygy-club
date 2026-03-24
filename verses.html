@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | v7.7.2 RECOVERY</title>
+    <title>GY-GY | v7.7.3 RECOVERY</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 2px solid #ffd700; }
@@ -60,36 +60,43 @@
         input.value = "";
 
         if (!hasConfig) {
-            pushMsg("❌ ОШИБКА: Файл config.js не подгружен!", true);
+            pushMsg("❌ ОШИБКА: Файл config.js не найден или поврежден!", true);
             btn.disabled = false; return;
         }
 
         const key = (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).trim();
         
-        // Самый стабильный эндпоинт для Free Tier в 2026-м
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${key}`;
+        // Перебор моделей от самой легкой до PRO
+        const tryModels = ['gemini-1.5-flash', 'gemini-pro']; 
+        let success = false;
 
-        try {
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: "Ты — циничный нуарный комик. Высмей ситуацию в 4 строки жесткой рифмы. Тон: ироничный. Слова: " + val }] }]
-                })
-            });
-            
-            const data = await response.json();
+        for (let m of tryModels) {
+            if (success) break;
+            try {
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${key}`;
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: "Ты — едкий нуарный комик. Высмей ситуацию в 4 строки жесткой рифмы. Тон: ироничный. Слова: " + val }] }]
+                    })
+                });
+                
+                const data = await response.json();
 
-            if (data.error) {
-                // Если и gemini-pro не зашла, значит Google требует gemini-1.5-flash без добавок
-                pushMsg(`Google капризничает: ${data.error.message}`, true);
-            } else if (data.candidates && data.candidates[0].content) {
-                pushMsg(data.candidates[0].content.parts[0].text, true);
-            } else {
-                pushMsg("❌ Пустой ответ. Попробуй другие слова.", true);
+                if (data.candidates && data.candidates[0].content) {
+                    pushMsg(data.candidates[0].content.parts[0].text, true);
+                    success = true;
+                } else if (data.error) {
+                    console.warn(`Модель ${m} не ответила: ${data.error.message}`);
+                }
+            } catch (e) {
+                console.error("Сбой сети на модели " + m);
             }
-        } catch (e) {
-            pushMsg("❌ Ошибка соединения. Проверь сеть.", true);
+        }
+
+        if (!success) {
+            pushMsg("❌ Google капризничает. Похоже, ключ еще 'не прогрелся' или модель не выбрана. Попробуй через минуту.", true);
         }
 
         btn.disabled = false;
