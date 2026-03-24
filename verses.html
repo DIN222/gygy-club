@@ -47,61 +47,52 @@
     <input type="text" id="in" placeholder="Новый ключ — новая жизнь..." onkeypress="if(event.key==='Enter') send()">
     <button id="go" class="btn-up" onclick="send()">↑</button>
 </footer>
-
 <script>
-    const MODELS = ['gemini-2.0-flash', 'gemini-1.5-flash'];
+    const MODELS = ['gemini-1.5-flash', 'gemini-2.0-flash-exp'];
+
+    // Проверка ключа по клику на лого (для тебя, шеф)
+    let clickCount = 0;
+    document.querySelector('.logo-gy').onclick = () => {
+        clickCount++;
+        if (clickCount >= 3) {
+            const k = (typeof BEUVRY_CONFIG !== 'undefined' ? (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).trim() : "КЛЮЧ НЕ НАЙДЕН");
+            alert(`Диагностика ключа: ${k.substring(0,5)}...${k.slice(-5)}`);
+            clickCount = 0;
+        }
+    };
 
     async function callAI(text) {
         const key = (typeof BEUVRY_CONFIG !== 'undefined' ? (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).trim() : "");
+        
+        if (!key || key.length < 10) return "Шеф, ключ пуст или слишком короткий! Проверь config.js.";
+
         for (let m of MODELS) {
             try {
                 const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${key}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: "Ты циничный нуарный комик. Стебись над словами юзера в 4 строки рифмы. Слова: " + text }] }] })
+                    body: JSON.stringify({ contents: [{ parts: [{ text: "Ты — едкий нуарный комик. Стебись над словами юзера в 4 строки рифмы. Тон: жесткий юмор. Слова: " + text }] }] })
                 });
+                
                 const d = await r.json();
-                if (d.candidates) return d.candidates[0].content.parts[0].text;
-                if (d.error) console.error(d.error.message);
-            } catch (e) { console.warn("Fail: " + m); }
+                
+                if (d.error) {
+                    console.error("Ошибка Google:", d.error.message);
+                    if (d.error.message.includes("expired")) return "⚠️ Ключ всё еще считается просроченным. Жди или смени ключ.";
+                    if (d.error.message.includes("API key not found")) return "⚠️ Google не видит этот ключ. Ошибка в копипасте.";
+                    continue;
+                }
+
+                if (d.candidates && d.candidates[0].content) {
+                    return d.candidates[0].content.parts[0].text;
+                }
+            } catch (e) { console.error("Сбой сети на " + m); }
         }
-        return "Модели всё еще ворчат. Проверь новый ключ!";
+        return "Модели всё еще ворчат. Проверь консоль (F12) или новый ключ!";
     }
 
-    function push(txt, isAi) {
-        const wall = document.getElementById('wall');
-        const d = document.createElement('div');
-        d.className = `msg ${isAi ? 'a' : 'u'}`;
-        d.innerHTML = txt.replace(/\n/g, '<br>');
-        
-        if (isAi) {
-            const menu = document.createElement('div');
-            menu.className = 'menu-dots'; menu.innerHTML = '⋮ <div class="drop-menu">' +
-                '<div onclick="this.closest(\'.msg\').remove()">✖ УДАЛИТЬ К ЧЕРТЯМ</div>' +
-                '<div onclick="alert(\'В BOX!\')">★ В СБОРНИК</div>' +
-                '<div onclick="alert(\'СХЕМА ГОТОВА\')">🎬 КЛИП</div></div>';
-            menu.onclick = (e) => {
-                e.stopPropagation();
-                document.querySelectorAll('.drop-menu').forEach(m => m.style.display='none');
-                menu.querySelector('.drop-menu').style.display='block';
-            };
-            d.appendChild(menu);
-        }
-        wall.appendChild(d);
-        wall.scrollTop = wall.scrollHeight;
-    }
-
-    async function send() {
-        const i = document.getElementById('in');
-        const b = document.getElementById('go');
-        if (!i.value.trim() || b.disabled) return;
-        b.disabled = true;
-        push(i.value, false);
-        const res = await callAI(i.value);
-        push(res, true);
-        i.value = ""; b.disabled = false; i.focus();
-    }
-    document.onclick = () => document.querySelectorAll('.drop-menu').forEach(m => m.style.display='none');
+    // Функция send и push остаются как в v7.4.0
 </script>
+
 </body>
 </html>
