@@ -3,114 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | v7.3.0 DIAGNOSTIC</title>
+    <title>GY-GY | v7.4.0 REBORN</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 2px solid #ffd700; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; display: flex; flex-direction: column; overflow: hidden; }
-        header { height: 65px; display: flex; align-items: center; border-bottom: var(--border); background: #111; padding: 0 15px; justify-content: space-between; position: relative; z-index: 100; }
-        .logo { font-weight: 900; font-size: 1.4rem; letter-spacing: 5px; position: absolute; left: 50%; transform: translateX(-50%); }
-        .nav-btn { width: 45px; height: 45px; border: var(--border); color: var(--gold); background: #000; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold; }
         
-        #wall { flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; background: #000; }
-        .msg { padding: 12px; max-width: 85%; border: 1px solid #333; position: relative; font-size: 1.1rem; }
-        .u { align-self: flex-start; border-left: 4px solid var(--gold); background: rgba(255,215,0,0.05); }
-        .a { align-self: flex-end; border-right: 4px solid #fff; background: rgba(255,255,255,0.05); text-align: right; }
+        header { height: 65px; display: flex; align-items: center; border-bottom: var(--border); background: #111; padding: 0 15px; box-sizing: border-box; justify-content: space-between; position: sticky; top: 0; z-index: 1000; }
+        .nav-btn { width: 45px; height: 45px; border: var(--border); color: var(--gold); background: #000; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.7rem; box-shadow: 2px 2px 0 var(--gold); }
+        .logo-gy { font-weight: 900; font-size: 1.5rem; letter-spacing: 5px; position: absolute; left: 50%; transform: translateX(-50%); text-shadow: 2px 2px 0 #333; }
+        
+        #wall { flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 20px; background: #000; scroll-behavior: smooth; }
+        .msg { padding: 15px; max-width: 85%; font-size: 1.1rem; border-radius: 2px; position: relative; border: 1px solid #222; }
+        .u { align-self: flex-start; border-left: 4px solid var(--gold); background: rgba(255, 215, 0, 0.05); }
+        .a { align-self: flex-end; border-right: 4px solid #fff; background: rgba(255, 255, 255, 0.05); text-align: right; }
 
-        /* Красная панель позора для ошибок */
-        #debug-box { background: #300; color: #ff4444; padding: 10px; font-size: 12px; border-top: 1px solid #ff4444; display: none; word-break: break-all; }
+        .menu-dots { cursor: pointer; font-size: 1.5rem; margin-top: 8px; opacity: 0.6; }
+        .drop-menu { display: none; position: absolute; right: 0; top: 100%; background: #111; border: var(--border); z-index: 2000; width: 170px; }
+        .drop-menu div { padding: 12px; font-size: 0.75rem; border-bottom: 1px solid #222; cursor: pointer; text-align: left; }
+        .drop-menu div:hover { background: var(--gold); color: #000; }
 
         footer { height: 90px; display: flex; align-items: center; padding: 0 15px; gap: 10px; border-top: var(--border); background: #111; }
         #in { flex-grow: 1; background: #000; border: 1px solid var(--gold); color: var(--gold); padding: 15px; outline: none; font-size: 1.1rem; }
-        .btn-send { width: 60px; height: 60px; background: var(--gold); border: none; font-size: 2rem; cursor: pointer; color: #000; font-weight: bold; }
+        .btn-up { width: 60px; height: 60px; background: var(--gold); border: none; font-size: 2.2rem; cursor: pointer; color: #000; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <header>
     <div class="nav-btn" onclick="location.reload()">REF</div>
-    <div class="logo">GY-GY</div>
-    <div class="nav-btn">RU</div>
+    <div class="logo-gy">GY-GY</div>
+    <div style="display:flex; gap:8px;">
+        <div class="nav-btn" onclick="alert('BOX: Тут будут твои шедевры')">BOX</div>
+        <div class="nav-btn">RU</div>
+    </div>
 </header>
 
 <div id="wall">
-    <div class="msg a">v7.3.0: Режим отладки. <br>Если я молчу — смотри на красную полоску внизу.</div>
+    <div class="msg a">v7.4.0: Жду новый ключ в config.js. <br>Как только обновишь — пиши 4 слова. Будем стебаться по-взрослому!</div>
 </div>
 
-<div id="debug-box"></div>
-
 <footer>
-    <input type="text" id="in" placeholder="Слова..." onkeypress="if(event.key==='Enter') send()">
-    <button id="go" class="btn-send" onclick="send()">↑</button>
+    <input type="text" id="in" placeholder="Новый ключ — новая жизнь..." onkeypress="if(event.key==='Enter') send()">
+    <button id="go" class="btn-up" onclick="send()">↑</button>
 </footer>
 
 <script>
-    const MODELS = ['gemini-1.5-flash', 'gemini-2.0-flash-exp'];
-
-    function getK() {
-        if (typeof BEUVRY_CONFIG === 'undefined') return "ERROR_NO_CONFIG";
-        const k = (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).trim();
-        return k || "ERROR_EMPTY_KEY";
-    }
+    const MODELS = ['gemini-2.0-flash', 'gemini-1.5-flash'];
 
     async function callAI(text) {
-        const key = getK();
-        const dbg = document.getElementById('debug-box');
-        dbg.style.display = 'none';
-
-        if (key.includes("ERROR")) {
-            dbg.style.display = 'block';
-            dbg.innerText = "Критическая ошибка: Файл config.js не найден или пуст!";
-            return "Беври потерял ключи от клуба.";
-        }
-
+        const key = (typeof BEUVRY_CONFIG !== 'undefined' ? (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).trim() : "");
         for (let m of MODELS) {
             try {
                 const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${key}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: "Стебись над словами в 4 строки нуара: " + text }] }] })
+                    body: JSON.stringify({ contents: [{ parts: [{ text: "Ты циничный нуарный комик. Стебись над словами юзера в 4 строки рифмы. Слова: " + text }] }] })
                 });
-                
-                const data = await r.json();
-
-                if (data.error) {
-                    dbg.style.display = 'block';
-                    dbg.innerText = `Google Error (${m}): ${data.error.code} - ${data.error.message}`;
-                    continue; 
-                }
-
-                if (data.candidates) return data.candidates[0].content.parts[0].text;
-            } catch (e) {
-                dbg.style.display = 'block';
-                dbg.innerText = "Ошибка сети: Не могу достучаться до серверов.";
-            }
+                const d = await r.json();
+                if (d.candidates) return d.candidates[0].content.parts[0].text;
+                if (d.error) console.error(d.error.message);
+            } catch (e) { console.warn("Fail: " + m); }
         }
-        return "Все модели на перекуре.";
+        return "Модели всё еще ворчат. Проверь новый ключ!";
     }
 
     function push(txt, isAi) {
+        const wall = document.getElementById('wall');
         const d = document.createElement('div');
         d.className = `msg ${isAi ? 'a' : 'u'}`;
         d.innerHTML = txt.replace(/\n/g, '<br>');
-        document.getElementById('wall').appendChild(d);
-        document.getElementById('wall').scrollTop = document.getElementById('wall').scrollHeight;
+        
+        if (isAi) {
+            const menu = document.createElement('div');
+            menu.className = 'menu-dots'; menu.innerHTML = '⋮ <div class="drop-menu">' +
+                '<div onclick="this.closest(\'.msg\').remove()">✖ УДАЛИТЬ К ЧЕРТЯМ</div>' +
+                '<div onclick="alert(\'В BOX!\')">★ В СБОРНИК</div>' +
+                '<div onclick="alert(\'СХЕМА ГОТОВА\')">🎬 КЛИП</div></div>';
+            menu.onclick = (e) => {
+                e.stopPropagation();
+                document.querySelectorAll('.drop-menu').forEach(m => m.style.display='none');
+                menu.querySelector('.drop-menu').style.display='block';
+            };
+            d.appendChild(menu);
+        }
+        wall.appendChild(d);
+        wall.scrollTop = wall.scrollHeight;
     }
 
     async function send() {
         const i = document.getElementById('in');
         const b = document.getElementById('go');
         if (!i.value.trim() || b.disabled) return;
-
         b.disabled = true;
         push(i.value, false);
         const res = await callAI(i.value);
         push(res, true);
-        
-        i.value = "";
-        b.disabled = false;
-        i.focus();
+        i.value = ""; b.disabled = false; i.focus();
     }
+    document.onclick = () => document.querySelectorAll('.drop-menu').forEach(m => m.style.display='none');
 </script>
 </body>
 </html>
