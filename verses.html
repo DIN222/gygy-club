@@ -3,32 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | v6.7.0 TOTAL JOKE</title>
+    <title>GY-GY | v6.8.0 REBOOT</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 2px solid #ffd700; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; display: flex; flex-direction: column; overflow: hidden; }
-        
-        /* ХЕДЕР - ТЕПЕРЬ ТОЧНО С КНОПКАМИ */
         header { height: 70px; display: flex; align-items: center; border-bottom: var(--border); background: #111; padding: 0 15px; box-sizing: border-box; justify-content: space-between; position: sticky; top: 0; z-index: 9999; }
         .nav-btn { width: 50px; height: 50px; border: var(--border); color: var(--gold); background: #000; cursor: pointer; display: flex; align-items: center; justify-content: center; text-decoration: none; font-weight: 900; font-size: 0.8rem; box-shadow: 3px 3px 0 var(--gold); }
-        .nav-btn:active { transform: translate(2px, 2px); box-shadow: none; }
         .logo-center { font-weight: 900; font-size: 1.6rem; letter-spacing: 6px; position: absolute; left: 50%; transform: translateX(-50%); text-shadow: 2px 2px 0 #ff0000; }
-        
         #wall { flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 25px; background: radial-gradient(circle, #111 0%, #000 100%); }
-        
-        .bubble { padding: 18px; max-width: 80%; font-size: 1.1rem; border: 1px solid #333; position: relative; animation: slide 0.3s ease-out; }
-        @keyframes slide { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
+        .bubble { padding: 18px; max-width: 80%; font-size: 1.1rem; border: 1px solid #333; position: relative; }
         .u-msg { align-self: flex-start; border-left: 4px solid var(--gold); background: rgba(255,215,0,0.05); color: #fff; }
         .a-msg { align-self: flex-end; border-right: 4px solid #fff; background: rgba(255,255,255,0.05); text-align: right; }
-
-        /* МЕНЮ ДЕЙСТВИЙ (ТРИ ТОЧКИ) */
         .opt-trigger { cursor: pointer; font-size: 1.8rem; margin-top: 10px; color: var(--gold); display: inline-block; padding: 0 10px; }
         .opt-menu { display: none; position: absolute; right: 0; top: 100%; background: #ffd700; color: #000; z-index: 10000; width: 180px; font-weight: bold; border: 2px solid #fff; }
         .opt-menu div { padding: 12px; border-bottom: 1px solid #000; cursor: pointer; font-size: 0.75rem; text-transform: uppercase; }
         .opt-menu div:hover { background: #000; color: #ffd700; }
-
         footer { height: 100px; display: flex; align-items: center; padding: 0 15px; gap: 10px; border-top: var(--border); background: #111; }
         #in { flex-grow: 1; background: #000; border: 1px solid var(--gold); color: var(--gold); padding: 18px; outline: none; font-size: 1.1rem; }
         .btn-send { width: 65px; height: 65px; background: var(--gold); border: none; font-size: 2.5rem; cursor: pointer; font-weight: bold; }
@@ -40,41 +30,57 @@
     <a href="ai_room_core_v8.html" class="nav-btn">EXIT</a>
     <div class="logo-center">GY-GY</div>
     <div style="display:flex; gap:10px;">
-        <div class="nav-btn" onclick="alert('BOX: Тут твои шедевры. Пока спим.')">BOX</div>
+        <div class="nav-btn" onclick="alert('BOX: Тут твои шедевры.')">BOX</div>
         <div class="nav-btn">RU</div>
     </div>
 </header>
 
 <div id="wall">
-    <div class="bubble u-msg">Система v6.7.0. Юмор: 100%. <br>Давай свои слова, попробуй меня рассмешить.</div>
+    <div class="bubble u-msg">v6.8.0: Подключена Gemma 3. <br>Пробуем прорвать блокаду!</div>
 </div>
 
 <footer>
-    <input type="text" id="in" placeholder="Пиши сюда, не стесняйся..." autocomplete="off">
+    <input type="text" id="in" placeholder="Пиши свои слова..." autocomplete="off">
     <button id="go" class="btn-send">↑</button>
 </footer>
 
 <script>
-    const MODELS = ['gemini-3.1-flash-lite-preview', 'gemini-2.5-flash-lite', 'gemini-2.0-flash'];
-    const wall = document.getElementById('wall');
-    const input = document.getElementById('in');
-    const btn = document.getElementById('go');
+    // Порядок моделей изменен: Gemma 3 теперь первая, чтобы обойти лимиты Gemini
+    const MODELS = [
+        'gemma-3-27b-it',
+        'gemini-3.1-flash-lite-preview', 
+        'gemini-2.5-flash-lite', 
+        'gemini-2.0-flash'
+    ];
 
     async function callAI(text) {
         const key = (typeof BEUVRY_CONFIG !== 'undefined' ? BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2 : "");
-        const funnyPrompt = "Ты — циничный нуарный поэт-юморист. Юзер дает 4 слова. Твоя задача: высмеять ситуацию, вставить иронию, но сохранить рифму. Никакого пафоса про 'бесконечную мглу', только стеб над штампами.";
+        const funnyPrompt = "Ты — едкий, саркастичный нуарный поэт. Юзер пишет бред, ты — стебешься в рифму. Максимум иронии, минимум соплей. 4 строки.";
         
         for (let m of MODELS) {
             try {
-                const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${key}`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: funnyPrompt + "\nСлова юзера: " + text }] }] })
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${key}`;
+                const r = await fetch(url, {
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: funnyPrompt + "\nСлова: " + text }] }] })
                 });
+                
                 const d = await r.json();
-                if (d.candidates) return d.candidates[0].content.parts[0].text;
-            } catch (e) {}
+                
+                if (d.candidates && d.candidates[0].content) {
+                    return d.candidates[0].content.parts[0].text;
+                }
+                
+                if (d.error) {
+                    console.warn(`Модель ${m} сообщает: ${d.error.message}`);
+                    continue; // Пробуем следующую в списке
+                }
+            } catch (e) {
+                console.error(`Критический сбой на ${m}`);
+            }
         }
-        return "Модели ушли на перекур. Постучись позже.";
+        return "ВНИМАНИЕ: Все модели в ауте. Смени IP или подожди 10 минут. Google нас запомнил.";
     }
 
     function pushMsg(txt, isAi) {
@@ -87,9 +93,9 @@
             wrap.style.textAlign = 'right';
             wrap.innerHTML = `<span class="opt-trigger">⋮</span>
                 <div class="opt-menu">
-                    <div onclick="alert('В BOX!')">★ В СБОРНИК</div>
-                    <div onclick="alert('СХЕМА: Кадр 1 - Крупно лицо. Кадр 2 - Бегство. Кадр 3 - Титры.')">🎬 СДЕЛАТЬ КЛИП</div>
-                    <div onclick="navigator.clipboard.writeText(\`${txt}\`);alert('Ок!')">🔗 ПЕРЕСЛАТЬ</div>
+                    <div onclick="alert('★ Сохранено!')">★ В СБОРНИК</div>
+                    <div onclick="alert('🎬 СХЕМА ГОТОВА')">🎬 СДЕЛАТЬ КЛИП</div>
+                    <div onclick="navigator.clipboard.writeText(\`${txt}\`);alert('Ok!')">🔗 ПЕРЕСЛАТЬ</div>
                     <div onclick="this.closest('.bubble').remove()" style="color:red">✖ УДАЛИТЬ НАФИГ</div>
                 </div>`;
             wrap.querySelector('.opt-trigger').onclick = (e) => {
