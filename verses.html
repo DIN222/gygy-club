@@ -60,37 +60,36 @@
         input.value = "";
 
         if (!hasConfig) {
-            pushMsg("❌ ОШИБКА: Проверь файл config.js!", true);
+            pushMsg("❌ ОШИБКА: Файл config.js не подгружен!", true);
             btn.disabled = false; return;
         }
 
         const key = (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).trim();
         
-        // Используем стабильную версию v1 вместо v1beta
-        const model = 'gemini-1.5-flash-latest'; 
-        const url = `https://generativelanguage.googleapis.com/v1/models/${model}:generateContent?key=${key}`;
+        // Самый стабильный эндпоинт для Free Tier в 2026-м
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${key}`;
 
         try {
             const response = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    contents: [{ parts: [{ text: "Ты — циничный нуарный комик. Твоя задача: высмеять ситуацию, вставить иронию, но сохранить жесткую рифму в 4 строки. Никакого пафоса, только стеб. Слова: " + val }] }]
+                    contents: [{ parts: [{ text: "Ты — циничный нуарный комик. Высмей ситуацию в 4 строки жесткой рифмы. Тон: ироничный. Слова: " + val }] }]
                 })
             });
             
             const data = await response.json();
 
             if (data.error) {
-                // Если модель всё еще не нравится, попробуем старую добрую 1.5-flash
-                pushMsg(`Гребаный Гугл: ${data.error.message}`, true);
+                // Если и gemini-pro не зашла, значит Google требует gemini-1.5-flash без добавок
+                pushMsg(`Google капризничает: ${data.error.message}`, true);
             } else if (data.candidates && data.candidates[0].content) {
                 pushMsg(data.candidates[0].content.parts[0].text, true);
             } else {
-                pushMsg("❌ Гугл молчит, как партизан на допросе.", true);
+                pushMsg("❌ Пустой ответ. Попробуй другие слова.", true);
             }
         } catch (e) {
-            pushMsg("❌ Ошибка сети. Проверь VPN.", true);
+            pushMsg("❌ Ошибка соединения. Проверь сеть.", true);
         }
 
         btn.disabled = false;
