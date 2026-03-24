@@ -1,73 +1,89 @@
 <!DOCTYPE html><html lang="ru"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY BEUVRY | v6.0.0 Future</title>
+    <title>GY-GY BEUVRY | v6.1.0 Elite</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; display: flex; flex-direction: column; overflow: hidden; }
-        header { height: 65px; display: flex; align-items: center; border-bottom: var(--border); background: #000; padding: 0 10px; box-sizing: border-box; justify-content: space-between; position: relative; }
+        header { height: 65px; display: flex; align-items: center; border-bottom: var(--border); background: #000; padding: 0 20px; box-sizing: border-box; justify-content: space-between; position: relative; }
         .btn-header { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border: var(--border); color: var(--gold); background: none; cursor: pointer; font-size: 1.5rem; }
-        .logo-gy { font-weight: 900; font-size: 1.2rem; letter-spacing: 3px; position: absolute; left: 50%; transform: translateX(-50%); }
-        #chat-wall { flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
-        .msg { padding: 12px; max-width: 85%; font-size: 1.1rem; border-radius: 2px; }
-        .user-msg { align-self: flex-start; border-left: 3px solid var(--gold); background: rgba(255, 215, 0, 0.05); }
-        .ai-msg { align-self: flex-end; border-right: 3px solid #fff; color: #eee; background: rgba(255, 255, 255, 0.1); text-align: right; }
-        footer { height: 85px; display: flex; align-items: center; padding: 0 10px; gap: 8px; border-top: 1px solid #333; }
-        #user-in { flex-grow: 1; background: #000; border: var(--border); color: var(--gold); padding: 14px; outline: none; }
-        .btn-up { width: 50px; height: 50px; background: var(--gold); border: none; font-size: 1.8rem; cursor: pointer; }
+        .logo-gy { font-weight: 900; font-size: 1.3rem; letter-spacing: 4px; position: absolute; left: 50%; transform: translateX(-50%); }
+        .lang-zone { border: var(--border); padding: 5px 8px; font-size: 0.7rem; cursor: pointer; }
+        #chat-wall { flex-grow: 1; overflow-y: auto; padding: 25px; display: flex; flex-direction: column; gap: 20px; }
+        .msg { padding: 15px; max-width: 80%; font-size: 1.1rem; line-height: 1.5; border-radius: 2px; position: relative; }
+        .user-msg { align-self: flex-start; border-left: 2px solid var(--gold); background: rgba(255, 215, 0, 0.03); }
+        .ai-msg { align-self: flex-end; border-right: 2px solid #fff; color: #f0f0f0; background: rgba(255, 255, 255, 0.07); text-align: right; font-style: italic; }
+        footer { height: 90px; display: flex; align-items: center; padding: 0 15px; gap: 10px; border-top: 1px solid #222; }
+        #user-in { flex-grow: 1; background: #000; border: var(--border); color: var(--gold); padding: 15px; outline: none; font-size: 1rem; }
+        .btn-up { width: 55px; height: 55px; background: var(--gold); color: #000; border: none; font-size: 2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     </style></head><body>
 
 <header>
     <div class="btn-header" onclick="location.href='ai_room_core_v8.html'">«</div>
     <div class="logo-gy">GY-GY</div>
-    <div style="font-size:0.5rem; color:red">GEN 3.1</div>
+    <div class="lang-zone">RU</div>
 </header>
 
 <div id="chat-wall">
-    <div class="msg user-msg">Шеф, калибровка завершена. Использую Gemini 3.1 Flash Lite. Давай свои 4 слова.</div>
+    <div class="msg user-msg">Система стабилизирована. Режим авто-каскада активен.</div>
 </div>
 
 <footer>
-    <input type="text" id="user-in" placeholder="Дождь дым пуля финал..." onkeypress="if(event.key==='Enter') send()">
+    <input type="text" id="user-in" placeholder="Ваши слова..." onkeypress="if(event.key==='Enter') send()">
     <button class="btn-up" onclick="send()">↑</button>
 </footer>
 
 <script>
+    const models = ['gemini-3.1-flash-lite-preview', 'gemini-2.0-flash'];
+    
     function getK() { return localStorage.getItem('user_gemini_key') || (typeof BEUVRY_CONFIG !== 'undefined' ? BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2 : ""); }
 
-    async function aiAction(t) {
-        const wall = document.getElementById('chat-wall');
-        const m = document.createElement('div'); m.className = 'ai-msg msg'; m.innerHTML = "<i>Генерация...</i>";
-        wall.appendChild(m);
-
+    async function callAI(text, modelIdx = 0) {
+        if (modelIdx >= models.length) return "Извините, Беври сегодня слишком задумчив. Попробуйте позже.";
+        
         const key = getK();
-        // Используем самую мощную модель из твоего списка
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-preview:generateContent?key=${key}`;
-
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${models[modelIdx]}:generateContent?key=${key}`;
+        
         try {
             const r = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: [{ parts: [{ text: (typeof BEUVRY_CONFIG !== 'undefined' ? BEUVRY_CONFIG.PROMPT : "Пиши нуарный стих.") + "\nТема: " + t }] }] })
+                body: JSON.stringify({ contents: [{ parts: [{ text: (typeof BEUVRY_CONFIG !== 'undefined' ? BEUVRY_CONFIG.PROMPT : "4 строки нуара.") + "\nТема: " + text }] }] })
             });
+            
             const d = await r.json();
             
-            if (d.error) {
-                m.innerHTML = "<b>Ошибка:</b> " + d.error.message;
-            } else if (d.candidates) {
-                m.innerHTML = d.candidates[0].content.parts[0].text.replace(/\n/g, '<br>');
+            // Если модель перегружена (503) или лимит (429), пробуем следующую
+            if (d.error && (d.error.code === 503 || d.error.code === 429)) {
+                console.log(`Model ${models[modelIdx]} busy, switching...`);
+                return await callAI(text, modelIdx + 1);
             }
-        } catch (e) { m.innerHTML = "Сбой связи."; }
-        wall.scrollTop = wall.scrollHeight;
+            
+            if (d.error) return "Ошибка системы: " + d.error.message;
+            return d.candidates[0].content.parts[0].text;
+            
+        } catch (e) { 
+            return await callAI(text, modelIdx + 1); 
+        }
     }
 
-    function send() {
+    async function send() {
         const i = document.getElementById('user-in');
-        if(i.value.trim()){
-            const m = document.createElement('div'); m.className = 'user-msg msg'; m.innerText = i.value;
-            document.getElementById('chat-wall').appendChild(m);
-            aiAction(i.value); i.value = "";
-        }
+        const val = i.value.trim();
+        if(!val) return;
+
+        const wall = document.getElementById('chat-wall');
+        const uM = document.createElement('div'); uM.className = 'msg user-msg'; uM.innerText = val;
+        wall.appendChild(uM);
+        i.value = "";
+
+        const aiM = document.createElement('div'); aiM.className = 'msg ai-msg'; aiM.innerHTML = "<i>...</i>";
+        wall.appendChild(aiM);
+        wall.scrollTop = wall.scrollHeight;
+
+        const response = await callAI(val);
+        aiM.innerHTML = response.replace(/\n/g, '<br>');
+        wall.scrollTop = wall.scrollHeight;
     }
 </script></body></html>
