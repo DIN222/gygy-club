@@ -3,29 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | v7.4.0 REBORN</title>
+    <title>GY-GY | v7.6.0 FIXED</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 2px solid #ffd700; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; display: flex; flex-direction: column; overflow: hidden; }
-        
-        header { height: 65px; display: flex; align-items: center; border-bottom: var(--border); background: #111; padding: 0 15px; box-sizing: border-box; justify-content: space-between; position: sticky; top: 0; z-index: 1000; }
-        .nav-btn { width: 45px; height: 45px; border: var(--border); color: var(--gold); background: #000; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.7rem; box-shadow: 2px 2px 0 var(--gold); }
-        .logo-gy { font-weight: 900; font-size: 1.5rem; letter-spacing: 5px; position: absolute; left: 50%; transform: translateX(-50%); text-shadow: 2px 2px 0 #333; }
-        
-        #wall { flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 20px; background: #000; scroll-behavior: smooth; }
-        .msg { padding: 15px; max-width: 85%; font-size: 1.1rem; border-radius: 2px; position: relative; border: 1px solid #222; }
-        .u { align-self: flex-start; border-left: 4px solid var(--gold); background: rgba(255, 215, 0, 0.05); }
-        .a { align-self: flex-end; border-right: 4px solid #fff; background: rgba(255, 255, 255, 0.05); text-align: right; }
-
-        .menu-dots { cursor: pointer; font-size: 1.5rem; margin-top: 8px; opacity: 0.6; }
-        .drop-menu { display: none; position: absolute; right: 0; top: 100%; background: #111; border: var(--border); z-index: 2000; width: 170px; }
-        .drop-menu div { padding: 12px; font-size: 0.75rem; border-bottom: 1px solid #222; cursor: pointer; text-align: left; }
-        .drop-menu div:hover { background: var(--gold); color: #000; }
-
+        header { height: 65px; display: flex; align-items: center; border-bottom: var(--border); background: #111; padding: 0 15px; justify-content: space-between; position: relative; z-index: 100; }
+        .logo-gy { font-weight: 900; font-size: 1.5rem; letter-spacing: 5px; position: absolute; left: 50%; transform: translateX(-50%); }
+        .nav-btn { width: 50px; height: 45px; border: var(--border); color: var(--gold); background: #000; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.7rem; }
+        #wall { flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .msg { padding: 12px; max-width: 80%; border: 1px solid #333; position: relative; font-size: 1.1rem; }
+        .u { align-self: flex-start; border-left: 4px solid var(--gold); background: rgba(255,215,0,0.05); }
+        .a { align-self: flex-end; border-right: 4px solid #fff; background: rgba(255,255,255,0.05); text-align: right; }
         footer { height: 90px; display: flex; align-items: center; padding: 0 15px; gap: 10px; border-top: var(--border); background: #111; }
         #in { flex-grow: 1; background: #000; border: 1px solid var(--gold); color: var(--gold); padding: 15px; outline: none; font-size: 1.1rem; }
-        .btn-up { width: 60px; height: 60px; background: var(--gold); border: none; font-size: 2.2rem; cursor: pointer; color: #000; font-weight: bold; }
+        .btn-go { width: 60px; height: 60px; background: var(--gold); border: none; font-size: 2.2rem; cursor: pointer; color: #000; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -33,66 +25,71 @@
 <header>
     <div class="nav-btn" onclick="location.reload()">REF</div>
     <div class="logo-gy">GY-GY</div>
-    <div style="display:flex; gap:8px;">
-        <div class="nav-btn" onclick="alert('BOX: Тут будут твои шедевры')">BOX</div>
-        <div class="nav-btn">RU</div>
-    </div>
+    <div class="nav-btn">RU</div>
 </header>
 
 <div id="wall">
-    <div class="msg a">v7.4.0: Жду новый ключ в config.js. <br>Как только обновишь — пиши 4 слова. Будем стебаться по-взрослому!</div>
+    <div class="msg a">v7.6.0: Стрелка обязана работать. <br>Если нет ответа — проверь серый текст под моим сообщением.</div>
 </div>
 
 <footer>
-    <input type="text" id="in" placeholder="Новый ключ — новая жизнь..." onkeypress="if(event.key==='Enter') send()">
-    <button id="go" class="btn-up" onclick="send()">↑</button>
+    <input type="text" id="in" placeholder="Призрак кошки ждет..." onkeypress="if(event.key==='Enter') doSend()">
+    <button id="go" class="btn-go" onclick="doSend()">↑</button>
 </footer>
+
 <script>
     const MODELS = ['gemini-1.5-flash', 'gemini-2.0-flash-exp'];
 
-    // Проверка ключа по клику на лого (для тебя, шеф)
-    let clickCount = 0;
-    document.querySelector('.logo-gy').onclick = () => {
-        clickCount++;
-        if (clickCount >= 3) {
-            const k = (typeof BEUVRY_CONFIG !== 'undefined' ? (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).trim() : "КЛЮЧ НЕ НАЙДЕН");
-            alert(`Диагностика ключа: ${k.substring(0,5)}...${k.slice(-5)}`);
-            clickCount = 0;
-        }
-    };
+    function push(txt, isAi) {
+        const d = document.createElement('div');
+        d.className = `msg ${isAi ? 'a' : 'u'}`;
+        d.innerHTML = txt.replace(/\n/g, '<br>');
+        document.getElementById('wall').appendChild(d);
+        document.getElementById('wall').scrollTop = document.getElementById('wall').scrollHeight;
+    }
 
     async function callAI(text) {
-        const key = (typeof BEUVRY_CONFIG !== 'undefined' ? (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).trim() : "");
-        
-        if (!key || key.length < 10) return "Шеф, ключ пуст или слишком короткий! Проверь config.js.";
+        let key = "";
+        try {
+            key = (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).trim();
+        } catch(e) { return "ОШИБКА: config.js не найден!"; }
+
+        // Тайная диагностика в чат
+        const diag = `(Key Check: ${key.substring(0,4)}...${key.slice(-4)})`;
+        console.log(diag);
 
         for (let m of MODELS) {
             try {
                 const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${key}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: "Ты — едкий нуарный комик. Стебись над словами юзера в 4 строки рифмы. Тон: жесткий юмор. Слова: " + text }] }] })
+                    body: JSON.stringify({ contents: [{ parts: [{ text: "Будь циничным нуарным комиком. 4 строки рифмы. Слова: " + text }] }] })
                 });
-                
-                const d = await r.json();
-                
-                if (d.error) {
-                    console.error("Ошибка Google:", d.error.message);
-                    if (d.error.message.includes("expired")) return "⚠️ Ключ всё еще считается просроченным. Жди или смени ключ.";
-                    if (d.error.message.includes("API key not found")) return "⚠️ Google не видит этот ключ. Ошибка в копипасте.";
-                    continue;
-                }
-
-                if (d.candidates && d.candidates[0].content) {
-                    return d.candidates[0].content.parts[0].text;
-                }
-            } catch (e) { console.error("Сбой сети на " + m); }
+                const data = await r.json();
+                if (data.candidates) return data.candidates[0].content.parts[0].text;
+                if (data.error) return `Гребаный Гугл пишет: ${data.error.message} <br><small style="color:gray">${diag}</small>`;
+            } catch (e) { console.error(m + " fail"); }
         }
-        return "Модели всё еще ворчат. Проверь консоль (F12) или новый ключ!";
+        return "Всё еще курят. <br><small style="color:gray">" + diag + "</small>";
     }
 
-    // Функция send и push остаются как в v7.4.0
-</script>
+    async function doSend() {
+        const input = document.getElementById('in');
+        const btn = document.getElementById('go');
+        const val = input.value.trim();
 
+        if (!val || btn.disabled) return;
+
+        btn.disabled = true;
+        push(val, false);
+        input.value = "";
+
+        const res = await callAI(val);
+        push(res, true);
+        
+        btn.disabled = false;
+        input.focus();
+    }
+</script>
 </body>
 </html>
