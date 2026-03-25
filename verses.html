@@ -3,49 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | CORE v31.0.0</title>
+    <title>GY-GY | CORE v32.0.0</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; display: flex; flex-direction: column; overflow: hidden; }
         
-        /* HEADER & NAVIGATION */
+        /* HEADER */
         .page-header { height: 60px; display: flex; align-items: center; border-bottom: var(--border); background: #111; position: relative; z-index: 1000; }
         .nav-fix { width: 50px; height: 100%; display: flex; align-items: center; justify-content: center; background: #111; cursor: pointer; font-weight: bold; font-size: 1.2rem; text-decoration: none; color: var(--gold); flex-shrink: 0; }
         .header-scroll { flex-grow: 1; display: flex; align-items: center; overflow-x: auto; white-space: nowrap; padding: 0 10px; gap: 20px; scrollbar-width: none; }
         .header-scroll::-webkit-scrollbar { display: none; }
-        .h-item { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.8rem; flex-shrink: 0; }
-        .avatar { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--gold); background: #333; }
         .logo-right { font-weight: 900; letter-spacing: 2px; padding-right: 10px; font-size: 0.9rem; flex-shrink: 0; }
 
         /* LOADING BAR */
         #progress { position: absolute; bottom: 0; left: 0; height: 2px; background: var(--gold); width: 0%; transition: width 0.3s; }
 
-        /* CHAT WALL */
-        #wall { flex-grow: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; background: #000; }
-        .bubble { padding: 12px; max-width: 85%; border: 1px solid #333; line-height: 1.4; font-size: 1.1rem; position: relative; transition: all 0.2s; }
+        /* WALL */
+        #wall { flex-grow: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; }
+        .bubble { padding: 12px; max-width: 85%; border: 1px solid #333; line-height: 1.4; font-size: 1.1rem; position: relative; }
         .u { align-self: flex-start; border-left: 3px solid var(--gold); background: rgba(255,215,0,0.03); color: #fff; }
-        .a { align-self: flex-end; border-right: 3px solid #fff; background: rgba(255,255,255,0.03); text-align: right; }
+        .a { align-self: flex-end; border-right: 3px solid #fff; background: rgba(255,255,255,0.05); text-align: right; }
 
-        /* МЕТАДАННЫЕ (СТИЛЬ) - НЕ КОПИРУЮТСЯ */
-        .style-label { display: block; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; color: var(--gold); margin-bottom: 8px; opacity: 0.5; user-select: none; pointer-events: none; }
-        .edit-zone { outline: none; min-height: 1em; }
-        .edit-zone:focus { color: var(--gold); }
-
-        /* КНОПКА КОПИРОВАНИЯ */
-        .copy-btn { position: absolute; bottom: -10px; right: 10px; background: #111; border: 1px solid var(--gold); color: var(--gold); font-size: 0.6rem; padding: 2px 6px; cursor: pointer; display: none; z-index: 10; border-radius: 2px; }
+        /* LABELS & EDITING */
+        .style-label { display: block; font-size: 0.65rem; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; opacity: 0.5; user-select: none; }
+        .edit-zone { outline: none; }
+        .copy-btn { position: absolute; bottom: -10px; right: 10px; background: #111; border: 1px solid var(--gold); color: var(--gold); font-size: 0.6rem; padding: 2px 6px; cursor: pointer; border-radius: 2px; display: none; }
         .bubble:hover .copy-btn { display: block; }
 
         /* FOOTER */
-        footer { height: 80px; display: flex; align-items: center; padding: 0 10px; gap: 10px; background: #000; border-top: 1px solid #222; }
+        footer { height: 80px; display: flex; align-items: center; padding: 0 10px; gap: 10px; background: #000; border-top: 1px solid #222; position: relative; }
+        .btn-mode { width: 50px; height: 50px; border: 1px solid #444; background: #111; color: var(--gold); cursor: pointer; font-size: 1.2rem; border-radius: 4px; }
         #in { flex-grow: 1; background: #0d0d0d; border: 1px solid #333; color: var(--gold); padding: 15px; font-size: 1rem; outline: none; border-radius: 4px; }
         .btn-ok { padding: 0 20px; height: 50px; background: var(--gold); border: none; color: #000; font-weight: 900; cursor: pointer; border-radius: 4px; }
-        .btn-ok:disabled { background: #444; color: #888; cursor: wait; }
 
-        /* MENU */
-        .act-menu { display: none; position: absolute; top: 62px; left: 50%; transform: translateX(-50%); background: #111; border: var(--border); z-index: 2000; width: 180px; box-shadow: 0 5px 15px rgba(0,0,0,0.8); }
-        .act-item { padding: 12px; border-bottom: 1px solid #222; cursor: pointer; font-size: 0.8rem; color: #fff; }
-        .act-item:hover { color: var(--gold); }
+        /* MENUS */
+        .pop-menu { display: none; position: absolute; background: #111; border: var(--border); z-index: 2000; box-shadow: 0 5px 20px rgba(0,0,0,0.8); }
+        .act-menu { top: 62px; left: 50%; transform: translateX(-50%); width: 180px; }
+        .mode-menu { bottom: 85px; left: 10px; width: 260px; }
+        .m-item { padding: 12px; border-bottom: 1px solid #222; cursor: pointer; font-size: 0.8rem; color: #fff; }
+        .m-item:hover { background: #222; color: var(--gold); }
+        .m-item b { display: block; color: var(--gold); }
     </style>
 </head>
 <body>
@@ -54,8 +52,7 @@
     <a href="ai_room_core_v8.html" class="nav-fix">❮</a>
     <div class="header-scroll">
         <div class="h-item">🌐 <span>RU</span></div>
-        <div class="h-item"><div class="avatar"></div> <span>User_ID</span></div>
-        <div class="h-item" onclick="toggleMenu()">ДЕЙСТВИЯ ▾</div>
+        <div class="h-item" onclick="toggle('actMenu')">ДЕЙСТВИЯ ▾</div>
     </div>
     <div class="logo-right">GY-GY</div>
     <a href="box_page.html" class="nav-fix">❯</a>
@@ -64,105 +61,89 @@
 
 <div id="wall"></div>
 
-<div id="actMenu" class="act-menu">
-    <div class="act-item" onclick="clearWall()">🗑 Удалить всё</div>
-    <div class="act-item" onclick="saveAll()">📦 Сохранить в BOX</div>
+<div id="actMenu" class="pop-menu act-menu">
+    <div class="m-item" onclick="clearWall()">🗑 Удалить</div>
+    <div class="m-item" onclick="saveToBox()">📦 В сборник</div>
+    <div class="m-item">🎬 Сделать клип</div>
+    <div class="m-item">✉️ Переслать</div>
+</div>
+
+<div id="modeMenu" class="pop-menu mode-menu">
+    <div class="m-item" onclick="setM('ø Абсурд', 'абсурдный юмор')"><b>ø Абсурд</b>Безумные связи</div>
+    <div class="m-item" onclick="setM('§ Быт', 'комедия наблюдений')"><b>§ Быт</b>Смешное в обычном</div>
+    <div class="m-item" onclick="setM('† Прожарка', 'инсалт-комедия')"><b>† Прожарка</b>Остро и дерзко</div>
+    <div class="m-item" onclick="setM('¶ Сатира', 'сатира')"><b>¶ Сатира</b>Ирония над важным</div>
+    <div class="m-item" onclick="setM('‡ Хлестко', 'уан-лайнеры')"><b>‡ Хлестко</b>В одну строку</div>
 </div>
 
 <footer>
-    <input type="text" id="in" placeholder="Введи 4 слова для марафона..." onkeydown="if(event.key==='Enter') startMarathon()">
-    <button id="okBtn" class="btn-ok" onclick="startMarathon()">ОК</button>
+    <button class="btn-mode" onclick="toggle('modeMenu')">▲</button>
+    <input type="text" id="in" placeholder="Режим: § Быт | 4 слова..." onkeydown="if(event.key==='Enter') send()">
+    <button id="okBtn" class="btn-ok" onclick="send()">ОК</button>
 </footer>
 
 <script>
-    const MODES = [
-        { name: "🌀 Абсурд", prompt: "абсурдный юмор и странные связи" },
-        { name: "🏠 Быт", prompt: "комедия наблюдений, добродушный стеб" },
-        { name: "🔥 Прожарка", prompt: "инсалт-комедия, острые подколки" },
-        { name: "🎭 Сатира", prompt: "сатира, высмеивание пафоса" },
-        { name: "🎯 Хлестко", prompt: "максимально короткий уан-лайнер" }
-    ];
+    let curDesc = "комедия наблюдений";
+    let curName = "§ Быт";
 
-    function toggleMenu() {
-        const m = document.getElementById('actMenu');
-        m.style.display = m.style.display === 'block' ? 'none' : 'block';
+    function toggle(id) {
+        const el = document.getElementById(id);
+        const show = el.style.display === 'block';
+        document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
+        el.style.display = show ? 'none' : 'block';
     }
 
-    function push(txt, isAi, modeName = "") {
+    function setM(name, desc) {
+        curName = name; curDesc = desc;
+        document.getElementById('in').placeholder = `Режим: ${name} | 4 слова...`;
+        toggle('modeMenu');
+    }
+
+    function push(txt, isAi, mode = "") {
         const wall = document.getElementById('wall');
         const d = document.createElement('div');
         d.className = `bubble ${isAi ? 'a' : 'u'}`;
-        
         if (isAi) {
-            d.innerHTML = `
-                <span class="style-label">${modeName}</span>
-                <div class="edit-zone" contenteditable="true" data-style="${modeName}">${txt.replace(/\n/g, '<br>')}</div>
-                <button class="copy-btn" onclick="copyText(this)">КОПИРОВАТЬ</button>
-            `;
-        } else {
-            d.innerText = txt;
-        }
-        
+            d.innerHTML = `<span class="style-label">${mode}</span>
+            <div class="edit-zone" contenteditable="true">${txt.replace(/\n/g, '<br>')}</div>
+            <button class="copy-btn" onclick="copyText(this)">КОПИРОВАТЬ</button>`;
+        } else { d.innerText = txt; }
         wall.appendChild(d);
         wall.scrollTop = wall.scrollHeight;
     }
 
     function copyText(btn) {
-        const text = btn.parentElement.querySelector('.edit-zone').innerText;
-        navigator.clipboard.writeText(text);
-        const old = btn.innerText;
-        btn.innerText = "ГОТОВО!";
-        setTimeout(() => btn.innerText = old, 1500);
+        navigator.clipboard.writeText(btn.parentElement.querySelector('.edit-zone').innerText);
+        btn.innerText = "ГОТОВО"; setTimeout(() => btn.innerText = "КОПИРОВАТЬ", 1000);
     }
 
-    async function startMarathon() {
+    async function send() {
         const input = document.getElementById('in');
-        const btn = document.getElementById('okBtn');
-        const bar = document.getElementById('progress');
-        const words = input.value.trim();
+        const val = input.value.trim();
+        if (!val) return;
         
-        if (!words || btn.disabled) return;
-        
-        btn.disabled = true;
-        push(words, false);
+        push(val, false);
         input.value = "";
         
+        const bar = document.getElementById('progress');
+        bar.style.width = "100%";
+        
         const key = (typeof BEUVRY_CONFIG !== 'undefined' ? (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).trim() : "");
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${key}`;
-
-        for (let i = 0; i < MODES.length; i++) {
-            bar.style.width = ((i + 1) / MODES.length * 100) + "%";
-            btn.innerText = "...";
-
-            try {
-                const r = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        contents: [{ parts: [{ text: `Стиль: ${MODES[i].prompt}. На основе этих 4 слов напиши ровно 4 строки стиха. Слова: ${words}` }] }] 
-                    })
-                });
-                const d = await r.json();
-                if (d.candidates && d.candidates[0].content) {
-                    push(d.candidates[0].content.parts[0].text, true, MODES[i].name);
-                }
-            } catch (e) {
-                console.error("Fail: " + MODES[i].name);
-            }
-        }
-
+        try {
+            const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${key}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ contents: [{ parts: [{ text: `Стиль: ${curDesc}. Напиши ровно 4 строки на слова: ${val}` }] }] })
+            });
+            const d = await r.json();
+            if (d.candidates) push(d.candidates[0].content.parts[0].text, true, curName);
+        } catch (e) { push("❌ Ошибка связи.", true); }
+        
         bar.style.width = "0%";
-        btn.disabled = false;
-        btn.innerText = "ОК";
-        input.focus();
     }
 
-    function clearWall() { document.getElementById('wall').innerHTML = ""; toggleMenu(); }
-    function saveAll() {
-        const items = document.querySelectorAll('.edit-zone');
-        alert(`Сохранено ${items.length} стихов!`);
-        toggleMenu();
-    }
+    function clearWall() { document.getElementById('wall').innerHTML = ""; toggle('actMenu'); }
+    function saveToBox() { alert("Сохранено!"); toggle('actMenu'); }
 </script>
 </body>
 </html>
