@@ -36,46 +36,39 @@
     <input type="text" id="in" placeholder="Слова..." onkeydown="if(event.key==='Enter') execute()">
     <button id="run" class="go-btn" onclick="execute()">↑</button>
 </footer>
-
 <script>
     async function execute() {
         const i = document.getElementById('in');
         const b = document.getElementById('run');
-        const v = i.value.trim();
-        if (!v || b.disabled) return;
-        
         b.disabled = true;
-        push(v, false);
-        i.value = "";
+        push("Запускаю полную ревизию твоего ключа...", false);
 
         const key = (typeof BEUVRY_CONFIG !== 'undefined' ? (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).trim() : "");
         
-        // ВНИМАНИЕ: Переход на gemini-pro — самую стабильную модель в истории Google API
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${key}`;
+        // Запрос списка доступных моделей
+        const url = `https://generativelanguage.googleapis.com/v1beta/models?key=${key}`;
 
         try {
-            const r = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    contents: [{ parts: [{ text: "Ты — циничный нуарный комик. Твоя задача: высмеять ситуацию, используя иронию и сарказм. Напиши 4 строки жесткой рифмы на слова: " + v }] }] 
-                })
-            });
-
+            const r = await fetch(url);
             const d = await r.json();
 
-            if (d.candidates && d.candidates[0].content) {
-                // ПОБЕДНЫЙ ВЫХОД
-                push(d.candidates[0].content.parts[0].text, true);
+            if (d.models) {
+                let list = "<b>ДОСТУПНЫЕ МОДЕЛИ:</b><br>";
+                d.models.forEach(m => {
+                    // Оставляем только те, что умеют генерировать текст
+                    if (m.supportedGenerationMethods.includes("generateContent")) {
+                        list += `• ${m.name.replace('models/', '')}<br>`;
+                    }
+                });
+                push(list + "<br>Шеф, скопируй этот список мне!", true);
             } else if (d.error) {
-                // Если даже gemini-pro не найдена, выводим список того, что ВООБЩЕ есть
-                push("❌ КРИТИЧЕСКАЯ ОШИБКА: " + d.error.message, true);
+                push("❌ ОШИБКА РЕВИЗИИ: " + d.error.message, true);
             }
         } catch (e) {
-            push("❌ СБОЙ СЕТИ: Провайдер режет коннект.", true);
+            push("❌ СБОЙ: Google заблокировал даже список моделей.", true);
         }
         b.disabled = false;
-        i.focus();
+        i.value = "";
     }
 
     function push(t, isAi) {
@@ -87,5 +80,6 @@
         w.scrollTop = w.scrollHeight;
     }
 </script>
+
 </body>
 </html>
