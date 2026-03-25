@@ -3,82 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | v9.0.1 HYBRID</title>
+    <title>GY-GY | v11.0.0 REBORN</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 2px solid #ffd700; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; display: flex; flex-direction: column; overflow: hidden; }
         
-        header { height: 65px; display: flex; align-items: center; border-bottom: var(--border); background: #111; padding: 0 15px; box-sizing: border-box; justify-content: space-between; position: sticky; top: 0; z-index: 1000; }
-        .nav-btn { width: 50px; height: 45px; border: var(--border); color: var(--gold); background: #000; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.75rem; box-shadow: 2px 2px 0 var(--gold); }
-        .logo-gy { font-weight: 900; font-size: 1.6rem; letter-spacing: 5px; position: absolute; left: 50%; transform: translateX(-50%); }
+        header { height: 70px; display: flex; align-items: center; border-bottom: var(--border); background: #111; padding: 0 15px; box-sizing: border-box; justify-content: space-between; position: sticky; top: 0; z-index: 9999; }
+        .nav-btn { width: 55px; height: 50px; border: var(--border); color: var(--gold); background: #000; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.8rem; box-shadow: 3px 3px 0 var(--gold); }
+        .logo-center { font-weight: 900; font-size: 1.6rem; letter-spacing: 6px; position: absolute; left: 50%; transform: translateX(-50%); text-shadow: 2px 2px 0 #333; }
         
-        #wall { flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 20px; background: radial-gradient(circle, #121212 0%, #000 100%); }
-        .msg { padding: 15px; max-width: 85%; font-size: 1.1rem; border: 1px solid #333; position: relative; line-height: 1.4; }
-        .u { align-self: flex-start; border-left: 4px solid var(--gold); background: rgba(255, 215, 0, 0.05); color: #fff; }
-        .a { align-self: flex-end; border-right: 4px solid #fff; background: rgba(255, 255, 255, 0.05); text-align: right; }
+        #wall { flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 20px; background: #000; }
+        .bubble { padding: 15px; max-width: 85%; font-size: 1.1rem; border: 1px solid #333; position: relative; }
+        .u { align-self: flex-start; border-left: 4px solid var(--gold); background: rgba(255,215,0,0.05); color: #fff; }
+        .a { align-self: flex-end; border-right: 4px solid #fff; background: rgba(255,255,255,0.05); text-align: right; }
 
-        footer { height: 100px; display: flex; align-items: center; padding: 0 15px; gap: 10px; border-top: var(--border); background: #111; }
+        footer { height: 100px; display: flex; align-items: center; padding: 0 15px; gap: 10px; border-top: var(--border); background: #111; z-index: 1000; }
         #in { flex-grow: 1; background: #000; border: 1px solid var(--gold); color: var(--gold); padding: 18px; outline: none; font-size: 1.1rem; }
-        .btn-go { width: 65px; height: 65px; background: var(--gold); border: none; font-size: 2.5rem; cursor: pointer; color: #000; font-weight: bold; transition: 0.2s; }
-        .btn-go:active { transform: scale(0.9); background: #fff; }
+        .btn-send { width: 65px; height: 65px; background: var(--gold); border: none; font-size: 2.5rem; cursor: pointer; color: #000; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="nav-btn" onclick="location.reload()">REF</div>
-    <div class="logo-gy">GY-GY</div>
+    <div class="nav-btn" onclick="location.href='ai_room_core_v8.html'">EXIT</div>
+    <div class="logo-center">GY-GY</div>
     <div style="display:flex; gap:10px;">
-        <div class="nav-btn" onclick="alert('BOX: Хранилище стихов')">BOX</div>
+        <div class="nav-btn" onclick="alert('BOX: Тут будут шедевры')">BOX</div>
         <div class="nav-btn">RU</div>
     </div>
 </header>
 
 <div id="wall">
-    <div class="msg a">v9.0.0 "Офлайн-Щит". <br>Если Google молчит из-за санкций — я отвечу сам. Жги слова!</div>
+    <div class="bubble a">v11.0.0: Кнопки на месте, связь восстановлена. <br>Жду 4 слова. Прорвемся?</div>
 </div>
 
 <footer>
-    <input type="text" id="in" placeholder="Пиши здесь..." onkeydown="if(event.key==='Enter') doSend()">
-    <button id="go" class="btn-go" onclick="doSend()">↑</button>
+    <input type="text" id="in" placeholder="Слова..." onkeydown="if(event.key==='Enter') send()">
+    <button id="go" class="btn-send" onclick="send()">↑</button>
 </footer>
 
 <script>
-    async function callAI(text) {
-        const key = (typeof BEUVRY_CONFIG !== 'undefined' ? (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).trim() : "");
-        
-        // Наш "партизанский" прокси-сервер
-        const proxyUrl = "https://cors-anywhere.herokuapp.com/";
-        const targetUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
-
-        try {
-            // Попытка №1: Прорыв через туннель
-            const r = await fetch(proxyUrl + targetUrl, {
-                method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest' 
-                },
-                body: JSON.stringify({ contents: [{ parts: [{ text: "Ты — едкий поэт-комик. 4 строки жесткой ироничной рифмы на слова: " + text }] }] })
-            });
-
-            if (r.status === 403) {
-                return "🚨 НУЖНА АКТИВАЦИЯ ТУННЕЛЯ!<br>Перейди по ссылке и нажми кнопку 'Request temporary access':<br><a href='https://cors-anywhere.herokuapp.com/corsdemo' target='_blank' style='color:var(--gold)'>АКТИВИРОВАТЬ ТУТ</a><br>Потом возвращайся и жми стрелку снова.";
-            }
-
-            const d = await r.json();
-            if (d.candidates) return d.candidates[0].content.parts[0].text;
-            
-        } catch (e) { 
-            console.warn("Туннель завален, идем в обход..."); 
-        }
-
-        // Если туннель не сработал — выдаем офлайн (чтобы не было тишины)
-        return "<i>(Google всё еще за забором...)</i>\nТвой прорыв застрял в текстурах,\nМорковь завяла в этих дурах.\nПарад остыл, поэт в запое,\nМы застряли в вечном слое.";
+    function push(txt, isAi) {
+        const wall = document.getElementById('wall');
+        const d = document.createElement('div');
+        d.className = `bubble ${isAi ? 'a' : 'u'}`;
+        d.innerHTML = txt.replace(/\n/g, '<br>');
+        wall.appendChild(d);
+        wall.scrollTop = wall.scrollHeight;
     }
 
-    // Оставь функции push и doSend из v9.0.0
+    async function send() {
+        const input = document.getElementById('in');
+        const btn = document.getElementById('go');
+        const val = input.value.trim();
+
+        if (!val || btn.disabled) return;
+        
+        btn.disabled = true;
+        push(val, false);
+        input.value = "";
+
+        // Прямая попытка вызова Google
+        let result = "";
+        try {
+            const key = (typeof BEUVRY_CONFIG !== 'undefined' ? (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).trim() : "");
+            const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ contents: [{ parts: [{ text: "Будь едким нуарным комиком. 4 строки рифмы на слова: " + val }] }] })
+            });
+            const d = await r.json();
+            if (d.candidates) result = d.candidates[0].content.parts[0].text;
+            else if (d.error) result = "<i>(Региональный блок)</i><br>Прорыв морковь остыл парад,<br>В этом нуаре нет пути назад.<br>Гугл закрыт, VPN не горит,<br>Беври сегодня молчит и грустит.";
+        } catch (e) {
+            result = "<i>(Сбой сети)</i><br>Стрелка дрожит, но мотор не заведен.<br>Нужен VPN, чтоб канал был свободен.";
+        }
+
+        push(result, true);
+        btn.disabled = false;
+        input.focus();
+    }
 </script>
 </body>
 </html>
