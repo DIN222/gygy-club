@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | v9.0.0 HYBRID</title>
+    <title>GY-GY | v9.0.1 HYBRID</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 2px solid #ffd700; }
@@ -45,61 +45,40 @@
 </footer>
 
 <script>
-    // Наша база данных цинизма (Офлайн-режим)
-    const BEUVRY_BRAIN = [
-        "Твои слова — пустой вокзал,\nТы зря на кнопки нажимал.\nНуар снаружи, мрак внутри,\nНа этот код во все глаза смотри.",
-        "Призрак кошки, стакан пустой,\nБеври сегодня явно не твой.\nСуета рассвета, в коде изъян,\nТы здесь актер, а не капитан.",
-        "Вечер, бутылка, пьяный поэт,\nВ твоих запросах логики нет.\nGoogle закрылся, VPN — в кусты,\nОстались только я и ты.",
-        "Завел простор, заел мотор,\nТехнический в чате идет террор.\nТихо быть — значит просто ждать,\nПока я буду этот код ломать."
-    ];
-
-    function push(txt, isAi) {
-        const wall = document.getElementById('wall');
-        const d = document.createElement('div');
-        d.className = `msg ${isAi ? 'a' : 'u'}`;
-        d.innerHTML = txt.replace(/\n/g, '<br>');
-        wall.appendChild(d);
-        wall.scrollTop = wall.scrollHeight;
-    }
-
     async function callAI(text) {
         const key = (typeof BEUVRY_CONFIG !== 'undefined' ? (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).trim() : "");
         
-        // Попытка №1: Стучимся в Google
-        if (key && key.length > 20) {
-            try {
-                const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: "Ты — едкий поэт-комик. 4 строки жесткой ироничной рифмы на слова: " + text }] }] })
-                });
-                const d = await r.json();
-                if (d.candidates) return d.candidates[0].content.parts[0].text;
-            } catch (e) { console.warn("Google Blocked or Network Error"); }
+        // Наш "партизанский" прокси-сервер
+        const proxyUrl = "https://cors-anywhere.herokuapp.com/";
+        const targetUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
+
+        try {
+            // Попытка №1: Прорыв через туннель
+            const r = await fetch(proxyUrl + targetUrl, {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest' 
+                },
+                body: JSON.stringify({ contents: [{ parts: [{ text: "Ты — едкий поэт-комик. 4 строки жесткой ироничной рифмы на слова: " + text }] }] })
+            });
+
+            if (r.status === 403) {
+                return "🚨 НУЖНА АКТИВАЦИЯ ТУННЕЛЯ!<br>Перейди по ссылке и нажми кнопку 'Request temporary access':<br><a href='https://cors-anywhere.herokuapp.com/corsdemo' target='_blank' style='color:var(--gold)'>АКТИВИРОВАТЬ ТУТ</a><br>Потом возвращайся и жми стрелку снова.";
+            }
+
+            const d = await r.json();
+            if (d.candidates) return d.candidates[0].content.parts[0].text;
+            
+        } catch (e) { 
+            console.warn("Туннель завален, идем в обход..."); 
         }
 
-        // Попытка №2: Если Google молчит — выдаем свой шедевр
-        const randomRhyme = BEUVRY_BRAIN[Math.floor(Math.random() * BEUVRY_BRAIN.length)];
-        return "<i>(Автономный модуль Беври)</i>\n" + randomRhyme;
+        // Если туннель не сработал — выдаем офлайн (чтобы не было тишины)
+        return "<i>(Google всё еще за забором...)</i>\nТвой прорыв застрял в текстурах,\nМорковь завяла в этих дурах.\nПарад остыл, поэт в запое,\nМы застряли в вечном слое.";
     }
 
-    async function doSend() {
-        const i = document.getElementById('in');
-        const b = document.getElementById('go');
-        const val = i.value.trim();
-
-        if (!val || b.disabled) return;
-
-        b.disabled = true;
-        push(val, false);
-        i.value = "";
-
-        const res = await callAI(val);
-        push(res, true);
-
-        b.disabled = false;
-        i.focus();
-    }
+    // Оставь функции push и doSend из v9.0.0
 </script>
 </body>
 </html>
