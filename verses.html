@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | CORE v26.0.5</title>
+    <title>GY-GY | CORE v27</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
@@ -14,50 +14,48 @@
         .nav-fix { width: 50px; height: 100%; display: flex; align-items: center; justify-content: center; background: #111; cursor: pointer; font-weight: bold; font-size: 1.2rem; flex-shrink: 0; }
         .nav-fix:active { background: var(--gold); color: #000; }
         
-        .header-scroll { flex-grow: 1; display: flex; align-items: center; overflow-x: auto; white-space: nowrap; padding: 0 10px; gap: 20px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+        .header-scroll { flex-grow: 1; display: flex; align-items: center; overflow-x: auto; white-space: nowrap; padding: 0 10px; gap: 20px; scrollbar-width: none; }
         .header-scroll::-webkit-scrollbar { display: none; }
         
         .h-item { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.8rem; flex-shrink: 0; }
         .avatar { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--gold); background: #333; }
+        .logo-right { font-weight: 900; letter-spacing: 2px; padding-right: 10px; font-size: 0.9rem; flex-shrink: 0; }
 
         /* ВЕРХНЕЕ МЕНЮ ДЕЙСТВИЙ */
-        .act-menu { display: none; position: absolute; top: 62px; left: 50%; transform: translateX(-50%); background: #111; border: var(--border); z-index: 2000; width: 180px; box-shadow: 0 5px 15px rgba(0,0,0,0.8); }
+        .act-menu { display: none; position: absolute; top: 62px; left: 50%; transform: translateX(-50%); background: #111; border: var(--border); z-index: 2000; width: 180px; }
         .act-item { padding: 12px; border-bottom: 1px solid #222; cursor: pointer; font-size: 0.8rem; color: #fff; }
-        .act-item:hover { background: #222; color: var(--gold); }
 
         /* ЗОНА ЧАТА */
-        #wall { flex-grow: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; background: #000; }
-        .bubble { padding: 12px; max-width: 80%; border: 1px solid #333; line-height: 1.4; font-size: 1rem; }
-        .u { align-self: flex-start; border-left: 3px solid var(--gold); background: rgba(255,215,0,0.03); color: #fff; }
+        #wall { flex-grow: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; }
+        .bubble { padding: 12px; max-width: 80%; border: 1px solid #333; line-height: 1.4; }
+        .u { align-self: flex-start; border-left: 3px solid var(--gold); background: rgba(255,215,0,0.03); }
         .a { align-self: flex-end; border-right: 3px solid #fff; background: rgba(255,255,255,0.03); text-align: right; }
 
-        /* FOOTER: ТАКТИЧЕСКИЙ ВВОД */
+        /* FOOTER */
         footer { height: 80px; display: flex; align-items: center; padding: 0 10px; gap: 10px; background: #000; border-top: 1px solid #222; position: relative; }
-        .btn-mode { width: 50px; height: 50px; border: 1px solid #444; background: #111; color: var(--gold); cursor: pointer; font-size: 1.2rem; border-radius: 4px; flex-shrink: 0; }
+        .btn-mode { width: 50px; height: 50px; border: 1px solid #444; background: #111; color: var(--gold); cursor: pointer; font-size: 1.2rem; border-radius: 4px; }
         #in { flex-grow: 1; background: #0d0d0d; border: 1px solid #333; color: var(--gold); padding: 15px; font-size: 1rem; outline: none; border-radius: 4px; }
-        #in:focus { border-color: var(--gold); }
-        .btn-ok { padding: 0 20px; height: 50px; background: var(--gold); border: none; color: #000; font-weight: 900; cursor: pointer; border-radius: 4px; flex-shrink: 0; }
+        .btn-ok { padding: 0 20px; height: 50px; background: var(--gold); border: none; color: #000; font-weight: 900; cursor: pointer; border-radius: 4px; }
 
         /* МЕНЮ РЕЖИМОВ (ВВЕРХ) */
-        .mode-menu { display: none; position: absolute; bottom: 85px; left: 10px; background: #111; border: var(--border); z-index: 2000; width: 260px; box-shadow: 0 -5px 20px rgba(0,0,0,0.8); }
+        .mode-menu { display: none; position: absolute; bottom: 85px; left: 10px; background: #111; border: var(--border); z-index: 2000; width: 260px; }
         .mode-option { padding: 12px; border-bottom: 1px solid #222; cursor: pointer; }
         .mode-option b { color: var(--gold); display: block; font-size: 0.85rem; }
         .mode-option span { color: #888; font-size: 0.7rem; }
-        .mode-option:hover { background: #222; }
     </style>
 </head>
 <body>
 
 <header class="page-header">
-    <div class="nav-fix" onclick="history.back()">❮</div>
+    <div class="nav-fix" onclick="location.href='ai_room_core_v8.html'">❮</div>
     
     <div class="header-scroll">
-        <div class="h-item">🌐 <span>RU</span></div>
+        <div class="h-item" onclick="alert('Google Translate Block Placeholder')">🌐 <span id="lang">RU</span></div>
         <div class="h-item"><div class="avatar"></div> <span>User_ID</span></div>
         <div class="h-item" onclick="toggleElement('actMenu')">ДЕЙСТВИЯ ▾</div>
-        <div class="h-item" style="font-weight:900; letter-spacing:2px; opacity:0.7;">GY-GY</div>
     </div>
 
+    <div class="logo-right">GY-GY</div>
     <div class="nav-fix" onclick="location.href='box_page.html'">❯</div>
 
     <div id="actMenu" class="act-menu">
@@ -69,39 +67,41 @@
 </header>
 
 <div id="wall">
-    <div class="bubble a">v26.0.0 CORE System. <br>Сначала выбери стиль слева (▲), затем пиши и жми ОК.</div>
+    <div class="bubble a">v27.0.0. <br>Режимы настроены. Лого справа. Левая стрелка ведет домой.</div>
 </div>
 
 <div id="modeMenu" class="mode-menu">
-    <div class="mode-option" onclick="setMode('🌀 Абсурд', 'Абсурдный юмор и странные связи')"><b>🌀 Абсурд</b><span>Сюрреализм и безумие</span></div>
-    <div class="mode-option" onclick="setMode('🏠 Быт', 'Комедия наблюдений')"><b>🏠 Быт</b><span>Смешное в повседневном</span></div>
-    <div class="mode-option" onclick="setMode('🔥 Прожарка', 'Инсалт-комедия')"><b>🔥 Прожарка</b><span>Дерзко и остроумно</span></div>
-    <div class="mode-option" onclick="setMode('🎭 Сатира', 'Сатирический взгляд')"><b>🎭 Сатира</b><span>Ирония над серьезным</span></div>
-    <div class="mode-option" onclick="setMode('🎯 Хлестко', 'Уан-лайнеры')"><b>🎯 Хлестко</b><span>Коротко, в одну строку</span></div>
+    <div class="mode-option" onclick="setMode('🌀 Абсурд', 'абсурдный и сюрреалистичный юмор')"><b>🌀 Абсурд</b><span>Странные связи и безумие</span></div>
+    <div class="mode-option" onclick="setMode('🏠 Быт', 'комедия наблюдений, добродушный стеб над бытом')"><b>🏠 Быт</b><span>Смешное в повседневном</span></div>
+    <div class="mode-option" onclick="setMode('🔥 Прожарка', 'инсалт-комедия, дерзкие и острые подколки')"><b>🔥 Прожарка</b><span>Остро и безжалостно</span></div>
+    <div class="mode-option" onclick="setMode('🎭 Сатира', 'сатира, высмеивание серьезности и пафоса')"><b>🎭 Сатира</b><span>Ирония над важным</span></div>
+    <div class="mode-option" onclick="setMode('🎯 Хлестко', 'уан-лайнеры, максимально короткие и емкие шутки')"><b>🎯 Хлестко</b><span>В одну строку</span></div>
 </div>
 
 <footer>
     <button class="btn-mode" onclick="toggleElement('modeMenu')">▲</button>
-    <input type="text" id="in" placeholder="Настрой стиль и пиши..." onkeydown="if(event.key==='Enter') send()">
+    <input type="text" id="in" placeholder="Стиль: Быт..." onkeydown="if(event.key==='Enter') send()">
     <button class="btn-ok" onclick="send()">ОК</button>
 </footer>
 
 <script>
-    let currentMode = "Комедия наблюдений";
+    let currentModeDesc = "комедия наблюдений, добродушный стеб над бытом";
+    let currentModeName = "🏠 Быт";
 
     function toggleElement(id) {
         const el = document.getElementById(id);
         const isVisible = el.style.display === 'block';
-        // Закрываем все меню перед открытием нужного
         document.getElementById('modeMenu').style.display = 'none';
         document.getElementById('actMenu').style.display = 'none';
         el.style.display = isVisible ? 'none' : 'block';
     }
 
     function setMode(name, desc) {
-        currentMode = desc;
+        currentModeName = name;
+        currentModeDesc = desc;
+        document.getElementById('in').placeholder = "Стиль: " + name.split(' ')[1];
         document.getElementById('modeMenu').style.display = 'none';
-        push(`РЕЖИМ: ${name}`, true);
+        push(`УСТАНОВЛЕН РЕЖИМ: ${name}`, true);
     }
 
     function push(txt, isAi) {
@@ -131,27 +131,20 @@
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
-                    contents: [{ parts: [{ text: `Стиль: ${currentMode}. Тон: Добродушно-насмешливый. Высмей несуразное в 4 строки на слова: ${val}` }] }] 
+                    contents: [{ parts: [{ text: `Ты — мастер юмора. Твой стиль сейчас: ${currentModeDesc}. Напиши 4 строки (или меньше) на слова: ${val}. Тон должен строго соответствовать стилю.` }] }] 
                 })
             });
             const d = await r.json();
             if (d.candidates) push(d.candidates[0].content.parts[0].text, true);
         } catch (e) {
-            push("❌ Сбой связи.", true);
+            push("❌ Ошибка связи.", true);
         }
         btn.disabled = false;
         input.focus();
     }
 
-    function clearWall() {
-        document.getElementById('wall').innerHTML = "";
-        toggleElement('actMenu');
-    }
-
-    function saveToBox() {
-        alert("Сохранено в BOX!");
-        toggleElement('actMenu');
-    }
+    function clearWall() { document.getElementById('wall').innerHTML = ""; toggleElement('actMenu'); }
+    function saveToBox() { alert("Сохранено в BOX!"); toggleElement('actMenu'); }
 </script>
 </body>
 </html>
