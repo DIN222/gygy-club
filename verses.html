@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | v16.0.3 FINAL</title>
+    <title>GY-GY | v16.0.4 FINAL</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 2px solid #ffd700; }
@@ -18,24 +18,76 @@
         footer { height: 100px; display: flex; align-items: center; padding: 0 15px; gap: 10px; border-top: var(--border); background: #111; }
         #in { flex-grow: 1; background: #000; border: 1px solid var(--gold); color: var(--gold); padding: 18px; font-size: 1.1rem; outline: none; }
         .go-btn { width: 65px; height: 65px; background: var(--gold); border: none; font-size: 2.5rem; cursor: pointer; color: #000; font-weight: bold; }
-    </style>
-</head>
-<body>
+   <style>
+    /* ОБНОВЛЕННЫЙ ПОДВАЛ: ЛОГИЧНЫЙ ПОРЯДОК */
+    footer { 
+        height: 80px; 
+        display: flex; 
+        align-items: center; 
+        padding: 0 10px; 
+        gap: 10px; 
+        background: #000; 
+        border-top: 1px solid #222; 
+    }
 
-<header>
-    <div class="nav-btn" onclick="location.href='ai_room_core_v8.html'">EXIT</div>
-    <div class="logo">GY-GY</div>
-    <div class="nav-btn">RU</div>
-</header>
+    /* Кнопка выбора режима - ТЕПЕРЬ ПЕРВАЯ */
+    .btn-mode { 
+        width: 50px; 
+        height: 50px; 
+        border: 1px solid #444; 
+        background: #111; 
+        color: var(--gold); 
+        cursor: pointer; 
+        font-size: 1.2rem; 
+        border-radius: 4px;
+        flex-shrink: 0;
+    }
 
-<div id="wall">
-    <div class="msg a">v16.0.0. Больше никаких оправданий. Либо ИИ шутит, либо мы признаем, что ключ мертв. Пиши.</div>
-</div>
+    /* Поле ввода - В ЦЕНТРЕ */
+    #in { 
+        flex-grow: 1; 
+        background: #0d0d0d; 
+        border: 1px solid #333; 
+        color: var(--gold); 
+        padding: 15px; 
+        font-size: 1rem; 
+        outline: none; 
+        border-radius: 4px;
+        min-width: 50px;
+    }
+
+    /* Кнопка ОК - ФИНАЛЬНАЯ */
+    .btn-ok { 
+        padding: 0 20px; 
+        height: 50px; 
+        background: var(--gold); 
+        border: none; 
+        color: #000; 
+        font-weight: 900; 
+        cursor: pointer; 
+        border-radius: 4px;
+        flex-shrink: 0;
+    }
+
+    /* МЕНЮ РЕЖИМОВ (Теперь привязано к левой кнопке) */
+    .mode-menu { 
+        display: none; 
+        position: absolute; 
+        bottom: 85px; 
+        left: 10px; /* Вылетает слева, над своей кнопкой */
+        background: #111; 
+        border: var(--border); 
+        z-index: 1000; 
+        width: 260px; 
+        box-shadow: 0 -5px 15px rgba(0,0,0,0.5);
+    }
+</style>
 
 <footer>
-    <input type="text" id="in" placeholder="Слова..." onkeydown="if(event.key==='Enter') execute()">
-    <button id="run" class="go-btn" onclick="execute()">↑</button>
-</footer>
+    <button class="btn-mode" onclick="toggleMenu('modeMenu')">▲</button>
+    <input type="text" id="in" placeholder="Сначала режим, потом текст..." onkeydown="if(event.key==='Enter') send()">
+    <button class="btn-ok" onclick="send()">ОК</button>
+</footer> 
 <script>
     async function execute() {
         const i = document.getElementById('in');
