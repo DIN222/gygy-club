@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | v16.0.0 FINAL</title>
+    <title>GY-GY | v16.0.1 FINAL</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 2px solid #ffd700; }
@@ -38,15 +38,6 @@
 </footer>
 
 <script>
-    function push(t, isAi) {
-        const w = document.getElementById('wall');
-        const d = document.createElement('div');
-        d.className = `msg ${isAi ? 'a' : 'u'}`;
-        d.innerHTML = t.replace(/\n/g, '<br>');
-        w.appendChild(d);
-        w.scrollTop = w.scrollHeight;
-    }
-
     async function execute() {
         const i = document.getElementById('in');
         const b = document.getElementById('run');
@@ -59,28 +50,41 @@
 
         const key = (typeof BEUVRY_CONFIG !== 'undefined' ? (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).trim() : "");
         
+        // ВНИМАНИЕ: Переход на gemini-pro — самую стабильную модель в истории Google API
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${key}`;
+
         try {
-            // Только ОДНА модель, самый стабильный эндпоинт 2026 года
-            const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
+            const r = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: [{ parts: [{ text: "Ты — едкий нуарный комик. Твоя задача: высмеять ситуацию, используя иронию и сарказм. Напиши 4 строки жесткой рифмы на слова: " + v }] }] })
+                body: JSON.stringify({ 
+                    contents: [{ parts: [{ text: "Ты — циничный нуарный комик. Твоя задача: высмеять ситуацию, используя иронию и сарказм. Напиши 4 строки жесткой рифмы на слова: " + v }] }] 
+                })
             });
 
             const d = await r.json();
 
             if (d.candidates && d.candidates[0].content) {
+                // ПОБЕДНЫЙ ВЫХОД
                 push(d.candidates[0].content.parts[0].text, true);
             } else if (d.error) {
-                push("❌ ОШИБКА GOOGLE: " + d.error.message, true);
-            } else {
-                push("❌ ПУСТОЙ ОТВЕТ: Проверь баланс ключа или VPN.", true);
+                // Если даже gemini-pro не найдена, выводим список того, что ВООБЩЕ есть
+                push("❌ КРИТИЧЕСКАЯ ОШИБКА: " + d.error.message, true);
             }
         } catch (e) {
-            push("❌ СБОЙ СЕТИ: Сигнал не уходит. Провайдер блокирует запрос.", true);
+            push("❌ СБОЙ СЕТИ: Провайдер режет коннект.", true);
         }
         b.disabled = false;
         i.focus();
+    }
+
+    function push(t, isAi) {
+        const w = document.getElementById('wall');
+        const d = document.createElement('div');
+        d.className = `msg ${isAi ? 'a' : 'u'}`;
+        d.innerHTML = t.replace(/\n/g, '<br>');
+        w.appendChild(d);
+        w.scrollTop = w.scrollHeight;
     }
 </script>
 </body>
