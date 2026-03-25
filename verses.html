@@ -57,9 +57,9 @@
             const r = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    contents: [{ parts: [{ text: "Ты — едкий нуарный комик Беври. Высмей ситуацию в 4 строки жесткой рифмы. Тон: ироничный, нуарный. Слова: " + v }] }] 
-                })
+               body: JSON.stringify({ 
+    contents: [{ parts: [{ text: "Ты — добродушно-насмешливый поэт. Твой стиль: ирония, умение подмечать забавное и несуразное в жизни. Избегай мрачности и депрессии. Напиши 4 строки веселого, подтрунивающего стиха на слова: " + v }] }] 
+})
             });
 
             const d = await r.json();
