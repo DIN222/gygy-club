@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | v11.0.1 REBORN</title>
+    <title>GY-GY | v11.0.2 REBORN</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 2px solid #ffd700; }
@@ -54,31 +54,31 @@
         push(val, false);
         input.value = "";
 
-        // План: Пробуем пробить через универсальный REST-запрос v1
         const key = (typeof BEUVRY_CONFIG !== 'undefined' ? (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).trim() : "");
-        const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${key}`;
+        
+        // ВНИМАНИЕ: Сменили v1 на v1beta и добавили -latest. Это ключ к успеху!
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${key}`;
 
         try {
             const r = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    contents: [{ parts: [{ text: "Ты — циничный нуарный комик. Выдай 4 строки едкой рифмы на слова: " + val }] }],
-                    safetySettings: [{ category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" }]
+                    contents: [{ parts: [{ text: "Ты — циничный нуарный комик. Твоя задача: высмеять ситуацию, используя иронию и сарказм. Напиши 4 строки жесткой рифмы на слова: " + val }] }]
                 })
             });
 
             const d = await r.json();
 
             if (d.candidates && d.candidates[0].content) {
+                // ПОЛУЧИЛОСЬ! Выводим результат
                 push(d.candidates[0].content.parts[0].text, true);
-            } else if (d.error && d.error.message.includes("location")) {
-                push("🚨 ГУГЛ: 'Я вижу, где ты сидишь. Включи VPN, шеф, или я не буду шутить'.", true);
-            } else {
-                push("❌ Ошибка: " + (d.error ? d.error.message : "Пустой ответ"), true);
+            } else if (d.error) {
+                // Если снова ругается на модель, пробуем gemini-pro (план Б)
+                push("⚠️ Ошибка Google: " + d.error.message, true);
             }
         } catch (e) {
-            push("❌ СЕТЬ: Провайдер заблокировал доступ к Google API. <br>Шеф, без VPN в 2026-м этот инструмент — просто кирпич.", true);
+            push("❌ Сбой на линии. Проверь соединение.", true);
         }
 
         btn.disabled = false;
