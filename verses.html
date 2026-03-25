@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | v11.0.0 REBORN</title>
+    <title>GY-GY | v11.0.1 REBORN</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 2px solid #ffd700; }
@@ -44,6 +44,47 @@
 </footer>
 
 <script>
+    async function send() {
+        const input = document.getElementById('in');
+        const btn = document.getElementById('go');
+        const val = input.value.trim();
+
+        if (!val || btn.disabled) return;
+        btn.disabled = true;
+        push(val, false);
+        input.value = "";
+
+        // План: Пробуем пробить через универсальный REST-запрос v1
+        const key = (typeof BEUVRY_CONFIG !== 'undefined' ? (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).trim() : "");
+        const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${key}`;
+
+        try {
+            const r = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: "Ты — циничный нуарный комик. Выдай 4 строки едкой рифмы на слова: " + val }] }],
+                    safetySettings: [{ category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" }]
+                })
+            });
+
+            const d = await r.json();
+
+            if (d.candidates && d.candidates[0].content) {
+                push(d.candidates[0].content.parts[0].text, true);
+            } else if (d.error && d.error.message.includes("location")) {
+                push("🚨 ГУГЛ: 'Я вижу, где ты сидишь. Включи VPN, шеф, или я не буду шутить'.", true);
+            } else {
+                push("❌ Ошибка: " + (d.error ? d.error.message : "Пустой ответ"), true);
+            }
+        } catch (e) {
+            push("❌ СЕТЬ: Провайдер заблокировал доступ к Google API. <br>Шеф, без VPN в 2026-м этот инструмент — просто кирпич.", true);
+        }
+
+        btn.disabled = false;
+        input.focus();
+    }
+
     function push(txt, isAi) {
         const wall = document.getElementById('wall');
         const d = document.createElement('div');
@@ -51,38 +92,6 @@
         d.innerHTML = txt.replace(/\n/g, '<br>');
         wall.appendChild(d);
         wall.scrollTop = wall.scrollHeight;
-    }
-
-    async function send() {
-        const input = document.getElementById('in');
-        const btn = document.getElementById('go');
-        const val = input.value.trim();
-
-        if (!val || btn.disabled) return;
-        
-        btn.disabled = true;
-        push(val, false);
-        input.value = "";
-
-        // Прямая попытка вызова Google
-        let result = "";
-        try {
-            const key = (typeof BEUVRY_CONFIG !== 'undefined' ? (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).trim() : "");
-            const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: [{ parts: [{ text: "Будь едким нуарным комиком. 4 строки рифмы на слова: " + val }] }] })
-            });
-            const d = await r.json();
-            if (d.candidates) result = d.candidates[0].content.parts[0].text;
-            else if (d.error) result = "<i>(Региональный блок)</i><br>Прорыв морковь остыл парад,<br>В этом нуаре нет пути назад.<br>Гугл закрыт, VPN не горит,<br>Беври сегодня молчит и грустит.";
-        } catch (e) {
-            result = "<i>(Сбой сети)</i><br>Стрелка дрожит, но мотор не заведен.<br>Нужен VPN, чтоб канал был свободен.";
-        }
-
-        push(result, true);
-        btn.disabled = false;
-        input.focus();
     }
 </script>
 </body>
