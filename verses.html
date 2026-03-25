@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | v11.0.2 REBORN</title>
+    <title>GY-GY | v11.0.3 REBORN</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 2px solid #ffd700; }
@@ -56,29 +56,44 @@
 
         const key = (typeof BEUVRY_CONFIG !== 'undefined' ? (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).trim() : "");
         
-        // ВНИМАНИЕ: Сменили v1 на v1beta и добавили -latest. Это ключ к успеху!
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${key}`;
+        // Список актуальных моделей 2026 года для перебора
+        const models = [
+            'gemini-1.5-flash', 
+            'gemini-1.5-pro', 
+            'gemini-2.0-flash-exp', 
+            'gemini-pro'
+        ];
 
-        try {
-            const r = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: "Ты — циничный нуарный комик. Твоя задача: высмеять ситуацию, используя иронию и сарказм. Напиши 4 строки жесткой рифмы на слова: " + val }] }]
-                })
-            });
+        let success = false;
 
-            const d = await r.json();
+        for (let modelName of models) {
+            if (success) break;
+            try {
+                // Используем v1beta как самую гибкую версию
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${key}`;
+                const r = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: "Ты — циничный нуарный комик. Выдай 4 строки едкой рифмы на слова: " + val }] }]
+                    })
+                });
 
-            if (d.candidates && d.candidates[0].content) {
-                // ПОЛУЧИЛОСЬ! Выводим результат
-                push(d.candidates[0].content.parts[0].text, true);
-            } else if (d.error) {
-                // Если снова ругается на модель, пробуем gemini-pro (план Б)
-                push("⚠️ Ошибка Google: " + d.error.message, true);
+                const d = await r.json();
+
+                if (d.candidates && d.candidates[0].content) {
+                    push(d.candidates[0].content.parts[0].text, true);
+                    success = true;
+                } else {
+                    console.warn(`Модель ${modelName} не ответила, пробую следующую...`);
+                }
+            } catch (e) {
+                console.error(`Ошибка связи с ${modelName}`);
             }
-        } catch (e) {
-            push("❌ Сбой на линии. Проверь соединение.", true);
+        }
+
+        if (!success) {
+            push("❌ Шеф, Google сегодня в коме. Ни одна модель не отозвалась. Попробуй через 5 минут или проверь ключ в config.js.", true);
         }
 
         btn.disabled = false;
