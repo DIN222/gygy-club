@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | CORE v32.0.0</title>
+    <title>GY-GY | CORE v33.0.0</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
@@ -13,10 +13,10 @@
         .page-header { height: 60px; display: flex; align-items: center; border-bottom: var(--border); background: #111; position: relative; z-index: 1000; }
         .nav-fix { width: 50px; height: 100%; display: flex; align-items: center; justify-content: center; background: #111; cursor: pointer; font-weight: bold; font-size: 1.2rem; text-decoration: none; color: var(--gold); flex-shrink: 0; }
         .header-scroll { flex-grow: 1; display: flex; align-items: center; overflow-x: auto; white-space: nowrap; padding: 0 10px; gap: 20px; scrollbar-width: none; }
-        .header-scroll::-webkit-scrollbar { display: none; }
         .logo-right { font-weight: 900; letter-spacing: 2px; padding-right: 10px; font-size: 0.9rem; flex-shrink: 0; }
+        .avatar { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--gold); background: #333; flex-shrink: 0; }
 
-        /* LOADING BAR */
+        /* PROGRESS BAR */
         #progress { position: absolute; bottom: 0; left: 0; height: 2px; background: var(--gold); width: 0%; transition: width 0.3s; }
 
         /* WALL */
@@ -25,7 +25,6 @@
         .u { align-self: flex-start; border-left: 3px solid var(--gold); background: rgba(255,215,0,0.03); color: #fff; }
         .a { align-self: flex-end; border-right: 3px solid #fff; background: rgba(255,255,255,0.05); text-align: right; }
 
-        /* LABELS & EDITING */
         .style-label { display: block; font-size: 0.65rem; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; opacity: 0.5; user-select: none; }
         .edit-zone { outline: none; }
         .copy-btn { position: absolute; bottom: -10px; right: 10px; background: #111; border: 1px solid var(--gold); color: var(--gold); font-size: 0.6rem; padding: 2px 6px; cursor: pointer; border-radius: 2px; display: none; }
@@ -52,6 +51,7 @@
     <a href="ai_room_core_v8.html" class="nav-fix">❮</a>
     <div class="header-scroll">
         <div class="h-item">🌐 <span>RU</span></div>
+        <div class="h-item"><div class="avatar" id="userAvatar"></div> <span>User_ID</span></div>
         <div class="h-item" onclick="toggle('actMenu')">ДЕЙСТВИЯ ▾</div>
     </div>
     <div class="logo-right">GY-GY</div>
@@ -69,11 +69,11 @@
 </div>
 
 <div id="modeMenu" class="pop-menu mode-menu">
-    <div class="m-item" onclick="setM('ø Абсурд', 'абсурдный юмор')"><b>ø Абсурд</b>Безумные связи</div>
-    <div class="m-item" onclick="setM('§ Быт', 'комедия наблюдений')"><b>§ Быт</b>Смешное в обычном</div>
-    <div class="m-item" onclick="setM('† Прожарка', 'инсалт-комедия')"><b>† Прожарка</b>Остро и дерзко</div>
-    <div class="m-item" onclick="setM('¶ Сатира', 'сатира')"><b>¶ Сатира</b>Ирония над важным</div>
-    <div class="m-item" onclick="setM('‡ Хлестко', 'уан-лайнеры')"><b>‡ Хлестко</b>В одну строку</div>
+    <div class="m-item" onclick="setM('ø Абсурд', 'абсурдный юмор, ровно 4 строки')"><b>ø Абсурд</b>Безумные связи</div>
+    <div class="m-item" onclick="setM('§ Быт', 'комедия наблюдений, ровно 4 строки')"><b>§ Быт</b>Смешное в обычном</div>
+    <div class="m-item" onclick="setM('† Прожарка', 'инсалт-комедия, ровно 4 строки')"><b>† Прожарка</b>Остро и дерзко</div>
+    <div class="m-item" onclick="setM('¶ Сатира', 'сатирический взгляд, ровно 4 строки')"><b>¶ Сатира</b>Ирония над важным</div>
+    <div class="m-item" onclick="setM('‡ Хлестко', 'максимально краткий уан-лайнер, 1 или 2 строки')"><b>‡ Хлестко</b>Коротко и в точку</div>
 </div>
 
 <footer>
@@ -83,14 +83,14 @@
 </footer>
 
 <script>
-    let curDesc = "комедия наблюдений";
+    let curDesc = "комедия наблюдений, ровно 4 строки";
     let curName = "§ Быт";
 
     function toggle(id) {
         const el = document.getElementById(id);
-        const show = el.style.display === 'block';
+        const isShow = el.style.display === 'block';
         document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
-        el.style.display = show ? 'none' : 'block';
+        el.style.display = isShow ? 'none' : 'block';
     }
 
     function setM(name, desc) {
@@ -114,7 +114,7 @@
 
     function copyText(btn) {
         navigator.clipboard.writeText(btn.parentElement.querySelector('.edit-zone').innerText);
-        btn.innerText = "ГОТОВО"; setTimeout(() => btn.innerText = "КОПИРОВАТЬ", 1000);
+        btn.innerText = "OK!"; setTimeout(() => btn.innerText = "КОПИРОВАТЬ", 1000);
     }
 
     async function send() {
@@ -133,7 +133,7 @@
             const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${key}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: [{ parts: [{ text: `Стиль: ${curDesc}. Напиши ровно 4 строки на слова: ${val}` }] }] })
+                body: JSON.stringify({ contents: [{ parts: [{ text: `Твоя роль: Мастер юмора Беври. Стиль: ${curDesc}. Используй слова: ${val}. Напиши только текст юмора, без лишних вступлений.` }] }] })
             });
             const d = await r.json();
             if (d.candidates) push(d.candidates[0].content.parts[0].text, true, curName);
