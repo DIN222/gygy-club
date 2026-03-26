@@ -104,17 +104,57 @@
         toggle('modeMenu');
     }
 
-    function push(txt, isAi, mode = "") {
-        const wall = document.getElementById('wall');
-        const d = document.createElement('div');
-        d.className = `bubble ${isAi ? 'a' : 'u'}`;
-        if (isAi) {
-            d.innerHTML = `<span class="style-label">${mode}</span>
+  // ОБНОВЛЕННАЯ ФУНКЦИЯ ВЫВОДА (добавь/замени в скрипте)
+function push(txt, isAi, mode = "") {
+    const wall = document.getElementById('wall');
+    const d = document.createElement('div');
+    d.className = `bubble ${isAi ? 'a' : 'u'}`;
+    
+    if (isAi) {
+        d.innerHTML = `
+            <span class="style-label">${mode}</span>
             <div class="edit-zone" contenteditable="true" data-style="${mode}">${txt.replace(/\n/g, '<br>')}</div>
-            <button class="copy-btn" onclick="copyText(this)">КОПИРОВАТЬ</button>`;
-        } else { d.innerText = txt; }
-        wall.appendChild(d);
-        wall.scrollTop = wall.scrollHeight;
+            <div class="bubble-btns">
+                <button class="copy-btn" onclick="copyText(this)">КОПИРОВАТЬ</button>
+                <button class="save-btn" onclick="saveOne(this)">В БОКС</button>
+            </div>
+        `;
+    } else { 
+        d.innerText = txt; 
+    }
+    
+    wall.appendChild(d);
+    wall.scrollTop = wall.scrollHeight;
+}
+
+// НОВАЯ ФУНКЦИЯ СОХРАНЕНИЯ ОДНОГО СТИХА
+function saveOne(btn) {
+    const parent = btn.parentElement.parentElement;
+    const text = parent.querySelector('.edit-zone').innerText;
+    const style = parent.querySelector('.edit-zone').getAttribute('data-style');
+    
+    let items = JSON.parse(localStorage.getItem('gygy_box') || '[]');
+    
+    items.push({
+        text: text,
+        mode: style,
+        date: new Date().toLocaleString()
+    });
+    
+    localStorage.setItem('gygy_box', JSON.stringify(items));
+    
+    // Анимация кнопки
+    btn.innerText = "ЕСТЬ!";
+    btn.style.borderColor = "#fff";
+    btn.style.color = "#fff";
+    setTimeout(() => {
+        btn.innerText = "В БОКС";
+        btn.style.borderColor = "var(--gold)";
+        btn.style.color = "var(--gold)";
+    }, 1500);
+}
+
+// ДОБАВЬ ЭТИ СТИЛИ В БЛОК <style>
     }
 
     async function send() {
