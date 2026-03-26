@@ -4,8 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | CORE v33.0.0</title>
+    <title>GY-GY | CORE v33.2.0</title>
     <script src="config.js"></script>
+    
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateInit"></script>
+    
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; display: flex; flex-direction: column; overflow: hidden; }
@@ -13,7 +16,15 @@
         /* HEADER */
         .page-header { height: 60px; display: flex; align-items: center; border-bottom: var(--border); background: #111; position: relative; z-index: 1000; }
         .nav-fix { width: 50px; height: 100%; display: flex; align-items: center; justify-content: center; background: #111; cursor: pointer; font-weight: bold; font-size: 1.2rem; text-decoration: none; color: var(--gold); flex-shrink: 0; }
-        .header-scroll { flex-grow: 1; display: flex; align-items: center; overflow-x: auto; white-space: nowrap; padding: 0 10px; gap: 20px; scrollbar-width: none; }
+        .header-scroll { flex-grow: 1; display: flex; align-items: center; overflow-x: auto; white-space: nowrap; padding: 0 10px; gap: 15px; scrollbar-width: none; }
+        
+        /* Стилизация Google Translate под наш дизайн */
+        #google_translate_element { height: 38px; overflow: hidden; opacity: 0.8; }
+        .goog-te-gadget-simple { background-color: #111 !important; border: 1px solid #333 !important; padding: 5px !important; border-radius: 4px !important; }
+        .goog-te-gadget-simple span { color: var(--gold) !important; font-family: 'Courier New', monospace !important; font-size: 0.7rem !important; }
+        .goog-te-banner-frame.skiptranslate { display: none !important; }
+        body { top: 0px !important; }
+
         .logo-right { font-weight: 900; letter-spacing: 2px; padding-right: 10px; font-size: 0.9rem; flex-shrink: 0; }
         .avatar { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--gold); background: #333; flex-shrink: 0; }
 
@@ -26,7 +37,7 @@
         .u { align-self: flex-start; border-left: 3px solid var(--gold); background: rgba(255,215,0,0.03); color: #fff; }
         .a { align-self: flex-end; border-right: 3px solid #fff; background: rgba(255,255,255,0.05); text-align: right; }
 
-        .style-label { display: block; font-size: 0.65rem; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; opacity: 0.5; user-select: none; }
+        .style-label { display: block; font-size: 0.65rem; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; opacity: 0.5; }
         .edit-zone { outline: none; }
         .copy-btn { position: absolute; bottom: -10px; right: 10px; background: #111; border: 1px solid var(--gold); color: var(--gold); font-size: 0.6rem; padding: 2px 6px; cursor: pointer; border-radius: 2px; display: none; }
         .bubble:hover .copy-btn { display: block; }
@@ -38,12 +49,10 @@
         .btn-ok { padding: 0 20px; height: 50px; background: var(--gold); border: none; color: #000; font-weight: 900; cursor: pointer; border-radius: 4px; }
 
         /* MENUS */
-        .pop-menu { display: none; position: absolute; background: #111; border: var(--border); z-index: 2000; box-shadow: 0 5px 20px rgba(0,0,0,0.8); }
+        .pop-menu { display: none; position: absolute; background: #111; border: var(--border); z-index: 2000; }
         .act-menu { top: 62px; left: 50%; transform: translateX(-50%); width: 180px; }
         .mode-menu { bottom: 85px; left: 10px; width: 260px; }
         .m-item { padding: 12px; border-bottom: 1px solid #222; cursor: pointer; font-size: 0.8rem; color: #fff; }
-        .m-item:hover { background: #222; color: var(--gold); }
-        .m-item b { display: block; color: var(--gold); }
     </style>
 </head>
 <body>
@@ -51,9 +60,9 @@
 <header class="page-header">
     <a href="ai_room_core_v8.html" class="nav-fix">❮</a>
     <div class="header-scroll">
-        <div class="h-item">🌐 <span>RU</span></div>
-        <div class="h-item"><div class="avatar" id="userAvatar"></div> <span>User_ID</span></div>
-        <div class="h-item" onclick="toggle('actMenu')">ДЕЙСТВИЯ ▾</div>
+        <div id="google_translate_element"></div>
+        <div class="avatar"></div>
+        <div class="h-item" onclick="toggle('actMenu')" style="cursor:pointer">ДЕЙСТВИЯ ▾</div>
     </div>
     <div class="logo-right">GY-GY</div>
     <a href="box_page.html" class="nav-fix">❯</a>
@@ -70,11 +79,11 @@
 </div>
 
 <div id="modeMenu" class="pop-menu mode-menu">
-    <div class="m-item" onclick="setM('ø Абсурд', 'абсурдный юмор, ровно 4 строки')"><b>ø Абсурд</b>Безумные связи</div>
-    <div class="m-item" onclick="setM('§ Быт', 'комедия наблюдений, ровно 4 строки')"><b>§ Быт</b>Смешное в обычном</div>
-    <div class="m-item" onclick="setM('† Прожарка', 'инсалт-комедия, ровно 4 строки')"><b>† Прожарка</b>Остро и дерзко</div>
-    <div class="m-item" onclick="setM('¶ Сатира', 'сатирический взгляд, ровно 4 строки')"><b>¶ Сатира</b>Ирония над важным</div>
-    <div class="m-item" onclick="setM('‡ Хлестко', 'максимально краткий уан-лайнер, 1 или 2 строки')"><b>‡ Хлестко</b>Коротко и в точку</div>
+    <div class="m-item" onclick="setM('ø Абсурд', 'абсурдный юмор, 4 строки')"><b>ø Абсурд</b></div>
+    <div class="m-item" onclick="setM('§ Быт', 'комедия наблюдений, 4 строки')"><b>§ Быт</b></div>
+    <div class="m-item" onclick="setM('† Прожарка', 'инсалт-комедия, 4 строки')"><b>† Прожарка</b></div>
+    <div class="m-item" onclick="setM('¶ Сатира', 'сатирический взгляд, 4 строки')"><b>¶ Сатира</b></div>
+    <div class="m-item" onclick="setM('‡ Хлестко', 'коротко и в точку')"><b>‡ Хлестко</b></div>
 </div>
 
 <footer>
@@ -86,6 +95,15 @@
 <script>
     let curDesc = "комедия наблюдений, ровно 4 строки";
     let curName = "§ Быт";
+
+    // Инициализация Google Translate
+    function googleTranslateInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'ru',
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+            autoDisplay: false
+        }, 'google_translate_element');
+    }
 
     function toggle(id) {
         const el = document.getElementById(id);
@@ -130,11 +148,12 @@
         bar.style.width = "100%";
         
         const key = (typeof BEUVRY_CONFIG !== 'undefined' ? (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).trim() : "");
+        
         try {
             const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${key}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: [{ parts: [{ text: `Твоя роль: Мастер юмора Беври. Стиль: ${curDesc}. Используй слова: ${val}. Напиши только текст юмора, без лишних вступлений.` }] }] })
+                body: JSON.stringify({ contents: [{ parts: [{ text: `Стиль: ${curDesc}. Используй слова: ${val}. Напиши только текст юмора.` }] }] })
             });
             const d = await r.json();
             if (d.candidates) push(d.candidates[0].content.parts[0].text, true, curName);
