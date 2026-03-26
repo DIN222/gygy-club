@@ -4,10 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | VERSES v38.7.0</title>
+    <title>GY-GY | VERSES v38.8.0</title>
     <style>
-        :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
-        * { box-sizing: border-box; }
+        :root { --gold: #ffd700; --bg: #000; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body, html { 
             margin: 0; padding: 0; width: 100%; height: 100vh; 
@@ -16,69 +16,64 @@
             display: flex; flex-direction: column; overflow: hidden; 
         }
 
-        /* HEADER: Навигация Назад/Вперед */
+        /* HEADER: Навигация v38.8.0 */
         .page-header { 
             height: 60px; display: flex; align-items: center; 
-            border-bottom: var(--border); background: #111; 
+            border-bottom: 1px solid var(--gold); background: #111; 
             flex-shrink: 0; z-index: 1001; 
         }
         .nav-fix { 
-            width: 50px; height: 100%; display: flex; align-items: center; 
+            width: 60px; height: 100%; display: flex; align-items: center; 
             justify-content: center; background: #111; cursor: pointer; 
             color: var(--gold); text-decoration: none; flex-shrink: 0; 
-            font-weight: bold; font-size: 1.4rem; 
+            font-weight: bold; font-size: 1.5rem; 
         }
         .header-title { 
             flex-grow: 1; text-align: center; font-weight: 900; 
-            letter-spacing: 2px; font-size: 0.9rem; text-transform: uppercase;
+            letter-spacing: 3px; font-size: 0.9rem; 
         }
 
         /* LIST */
         #boxList { 
             flex: 1; overflow-y: auto; padding: 15px; 
-            display: flex; flex-direction: column; gap: 15px; 
+            display: flex; flex-direction: column; gap: 20px; 
         }
         .verse-card { 
             padding: 15px; border: 1px solid #333; 
-            background: rgba(255,255,255,0.03); position: relative;
+            background: #050505; position: relative;
         }
         .v-meta { 
-            font-size: 0.6rem; opacity: 0.5; margin-bottom: 8px; 
-            display: flex; justify-content: space-between;
+            font-size: 0.6rem; opacity: 0.4; margin-bottom: 10px; 
+            display: flex; justify-content: space-between; text-transform: uppercase;
         }
         .v-text { 
-            font-size: 1rem; line-height: 1.4; color: #fff; 
-            white-space: pre-wrap; outline: none;
+            font-size: 1.1rem; line-height: 1.5; color: #fff; 
+            white-space: pre-wrap; outline: none; margin-bottom: 15px;
         }
 
         /* ACTIONS */
         .v-btns { 
-            display: flex; gap: 10px; margin-top: 12px; 
-            border-top: 1px solid #222; padding-top: 10px; 
+            display: flex; gap: 10px; border-top: 1px solid #222; padding-top: 10px; 
         }
         .v-btn { 
             background: transparent; border: 1px solid #444; 
-            color: var(--gold); font-size: 0.65rem; padding: 5px 10px; 
-            cursor: pointer; text-transform: uppercase;
+            color: var(--gold); font-size: 0.7rem; padding: 6px 12px; 
+            cursor: pointer; text-transform: uppercase; font-weight: bold;
         }
-        .v-btn:hover { border-color: var(--gold); }
-        .v-btn-del { color: #f44; border-color: #600; }
+        .v-btn-del { color: #f44; border-color: #500; margin-left: auto; }
 
-        .empty-msg { text-align: center; margin-top: 50px; opacity: 0.5; }
+        .empty-msg { text-align: center; margin-top: 60px; opacity: 0.3; font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
 <header class="page-header">
     <a href="ai_room_core_v8.html" class="nav-fix">❮</a>
-    
-    <div class="header-title">GY-GY / В БОКСЕ</div>
-
-    <a href="#" class="nav-fix" onclick="alert('Дальше пока нечего смотреть, шеф!')">❯</a>
+    <div class="header-title">GY-GY / В БОКСЕ / v38.8.0</div>
+    <div style="width: 60px;"></div>
 </header>
 
-<div id="boxList">
-    </div>
+<div id="boxList"></div>
 
 <script>
     function renderBox() {
@@ -86,54 +81,52 @@
         const items = JSON.parse(localStorage.getItem('gygy_box') || '[]');
         
         if (items.length === 0) {
-            list.innerHTML = '<div class="empty-msg">В боксе пока пусто...</div>';
+            list.innerHTML = '<div class="empty-msg">БОКС ПУСТ</div>';
             return;
         }
 
-        list.innerHTML = items.map((item, index) => `
-            <div class="verse-card" data-id="${index}">
-                <div class="v-meta">
-                    <span>${item.mode || 'ЮМОР'}</span>
-                    <span>${item.date || ''}</span>
+        // Рендерим новые сверху (reverse)
+        list.innerHTML = items.slice().reverse().map((item, index) => {
+            // Рассчитываем реальный индекс в исходном массиве
+            const realIdx = items.length - 1 - index;
+            return `
+                <div class="verse-card">
+                    <div class="v-meta">
+                        <span>${item.mode || 'КУПЛЕТ'}</span>
+                        <span>${item.date || ''}</span>
+                    </div>
+                    <div class="v-text" contenteditable="true" onblur="updateVerse(${realIdx}, this.innerText)">${item.text}</div>
+                    <div class="v-btns">
+                        <button class="v-btn" onclick="copyVerse(${realIdx}, this)">КОПИРОВАТЬ</button>
+                        <button class="v-btn v-btn-del" onclick="deleteVerse(${realIdx})">УДАЛИТЬ</button>
+                    </div>
                 </div>
-                <div class="v-text" contenteditable="true" onblur="updateVerse(${index}, this.innerText)">${item.text}</div>
-                <div class="v-btns">
-                    <button class="v-btn" onclick="copyVerse(${index})">Копировать</button>
-                    <button class="v-btn" onclick="shareVerse(${index})">Переслать</button>
-                    <button class="v-btn v-btn-del" onclick="deleteVerse(${index})">Удалить</button>
-                </div>
-            </div>
-        `).join('');
+            `;
+        }).join('');
     }
 
-    function updateVerse(index, newText) {
+    function updateVerse(idx, text) {
         let items = JSON.parse(localStorage.getItem('gygy_box') || '[]');
-        items[index].text = newText;
+        items[idx].text = text;
         localStorage.setItem('gygy_box', JSON.stringify(items));
     }
 
-    function deleteVerse(index) {
-        if (!confirm('Удалить из бокса?')) return;
+    function deleteVerse(idx) {
+        if(!confirm('Удалить?')) return;
         let items = JSON.parse(localStorage.getItem('gygy_box') || '[]');
-        items.splice(index, 1);
+        items.splice(idx, 1);
         localStorage.setItem('gygy_box', JSON.stringify(items));
         renderBox();
     }
 
-    function copyVerse(index) {
+    function copyVerse(idx, btn) {
         let items = JSON.parse(localStorage.getItem('gygy_box') || '[]');
-        navigator.clipboard.writeText(items[index].text);
-        alert('Скопировано!');
+        navigator.clipboard.writeText(items[idx].text).then(() => {
+            const t = btn.innerText; btn.innerText = 'OK!';
+            setTimeout(() => btn.innerText = t, 1000);
+        });
     }
 
-    function shareVerse(index) {
-        let items = JSON.parse(localStorage.getItem('gygy_box') || '[]');
-        if (navigator.share) {
-            navigator.share({ title: 'GY-GY Verse', text: items[index].text });
-        }
-    }
-
-    // Запуск при загрузке
     renderBox();
 </script>
 
