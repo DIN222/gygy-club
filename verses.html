@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY VERSES | v37.3.1 FULL</title>
+    <title>GY-GY VERSES | v37.3.2 RESTORED</title>
     <style>
         :root { 
             --gold: #ffd700; 
@@ -20,7 +20,6 @@
             overflow: hidden; 
         }
 
-        /* ШАПКА (HEADER) */
         header { 
             height: 65px; display: flex; align-items: center; 
             border-bottom: var(--border); background: #000; 
@@ -29,29 +28,26 @@
             z-index: 10;
         }
         
-        /* КНОПКА ВОЗВРАТА СТРОГО НА VERSES.HTML */
         .btn-header { 
             width: 44px; height: 44px; display: flex; 
             align-items: center; justify-content: center; 
             border: var(--border); color: var(--gold); 
             background: none; cursor: pointer; flex-shrink: 0; 
             font-size: 1.8rem; text-decoration: none;
-            transition: 0.3s;
         }
-        .btn-header:active { background: var(--gold); color: #000; }
 
         .scroll-zone { 
             flex-grow: 1; display: flex; align-items: center; 
-            gap: 12px; overflow-x: auto; padding: 0 15px; 
+            gap: 10px; overflow-x: auto; padding: 0 15px; 
             scrollbar-width: none; 
         }
         .scroll-zone::-webkit-scrollbar { display: none; }
 
-        /* ВЕРХНЯЯ КНОПКА: СБОРНИК (ПЕРЕХОД В АРХИВ) */
+        /* Кнопки верхней панели */
         .item-fix { 
             height: 42px; min-width: 90px; border: var(--border); 
             color: var(--gold); background: none; 
-            font-size: 0.75rem; font-weight: 900; 
+            font-size: 0.7rem; font-weight: 900; 
             display: flex; align-items: center; justify-content: center; 
             white-space: nowrap; flex-shrink: 0; cursor: pointer; 
             text-decoration: none; text-transform: uppercase;
@@ -61,10 +57,9 @@
         #google_translate_element { 
             height: 42px; border: var(--border); 
             display: flex; align-items: center; overflow: hidden; 
-            background: #111;
         }
 
-        /* ОСНОВНОЙ ЧАТ (WALL) */
+        /* ЧАТ */
         #chat-wall { 
             flex-grow: 1; overflow-y: auto; padding: 25px 15px; 
             display: flex; flex-direction: column; gap: 25px; 
@@ -74,7 +69,7 @@
         .msg { 
             padding: 15px; max-width: 85%; font-size: 1.25rem; 
             line-height: 1.5; border-radius: 4px; 
-            position: relative; animation: fadeIn 0.4s ease;
+            animation: fadeIn 0.4s ease;
         }
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -82,17 +77,14 @@
         .user-msg { 
             align-self: flex-start; border-left: 4px solid var(--gold); 
             background: var(--glass); color: var(--gold); 
-            box-shadow: -5px 5px 15px rgba(0,0,0,0.5);
         }
         
         .ai-msg { 
             align-self: flex-end; border-right: 4px solid #fff; 
             color: #eee; background: rgba(255, 255, 255, 0.07); 
             font-style: italic; text-align: right; 
-            box-shadow: 5px 5px 15px rgba(0,0,0,0.5);
         }
 
-        /* НИЖНЯЯ ПАНЕЛЬ (FOOTER) */
         footer { 
             height: 90px; display: flex; align-items: center; 
             padding: 0 10px; gap: 10px; border-top: 1px solid #333; 
@@ -103,17 +95,14 @@
             flex-grow: 1; background: #000; border: var(--border); 
             color: var(--gold); padding: 16px; outline: none; 
             font-size: 1.1rem; font-family: inherit;
-            box-shadow: inset 0 0 10px rgba(255, 215, 0, 0.1);
         }
 
         .btn-up { 
             width: 55px; height: 55px; background: var(--gold); 
             color: #000; border: none; font-size: 2rem; 
-            cursor: pointer; font-weight: 900; transition: 0.2s;
+            cursor: pointer; font-weight: 900;
         }
-        .btn-up:active { transform: scale(0.9); }
         
-        /* НИЖНЯЯ КНОПКА: В СБОРНИК (ДЕЙСТВИЕ СОХРАНЕНИЯ) */
         .btn-action { 
             height: 55px; padding: 0 12px; border: var(--border); 
             color: var(--gold); background: none; 
@@ -122,7 +111,6 @@
             max-width: 80px; text-align: center; line-height: 1.1;
         }
 
-        /* УБИРАЕМ МУСОР GOOGLE */
         .goog-te-banner-frame, #goog-gt-tt { display: none !important; }
         body { top: 0 !important; }
     </style>
@@ -135,33 +123,36 @@
     <div class="scroll-zone">
         <div id="google_translate_element"></div>
         <a href="library.html" class="item-fix">СБОРНИК</a>
+        
+        <button class="item-fix" onclick="alert('Выбор юмора...')">ВИД ЮМОРА</button>
+        <button class="item-fix" onclick="alert('Выбор действия...')">ДЕЙСТВИЕ</button>
+        
         <div class="item-fix">ID: 001</div>
-        <div class="item-fix" onclick="aiAction('Проверка системы')">
+        <div class="item-fix" onclick="aiAction('Статус')">
             <svg viewBox="0 0 24 24" style="width:24px; height:24px; fill:var(--gold);"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5-9h10v2H7z"/></svg>
         </div>
     </div>
     
-    <div style="font-size: 0.9rem; padding: 0 10px; font-weight: 900; letter-spacing: 2px;">GY-GY</div>
+    <div style="font-size: 0.9rem; padding: 0 10px; font-weight: 900;">GY-GY</div>
     <div class="btn-header" onclick="window.history.forward()">»</div>
 </header>
 
 <div id="chat-wall">
-    <div class="msg user-msg">База v37.3.0 восстановлена в полном объеме. Жду 4 слова.</div>
+    <div class="msg user-msg">Версия v37.3.0 восстановлена. Кнопки Юмора и Действия на месте.</div>
 </div>
 
 <footer>
     <input type="text" id="user-in" placeholder="СЛОВА..." onkeypress="if(event.key==='Enter') send()">
     <button class="btn-up" onclick="send()">↑</button>
-    <button class="btn-action" onclick="alert('Рифма запечатана в Сборник')">В СБОРНИК</button>
+    <button class="btn-action" onclick="alert('Сохранено в Сборник')">В СБОРНИК</button>
 </footer>
 
 <script>
-    // СТЫК КЛЮЧА API V1
     async function aiAction(text) {
         const wall = document.getElementById('chat-wall');
         const m = document.createElement('div');
         m.className = 'msg ai-msg';
-        m.innerHTML = "<i>Сварка фатума...</i>";
+        m.innerHTML = "<i>Сварка...</i>";
         wall.appendChild(m);
         wall.scrollTop = wall.scrollHeight;
 
@@ -176,33 +167,27 @@
                     contents: [{ parts: [{ text: "Ты нуарный поэт Беври. Напиши жесткое 4-стишие на русском языке на эти 4 слова: " + text }] }]
                 })
             });
-            
             const data = await response.json();
-            
-            if (data.candidates && data.candidates[0] && data.candidates[0].content) {
-                let result = data.candidates[0].content.parts[0].text;
-                m.innerHTML = result.replace(/\n/g, '<br>');
-            } else if (data.error) {
-                m.innerHTML = "Ошибка Беври: " + data.error.message;
+            if (data.candidates && data.candidates[0].content) {
+                m.innerHTML = data.candidates[0].content.parts[0].text.replace(/\n/g, '<br>');
             } else {
-                m.innerHTML = "Беври молчит. Проверь API.";
+                m.innerHTML = "Ошибка API v1. Проверь статус.";
             }
         } catch (e) {
-            m.innerHTML = "Стык ключа не удался. Проверь фрагменты.";
+            m.innerHTML = "Сбой стыковки.";
         }
         wall.scrollTop = wall.scrollHeight;
     }
 
     function send() {
         const input = document.getElementById('user-in');
-        const val = input.value.trim();
-        if(val) {
+        if(input.value.trim()){
             const wall = document.getElementById('chat-wall');
             const m = document.createElement('div');
             m.className = 'msg user-msg';
-            m.innerText = val;
+            m.innerText = input.value;
             wall.appendChild(m);
-            aiAction(val);
+            aiAction(input.value);
             input.value = "";
         }
     }
