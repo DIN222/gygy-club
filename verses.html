@@ -4,171 +4,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | CORE v37.6.0</title>
-    <script src="config.js"></script>
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateInit"></script>
-    
+    <title>GY-GY | VERSES v38.7.0</title>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
         * { box-sizing: border-box; }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100vh; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; display: flex; flex-direction: column; overflow: hidden; }
         
-        /* HEADER */
-        .page-header { height: 60px; display: flex; align-items: center; border-bottom: var(--border); background: #111; flex-shrink: 0; z-index: 1001; }
-        .nav-fix { width: 50px; height: 100%; display: flex; align-items: center; justify-content: center; background: #111; cursor: pointer; color: var(--gold); text-decoration: none; flex-shrink: 0; font-weight: bold; font-size: 1.2rem; }
-        .header-scroll { flex-grow: 1; display: flex; align-items: center; overflow: hidden; padding: 0 10px; gap: 15px; }
-        
-        /* Google Translate Styling */
-        #google_translate_element { height: 35px; overflow: hidden; opacity: 0.8; }
-        .goog-te-gadget-simple { background: #111 !important; border: 1px solid #333 !important; padding: 4px !important; border-radius: 4px; }
-        .goog-te-gadget-simple span { color: var(--gold) !important; font-size: 0.7rem !important; }
-        .goog-te-banner-frame.skiptranslate { display: none !important; }
-        body { top: 0px !important; }
+        body, html { 
+            margin: 0; padding: 0; width: 100%; height: 100vh; 
+            background: var(--bg); color: var(--gold); 
+            font-family: 'Courier New', monospace; 
+            display: flex; flex-direction: column; overflow: hidden; 
+        }
 
-        .logo-right { font-weight: 900; letter-spacing: 2px; padding: 0 10px; font-size: 0.9rem; flex-shrink: 0; }
-        .loading .logo-right { animation: pulse 1s infinite alternate; color: #fff; }
-        @keyframes pulse { from { opacity: 0.4; } to { opacity: 1; } }
+        /* HEADER: Навигация Назад/Вперед */
+        .page-header { 
+            height: 60px; display: flex; align-items: center; 
+            border-bottom: var(--border); background: #111; 
+            flex-shrink: 0; z-index: 1001; 
+        }
+        .nav-fix { 
+            width: 50px; height: 100%; display: flex; align-items: center; 
+            justify-content: center; background: #111; cursor: pointer; 
+            color: var(--gold); text-decoration: none; flex-shrink: 0; 
+            font-weight: bold; font-size: 1.4rem; 
+        }
+        .header-title { 
+            flex-grow: 1; text-align: center; font-weight: 900; 
+            letter-spacing: 2px; font-size: 0.9rem; text-transform: uppercase;
+        }
 
-        /* WALL */
-        #wall { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; }
-        .bubble { padding: 12px; max-width: 85%; border: 1px solid #333; line-height: 1.4; font-size: 1.1rem; position: relative; }
-        .u { align-self: flex-start; border-left: 3px solid var(--gold); background: rgba(255,215,0,0.03); color: #fff; }
-        .a { align-self: flex-end; border-right: 3px solid #fff; background: rgba(255,255,255,0.05); text-align: right; }
-        
-        .style-label { display: block; font-size: 0.65rem; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; opacity: 0.5; }
-        .edit-zone { outline: none; }
-        
-        /* Кнопки под куплетом */
-        .bubble-btns { display: flex; gap: 8px; justify-content: flex-end; margin-top: 10px; }
-        .c-btn { background: #111; border: 1px solid #444; color: var(--gold); font-size: 0.6rem; padding: 4px 8px; cursor: pointer; border-radius: 2px; text-transform: uppercase; }
-        .c-btn:hover { border-color: var(--gold); }
-        .btn-del-mini { border-color: #600; color: #f44; }
+        /* LIST */
+        #boxList { 
+            flex: 1; overflow-y: auto; padding: 15px; 
+            display: flex; flex-direction: column; gap: 15px; 
+        }
+        .verse-card { 
+            padding: 15px; border: 1px solid #333; 
+            background: rgba(255,255,255,0.03); position: relative;
+        }
+        .v-meta { 
+            font-size: 0.6rem; opacity: 0.5; margin-bottom: 8px; 
+            display: flex; justify-content: space-between;
+        }
+        .v-text { 
+            font-size: 1rem; line-height: 1.4; color: #fff; 
+            white-space: pre-wrap; outline: none;
+        }
 
-        /* FOOTER */
-        footer { height: 80px; display: flex; align-items: center; padding: 0 10px; gap: 10px; background: #000; border-top: 1px solid #222; flex-shrink: 0; }
-        .btn-mode { width: 50px; height: 50px; border: 1px solid #444; background: #111; color: var(--gold); cursor: pointer; font-size: 1.2rem; border-radius: 4px; }
-        #in { flex-grow: 1; background: #0d0d0d; border: 1px solid #333; color: var(--gold); padding: 15px; font-size: 1rem; outline: none; border-radius: 4px; }
-        .btn-ok { padding: 0 20px; height: 50px; background: var(--gold); border: none; color: #000; font-weight: 900; cursor: pointer; border-radius: 4px; }
+        /* ACTIONS */
+        .v-btns { 
+            display: flex; gap: 10px; margin-top: 12px; 
+            border-top: 1px solid #222; padding-top: 10px; 
+        }
+        .v-btn { 
+            background: transparent; border: 1px solid #444; 
+            color: var(--gold); font-size: 0.65rem; padding: 5px 10px; 
+            cursor: pointer; text-transform: uppercase;
+        }
+        .v-btn:hover { border-color: var(--gold); }
+        .v-btn-del { color: #f44; border-color: #600; }
 
-        /* POPUP MENUS */
-        .pop-menu { display: none; position: absolute; background: #111; border: var(--border); z-index: 2000; box-shadow: 0 5px 20px #000; }
-        .act-menu { top: 62px; left: 50%; transform: translateX(-50%); width: 180px; }
-        .mode-menu { bottom: 85px; left: 10px; width: 260px; }
-        .m-item { padding: 12px; border-bottom: 1px solid #222; cursor: pointer; font-size: 0.8rem; color: #fff; }
-        .m-item b { display: block; color: var(--gold); }
-        .m-item i { display: block; font-size: 0.7rem; opacity: 0.6; font-style: normal; margin-top: 2px; }
+        .empty-msg { text-align: center; margin-top: 50px; opacity: 0.5; }
     </style>
 </head>
-<body id="mainBody">
+<body>
 
 <header class="page-header">
-    <a href="index.html" class="nav-fix">❮</a>
-    <div class="header-scroll">
-        <div id="google_translate_element"></div>
-        <div class="avatar"></div>
-        <div class="h-item" onclick="toggle('actMenu')" style="cursor:pointer">ДЕЙСТВИЯ ▾</div>
-    </div>
-    <a href="verses.html" class="nav-fix">📦</a>
-    <div class="logo-right">GY-GY</div>
-    <a href="verses.html" class="nav-fix">❯</a>
+    <a href="ai_room_core_v8.html" class="nav-fix">❮</a>
+    
+    <div class="header-title">GY-GY / В БОКСЕ</div>
+
+    <a href="#" class="nav-fix" onclick="alert('Дальше пока нечего смотреть, шеф!')">❯</a>
 </header>
 
-<div id="wall"></div>
-
-<div id="actMenu" class="pop-menu act-menu">
-    <div class="m-item" onclick="location.href='verses.html'">📦 1. Сборник</div>
-    <div class="m-item" onclick="alert('Генерация клипа...')">🎬 2. Клип</div>
-    <div class="m-item" onclick="shareText()">✉️ 3. Переслать</div>
-</div>
-
-<div id="modeMenu" class="pop-menu mode-menu">
-    <div class="m-item" onclick="setM('ø Абсурд', 'абсурдный юмор, 4 строки')"><b>ø Абсурд</b><i>Безумные связи</i></div>
-    <div class="m-item" onclick="setM('§ Быт', 'комедия наблюдений, 4 строки')"><b>§ Быт</b><i>Смешное в обычном</i></div>
-    <div class="m-item" onclick="setM('† Прожарка', 'инсалт-комедия, 4 строки')"><b>† Прожарка</b><i>Остро и дерзко</i></div>
-    <div class="m-item" onclick="setM('¶ Сатира', 'сатирическая ирония, 4 строки')"><b>¶ Сатира</b><i>Ирония над важным</i></div>
-    <div class="m-item" onclick="setM('‡ Хлестко', 'остро, 1-2 строки')"><b>‡ Хлестко</b><i>Коротко и в точку</i></div>
-</div>
-
-<footer>
-    <button class="btn-mode" onclick="toggle('modeMenu')">▲</button>
-    <input type="text" id="in" placeholder="Режим: § Быт | 4 слова..." onkeydown="if(event.key==='Enter') startSend()">
-    <button id="okBtn" class="btn-ok" onclick="startSend()">ОК</button>
-</footer>
+<div id="boxList">
+    </div>
 
 <script>
-    let curDesc = "комедия наблюдений, ровно 4 строки";
-    let curName = "§ Быт";
+    function renderBox() {
+        const list = document.getElementById('boxList');
+        const items = JSON.parse(localStorage.getItem('gygy_box') || '[]');
+        
+        if (items.length === 0) {
+            list.innerHTML = '<div class="empty-msg">В боксе пока пусто...</div>';
+            return;
+        }
 
-    function googleTranslateInit() {
-        new google.translate.TranslateElement({pageLanguage: 'ru', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+        list.innerHTML = items.map((item, index) => `
+            <div class="verse-card" data-id="${index}">
+                <div class="v-meta">
+                    <span>${item.mode || 'ЮМОР'}</span>
+                    <span>${item.date || ''}</span>
+                </div>
+                <div class="v-text" contenteditable="true" onblur="updateVerse(${index}, this.innerText)">${item.text}</div>
+                <div class="v-btns">
+                    <button class="v-btn" onclick="copyVerse(${index})">Копировать</button>
+                    <button class="v-btn" onclick="shareVerse(${index})">Переслать</button>
+                    <button class="v-btn v-btn-del" onclick="deleteVerse(${index})">Удалить</button>
+                </div>
+            </div>
+        `).join('');
     }
 
-    function toggle(id) {
-        const el = document.getElementById(id);
-        const isShow = el.style.display === 'block';
-        document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
-        el.style.display = isShow ? 'none' : 'block';
-    }
-
-    function setM(name, desc) {
-        curName = name; curDesc = desc;
-        document.getElementById('in').placeholder = `Режим: ${name} | 4 слова...`;
-        toggle('modeMenu');
-    }
-
-    function push(txt, isAi, mode = "") {
-        const wall = document.getElementById('wall');
-        const d = document.createElement('div');
-        d.className = `bubble ${isAi ? 'a' : 'u'}`;
-        if (isAi) {
-            d.innerHTML = `
-                <span class="style-label">${mode}</span>
-                <div class="edit-zone" contenteditable="true" data-style="${mode}">${txt.replace(/\n/g, '<br>')}</div>
-                <div class="bubble-btns">
-                    <button class="c-btn btn-del-mini" onclick="this.closest('.bubble').remove()">УДАЛИТЬ</button>
-                    <button class="c-btn" onclick="saveOne(this)">В БОКС</button>
-                </div>`;
-        } else { d.innerText = txt; }
-        wall.appendChild(d);
-        wall.scrollTop = wall.scrollHeight;
-    }
-
-    async function startSend() {
-        const input = document.getElementById('in');
-        const val = input.value.trim();
-        if (!val) return;
-        push(val, false); input.value = "";
-        document.getElementById('mainBody').classList.add('loading');
-        const key = (typeof BEUVRY_CONFIG !== 'undefined' ? (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).trim() : "");
-        try {
-            const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${key}`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ contents: [{ parts: [{ text: `Роль: Беври. Стиль: ${curDesc}. Слова: ${val}` }] }] })
-            });
-            const d = await r.json();
-            if (d.candidates) push(d.candidates[0].content.parts[0].text, true, curName);
-        } catch (e) { push("❌ Ошибка.", true); }
-        document.getElementById('mainBody').classList.remove('loading');
-    }
-
-    function saveOne(btn) {
-        const parent = btn.parentElement.parentElement;
-        const text = parent.querySelector('.edit-zone').innerText;
-        const mode = parent.querySelector('.edit-zone').getAttribute('data-style');
+    function updateVerse(index, newText) {
         let items = JSON.parse(localStorage.getItem('gygy_box') || '[]');
-        items.push({ text: text, mode: mode, date: new Date().toLocaleString() });
+        items[index].text = newText;
         localStorage.setItem('gygy_box', JSON.stringify(items));
-        btn.innerText = "ЕСТЬ!"; setTimeout(() => btn.innerText = "В БОКС", 1000);
     }
 
-    function shareText() {
-        const bubbles = document.querySelectorAll('.a .edit-zone');
-        if (bubbles.length > 0) {
-            const text = bubbles[bubbles.length-1].innerText;
-            if (navigator.share) navigator.share({title: 'GY-GY', text: text});
+    function deleteVerse(index) {
+        if (!confirm('Удалить из бокса?')) return;
+        let items = JSON.parse(localStorage.getItem('gygy_box') || '[]');
+        items.splice(index, 1);
+        localStorage.setItem('gygy_box', JSON.stringify(items));
+        renderBox();
+    }
+
+    function copyVerse(index) {
+        let items = JSON.parse(localStorage.getItem('gygy_box') || '[]');
+        navigator.clipboard.writeText(items[index].text);
+        alert('Скопировано!');
+    }
+
+    function shareVerse(index) {
+        let items = JSON.parse(localStorage.getItem('gygy_box') || '[]');
+        if (navigator.share) {
+            navigator.share({ title: 'GY-GY Verse', text: items[index].text });
         }
     }
+
+    // Запуск при загрузке
+    renderBox();
 </script>
+
 </body>
 </html>
