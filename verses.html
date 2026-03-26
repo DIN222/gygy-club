@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | CORE v38.9.3</title>
+    <title>GY-GY | CORE v38.9.4</title>
     <script src="config.js"></script>
     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateInit"></script>
     
@@ -18,7 +18,7 @@
         .nav-fix { width: 50px; height: 100%; display: flex; align-items: center; justify-content: center; background: #111; cursor: pointer; color: var(--gold); text-decoration: none; flex-shrink: 0; font-weight: bold; font-size: 1.2rem; }
         .header-scroll { flex-grow: 1; display: flex; align-items: center; overflow: hidden; padding: 0 10px; gap: 15px; }
         
-        /* Google Translate Styling */
+        /* Google Translate */
         #google_translate_element { height: 35px; overflow: hidden; opacity: 0.8; }
         .goog-te-gadget-simple { background: #111 !important; border: 1px solid #333 !important; padding: 4px !important; border-radius: 4px; }
         .goog-te-gadget-simple span { color: var(--gold) !important; font-size: 0.7rem !important; }
@@ -38,10 +38,8 @@
         .style-label { display: block; font-size: 0.65rem; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; opacity: 0.5; }
         .edit-zone { outline: none; }
         
-        /* Кнопки под куплетом */
         .bubble-btns { display: flex; gap: 8px; justify-content: flex-end; margin-top: 10px; }
         .c-btn { background: #111; border: 1px solid #444; color: var(--gold); font-size: 0.6rem; padding: 4px 8px; cursor: pointer; border-radius: 2px; text-transform: uppercase; }
-        .c-btn:hover { border-color: var(--gold); }
         .btn-del-mini { border-color: #600; color: #f44; }
 
         /* FOOTER */
@@ -50,7 +48,6 @@
         #in { flex-grow: 1; background: #0d0d0d; border: 1px solid #333; color: var(--gold); padding: 15px; font-size: 1rem; outline: none; border-radius: 4px; }
         .btn-ok { padding: 0 20px; height: 50px; background: var(--gold); border: none; color: #000; font-weight: 900; cursor: pointer; border-radius: 4px; }
 
-        /* POPUP MENUS */
         .pop-menu { display: none; position: absolute; background: #111; border: var(--border); z-index: 2000; box-shadow: 0 5px 20px #000; }
         .act-menu { top: 62px; left: 50%; transform: translateX(-50%); width: 180px; }
         .mode-menu { bottom: 85px; left: 10px; width: 260px; }
@@ -62,14 +59,16 @@
 <body id="mainBody">
 
 <header class="page-header">
-    <a href="index.html" class="nav-fix">❮</a>
+    <a href="verses.html" class="nav-fix">❮</a>
+    
     <div class="header-scroll">
         <div id="google_translate_element"></div>
         <div class="avatar"></div>
         <div class="h-item" onclick="toggle('actMenu')" style="cursor:pointer">ДЕЙСТВИЯ ▾</div>
     </div>
-    <a href="verses.html" class="nav-fix">📦</a>
+    
     <div class="logo-right">GY-GY</div>
+    
     <a href="verses.html" class="nav-fix">❯</a>
 </header>
 
