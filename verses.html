@@ -4,106 +4,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | CORE v38.9.5</title>
+    <title>GY-GY | VERSES v38.9.11</title>
     <script src="config.js"></script>
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateInit"></script>
-    
     <style>
-        :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
-        * { box-sizing: border-box; }
+        :root { --gold: #ffd700; --bg: #000; }
+        * { box-sizing: border-box; outline: none; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100vh; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; display: flex; flex-direction: column; overflow: hidden; }
         
-        /* HEADER: Навигация по уровням */
-        .page-header { height: 60px; display: flex; align-items: center; border-bottom: var(--border); background: #111; flex-shrink: 0; z-index: 1001; }
-        .nav-fix { width: 50px; height: 100%; display: flex; align-items: center; justify-content: center; background: #111; cursor: pointer; color: var(--gold); text-decoration: none; flex-shrink: 0; font-weight: bold; font-size: 1.2rem; }
-        .header-scroll { flex-grow: 1; display: flex; align-items: center; overflow: hidden; padding: 0 10px; gap: 15px; }
-        
-        #google_translate_element { height: 35px; overflow: hidden; opacity: 0.8; }
-        .goog-te-gadget-simple { background: #111 !important; border: 1px solid #333 !important; padding: 4px !important; border-radius: 4px; }
-        .goog-te-gadget-simple span { color: var(--gold) !important; font-size: 0.7rem !important; }
+        /* HEADER: Навигация между экранами */
+        .page-header { height: 60px; display: flex; align-items: center; border-bottom: 1px solid var(--gold); background: #111; flex-shrink: 0; }
+        .nav-fix { width: 50px; height: 100%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--gold); text-decoration: none; font-weight: bold; font-size: 1.2rem; }
+        .header-title { flex-grow: 1; text-align: center; font-weight: 900; letter-spacing: 2px; font-size: 0.9rem; }
 
-        .logo-right { font-weight: 900; letter-spacing: 2px; padding: 0 10px; font-size: 0.9rem; flex-shrink: 0; }
+        /* WORK ZONE */
+        #workZone { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; }
+        .draft { padding: 15px; border: 1px solid #333; background: #050505; position: relative; }
+        .d-label { font-size: 0.6rem; opacity: 0.5; text-transform: uppercase; margin-bottom: 8px; display: block; }
+        .d-text { font-size: 1.2rem; line-height: 1.5; color: #fff; white-space: pre-wrap; margin-bottom: 15px; }
         
-        /* WALL */
-        #wall { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; }
-        .bubble { padding: 12px; max-width: 85%; border: 1px solid #333; line-height: 1.4; font-size: 1.1rem; position: relative; }
-        .u { align-self: flex-start; border-left: 3px solid var(--gold); background: rgba(255,215,0,0.03); color: #fff; }
-        .a { align-self: flex-end; border-right: 3px solid #fff; background: rgba(255,255,255,0.05); text-align: right; }
-        
-        .style-label { display: block; font-size: 0.65rem; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; opacity: 0.5; }
-        .edit-zone { outline: none; }
-        
-        .bubble-btns { display: flex; gap: 8px; justify-content: flex-end; margin-top: 10px; }
-        .c-btn { background: #111; border: 1px solid #444; color: var(--gold); font-size: 0.6rem; padding: 4px 8px; cursor: pointer; border-radius: 2px; text-transform: uppercase; }
+        /* ACTIONS */
+        .d-btns { display: flex; gap: 10px; justify-content: flex-end; }
+        .btn-act { background: transparent; border: 1px solid #444; color: var(--gold); padding: 5px 10px; cursor: pointer; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; }
+        .btn-export { border-color: var(--gold); color: #000; background: var(--gold); }
 
-        /* FOOTER */
-        footer { height: 80px; display: flex; align-items: center; padding: 0 10px; gap: 10px; background: #000; border-top: 1px solid #222; flex-shrink: 0; }
-        .btn-mode { width: 50px; height: 50px; border: 1px solid #444; background: #111; color: var(--gold); cursor: pointer; font-size: 1.2rem; border-radius: 4px; }
-        #in { flex-grow: 1; background: #0d0d0d; border: 1px solid #333; color: var(--gold); padding: 15px; font-size: 1rem; outline: none; border-radius: 4px; }
-        .btn-ok { padding: 0 20px; height: 50px; background: var(--gold); border: none; color: #000; font-weight: 900; cursor: pointer; border-radius: 4px; }
-
-        .pop-menu { display: none; position: absolute; background: #111; border: var(--border); z-index: 2000; }
-        .act-menu { top: 62px; left: 50%; transform: translateX(-50%); width: 180px; }
-        .mode-menu { bottom: 85px; left: 10px; width: 260px; }
-        .m-item { padding: 12px; border-bottom: 1px solid #222; cursor: pointer; font-size: 0.8rem; color: #fff; }
+        /* FOOTER: Ввод и Выбор режимов */
+        footer { padding: 10px; background: #111; border-top: 1px solid #222; flex-shrink: 0; }
+        .input-row { display: flex; gap: 10px; margin-bottom: 10px; }
+        #in { flex: 1; background: #000; border: 1px solid #333; color: var(--gold); padding: 12px; font-size: 1rem; border-radius: 4px; }
+        .modes-bar { display: flex; overflow-x: auto; gap: 8px; padding-bottom: 5px; scrollbar-width: none; }
+        .m-btn { white-space: nowrap; background: #1a1a1a; border: 1px solid #333; color: var(--gold); padding: 6px 12px; font-size: 0.7rem; cursor: pointer; border-radius: 4px; }
+        .m-btn.active { border-color: var(--gold); background: #332b00; }
     </style>
 </head>
 <body id="mainBody">
 
 <header class="page-header">
-    <a href="index.html" class="nav-fix">❮</a>
-    
-    <div class="header-scroll">
-        <div id="google_translate_element"></div>
-        <div class="avatar"></div>
-        <div class="h-item" onclick="toggle('actMenu')" style="cursor:pointer">ДЕЙСТВИЯ ▾</div>
-    </div>
-    
-    <div class="logo-right">GY-GY</div>
-    
-    <a href="next_level.html" class="nav-fix">❯</a>
+    <a href="ai_room_core_v8.html" class="nav-fix">❮</a>
+    <div class="header-title">GY-GY / ЦЕХ СОЧИНЕНИЯ</div>
+    <a href="box_page.html" class="nav-fix">📦</a>
 </header>
 
-<div id="wall"></div>
-
-<div id="actMenu" class="pop-menu act-menu">
-    <div class="m-item" onclick="location.href='verses.html'">📦 1. Сборник</div>
-    <div class="m-item" onclick="alert('Генерация...')">🎬 2. Клип</div>
-    <div class="m-item" onclick="shareText()">✉️ 3. Переслать</div>
-</div>
-
-<div id="modeMenu" class="pop-menu mode-menu">
-    <div class="m-item" onclick="setM('ø Абсурд', '4 строки')"><b>ø Абсурд</b></div>
-    <div class="m-item" onclick="setM('§ Быт', '4 строки')"><b>§ Быт</b></div>
+<div id="workZone">
+    <div style="text-align:center; opacity:0.3; margin-top:20px;">ЗДЕСЬ РОЖДАЕТСЯ ЮМОР...</div>
 </div>
 
 <footer>
-    <button class="btn-mode" onclick="toggle('modeMenu')">▲</button>
-    <input type="text" id="in" placeholder="Введите текст...">
-    <button id="okBtn" class="btn-ok" onclick="startSend()">ОК</button>
+    <div class="modes-bar" id="modesBar">
+        <button class="m-btn active" onclick="setM(this, 'ø Абсурд', 'абсурдный юмор, 4 строки')">ø Абсурд</button>
+        <button class="m-btn" onclick="setM(this, '§ Быт', 'комедия наблюдений, 4 строки')">§ Быт</button>
+        <button class="m-btn" onclick="setM(this, '† Прожарка', 'инсалт-комедия, 4 строки')">† Прожарка</button>
+        <button class="m-btn" onclick="setM(this, '¶ Сатира', 'сатирическая ирония, 4 строки')">¶ Сатира</button>
+        <button class="m-btn" onclick="setM(this, '‡ Хлестко', 'остро, 1-2 строки')">‡ Хлестко</button>
+    </div>
+    <div class="input-row">
+        <input type="text" id="in" placeholder="Тема для стиха..." onkeydown="if(event.key==='Enter') generate()">
+        <button class="btn-act btn-export" style="padding: 0 15px;" onclick="generate()">ОК</button>
+    </div>
 </footer>
 
 <script>
-    // Тот же JS, что и был, только исправленные ссылки в кнопках
-    function toggle(id) {
-        const el = document.getElementById(id);
-        const isShow = el.style.display === 'block';
-        document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
-        el.style.display = isShow ? 'none' : 'block';
+    let curMode = "ø Абсурд";
+    let curDesc = "абсурдный юмор, 4 строки";
+
+    function setM(btn, name, desc) {
+        document.querySelectorAll('.m-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        curMode = name; curDesc = desc;
     }
 
-    function saveOne(btn) {
-        const parent = btn.parentElement.parentElement;
-        const text = parent.querySelector('.edit-zone').innerText;
-        let items = JSON.parse(localStorage.getItem('gygy_box') || '[]');
-        items.push({ text: text, date: new Date().toLocaleString() });
-        localStorage.setItem('gygy_box', JSON.stringify(items));
-        btn.innerText = "ЕСТЬ!"; setTimeout(() => btn.innerText = "В БОКС", 1000);
+    async function generate() {
+        const input = document.getElementById('in');
+        const val = input.value.trim();
+        if (!val) return;
+        
+        const zone = document.getElementById('workZone');
+        input.value = "";
+        
+        const key = (typeof BEUVRY_CONFIG !== 'undefined' ? (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).trim() : "");
+        
+        try {
+            const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ contents: [{ parts: [{ text: `Роль: Беври. Стиль: ${curDesc}. Слова/Тема: ${val}` }] }] })
+            });
+            const d = await r.json();
+            const txt = d.candidates[0].content.parts[0].text;
+            
+            const div = document.createElement('div');
+            div.className = 'draft';
+            div.innerHTML = `
+                <span class="d-label">${curMode}</span>
+                <div class="d-text" contenteditable="true">${txt.replace(/\n/g, '<br>')}</div>
+                <div class="d-btns">
+                    <button class="btn-act" onclick="this.closest('.draft').remove()">УДАЛИТЬ</button>
+                    <button class="btn-act btn-export" onclick="exportToBox(this)">В БОКС 📦</button>
+                </div>
+            `;
+            zone.prepend(div);
+        } catch (e) { alert("Ошибка связи с космосом."); }
     }
-    
-    function googleTranslateInit() {
-        new google.translate.TranslateElement({pageLanguage: 'ru', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+
+    function exportToBox(btn) {
+        const parent = btn.closest('.draft');
+        const text = parent.querySelector('.d-text').innerText;
+        const mode = parent.querySelector('.d-label').innerText;
+        
+        let box = JSON.parse(localStorage.getItem('gygy_box') || '[]');
+        box.push({ text: text, mode: mode, date: new Date().toLocaleString() });
+        localStorage.setItem('gygy_box', JSON.stringify(box));
+        
+        btn.innerText = "ОТПРАВЛЕНО!";
+        btn.disabled = true;
+        setTimeout(() => { parent.style.opacity = '0.3'; }, 500);
     }
 </script>
+
 </body>
 </html>
