@@ -6,6 +6,29 @@
     <title>GY-GY | CORE v35</title>
     <script src="config.js"></script>
     <style>
+        .bubble-btns {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.copy-btn, .save-btn {
+    position: static; /* Убираем абсолютное позиционирование */
+    background: #111;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-size: 0.6rem;
+    padding: 4px 8px;
+    cursor: pointer;
+    border-radius: 2px;
+    display: none; /* Прячем до наведения */
+}
+
+.bubble:hover .copy-btn, 
+.bubble:hover .save-btn { 
+    display: block; 
+}
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; display: flex; flex-direction: column; overflow: hidden; }
         
