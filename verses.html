@@ -143,7 +143,33 @@
     }
 
     function clearWall() { document.getElementById('wall').innerHTML = ""; toggle('actMenu'); }
-    function saveToBox() { alert("Сохранено!"); toggle('actMenu'); }
+   function saveToBox() {
+    // Находим все блоки с текстом ИИ (из марафона или одиночные)
+    const edits = document.querySelectorAll('.edit-zone');
+    
+    if (edits.length === 0) {
+        alert("Сначала зарифмуй что-нибудь!");
+        return;
+    }
+
+    // Достаем уже сохраненное из памяти браузера (или пустой массив)
+    let items = JSON.parse(localStorage.getItem('gygy_box') || '[]');
+    
+    // Добавляем каждый найденный стих
+    edits.forEach(el => {
+        items.push({
+            text: el.innerText,
+            mode: el.getAttribute('data-style') || curName, 
+            date: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+        });
+    });
+    
+    // Сохраняем обратно в память
+    localStorage.setItem('gygy_box', JSON.stringify(items));
+    
+    alert(`Успешно! Добавлено ${edits.length} шт. Проверь в меню '❯'`);
+    toggle('actMenu'); // Закрываем меню действий
+}
 </script>
 </body>
 </html>
