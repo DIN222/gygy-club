@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | CORE v33.3.6 TOTAL FIX</title>
+    <title>GY-GY | CORE v33.3.7 TOTAL FIX</title>
     <script src="config.js"></script>
     
     <script type="text/javascript">
@@ -114,23 +114,34 @@
 
     // 3. Ядро связи с Беври (AI)
     async function callAI(text) {
+    const p1 = (typeof BEUVRY_CONFIG !== 'undefined') ? BEUVRY_CONFIG.PART_1 : "";
+    const p2 = (typeof BEUVRY_CONFIG !== 'undefined') ? BEUVRY_CONFIG.PART_2 : "";
+    const key = (p1 + p2).replace(/["'\s]/g, "");
+    
+    // Берем список моделей из конфига
+    const models = BEUVRY_CONFIG.MODELS_PRIORITY || ["gemini-1.5-flash"];
+    const basePrompt = BEUVRY_CONFIG.PROMPT || "";
+
+    for (let model of models) {
         try {
-            if (typeof BEUVRY_CONFIG === 'undefined') return "❌ config.js не найден";
-            const key = (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).replace(/["'\s]/g, "");
-            const model = BEUVRY_CONFIG.MODEL || "gemini-1.5-flash";
-            const basePrompt = BEUVRY_CONFIG.PROMPT || "";
-            
             const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: [{ parts: [{ text: `${basePrompt}\nРежим: ${curDesc}. Юзер сказал: ${text}` }] }] })
+                body: JSON.stringify({ contents: [{ parts: [{ text: `${basePrompt}\nРежим: ${curDesc}. Слова: ${text}` }] }] })
             });
             const d = await r.json();
-            if (d.error) return "🚬 Ошибка API: " + d.error.message;
-            return d.candidates[0].content.parts[0].text.trim();
-        } catch (e) { return "🚬 Связь оборвана. Проверь ключ."; }
+            
+            // Если модель ответила — отдаем результат и выходим из цикла
+            if (d.candidates && d.candidates[0].content) {
+                return d.candidates[0].content.parts[0].text.trim();
+            }
+            console.warn(`Модель ${model} не ответила, пробую следующую...`);
+        } catch (e) {
+            console.error(`Ошибка связи с ${model}:`, e);
+        }
     }
-
+    return "🚬 Все каналы связи заблокированы. Проверь ключ или интернет.";
+}
     // 4. Логика интерфейса
     const wall = document.getElementById('wall');
     const input = document.getElementById('in');
