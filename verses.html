@@ -127,22 +127,30 @@
         toggle('modeMenu');
     }
 
-    async function callAI(text) {
-        const key = (typeof BEUVRY_CONFIG !== 'undefined' ? (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).trim() : "");
-        const prompt = `Ты — циничный нуарный поэт Беври. Стиль: ${curDesc}. Юзер дает слова: ${text}. Напиши только текст юмора в рифму, без лишних слов.`;
-        
-        for (let m of MODELS) {
-            try {
-                const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${key}`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-                });
-                const d = await r.json();
-                if (d.candidates) return d.candidates[0].content.parts[0].text.trim();
-            } catch (e) { console.error("Error with " + m); }
-        }
-        return "Модели ушли на перекур. Попробуй позже.";
+async function callAI(text) {
+    // Чистим ключ от любых невидимых символов
+    const key = (typeof BEUVRY_CONFIG !== 'undefined' ? 
+        (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).replace(/\s/g, '') : "");
+    
+    const prompt = `Ты — циничный нуарный поэт Беври. Стиль: ${curDesc}. Юзер дает слова: ${text}. Напиши только текст юмора в рифму, без лишних слов.`;
+    
+    for (let m of MODELS) {
+        try {
+            const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${key}`, {
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+            });
+            const d = await r.json();
+            
+            // Если Google ругается на ключ, ты увидишь это в F12
+            if (d.error) { console.error("Ошибка API:", d.error.message); continue; }
+            
+            if (d.candidates) return d.candidates[0].content.parts[0].text.trim();
+        } catch (e) { console.error("Сбой сети для " + m); }
     }
+    return "Модели ушли на перекур. Проверь консоль (F12).";
+}
 
     function pushMsg(txt, isAi) {
         const d = document.createElement('div');
