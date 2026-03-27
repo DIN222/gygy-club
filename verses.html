@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | CORE v33.4.1</title>
+    <title>GY-GY | CORE v33.3.0</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
@@ -132,16 +132,11 @@
         
         const key = (typeof BEUVRY_CONFIG !== 'undefined' ? (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).trim() : "");
         try {
-            const r = await fetch(// Вставь это в функцию send() вместо старого fetch:
-const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${BEUVRY_CONFIG.MODEL}:generateContent?key=${key}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ 
-        contents: [{ 
-            parts: [{ text: `${BEUVRY_CONFIG.PROMPT}. Тема: ${val}` }] 
-        }] 
-    })
-});
+            const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ contents: [{ parts: [{ text: `Твоя роль: Мастер юмора Беври. Стиль: ${curDesc}. Используй слова: ${val}. Напиши только текст юмора, без лишних вступлений.` }] }] })
+            });
             const d = await r.json();
             if (d.candidates && d.candidates[0].content.parts[0].text) {
                 push(d.candidates[0].content.parts[0].text.trim(), true, curName);
