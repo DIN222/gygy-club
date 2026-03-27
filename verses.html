@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | CORE v33.4.2 TOTAL</title>
+    <title>GY-GY | CORE v33.4.3 TOTAL</title>
     <script src="config.js"></script>
     
     <script type="text/javascript">
@@ -128,27 +128,40 @@
     }
 
 async function callAI(text) {
-    // 1. Собираем ключ без мусора
-    let p1 = (typeof BEUVRY_CONFIG !== 'undefined') ? BEUVRY_CONFIG.PART_1 : "";
-    let p2 = (typeof BEUVRY_CONFIG !== 'undefined') ? BEUVRY_CONFIG.PART_2 : "";
+    // 1. Собираем новый ключ без мусора
+    const p1 = (typeof BEUVRY_CONFIG !== 'undefined') ? BEUVRY_CONFIG.PART_1 : "";
+    const p2 = (typeof BEUVRY_CONFIG !== 'undefined') ? BEUVRY_CONFIG.PART_2 : "";
     const key = (p1 + p2).replace(/["'\s]/g, "");
 
-    if (!key) return "❌ Ключ API не найден в config.js";
+    // 2. Берем модель и промпт ПРЯМО из твоего конфига
+    const model = (typeof BEUVRY_CONFIG !== 'undefined') ? BEUVRY_CONFIG.MODEL : "gemini-1.5-flash";
+    const basePrompt = (typeof BEUVRY_CONFIG !== 'undefined') ? BEUVRY_CONFIG.PROMPT : "";
 
-    // 2. Список моделей (добавил 1.5-flash первой, она самая стабильная)
-    const activeModels = ['gemini-1.5-flash', 'gemini-2.0-flash'];
-    
-    const prompt = `Ты — циничный нуарный поэт Беври. Режим: ${curDesc}. Слова: ${text}. Напиши только рифмованный текст, без вступлений.`;
+    const fullPrompt = `${basePrompt}\nРежим: ${curDesc}. Слова пользователя: ${text}`;
 
-    for (let m of activeModels) {
-        try {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${key}`;
-            const r = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-            });
+    try {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`;
+        const r = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ contents: [{ parts: [{ text: fullPrompt }] }] })
+        });
 
+        const d = await r.json();
+
+        if (d.error) {
+            console.error("API Error:", d.error.message);
+            return `❌ Ошибка API: ${d.error.message}`;
+        }
+
+        if (d.candidates && d.candidates[0].content.parts[0].text) {
+            return d.candidates[0].content.parts[0].text.trim();
+        }
+    } catch (e) {
+        console.error("Fetch error:", e);
+    }
+    return "🚬 Что-то всё равно мешает связи. Проверь консоль (F12).";
+}
             const d = await r.json();
 
             // 3. Вывод конкретной ошибки в чат, чтобы не лезть в F12
