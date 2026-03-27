@@ -128,10 +128,21 @@
     }
 
 async function callAI(text) {
-    // Чистим ключ от любых невидимых символов
-    const key = (typeof BEUVRY_CONFIG !== 'undefined' ? 
-        (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).replace(/\s/g, '') : "");
-    
+    // 1. Прямая проверка: есть ли конфиг вообще?
+    if (typeof BEUVRY_CONFIG === 'undefined') {
+        console.error("Файл config.js не найден или не загружен!");
+        return "Ошибка: Проверь наличие файла config.js рядом с HTML";
+    }
+
+    // 2. Склеиваем и чистим ключ от лишнего
+    const p1 = BEUVRY_CONFIG.PART_1 || "";
+    const p2 = BEUVRY_CONFIG.PART_2 || "";
+    const key = (p1 + p2).replace(/["'\s]/g, ""); // Убираем случайные кавычки и пробелы
+
+    // 3. Тестовый вывод в консоль (нажми F12 -> Console, чтобы увидеть)
+    console.log("Использую ключ (первые 5 симв):", key.substring(0, 5) + "...");
+    console.log("Модель:", MODELS[0]);
+
     const prompt = `Ты — циничный нуарный поэт Беври. Стиль: ${curDesc}. Юзер дает слова: ${text}. Напиши только текст юмора в рифму, без лишних слов.`;
     
     for (let m of MODELS) {
@@ -141,17 +152,23 @@ async function callAI(text) {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
             });
+            
             const d = await r.json();
             
-            // Если Google ругается на ключ, ты увидишь это в F12
-            if (d.error) { console.error("Ошибка API:", d.error.message); continue; }
+            if (d.error) { 
+                console.error(`Ошибка модели ${m}:`, d.error.message); 
+                continue; 
+            }
             
-            if (d.candidates) return d.candidates[0].content.parts[0].text.trim();
-        } catch (e) { console.error("Сбой сети для " + m); }
+            if (d.candidates && d.candidates[0].content.parts[0].text) {
+                return d.candidates[0].content.parts[0].text.trim();
+            }
+        } catch (e) { 
+            console.error("Сетевая ошибка для " + m, e); 
+        }
     }
-    return "Модели ушли на перекур. Проверь консоль (F12).";
+    return "Модели всё еще на перекуре. Посмотри консоль (F12) — там теперь точно есть причина.";
 }
-
     function pushMsg(txt, isAi) {
         const d = document.createElement('div');
         d.className = `bubble ${isAi ? 'a-msg' : 'u-msg'}`;
