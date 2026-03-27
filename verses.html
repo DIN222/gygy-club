@@ -4,135 +4,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | CORE v33.5.3 TRIZ-STABLE</title>
-    <script src="config.js"></script>
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-    <script type="text/javascript">
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({pageLanguage: 'ru'}, 'google_translate_element');
-        }
-    </script>
+    <title>GY-GY VERSES | v37.3.2 Solid</title>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
-        * { box-sizing: border-box; }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; overflow: hidden; display: flex; flex-direction: column; }
-        
-        /* HEADER - STATIC CONSTANTS */
-        header { height: 70px; display: flex; align-items: center; border-bottom: var(--border); background: #111; padding: 0 10px; flex-shrink: 0; z-index: 1000; justify-content: space-between; }
-        .nav-btn { width: 40px; height: 40px; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--gold); text-decoration: none; font-weight: bold; flex-shrink: 0; }
-        
-        #google_translate_element { width: 150px; height: 35px; overflow: hidden; border: 1px solid #333; flex-shrink: 0; }
-        
-        .header-center { display: flex; align-items: center; gap: 10px; flex-grow: 1; justify-content: center; }
-        .avatar { width: 35px; height: 35px; border-radius: 50%; border: 1px solid var(--gold); background: url('https://api.dicebear.com/7.x/bottts/svg?seed=Beuvry') center/cover; flex-shrink: 0; }
-        .btn-act { color: var(--gold); font-size: 0.7rem; cursor: pointer; border: 1px solid #444; padding: 10px; background: #222; text-transform: uppercase; white-space: nowrap; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; display: flex; flex-direction: column; overflow: hidden; }
 
-        /* WALL */
-        #wall { flex-grow: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; background: #000; }
-        .bubble { padding: 12px; max-width: 85%; border: 1px solid #333; position: relative; line-height: 1.4; }
-        .u-msg { align-self: flex-start; border-left: 3px solid var(--gold); background: rgba(255,215,0,0.02); color: #fff; }
-        .a-msg { align-self: flex-end; border-right: 3px solid #fff; background: rgba(255,255,255,0.05); text-align: right; }
+        /* УЗЕЛ НАВИГАЦИИ (ВЕРХ) */
+        header { height: 60px; display: flex; align-items: center; border-bottom: var(--border); background: #000; padding: 0 10px; gap: 10px; flex-shrink: 0; z-index: 10; }
+        .btn-nav { width: 42px; height: 42px; border: var(--border); display: flex; align-items: center; justify-content: center; color: var(--gold); text-decoration: none; font-size: 1.8rem; transition: 0.2s; }
+        .btn-nav:active { background: var(--gold); color: #000; }
+        
+        .scroll-zone { flex-grow: 1; display: flex; align-items: center; gap: 12px; overflow-x: auto; scrollbar-width: none; }
+        .scroll-zone::-webkit-scrollbar { display: none; }
+        
+        .icon-box { width: 42px; height: 42px; border: var(--border); display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 1.3rem; color: var(--gold); }
+        .sys-id { border: var(--border); padding: 8px 12px; font-size: 0.75rem; font-weight: 900; white-space: nowrap; }
 
-        /* MENUS */
-        .pop-menu { display: none; position: absolute; background: #111; border: var(--border); z-index: 9999; width: 220px; box-shadow: 0 0 20px #000; }
-        .act-pos { top: 75px; right: 10px; }
-        .mode-pos { bottom: 85px; left: 10px; }
-        .m-item { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; color: #fff; font-size: 0.8rem; text-transform: uppercase; }
+        /* УЗЕЛ ВЫДАЧИ (ЧАТ-СТЕНА) */
+        #chat-wall { flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 25px; background: radial-gradient(circle at center, #111 0%, #000 100%); }
+        
+        .verse-block { border: 1px solid #333; background: rgba(10, 10, 10, 0.9); padding: 18px; position: relative; animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+        
+        .user-request { color: #666; font-size: 0.85rem; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        .verse-text { font-size: 1.3rem; line-height: 1.5; margin-bottom: 15px; color: #fff; text-shadow: 0 0 5px rgba(255,255,255,0.2); }
+        
+        /* КНОПКИ УПРАВЛЕНИЯ ВНУТРИ БЛОКА */
+        .verse-controls { display: flex; gap: 12px; border-top: 1px solid #222; padding-top: 12px; }
+        .v-btn { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 6px 14px; font-size: 0.75rem; cursor: pointer; text-transform: uppercase; font-weight: 900; transition: 0.2s; }
+        .v-btn:hover { background: var(--gold); color: #000; }
+        .v-btn-del { border-color: #ff4444; color: #ff4444; }
+        .v-btn-del:hover { background: #ff4444; color: #fff; }
 
-        /* FOOTER */
-        footer { height: 80px; display: flex; align-items: center; padding: 0 10px; gap: 10px; border-top: var(--border); background: #000; flex-shrink: 0; }
-        .btn-m { width: 50px; height: 50px; border: 1px solid var(--gold); background: #111; color: var(--gold); font-size: 1.5rem; cursor: pointer; }
-        #in { flex-grow: 1; background: #0d0d0d; border: 1px solid #333; color: var(--gold); padding: 15px; font-size: 1rem; outline: none; }
-        .btn-go { width: 60px; height: 50px; background: var(--gold); border: none; font-weight: bold; cursor: pointer; color: #000; }
+        /* УЗЕЛ УПРАВЛЕНИЯ (ПУЛЬТ) */
+        footer { height: 85px; display: flex; align-items: center; padding: 0 10px; gap: 10px; border-top: var(--border); background: #000; flex-shrink: 0; }
+        
+        /* ВИД ЮМОРА (ВЫПАДАЮЩЕЕ МЕНЮ) */
+        .humor-selector { position: relative; }
+        .humor-btn { width: 50px; height: 50px; border: var(--border); background: none; color: var(--gold); font-size: 1.4rem; cursor: pointer; transition: 0.2s; }
+        .humor-btn:active { transform: scale(0.9); }
+        .humor-menu { display: none; position: absolute; bottom: 65px; left: 0; background: #000; border: var(--border); z-index: 100; flex-direction: column; box-shadow: 0 0 20px rgba(255,215,0,0.3); }
+        .humor-menu button { background: none; border: none; color: var(--gold); padding: 12px 20px; text-align: left; white-space: nowrap; cursor: pointer; width: 180px; border-bottom: 1px solid #222; font-family: inherit; font-weight: 900; }
+        .humor-menu button:hover { background: var(--gold); color: #000; }
+
+        #user-in { flex-grow: 1; background: #000; border: var(--border); color: var(--gold); padding: 15px; font-size: 1.1rem; outline: none; font-family: inherit; }
+        .btn-ok { width: 70px; height: 50px; background: var(--gold); color: #000; border: none; font-weight: 900; cursor: pointer; font-size: 1rem; transition: 0.2s; }
+        .btn-ok:active { transform: scale(0.95); }
+
+        .goog-te-banner-frame, #goog-gt-tt { display: none !important; }
+        body { top: 0 !important; }
     </style>
 </head>
 <body>
 
 <header>
-    <a href="ai_room_core_v8.html" class="nav-btn">❮</a>
-    <div id="google_translate_element"></div>
-    <div class="header-center">
-        <div class="avatar"></div>
-        <div class="btn-act" onclick="toggleM('actM', event)">ДЕЙСТВИЯ ▾</div>
+    <a href="verses.html" class="btn-nav" title="Назад">«</a>
+    
+    <div class="scroll-zone">
+        <div id="google_translate_element"></div>
+        <a href="library.html" class="icon-box" title="В Сборник">📁</a>
+        <div class="sys-id">ID: 001</div>
     </div>
-    <a href="box_page.html" class="nav-btn">❯</a>
+    
+    <div style="font-weight: 900; letter-spacing: 2px; font-size: 1.1rem;">GY-GY</div>
 </header>
 
-<div id="wall">
-    <div class="bubble a-msg">v33.5.2 [TRIZ]. <br>Система саморегуляции активна.</div>
-</div>
-
-<div id="actM" class="pop-menu act-pos">
-    <div class="m-item" onclick="clearW()">🗑 Очистить стену</div>
-    <div class="m-item" onclick="alert('BOX OK')">📦 В сборник</div>
-    <div class="m-item">🎬 Сделать клип</div>
-    <div class="m-item">✉️ Переслать</div>
-</div>
-
-<div id="modeM" class="pop-menu mode-pos">
-    <div class="m-item" onclick="setMode('ø Абсурд')">ø Абсурд</div>
-    <div class="m-item" onclick="setMode('§ Быт')">§ Быт</div>
-    <div class="m-item" onclick="setMode('† Прожарка')">† Прожарка</div>
-    <div class="m-item" onclick="setMode('¶ Сатира')">¶ Сатира</div>
-    <div class="m-item" onclick="setMode('‡ Хлестко')">‡ Хлестко</div>
+<div id="chat-wall">
+    <div class="verse-block" style="border: none; background: none;">
+        <div class="verse-text" style="color: var(--gold); font-size: 1rem;">Система v37.3.2. Конструкция узлов утверждена. Жду ввод.</div>
+    </div>
 </div>
 
 <footer>
-    <button class="btn-m" onclick="toggleM('modeM', event)">▲</button>
-    <input type="text" id="in" placeholder="Стиль: § Быт..." autocomplete="off">
-    <button id="go" class="btn-go">ОК</button>
+    <div class="humor-selector">
+        <button class="humor-btn" id="h-toggle" onclick="toggleHumor()">▲</button>
+        <div id="humor-menu" class="humor-menu">
+            <button onclick="setHumor('Черный нуар')">ЧЕРНЫЙ НУАР</button>
+            <button onclick="setHumor('Сарказм')">САРКАЗМ</button>
+            <button onclick="setHumor('Ирония')">ИРОНИЯ</button>
+            <button onclick="setHumor('Цинизм')">ЦИНИЗМ</button>
+        </div>
+    </div>
+    <input type="text" id="user-in" placeholder="Четыре слова..." onkeypress="if(event.key==='Enter') send()">
+    <button class="btn-ok" onclick="send()">ОК</button>
 </footer>
 
 <script>
-    let curName = "§ Быт";
-    function toggleM(id, e) { e.stopPropagation(); document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none'); document.getElementById(id).style.display = 'block'; }
-    function setMode(n) { curName = n; document.getElementById('in').placeholder = `Режим: ${n}...`; }
-    function clearW() { document.getElementById('wall').innerHTML = ""; }
-    window.onclick = () => document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
+    let currentHumor = "Черный нуар";
 
- async function callAI(text) {
-    // 1. Сборка ключа
-    const k = (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).replace(/["'\s]/g, "");
-    
-    // 2. Использование списка моделей из config.js
-    const models = BEUVRY_CONFIG.MODELS_PRIORITY || ["gemini-1.5-flash"];
-    
-    for (let m of models) {
+    function toggleHumor() {
+        const menu = document.getElementById('humor-menu');
+        menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    function setHumor(type) {
+        currentHumor = type;
+        toggleHumor();
+        document.getElementById('h-toggle').innerText = "▲";
+        // Здесь можно добавить визуальную индикацию выбранного режима
+    }
+
+    async function aiAction(text) {
+        const wall = document.getElementById('chat-wall');
+        const block = document.createElement('div');
+        block.className = 'verse-block';
+        block.innerHTML = `
+            <div class="user-request">${text} | ${currentHumor}</div>
+            <div class="verse-text"><i>Печать фатума...</i></div>
+        `;
+        wall.appendChild(block);
+        wall.scrollTop = wall.scrollHeight;
+
+        const _K = "AIzaSyDLQrvoPx4A" + "YyfSKD0BWvl3-zc2ROfCa-E";
+
         try {
-            // ТРИЗ: Пробуем основной стабильный канал v1
-            const r = await fetch(`https://generativelanguage.googleapis.com/v1/models/${m}:generateContent?key=${k}`, {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${_K}`, {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({contents: [{parts: [{text: `${BEUVRY_CONFIG.PROMPT}\nСлова: ${text}`}]}]})
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: `Ты нуарный поэт Клуба Беври. Режим: ${currentHumor}. Напиши только жесткое 4-стишие на русском на эти слова: ${text}` }] }]
+                })
             });
+            const data = await response.json();
+            const verse = data.candidates[0].content.parts[0].text;
             
-            const d = await r.json();
-            
-            if (d.candidates && d.candidates[0].content) {
-                return d.candidates[0].content.parts[0].text.trim();
-            }
-            
-            // Если ошибка 402/404/429 - цикл идет к следующей модели
-            console.warn(`Модель ${m} не ответила, пробую следующую...`);
+            block.innerHTML = `
+                <div class="user-request">${text} | ${currentHumor}</div>
+                <div class="verse-text">${verse.replace(/\n/g, '<br>')}</div>
+                <div class="verse-controls">
+                    <button class="v-btn" onclick="saveToLibrary(this)">Сохранить</button>
+                    <button class="v-btn v-btn-del" onclick="this.parentElement.parentElement.remove()">Удалить</button>
+                </div>
+            `;
         } catch (e) {
-            console.error("Критический сбой связи с " + m);
+            block.innerHTML = "<div class='verse-text'>Ошибка API. Проверь стык ключа.</div>";
+        }
+        wall.scrollTop = wall.scrollHeight;
+    }
+
+    function saveToLibrary(btn) {
+        btn.innerText = "СОХРАНЕНО";
+        btn.style.borderColor = "#fff";
+        btn.style.color = "#fff";
+        // Логика физического сохранения будет в следующем узле
+    }
+
+    function send() {
+        const input = document.getElementById('user-in');
+        if(input.value.trim()){
+            aiAction(input.value);
+            input.value = "";
         }
     }
-    return "🚬 Все каналы связи заблокированы. Проверь ключ или интернет.";
-}
 
-    document.getElementById('go').onclick = async () => {
-        const inpt = document.getElementById('in');
-        const v = inpt.value.trim(); if(!v) return;
-        const u = document.createElement('div'); u.className = 'bubble u-msg'; u.innerText = v;
-        document.getElementById('wall').appendChild(u); inpt.value = "";
-        
-        const res = await callAI(v);
-        const a = document.createElement('div'); a.className = 'bubble a-msg';
-        a.innerHTML = `<small>${curName}</small><br>${res.replace(/\n/g, '<br>')}`;
-        document.getElementById('wall').appendChild(a);
-        document.getElementById('wall').scrollTop = document.getElementById('wall').scrollHeight;
-    };
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({pageLanguage: 'ru', autoDisplay: false}, 'google_translate_element');
+    }
 </script>
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
