@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | CORE v33.5.2 TRIZ-STABLE</title>
+    <title>GY-GY | CORE v33.5.3 TRIZ-STABLE</title>
     <script src="config.js"></script>
     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
     <script type="text/javascript">
@@ -90,26 +90,36 @@
     function clearW() { document.getElementById('wall').innerHTML = ""; }
     window.onclick = () => document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
 
-    async function callAI(text) {
-        const k = (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).replace(/["'\s]/g, "");
-        // ТРИЗ: Динамический перебор вариантов при отказе (404)
-        const models = ["gemini-1.5-flash-latest", "gemini-1.5-flash", "gemini-1.5-flash-8b", "gemini-2.0-flash-exp"];
-        
-        for (let m of models) {
-            try {
-                const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${k}`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({contents: [{parts: [{text: `${BEUVRY_CONFIG.PROMPT}\nСтиль: ${curName}. Слова: ${text}`}]}]})
-                });
-                const d = await r.json();
-                if (d.candidates && d.candidates[0].content) {
-                    return d.candidates[0].content.parts[0].text.trim();
-                }
-            } catch (e) { console.warn(`Модель ${m} недоступна, пробую следующую...`); }
+ async function callAI(text) {
+    // 1. Сборка ключа
+    const k = (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).replace(/["'\s]/g, "");
+    
+    // 2. Использование списка моделей из config.js
+    const models = BEUVRY_CONFIG.MODELS_PRIORITY || ["gemini-1.5-flash"];
+    
+    for (let m of models) {
+        try {
+            // ТРИЗ: Пробуем основной стабильный канал v1
+            const r = await fetch(`https://generativelanguage.googleapis.com/v1/models/${m}:generateContent?key=${k}`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({contents: [{parts: [{text: `${BEUVRY_CONFIG.PROMPT}\nСлова: ${text}`}]}]})
+            });
+            
+            const d = await r.json();
+            
+            if (d.candidates && d.candidates[0].content) {
+                return d.candidates[0].content.parts[0].text.trim();
+            }
+            
+            // Если ошибка 402/404/429 - цикл идет к следующей модели
+            console.warn(`Модель ${m} не ответила, пробую следующую...`);
+        } catch (e) {
+            console.error("Критический сбой связи с " + m);
         }
-        return "❌ Системный сбой API. Все варианты перебраны.";
     }
+    return "🚬 Все каналы связи заблокированы. Проверь ключ или интернет.";
+}
 
     document.getElementById('go').onclick = async () => {
         const inpt = document.getElementById('in');
