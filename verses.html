@@ -3,48 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | CORE v33.8.0 🔒</title>
+    <title>GY-GY | CORE v33.5.14 🔒</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; overflow: hidden; display: flex; flex-direction: column; }
         
+        /* HEADER_BLOCK 🔒 */
         header { height: 70px; display: flex; align-items: center; border-bottom: var(--border); background: #111; padding: 0 10px; justify-content: space-between; z-index: 1000; position: relative; }
+        
+        /* ЛОГОТИП И СТРЕЛКА ВОЗВРАТА 🔒 */
         .nav-fix { width: 45px; height: 45px; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--gold); text-decoration: none; font-weight: bold; }
+        .logo-gy { font-size: 1.2rem; font-weight: 900; color: var(--gold); margin-left: 10px; }
+        
+        .header-center { display: flex; align-items: center; gap: 10px; }
         .btn-act { color: var(--gold); font-size: 0.7rem; cursor: pointer; border: 1px solid var(--gold); padding: 8px 12px; background: #222; text-transform: uppercase; }
 
-        #wall { flex-grow: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 20px; }
-        
-        .verse-container { align-self: flex-end; width: 90%; display: flex; flex-direction: column; gap: 5px; }
-        .verse-text { padding: 12px; border-right: 3px solid #fff; background: rgba(255,255,255,0.05); color: #fff; text-align: right; outline: none; line-height: 1.4; white-space: pre-wrap; font-size: 1.1rem; }
-        .verse-controls { display: flex; justify-content: flex-end; }
-        .btn-save-mini { background: var(--gold); color: #000; border: none; padding: 6px 12px; font-size: 0.7rem; font-weight: bold; cursor: pointer; text-transform: uppercase; border-radius: 2px; }
+        #wall { flex-grow: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; }
+        .bubble { padding: 12px; max-width: 85%; border: 1px solid #333; border-radius: 4px; line-height: 1.4; position: relative; }
+        .u { align-self: flex-start; border-left: 3px solid var(--gold); background: rgba(255,215,0,0.05); color: #fff; }
+        .a { align-self: flex-end; border-right: 3px solid #fff; background: rgba(255,255,255,0.05); text-align: right; outline: none; }
 
-        .u-msg { align-self: flex-start; border-left: 3px solid var(--gold); padding: 10px; background: rgba(255,215,0,0.05); font-size: 0.9rem; max-width: 80%; color: #aaa; }
-
+        /* FOOTER_BLOCK 🔒 */
         footer { height: 80px; display: flex; align-items: center; padding: 0 10px; gap: 10px; border-top: 1px solid #222; background: #000; position: relative; }
-        .btn-mode { width: 50px; height: 50px; border: 1px solid #444; background: #111; color: var(--gold); cursor: pointer; font-size: 1.2rem; }
-        #in { flex-grow: 1; background: #0d0d0d; border: 1px solid #333; color: var(--gold); padding: 15px; font-size: 1rem; outline: none; border-radius: 4px; }
         
-        .pop-menu { display: none; position: absolute; background: #111; border: var(--border); z-index: 9999; box-shadow: 0 0 20px #000; }
+        /* КНОПКА ВЫБОРА ВИДОВ ЮМОРА 🔒 */
+        .btn-mode { width: 50px; height: 50px; border: 1px solid #444; background: #111; color: var(--gold); cursor: pointer; font-size: 1.2rem; z-index: 10; }
+        
+        #in { flex-grow: 1; background: #0d0d0d; border: 1px solid #333; color: var(--gold); padding: 15px; font-size: 1rem; outline: none; }
+        .btn-ok { height: 50px; padding: 0 20px; background: var(--gold); border: none; color: #000; font-weight: 900; cursor: pointer; }
+
+        .pop-menu { display: none; position: absolute; background: #111; border: var(--border); z-index: 9999; box-shadow: 0 0 25px #000; }
         #actMenu { top: 75px; right: 10px; width: 180px; }
         #modeMenu { bottom: 85px; left: 10px; width: 250px; }
-        .m-item { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-size: 0.85rem; text-transform: uppercase; color: #fff; }
-        .m-item b { color: var(--gold); display: block; margin-bottom: 3px; }
+        .m-item { padding: 12px; border-bottom: 1px solid #222; cursor: pointer; font-size: 0.8rem; color: #fff; text-transform: uppercase; }
+        .m-item b { display: block; color: var(--gold); margin-bottom: 2px; }
         .m-item:hover { background: var(--gold); color: #000; }
     </style>
 </head>
 <body>
 
 <header>
-    <a href="index.html" class="nav-fix">❮</a>
-    <div id="google_translate_element"></div>
+    <div style="display: flex; align-items: center;">
+        <a href="index.html" class="nav-fix">❮</a>
+        <div class="logo-gy">GY-GY</div>
+    </div>
+
+    <div class="header-center">
+        <div id="google_translate_element"></div>
+    </div>
+
     <div class="btn-act" onclick="toggleM('actMenu', event)">ДЕЙСТВИЯ ▾</div>
     <div id="actMenu" class="pop-menu">
         <div class="m-item" onclick="location.href='box_page.html'">📚 Сборник</div>
         <div class="m-item" onclick="alert('КЛИП В ОЧЕРЕДИ')">🎬 Клип</div>
         <div class="m-item">✉️ Переслать</div>
-        <div class="m-item" style="color: #666; border-top: 1px solid #333;" onclick="clearWall()">🗑 Очистить</div>
+        <div class="m-item" style="color:#666" onclick="clearWall()">🗑 Очистить стену</div>
     </div>
 </header>
 
@@ -52,19 +66,21 @@
 
 <footer>
     <button class="btn-mode" onclick="toggleM('modeMenu', event)">▲</button>
+    
     <input type="text" id="in" placeholder="Стиль: § Быт..." onkeydown="if(event.key==='Enter') send()">
-    <button class="nav-fix" style="background:var(--gold); color:#000; border:none; width: 60px;" onclick="send()">OK</button>
+    <button class="btn-ok" onclick="send()">OK</button>
 
     <div id="modeMenu" class="pop-menu">
         <div class="m-item" onclick="setM('ø Абсурд', 'абсурдный юмор, 4 строки')"><b>ø Абсурд</b>Безумные связи</div>
         <div class="m-item" onclick="setM('§ Быт', 'комедия наблюдений, 4 строки')"><b>§ Быт</b>Обычное смешное</div>
         <div class="m-item" onclick="setM('† Прожарка', 'инсалт-комедия, остро, 4 строки')"><b>† Прожарка</b>Дерзко и едко</div>
         <div class="m-item" onclick="setM('¶ Сатира', 'сатирический взгляд, 4 строки')"><b>¶ Сатира</b>Ирония над важным</div>
-        <div class="m-item" onclick="setM('‡ Хлестко', 'уан-лайнер, 1-2 строки')"><b>‡ Хлестко</b>Коротко в точку</div>
+        <div class="m-item" onclick="setM('‡ Хлестко', 'краткий уан-лайнер, 1-2 строки')"><b>‡ Хлестко</b>Коротко в точку</div>
     </div>
 </footer>
 
 <script>
+    /* LOGIC_CORE 🔒 */
     let curName = "§ Быт";
     let curDesc = "комедия наблюдений, ровно 4 строки";
 
@@ -84,17 +100,6 @@
 
     function clearWall() { document.getElementById('wall').innerHTML = ""; }
 
-    // ФУНКЦИЯ СОХРАНЕНИЯ В localStorage
-    function saveToBox(btn) {
-        const verseText = btn.closest('.verse-container').querySelector('.verse-text').innerText;
-        let box = JSON.parse(localStorage.getItem('gy_box') || '[]');
-        box.push({ text: verseText, date: new Date().toLocaleString(), style: curName });
-        localStorage.setItem('gy_box', JSON.stringify(box));
-        btn.innerText = "В СБОРНИКЕ!";
-        btn.style.background = "#fff";
-        setTimeout(() => { btn.innerText = "СОХРАНИТЬ"; btn.style.background = "var(--gold)"; }, 2000);
-    }
-
     async function send() {
         const input = document.getElementById('in');
         const wall = document.getElementById('wall');
@@ -102,7 +107,7 @@
         if (!val) return;
 
         const uMsg = document.createElement('div');
-        uMsg.className = 'u-msg';
+        uMsg.className = 'bubble u';
         uMsg.innerText = val;
         wall.appendChild(uMsg);
         input.value = "";
@@ -118,15 +123,11 @@
             const d = await r.json();
             if (d.candidates) {
                 const text = d.candidates[0].content.parts[0].text.trim();
-                const container = document.createElement('div');
-                container.className = 'verse-container';
-                container.innerHTML = `
-                    <div class="verse-text" contenteditable="true">${text}</div>
-                    <div class="verse-controls">
-                        <button class="btn-save-mini" onclick="saveToBox(this)">СОХРАНИТЬ</button>
-                    </div>
-                `;
-                wall.appendChild(container);
+                const aMsg = document.createElement('div');
+                aMsg.className = 'bubble a';
+                aMsg.contentEditable = "true";
+                aMsg.innerHTML = text.replace(/\n/g, '<br>');
+                wall.appendChild(aMsg);
             }
         } catch (e) { console.error(e); }
         wall.scrollTop = wall.scrollHeight;
