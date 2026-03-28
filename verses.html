@@ -4,145 +4,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY VERSES | v5.1.5</title>
+    <title>GY-GY | CORE v33.5.2 TRIZ-STABLE</title>
+    <script src="config.js"></script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage: 'ru'}, 'google_translate_element');
+        }
+    </script>
     <style>
-        :root {
-            --orange-neon: #ff8c00;
-            --gold: #ffd700;
-            --bg: #000;
-        }
+        :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
+        * { box-sizing: border-box; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; overflow: hidden; display: flex; flex-direction: column; }
+        
+        /* HEADER - STATIC CONSTANTS */
+        header { height: 70px; display: flex; align-items: center; border-bottom: var(--border); background: #111; padding: 0 10px; flex-shrink: 0; z-index: 1000; justify-content: space-between; }
+        .nav-btn { width: 40px; height: 40px; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--gold); text-decoration: none; font-weight: bold; flex-shrink: 0; }
+        
+        #google_translate_element { width: 150px; height: 35px; overflow: hidden; border: 1px solid #333; flex-shrink: 0; }
+        
+        .header-center { display: flex; align-items: center; gap: 10px; flex-grow: 1; justify-content: center; }
+        .avatar { width: 35px; height: 35px; border-radius: 50%; border: 1px solid var(--gold); background: url('https://api.dicebear.com/7.x/bottts/svg?seed=Beuvry') center/cover; flex-shrink: 0; }
+        .btn-act { color: var(--gold); font-size: 0.7rem; cursor: pointer; border: 1px solid #444; padding: 10px; background: #222; text-transform: uppercase; white-space: nowrap; }
 
-        body, html {
-            margin: 0; padding: 0;
-            width: 100%; height: 100%;
-            background: var(--bg);
-            color: #fff;
-            font-family: 'Courier New', monospace;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
+        /* WALL */
+        #wall { flex-grow: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; background: #000; }
+        .bubble { padding: 12px; max-width: 85%; border: 1px solid #333; position: relative; line-height: 1.4; }
+        .u-msg { align-self: flex-start; border-left: 3px solid var(--gold); background: rgba(255,215,0,0.02); color: #fff; }
+        .a-msg { align-self: flex-end; border-right: 3px solid #fff; background: rgba(255,255,255,0.05); text-align: right; }
 
-        /* --- ВЕРХНЯЯ ПАНЕЛЬ: ЖЕСТКАЯ НАВИГАЦИЯ --- */
-        header {
-            height: 60px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 15px;
-            border-bottom: 1px solid var(--gold);
-            flex-shrink: 0;
-            background: #000;
-        }
+        /* MENUS */
+        .pop-menu { display: none; position: absolute; background: #111; border: var(--border); z-index: 9999; width: 220px; box-shadow: 0 0 20px #000; }
+        .act-pos { top: 75px; right: 10px; }
+        .mode-pos { bottom: 85px; left: 10px; }
+        .m-item { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; color: #fff; font-size: 0.8rem; text-transform: uppercase; }
 
-        /* Стиль для обеих кнопок (ссылка и button) */
-        .nav-control {
-            text-decoration: none;
-            background: none; 
-            border: 1px solid var(--gold);
-            color: var(--gold); 
-            cursor: pointer;
-            width: 50px;
-            height: 40px;
-            font-size: 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            outline: none;
-            box-sizing: border-box;
-        }
-
-        /* --- ПОЛЕ ЧАТА --- */
-        #chat-wall {
-            flex-grow: 1; 
-            overflow-y: auto;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            background: #000;
-        }
-
-        .message {
-            padding: 5px 15px;
-            border-left: 2px solid var(--orange-neon);
-            color: var(--gold);
-            font-size: 1.2rem;
-            word-wrap: break-word;
-        }
-
-        /* --- НИЖНЯЯ СТРОКА ВВОДА --- */
-        footer {
-            height: 80px;
-            display: flex;
-            align-items: center;
-            padding: 0 15px;
-            gap: 10px;
-            border-top: 1px solid #222;
-            background: #000;
-            flex-shrink: 0;
-        }
-
-        #user-input {
-            flex-grow: 1;
-            background: #000;
-            border: 1px solid #333;
-            color: #fff;
-            padding: 15px;
-            font-family: inherit;
-            font-size: 1rem;
-            outline: none;
-        }
-
-        #user-input:focus {
-            border-color: var(--orange-neon);
-        }
-
-        #send-btn {
-            background: var(--orange-neon);
-            color: #000;
-            border: none;
-            padding: 15px 20px;
-            font-weight: bold;
-            cursor: pointer;
-            text-transform: uppercase;
-        }
+        /* FOOTER */
+        footer { height: 80px; display: flex; align-items: center; padding: 0 10px; gap: 10px; border-top: var(--border); background: #000; flex-shrink: 0; }
+        .btn-m { width: 50px; height: 50px; border: 1px solid var(--gold); background: #111; color: var(--gold); font-size: 1.5rem; cursor: pointer; }
+        #in { flex-grow: 1; background: #0d0d0d; border: 1px solid #333; color: var(--gold); padding: 15px; font-size: 1rem; outline: none; }
+        .btn-go { width: 60px; height: 50px; background: var(--gold); border: none; font-weight: bold; cursor: pointer; color: #000; }
     </style>
 </head>
 <body>
 
 <header>
-    <a href="ai_room_core_v8.html" class="nav-control">«</a>
-    
-    <div></div> <button class="nav-control" onclick="window.history.forward()">»</button>
+    <a href="ai_room_core_v8.html" class="nav-btn">❮</a>
+    <div id="google_translate_element"></div>
+    <div class="header-center">
+        <div class="avatar"></div>
+        <div class="btn-act" onclick="toggleM('actM', event)">ДЕЙСТВИЯ ▾</div>
+    </div>
+    <a href="box_page.html" class="nav-btn">❯</a>
 </header>
 
-<div id="chat-wall">
-    <div class="message">Айсберг дно приехал кот,</div>
-    <div class="message">Кресло помнит тех, кто не вернулся...</div>
+<div id="wall">
+    <div class="bubble a-msg">v33.5.2 [TRIZ]. <br>Система саморегуляции активна.</div>
+</div>
+
+<div id="actM" class="pop-menu act-pos">
+    <div class="m-item" onclick="clearW()">🗑 Очистить стену</div>
+    <div class="m-item" onclick="alert('BOX OK')">📦 В сборник</div>
+    <div class="m-item">🎬 Сделать клип</div>
+    <div class="m-item">✉️ Переслать</div>
+</div>
+
+<div id="modeM" class="pop-menu mode-pos">
+    <div class="m-item" onclick="setMode('ø Абсурд')">ø Абсурд</div>
+    <div class="m-item" onclick="setMode('§ Быт')">§ Быт</div>
+    <div class="m-item" onclick="setMode('† Прожарка')">† Прожарка</div>
+    <div class="m-item" onclick="setMode('¶ Сатира')">¶ Сатира</div>
+    <div class="m-item" onclick="setMode('‡ Хлестко')">‡ Хлестко</div>
 </div>
 
 <footer>
-    <input type="text" id="user-input" placeholder="Введите текст..." onkeypress="if(event.key==='Enter') pushMsg()">
-    <button id="send-btn" onclick="pushMsg()">ОТПРАВИТЬ</button>
+    <button class="btn-m" onclick="toggleM('modeM', event)">▲</button>
+    <input type="text" id="in" placeholder="Стиль: § Быт..." autocomplete="off">
+    <button id="go" class="btn-go">ОК</button>
 </footer>
 
 <script>
-    function pushMsg() {
-        const input = document.getElementById('user-input');
-        const wall = document.getElementById('chat-wall');
-        
-        if(input.value.trim() !== "") {
-            const msg = document.createElement('div');
-            msg.className = 'message';
-            msg.innerText = input.value;
-            wall.appendChild(msg);
-            
-            input.value = "";
-            wall.scrollTop = wall.scrollHeight;
-        }
-    }
-</script>
+    let curName = "§ Быт";
+    function toggleM(id, e) { e.stopPropagation(); document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none'); document.getElementById(id).style.display = 'block'; }
+    function setMode(n) { curName = n; document.getElementById('in').placeholder = `Режим: ${n}...`; }
+    function clearW() { document.getElementById('wall').innerHTML = ""; }
+    window.onclick = () => document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
 
+    async function callAI(text) {
+        const k = (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).replace(/["'\s]/g, "");
+        // ТРИЗ: Динамический перебор вариантов при отказе (404)
+        const models = ["gemini-1.5-flash-latest", "gemini-1.5-flash", "gemini-1.5-flash-8b", "gemini-2.0-flash-exp"];
+        
+        for (let m of models) {
+            try {
+                const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${k}`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({contents: [{parts: [{text: `${BEUVRY_CONFIG.PROMPT}\nСтиль: ${curName}. Слова: ${text}`}]}]})
+                });
+                const d = await r.json();
+                if (d.candidates && d.candidates[0].content) {
+                    return d.candidates[0].content.parts[0].text.trim();
+                }
+            } catch (e) { console.warn(`Модель ${m} недоступна, пробую следующую...`); }
+        }
+        return "❌ Системный сбой API. Все варианты перебраны.";
+    }
+
+    document.getElementById('go').onclick = async () => {
+        const inpt = document.getElementById('in');
+        const v = inpt.value.trim(); if(!v) return;
+        const u = document.createElement('div'); u.className = 'bubble u-msg'; u.innerText = v;
+        document.getElementById('wall').appendChild(u); inpt.value = "";
+        
+        const res = await callAI(v);
+        const a = document.createElement('div'); a.className = 'bubble a-msg';
+        a.innerHTML = `<small>${curName}</small><br>${res.replace(/\n/g, '<br>')}`;
+        document.getElementById('wall').appendChild(a);
+        document.getElementById('wall').scrollTop = document.getElementById('wall').scrollHeight;
+    };
+</script>
 </body>
 </html>
