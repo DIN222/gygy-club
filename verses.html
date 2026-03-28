@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | CORE v33.5.12</title>
+    <title>GY-GY | CORE v33.5.13</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
@@ -99,6 +99,7 @@ async function send() {
         const val = input.value.trim();
         if (!val) return;
 
+        // 1. Твой текст на стену
         const uMsg = document.createElement('div');
         uMsg.className = 'bubble u';
         uMsg.innerText = val;
@@ -108,12 +109,11 @@ async function send() {
 
         const cleanKey = (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).replace(/[^a-zA-Z0-9_-]/g, "");
         
-        // ТРИЗ: Используем МАКСИМАЛЬНО точные имена моделей для 2026 года
+        // ТРИЗ: Используем только те модели, которые ТЫ ЛИЧНО подтвердил списком
         const models = [
-            "gemini-1.5-flash-latest", 
-            "gemini-1.5-flash", 
-            "gemini-1.5-flash-8b-latest",
-            "gemini-2.0-flash-exp"
+            "gemini-3.1-flash-lite-preview", // Новейшая и быстрая (Март 2026)
+            "gemini-2.5-flash",              // Самая стабильная во Франции
+            "gemini-2.0-flash-latest"        // Резерв
         ];
         
         let success = false;
@@ -122,7 +122,7 @@ async function send() {
         for (let m of models) {
             if (success) break;
             try {
-                // Пробуем v1beta, так как -latest часто живут только там
+                // Твой список показал, что v1beta — основной путь для этих моделей
                 const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${cleanKey}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -137,14 +137,15 @@ async function send() {
                     const resText = d.candidates[0].content.parts[0].text.trim();
                     const aMsg = document.createElement('div');
                     aMsg.className = 'bubble a';
-                    aMsg.innerHTML = `<small style="opacity:0.5">${curName} [${m}]</small><br>${resText.replace(/\n/g, '<br>')}`;
+                    // Выводим результат и имя новой модели для гордости
+                    aMsg.innerHTML = `<small style="opacity:0.5">${curName} [${m.replace('gemini-', '')}]</small><br>${resText.replace(/\n/g, '<br>')}`;
                     wall.appendChild(aMsg);
                     success = true;
-                } else if (d.error) {
-                    lastError = `${m}: ${d.error.message}`;
+                } else {
+                    lastError = d.error ? d.error.message : "Ошибка доступа";
                 }
             } catch (e) { 
-                lastError = "Сбой сети"; 
+                lastError = "Сбой связи"; 
             }
         }
 
@@ -152,12 +153,11 @@ async function send() {
             const errMsg = document.createElement('div');
             errMsg.className = 'bubble a';
             errMsg.style.color = "#ff4444";
-            errMsg.innerText = "ФИНАЛЬНЫЙ ОТКАЗ: " + lastError;
+            errMsg.innerText = "ОТКАЗ: " + lastError;
             wall.appendChild(errMsg);
         }
         wall.scrollTop = wall.scrollHeight;
     }
-
     window.onclick = () => document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
 </script>
 
