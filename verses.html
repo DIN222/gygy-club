@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | CORE v33.5.10</title>
+    <title>GY-GY | CORE v33.5.11</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
@@ -93,13 +93,13 @@
 
     function clearWall() { document.getElementById('wall').innerHTML = ""; }
 
-    async function send() {
+   async function send() {
         const input = document.getElementById('in');
         const wall = document.getElementById('wall');
         const val = input.value.trim();
         if (!val) return;
 
-        // Выводим твой текст
+        // 1. Отображаем твой ввод
         const uMsg = document.createElement('div');
         uMsg.className = 'bubble u';
         uMsg.innerText = val;
@@ -109,15 +109,16 @@
 
         const cleanKey = (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).replace(/[^a-zA-Z0-9_-]/g, "");
         
-        // ТРИЗ: Пробуем сначала стабильный v1, потом v1beta
-        const endpoints = ["v1", "v1beta"];
+        // ТРИЗ: Список моделей, которые ОБЯЗАНЫ быть во Франции в 2026
+        const models = ["gemini-1.5-flash", "gemini-1.5-flash-8b", "gemini-1.5-pro"];
         let success = false;
         let lastError = "";
 
-        for (let ver of endpoints) {
+        for (let m of models) {
             if (success) break;
             try {
-                const r = await fetch(`https://generativelanguage.googleapis.com/${ver}/models/gemini-1.5-flash:generateContent?key=${cleanKey}`, {
+                // Используем строго стабильную версию v1
+                const r = await fetch(`https://generativelanguage.googleapis.com/v1/models/${m}:generateContent?key=${cleanKey}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -131,14 +132,14 @@
                     const resText = d.candidates[0].content.parts[0].text.trim();
                     const aMsg = document.createElement('div');
                     aMsg.className = 'bubble a';
-                    aMsg.innerHTML = `<small style="opacity:0.5">${curName}</small><br>${resText.replace(/\n/g, '<br>')}`;
+                    aMsg.innerHTML = `<small style="opacity:0.5">${curName} (${m})</small><br>${resText.replace(/\n/g, '<br>')}`;
                     wall.appendChild(aMsg);
                     success = true;
-                } else {
-                    lastError = d.error ? d.error.message : "Неизвестная ошибка";
+                } else if (d.error) {
+                    lastError = `${m}: ${d.error.message}`;
                 }
             } catch (e) { 
-                lastError = "Сбой сети или блокировка";
+                lastError = "Сбой сети"; 
             }
         }
 
@@ -146,7 +147,7 @@
             const errMsg = document.createElement('div');
             errMsg.className = 'bubble a';
             errMsg.style.color = "#ff4444";
-            errMsg.innerText = "СИСТЕМА: " + lastError;
+            errMsg.innerText = "СИСТЕМА ОТКАЗА: " + lastError;
             wall.appendChild(errMsg);
         }
         wall.scrollTop = wall.scrollHeight;
