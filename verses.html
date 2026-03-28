@@ -3,38 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | CORE v33.5.8 FULL</title>
+    <title>GY-GY | CORE v33.5.8</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; display: flex; flex-direction: column; overflow: hidden; }
         
         /* HEADER */
-        header { height: 70px; display: flex; align-items: center; border-bottom: var(--border); background: #111; padding: 0 5px; justify-content: space-between; z-index: 1000; flex-shrink: 0; gap: 5px; }
-        .nav-fix { width: 40px; height: 45px; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--gold); text-decoration: none; font-weight: bold; font-size: 1.1rem; flex-shrink: 0; }
-        .header-center { display: flex; align-items: center; gap: 8px; flex-grow: 1; justify-content: center; overflow: hidden; }
-        #google_translate_element { width: 130px; overflow: hidden; height: 35px; border: 1px solid #333; }
-        .avatar { width: 35px; height: 35px; border-radius: 50%; border: 1px solid var(--gold); background: #333; flex-shrink: 0; }
-        .btn-act { color: var(--gold); font-size: 0.65rem; cursor: pointer; border: 1px solid var(--gold); padding: 10px 6px; background: #222; text-transform: uppercase; white-space: nowrap; }
+        header { height: 70px; display: flex; align-items: center; border-bottom: var(--border); background: #111; padding: 0 10px; justify-content: space-between; z-index: 1000; flex-shrink: 0; position: relative; }
+        .nav-fix { width: 45px; height: 45px; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--gold); text-decoration: none; font-weight: bold; font-size: 1.2rem; }
+        .header-center { display: flex; align-items: center; gap: 10px; }
+        .avatar { width: 35px; height: 35px; border-radius: 50%; border: 1px solid var(--gold); background: #333; }
+        .btn-act { color: var(--gold); font-size: 0.7rem; cursor: pointer; border: 1px solid var(--gold); padding: 8px 12px; background: #222; text-transform: uppercase; }
 
         /* WALL */
         #wall { flex-grow: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; scroll-behavior: smooth; }
-        .bubble { padding: 12px; max-width: 85%; border: 1px solid #333; border-radius: 4px; line-height: 1.4; position: relative; }
-        .u { align-self: flex-start; border-left: 3px solid var(--gold); background: rgba(255,215,0,0.03); color: #fff; }
+        .bubble { padding: 12px; max-width: 85%; border: 1px solid #333; border-radius: 4px; line-height: 1.4; }
+        .u { align-self: flex-start; border-left: 3px solid var(--gold); background: rgba(255,215,0,0.05); color: #fff; }
         .a { align-self: flex-end; border-right: 3px solid #fff; background: rgba(255,255,255,0.05); text-align: right; }
 
         /* FOOTER */
-        footer { height: 80px; display: flex; align-items: center; padding: 0 10px; gap: 10px; border-top: 1px solid #222; background: #000; flex-shrink: 0; }
-        .btn-mode { width: 50px; height: 50px; border: 1px solid #444; background: #111; color: var(--gold); cursor: pointer; font-size: 1.2rem; }
+        footer { height: 80px; display: flex; align-items: center; padding: 0 10px; gap: 10px; border-top: 1px solid #222; background: #000; flex-shrink: 0; position: relative; }
+        .btn-mode { width: 50px; height: 50px; border: 1px solid #444; background: #111; color: var(--gold); cursor: pointer; font-size: 1.2rem; z-index: 10; }
         #in { flex-grow: 1; background: #0d0d0d; border: 1px solid #333; color: var(--gold); padding: 15px; font-size: 1rem; outline: none; }
-        .btn-ok { height: 50px; padding: 0 15px; background: var(--gold); border: none; color: #000; font-weight: 900; cursor: pointer; }
+        .btn-ok { height: 50px; padding: 0 20px; background: var(--gold); border: none; color: #000; font-weight: 900; cursor: pointer; }
 
-        /* МЕНЮ */
-        .pop-menu { display: none; position: absolute; background: #111; border: var(--border); z-index: 2000; box-shadow: 0 0 20px #000; }
-        #actMenu { top: 75px; right: 50px; width: 180px; }
-        #modeMenu { bottom: 85px; left: 10px; width: 240px; }
+        /* ВЫПАДАЮЩИЕ СПИСКИ (FIXED) */
+        .pop-menu { display: none; position: absolute; background: #111; border: var(--border); z-index: 9999; box-shadow: 0 0 25px #000; }
+        #actMenu { top: 75px; right: 10px; width: 180px; }
+        #modeMenu { bottom: 85px; left: 10px; width: 250px; }
         .m-item { padding: 12px; border-bottom: 1px solid #222; cursor: pointer; font-size: 0.8rem; color: #fff; text-transform: uppercase; }
-        .m-item b { display: block; color: var(--gold); font-size: 0.9rem; }
+        .m-item b { display: block; color: var(--gold); margin-bottom: 2px; }
         .m-item:hover { background: var(--gold); color: #000; }
     </style>
 </head>
@@ -45,46 +44,50 @@
     <div class="header-center">
         <div id="google_translate_element"></div>
         <div class="avatar"></div>
-        <div class="btn-act" onclick="toggleM('actMenu', event)">ДЕЙСТВИЯ ▾</div>
     </div>
+    <div class="btn-act" onclick="toggleM('actMenu', event)">ДЕЙСТВИЯ ▾</div>
     <a href="box_page.html" class="nav-fix">❯</a>
+
+    <div id="actMenu" class="pop-menu">
+        <div class="m-item" onclick="clearWall()">🗑 Очистить стену</div>
+        <div class="m-item" onclick="alert('BOX OK')">📦 В сборник</div>
+        <div class="m-item">🎬 Сделать клип</div>
+        <div class="m-item">✉️ Переслать</div>
+    </div>
 </header>
 
 <div id="wall">
-    <div class="bubble a">С чего начнем? [v33.5.7]</div>
-</div>
-
-<div id="actMenu" class="pop-menu">
-    <div class="m-item" onclick="clearWall()">🗑 Очистить </div>
-    <div class="m-item" onclick="alert('BOX OK')">📦 Сборник</div>
-    <div class="m-item">🎬 Сделать клип</div>
-    <div class="m-item">✉️ Переслать</div>
-</div>
-
-<div id="modeMenu" class="pop-menu">
-    <div class="m-item" onclick="setM('ø Абсурд', 'абсурдный юмор, 4 строки')"><b>ø Абсурд</b>Безумные связи</div>
-    <div class="m-item" onclick="setM('§ Быт', 'комедия наблюдений, 4 строки')"><b>§ Быт</b>Обычное смешное</div>
-    <div class="m-item" onclick="setM('† Прожарка', 'инсалт-комедия, остро, 4 строки')"><b>† Прожарка</b>Дерзко и едко</div>
-    <div class="m-item" onclick="setM('¶ Сатира', 'сатирический взгляд, 4 строки')"><b>¶ Сатира</b>Ирония над важным</div>
-    <div class="m-item" onclick="setM('‡ Хлестко', 'краткий уан-лайнер, 1-2 строки')"><b>‡ Хлестко</b>Коротко в точку</div>
+    <div class="bubble a">С чего начнем? [v33.5.8]</div>
 </div>
 
 <footer>
     <button class="btn-mode" onclick="toggleM('modeMenu', event)">▲</button>
     <input type="text" id="in" placeholder="Стиль: § Быт..." onkeydown="if(event.key==='Enter') send()">
     <button class="btn-ok" onclick="send()">ОК</button>
+
+    <div id="modeMenu" class="pop-menu">
+        <div class="m-item" onclick="setM('ø Абсурд', 'абсурдный юмор, 4 строки')"><b>ø Абсурд</b>Безумные связи</div>
+        <div class="m-item" onclick="setM('§ Быт', 'комедия наблюдений, 4 строки')"><b>§ Быт</b>Обычное смешное</div>
+        <div class="m-item" onclick="setM('† Прожарка', 'инсалт-комедия, остро, 4 строки')"><b>† Прожарка</b>Дерзко и едко</div>
+        <div class="m-item" onclick="setM('¶ Сатира', 'сатирический взгляд, 4 строки')"><b>¶ Сатира</b>Ирония над важным</div>
+        <div class="m-item" onclick="setM('‡ Хлестко', 'краткий уан-лайнер, 1-2 строки')"><b>‡ Хлестко</b>Коротко в точку</div>
+    </div>
 </footer>
 
 <script>
     let curName = "§ Быт";
     let curDesc = "комедия наблюдений, ровно 4 строки";
 
+    // Улучшенная функция переключения
     function toggleM(id, e) {
-        if(e) e.stopPropagation();
-        const el = document.getElementById(id);
-        const isShow = el.style.display === 'block';
-        document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
-        el.style.display = isShow ? 'none' : 'block';
+        if (e) e.stopPropagation();
+        const menu = document.getElementById(id);
+        const allMenus = document.querySelectorAll('.pop-menu');
+        
+        const isCurrentlyVisible = menu.style.display === 'block';
+        
+        allMenus.forEach(m => m.style.display = 'none');
+        menu.style.display = isCurrentlyVisible ? 'none' : 'block';
     }
 
     function setM(name, desc) {
@@ -93,9 +96,9 @@
         document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
     }
 
-    function clearWall() { document.getElementById('wall').innerHTML = ""; toggleM('actMenu'); }
+    function clearWall() { document.getElementById('wall').innerHTML = ""; }
 
-  async function send() {
+    async function send() {
         const input = document.getElementById('in');
         const wall = document.getElementById('wall');
         const val = input.value.trim();
@@ -110,7 +113,7 @@
 
         const cleanKey = (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).replace(/[^a-zA-Z0-9_-]/g, "");
         
-        // ТРИЗ: Пробуем сначала стабильный канал v1, если v1beta закрыт
+        // Автоматический перебор версий API для Франции
         const endpoints = ["v1", "v1beta"];
         let success = false;
 
@@ -124,45 +127,26 @@
                         contents: [{ parts: [{ text: `${BEUVRY_CONFIG.PROMPT}\nСтиль: ${curDesc}. Слова: ${val}` }] }]
                     })
                 });
-
-                const data = await r.json();
-                
-                if (data.candidates && data.candidates[0].content) {
-                    const resText = data.candidates[0].content.parts[0].text.trim();
+                const d = await r.json();
+                if (d.candidates && d.candidates[0].content) {
+                    const res = d.candidates[0].content.parts[0].text.trim();
                     const aMsg = document.createElement('div');
                     aMsg.className = 'bubble a';
-                    aMsg.innerHTML = `<small style="opacity:0.5">${curName}</small><br>${resText.replace(/\n/g, '<br>')}`;
+                    aMsg.innerHTML = `<small style="opacity:0.5">${curName}</small><br>${res.replace(/\n/g, '<br>')}`;
                     wall.appendChild(aMsg);
                     success = true;
                 } else if (ver === "v1beta") {
-                    // Если и v1beta не помог, выводим ошибку
                     const aMsg = document.createElement('div');
                     aMsg.className = 'bubble a';
-                    aMsg.innerText = "ОШИБКА: " + (data.error ? data.error.message : "Доступ ограничен");
+                    aMsg.innerText = "ОШИБКА: " + (d.error ? d.error.message : "Сбой API");
                     wall.appendChild(aMsg);
                 }
-            } catch (e) { 
-                console.error("Ошибка на " + ver); 
-            }
+            } catch (e) { console.error(e); }
         }
         wall.scrollTop = wall.scrollHeight;
     }
 
-            const data = await r.json();
-            const aMsg = document.createElement('div');
-            aMsg.className = 'bubble a';
-
-            if (data.candidates && data.candidates[0].content) {
-                const resText = data.candidates[0].content.parts[0].text.trim();
-                aMsg.innerHTML = `<small style="opacity:0.5">${curName}</small><br>${resText.replace(/\n/g, '<br>')}`;
-            } else {
-                aMsg.innerText = "ОШИБКА API: " + (data.error ? data.error.message : "Пустой ответ");
-            }
-            wall.appendChild(aMsg);
-            wall.scrollTop = wall.scrollHeight;
-        } catch (e) { console.error(e); }
-    }
-
+    // Закрытие при клике мимо
     window.onclick = () => document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
 </script>
 
