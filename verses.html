@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | CORE v33.5.9</title>
+    <title>GY-GY | CORE v33.5.10</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
@@ -73,21 +73,16 @@
         <div class="m-item" onclick="setM('‡ Хлестко', 'краткий уан-лайнер, 1-2 строки')"><b>‡ Хлестко</b>Коротко в точку</div>
     </div>
 </footer>
-
 <script>
     let curName = "§ Быт";
     let curDesc = "комедия наблюдений, ровно 4 строки";
 
-    // Улучшенная функция переключения
     function toggleM(id, e) {
         if (e) e.stopPropagation();
         const menu = document.getElementById(id);
-        const allMenus = document.querySelectorAll('.pop-menu');
-        
-        const isCurrentlyVisible = menu.style.display === 'block';
-        
-        allMenus.forEach(m => m.style.display = 'none');
-        menu.style.display = isCurrentlyVisible ? 'none' : 'block';
+        const isShow = menu.style.display === 'block';
+        document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
+        menu.style.display = isShow ? 'none' : 'block';
     }
 
     function setM(name, desc) {
@@ -104,6 +99,7 @@
         const val = input.value.trim();
         if (!val) return;
 
+        // Выводим твой текст
         const uMsg = document.createElement('div');
         uMsg.className = 'bubble u';
         uMsg.innerText = val;
@@ -113,9 +109,10 @@
 
         const cleanKey = (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).replace(/[^a-zA-Z0-9_-]/g, "");
         
-        // Автоматический перебор версий API для Франции
+        // ТРИЗ: Пробуем сначала стабильный v1, потом v1beta
         const endpoints = ["v1", "v1beta"];
         let success = false;
+        let lastError = "";
 
         for (let ver of endpoints) {
             if (success) break;
@@ -127,26 +124,34 @@
                         contents: [{ parts: [{ text: `${BEUVRY_CONFIG.PROMPT}\nСтиль: ${curDesc}. Слова: ${val}` }] }]
                     })
                 });
+
                 const d = await r.json();
+                
                 if (d.candidates && d.candidates[0].content) {
-                    const res = d.candidates[0].content.parts[0].text.trim();
+                    const resText = d.candidates[0].content.parts[0].text.trim();
                     const aMsg = document.createElement('div');
                     aMsg.className = 'bubble a';
-                    aMsg.innerHTML = `<small style="opacity:0.5">${curName}</small><br>${res.replace(/\n/g, '<br>')}`;
+                    aMsg.innerHTML = `<small style="opacity:0.5">${curName}</small><br>${resText.replace(/\n/g, '<br>')}`;
                     wall.appendChild(aMsg);
                     success = true;
-                } else if (ver === "v1beta") {
-                    const aMsg = document.createElement('div');
-                    aMsg.className = 'bubble a';
-                    aMsg.innerText = "ОШИБКА: " + (d.error ? d.error.message : "Сбой API");
-                    wall.appendChild(aMsg);
+                } else {
+                    lastError = d.error ? d.error.message : "Неизвестная ошибка";
                 }
-            } catch (e) { console.error(e); }
+            } catch (e) { 
+                lastError = "Сбой сети или блокировка";
+            }
+        }
+
+        if (!success) {
+            const errMsg = document.createElement('div');
+            errMsg.className = 'bubble a';
+            errMsg.style.color = "#ff4444";
+            errMsg.innerText = "СИСТЕМА: " + lastError;
+            wall.appendChild(errMsg);
         }
         wall.scrollTop = wall.scrollHeight;
     }
 
-    // Закрытие при клике мимо
     window.onclick = () => document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
 </script>
 
