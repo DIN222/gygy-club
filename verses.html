@@ -3,76 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | CORE v33.5.13</title>
+    <title>GY-GY | CORE v33.8.0 🔒</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; display: flex; flex-direction: column; overflow: hidden; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; overflow: hidden; display: flex; flex-direction: column; }
         
-        /* HEADER */
-        header { height: 70px; display: flex; align-items: center; border-bottom: var(--border); background: #111; padding: 0 10px; justify-content: space-between; z-index: 1000; flex-shrink: 0; position: relative; }
-        .nav-fix { width: 45px; height: 45px; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--gold); text-decoration: none; font-weight: bold; font-size: 1.2rem; }
-        .header-center { display: flex; align-items: center; gap: 10px; }
-        .avatar { width: 35px; height: 35px; border-radius: 50%; border: 1px solid var(--gold); background: #333; }
+        header { height: 70px; display: flex; align-items: center; border-bottom: var(--border); background: #111; padding: 0 10px; justify-content: space-between; z-index: 1000; position: relative; }
+        .nav-fix { width: 45px; height: 45px; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--gold); text-decoration: none; font-weight: bold; }
         .btn-act { color: var(--gold); font-size: 0.7rem; cursor: pointer; border: 1px solid var(--gold); padding: 8px 12px; background: #222; text-transform: uppercase; }
 
-        /* WALL */
-        #wall { flex-grow: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; scroll-behavior: smooth; }
-        .bubble { padding: 12px; max-width: 85%; border: 1px solid #333; border-radius: 4px; line-height: 1.4; }
-        .u { align-self: flex-start; border-left: 3px solid var(--gold); background: rgba(255,215,0,0.05); color: #fff; }
-        .a { align-self: flex-end; border-right: 3px solid #fff; background: rgba(255,255,255,0.05); text-align: right; }
+        #wall { flex-grow: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 20px; }
+        
+        .verse-container { align-self: flex-end; width: 90%; display: flex; flex-direction: column; gap: 5px; }
+        .verse-text { padding: 12px; border-right: 3px solid #fff; background: rgba(255,255,255,0.05); color: #fff; text-align: right; outline: none; line-height: 1.4; white-space: pre-wrap; font-size: 1.1rem; }
+        .verse-controls { display: flex; justify-content: flex-end; }
+        .btn-save-mini { background: var(--gold); color: #000; border: none; padding: 6px 12px; font-size: 0.7rem; font-weight: bold; cursor: pointer; text-transform: uppercase; border-radius: 2px; }
 
-        /* FOOTER */
-        footer { height: 80px; display: flex; align-items: center; padding: 0 10px; gap: 10px; border-top: 1px solid #222; background: #000; flex-shrink: 0; position: relative; }
-        .btn-mode { width: 50px; height: 50px; border: 1px solid #444; background: #111; color: var(--gold); cursor: pointer; font-size: 1.2rem; z-index: 10; }
-        #in { flex-grow: 1; background: #0d0d0d; border: 1px solid #333; color: var(--gold); padding: 15px; font-size: 1rem; outline: none; }
-        .btn-ok { height: 50px; padding: 0 20px; background: var(--gold); border: none; color: #000; font-weight: 900; cursor: pointer; }
+        .u-msg { align-self: flex-start; border-left: 3px solid var(--gold); padding: 10px; background: rgba(255,215,0,0.05); font-size: 0.9rem; max-width: 80%; color: #aaa; }
 
-        /* ВЫПАДАЮЩИЕ СПИСКИ (FIXED) */
-        .pop-menu { display: none; position: absolute; background: #111; border: var(--border); z-index: 9999; box-shadow: 0 0 25px #000; }
+        footer { height: 80px; display: flex; align-items: center; padding: 0 10px; gap: 10px; border-top: 1px solid #222; background: #000; position: relative; }
+        .btn-mode { width: 50px; height: 50px; border: 1px solid #444; background: #111; color: var(--gold); cursor: pointer; font-size: 1.2rem; }
+        #in { flex-grow: 1; background: #0d0d0d; border: 1px solid #333; color: var(--gold); padding: 15px; font-size: 1rem; outline: none; border-radius: 4px; }
+        
+        .pop-menu { display: none; position: absolute; background: #111; border: var(--border); z-index: 9999; box-shadow: 0 0 20px #000; }
         #actMenu { top: 75px; right: 10px; width: 180px; }
         #modeMenu { bottom: 85px; left: 10px; width: 250px; }
-        .m-item { padding: 12px; border-bottom: 1px solid #222; cursor: pointer; font-size: 0.8rem; color: #fff; text-transform: uppercase; }
-        .m-item b { display: block; color: var(--gold); margin-bottom: 2px; }
+        .m-item { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-size: 0.85rem; text-transform: uppercase; color: #fff; }
+        .m-item b { color: var(--gold); display: block; margin-bottom: 3px; }
         .m-item:hover { background: var(--gold); color: #000; }
     </style>
 </head>
 <body>
 
 <header>
-    <a href="ai_room_core_v8.html" class="nav-fix">❮</a>
-    <div class="header-center">
-        <div id="google_translate_element"></div>
-        <div class="avatar"></div>
-    </div>
+    <a href="index.html" class="nav-fix">❮</a>
+    <div id="google_translate_element"></div>
     <div class="btn-act" onclick="toggleM('actMenu', event)">ДЕЙСТВИЯ ▾</div>
-    <a href="box_page.html" class="nav-fix">❯</a>
-
     <div id="actMenu" class="pop-menu">
-        <div class="m-item" onclick="clearWall()">🗑 Очистить стену</div>
-        <div class="m-item" onclick="alert('BOX OK')">📦 В сборник</div>
-        <div class="m-item">🎬 Сделать клип</div>
+        <div class="m-item" onclick="location.href='box_page.html'">📚 Сборник</div>
+        <div class="m-item" onclick="alert('КЛИП В ОЧЕРЕДИ')">🎬 Клип</div>
         <div class="m-item">✉️ Переслать</div>
+        <div class="m-item" style="color: #666; border-top: 1px solid #333;" onclick="clearWall()">🗑 Очистить</div>
     </div>
 </header>
 
-<div id="wall">
-    <div class="bubble a">С чего начнем? [v33.5.8]</div>
-</div>
+<div id="wall"></div>
 
 <footer>
     <button class="btn-mode" onclick="toggleM('modeMenu', event)">▲</button>
     <input type="text" id="in" placeholder="Стиль: § Быт..." onkeydown="if(event.key==='Enter') send()">
-    <button class="btn-ok" onclick="send()">ОК</button>
+    <button class="nav-fix" style="background:var(--gold); color:#000; border:none; width: 60px;" onclick="send()">OK</button>
 
     <div id="modeMenu" class="pop-menu">
         <div class="m-item" onclick="setM('ø Абсурд', 'абсурдный юмор, 4 строки')"><b>ø Абсурд</b>Безумные связи</div>
         <div class="m-item" onclick="setM('§ Быт', 'комедия наблюдений, 4 строки')"><b>§ Быт</b>Обычное смешное</div>
         <div class="m-item" onclick="setM('† Прожарка', 'инсалт-комедия, остро, 4 строки')"><b>† Прожарка</b>Дерзко и едко</div>
         <div class="m-item" onclick="setM('¶ Сатира', 'сатирический взгляд, 4 строки')"><b>¶ Сатира</b>Ирония над важным</div>
-        <div class="m-item" onclick="setM('‡ Хлестко', 'краткий уан-лайнер, 1-2 строки')"><b>‡ Хлестко</b>Коротко в точку</div>
+        <div class="m-item" onclick="setM('‡ Хлестко', 'уан-лайнер, 1-2 строки')"><b>‡ Хлестко</b>Коротко в точку</div>
     </div>
 </footer>
+
 <script>
     let curName = "§ Быт";
     let curDesc = "комедия наблюдений, ровно 4 строки";
@@ -87,86 +78,61 @@
 
     function setM(name, desc) {
         curName = name; curDesc = desc;
-        document.getElementById('in').placeholder = `Режим: ${name}...`;
+        document.getElementById('in').placeholder = name + "...";
         document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
     }
 
     function clearWall() { document.getElementById('wall').innerHTML = ""; }
 
-async function send() {
+    // ФУНКЦИЯ СОХРАНЕНИЯ В localStorage
+    function saveToBox(btn) {
+        const verseText = btn.closest('.verse-container').querySelector('.verse-text').innerText;
+        let box = JSON.parse(localStorage.getItem('gy_box') || '[]');
+        box.push({ text: verseText, date: new Date().toLocaleString(), style: curName });
+        localStorage.setItem('gy_box', JSON.stringify(box));
+        btn.innerText = "В СБОРНИКЕ!";
+        btn.style.background = "#fff";
+        setTimeout(() => { btn.innerText = "СОХРАНИТЬ"; btn.style.background = "var(--gold)"; }, 2000);
+    }
+
+    async function send() {
         const input = document.getElementById('in');
         const wall = document.getElementById('wall');
         const val = input.value.trim();
         if (!val) return;
 
-        // 1. Твой текст на стену
         const uMsg = document.createElement('div');
-        uMsg.className = 'bubble u';
+        uMsg.className = 'u-msg';
         uMsg.innerText = val;
         wall.appendChild(uMsg);
         input.value = "";
-        wall.scrollTop = wall.scrollHeight;
 
         const cleanKey = (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).replace(/[^a-zA-Z0-9_-]/g, "");
         
-        // ТРИЗ: Используем только те модели, которые ТЫ ЛИЧНО подтвердил списком
-        const models = [
-            "gemini-3.1-flash-lite-preview", // Новейшая и быстрая (Март 2026)
-            "gemini-2.5-flash",              // Самая стабильная во Франции
-            "gemini-2.0-flash-latest"        // Резерв
-        ];
-        
-        let success = false;
-        let lastError = "";
-
-        for (let m of models) {
-            if (success) break;
-            try {
-                // Твой список показал, что v1beta — основной путь для этих моделей
-                const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${cleanKey}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: `${BEUVRY_CONFIG.PROMPT}\nСтиль: ${curDesc}. Слова: ${val}` }] }]
-                    })
-                });
-
-                const d = await r.json();
-                
-                if (d.candidates && d.candidates[0].content) {
-                    const resText = d.candidates[0].content.parts[0].text.trim();
-                    const aMsg = document.createElement('div');
-                    aMsg.className = 'bubble a';
-                    // Выводим результат и имя новой модели для гордости
-                    aMsg.innerHTML = `<small style="opacity:0.5">${curName} [${m.replace('gemini-', '')}]</small><br>${resText.replace(/\n/g, '<br>')}`;
-                    wall.appendChild(aMsg);
-                    success = true;
-                } else {
-                    lastError = d.error ? d.error.message : "Ошибка доступа";
-                }
-            } catch (e) { 
-                lastError = "Сбой связи"; 
+        try {
+            const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-preview:generateContent?key=${cleanKey}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ contents: [{ parts: [{ text: `${BEUVRY_CONFIG.PROMPT}\nСтиль: ${curDesc}. Слова: ${val}` }] }] })
+            });
+            const d = await r.json();
+            if (d.candidates) {
+                const text = d.candidates[0].content.parts[0].text.trim();
+                const container = document.createElement('div');
+                container.className = 'verse-container';
+                container.innerHTML = `
+                    <div class="verse-text" contenteditable="true">${text}</div>
+                    <div class="verse-controls">
+                        <button class="btn-save-mini" onclick="saveToBox(this)">СОХРАНИТЬ</button>
+                    </div>
+                `;
+                wall.appendChild(container);
             }
-        }
-
-        if (!success) {
-            const errMsg = document.createElement('div');
-            errMsg.className = 'bubble a';
-            errMsg.style.color = "#ff4444";
-            errMsg.innerText = "ОТКАЗ: " + lastError;
-            wall.appendChild(errMsg);
-        }
+        } catch (e) { console.error(e); }
         wall.scrollTop = wall.scrollHeight;
     }
+
     window.onclick = () => document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
 </script>
-
-<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-<script>
-    function googleTranslateElementInit() {
-        new google.translate.TranslateElement({pageLanguage: 'ru'}, 'google_translate_element');
-    }
-</script>
-
 </body>
 </html>
