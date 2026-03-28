@@ -4,94 +4,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY VERSES | v37.3.3 REPAIRED</title>
+    <title>GY-GY VERSES | v37.3.4 Final Repair</title>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 2px solid #ffd700; }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; display: flex; flex-direction: column; overflow: hidden; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Courier New', monospace; display: flex; flex-direction: column; overflow: hidden; }
 
-        /* ВЕРХНЯЯ ПАНЕЛЬ - ФИКСАЦИЯ */
-        header { height: 65px; display: flex; align-items: center; border-bottom: var(--border); background: #000; padding: 0 10px; gap: 10px; flex-shrink: 0; z-index: 999; }
-        
-        .btn-nav { width: 45px; height: 45px; border: var(--border); display: flex; align-items: center; justify-content: center; color: var(--gold); text-decoration: none; font-size: 2rem; font-weight: 900; cursor: pointer; background: rgba(255, 215, 0, 0.1); }
+        /* ВЕРХНИЙ УЗЕЛ */
+        header { height: 70px; display: flex; align-items: center; border-bottom: var(--border); padding: 0 10px; gap: 10px; flex-shrink: 0; background: #000; }
+        .btn-nav { width: 45px; height: 45px; border: var(--border); display: flex; align-items: center; justify-content: center; color: var(--gold); text-decoration: none; font-size: 2rem; font-weight: 900; background: rgba(255, 215, 0, 0.1); }
         
         .scroll-zone { flex-grow: 1; display: flex; align-items: center; gap: 10px; overflow-x: auto; }
-        .icon-box { width: 45px; height: 45px; border: var(--border); display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 1.5rem; color: var(--gold); background: rgba(255, 215, 0, 0.1); }
+        .avatar { width: 45px; height: 45px; border: var(--border); background-size: cover; background-position: center; border-radius: 50%; }
+        .icon-lib { width: 45px; height: 45px; border: var(--border); display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 1.5rem; color: var(--gold); }
 
-        /* ЧАТ */
-        #chat-wall { flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 20px; background: #000; }
-        .verse-block { border: 1px solid var(--gold); background: #050505; padding: 15px; margin-bottom: 10px; }
-        .verse-text { font-size: 1.2rem; line-height: 1.4; color: #fff; margin: 10px 0; }
-        .v-controls { display: flex; gap: 10px; margin-top: 10px; border-top: 1px solid #333; padding-top: 10px; }
-        .v-btn { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 8px; font-size: 0.7rem; cursor: pointer; font-weight: 900; }
+        /* СТЕНА */
+        #chat-wall { flex-grow: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; }
+        .v-block { border: 1px solid var(--gold); background: #050505; padding: 12px; }
+        .v-text { font-size: 1.2rem; line-height: 1.4; color: #fff; margin: 10px 0; }
+        .v-ctrl { display: flex; gap: 10px; border-top: 1px solid #333; padding-top: 8px; }
+        .v-btn { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 5px 10px; font-size: 0.7rem; cursor: pointer; }
 
-        /* НИЖНЯЯ ПАНЕЛЬ - ПУЛЬТ */
-        footer { height: 90px; display: flex; align-items: center; padding: 0 10px; gap: 10px; border-top: var(--border); background: #000; flex-shrink: 0; z-index: 999; }
+        /* НИЖНИЙ ПУЛЬТ (ТРИ КНОПКИ) */
+        footer { height: 90px; display: flex; align-items: center; padding: 0 10px; gap: 8px; border-top: var(--border); background: #000; }
         
-        .humor-selector { position: relative; }
-        .humor-btn { width: 50px; height: 50px; border: var(--border); background: #111; color: var(--gold); font-size: 1.5rem; cursor: pointer; }
-        .humor-menu { display: none; position: absolute; bottom: 70px; left: 0; background: #000; border: var(--border); z-index: 1000; flex-direction: column; width: 180px; }
-        .humor-menu button { background: none; border: none; color: var(--gold); padding: 15px; text-align: left; cursor: pointer; border-bottom: 1px solid #222; font-size: 0.8rem; font-weight: 900; }
+        /* Кнопка 1: Юмор */
+        .h-btn { width: 55px; height: 55px; border: var(--border); background: #111; color: var(--gold); font-size: 1.5rem; cursor: pointer; }
+        .h-menu { display: none; position: absolute; bottom: 100px; left: 10px; background: #000; border: var(--border); flex-direction: column; z-index: 100; }
+        .h-menu button { background: none; border: none; color: var(--gold); padding: 15px; text-align: left; cursor: pointer; border-bottom: 1px solid #222; }
 
+        /* Поле ввода */
         #user-in { flex-grow: 1; background: #111; border: var(--border); color: var(--gold); padding: 15px; font-size: 1.1rem; outline: none; }
-        .btn-ok { width: 70px; height: 55px; background: var(--gold); color: #000; border: none; font-weight: 900; cursor: pointer; font-size: 1.1rem; }
 
-        #google_translate_element { display: inline-block; border: 1px solid #333; height: 45px; overflow: hidden; }
+        /* Кнопка 2: ОК */
+        .ok-btn { width: 65px; height: 55px; background: var(--gold); color: #000; border: none; font-weight: 900; font-size: 1.1rem; cursor: pointer; }
+
+        /* Кнопка 3: В Сборник (Иконка сохранения) */
+        .save-btn { width: 55px; height: 55px; border: var(--border); background: #111; color: var(--gold); font-size: 1.5rem; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <header>
-    <a href="verses.html" class="btn-nav">«</a>
-    
+    <a href="verses.html" class="btn-nav" id="back-link">«</a>
     <div class="scroll-zone">
         <div id="google_translate_element"></div>
-        <a href="library.html" class="icon-box">📁</a>
-        <div style="border:1px solid #444; padding: 10px; font-size: 0.7rem;">ID: 001</div>
+        <a href="library.html" class="icon-lib">📁</a>
+        <div id="user-avatar" class="avatar" title="Твой Аватар"></div>
+        <div style="border:1px solid #444; padding:5px; font-size:0.6rem;">ID: <span id="user-id">...</span></div>
     </div>
-    
-    <div style="font-weight: 900;">GY-GY</div>
+    <div style="font-weight:900;">GY-GY</div>
 </header>
 
 <div id="chat-wall">
-    <div class="verse-text" style="color: var(--gold);">v37.3.3: Узлы восстановлены. Проверь "ОК" и "«".</div>
+    <div class="v-text" style="color:var(--gold);">v37.3.4: Аватар и навигация восстановлены.</div>
 </div>
 
 <footer>
     <div class="humor-selector">
-        <button class="humor-btn" onclick="toggleHumor()">▲</button>
-        <div id="humor-menu" class="humor-menu">
-            <button onclick="setHumor('Черный нуар')">ЧЕРНЫЙ НУАР</button>
-            <button onclick="setHumor('Сарказм')">САРКАЗМ</button>
-            <button onclick="setHumor('Цинизм')">ЦИНИЗМ</button>
+        <button class="h-btn" onclick="toggleH()">▲</button>
+        <div id="h-menu" class="h-menu">
+            <button onclick="setH('Нуар')">НУАР</button>
+            <button onclick="setH('Сарказм')">САРКАЗМ</button>
+            <button onclick="setH('Цинизм')">ЦИНИЗМ</button>
         </div>
     </div>
-    <input type="text" id="user-in" placeholder="СЛОВА..." onkeypress="if(event.key==='Enter') send()">
-    <button class="btn-ok" onclick="send()">ОК</button>
+    <input type="text" id="user-in" placeholder="..." onkeypress="if(event.key==='Enter') send()">
+    <button class="ok-btn" onclick="send()">ОК</button>
+    <button class="save-btn" onclick="alert('Последний стих в Сборнике')">💾</button>
 </footer>
 
 <script>
-    let currentHumor = "Черный нуар";
+    let currentH = "Нуар";
 
-    function toggleHumor() {
-        const m = document.getElementById('humor-menu');
+    // УЗЕЛ АВАТАРА И ID
+    function initUser() {
+        const id = Math.floor(Math.random() * 999) + 100;
+        document.getElementById('user-id').innerText = id;
+        // Генерация аватара по ID (используем сервис аватаров)
+        document.getElementById('user-avatar').style.backgroundImage = `url('https://api.dicebear.com/7.x/bottts/svg?seed=${id}')`;
+    }
+    initUser();
+
+    function toggleH() {
+        const m = document.getElementById('h-menu');
         m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
     }
 
-    function setHumor(h) {
-        currentHumor = h;
-        toggleHumor();
-        alert("Выбран: " + h);
-    }
+    function setH(h) { currentH = h; toggleH(); }
 
     async function aiAction(text) {
         const wall = document.getElementById('chat-wall');
         const block = document.createElement('div');
-        block.className = 'verse-block';
-        block.innerHTML = `<i>Связь с Беври...</i>`;
+        block.className = 'v-block';
+        block.innerHTML = `<i>Сварка фатума...</i>`;
         wall.appendChild(block);
         wall.scrollTop = wall.scrollHeight;
 
-        // ИСПРАВЛЕННЫЙ СТЫК КЛЮЧА
         const key = "AIzaSyDLQrvoPx4AYyfSKD0BWvl3-zc2ROfCa-E";
 
         try {
@@ -99,37 +107,26 @@
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    contents: [{ parts: [{ text: `Напиши жесткое нуарное 4-стишие на русском на тему: ${text}. Юмор: ${currentHumor}` }] }]
+                    contents: [{ parts: [{ text: `Напиши 4-стишие на русском. Тема: ${text}. Юмор: ${currentH}` }] }]
                 })
             });
             const data = await response.json();
-            
-            if (data.candidates && data.candidates[0]) {
-                const verse = data.candidates[0].content.parts[0].text;
+            if (data.candidates) {
+                const v = data.candidates[0].content.parts[0].text;
                 block.innerHTML = `
-                    <div style="color:#666; font-size:0.7rem;">${text} | ${currentHumor}</div>
-                    <div class="verse-text">${verse.replace(/\n/g, '<br>')}</div>
-                    <div class="v-controls">
-                        <button class="v-btn" onclick="alert('В Сборнике')">СОХРАНИТЬ</button>
-                        <button class="v-btn" style="border-color:red; color:red;" onclick="this.parentElement.parentElement.remove()">УДАЛИТЬ</button>
-                    </div>
-                `;
-            } else {
-                block.innerHTML = "Ошибка API: Проверь консоль или ключ.";
-                console.log(data);
-            }
-        } catch (e) {
-            block.innerHTML = "Сбой сети.";
-        }
+                    <div class="v-text">${v.replace(/\n/g, '<br>')}</div>
+                    <div class="v-ctrl">
+                        <button class="v-btn" onclick="this.innerText='ОК'">💾</button>
+                        <button class="v-btn" style="color:red; border-color:red;" onclick="this.parentElement.parentElement.remove()">✖</button>
+                    </div>`;
+            } else { block.innerHTML = "Ошибка API."; }
+        } catch (e) { block.innerHTML = "Сбой сети."; }
         wall.scrollTop = wall.scrollHeight;
     }
 
     function send() {
-        const input = document.getElementById('user-in');
-        if(input.value.trim()){
-            aiAction(input.value);
-            input.value = "";
-        }
+        const i = document.getElementById('user-in');
+        if(i.value.trim()){ aiAction(i.value); i.value = ""; }
     }
 
     function googleTranslateElementInit() {
