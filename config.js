@@ -1,8 +1,8 @@
 // config.js - Интеллектуальное хранилище Беври v4.3
 const BEUVRY_CONFIG = {
     // Твой новый рабочий ключ (склеивается автоматически)
-    PART_1: "AIzaSyBIClVJVGETK_ZG0", 
-    PART_2: "e886aTYZ7NCDwln67w",
+    PART_1: "AIzaSyBfioRTS8xDmvI", 
+    PART_2: "FtaZLO4itv0UDgqW7F2Y",
     
     // Список моделей по приоритету (от самых новых к стабильным)
     MODELS_PRIORITY: [
