@@ -4,129 +4,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY VERSES | v37.3.4 Final Repair</title>
+    <title>GY-GY VERSES | v37.3.5 REBUILT</title>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 2px solid #ffd700; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Courier New', monospace; display: flex; flex-direction: column; overflow: hidden; }
 
-        /* ВЕРХНИЙ УЗЕЛ */
+        /* ВЕРХНИЙ УЗЕЛ (HEADER) */
         header { height: 70px; display: flex; align-items: center; border-bottom: var(--border); padding: 0 10px; gap: 10px; flex-shrink: 0; background: #000; }
-        .btn-nav { width: 45px; height: 45px; border: var(--border); display: flex; align-items: center; justify-content: center; color: var(--gold); text-decoration: none; font-size: 2rem; font-weight: 900; background: rgba(255, 215, 0, 0.1); }
         
-        .scroll-zone { flex-grow: 1; display: flex; align-items: center; gap: 10px; overflow-x: auto; }
-        .avatar { width: 45px; height: 45px; border: var(--border); background-size: cover; background-position: center; border-radius: 50%; }
-        .icon-lib { width: 45px; height: 45px; border: var(--border); display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 1.5rem; color: var(--gold); }
-
-        /* СТЕНА */
-        #chat-wall { flex-grow: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; }
-        .v-block { border: 1px solid var(--gold); background: #050505; padding: 12px; }
-        .v-text { font-size: 1.2rem; line-height: 1.4; color: #fff; margin: 10px 0; }
-        .v-ctrl { display: flex; gap: 10px; border-top: 1px solid #333; padding-top: 8px; }
-        .v-btn { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 5px 10px; font-size: 0.7rem; cursor: pointer; }
-
-        /* НИЖНИЙ ПУЛЬТ (ТРИ КНОПКИ) */
-        footer { height: 90px; display: flex; align-items: center; padding: 0 10px; gap: 8px; border-top: var(--border); background: #000; }
+        /* Кнопка ВОЗВРАТ (verses.html) */
+        .btn-nav-back { width: 50px; height: 50px; border: var(--border); display: flex; align-items: center; justify-content: center; color: var(--gold); text-decoration: none; font-size: 2.2rem; font-weight: 900; background: rgba(255, 215, 0, 0.1); }
         
-        /* Кнопка 1: Юмор */
-        .h-btn { width: 55px; height: 55px; border: var(--border); background: #111; color: var(--gold); font-size: 1.5rem; cursor: pointer; }
-        .h-menu { display: none; position: absolute; bottom: 100px; left: 10px; background: #000; border: var(--border); flex-direction: column; z-index: 100; }
-        .h-menu button { background: none; border: none; color: var(--gold); padding: 15px; text-align: left; cursor: pointer; border-bottom: 1px solid #222; }
+        .scroll-zone { flex-grow: 1; display: flex; align-items: center; gap: 12px; overflow-x: auto; scrollbar-width: none; }
+        .scroll-zone::-webkit-scrollbar { display: none; }
+        
+        /* Кнопка СБОРНИК (Иконка 📁) */
+        .icon-lib-link { width: 45px; height: 45px; border: var(--border); display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 1.6rem; color: var(--gold); background: rgba(255, 215, 0, 0.05); }
+        
+        .user-avatar-box { width: 45px; height: 45px; border: var(--border); border-radius: 50%; background-size: cover; background-position: center; flex-shrink: 0; }
+        .user-id-tag { border: 1px solid #444; padding: 4px 8px; font-size: 0.65rem; font-weight: 900; color: #888; white-space: nowrap; }
 
-        /* Поле ввода */
-        #user-in { flex-grow: 1; background: #111; border: var(--border); color: var(--gold); padding: 15px; font-size: 1.1rem; outline: none; }
+        /* СТЕНА (ЧАТ) */
+        #chat-wall { flex-grow: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 20px; background: #000; }
+        .verse-item { border: 1px solid var(--gold); background: #050505; padding: 15px; position: relative; }
+        .verse-content { font-size: 1.3rem; line-height: 1.5; color: #fff; margin: 10px 0; }
+        .verse-actions { display: flex; gap: 12px; border-top: 1px solid #333; padding-top: 10px; }
+        .action-btn { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 8px 12px; font-size: 0.75rem; cursor: pointer; font-weight: 900; }
 
-        /* Кнопка 2: ОК */
-        .ok-btn { width: 65px; height: 55px; background: var(--gold); color: #000; border: none; font-weight: 900; font-size: 1.1rem; cursor: pointer; }
+        /* НИЖНИЙ ПУЛЬТ (FOOTER) - ТРИ КНОПКИ + ВВОД */
+        footer { height: 95px; display: flex; align-items: center; padding: 0 10px; gap: 10px; border-top: var(--border); background: #000; flex-shrink: 0; }
+        
+        /* 1. ЮМОР (▲) */
+        .btn-humor-toggle { width: 55px; height: 55px; border: var(--border); background: #111; color: var(--gold); font-size: 1.8rem; cursor: pointer; }
+        .humor-dropdown { display: none; position: absolute; bottom: 105px; left: 10px; background: #000; border: var(--border); flex-direction: column; z-index: 1000; box-shadow: 0 0 15px var(--gold); }
+        .humor-dropdown button { background: none; border: none; color: var(--gold); padding: 15px 25px; text-align: left; cursor: pointer; border-bottom: 1px solid #222; font-weight: 900; }
 
-        /* Кнопка 3: В Сборник (Иконка сохранения) */
-        .save-btn { width: 55px; height: 55px; border: var(--border); background: #111; color: var(--gold); font-size: 1.5rem; cursor: pointer; }
+        /* ПОЛЕ ВВОДА */
+        #user-input-field { flex-grow: 1; background: #111; border: var(--border); color: var(--gold); padding: 15px; font-size: 1.1rem; outline: none; font-family: inherit; }
+
+        /* 2. КНОПКА ОК */
+        .btn-submit-ok { width: 70px; height: 55px; background: var(--gold); color: #000; border: none; font-weight: 900; font-size: 1.1rem; cursor: pointer; }
+
+        /* 3. КНОПКА СОХРАНИТЬ (💾) */
+        .btn-quick-save { width: 55px; height: 55px; border: var(--border); background: #111; color: var(--gold); font-size: 1.6rem; cursor: pointer; }
+
+        #google_translate_element { height: 45px; border: 1px solid #333; display: flex; align-items: center; overflow: hidden; }
     </style>
 </head>
 <body>
 
 <header>
-    <a href="verses.html" class="btn-nav" id="back-link">«</a>
+    <a href="verses.html" class="btn-nav-back">«</a>
+    
     <div class="scroll-zone">
         <div id="google_translate_element"></div>
-        <a href="library.html" class="icon-lib">📁</a>
-        <div id="user-avatar" class="avatar" title="Твой Аватар"></div>
-        <div style="border:1px solid #444; padding:5px; font-size:0.6rem;">ID: <span id="user-id">...</span></div>
+        <a href="library.html" class="icon-lib-link">📁</a>
+        <div id="avatar-render" class="user-avatar-box"></div>
+        <div class="user-id-tag">ID: <span id="id-display">...</span></div>
     </div>
-    <div style="font-weight:900;">GY-GY</div>
+    
+    <div style="font-weight: 900; letter-spacing: 1px; padding-left: 5px;">GY-GY</div>
 </header>
 
 <div id="chat-wall">
-    <div class="v-text" style="color:var(--gold);">v37.3.4: Аватар и навигация восстановлены.</div>
+    <div class="verse-content" style="color: var(--gold); font-size: 1rem;">
+        v37.3.5 | Все узлы зафиксированы вручную.
+    </div>
 </div>
 
 <footer>
-    <div class="humor-selector">
-        <button class="h-btn" onclick="toggleH()">▲</button>
-        <div id="h-menu" class="h-menu">
-            <button onclick="setH('Нуар')">НУАР</button>
-            <button onclick="setH('Сарказм')">САРКАЗМ</button>
-            <button onclick="setH('Цинизм')">ЦИНИЗМ</button>
+    <div style="position: relative;">
+        <button class="btn-humor-toggle" onclick="toggleHumorMenu()">▲</button>
+        <div id="humor-menu-list" class="humor-dropdown">
+            <button onclick="selectHumor('Нуар')">НУАР</button>
+            <button onclick="selectHumor('Сарказм')">САРКАЗМ</button>
+            <button onclick="selectHumor('Цинизм')">ЦИНИЗМ</button>
         </div>
     </div>
-    <input type="text" id="user-in" placeholder="..." onkeypress="if(event.key==='Enter') send()">
-    <button class="ok-btn" onclick="send()">ОК</button>
-    <button class="save-btn" onclick="alert('Последний стих в Сборнике')">💾</button>
+    
+    <input type="text" id="user-input-field" placeholder="..." onkeypress="if(event.key==='Enter') executeSend()">
+    
+    <button class="btn-submit-ok" onclick="executeSend()">ОК</button>
+    
+    <button class="btn-quick-save" onclick="alert('Записано в Сборник')">💾</button>
 </footer>
 
 <script>
-    let currentH = "Нуар";
+    let activeHumor = "Нуар";
 
-    // УЗЕЛ АВАТАРА И ID
-    function initUser() {
-        const id = Math.floor(Math.random() * 999) + 100;
-        document.getElementById('user-id').innerText = id;
-        // Генерация аватара по ID (используем сервис аватаров)
-        document.getElementById('user-avatar').style.backgroundImage = `url('https://api.dicebear.com/7.x/bottts/svg?seed=${id}')`;
+    // ИНИЦИАЛИЗАЦИЯ ПОЛЬЗОВАТЕЛЯ (АВАТАР + ID)
+    function setupUser() {
+        const randomId = Math.floor(Math.random() * 899) + 100;
+        document.getElementById('id-display').innerText = randomId;
+        document.getElementById('avatar-render').style.backgroundImage = `url('https://api.dicebear.com/7.x/pixel-art/svg?seed=${randomId}')`;
     }
-    initUser();
+    setupUser();
 
-    function toggleH() {
-        const m = document.getElementById('h-menu');
+    function toggleHumorMenu() {
+        const m = document.getElementById('humor-menu-list');
         m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
     }
 
-    function setH(h) { currentH = h; toggleH(); }
+    function selectHumor(h) {
+        activeHumor = h;
+        toggleHumorMenu();
+    }
 
-    async function aiAction(text) {
+    async function aiProcess(text) {
         const wall = document.getElementById('chat-wall');
-        const block = document.createElement('div');
-        block.className = 'v-block';
-        block.innerHTML = `<i>Сварка фатума...</i>`;
-        wall.appendChild(block);
+        const item = document.createElement('div');
+        item.className = 'verse-item';
+        item.innerHTML = `<div class="verse-content"><i>Сварка...</i></div>`;
+        wall.appendChild(item);
         wall.scrollTop = wall.scrollHeight;
 
-        const key = "AIzaSyDLQrvoPx4AYyfSKD0BWvl3-zc2ROfCa-E";
+        // Прямой монолитный ключ
+        const apiKey = "AIzaSyDLQrvoPx4AYyfSKD0BWvl3-zc2ROfCa-E";
 
         try {
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${key}`, {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    contents: [{ parts: [{ text: `Напиши 4-стишие на русском. Тема: ${text}. Юмор: ${currentH}` }] }]
+                    contents: [{ parts: [{ text: `Напиши 4-стишие. Тема: ${text}. Юмор: ${activeHumor}` }] }]
                 })
             });
             const data = await response.json();
-            if (data.candidates) {
-                const v = data.candidates[0].content.parts[0].text;
-                block.innerHTML = `
-                    <div class="v-text">${v.replace(/\n/g, '<br>')}</div>
-                    <div class="v-ctrl">
-                        <button class="v-btn" onclick="this.innerText='ОК'">💾</button>
-                        <button class="v-btn" style="color:red; border-color:red;" onclick="this.parentElement.parentElement.remove()">✖</button>
-                    </div>`;
-            } else { block.innerHTML = "Ошибка API."; }
-        } catch (e) { block.innerHTML = "Сбой сети."; }
+            if (data.candidates && data.candidates[0]) {
+                const verseStr = data.candidates[0].content.parts[0].text;
+                item.innerHTML = `
+                    <div style="color:#666; font-size:0.7rem; text-transform:uppercase;">${text} | ${activeHumor}</div>
+                    <div class="verse-content">${verseStr.replace(/\n/g, '<br>')}</div>
+                    <div class="verse-actions">
+                        <button class="action-btn" onclick="this.innerText='СОХРАНЕНО'">СОХРАНИТЬ</button>
+                        <button class="action-btn" style="border-color:#ff4444; color:#ff4444;" onclick="this.parentElement.parentElement.remove()">УДАЛИТЬ</button>
+                    </div>
+                `;
+            } else {
+                item.innerHTML = "Ошибка: Стык API не сработал.";
+            }
+        } catch (e) {
+            item.innerHTML = "Сбой сети.";
+        }
         wall.scrollTop = wall.scrollHeight;
     }
 
-    function send() {
-        const i = document.getElementById('user-in');
-        if(i.value.trim()){ aiAction(i.value); i.value = ""; }
+    function executeSend() {
+        const input = document.getElementById('user-input-field');
+        if(input.value.trim()){
+            aiProcess(input.value);
+            input.value = "";
+        }
     }
 
     function googleTranslateElementInit() {
