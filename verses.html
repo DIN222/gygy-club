@@ -4,163 +4,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY VERSES | v37.3.5 REBUILT</title>
+    <title>GY-GY | CORE v33.3.0</title>
+    <script src="config.js"></script>
     <style>
-        :root { --gold: #ffd700; --bg: #000; --border: 2px solid #ffd700; }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Courier New', monospace; display: flex; flex-direction: column; overflow: hidden; }
-
-        /* ВЕРХНИЙ УЗЕЛ (HEADER) */
-        header { height: 70px; display: flex; align-items: center; border-bottom: var(--border); padding: 0 10px; gap: 10px; flex-shrink: 0; background: #000; }
+        :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; display: flex; flex-direction: column; overflow: hidden; }
         
-        /* Кнопка ВОЗВРАТ (verses.html) */
-        .btn-nav-back { width: 50px; height: 50px; border: var(--border); display: flex; align-items: center; justify-content: center; color: var(--gold); text-decoration: none; font-size: 2.2rem; font-weight: 900; background: rgba(255, 215, 0, 0.1); }
-        
-        .scroll-zone { flex-grow: 1; display: flex; align-items: center; gap: 12px; overflow-x: auto; scrollbar-width: none; }
-        .scroll-zone::-webkit-scrollbar { display: none; }
-        
-        /* Кнопка СБОРНИК (Иконка 📁) */
-        .icon-lib-link { width: 45px; height: 45px; border: var(--border); display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 1.6rem; color: var(--gold); background: rgba(255, 215, 0, 0.05); }
-        
-        .user-avatar-box { width: 45px; height: 45px; border: var(--border); border-radius: 50%; background-size: cover; background-position: center; flex-shrink: 0; }
-        .user-id-tag { border: 1px solid #444; padding: 4px 8px; font-size: 0.65rem; font-weight: 900; color: #888; white-space: nowrap; }
+        /* HEADER */
+        .page-header { height: 60px; display: flex; align-items: center; border-bottom: var(--border); background: #111; position: relative; z-index: 1000; flex-shrink: 0; }
+        .nav-fix { width: 50px; height: 100%; display: flex; align-items: center; justify-content: center; background: #111; cursor: pointer; font-weight: bold; font-size: 1.2rem; text-decoration: none; color: var(--gold); flex-shrink: 0; }
+        .header-scroll { flex-grow: 1; display: flex; align-items: center; overflow-x: auto; white-space: nowrap; padding: 0 10px; gap: 20px; scrollbar-width: none; }
+        .logo-right { font-weight: 900; letter-spacing: 2px; padding-right: 10px; font-size: 0.9rem; flex-shrink: 0; }
+        .avatar { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--gold); background: #333; flex-shrink: 0; }
 
-        /* СТЕНА (ЧАТ) */
-        #chat-wall { flex-grow: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 20px; background: #000; }
-        .verse-item { border: 1px solid var(--gold); background: #050505; padding: 15px; position: relative; }
-        .verse-content { font-size: 1.3rem; line-height: 1.5; color: #fff; margin: 10px 0; }
-        .verse-actions { display: flex; gap: 12px; border-top: 1px solid #333; padding-top: 10px; }
-        .action-btn { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 8px 12px; font-size: 0.75rem; cursor: pointer; font-weight: 900; }
+        /* PROGRESS BAR */
+        #progress { position: absolute; bottom: 0; left: 0; height: 2px; background: var(--gold); width: 0%; transition: width 0.3s; }
 
-        /* НИЖНИЙ ПУЛЬТ (FOOTER) - ТРИ КНОПКИ + ВВОД */
-        footer { height: 95px; display: flex; align-items: center; padding: 0 10px; gap: 10px; border-top: var(--border); background: #000; flex-shrink: 0; }
-        
-        /* 1. ЮМОР (▲) */
-        .btn-humor-toggle { width: 55px; height: 55px; border: var(--border); background: #111; color: var(--gold); font-size: 1.8rem; cursor: pointer; }
-        .humor-dropdown { display: none; position: absolute; bottom: 105px; left: 10px; background: #000; border: var(--border); flex-direction: column; z-index: 1000; box-shadow: 0 0 15px var(--gold); }
-        .humor-dropdown button { background: none; border: none; color: var(--gold); padding: 15px 25px; text-align: left; cursor: pointer; border-bottom: 1px solid #222; font-weight: 900; }
+        /* WALL */
+        #wall { flex-grow: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; scroll-behavior: smooth; }
+        .bubble { padding: 12px; max-width: 85%; border: 1px solid #333; line-height: 1.4; font-size: 1.1rem; position: relative; border-radius: 4px; }
+        .u { align-self: flex-start; border-left: 3px solid var(--gold); background: rgba(255,215,0,0.03); color: #fff; }
+        .a { align-self: flex-end; border-right: 3px solid #fff; background: rgba(255,255,255,0.05); text-align: right; }
 
-        /* ПОЛЕ ВВОДА */
-        #user-input-field { flex-grow: 1; background: #111; border: var(--border); color: var(--gold); padding: 15px; font-size: 1.1rem; outline: none; font-family: inherit; }
+        .style-label { display: block; font-size: 0.65rem; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; opacity: 0.5; user-select: none; }
+        .edit-zone { outline: none; white-space: pre-wrap; }
+        .copy-btn { position: absolute; bottom: -10px; right: 10px; background: #111; border: 1px solid var(--gold); color: var(--gold); font-size: 0.6rem; padding: 2px 6px; cursor: pointer; border-radius: 2px; display: none; z-index: 10; }
+        .bubble:hover .copy-btn { display: block; }
 
-        /* 2. КНОПКА ОК */
-        .btn-submit-ok { width: 70px; height: 55px; background: var(--gold); color: #000; border: none; font-weight: 900; font-size: 1.1rem; cursor: pointer; }
+        /* FOOTER */
+        footer { height: 80px; display: flex; align-items: center; padding: 0 10px; gap: 10px; background: #000; border-top: 1px solid #222; position: relative; flex-shrink: 0; }
+        .btn-mode { width: 50px; height: 50px; border: 1px solid #444; background: #111; color: var(--gold); cursor: pointer; font-size: 1.2rem; border-radius: 4px; }
+        #in { flex-grow: 1; background: #0d0d0d; border: 1px solid #333; color: var(--gold); padding: 15px; font-size: 1rem; outline: none; border-radius: 4px; }
+        .btn-ok { padding: 0 20px; height: 50px; background: var(--gold); border: none; color: #000; font-weight: 900; cursor: pointer; border-radius: 4px; }
 
-        /* 3. КНОПКА СОХРАНИТЬ (💾) */
-        .btn-quick-save { width: 55px; height: 55px; border: var(--border); background: #111; color: var(--gold); font-size: 1.6rem; cursor: pointer; }
-
-        #google_translate_element { height: 45px; border: 1px solid #333; display: flex; align-items: center; overflow: hidden; }
+        /* MENUS */
+        .pop-menu { display: none; position: absolute; background: #111; border: var(--border); z-index: 2000; box-shadow: 0 5px 20px rgba(0,0,0,0.8); }
+        .act-menu { top: 62px; left: 50%; transform: translateX(-50%); width: 180px; }
+        .mode-menu { bottom: 85px; left: 10px; width: 260px; }
+        .m-item { padding: 12px; border-bottom: 1px solid #222; cursor: pointer; font-size: 0.8rem; color: #fff; }
+        .m-item:hover { background: #222; color: var(--gold); }
+        .m-item b { display: block; color: var(--gold); }
     </style>
 </head>
 <body>
 
-<header>
-    <a href="verses.html" class="btn-nav-back">«</a>
-    
-    <div class="scroll-zone">
-        <div id="google_translate_element"></div>
-        <a href="library.html" class="icon-lib-link">📁</a>
-        <div id="avatar-render" class="user-avatar-box"></div>
-        <div class="user-id-tag">ID: <span id="id-display">...</span></div>
+<header class="page-header">
+    <a href="ai_room_core_v8.html" class="nav-fix">❮</a>
+    <div class="header-scroll">
+        <div class="h-item">🌐 <span>RU</span></div>
+        <div class="h-item"><div class="avatar"></div></div>
+        <div class="h-item" onclick="toggle('actMenu')" style="cursor:pointer">ДЕЙСТВИЯ ▾</div>
     </div>
-    
-    <div style="font-weight: 900; letter-spacing: 1px; padding-left: 5px;">GY-GY</div>
+    <div class="logo-right">GY-GY</div>
+    <a href="box_page.html" class="nav-fix">❯</a>
+    <div id="progress"></div>
 </header>
 
-<div id="chat-wall">
-    <div class="verse-content" style="color: var(--gold); font-size: 1rem;">
-        v37.3.5 | Все узлы зафиксированы вручную.
-    </div>
+<div id="wall"></div>
+
+<div id="actMenu" class="pop-menu act-menu">
+    <div class="m-item" onclick="clearWall()">🗑 Удалить</div>
+    <div class="m-item" onclick="saveToBox()">📦 В сборник</div>
+    <div class="m-item">🎬 Сделать клип</div>
+    <div class="m-item">✉️ Переслать</div>
+</div>
+
+<div id="modeMenu" class="pop-menu mode-menu">
+    <div class="m-item" onclick="setM('ø Абсурд', 'абсурдный юмор, ровно 4 строки')"><b>ø Абсурд</b>Безумные связи</div>
+    <div class="m-item" onclick="setM('§ Быт', 'комедия наблюдений, ровно 4 строки')"><b>§ Быт</b>Смешное в обычном</div>
+    <div class="m-item" onclick="setM('† Прожарка', 'инсалт-комедия, ровно 4 строки')"><b>† Прожарка</b>Остро и дерзко</div>
+    <div class="m-item" onclick="setM('¶ Сатира', 'сатирический взгляд, ровно 4 строки')"><b>¶ Сатира</b>Ирония над важным</div>
+    <div class="m-item" onclick="setM('‡ Хлестко', 'максимально краткий уан-лайнер, 1 или 2 строки')"><b>‡ Хлестко</b>Коротко и в точку</div>
 </div>
 
 <footer>
-    <div style="position: relative;">
-        <button class="btn-humor-toggle" onclick="toggleHumorMenu()">▲</button>
-        <div id="humor-menu-list" class="humor-dropdown">
-            <button onclick="selectHumor('Нуар')">НУАР</button>
-            <button onclick="selectHumor('Сарказм')">САРКАЗМ</button>
-            <button onclick="selectHumor('Цинизм')">ЦИНИЗМ</button>
-        </div>
-    </div>
-    
-    <input type="text" id="user-input-field" placeholder="..." onkeypress="if(event.key==='Enter') executeSend()">
-    
-    <button class="btn-submit-ok" onclick="executeSend()">ОК</button>
-    
-    <button class="btn-quick-save" onclick="alert('Записано в Сборник')">💾</button>
+    <button class="btn-mode" onclick="toggle('modeMenu')">▲</button>
+    <input type="text" id="in" placeholder="Режим: § Быт | 4 слова..." onkeydown="if(event.key==='Enter') send()">
+    <button id="okBtn" class="btn-ok" onclick="send()">ОК</button>
 </footer>
 
 <script>
-    let activeHumor = "Нуар";
+    let curDesc = "комедия наблюдений, ровно 4 строки";
+    let curName = "§ Быт";
 
-    // ИНИЦИАЛИЗАЦИЯ ПОЛЬЗОВАТЕЛЯ (АВАТАР + ID)
-    function setupUser() {
-        const randomId = Math.floor(Math.random() * 899) + 100;
-        document.getElementById('id-display').innerText = randomId;
-        document.getElementById('avatar-render').style.backgroundImage = `url('https://api.dicebear.com/7.x/pixel-art/svg?seed=${randomId}')`;
-    }
-    setupUser();
-
-    function toggleHumorMenu() {
-        const m = document.getElementById('humor-menu-list');
-        m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
+    function toggle(id) {
+        const el = document.getElementById(id);
+        const isShow = el.style.display === 'block';
+        document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
+        el.style.display = isShow ? 'none' : 'block';
     }
 
-    function selectHumor(h) {
-        activeHumor = h;
-        toggleHumorMenu();
+    function setM(name, desc) {
+        curName = name; curDesc = desc;
+        document.getElementById('in').placeholder = `Режим: ${name} | 4 слова...`;
+        toggle('modeMenu');
     }
 
-    async function aiProcess(text) {
-        const wall = document.getElementById('chat-wall');
-        const item = document.createElement('div');
-        item.className = 'verse-item';
-        item.innerHTML = `<div class="verse-content"><i>Сварка...</i></div>`;
-        wall.appendChild(item);
+    function push(txt, isAi, mode = "") {
+        const wall = document.getElementById('wall');
+        const d = document.createElement('div');
+        d.className = `bubble ${isAi ? 'a' : 'u'}`;
+        if (isAi) {
+            d.innerHTML = `<span class="style-label">${mode}</span>
+            <div class="edit-zone" contenteditable="true">${txt.replace(/\n/g, '<br>')}</div>
+            <button class="copy-btn" onclick="copyText(this)">КОПИРОВАТЬ</button>`;
+        } else { d.innerText = txt; }
+        wall.appendChild(d);
         wall.scrollTop = wall.scrollHeight;
+    }
 
-        // Прямой монолитный ключ
-        const apiKey = "AIzaSyDLQrvoPx4AYyfSKD0BWvl3-zc2ROfCa-E";
+    function copyText(btn) {
+        const text = btn.parentElement.querySelector('.edit-zone').innerText;
+        navigator.clipboard.writeText(text);
+        btn.innerText = "OK!"; setTimeout(() => btn.innerText = "КОПИРОВАТЬ", 1000);
+    }
 
+    async function send() {
+        const input = document.getElementById('in');
+        const val = input.value.trim();
+        if (!val) return;
+        
+        push(val, false);
+        input.value = "";
+        
+        const bar = document.getElementById('progress');
+        bar.style.width = "100%";
+        
+        const key = (typeof BEUVRY_CONFIG !== 'undefined' ? (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).trim() : "");
         try {
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+            const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: `Напиши 4-стишие. Тема: ${text}. Юмор: ${activeHumor}` }] }]
-                })
+                body: JSON.stringify({ contents: [{ parts: [{ text: `Твоя роль: Мастер юмора Беври. Стиль: ${curDesc}. Используй слова: ${val}. Напиши только текст юмора, без лишних вступлений.` }] }] })
             });
-            const data = await response.json();
-            if (data.candidates && data.candidates[0]) {
-                const verseStr = data.candidates[0].content.parts[0].text;
-                item.innerHTML = `
-                    <div style="color:#666; font-size:0.7rem; text-transform:uppercase;">${text} | ${activeHumor}</div>
-                    <div class="verse-content">${verseStr.replace(/\n/g, '<br>')}</div>
-                    <div class="verse-actions">
-                        <button class="action-btn" onclick="this.innerText='СОХРАНЕНО'">СОХРАНИТЬ</button>
-                        <button class="action-btn" style="border-color:#ff4444; color:#ff4444;" onclick="this.parentElement.parentElement.remove()">УДАЛИТЬ</button>
-                    </div>
-                `;
-            } else {
-                item.innerHTML = "Ошибка: Стык API не сработал.";
+            const d = await r.json();
+            if (d.candidates && d.candidates[0].content.parts[0].text) {
+                push(d.candidates[0].content.parts[0].text.trim(), true, curName);
             }
-        } catch (e) {
-            item.innerHTML = "Сбой сети.";
-        }
-        wall.scrollTop = wall.scrollHeight;
+        } catch (e) { push("❌ Ошибка связи.", true); }
+        
+        setTimeout(() => { bar.style.width = "0%"; }, 500);
     }
 
-    function executeSend() {
-        const input = document.getElementById('user-input-field');
-        if(input.value.trim()){
-            aiProcess(input.value);
-            input.value = "";
-        }
-    }
-
-    function googleTranslateElementInit() {
-        new google.translate.TranslateElement({pageLanguage: 'ru', autoDisplay: false}, 'google_translate_element');
-    }
+    function clearWall() { document.getElementById('wall').innerHTML = ""; toggle('actMenu'); }
+    function saveToBox() { alert("Сохранено!"); toggle('actMenu'); }
 </script>
-<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
