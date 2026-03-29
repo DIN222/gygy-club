@@ -108,14 +108,14 @@
 
     function clearWall() { document.getElementById('wall').innerHTML = ""; }
 
-  /* 🔒 ОБНОВЛЕННЫЙ СИНХРОНИЗАТОР С CONFIG.JS v33.5.15 */
+/* 🔒 УМНЫЙ СИНХРОНИЗАТОР С АВТО-ПЕРЕБОРОМ МОДЕЛЕЙ v33.5.16 */
 async function send() {
     const input = document.getElementById('in');
     const wall = document.getElementById('wall');
     const val = input.value.trim();
     if (!val) return;
 
-    // Отрисовка сообщения пользователя
+    // Отображаем ввод пользователя
     const uMsg = document.createElement('div');
     uMsg.className = 'bubble u';
     uMsg.innerText = val;
@@ -125,39 +125,51 @@ async function send() {
 
     const cleanKey = (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).replace(/[^a-zA-Z0-9_-]/g, "");
     
-    // Берем лучшую модель из конфига (индекс 0 - gemini-2.0-flash)
-    const activeModel = BEUVRY_CONFIG.MODELS_PRIORITY[0]; 
-    
-    // ТЕХНИЧЕСКИЙ УСИЛИТЕЛЬ РИФМЫ (Склеиваем с базовым промптом)
-    const technicalBoost = `\n[ТЕХНИЧЕСКОЕ ЗАДАНИЕ: Рифма обязательна. Схема ABAB или AABB. Ритм строгий. Стиль: ${curDesc}]`;
+    // ТЕХНИЧЕСКИЙ УСИЛИТЕЛЬ РИФМЫ
+    const technicalBoost = `\n[ЗАДАНИЕ: СТРОГАЯ РИФМА ABAB. Ритм четкий. Стиль: ${curDesc}]`;
+    const fullPrompt = BEUVRY_CONFIG.PROMPT + technicalBoost + "\nСлова пользователя: " + val;
 
-    try {
-        const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${cleanKey}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: [{ parts: [{ text: BEUVRY_CONFIG.PROMPT + technicalBoost + "\nСлова пользователя: " + val }] }]
-            })
-        });
+    let success = false;
+
+    // Цикл перебора моделей из твоего config.js
+    for (let modelName of BEUVRY_CONFIG.MODELS_PRIORITY) {
+        if (success) break;
         
-        const d = await r.json();
-        if (d.candidates && d.candidates[0].content) {
-            const res = d.candidates[0].content.parts[0].text.trim();
-            const aMsg = document.createElement('div');
-            aMsg.className = 'bubble a';
-            aMsg.contentEditable = "true";
-            aMsg.innerHTML = `<small style="opacity:0.5">${curName}</small><br>${res.replace(/\n/g, '<br>')}`;
-            wall.appendChild(aMsg);
-        } else {
-            throw new Error(d.error ? d.error.message : "Пустой ответ");
+        try {
+            console.log(`Пробую модель: ${modelName}...`);
+            const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${cleanKey}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: fullPrompt }] }]
+                })
+            });
+            
+            const d = await r.json();
+            
+            if (d.candidates && d.candidates[0].content) {
+                const res = d.candidates[0].content.parts[0].text.trim();
+                const aMsg = document.createElement('div');
+                aMsg.className = 'bubble a';
+                aMsg.contentEditable = "true";
+                aMsg.innerHTML = `<small style="opacity:0.5">${modelName} | ${curName}</small><br>${res.replace(/\n/g, '<br>')}`;
+                wall.appendChild(aMsg);
+                success = true; // Выходим из цикла, если успех
+            } else {
+                console.warn(`Модель ${modelName} не ответила, пробую следующую...`);
+            }
+        } catch (e) {
+            console.error(`Ошибка с моделью ${modelName}:`, e);
         }
-    } catch (e) {
-        console.error("Ошибка Беври:", e);
+    }
+
+    if (!success) {
         const errMsg = document.createElement('div');
         errMsg.className = 'bubble a';
-        errMsg.innerText = "Сбой связи с клубом. Проверь ключ или модель.";
+        errMsg.innerText = "Клуб закрыт. Проверь API-ключ в config.js или лимиты Google.";
         wall.appendChild(errMsg);
     }
+    
     wall.scrollTop = wall.scrollHeight;
 }
 
