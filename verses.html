@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | VERSES v33.5.29 🔒</title>
+    <title>GY-GY | VERSES v33.5.30 🔒</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
@@ -67,13 +67,23 @@
     <input type="text" id="in" placeholder="Стиль: § Быт..." onkeydown="if(event.key==='Enter') send()">
     <button class="btn-ok" onclick="send()">ОК</button>
 
-    <div id="modeMenu" class="pop-menu">
-        <div class="m-item" onclick="setM('ø Абсурд', '4 строки')"><b>ø Абсурд</b>Безумие</div>
-        <div class="m-item" onclick="setM('§ Быт', '4 строки')"><b>§ Быт</b>Обычное</div>
-        <div class="m-item" onclick="setM('† Прожарка', '4 строки')"><b>† Прожарка</b>Дерзко</div>
-        <div class="m-item" onclick="setM('¶ Сатира', '4 строки')"><b>¶ Сатира</b>Ирония</div>
-        <div class="m-item" onclick="setM('‡ Хлестко', '1-2 строки')"><b>‡ Хлестко</b>Кратко</div>
+  <div id="modeMenu" class="pop-menu">
+    <div class="m-item" onclick="setM('ø Абсурд', 'полное безумие, сюрреализм, 4 строки')">
+        <b>ø Абсурд</b>Безумие
     </div>
+    <div class="m-item" onclick="setM('§ Быт', 'комедия наблюдений, жиза, 4 строки')">
+        <b>§ Быт</b>Обычное
+    </div>
+    <div class="m-item" onclick="setM('† Прожарка', 'жестко, едко, высмеять пороки, 4 строки')">
+        <b>† Прожарка</b>Дерзко
+    </div>
+    <div class="m-item" onclick="setM('¶ Сатира', 'социальный подтекст, ирония, 4 строки')">
+        <b>¶ Сатира</b>Ирония
+    </div>
+    <div class="m-item" onclick="setM('‡ Хлестко', 'афоризм, ударная фраза, 1-2 строки')">
+        <b>‡ Хлестко</b>Кратко
+    </div>
+</div> 
 </footer>
 
 <script>
@@ -97,12 +107,16 @@
         menu.style.display = isVisible ? 'none' : 'block';
     }
 
-    function setM(name, desc) {
-        curName = name; curDesc = desc;
-        document.getElementById('in').placeholder = `Режим: ${name}...`;
-        document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
-    }
-
+  <script>
+/* Обновленная логика установки режима 🔒 */
+function setM(name, desc) {
+    curName = name; 
+    curDesc = desc;
+    // Теперь placeholder тоже дает подсказку о характере режима
+    document.getElementById('in').placeholder = `${name} (${desc.split(',')[0]})...`;
+    document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
+}
+</script>
     async function send() {
         const input = document.getElementById('in');
         const wall = document.getElementById('wall');
