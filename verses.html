@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | CORE v33.5.21</title>
+    <title>GY-GY | CORE v33.5.22</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
@@ -107,30 +107,46 @@
     }
 
     function clearWall() { document.getElementById('wall').innerHTML = ""; }
-/* 🔒 ИНТЕРФЕЙС УПРАВЛЕНИЯ СТИХОМ v33.5.21 */
+/* 🔒 CORE v33.5.22: ВОССТАНОВЛЕНИЕ СИСТЕМЫ И МЕНЮ */
+let curName = "§ Быт";
+let curDesc = "комедия наблюдений, ровно 4 строки";
+
+// 1. УПРАВЛЕНИЕ МЕНЮ (ДЕЙСТВИЯ И РЕЖИМЫ)
+function toggleM(id, e) {
+    if (e) e.stopPropagation();
+    const menu = document.getElementById(id);
+    const allMenus = document.querySelectorAll('.pop-menu');
+    const isVisible = menu.style.display === 'block';
+    
+    allMenus.forEach(m => m.style.display = 'none'); // Закрыть все
+    menu.style.display = isVisible ? 'none' : 'block'; // Тоггл текущего
+}
+
+function setM(name, desc) {
+    curName = name; curDesc = desc;
+    document.getElementById('in').placeholder = `Режим: ${name}...`;
+    document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
+}
+
+// 2. ГЕНЕРАЦИЯ И РИФМА
 async function send() {
     const input = document.getElementById('in');
     const wall = document.getElementById('wall');
     const val = input.value.trim();
     if (!val) return;
 
-    // Генерируем уникальный ID для связки запроса и ответа
     const entryId = "entry-" + Date.now();
-
-    // Обертка для всей итерации (Запрос + Ответ)
     const entryWrap = document.createElement('div');
     entryWrap.id = entryId;
-    entryWrap.style.display = "flex";
-    entryWrap.style.flexDirection = "column";
-    entryWrap.style.gap = "5px";
+    entryWrap.style.cssText = "display:flex; flex-direction:column; gap:5px; margin-bottom:15px;";
 
-    // 1. Отображаем твои 4 слова
+    // Юзер-блок
     const uMsg = document.createElement('div');
     uMsg.className = 'bubble u';
     uMsg.innerText = val;
     entryWrap.appendChild(uMsg);
-
     wall.appendChild(entryWrap);
+    
     input.value = "";
     wall.scrollTop = wall.scrollHeight;
 
@@ -143,45 +159,52 @@ async function send() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                contents: [{ parts: [{ text: BEUVRY_CONFIG.PROMPT + `\n[РИФМА: СТРОГО ABAB. СТИЛЬ: ${curDesc}]\nСЛОВА: ${val}` }] }]
+                contents: [{ parts: [{ text: BEUVRY_CONFIG.PROMPT + `\n[РИФМА: ABAB. СТИЛЬ: ${curDesc}]\nСЛОВА: ${val}` }] }]
             })
         });
 
         const data = await response.json();
-
-        if (data.candidates && data.candidates[0].content) {
+        if (data.candidates) {
             const res = data.candidates[0].content.parts[0].text.trim();
             const aMsg = document.createElement('div');
             aMsg.className = 'bubble a';
-            
-            // Внутренняя структура ответа
             aMsg.innerHTML = `
                 <small style="opacity:0.4">${targetModel} | ${curName}</small>
-                <div class="verse-text" contentEditable="true" 
-                     style="margin: 10px 0; outline: none; min-height: 20px;" 
-                     oninput="checkEmpty('${entryId}')">
+                <div class="verse-text" contentEditable="true" style="margin:10px 0; outline:none;" oninput="checkEmpty('${entryId}')">
                     ${res.replace(/\n/g, '<br>')}
                 </div>
-                <div class="verse-controls" style="display: flex; gap: 10px; justify-content: flex-end; border-top: 1px solid rgba(255,215,0,0.1); padding-top: 8px;">
-                    <span class="del-btn" onclick="deleteEntry('${entryId}')" style="cursor:pointer; color: #ff4444; font-size: 0.65rem; border: 1px solid #ff4444; padding: 2px 6px;">УДАЛИТЬ</span>
-                    <span class="save-btn" onclick="lockAndSave('${entryId}')" style="cursor:pointer; color: var(--gold); font-size: 0.65rem; border: 1px solid var(--gold); padding: 2px 6px;">СОХРАНИТЬ В BOX</span>
+                <div class="verse-controls" style="display:flex; gap:10px; justify-content:flex-end; border-top:1px solid rgba(255,215,0,0.1); padding-top:8px;">
+                    <span onclick="deleteEntry('${entryId}')" style="cursor:pointer; color:#ff4444; font-size:0.65rem; border:1px solid #ff4444; padding:2px 6px;">УДАЛИТЬ</span>
+                    <span onclick="lockAndSave('${entryId}')" style="cursor:pointer; color:var(--gold); font-size:0.65rem; border:1px solid var(--gold); padding:2px 6px;">СОХРАНИТЬ В BOX</span>
                 </div>
             `;
             entryWrap.appendChild(aMsg);
         }
-    } catch (e) { console.error(e); }
+    } catch (e) { console.error("Клуб недоступен:", e); }
     wall.scrollTop = wall.scrollHeight;
 }
 
-/* 🔒 ФУНКЦИЯ ПРОВЕРКИ НА ПУСТОТУ: если стер текст — удаляем всё */
+// 3. ФУНКЦИИ КОНТРОЛЯ СТИХОВ
 function checkEmpty(id) {
     const entry = document.getElementById(id);
     const text = entry.querySelector('.verse-text').innerText.trim();
-    if (text === "") {
-        entry.remove();
-    }
+    if (!text) entry.remove();
 }
 
+function deleteEntry(id) { document.getElementById(id)?.remove(); }
+
+function lockAndSave(id) {
+    const entry = document.getElementById(id);
+    entry.querySelector('.verse-text').contentEditable = "false";
+    entry.querySelector('.verse-controls').innerHTML = `<small style="color:var(--gold); letter-spacing:1px;">ОБЪЕКТ ЗАФИКСИРОВАН 🔒</small>`;
+}
+
+// 4. ГЛОБАЛЬНОЕ ЗАКРЫТИЕ МЕНЮ
+window.onclick = function(event) {
+    if (!event.target.matches('.btn-mode') && !event.target.matches('.btn-act')) {
+        document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
+    }
+}
 /* 🔒 ФУНКЦИЯ ПРИНУДИТЕЛЬНОГО УДАЛЕНИЯ */
 function deleteEntry(id) {
     const entry = document.getElementById(id);
