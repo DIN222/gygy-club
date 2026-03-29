@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | CORE v33.5.26 🔒</title>
+    <title>GY-GY | CORE v33.5.27 🔒</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
@@ -13,7 +13,6 @@
         header { height: 70px; display: flex; align-items: center; border-bottom: var(--border); background: #111; padding: 0 10px; gap: 8px; z-index: 1000; flex-shrink: 0; position: relative; }
         .nav-fix { width: 40px; height: 40px; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--gold); text-decoration: none; font-weight: bold; font-size: 1.1rem; flex-shrink: 0; }
         .logo-gy { font-size: 1.1rem; font-weight: 900; color: var(--gold); letter-spacing: 1px; flex-shrink: 0; margin-left: auto; margin-right: 5px; }
-        .header-center { flex-grow: 1; display: flex; align-items: center; min-width: 0; }
         .btn-act { color: var(--gold); font-size: 0.65rem; cursor: pointer; border: 1px solid var(--gold); padding: 8px 10px; background: #222; text-transform: uppercase; flex-shrink: 0; white-space: nowrap; margin-left: 5px; }
 
         /* WALL 🔒 */
@@ -24,12 +23,12 @@
 
         /* FOOTER_CORE 🔒 */
         footer { height: 80px; display: flex; align-items: center; padding: 0 10px; gap: 10px; border-top: 1px solid #222; background: #000; flex-shrink: 0; position: relative; z-index: 1001; }
-        .btn-mode { width: 50px; height: 50px; border: 1px solid #444; background: #111; color: var(--gold); cursor: pointer; font-size: 1.2rem; z-index: 10; }
+        .btn-mode { width: 50px; height: 50px; border: 1px solid #444; background: #111; color: var(--gold); cursor: pointer; font-size: 1.2rem; }
         #in { flex-grow: 1; background: #0d0d0d; border: 1px solid #333; color: var(--gold); padding: 15px; font-size: 1rem; outline: none; }
         .btn-ok { height: 50px; padding: 0 20px; background: var(--gold); border: none; color: #000; font-weight: 900; cursor: pointer; }
 
         /* POPUP MENUS 🔒 */
-        .pop-menu { display: none; position: absolute; background: #111; border: var(--border); z-index: 10000 !important; box-shadow: 0 0 30px #000; overflow: hidden; }
+        .pop-menu { display: none; position: absolute; background: #111; border: var(--border); z-index: 10000; box-shadow: 0 0 30px #000; overflow: hidden; }
         #actMenu { top: 75px; right: 10px; width: 200px; }
         #modeMenu { bottom: 85px; left: 10px; width: 260px; }
         .m-item { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-size: 0.8rem; color: #fff; text-transform: uppercase; text-align: left; }
@@ -40,22 +39,20 @@
 <body>
 
 <header>
-    <a href="ai_room_core_v8.html" class="nav-fix">❮</a>
+    <div class="nav-fix" onclick="window.history.back()">❮</div>
     <div class="header-center"><div id="google_translate_element"></div></div>
     <div class="btn-act" onclick="toggleM('actMenu', event)">ДЕЙСТВИЯ ▾</div>
     <div class="logo-gy">GY-GY</div>
     <a href="box_page.html" class="nav-fix">❯</a>
 
     <div id="actMenu" class="pop-menu">
-        <div class="m-item" onclick="clearWall()">🗑 Очистить стену</div>
-        <div class="m-item" onclick="alert('BOX OK')">📦 В сборник</div>
-        <div class="m-item">🎬 Сделать клип</div>
-        <div class="m-item">✉️ Переслать</div>
+        <div class="m-item" onclick="document.getElementById('wall').innerHTML = ''">🗑 Очистить стену</div>
+        <div class="m-item" onclick="location.href='box_page.html'">📦 Перейти в BOX</div>
     </div>
 </header>
 
 <div id="wall">
-    <div class="bubble a">Система v33.5.26 восстановлена. 5 режимов под замком 🔒.</div>
+    <div class="bubble a">Система v33.5.26 готова. Транспорт в BOX активирован 🔒.</div>
 </div>
 
 <footer>
@@ -64,19 +61,18 @@
     <button class="btn-ok" onclick="send()">ОК</button>
 
     <div id="modeMenu" class="pop-menu">
-        <div class="m-item" onclick="setM('ø Абсурд', 'абсурдный юмор, 4 строки')"><b>ø Абсурд</b>Безумные связи</div>
-        <div class="m-item" onclick="setM('§ Быт', 'комедия наблюдений, 4 строки')"><b>§ Быт</b>Обычное смешное</div>
-        <div class="m-item" onclick="setM('† Прожарка', 'инсалт-комедия, остро, 4 строки')"><b>† Прожарка</b>Дерзко и едко</div>
-        <div class="m-item" onclick="setM('¶ Сатира', 'сатирический взгляд, 4 строки')"><b>¶ Сатира</b>Ирония над важным</div>
-        <div class="m-item" onclick="setM('‡ Хлестко', 'краткий уан-лайнер, 1-2 строки')"><b>‡ Хлестко</b>Коротко в точку</div>
+        <div class="m-item" onclick="setM('ø Абсурд', '4 строки')"><b>ø Абсурд</b>Безумие</div>
+        <div class="m-item" onclick="setM('§ Быт', '4 строки')"><b>§ Быт</b>Обычное</div>
+        <div class="m-item" onclick="setM('† Прожарка', '4 строки')"><b>† Прожарка</b>Дерзко</div>
+        <div class="m-item" onclick="setM('¶ Сатира', '4 строки')"><b>¶ Сатира</b>Ирония</div>
+        <div class="m-item" onclick="setM('‡ Хлестко', '1-2 строки')"><b>‡ Хлестко</b>Кратко</div>
     </div>
 </footer>
 
 <script>
     let curName = "§ Быт";
-    let curDesc = "комедия наблюдений, ровно 4 строки";
+    let curDesc = "комедия наблюдений, 4 строки";
 
-    // 1. УПРАВЛЕНИЕ МЕНЮ 🔒
     function toggleM(id, e) {
         if (e) e.stopPropagation();
         const menu = document.getElementById(id);
@@ -91,9 +87,6 @@
         document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
     }
 
-    function clearWall() { document.getElementById('wall').innerHTML = ""; }
-
-    // 2. ГЕНЕРАЦИЯ И КОНТРОЛЬ 🔒
     async function send() {
         const input = document.getElementById('in');
         const wall = document.getElementById('wall');
@@ -110,11 +103,9 @@
         input.value = "";
         wall.scrollTop = wall.scrollHeight;
 
-        const cleanKey = (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).replace(/[^a-zA-Z0-9_-]/g, "");
-        const targetModel = BEUVRY_CONFIG.MODELS_PRIORITY[0];
-
         try {
-            const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${targetModel}:generateContent?key=${cleanKey}`, {
+            const cleanKey = (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).replace(/[^a-zA-Z0-9_-]/g, "");
+            const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${BEUVRY_CONFIG.MODELS_PRIORITY[0]}:generateContent?key=${cleanKey}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ contents: [{ parts: [{ text: BEUVRY_CONFIG.PROMPT + `\n[СТИЛЬ: ${curDesc}]\nСЛОВА: ${val}` }] }] })
@@ -125,7 +116,7 @@
                 const aMsg = document.createElement('div');
                 aMsg.className = 'bubble a';
                 aMsg.innerHTML = `
-                    <small style="opacity:0.4">${targetModel} | ${curName}</small>
+                    <small style="opacity:0.4">${curName}</small>
                     <div class="v-text" contentEditable="true" style="margin:10px 0; outline:none;" oninput="if(!this.innerText.trim()) document.getElementById('${entryId}').remove()">
                         ${res.replace(/\n/g, '<br>')}
                     </div>
@@ -139,11 +130,17 @@
         wall.scrollTop = wall.scrollHeight;
     }
 
+    /* 🔒 ТРИЗ-РЫЧАГ СОХРАНЕНИЯ */
     function lockAndSave(id, btn) {
         const entry = document.getElementById(id);
+        const text = entry.querySelector('.v-text').innerText;
+        
+        let box = JSON.parse(localStorage.getItem('gy_box') || '[]');
+        box.push({ text: text, style: curName, timestamp: new Date().toLocaleString() });
+        localStorage.setItem('gy_box', JSON.stringify(box));
+
         entry.querySelector('.v-text').contentEditable = "false";
         btn.parentElement.innerHTML = `<small style="color:var(--gold); letter-spacing:1px;">ОБЪЕКТ ЗАФИКСИРОВАН 🔒</small>`;
-        console.log("Фиксация:", entry.querySelector('.v-text').innerText);
     }
 
     window.onclick = () => document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
