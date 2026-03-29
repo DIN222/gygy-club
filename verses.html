@@ -38,13 +38,52 @@
         #in { flex-grow: 1; background: #0d0d0d; border: 1px solid #333; color: var(--gold); padding: 15px; font-size: 1rem; outline: none; }
         .btn-ok { height: 50px; padding: 0 20px; background: var(--gold); border: none; color: #000; font-weight: 900; cursor: pointer; }
 
-        .pop-menu { display: none; position: absolute; background: #111; border: var(--border); z-index: 9999; box-shadow: 0 0 25px #000; }
-        #actMenu { top: 75px; right: 10px; width: 180px; }
-        #modeMenu { bottom: 85px; left: 10px; width: 250px; }
-        .m-item { padding: 12px; border-bottom: 1px solid #222; cursor: pointer; font-size: 0.8rem; color: #fff; text-transform: uppercase; }
-        .m-item b { display: block; color: var(--gold); margin-bottom: 2px; }
-        .m-item:hover { background: var(--gold); color: #000; }
-    </style>
+        /* 🔒 ФИКСАЦИЯ ВЫПАДАЮЩИХ МЕНЮ v33.5.23 */
+.pop-menu { 
+    display: none; 
+    position: absolute; 
+    background: #111; 
+    border: 1px solid var(--gold); 
+    z-index: 10000 !important; /* Выше всего на свете */
+    box-shadow: 0 0 30px #000, 0 0 10px var(--gold); 
+    overflow: hidden;
+}
+
+/* Меню ДЕЙСТВИЯ (справа вверху) */
+#actMenu { 
+    top: 75px; 
+    right: 10px; 
+    width: 200px; 
+}
+
+/* Меню РЕЖИМЫ (слева внизу, над футером) */
+#modeMenu { 
+    bottom: 85px; 
+    left: 10px; 
+    width: 260px; 
+}
+
+.m-item { 
+    padding: 15px; 
+    border-bottom: 1px solid #222; 
+    cursor: pointer; 
+    font-size: 0.85rem; 
+    color: #fff; 
+    text-transform: uppercase; 
+    transition: 0.2s;
+}
+
+.m-item:hover { 
+    background: var(--gold); 
+    color: #000; 
+}
+
+.m-item b { 
+    display: block; 
+    color: var(--gold); 
+    margin-bottom: 3px; 
+    font-size: 0.9rem;
+}
 </head>
 <body>
 
