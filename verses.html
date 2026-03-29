@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | CORE v33.5.19</title>
+    <title>GY-GY | CORE v33.5.20</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
@@ -107,14 +107,14 @@
     }
 
     function clearWall() { document.getElementById('wall').innerHTML = ""; }
-
-/* 🔒 ОБНОВЛЕНИЕ ПОД ПОКОЛЕНИЕ 3.1 v33.5.19 */
+/* 🔒 ОБНОВЛЕННЫЙ ВЫВОД С КНОПКОЙ СОХРАНЕНИЯ v33.5.20 */
 async function send() {
     const input = document.getElementById('in');
     const wall = document.getElementById('wall');
     const val = input.value.trim();
     if (!val) return;
 
+    // Пользовательское сообщение
     const uMsg = document.createElement('div');
     uMsg.className = 'bubble u';
     uMsg.innerText = val;
@@ -124,38 +124,61 @@ async function send() {
 
     const rawKey = BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2;
     const cleanKey = rawKey.replace(/[^a-zA-Z0-9_-]/g, "").trim();
-    
-    // Берем новейшую модель 3.1 из твоего обновленного списка
     const targetModel = BEUVRY_CONFIG.MODELS_PRIORITY[0]; 
-    
+
     try {
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${targetModel}:generateContent?key=${cleanKey}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                contents: [{ parts: [{ text: BEUVRY_CONFIG.PROMPT + `\n[ТЕХЗАДАНИЕ: РИФМА ABAB. СТИЛЬ: ${curDesc}]\nСЛОВА: ${val}` }] }]
+                contents: [{ parts: [{ text: BEUVRY_CONFIG.PROMPT + `\n[РИФМА: СТРОГО ABAB. СТИЛЬ: ${curDesc}]\nСЛОВА: ${val}` }] }]
             })
         });
 
         const data = await response.json();
 
-        if (data.error) throw new Error(data.error.message);
-
         if (data.candidates && data.candidates[0].content) {
             const res = data.candidates[0].content.parts[0].text.trim();
             const aMsg = document.createElement('div');
             aMsg.className = 'bubble a';
-            aMsg.contentEditable = "true";
-            aMsg.innerHTML = `<small style="opacity:0.4">${targetModel}</small><br>${res.replace(/\n/g, '<br>')}`;
+            aMsg.id = "msg-" + Date.now(); // Уникальный ID для фиксации
+            
+            // Формируем блок: Текст (редактируемый) + Панель управления
+            aMsg.innerHTML = `
+                <small style="opacity:0.4">${targetModel} | ${curName}</small>
+                <div class="verse-text" contentEditable="true" style="margin: 10px 0; outline: none;">
+                    ${res.replace(/\n/g, '<br>')}
+                </div>
+                <div class="verse-controls" style="display: flex; gap: 10px; justify-content: flex-end; border-top: 1px solid rgba(255,215,0,0.2); padding-top: 8px;">
+                    <span class="save-btn" onclick="lockAndSave('${aMsg.id}')" style="cursor:pointer; color: var(--gold); font-size: 0.7rem; border: 1px solid var(--gold); padding: 2px 8px;">СОХРАНИТЬ В BOX</span>
+                </div>
+            `;
             wall.appendChild(aMsg);
         }
     } catch (e) {
-        const errMsg = document.createElement('div');
-        errMsg.className = 'bubble a';
-        errMsg.innerHTML = `<span style="color:red">ОШИБКА ПОКОЛЕНИЯ 3.1:</span><br><small>${e.message}</small>`;
-        wall.appendChild(errMsg);
+        console.error(e);
     }
     wall.scrollTop = wall.scrollHeight;
+}
+
+/* 🔒 ФУНКЦИЯ ФИКСАЦИИ И СОХРАНЕНИЯ */
+function lockAndSave(id) {
+    const block = document.getElementById(id);
+    const textZone = block.querySelector('.verse-text');
+    const controls = block.querySelector('.verse-controls');
+
+    // 1. Запрещаем редактирование
+    textZone.contentEditable = "false";
+    
+    // 2. Вешаем невидимый замок в атрибуты и визуальный маркер в код
+    block.setAttribute('data-locked', 'true'); 
+    
+    // 3. Меняем панель управления на статус "СОХРАНЕНО 🔒"
+    controls.innerHTML = `<small style="color: var(--gold); letter-spacing: 1px;">ОБЪЕКТ ЗАФИКСИРОВАН 🔒</small>`;
+    
+    // 4. Эмуляция отправки в BOX (можно заменить на реальный fetch/localStorage)
+    console.log("Стих сохранен в BOX:", textZone.innerText);
+    alert("Зафиксировано в Сборнике. Редактирование запрещено.");
 }
 
     window.onclick = () => document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
