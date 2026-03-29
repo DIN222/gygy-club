@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | CORE v33.5.20</title>
+    <title>GY-GY | CORE v33.5.21</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
@@ -107,18 +107,30 @@
     }
 
     function clearWall() { document.getElementById('wall').innerHTML = ""; }
-/* 🔒 ОБНОВЛЕННЫЙ ВЫВОД С КНОПКОЙ СОХРАНЕНИЯ v33.5.20 */
+/* 🔒 ИНТЕРФЕЙС УПРАВЛЕНИЯ СТИХОМ v33.5.21 */
 async function send() {
     const input = document.getElementById('in');
     const wall = document.getElementById('wall');
     const val = input.value.trim();
     if (!val) return;
 
-    // Пользовательское сообщение
+    // Генерируем уникальный ID для связки запроса и ответа
+    const entryId = "entry-" + Date.now();
+
+    // Обертка для всей итерации (Запрос + Ответ)
+    const entryWrap = document.createElement('div');
+    entryWrap.id = entryId;
+    entryWrap.style.display = "flex";
+    entryWrap.style.flexDirection = "column";
+    entryWrap.style.gap = "5px";
+
+    // 1. Отображаем твои 4 слова
     const uMsg = document.createElement('div');
     uMsg.className = 'bubble u';
     uMsg.innerText = val;
-    wall.appendChild(uMsg);
+    entryWrap.appendChild(uMsg);
+
+    wall.appendChild(entryWrap);
     input.value = "";
     wall.scrollTop = wall.scrollHeight;
 
@@ -141,31 +153,52 @@ async function send() {
             const res = data.candidates[0].content.parts[0].text.trim();
             const aMsg = document.createElement('div');
             aMsg.className = 'bubble a';
-            aMsg.id = "msg-" + Date.now(); // Уникальный ID для фиксации
             
-            // Формируем блок: Текст (редактируемый) + Панель управления
+            // Внутренняя структура ответа
             aMsg.innerHTML = `
                 <small style="opacity:0.4">${targetModel} | ${curName}</small>
-                <div class="verse-text" contentEditable="true" style="margin: 10px 0; outline: none;">
+                <div class="verse-text" contentEditable="true" 
+                     style="margin: 10px 0; outline: none; min-height: 20px;" 
+                     oninput="checkEmpty('${entryId}')">
                     ${res.replace(/\n/g, '<br>')}
                 </div>
-                <div class="verse-controls" style="display: flex; gap: 10px; justify-content: flex-end; border-top: 1px solid rgba(255,215,0,0.2); padding-top: 8px;">
-                    <span class="save-btn" onclick="lockAndSave('${aMsg.id}')" style="cursor:pointer; color: var(--gold); font-size: 0.7rem; border: 1px solid var(--gold); padding: 2px 8px;">СОХРАНИТЬ В BOX</span>
+                <div class="verse-controls" style="display: flex; gap: 10px; justify-content: flex-end; border-top: 1px solid rgba(255,215,0,0.1); padding-top: 8px;">
+                    <span class="del-btn" onclick="deleteEntry('${entryId}')" style="cursor:pointer; color: #ff4444; font-size: 0.65rem; border: 1px solid #ff4444; padding: 2px 6px;">УДАЛИТЬ</span>
+                    <span class="save-btn" onclick="lockAndSave('${entryId}')" style="cursor:pointer; color: var(--gold); font-size: 0.65rem; border: 1px solid var(--gold); padding: 2px 6px;">СОХРАНИТЬ В BOX</span>
                 </div>
             `;
-            wall.appendChild(aMsg);
+            entryWrap.appendChild(aMsg);
         }
-    } catch (e) {
-        console.error(e);
-    }
+    } catch (e) { console.error(e); }
     wall.scrollTop = wall.scrollHeight;
 }
 
-/* 🔒 ФУНКЦИЯ ФИКСАЦИИ И СОХРАНЕНИЯ */
+/* 🔒 ФУНКЦИЯ ПРОВЕРКИ НА ПУСТОТУ: если стер текст — удаляем всё */
+function checkEmpty(id) {
+    const entry = document.getElementById(id);
+    const text = entry.querySelector('.verse-text').innerText.trim();
+    if (text === "") {
+        entry.remove();
+    }
+}
+
+/* 🔒 ФУНКЦИЯ ПРИНУДИТЕЛЬНОГО УДАЛЕНИЯ */
+function deleteEntry(id) {
+    const entry = document.getElementById(id);
+    if (entry) entry.remove();
+}
+
+/* 🔒 ФУНКЦИЯ ФИКСАЦИИ */
 function lockAndSave(id) {
-    const block = document.getElementById(id);
-    const textZone = block.querySelector('.verse-text');
-    const controls = block.querySelector('.verse-controls');
+    const entry = document.getElementById(id);
+    const textZone = entry.querySelector('.verse-text');
+    const controls = entry.querySelector('.verse-controls');
+
+    textZone.contentEditable = "false";
+    controls.innerHTML = `<small style="color: var(--gold); letter-spacing: 1px;">ОБЪЕКТ ЗАФИКСИРОВАН 🔒</small>`;
+    
+    console.log("Сохранено в BOX:", textZone.innerText);
+}
 
     // 1. Запрещаем редактирование
     textZone.contentEditable = "false";
