@@ -3,91 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | BOX</title>
+    <title>GY-GY | BOX v1.0.0</title>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; overflow-x: hidden; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; overflow: hidden; }
+
+        /* 🔒 ПОСТОЯННЫЙ ЭЛЕМЕНТ: HEADER */
+        header { 
+            height: 70px; 
+            display: flex; 
+            align-items: center; 
+            border-bottom: var(--border); 
+            background: #111; 
+            padding: 0 10px; 
+            gap: 15px; 
+            z-index: 1000; 
+        }
+
+        /* 🔒 РЫЧАГ УПРАВЛЕНИЯ: КНОПКА ВОЗВРАТА */
+        .nav-back { 
+            width: 40px; 
+            height: 40px; 
+            border: 1px solid var(--gold); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            cursor: pointer; 
+            color: var(--gold); 
+            font-size: 1.2rem; 
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .nav-back:hover { background: var(--gold); color: #000; }
+
+        /* 🔒 ПОСТОЯННЫЙ ЭЛЕМЕНТ: ЛОГОТИП */
+        .logo-gy { font-size: 1.1rem; font-weight: 900; color: var(--gold); letter-spacing: 2px; margin-left: auto; }
         
-        /* HEADER */
-        header { height: 60px; display: flex; align-items: center; border-bottom: var(--border); background: #111; padding: 0 15px; position: sticky; top: 0; z-index: 100; }
-        .back-btn { text-decoration: none; color: var(--gold); font-weight: 900; font-size: 1.2rem; margin-right: 20px; }
-        .title { font-weight: 900; letter-spacing: 2px; flex-grow: 1; text-align: center; }
+        /* 🔒 ПОСТОЯННЫЙ ЭЛЕМЕНТ: ЯЗЫКОВАЯ ПАНЕЛЬ */
+        #google_translate_element { margin-left: 5px; }
 
-        /* LIST */
-        #boxList { padding: 15px; display: flex; flex-direction: column; gap: 20px; }
-        .card { border: 1px solid #333; padding: 15px; background: #0a0a0a; position: relative; transition: border-color 0.3s; }
-        .card:hover { border-color: var(--gold); }
-        
-        /* META INSIDE CARD */
-        .card-meta { display: flex; justify-content: space-between; font-size: 0.7rem; opacity: 0.5; margin-bottom: 10px; text-transform: uppercase; }
-        .card-text { line-height: 1.5; font-size: 1rem; color: #fff; margin-bottom: 15px; white-space: pre-wrap; }
-
-        /* CARD ACTIONS */
-        .card-btns { display: flex; gap: 10px; border-top: 1px solid #222; padding-top: 10px; }
-        .c-btn { background: none; border: 1px solid #444; color: var(--gold); font-size: 0.65rem; padding: 5px 10px; cursor: pointer; text-transform: uppercase; }
-        .c-btn:hover { background: var(--gold); color: #000; }
-        .btn-del { border-color: #600; color: #f44; }
-
-        /* EMPTY STATE */
-        .empty { text-align: center; margin-top: 100px; opacity: 0.5; }
+        .content { padding: 20px; text-align: center; }
+        h1 { font-size: 1.1rem; text-transform: uppercase; letter-spacing: 3px; border-bottom: 1px solid #222; padding-bottom: 15px; margin-top: 10px; }
+        .box-placeholder { margin-top: 100px; opacity: 0.2; font-style: italic; letter-spacing: 1px; }
     </style>
 </head>
 <body>
 
 <header>
-    <a href="index.html" class="back-btn">❮</a>
-    <div class="title">BOX / СБОРНИК</div>
-    <div style="width: 30px;"></div> </header>
+    <div class="nav-back" onclick="window.history.back();" title="Предыдущая страница">❮</div>
+    
+    <div id="google_translate_element"></div>
+    
+    <div class="logo-gy">GY-GY</div>
+</header>
 
-<div id="boxList">
-    </div>
+<div class="content">
+    <h1>Сборник (BOX)</h1>
+    <div class="box-placeholder">Объекты не зафиксированы...</div>
+</div>
 
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 <script>
-    // Загрузка данных
-    function loadBox() {
-        const list = document.getElementById('boxList');
-        const items = JSON.parse(localStorage.getItem('gygy_box') || '[]');
-        
-        if (items.length === 0) {
-            list.innerHTML = '<div class="empty">Здесь пока пусто...<br>Зарифмуй что-нибудь в CORE!</div>';
-            return;
-        }
-
-        // Рендерим от новых к старым
-        list.innerHTML = items.reverse().map((item, index) => `
-            <div class="card">
-                <div class="card-meta">
-                    <span>${item.mode || 'ЮМОР'}</span>
-                    <span>${item.date || ''}</span>
-                </div>
-                <div class="card-text">${item.text}</div>
-                <div class="card-btns">
-                    <button class="c-btn" onclick="copyCard(${index})">КОПИРОВАТЬ</button>
-                    <button class="c-btn btn-del" onclick="deleteCard(${index})">УДАЛИТЬ</button>
-                </div>
-            </div>
-        `).join('');
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({pageLanguage: 'ru'}, 'google_translate_element');
     }
-
-    // Копирование конкретной карточки
-    function copyCard(idx) {
-        const items = JSON.parse(localStorage.getItem('gygy_box') || '[]');
-        const realIdx = items.length - 1 - idx; // инверсия из-за reverse()
-        navigator.clipboard.writeText(items[realIdx].text);
-        alert("Текст в буфере!");
-    }
-
-    // Удаление карточки
-    function deleteCard(idx) {
-        if (!confirm("Удалить этот шедевр?")) return;
-        let items = JSON.parse(localStorage.getItem('gygy_box') || '[]');
-        const realIdx = items.length - 1 - idx;
-        items.splice(realIdx, 1);
-        localStorage.setItem('gygy_box', JSON.stringify(items));
-        loadBox();
-    }
-
-    window.onload = loadBox;
 </script>
 
 </body>
