@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | CORE v33.5.23</title>
+    <title>GY-GY | CORE v33.5.26 🔒</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
@@ -11,93 +11,39 @@
         
         /* HEADER_CORE 🔒 */
         header { height: 70px; display: flex; align-items: center; border-bottom: var(--border); background: #111; padding: 0 10px; gap: 8px; z-index: 1000; flex-shrink: 0; position: relative; }
-        
-        /* ЭЛЕМЕНТЫ НАВИГАЦИИ 🔒 */
         .nav-fix { width: 40px; height: 40px; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--gold); text-decoration: none; font-weight: bold; font-size: 1.1rem; flex-shrink: 0; }
-        
-        /* ЛОГОТИП СПРАВА (ВИЗУАЛЬНО ЧИСТЫЙ) 🔒 */
         .logo-gy { font-size: 1.1rem; font-weight: 900; color: var(--gold); letter-spacing: 1px; flex-shrink: 0; margin-left: auto; margin-right: 5px; }
-        
-        /* ЯЗЫКОВОЙ БЛОК 🔒 */
         .header-center { flex-grow: 1; display: flex; align-items: center; min-width: 0; }
-        
-        /* КНОПКА ДЕЙСТВИЯ 🔒 */
         .btn-act { color: var(--gold); font-size: 0.65rem; cursor: pointer; border: 1px solid var(--gold); padding: 8px 10px; background: #222; text-transform: uppercase; flex-shrink: 0; white-space: nowrap; margin-left: 5px; }
 
+        /* WALL 🔒 */
         #wall { flex-grow: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; scroll-behavior: smooth; }
-        .bubble { padding: 12px; max-width: 85%; border: 1px solid #333; border-radius: 4px; line-height: 1.4; font-size: 1rem; }
+        .bubble { padding: 12px; max-width: 85%; border: 1px solid #333; border-radius: 4px; line-height: 1.4; font-size: 1rem; position: relative; }
         .u { align-self: flex-start; border-left: 3px solid var(--gold); background: rgba(255,215,0,0.05); color: #fff; }
-        .a { align-self: flex-end; border-right: 3px solid #fff; background: rgba(255,255,255,0.05); text-align: right; outline: none; }
+        .a { align-self: flex-end; border-right: 3px solid #fff; background: rgba(255,255,255,0.05); text-align: right; }
 
         /* FOOTER_CORE 🔒 */
-        footer { height: 80px; display: flex; align-items: center; padding: 0 10px; gap: 10px; border-top: 1px solid #222; background: #000; flex-shrink: 0; position: relative; }
-        
-        /* КНОПКА ВИДЫ ЮМОРА 🔒 */
+        footer { height: 80px; display: flex; align-items: center; padding: 0 10px; gap: 10px; border-top: 1px solid #222; background: #000; flex-shrink: 0; position: relative; z-index: 1001; }
         .btn-mode { width: 50px; height: 50px; border: 1px solid #444; background: #111; color: var(--gold); cursor: pointer; font-size: 1.2rem; z-index: 10; }
-        
         #in { flex-grow: 1; background: #0d0d0d; border: 1px solid #333; color: var(--gold); padding: 15px; font-size: 1rem; outline: none; }
         .btn-ok { height: 50px; padding: 0 20px; background: var(--gold); border: none; color: #000; font-weight: 900; cursor: pointer; }
 
-        /* 🔒 ФИКСАЦИЯ ВЫПАДАЮЩИХ МЕНЮ v33.5.23 */
-.pop-menu { 
-    display: none; 
-    position: absolute; 
-    background: #111; 
-    border: 1px solid var(--gold); 
-    z-index: 10000 !important; /* Выше всего на свете */
-    box-shadow: 0 0 30px #000, 0 0 10px var(--gold); 
-    overflow: hidden;
-}
-
-/* Меню ДЕЙСТВИЯ (справа вверху) */
-#actMenu { 
-    top: 75px; 
-    right: 10px; 
-    width: 200px; 
-}
-
-/* Меню РЕЖИМЫ (слева внизу, над футером) */
-#modeMenu { 
-    bottom: 85px; 
-    left: 10px; 
-    width: 260px; 
-}
-
-.m-item { 
-    padding: 15px; 
-    border-bottom: 1px solid #222; 
-    cursor: pointer; 
-    font-size: 0.85rem; 
-    color: #fff; 
-    text-transform: uppercase; 
-    transition: 0.2s;
-}
-
-.m-item:hover { 
-    background: var(--gold); 
-    color: #000; 
-}
-
-.m-item b { 
-    display: block; 
-    color: var(--gold); 
-    margin-bottom: 3px; 
-    font-size: 0.9rem;
-}
+        /* POPUP MENUS 🔒 */
+        .pop-menu { display: none; position: absolute; background: #111; border: var(--border); z-index: 10000 !important; box-shadow: 0 0 30px #000; overflow: hidden; }
+        #actMenu { top: 75px; right: 10px; width: 200px; }
+        #modeMenu { bottom: 85px; left: 10px; width: 260px; }
+        .m-item { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-size: 0.8rem; color: #fff; text-transform: uppercase; text-align: left; }
+        .m-item b { display: block; color: var(--gold); margin-bottom: 3px; }
+        .m-item:hover { background: var(--gold); color: #000; }
+    </style>
 </head>
 <body>
 
 <header>
     <a href="ai_room_core_v8.html" class="nav-fix">❮</a>
-    
-    <div class="header-center">
-        <div id="google_translate_element"></div>
-    </div>
-    
+    <div class="header-center"><div id="google_translate_element"></div></div>
     <div class="btn-act" onclick="toggleM('actMenu', event)">ДЕЙСТВИЯ ▾</div>
-    
     <div class="logo-gy">GY-GY</div>
-    
     <a href="box_page.html" class="nav-fix">❯</a>
 
     <div id="actMenu" class="pop-menu">
@@ -109,7 +55,7 @@
 </header>
 
 <div id="wall">
-    <div class="bubble a">Система v33.5.14 готова. Все замки переведены в невидимый режим (только в коде) 🔒.</div>
+    <div class="bubble a">Система v33.5.26 восстановлена. 5 режимов под замком 🔒.</div>
 </div>
 
 <footer>
@@ -130,13 +76,13 @@
     let curName = "§ Быт";
     let curDesc = "комедия наблюдений, ровно 4 строки";
 
+    // 1. УПРАВЛЕНИЕ МЕНЮ 🔒
     function toggleM(id, e) {
         if (e) e.stopPropagation();
         const menu = document.getElementById(id);
-        const allMenus = document.querySelectorAll('.pop-menu');
-        const isCurrentlyVisible = menu.style.display === 'block';
-        allMenus.forEach(m => m.style.display = 'none');
-        menu.style.display = isCurrentlyVisible ? 'none' : 'block';
+        const isVisible = menu.style.display === 'block';
+        document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
+        menu.style.display = isVisible ? 'none' : 'block';
     }
 
     function setM(name, desc) {
@@ -146,145 +92,64 @@
     }
 
     function clearWall() { document.getElementById('wall').innerHTML = ""; }
-/* 🔒 CORE v33.5.22: ВОССТАНОВЛЕНИЕ СИСТЕМЫ И МЕНЮ */
-let curName = "§ Быт";
-let curDesc = "комедия наблюдений, ровно 4 строки";
 
-// 1. УПРАВЛЕНИЕ МЕНЮ (ДЕЙСТВИЯ И РЕЖИМЫ)
-function toggleM(id, e) {
-    if (e) e.stopPropagation();
-    const menu = document.getElementById(id);
-    const allMenus = document.querySelectorAll('.pop-menu');
-    const isVisible = menu.style.display === 'block';
-    
-    allMenus.forEach(m => m.style.display = 'none'); // Закрыть все
-    menu.style.display = isVisible ? 'none' : 'block'; // Тоггл текущего
-}
+    // 2. ГЕНЕРАЦИЯ И КОНТРОЛЬ 🔒
+    async function send() {
+        const input = document.getElementById('in');
+        const wall = document.getElementById('wall');
+        const val = input.value.trim();
+        if (!val) return;
 
-function setM(name, desc) {
-    curName = name; curDesc = desc;
-    document.getElementById('in').placeholder = `Режим: ${name}...`;
-    document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
-}
+        const entryId = "entry-" + Date.now();
+        const wrap = document.createElement('div');
+        wrap.id = entryId;
+        wrap.style.cssText = "display:flex; flex-direction:column; gap:5px; margin-bottom:15px;";
+        wrap.innerHTML = `<div class="bubble u">${val}</div>`;
+        wall.appendChild(wrap);
+        
+        input.value = "";
+        wall.scrollTop = wall.scrollHeight;
 
-// 2. ГЕНЕРАЦИЯ И РИФМА
-async function send() {
-    const input = document.getElementById('in');
-    const wall = document.getElementById('wall');
-    const val = input.value.trim();
-    if (!val) return;
+        const cleanKey = (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).replace(/[^a-zA-Z0-9_-]/g, "");
+        const targetModel = BEUVRY_CONFIG.MODELS_PRIORITY[0];
 
-    const entryId = "entry-" + Date.now();
-    const entryWrap = document.createElement('div');
-    entryWrap.id = entryId;
-    entryWrap.style.cssText = "display:flex; flex-direction:column; gap:5px; margin-bottom:15px;";
-
-    // Юзер-блок
-    const uMsg = document.createElement('div');
-    uMsg.className = 'bubble u';
-    uMsg.innerText = val;
-    entryWrap.appendChild(uMsg);
-    wall.appendChild(entryWrap);
-    
-    input.value = "";
-    wall.scrollTop = wall.scrollHeight;
-
-    const rawKey = BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2;
-    const cleanKey = rawKey.replace(/[^a-zA-Z0-9_-]/g, "").trim();
-    const targetModel = BEUVRY_CONFIG.MODELS_PRIORITY[0]; 
-
-    try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${targetModel}:generateContent?key=${cleanKey}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: [{ parts: [{ text: BEUVRY_CONFIG.PROMPT + `\n[РИФМА: ABAB. СТИЛЬ: ${curDesc}]\nСЛОВА: ${val}` }] }]
-            })
-        });
-
-        const data = await response.json();
-        if (data.candidates) {
-            const res = data.candidates[0].content.parts[0].text.trim();
-            const aMsg = document.createElement('div');
-            aMsg.className = 'bubble a';
-            aMsg.innerHTML = `
-                <small style="opacity:0.4">${targetModel} | ${curName}</small>
-                <div class="verse-text" contentEditable="true" style="margin:10px 0; outline:none;" oninput="checkEmpty('${entryId}')">
-                    ${res.replace(/\n/g, '<br>')}
-                </div>
-                <div class="verse-controls" style="display:flex; gap:10px; justify-content:flex-end; border-top:1px solid rgba(255,215,0,0.1); padding-top:8px;">
-                    <span onclick="deleteEntry('${entryId}')" style="cursor:pointer; color:#ff4444; font-size:0.65rem; border:1px solid #ff4444; padding:2px 6px;">УДАЛИТЬ</span>
-                    <span onclick="lockAndSave('${entryId}')" style="cursor:pointer; color:var(--gold); font-size:0.65rem; border:1px solid var(--gold); padding:2px 6px;">СОХРАНИТЬ В BOX</span>
-                </div>
-            `;
-            entryWrap.appendChild(aMsg);
-        }
-    } catch (e) { console.error("Клуб недоступен:", e); }
-    wall.scrollTop = wall.scrollHeight;
-}
-
-// 3. ФУНКЦИИ КОНТРОЛЯ СТИХОВ
-function checkEmpty(id) {
-    const entry = document.getElementById(id);
-    const text = entry.querySelector('.verse-text').innerText.trim();
-    if (!text) entry.remove();
-}
-
-function deleteEntry(id) { document.getElementById(id)?.remove(); }
-
-function lockAndSave(id) {
-    const entry = document.getElementById(id);
-    entry.querySelector('.verse-text').contentEditable = "false";
-    entry.querySelector('.verse-controls').innerHTML = `<small style="color:var(--gold); letter-spacing:1px;">ОБЪЕКТ ЗАФИКСИРОВАН 🔒</small>`;
-}
-
-// 4. ГЛОБАЛЬНОЕ ЗАКРЫТИЕ МЕНЮ
-window.onclick = function(event) {
-    if (!event.target.matches('.btn-mode') && !event.target.matches('.btn-act')) {
-        document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
+        try {
+            const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${targetModel}:generateContent?key=${cleanKey}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ contents: [{ parts: [{ text: BEUVRY_CONFIG.PROMPT + `\n[СТИЛЬ: ${curDesc}]\nСЛОВА: ${val}` }] }] })
+            });
+            const d = await r.json();
+            if (d.candidates) {
+                const res = d.candidates[0].content.parts[0].text.trim();
+                const aMsg = document.createElement('div');
+                aMsg.className = 'bubble a';
+                aMsg.innerHTML = `
+                    <small style="opacity:0.4">${targetModel} | ${curName}</small>
+                    <div class="v-text" contentEditable="true" style="margin:10px 0; outline:none;" oninput="if(!this.innerText.trim()) document.getElementById('${entryId}').remove()">
+                        ${res.replace(/\n/g, '<br>')}
+                    </div>
+                    <div class="v-ctrl" style="display:flex; gap:10px; justify-content:flex-end; border-top:1px solid rgba(255,215,0,0.1); padding-top:8px;">
+                        <span onclick="document.getElementById('${entryId}').remove()" style="cursor:pointer; color:#ff4444; font-size:0.65rem; border:1px solid #ff4444; padding:2px 6px;">УДАЛИТЬ</span>
+                        <span onclick="lockAndSave('${entryId}', this)" style="cursor:pointer; color:var(--gold); font-size:0.65rem; border:1px solid var(--gold); padding:2px 6px;">СОХРАНИТЬ</span>
+                    </div>`;
+                wrap.appendChild(aMsg);
+            }
+        } catch (e) { console.error(e); }
+        wall.scrollTop = wall.scrollHeight;
     }
-}
-/* 🔒 ФУНКЦИЯ ПРИНУДИТЕЛЬНОГО УДАЛЕНИЯ */
-function deleteEntry(id) {
-    const entry = document.getElementById(id);
-    if (entry) entry.remove();
-}
 
-/* 🔒 ФУНКЦИЯ ФИКСАЦИИ */
-function lockAndSave(id) {
-    const entry = document.getElementById(id);
-    const textZone = entry.querySelector('.verse-text');
-    const controls = entry.querySelector('.verse-controls');
-
-    textZone.contentEditable = "false";
-    controls.innerHTML = `<small style="color: var(--gold); letter-spacing: 1px;">ОБЪЕКТ ЗАФИКСИРОВАН 🔒</small>`;
-    
-    console.log("Сохранено в BOX:", textZone.innerText);
-}
-
-    // 1. Запрещаем редактирование
-    textZone.contentEditable = "false";
-    
-    // 2. Вешаем невидимый замок в атрибуты и визуальный маркер в код
-    block.setAttribute('data-locked', 'true'); 
-    
-    // 3. Меняем панель управления на статус "СОХРАНЕНО 🔒"
-    controls.innerHTML = `<small style="color: var(--gold); letter-spacing: 1px;">ОБЪЕКТ ЗАФИКСИРОВАН 🔒</small>`;
-    
-    // 4. Эмуляция отправки в BOX (можно заменить на реальный fetch/localStorage)
-    console.log("Стих сохранен в BOX:", textZone.innerText);
-    alert("Зафиксировано в Сборнике. Редактирование запрещено.");
-}
+    function lockAndSave(id, btn) {
+        const entry = document.getElementById(id);
+        entry.querySelector('.v-text').contentEditable = "false";
+        btn.parentElement.innerHTML = `<small style="color:var(--gold); letter-spacing:1px;">ОБЪЕКТ ЗАФИКСИРОВАН 🔒</small>`;
+        console.log("Фиксация:", entry.querySelector('.v-text').innerText);
+    }
 
     window.onclick = () => document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
 </script>
 
 <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-<script>
-    function googleTranslateElementInit() {
-        new google.translate.TranslateElement({pageLanguage: 'ru'}, 'google_translate_element');
-    }
-</script>
-
+<script>function googleTranslateElementInit(){new google.translate.TranslateElement({pageLanguage:'ru'},'google_translate_element');}</script>
 </body>
 </html>
