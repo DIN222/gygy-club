@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | VERSES v33.5.30 🔒</title>
+    <title>GY-GY | VERSES v33.5.31 🔒</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
@@ -117,46 +117,70 @@ function setM(name, desc) {
     document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
 }
 </script>
-    async function send() {
-        const input = document.getElementById('in');
-        const wall = document.getElementById('wall');
-        const val = input.value.trim();
-        if (!val) return;
+  async function send() {
+    const input = document.getElementById('in');
+    const wall = document.getElementById('wall');
+    const val = input.value.trim();
+    if (!val) return;
 
-        const entryId = "entry-" + Date.now();
-        const wrap = document.createElement('div');
-        wrap.id = entryId;
-        wrap.style.cssText = "display:flex; flex-direction:column; gap:5px; margin-bottom:15px;";
-        wrap.innerHTML = `<div class="bubble u">${val}</div>`;
-        wall.appendChild(wrap);
+    // Создаем уникальный ID для блока (ТРИЗ: Индивидуализация)
+    const entryId = "entry-" + Date.now();
+    const wrap = document.createElement('div');
+    wrap.id = entryId;
+    wrap.style.cssText = "display:flex; flex-direction:column; gap:5px; margin-bottom:15px;";
+    
+    // Юзер-блок
+    wrap.innerHTML = `<div class="bubble u">${val}</div>`;
+    wall.appendChild(wrap);
+    
+    input.value = "";
+    wall.scrollTop = wall.scrollHeight;
+
+    try {
+        const cleanKey = (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).replace(/[^a-zA-Z0-9_-]/g, "");
         
-        input.value = "";
-        wall.scrollTop = wall.scrollHeight;
+        // Формируем запрос с учетом расширенного описания стиля
+        const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${BEUVRY_CONFIG.MODELS_PRIORITY[0]}:generateContent?key=${cleanKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                contents: [{ 
+                    parts: [{ 
+                        text: BEUVRY_CONFIG.PROMPT + `\n[ТЕКУЩИЙ РЕЖИМ: ${curName}]\n[ИНСТРУКЦИЯ СТИЛЯ: ${curDesc}]\n[ВХОДНЫЕ СЛОВА: ${val}]` 
+                    }] 
+                }] 
+            })
+        });
 
-        try {
-            const cleanKey = (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).replace(/[^a-zA-Z0-9_-]/g, "");
-            const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${BEUVRY_CONFIG.MODELS_PRIORITY[0]}:generateContent?key=${cleanKey}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: [{ parts: [{ text: BEUVRY_CONFIG.PROMPT + `\n[СТИЛЬ: ${curDesc}]\nСЛОВА: ${val}` }] }] })
-            });
-            const d = await r.json();
-            if (d.candidates) {
-                const res = d.candidates[0].content.parts[0].text.trim();
-                const aMsg = document.createElement('div');
-                aMsg.className = 'bubble a';
-                aMsg.innerHTML = `
-                    <small style="opacity:0.4">${curName}</small>
-                    <div class="v-text" contentEditable="true" style="margin:10px 0; outline:none;">${res.replace(/\n/g, '<br>')}</div>
-                    <div class="v-ctrl" style="display:flex; gap:10px; justify-content:flex-end; border-top:1px solid rgba(255,215,0,0.1); padding-top:8px;">
-                        <span onclick="document.getElementById('${entryId}').remove()" style="cursor:pointer; color:#ff4444; font-size:0.65rem; border:1px solid #ff4444; padding:2px 6px;">УДАЛИТЬ</span>
-                        <span onclick="lockAndSave('${entryId}', this)" style="cursor:pointer; color:var(--gold); font-size:0.65rem; border:1px solid var(--gold); padding:2px 6px;">СОХРАНИТЬ</span>
-                    </div>`;
-                wrap.appendChild(aMsg);
-            }
-        } catch (e) { console.error(e); }
-        wall.scrollTop = wall.scrollHeight;
+        const d = await r.json();
+        
+        if (d.candidates) {
+            const res = d.candidates[0].content.parts[0].text.trim();
+            const aMsg = document.createElement('div');
+            aMsg.className = 'bubble a';
+            
+            // Получаем только "хвост" комментария (например, "Безумие" из меню)
+            const modeHint = document.querySelector(`.m-item[onclick*="${curName}"]`)?.innerText.split('\n')[1] || "";
+
+            aMsg.innerHTML = `
+                <small style="opacity:0.5; font-size:0.7rem; letter-spacing:1px;">${curName} — ${modeHint}</small>
+                <div class="v-text" contentEditable="true" style="margin:10px 0; outline:none; text-align:right; white-space:pre-wrap;">${res}</div>
+                <div class="v-ctrl" style="display:flex; gap:10px; justify-content:flex-end; border-top:1px solid rgba(255,215,0,0.1); padding-top:8px;">
+                    <span onclick="document.getElementById('${entryId}').remove()" style="cursor:pointer; color:#ff4444; font-size:0.65rem; border:1px solid #ff4444; padding:2px 6px; text-transform:uppercase;">УДАЛИТЬ</span>
+                    <span onclick="lockAndSave('${entryId}', this)" style="cursor:pointer; color:var(--gold); font-size:0.65rem; border:1px solid var(--gold); padding:2px 6px; text-transform:uppercase;">СОХРАНИТЬ</span>
+                </div>`;
+            wrap.appendChild(aMsg);
+        }
+    } catch (e) { 
+        console.error("Ошибка системы:", e);
+        const errDiv = document.createElement('div');
+        errDiv.className = 'bubble a';
+        errDiv.innerHTML = `<small style="color:red">Сбой связи. Проверьте ключ или лимиты.</small>`;
+        wrap.appendChild(errDiv);
     }
+    
+    wall.scrollTop = wall.scrollHeight;
+}
 
     /* 🔒 РЫЧАГ СОХРАНЕНИЯ В ПАМЯТЬ */
     function lockAndSave(id, btn) {
