@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | CORE v33.5.28 🔒</title>
+    <title>GY-GY | VERSES v33.5.29 🔒</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
@@ -15,8 +15,8 @@
         .logo-gy { font-size: 1.1rem; font-weight: 900; color: var(--gold); letter-spacing: 1px; flex-shrink: 0; margin-left: auto; margin-right: 5px; }
         .btn-act { color: var(--gold); font-size: 0.65rem; cursor: pointer; border: 1px solid var(--gold); padding: 8px 10px; background: #222; text-transform: uppercase; flex-shrink: 0; white-space: nowrap; margin-left: 5px; }
         
-        /* Google Translate Scale */
-        #google_translate_element { transform: scale(0.85); transform-origin: left center; }
+        /* Google Translate Scale 🔒 */
+        #google_translate_element { transform: scale(0.85); transform-origin: left center; min-width: 140px; }
 
         /* WALL 🔒 */
         #wall { flex-grow: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; scroll-behavior: smooth; }
@@ -42,14 +42,14 @@
 <body>
 
 <header>
-    <div class="nav-fix" onclick="window.history.back()" title="Назад">❮</div>
+    <div class="nav-fix" onclick="goBackToCore()" title="Назад в Core v8">❮</div>
     
     <div id="google_translate_element"></div>
     
     <div class="btn-act" onclick="toggleM('actMenu', event)">ДЕЙСТВИЯ ▾</div>
     <div class="logo-gy">GY-GY</div>
     
-    <a href="box_page.html" class="nav-fix">❯</a>
+    <a href="box_page.html" class="nav-fix" title="Перейти в BOX">❯</a>
 
     <div id="actMenu" class="pop-menu">
         <div class="m-item" onclick="document.getElementById('wall').innerHTML = ''">🗑 Очистить стену</div>
@@ -59,7 +59,7 @@
 </header>
 
 <div id="wall">
-    <div class="bubble a">Система v33.5.27 восстановлена. Все модули на месте. 🔒</div>
+    <div class="bubble a">Система v33.5.28 активна. Навигация на Core v8 настроена. 🔒</div>
 </div>
 
 <footer>
@@ -79,6 +79,15 @@
 <script>
     let curName = "§ Быт";
     let curDesc = "комедия наблюдений, 4 строки";
+
+    /* 🔒 ЛОГИКА ВОЗВРАТА */
+    function goBackToCore() {
+        if (window.history.length > 1 && document.referrer.includes('ai_room_core_v8.html')) {
+            window.history.back();
+        } else {
+            window.location.href = 'ai_room_core_v8.html';
+        }
+    }
 
     function toggleM(id, e) {
         if (e) e.stopPropagation();
@@ -135,6 +144,7 @@
         wall.scrollTop = wall.scrollHeight;
     }
 
+    /* 🔒 РЫЧАГ СОХРАНЕНИЯ В ПАМЯТЬ */
     function lockAndSave(id, btn) {
         const entry = document.getElementById(id);
         const textZone = entry.querySelector('.v-text');
