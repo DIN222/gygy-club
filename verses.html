@@ -3,32 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | CORE v33.5.8</title>
+    <title>GY-GY | CORE v33.5.8 🔒</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; display: flex; flex-direction: column; overflow: hidden; }
         
-        /* HEADER */
+        /* HEADER 🔒 */
         header { height: 70px; display: flex; align-items: center; border-bottom: var(--border); background: #111; padding: 0 10px; justify-content: space-between; z-index: 1000; flex-shrink: 0; position: relative; }
+        
+        /* СТРЕЛКИ НАВИГАЦИИ 🔒 */
         .nav-fix { width: 45px; height: 45px; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--gold); text-decoration: none; font-weight: bold; font-size: 1.2rem; }
+        
+        /* ЯЗЫКОВОЙ БЛОК 🔒 */
         .header-center { display: flex; align-items: center; gap: 10px; }
         .avatar { width: 35px; height: 35px; border-radius: 50%; border: 1px solid var(--gold); background: #333; }
+        
+        /* КНОПКА ДЕЙСТВИЯ 🔒 */
         .btn-act { color: var(--gold); font-size: 0.7rem; cursor: pointer; border: 1px solid var(--gold); padding: 8px 12px; background: #222; text-transform: uppercase; }
 
         /* WALL */
         #wall { flex-grow: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; scroll-behavior: smooth; }
         .bubble { padding: 12px; max-width: 85%; border: 1px solid #333; border-radius: 4px; line-height: 1.4; }
         .u { align-self: flex-start; border-left: 3px solid var(--gold); background: rgba(255,215,0,0.05); color: #fff; }
-        .a { align-self: flex-end; border-right: 3px solid #fff; background: rgba(255,255,255,0.05); text-align: right; }
+        .a { align-self: flex-end; border-right: 3px solid #fff; background: rgba(255,255,255,0.05); text-align: right; outline: none; }
 
-        /* FOOTER */
+        /* FOOTER 🔒 */
         footer { height: 80px; display: flex; align-items: center; padding: 0 10px; gap: 10px; border-top: 1px solid #222; background: #000; flex-shrink: 0; position: relative; }
+        
+        /* КНОПКА ВИДЫ ЮМОРА 🔒 */
         .btn-mode { width: 50px; height: 50px; border: 1px solid #444; background: #111; color: var(--gold); cursor: pointer; font-size: 1.2rem; z-index: 10; }
+        
         #in { flex-grow: 1; background: #0d0d0d; border: 1px solid #333; color: var(--gold); padding: 15px; font-size: 1rem; outline: none; }
         .btn-ok { height: 50px; padding: 0 20px; background: var(--gold); border: none; color: #000; font-weight: 900; cursor: pointer; }
 
-        /* ВЫПАДАЮЩИЕ СПИСКИ (FIXED) */
         .pop-menu { display: none; position: absolute; background: #111; border: var(--border); z-index: 9999; box-shadow: 0 0 25px #000; }
         #actMenu { top: 75px; right: 10px; width: 180px; }
         #modeMenu { bottom: 85px; left: 10px; width: 250px; }
@@ -41,11 +49,14 @@
 
 <header>
     <a href="ai_room_core_v8.html" class="nav-fix">❮</a>
+    
     <div class="header-center">
         <div id="google_translate_element"></div>
         <div class="avatar"></div>
     </div>
+    
     <div class="btn-act" onclick="toggleM('actMenu', event)">ДЕЙСТВИЯ ▾</div>
+    
     <a href="box_page.html" class="nav-fix">❯</a>
 
     <div id="actMenu" class="pop-menu">
@@ -57,11 +68,12 @@
 </header>
 
 <div id="wall">
-    <div class="bubble a">С чего начнем? [v33.5.8]</div>
+    <div class="bubble a">Система v33.5.8 восстановлена. Замки установлены 🔒</div>
 </div>
 
 <footer>
     <button class="btn-mode" onclick="toggleM('modeMenu', event)">▲</button>
+    
     <input type="text" id="in" placeholder="Стиль: § Быт..." onkeydown="if(event.key==='Enter') send()">
     <button class="btn-ok" onclick="send()">ОК</button>
 
@@ -78,14 +90,11 @@
     let curName = "§ Быт";
     let curDesc = "комедия наблюдений, ровно 4 строки";
 
-    // Улучшенная функция переключения
     function toggleM(id, e) {
         if (e) e.stopPropagation();
         const menu = document.getElementById(id);
         const allMenus = document.querySelectorAll('.pop-menu');
-        
         const isCurrentlyVisible = menu.style.display === 'block';
-        
         allMenus.forEach(m => m.style.display = 'none');
         menu.style.display = isCurrentlyVisible ? 'none' : 'block';
     }
@@ -113,10 +122,10 @@
 
         const cleanKey = (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).replace(/[^a-zA-Z0-9_-]/g, "");
         
-        // Автоматический перебор версий API для Франции
         const endpoints = ["v1", "v1beta"];
         let success = false;
 
+        // Попытка использовать Gemini 1.5 Flash (как в оригинале 33.5.8)
         for (let ver of endpoints) {
             if (success) break;
             try {
@@ -132,21 +141,16 @@
                     const res = d.candidates[0].content.parts[0].text.trim();
                     const aMsg = document.createElement('div');
                     aMsg.className = 'bubble a';
+                    aMsg.contentEditable = "true";
                     aMsg.innerHTML = `<small style="opacity:0.5">${curName}</small><br>${res.replace(/\n/g, '<br>')}`;
                     wall.appendChild(aMsg);
                     success = true;
-                } else if (ver === "v1beta") {
-                    const aMsg = document.createElement('div');
-                    aMsg.className = 'bubble a';
-                    aMsg.innerText = "ОШИБКА: " + (d.error ? d.error.message : "Сбой API");
-                    wall.appendChild(aMsg);
                 }
             } catch (e) { console.error(e); }
         }
         wall.scrollTop = wall.scrollHeight;
     }
 
-    // Закрытие при клике мимо
     window.onclick = () => document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
 </script>
 
