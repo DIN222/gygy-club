@@ -3,41 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | CLIP v0.0.3 🔒</title>
+    <title>GY-GY | CLIP v0.0.4 🔒</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; display: flex; flex-direction: column; overflow: hidden; }
         
-        /* HEADER 🔒 */
-        header { height: 70px; display: flex; align-items: center; border-bottom: var(--border); background: #000; padding: 0 10px; gap: 8px; z-index: 1000; flex-shrink: 0; }
-        .nav-fix { width: 40px; height: 40px; border: var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--gold); text-decoration: none; font-size: 1.1rem; transition: 0.3s; }
-        .nav-fix:hover { box-shadow: 0 0 10px var(--gold); }
-        .logo-gy { font-size: 1.1rem; font-weight: 900; color: var(--gold); letter-spacing: 2px; margin-left: auto; }
-        #google_translate_element { transform: scale(0.8); transform-origin: left center; }
+        /* ЕДИНАЯ ПАНЕЛЬ СО СКРОЛЛОМ 🔒 */
+        header { 
+            height: 65px; 
+            display: flex; 
+            align-items: center; 
+            border-bottom: var(--border); 
+            background: #000; 
+            padding: 0 5px; 
+            gap: 10px; 
+            z-index: 1000; 
+            flex-shrink: 0; 
+        }
 
-        /* WORKSPACE 🔒 */
-        #workspace { flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 20px; align-items: center; }
-        .clip-card { width: 100%; max-width: 500px; border: 1px solid #222; padding: 25px; background: rgba(255,215,0,0.01); position: relative; border-radius: 4px; }
-        .v-text { font-size: 1.3rem; line-height: 1.6; text-align: center; color: #fff; white-space: pre-wrap; outline: none; border: none; background: transparent; width: 100%; min-height: 120px; resize: none; font-family: inherit; }
-        
-        /* SELECTOR 🔒 */
-        .music-selector { width: 100%; max-width: 500px; border: var(--border); padding: 15px; text-align: center; cursor: pointer; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
+        .nav-fix { width: 38px; height: 38px; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--gold); text-decoration: none; font-size: 1rem; flex-shrink: 0; }
+        .logo-gy { font-size: 1rem; font-weight: 900; color: var(--gold); letter-spacing: 1px; padding: 0 5px; border-right: 1px solid #222; height: 30px; display: flex; align-items: center; flex-shrink: 0; }
 
-        /* GENERATION LOG 🔒 */
-        #genLog { width: 100%; max-width: 500px; font-size: 0.7rem; color: #888; border: 1px dashed #333; padding: 10px; display: none; white-space: pre-wrap; }
+        /* ЗОНА СКРОЛЛА КНОПОК 🔒 */
+        .scroll-tools { 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            overflow-x: auto; 
+            white-space: nowrap; 
+            flex-grow: 1; 
+            padding-right: 10px;
+            scrollbar-width: none; /* Firefox */
+        }
+        .scroll-tools::-webkit-scrollbar { display: none; /* Chrome/Safari */ }
 
-        /* SAVE GRID 🔒 */
-        .save-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; max-width: 500px; margin-top: 10px; margin-bottom: 30px; }
-        .btn-save { border: 1px solid #444; background: #000; color: #fff; padding: 15px 5px; cursor: pointer; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
-        .btn-save:hover { border-color: var(--gold); color: var(--gold); }
-        .gold-btn { border-color: var(--gold); color: var(--gold); font-weight: 900; }
-        .full-btn { grid-column: span 2; font-size: 0.8rem; padding: 18px; border-width: 2px; }
+        .t-btn { 
+            height: 38px; 
+            padding: 0 15px; 
+            border: 1px solid #333; 
+            background: #000; 
+            color: #fff; 
+            font-size: 0.65rem; 
+            text-transform: uppercase; 
+            cursor: pointer; 
+            display: inline-flex; 
+            align-items: center; 
+            transition: 0.2s;
+            flex-shrink: 0;
+        }
+        .t-btn:hover { border-color: var(--gold); color: var(--gold); }
+        .t-btn b { color: var(--gold); margin-right: 5px; }
 
-        /* POPUP 🔒 */
-        .pop-menu { display: none; position: absolute; background: #000; border: var(--border); z-index: 10000; width: 250px; bottom: 180px; left: 50%; transform: translateX(-50%); box-shadow: 0 0 30px #000; }
-        .m-item { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-size: 0.8rem; transition: 0.2s; }
-        .m-item b { color: var(--gold); display: block; }
+        /* ЭКРАН 🔒 */
+        #workspace { flex-grow: 1; display: flex; flex-direction: column; padding: 10px; }
+        .editor-container { flex-grow: 1; border: 1px solid #111; padding: 15px; background: rgba(255,215,0,0.01); display: flex; flex-direction: column; position: relative; }
+        .v-text { flex-grow: 1; font-size: 1.5rem; line-height: 1.5; text-align: center; color: #fff; border: none; background: transparent; outline: none; resize: none; font-family: inherit; width: 100%; }
+
+        #genLog { font-size: 0.7rem; color: #666; border-top: 1px solid #222; padding-top: 10px; margin-top: 10px; max-height: 120px; overflow-y: auto; display: none; }
+
+        /* ГЛАВНЫЙ ПУСК 🔒 */
+        footer { padding: 10px; background: #000; flex-shrink: 0; }
+        .run-btn { width: 100%; height: 60px; border: var(--border); background: #000; color: var(--gold); font-weight: 900; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* МЕНЮ 🔒 */
+        .pop-menu { display: none; position: absolute; background: #000; border: var(--border); z-index: 10000; width: 220px; top: 60px; left: 60px; box-shadow: 0 10px 30px #000; }
+        .m-item { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-size: 0.75rem; }
         .m-item:hover { border-left: 5px solid var(--gold); color: var(--gold); }
     </style>
 </head>
@@ -45,47 +76,42 @@
 
 <header>
     <div class="nav-fix" onclick="window.history.back()">❮</div>
-    <div id="google_translate_element"></div>
     <div class="logo-gy">GY-GY</div>
-    <div class="nav-fix" onclick="window.location.href='music_box.html'" title="Фонотека">🎵</div>
+    
+    <div class="scroll-tools">
+        <button class="t-btn" onclick="toggleM('musicMenu', event)"><b>🎹</b> <span id="curMusic">LO-FI</span></button>
+        <button class="t-btn" onclick="saveToBox()"><b>📦</b> В BOX</button>
+        <button class="t-btn" onclick="window.location.href='music_box.html'"><b>🎵</b> ФОНОТЕКА</button>
+        <button class="t-btn" onclick="downloadAsFile()"><b>📥</b> ФАЙЛ</button>
+        <button class="t-btn" onclick="shareClip()"><b>🔗</b> SHARE</button>
+        <button class="t-btn" onclick="location.reload()"><b>🔄</b> RESET</button>
+    </div>
 </header>
 
 <div id="workspace">
-    <div class="clip-card">
-        <textarea id="clipText" class="v-text" placeholder="Введите текст или выберите из BOX..."></textarea>
-    </div>
-    
-    <div class="music-selector" onclick="toggleM('musicMenu', event)">
-        🎹 РИТМ: <span id="curMusic">LO-FI</span> ▾
-    </div>
-
-    <div id="genLog"></div>
-
-    <div class="save-grid">
-        <button class="btn-save gold-btn full-btn" id="genBtn" onclick="runClipGen()">🔥 ЗАПУСТИТЬ ГЕНЕРАЦИЮ КЛИПА</button>
-        
-        <button class="btn-save gold-btn" onclick="saveToBox()">📦 В BOX</button>
-        <button class="btn-save gold-btn" onclick="window.location.href='music_box.html'">🎹 ФОНОТЕКА</button>
-        <button class="btn-save" onclick="downloadAsFile()">📥 НА УСТРОЙСТВО</button>
-        <button class="btn-save" onclick="shareClip()">🔗 ПЕРЕСЛАТЬ</button>
+    <div class="editor-container">
+        <textarea id="clipText" class="v-text" placeholder="Текст клипа..."></textarea>
+        <div id="genLog"></div>
     </div>
 </div>
 
+<footer>
+    <button class="run-btn" id="genBtn" onclick="runClipGen()">🔥 ЗАПУСТИТЬ ГЕНЕРАЦИЮ</button>
+</footer>
+
 <div id="musicMenu" class="pop-menu">
-    <div class="m-item" onclick="setMusic('Lo-Fi', 'Lofi hip hop, chill beats, cozy atmosphere, vinyl crackle')"><b>🎹 Lo-Fi</b><span>Ламповый чилл</span></div>
-    <div class="m-item" onclick="setMusic('Techno', 'Deep techno, industrial, strobe lights, 128bpm, driving bass')"><b>⚡ Techno</b><span>Энергичный драйв</span></div>
-    <div class="m-item" onclick="setMusic('Rock', 'Hard rock, distorted electric guitar, heavy drums, high energy stadium sound')"><b>🎸 Rock</b><span>Гитарный драйв</span></div>
-    <div class="m-item" onclick="setMusic('Rap', 'Boom bap, old school hip hop, heavy kick, rhythmic flow, urban street vibe')"><b>🎤 Rap</b><span>Уличный ритм</span></div>
-    <div class="m-item" onclick="setMusic('Blues', 'Classic blues, slide guitar, soulful harmonica, slow emotional tempo, smoky bar atmosphere')"><b>🎷 Blues</b><span>Душевный блюз</span></div>
-    <div class="m-item" onclick="setMusic('Phonk', 'Aggressive drift phonk, distorted bass, cowbell, fast car aesthetic')"><b>🚗 Phonk</b><span>Агрессивный бас</span></div>
-    <div class="m-item" onclick="setMusic('Cyberpunk', 'Darksynth, neon rain, futuristic cinematic, heavy synthesizers')"><b>🌃 Cyberpunk</b><span>Будущее здесь</span></div>
+    <div class="m-item" onclick="setMusic('LO-FI', 'Lofi hip hop')">🎹 LO-FI</div>
+    <div class="m-item" onclick="setMusic('ROCK', 'Hard rock guitars')">🎸 ROCK</div>
+    <div class="m-item" onclick="setMusic('RAP', 'Boom bap beats')">🎤 RAP</div>
+    <div class="m-item" onclick="setMusic('BLUES', 'Blues harmonica')">🎷 BLUES</div>
+    <div class="m-item" onclick="setMusic('TECHNO', 'Deep techno')">⚡ TECHNO</div>
+    <div class="m-item" onclick="setMusic('PHONK', 'Drift phonk')">🚗 PHONK</div>
 </div>
 
 <script>
-    let selectedMusic = "Lo-Fi";
-    let musicStyleRaw = "Lofi hip hop, chill beats, cozy atmosphere";
+    let selectedMusic = "LO-FI";
+    let musicStyleRaw = "Lofi hip hop";
 
-    // Подгрузка текста из BOX
     window.onload = () => {
         const last = localStorage.getItem('last_verse');
         if (last) document.getElementById('clipText').value = last;
@@ -98,59 +124,36 @@
     }
 
     function setMusic(name, raw) {
-        selectedMusic = name;
-        musicStyleRaw = raw;
+        selectedMusic = name; musicStyleRaw = raw;
         document.getElementById('curMusic').innerText = name;
         document.getElementById('musicMenu').style.display = 'none';
     }
 
-    /* 🚀 ГЕНЕРАЦИЯ КЛИПА (ENGINE v33.5.36) */
     async function runClipGen() {
         const text = document.getElementById('clipText').value.trim();
         const btn = document.getElementById('genBtn');
         const log = document.getElementById('genLog');
-        
-        if (!text) { alert("Шеф, текст пуст!"); return; }
+        if (!text) return;
 
-        btn.innerText = "🌀 СИНТЕЗ МЕДИА-ПЛАНА...";
+        btn.innerText = "🌀 ПОДГОТОВКА...";
         btn.disabled = true;
         log.style.display = "block";
-        log.innerText = "> Инициализация движка...\n> Анализ ритма: " + selectedMusic;
+        log.innerText = "> Ритм: " + selectedMusic + "\n> Анализ текста...";
 
         try {
             const cleanKey = (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).replace(/[^a-zA-Z0-9_-]/g, "");
-            
-            const prompt = `Действуй как режиссер и саунд-дизайнер. Создай детальное ТЗ (промпт) для генерации видео и аудио. 
-            ТЕКСТ: "${text}"
-            МУЗЫКАЛЬНЫЙ СТИЛЬ: ${musicStyleRaw}
-            Выдай ответ в формате:
-            [VIDEO PROMPT]: (описание визуального ряда)
-            [AUDIO SETTINGS]: (настройки звука и эффектов)`;
-
             const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${BEUVRY_CONFIG.MODELS_PRIORITY[0]}:generateContent?key=${cleanKey}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                body: JSON.stringify({ contents: [{ parts: [{ text: `Промпт для клипа в стиле ${musicStyleRaw}: ${text}` }] }] })
             });
-
             const d = await r.json();
-            if (d.candidates) {
-                const res = d.candidates[0].content.parts[0].text;
-                log.innerText += "\n> План успешно сформирован.\n\n" + res;
-                btn.innerText = "ГОТОВО ✅";
-                
-                // Сохраняем результат в локальную сессию
-                localStorage.setItem('last_clip_plan', res);
-            }
+            log.innerText = d.candidates[0].content.parts[0].text;
+            btn.innerText = "ГОТОВО ✅";
         } catch (e) {
-            log.innerText += "\n> Ошибка: " + e.message;
-            btn.innerText = "СБОЙ ГЕНЕРАЦИИ ❌";
+            btn.innerText = "СБОЙ ❌";
         }
-        
-        setTimeout(() => { 
-            btn.disabled = false; 
-            btn.innerText = "🔥 ЗАПУСТИТЬ ГЕНЕРАЦИЮ КЛИПА"; 
-        }, 5000);
+        setTimeout(() => { btn.disabled = false; btn.innerText = "🔥 ЗАПУСТИТЬ ГЕНЕРАЦИЮ"; }, 4000);
     }
 
     function saveToBox() {
@@ -158,27 +161,21 @@
         let box = JSON.parse(localStorage.getItem('gy_box') || '[]');
         box.push({ text, style: `CLIP [${selectedMusic}]`, timestamp: new Date().toLocaleString() });
         localStorage.setItem('gy_box', JSON.stringify(box));
-        alert("Зафиксировано в BOX! 🔒");
+        alert("В BOX! 🔒");
     }
 
     function downloadAsFile() {
-        const text = document.getElementById('clipText').value;
-        const blob = new Blob([`GY-GY CLIP\nSTYLE: ${selectedMusic}\n\n${text}`], { type: 'text/plain' });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = `clip_${Date.now()}.txt`;
-        a.click();
+        const blob = new Blob([document.getElementById('clipText').value], {type:'text/plain'});
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+        a.download = `gy_clip.txt`; a.click();
     }
 
     function shareClip() {
-        const text = document.getElementById('clipText').value;
-        if (navigator.share) navigator.share({ title: 'GY-GY Clip', text: text });
+        if (navigator.share) navigator.share({ text: document.getElementById('clipText').value });
     }
 
     window.onclick = () => document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
 </script>
 
-<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-<script>function googleTranslateElementInit(){new google.translate.TranslateElement({pageLanguage:'ru'},'google_translate_element');}</script>
 </body>
 </html>
