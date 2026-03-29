@@ -108,14 +108,14 @@
 
     function clearWall() { document.getElementById('wall').innerHTML = ""; }
 
-/* 🔒 АВАРИЙНЫЙ РЕЖИМ v33.5.17 — ПРЯМОЙ ПРОБОЙ */
+/* 🔒 РЕЖИМ ПРЯМОГО ПРОБОЯ v33.5.18 - v1beta */
 async function send() {
     const input = document.getElementById('in');
     const wall = document.getElementById('wall');
     const val = input.value.trim();
     if (!val) return;
 
-    // Вывод пользователя
+    // Отображаем ваш ввод
     const uMsg = document.createElement('div');
     uMsg.className = 'bubble u';
     uMsg.innerText = val;
@@ -123,16 +123,16 @@ async function send() {
     input.value = "";
     wall.scrollTop = wall.scrollHeight;
 
-    // Жесткая очистка ключа (убираем всё, кроме букв и цифр)
+    // Склейка и очистка ключа
     const rawKey = BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2;
     const cleanKey = rawKey.replace(/[^a-zA-Z0-9_-]/g, "").trim();
     
-    // Используем самую стабильную модель для проверки
-    const testModel = "gemini-1.5-flash"; 
-    const fullPrompt = `${BEUVRY_CONFIG.PROMPT}\n[СТИЛЬ: ${curDesc}]\nСЛОВА: ${val}`;
+    // Используем v1beta — это критично для Gemini 1.5 Flash
+    const targetModel = "gemini-1.5-flash"; 
+    const fullPrompt = BEUVRY_CONFIG.PROMPT + `\n[РИФМА: СТРОГО. СТИЛЬ: ${curDesc}]\nСЛОВА: ${val}`;
 
     try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/${testModel}:generateContent?key=${cleanKey}`, {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${targetModel}:generateContent?key=${cleanKey}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -143,8 +143,7 @@ async function send() {
         const data = await response.json();
 
         if (data.error) {
-            // Если Google вернул конкретную ошибку (например, 403 или 400)
-            throw new Error(`Google API: ${data.error.message} (Код: ${data.error.code})`);
+            throw new Error(`${data.error.message} (Код: ${data.error.code})`);
         }
 
         if (data.candidates && data.candidates[0].content) {
@@ -152,15 +151,14 @@ async function send() {
             const aMsg = document.createElement('div');
             aMsg.className = 'bubble a';
             aMsg.contentEditable = "true";
-            aMsg.innerHTML = `<small style="opacity:0.4">v1 | ${testModel}</small><br>${res.replace(/\n/g, '<br>')}`;
+            aMsg.innerHTML = `<small style="opacity:0.4">v1beta | ${targetModel}</small><br>${res.replace(/\n/g, '<br>')}`;
             wall.appendChild(aMsg);
         }
     } catch (e) {
-        console.error("Ошибка пробоя:", e);
+        console.error("Ошибка v1beta:", e);
         const errMsg = document.createElement('div');
         errMsg.className = 'bubble a';
-        // Выводим конкретный текст ошибки от Google, чтобы понять причину
-        errMsg.innerHTML = `<span style="color:red">КЛУБ ЗАБЛОКИРОВАН:</span><br><small>${e.message}</small>`;
+        errMsg.innerHTML = `<span style="color:red">ДОСТУП ОТКЛОНЕН:</span><br><small>${e.message}</small>`;
         wall.appendChild(errMsg);
     }
     wall.scrollTop = wall.scrollHeight;
