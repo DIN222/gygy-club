@@ -3,82 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | CORE v33.5.32 🔒</title>
+    <title>GY-GY | CORE v33.5.33 🔒</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; display: flex; flex-direction: column; overflow: hidden; }
         
-        /* HEADER_CORE: ПОСТОЯННЫЕ АТРИБУТЫ 🔒 */
-        header { height: 70px; display: flex; align-items: center; border-bottom: var(--border); background: #111; padding: 0 10px; gap: 8px; z-index: 1000; flex-shrink: 0; position: relative; }
-        .nav-fix { width: 40px; height: 40px; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--gold); text-decoration: none; font-weight: bold; font-size: 1.1rem; flex-shrink: 0; }
+        /* HEADER 🔒 */
+        header { height: 70px; display: flex; align-items: center; border-bottom: var(--border); background: #000; padding: 0 10px; gap: 8px; z-index: 1000; flex-shrink: 0; position: relative; }
+        .nav-fix { width: 40px; height: 40px; border: var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--gold); text-decoration: none; font-weight: bold; font-size: 1.1rem; flex-shrink: 0; }
         .logo-gy { font-size: 1.1rem; font-weight: 900; color: var(--gold); letter-spacing: 1px; flex-shrink: 0; margin-left: auto; margin-right: 5px; }
-        .btn-act { color: var(--gold); font-size: 0.65rem; cursor: pointer; border: 1px solid var(--gold); padding: 8px 10px; background: #222; text-transform: uppercase; flex-shrink: 0; white-space: nowrap; margin-left: 5px; min-width: 80px; text-align: center; }
+        .btn-act { color: var(--gold); font-size: 0.65rem; cursor: pointer; border: var(--border); padding: 8px 10px; background: #000; text-transform: uppercase; flex-shrink: 0; white-space: nowrap; min-width: 80px; text-align: center; }
         #google_translate_element { transform: scale(0.8); transform-origin: left center; min-width: 130px; }
 
         /* WALL 🔒 */
         #wall { flex-grow: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; scroll-behavior: smooth; }
         .bubble { padding: 12px; max-width: 85%; border: 1px solid #333; border-radius: 4px; line-height: 1.4; font-size: 1rem; position: relative; }
-        .u { align-self: flex-start; border-left: 3px solid var(--gold); background: rgba(255,215,0,0.05); color: #fff; }
-        .a { align-self: flex-end; border-right: 3px solid #fff; background: rgba(255,255,255,0.05); text-align: right; }
+        .u { align-self: flex-start; border-left: 3px solid var(--gold); background: rgba(255,215,0,0.02); color: #fff; }
+        .a { align-self: flex-end; border-right: 3px solid #fff; background: rgba(255,255,255,0.02); text-align: right; }
         .v-text { margin: 10px 0; outline: none; white-space: pre-wrap; word-wrap: break-word; }
 
-        /* FOOTER_CORE 🔒 */
-        footer { height: 80px; display: flex; align-items: center; padding: 0 10px; gap: 10px; border-top: 1px solid #222; background: #000; flex-shrink: 0; position: relative; z-index: 1001; }
-        .btn-mode { width: 50px; height: 50px; border: 1px solid #444; background: #111; color: var(--gold); cursor: pointer; font-size: 1.2rem; }
-        #in { flex-grow: 1; background: #0d0d0d; border: 1px solid #333; color: var(--gold); padding: 15px; font-size: 1rem; outline: none; }
-        .btn-ok { height: 50px; padding: 0 20px; background: var(--gold); border: none; color: #000; font-weight: 900; cursor: pointer; }
+        /* FOOTER 🔒 */
+        footer { height: 80px; display: flex; align-items: center; padding: 0 10px; gap: 10px; border-top: 1px solid #222; background: #000; flex-shrink: 0; z-index: 1001; }
+        .btn-mode { width: 50px; height: 50px; border: 1px solid #444; background: #000; color: var(--gold); cursor: pointer; font-size: 1.2rem; }
+        #in { flex-grow: 1; background: #000; border: 1px solid #333; color: var(--gold); padding: 15px; font-size: 1rem; outline: none; border-radius: 0; }
+        .btn-ok { height: 50px; padding: 0 20px; background: #000; border: var(--border); color: var(--gold); font-weight: 900; cursor: pointer; }
 
-        /* POPUP MENUS 🔒 */
-        .pop-menu { display: none; position: absolute; background: #111; border: var(--border); z-index: 10000; box-shadow: 0 0 30px #000; overflow: hidden; }
+        /* POPUP MENUS: ТОЛЬКО ЗОЛОТО НА ЧЕРНОМ 🔒 */
+        .pop-menu { display: none; position: absolute; background: #000; border: var(--border); z-index: 10000; box-shadow: 0 0 20px rgba(255,215,0,0.2); overflow: hidden; }
         #actMenu { top: 75px; right: 10px; width: 230px; }
-        #modeMenu { bottom: 85px; left: 10px; width: 260px; }
-        .m-item { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-size: 0.8rem; color: #fff; text-transform: uppercase; text-align: left; }
-        .m-item b { display: block; color: var(--gold); margin-bottom: 3px; }
-        .m-item span { color: #888; font-size: 0.7rem; text-transform: none; }
-        .m-item:hover { background: var(--gold); color: #000; }
-        .m-item:hover span { color: #333; }
+        #modeMenu { bottom: 85px; left: 10px; width: 280px; }
+        .m-item { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-size: 0.8rem; color: #fff; text-transform: uppercase; text-align: left; transition: 0.2s; }
+        .m-item b { display: block; color: var(--gold); margin-bottom: 3px; letter-spacing: 1px; }
+        .m-item span { color: #888; font-size: 0.7rem; text-transform: none; line-height: 1.2; display: block; margin-top: 4px; }
+        
+        /* HOVER БЕЗ ЗАЛИВКИ 🔒 */
+        .m-item:hover { border-left: 5px solid var(--gold); color: var(--gold); background: #000; }
+        .m-item:hover b { text-shadow: 0 0 5px var(--gold); }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="nav-fix" onclick="goBackToCore()" title="Назад в Core v8">❮</div>
+    <div class="nav-fix" onclick="goBackToCore()" title="Назад">❮</div>
     <div id="google_translate_element"></div>
     <div class="btn-act" onclick="toggleM('actMenu', event)">ДЕЙСТВИЯ ▾</div>
     <div class="logo-gy">GY-GY</div>
-    <a href="box_page.html" class="nav-fix" title="Перейти в BOX">❯</a>
+    <a href="box_page.html" class="nav-fix">❯</a>
 
     <div id="actMenu" class="pop-menu">
-        <div class="m-item" onclick="copyWall()">📋 Клип (копировать всё)</div>
-        <div class="m-item" onclick="shareWall()">🔗 Переслать (последнее)</div>
-        <div class="m-item" onclick="document.getElementById('wall').innerHTML = ''">🗑 Очистить стену</div>
-        <div class="m-item" onclick="location.href='box_page.html'">📦 Перейти в BOX</div>
-        <div class="m-item" onclick="location.reload()">🔄 Обновить сессию</div>
+        <div class="m-item" onclick="copyWall()">📋 КЛИП <span>Копировать всё в буфер</span></div>
+        <div class="m-item" onclick="shareWall()">🔗 ПЕРЕСЛАТЬ <span>Отправить последний стих</span></div>
+        <div class="m-item" onclick="document.getElementById('wall').innerHTML = ''">🗑 ОЧИСТИТЬ <span>Стереть текущую стену</span></div>
+        <div class="m-item" onclick="location.href='box_page.html'">📦 BOX <span>Открыть хранилище</span></div>
+        <div class="m-item" onclick="location.reload()">🔄 РЕСТАРТ <span>Обновить сессию</span></div>
     </div>
 </header>
 
 <div id="wall">
-    <div class="bubble a">Система v33.5.31 активна. <br><small>Клип и Пересылка интегрированы в ДЕЙСТВИЯ. 🔒</small></div>
+    <div class="bubble a">Система v33.5.32. <br><small>Режим "Золото на черном" активен. 🔒</small></div>
 </div>
 
 <footer>
     <button class="btn-mode" onclick="toggleM('modeMenu', event)">▲</button>
-    <input type="text" id="in" placeholder="Стиль: § Быт (Обычное)..." onkeydown="if(event.key==='Enter') send()">
+    <input type="text" id="in" placeholder="Стиль: § Быт..." onkeydown="if(event.key==='Enter') send()">
     <button class="btn-ok" onclick="send()">ОК</button>
 
     <div id="modeMenu" class="pop-menu">
-        <div class="m-item" onclick="setM('ø Абсурд', 'полное безумие, сюрреализм, 4 строки')"><b>ø Абсурд</b><span>Безумие</span></div>
-        <div class="m-item" onclick="setM('§ Быт', 'комедия наблюдений, жиза, 4 строки')"><b>§ Быт</b><span>Обычное</span></div>
-        <div class="m-item" onclick="setM('† Прожарка', 'жестко, едко, высмеять пороки, 4 строки')"><b>† Прожарка</b><span>Дерзко</span></div>
-        <div class="m-item" onclick="setM('¶ Сатира', 'социальный подтекст, ирония, 4 строки')"><b>¶ Сатира</b><span>Ирония</span></div>
-        <div class="m-item" onclick="setM('‡ Хлестко', 'афоризм, ударная фраза, 1-2 строки')"><b>‡ Хлестко</b><span>Кратко</span></div>
+        <div class="m-item" onclick="setM('ø Абсурд', 'Логика сна: соединение несоединимого, сюрреалистичные образы, разрушение здравого смысла.')">
+            <b>ø Абсурд</b><span>Сюрреализм и безумие</span>
+        </div>
+        <div class="m-item" onclick="setM('§ Быт', 'Комедия наблюдений: узнаваемые житейские ситуации, ирония над повседневностью, эффект «жизы».')">
+            <b>§ Быт</b><span>Житейская ирония</span>
+        </div>
+        <div class="m-item" onclick="setM('† Прожарка', 'Агрессивный юмор: острое высмеивание недостатков, сарказм, едкие и прямые попадания в цель.')">
+            <b>† Прожарка</b><span>Жесткий сарказм</span>
+        </div>
+        <div class="m-item" onclick="setM('¶ Сатира', 'Социальный юмор: высмеивание общественных явлений, человеческих пороков и системы через иронию.')">
+            <b>¶ Сатира</b><span>Острая социалка</span>
+        </div>
+        <div class="m-item" onclick="setM('‡ Хлестко', 'Минимализм: одна-две строки, афоризм, парадоксальный вывод, максимально сжатый смысл.')">
+            <b>‡ Хлестко</b><span>Ударный афоризм</span>
+        </div>
     </div>
 </footer>
 
 <script>
     let curName = "§ Быт";
-    let curDesc = "комедия наблюдений, жиза, 4 строки";
+    let curDesc = "Комедия наблюдений: узнаваемые житейские ситуации, ирония над повседневностью.";
 
     function goBackToCore() {
         if (window.history.length > 1 && document.referrer.includes('ai_room_core_v8.html')) {
@@ -90,16 +102,16 @@
 
     function toggleM(id, e) {
         if (e) e.stopPropagation();
+        document.querySelectorAll('.pop-menu').forEach(m => {
+            if(m.id !== id) m.style.display = 'none';
+        });
         const menu = document.getElementById(id);
-        const isVisible = menu.style.display === 'block';
-        document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
-        menu.style.display = isVisible ? 'none' : 'block';
+        menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
     }
 
     function setM(name, desc) {
         curName = name; curDesc = desc;
-        const hint = desc.split(',')[0];
-        document.getElementById('in').placeholder = `Режим: ${name} (${hint})...`;
+        document.getElementById('in').placeholder = `${name}...`;
         document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
     }
 
@@ -115,7 +127,6 @@
         wrap.style.cssText = "display:flex; flex-direction:column; gap:5px; margin-bottom:15px;";
         wrap.innerHTML = `<div class="bubble u">${val}</div>`;
         wall.appendChild(wrap);
-        
         input.value = "";
         wall.scrollTop = wall.scrollHeight;
 
@@ -125,7 +136,7 @@
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
-                    contents: [{ parts: [{ text: BEUVRY_CONFIG.PROMPT + `\n[РЕЖИМ: ${curName}]\n[СТИЛЬ: ${curDesc}]\n[СЛОВА: ${val}]` }] }] 
+                    contents: [{ parts: [{ text: BEUVRY_CONFIG.PROMPT + `\n[РЕЖИМ: ${curName}]\n[УСТАНОВКА: ${curDesc}]\n[ВВОД: ${val}]` }] }] 
                 })
             });
             const d = await r.json();
@@ -133,11 +144,10 @@
                 const res = d.candidates[0].content.parts[0].text.trim();
                 const aMsg = document.createElement('div');
                 aMsg.className = 'bubble a';
-                
-                const modeHint = Array.from(document.querySelectorAll('.m-item')).find(el => el.innerText.includes(curName))?.querySelector('span')?.innerText || "";
+                const modeLabel = document.querySelector(`.m-item[onclick*="${curName}"] span`)?.innerText || "";
 
                 aMsg.innerHTML = `
-                    <small style="opacity:0.5; font-size:0.7rem; letter-spacing:1px; text-transform:uppercase;">${curName} — ${modeHint}</small>
+                    <small style="opacity:0.5; font-size:0.7rem; letter-spacing:1px; color:var(--gold)">${curName} — ${modeLabel}</small>
                     <div class="v-text" contentEditable="true">${res}</div>
                     <div class="v-ctrl" style="display:flex; gap:10px; justify-content:flex-end; border-top:1px solid rgba(255,215,0,0.1); padding-top:8px;">
                         <span onclick="document.getElementById('${entryId}').remove()" style="cursor:pointer; color:#ff4444; font-size:0.65rem; border:1px solid #ff4444; padding:2px 6px;">УДАЛИТЬ</span>
@@ -151,35 +161,21 @@
 
     function lockAndSave(id, btn) {
         const entry = document.getElementById(id);
-        const textZone = entry.querySelector('.v-text');
-        const content = textZone.innerText;
+        const text = entry.querySelector('.v-text').innerText;
         let box = JSON.parse(localStorage.getItem('gy_box') || '[]');
-        box.push({ text: content, style: curName, timestamp: new Date().toLocaleString() });
+        box.push({ text: text, style: curName, timestamp: new Date().toLocaleString() });
         localStorage.setItem('gy_box', JSON.stringify(box));
-        textZone.contentEditable = "false";
-        btn.parentElement.innerHTML = `<small style="color:var(--gold); letter-spacing:1px;">ОБЪЕКТ ЗАФИКСИРОВАН 🔒</small>`;
+        btn.parentElement.innerHTML = `<small style="color:var(--gold); letter-spacing:1px;">ЗАФИКСИРОВАНО 🔒</small>`;
     }
 
-    /* 📋 КЛИП: Копирование всей стены */
     function copyWall() {
         const texts = Array.from(document.querySelectorAll('.v-text')).map(el => el.innerText).join('\n---\n');
-        if (!texts) return;
-        navigator.clipboard.writeText(texts).then(() => {
-            const btn = document.querySelector('.btn-act');
-            const old = btn.innerText; btn.innerText = "ГОТОВО! ✅";
-            setTimeout(() => btn.innerText = old, 2000);
-        });
+        if (texts) navigator.clipboard.writeText(texts).then(() => alert("Стена скопирована в КЛИП"));
     }
 
-    /* 🔗 ПЕРЕСЛАТЬ: Шаринг последнего */
     function shareWall() {
         const last = Array.from(document.querySelectorAll('.v-text')).pop();
-        if (!last) return;
-        if (navigator.share) {
-            navigator.share({ title: 'GY-GY', text: last.innerText });
-        } else {
-            alert("Ваш браузер не поддерживает SHARE. Используйте КЛИП.");
-        }
+        if (last && navigator.share) navigator.share({ title: 'GY-GY', text: last.innerText });
     }
 
     window.onclick = () => document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
