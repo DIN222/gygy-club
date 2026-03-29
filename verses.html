@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | CORE v33.5.9 🔒</title>
+    <title>GY-GY | CORE v33.5.10 🔒</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
@@ -14,6 +14,9 @@
         
         /* СТРЕЛКИ НАВИГАЦИИ 🔒 */
         .nav-fix { width: 45px; height: 45px; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--gold); text-decoration: none; font-weight: bold; font-size: 1.2rem; }
+        
+        /* ЛОГОТИП GY-GY 🔒 */
+        .logo-gy { font-size: 1.3rem; font-weight: 900; color: var(--gold); letter-spacing: 2px; margin-left: 10px; }
         
         /* ЯЗЫКОВОЙ БЛОК 🔒 */
         .header-center { display: flex; align-items: center; gap: 10px; }
@@ -48,7 +51,10 @@
 <body>
 
 <header>
-    <a href="ai_room_core_v8.html" class="nav-fix">❮</a>
+    <div style="display: flex; align-items: center;">
+        <a href="ai_room_core_v8.html" class="nav-fix">❮</a>
+        <div class="logo-gy">GY-GY</div>
+    </div>
     
     <div class="header-center">
         <div id="google_translate_element"></div>
@@ -68,7 +74,7 @@
 </header>
 
 <div id="wall">
-    <div class="bubble a">Система v33.5.8 восстановлена. Замки установлены 🔒</div>
+    <div class="bubble a">Логотип GY-GY установлен и заблокирован 🔒. Система готова.</div>
 </div>
 
 <footer>
@@ -125,10 +131,10 @@
         const endpoints = ["v1", "v1beta"];
         let success = false;
 
-        // Попытка использовать Gemini 1.5 Flash (как в оригинале 33.5.8)
         for (let ver of endpoints) {
             if (success) break;
             try {
+                // Мы сохраняем вызов gemini-1.5-flash, как в оригинале v33.5.8
                 const r = await fetch(`https://generativelanguage.googleapis.com/${ver}/models/gemini-1.5-flash:generateContent?key=${cleanKey}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -141,7 +147,7 @@
                     const res = d.candidates[0].content.parts[0].text.trim();
                     const aMsg = document.createElement('div');
                     aMsg.className = 'bubble a';
-                    aMsg.contentEditable = "true";
+                    aMsg.contentEditable = "true"; // Мы сохраняем возможность редактирования ответов
                     aMsg.innerHTML = `<small style="opacity:0.5">${curName}</small><br>${res.replace(/\n/g, '<br>')}`;
                     wall.appendChild(aMsg);
                     success = true;
