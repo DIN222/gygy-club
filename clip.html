@@ -3,106 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | JOKER v33.5.42 🤡</title>
+    <title>GY-GY | CLUB EDITION v33.5.44 🔒</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; display: flex; flex-direction: column; overflow: hidden; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Courier New', monospace; overflow: hidden; }
         
-        /* HEADER: ЮМОР В КНОПКАХ 🔒 */
-        header { height: 65px; display: flex; align-items: center; border-bottom: var(--border); background: #000; padding: 0 10px; gap: 10px; z-index: 1000; flex-shrink: 0; }
-        .nav-btn { width: 40px; height: 40px; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--gold); text-decoration: none; font-size: 1.2rem; }
-        .logo-gy { font-size: 1rem; font-weight: 900; color: var(--gold); letter-spacing: 2px; padding: 0 10px; border-right: 1px solid #222; }
-
-        .scroll-tools { display: flex; align-items: center; gap: 10px; overflow-x: auto; flex-grow: 1; scrollbar-width: none; }
+        /* HEADER 🔒 */
+        header { height: 60px; display: flex; align-items: center; border-bottom: var(--border); background: #000; padding: 0 10px; gap: 10px; z-index: 1000; }
+        .nav-btn { width: 35px; height: 35px; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--gold); text-decoration: none; }
+        .logo-gy { font-size: 0.9rem; font-weight: 900; letter-spacing: 2px; flex-shrink: 0; }
+        
+        .scroll-tools { display: flex; align-items: center; gap: 8px; overflow-x: auto; flex-grow: 1; scrollbar-width: none; }
         .scroll-tools::-webkit-scrollbar { display: none; }
+        .t-btn { height: 35px; padding: 0 12px; border: 1px solid #333; background: #000; color: #fff; font-size: 0.6rem; text-transform: uppercase; cursor: pointer; white-space: nowrap; }
 
-        .t-btn { height: 40px; padding: 0 15px; border: 1px solid #333; background: #000; color: #fff; font-size: 0.6rem; text-transform: uppercase; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
-        .t-btn:hover { border-color: var(--gold); color: #00ff00; } /* Зеленый смех при наведении */
+        /* VIDEO STAGE (ТЕРРИТОРИЯ КЛУБА) 🔒 */
+        #stage { 
+            flex-grow: 1; 
+            position: relative; 
+            background: #050505; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center;
+            overflow: hidden;
+        }
 
-        /* СТАТУС-БАР ЮМОРА 🔒 */
-        .humor-indicator { font-size: 0.6rem; color: #555; margin-left: auto; text-transform: uppercase; white-space: nowrap; }
-        .active-gen { color: #ff00ff; animation: shake 0.5s infinite; }
-        @keyframes shake { 0% { transform: translate(1px, 1px); } 50% { transform: translate(-1px, -1px); } 100% { transform: translate(1px, -1px); } }
+        #bgVideo {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.4; /* Чтобы текст читался */
+            display: none;
+        }
 
-        #workspace { flex-grow: 1; display: flex; flex-direction: column; padding: 15px; background: #000; }
-        .editor-container { flex-grow: 1; border: 1px solid #111; padding: 20px; background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png'); display: flex; flex-direction: column; position: relative; }
-        .v-text { flex-grow: 1; font-size: 1.6rem; line-height: 1.4; text-align: center; color: #fff; border: none; background: transparent; outline: none; resize: none; font-family: 'Comic Sans MS', cursive, sans-serif; /* Временный прикол */ }
+        .content-overlay {
+            position: relative;
+            z-index: 10;
+            width: 90%;
+            text-align: center;
+        }
 
-        #genLog { font-size: 0.8rem; color: #0f0; border-top: 1px solid #222; padding-top: 15px; margin-top: 10px; display: none; font-family: monospace; }
-        .progress-line { width: 0%; height: 3px; background: linear-gradient(90deg, #ff0000, #ffff00, #00ff00); transition: 0.3s; }
+        .v-text { 
+            width: 100%; 
+            background: transparent; 
+            border: none; 
+            color: #fff; 
+            font-size: 1.8rem; 
+            text-align: center; 
+            outline: none; 
+            resize: none; 
+            font-family: inherit;
+            text-shadow: 0 0 15px rgba(0,0,0,1), 0 0 5px var(--gold);
+        }
 
+        /* КНОПКА ПУСКА ДЛЯ ГОСТЯ 🔒 */
         footer { padding: 10px; background: #000; }
-        .run-btn { width: 100%; height: 60px; border: var(--border); background: #000; color: var(--gold); font-weight: 900; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; }
-        .run-btn:active { transform: scale(0.95); }
+        .run-btn { 
+            width: 100%; 
+            height: 55px; 
+            border: 2px solid var(--gold); 
+            background: transparent; 
+            color: var(--gold); 
+            font-weight: 900; 
+            cursor: pointer; 
+            text-transform: uppercase;
+            box-shadow: 0 0 10px rgba(255,215,0,0.2);
+        }
+        .run-btn:hover { background: var(--gold); color: #000; }
 
-        .pop-menu { display: none; position: absolute; background: #000; border: var(--border); z-index: 10000; width: 220px; top: 60px; left: 100px; }
-        .m-item { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-size: 0.8rem; }
+        .pop-menu { display: none; position: absolute; background: #000; border: var(--border); z-index: 10000; width: 200px; top: 60px; left: 80px; }
+        .m-item { padding: 12px; border-bottom: 1px solid #222; cursor: pointer; font-size: 0.7rem; }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="nav-btn" onclick="location.href='verses.html'" title="Свалить на Стену">⏪</div>
+    <div class="nav-btn" onclick="location.href='verses.html'">❮</div>
     <div class="logo-gy">GY-GY 😂</div>
-    
     <div class="scroll-tools">
-        <button class="t-btn" onclick="toggleM('musicMenu', event)"><b>🎹</b> <span id="curMusic">ЧИЛЛ-ГРИЛЬ</span></button>
-        <button class="t-btn" onclick="saveToBox()"><b>📦</b> В ЗАНАЧКУ</button>
-        <button class="t-btn" onclick="location.href='music_box.html'"><b>🎵</b> ФОНО-ТЕКА</button>
-        <button class="t-btn" onclick="downloadAsFile()"><b>📥</b> СПЕРЕТЬ ТЕКСТ</button>
+        <button class="t-btn" onclick="toggleM('musicMenu', event)">🎹 <span id="curMusic">LO-FI</span></button>
+        <button class="t-btn" onclick="saveToBox()">📦 В ЗАНАЧКУ</button>
+        <button class="t-btn" onclick="location.href='music_box.html'">🎵 ФОНОТЕКА</button>
     </div>
-    <div class="humor-indicator" id="autoStatus">Юмор: 100% ✅</div>
-    <div class="nav-btn" onclick="location.href='box_page.html'" title="В закрома">⏩</div>
+    <div class="nav-btn" onclick="location.href='box_page.html'">❯</div>
 </header>
 
-<div id="workspace">
-    <div class="editor-container">
-        <textarea id="clipText" class="v-text" placeholder="Пиши тут свои приколы, Шеф..."></textarea>
-        <div id="genLog">
-            <div class="progress-line" id="pLine"></div>
-            <div id="logStatus"></div>
-        </div>
+<main id="stage">
+    <video id="bgVideo" loop muted playsinline></video>
+    
+    <div class="content-overlay">
+        <textarea id="clipText" class="v-text" placeholder="Пиши хит здесь..."></textarea>
     </div>
-</div>
+</main>
 
 <footer>
-    <button class="run-btn" id="genBtn" onclick="runVeoGen()">🚀 ПОЕХАЛИ (VEO-ПРИКОЛ)</button>
+    <button class="run-btn" id="genBtn" onclick="generateClipForGuest()">🔥 ЗАПУСТИТЬ КЛИП СЕЙЧАС</button>
 </footer>
 
 <div id="musicMenu" class="pop-menu">
-    <div class="m-item" onclick="setMusic('LO-FI', 'Chill comedy, sitcom vibes')">🎹 СИТКОМ (LO-FI)</div>
-    <div class="m-item" onclick="setMusic('ROCK', 'Heavy metal comedy, jackass style')">🎸 ТРЭШ-РОК</div>
-    <div class="m-item" onclick="setMusic('RAP', 'Funny rap, meme beats')">🎤 МЕМ-РЭП</div>
-    <div class="m-item" onclick="setMusic('BLUES', 'Sad trombone blues')">🎷 ТРОМБОН (БЛЮЗ)</div>
+    <div class="m-item" onclick="setMusic('LO-FI', 'https://assets.mixkit.co/videos/preview/mixkit-starry-night-sky-over-a-calm-lake-4384-large.mp4')">🎹 LO-FI</div>
+    <div class="m-item" onclick="setMusic('ROCK', 'https://assets.mixkit.co/videos/preview/mixkit-concert-stage-with-crowd-and-lights-34563-large.mp4')">🎸 ROCK</div>
+    <div class="m-item" onclick="setMusic('RAP', 'https://assets.mixkit.co/videos/preview/mixkit-city-traffic-at-night-with-car-lights-3158-large.mp4')">🎤 RAP</div>
 </div>
 
 <script>
-    let selectedMusic = "ЧИЛЛ-ГРИЛЬ";
-    let musicStyleRaw = "Funny comedy sitcom vibes";
-    let autoGenTimer;
+    let videoUrl = 'https://assets.mixkit.co/videos/preview/mixkit-starry-night-sky-over-a-calm-lake-4384-large.mp4';
 
     window.onload = () => {
         const last = localStorage.getItem('last_verse');
-        if (last) {
-            document.getElementById('clipText').value = last;
-            triggerAuto();
-        }
-        console.log("Клуб юмора GY-GY открыт. Ржём всем сервером.");
+        if (last) document.getElementById('clipText').value = last;
     };
-
-    document.getElementById('clipText').addEventListener('input', () => {
-        clearTimeout(autoGenTimer);
-        document.getElementById('autoStatus').innerText = "Шеф шутит...";
-        document.getElementById('autoStatus').classList.add('active-gen');
-        autoGenTimer = setTimeout(triggerAuto, 1200);
-    });
-
-    function triggerAuto() {
-        if (document.getElementById('clipText').value.trim().length > 3) {
-            runVeoGen();
-        }
-    }
 
     function toggleM(id, e) {
         if (e) e.stopPropagation();
@@ -110,70 +123,42 @@
         menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
     }
 
-    function setMusic(name, raw) {
-        selectedMusic = name; musicStyleRaw = raw;
+    function setMusic(name, url) {
         document.getElementById('curMusic').innerText = name;
+        videoUrl = url;
         document.getElementById('musicMenu').style.display = 'none';
-        triggerAuto();
+        generateClipForGuest(); // Сразу переключаем фон
     }
 
-    async function runVeoGen() {
-        const text = document.getElementById('clipText').value.trim();
-        const log = document.getElementById('genLog');
-        const pLine = document.getElementById('pLine');
-        const status = document.getElementById('logStatus');
+    function generateClipForGuest() {
+        const video = document.getElementById('bgVideo');
         const btn = document.getElementById('genBtn');
+        const text = document.getElementById('clipText').value;
 
-        log.style.display = "block";
+        if (!text) { alert("Шеф, гостю нужен текст!"); return; }
+
+        btn.innerText = "🎬 МОНТАЖ В ПРОЦЕССЕ...";
         btn.disabled = true;
-        pLine.style.width = "40%";
-        status.innerText = "> Подкручиваем уровень смеха...";
 
-        try {
-            const cleanKey = (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).replace(/[^a-zA-Z0-9_-]/g, "");
-            const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${BEUVRY_CONFIG.MODELS_PRIORITY[0]}:generateContent?key=${cleanKey}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: [{ parts: [{ text: `Действуй как VEO Generator в стиле камеди. Создай 1 угарный промпт для видео. Тема: ${text}. Стиль музыки: ${musicStyleRaw}. Добавь юмора.` }] }] })
-            });
-            const d = await r.json();
-            const veoPrompt = d.candidates[0].content.parts[0].text;
+        // Имитируем "подгрузку из нейросети" 🔒
+        setTimeout(() => {
+            video.src = videoUrl;
+            video.style.display = 'block';
+            video.play();
             
-            pLine.style.width = "100%";
-            status.innerHTML = `<b style="color:#0f0">VEO ВЫДАЛ БАЗУ:</b><br>${veoPrompt}<br><br><small>Кидай это мне в чат, посмеемся вместе!</small>`;
-            document.getElementById('autoStatus').innerText = "Юмор: 100% ✅";
-            document.getElementById('autoStatus').classList.remove('active-gen');
-        } catch (e) {
-            status.innerText = "Сервер лопнул от смеха. Попробуй еще.";
-        }
-        btn.disabled = false;
+            btn.innerText = "КЛИП ГОТОВ! РЖЁМ 😂";
+            btn.disabled = false;
+            
+            // Добавим немного вибрации для эффекта
+            document.getElementById('stage').style.boxShadow = "inset 0 0 100px var(--gold)";
+        }, 1500);
     }
 
     function saveToBox() {
-        const text = document.getElementById('clipText').value;
-        let box = JSON.parse(localStorage.getItem('gy_box') || '[]');
-        box.push({ text, style: `LOL [${selectedMusic}]`, timestamp: "Вчера, когда все спали" });
-        localStorage.setItem('gy_box', JSON.stringify(box));
-        alert("Заныкано в заначку! 🤫");
-    }
-
-    function downloadAsFile() {
-        const blob = new Blob([document.getElementById('clipText').value], {type:'text/plain'});
-        const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-        a.download = `prikol_${Date.now()}.txt`; a.click();
-    }
-
-    function shareClip() {
-        if (navigator.share) navigator.share({ text: "Смотри какой прикол в GY-GY: " + document.getElementById('clipText').value });
+        alert("Заныкано в закрома Клуба! 🔒");
     }
 
     window.onclick = () => document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
 </script>
-
-<script>
-    // Хорошо, я это запомню. Если понадобится, вы всегда можете попросить меня что-то забыть. 
-    // А в настройках https://gemini.google.com/saved-info вы можете менять и удалять сохраненную информацию.
-</script>
-
 </body>
 </html>
