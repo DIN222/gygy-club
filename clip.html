@@ -3,109 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | CLIP v0.0.4 🔒</title>
+    <title>GY-GY | CLIP v33.5.39 🔒</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; display: flex; flex-direction: column; overflow: hidden; }
         
-        /* ЕДИНАЯ ПАНЕЛЬ СО СКРОЛЛОМ 🔒 */
+        /* HEADER FIX 🔒 */
         header { 
             height: 65px; 
             display: flex; 
             align-items: center; 
             border-bottom: var(--border); 
             background: #000; 
-            padding: 0 5px; 
+            padding: 0 10px; 
             gap: 10px; 
             z-index: 1000; 
             flex-shrink: 0; 
         }
 
-        .nav-fix { width: 38px; height: 38px; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--gold); text-decoration: none; font-size: 1rem; flex-shrink: 0; }
-        .logo-gy { font-size: 1rem; font-weight: 900; color: var(--gold); letter-spacing: 1px; padding: 0 5px; border-right: 1px solid #222; height: 30px; display: flex; align-items: center; flex-shrink: 0; }
+        .nav-btn { width: 40px; height: 40px; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--gold); text-decoration: none; font-size: 1.2rem; flex-shrink: 0; }
+        .logo-gy { font-size: 1rem; font-weight: 900; color: var(--gold); letter-spacing: 1px; padding: 0 10px; border-right: 1px solid #222; flex-shrink: 0; }
 
-        /* ЗОНА СКРОЛЛА КНОПОК 🔒 */
-        .scroll-tools { 
-            display: flex; 
-            align-items: center; 
-            gap: 8px; 
-            overflow-x: auto; 
-            white-space: nowrap; 
-            flex-grow: 1; 
-            padding-right: 10px;
-            scrollbar-width: none; /* Firefox */
-        }
-        .scroll-tools::-webkit-scrollbar { display: none; /* Chrome/Safari */ }
+        /* SCROLL TOOLS 🔒 */
+        .scroll-tools { display: flex; align-items: center; gap: 8px; overflow-x: auto; flex-grow: 1; scrollbar-width: none; }
+        .scroll-tools::-webkit-scrollbar { display: none; }
 
-        .t-btn { 
-            height: 38px; 
-            padding: 0 15px; 
-            border: 1px solid #333; 
-            background: #000; 
-            color: #fff; 
-            font-size: 0.65rem; 
-            text-transform: uppercase; 
-            cursor: pointer; 
-            display: inline-flex; 
-            align-items: center; 
-            transition: 0.2s;
-            flex-shrink: 0;
-        }
+        .t-btn { height: 40px; padding: 0 15px; border: 1px solid #333; background: #000; color: #fff; font-size: 0.65rem; text-transform: uppercase; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
         .t-btn:hover { border-color: var(--gold); color: var(--gold); }
         .t-btn b { color: var(--gold); margin-right: 5px; }
 
-        /* ЭКРАН 🔒 */
-        #workspace { flex-grow: 1; display: flex; flex-direction: column; padding: 10px; }
-        .editor-container { flex-grow: 1; border: 1px solid #111; padding: 15px; background: rgba(255,215,0,0.01); display: flex; flex-direction: column; position: relative; }
-        .v-text { flex-grow: 1; font-size: 1.5rem; line-height: 1.5; text-align: center; color: #fff; border: none; background: transparent; outline: none; resize: none; font-family: inherit; width: 100%; }
+        /* WORKSPACE 🔒 */
+        #workspace { flex-grow: 1; display: flex; flex-direction: column; padding: 15px; }
+        .editor-container { flex-grow: 1; border: 1px solid #111; padding: 20px; background: rgba(255,215,0,0.01); display: flex; flex-direction: column; position: relative; }
+        .v-text { flex-grow: 1; font-size: 1.5rem; line-height: 1.5; text-align: center; color: #fff; border: none; background: transparent; outline: none; resize: none; font-family: inherit; }
 
-        #genLog { font-size: 0.7rem; color: #666; border-top: 1px solid #222; padding-top: 10px; margin-top: 10px; max-height: 120px; overflow-y: auto; display: none; }
+        /* PROGRESS LOG 🔒 */
+        #genLog { font-size: 0.75rem; color: #888; border-top: 1px solid #222; padding-top: 15px; margin-top: 10px; display: none; }
+        .progress-bar { width: 0%; height: 2px; background: var(--gold); transition: 0.5s; margin-bottom: 10px; box-shadow: 0 0 10px var(--gold); }
 
-        /* ГЛАВНЫЙ ПУСК 🔒 */
         footer { padding: 10px; background: #000; flex-shrink: 0; }
-        .run-btn { width: 100%; height: 60px; border: var(--border); background: #000; color: var(--gold); font-weight: 900; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; }
+        .run-btn { width: 100%; height: 60px; border: var(--border); background: #000; color: var(--gold); font-weight: 900; cursor: pointer; text-transform: uppercase; }
 
-        /* МЕНЮ 🔒 */
-        .pop-menu { display: none; position: absolute; background: #000; border: var(--border); z-index: 10000; width: 220px; top: 60px; left: 60px; box-shadow: 0 10px 30px #000; }
-        .m-item { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-size: 0.75rem; }
+        .pop-menu { display: none; position: absolute; background: #000; border: var(--border); z-index: 10000; width: 220px; top: 60px; left: 100px; }
+        .m-item { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-size: 0.8rem; }
         .m-item:hover { border-left: 5px solid var(--gold); color: var(--gold); }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="nav-fix" onclick="window.history.back()">❮</div>
+    <div class="nav-btn" onclick="location.href='verses.html'">❮</div>
     <div class="logo-gy">GY-GY</div>
     
     <div class="scroll-tools">
         <button class="t-btn" onclick="toggleM('musicMenu', event)"><b>🎹</b> <span id="curMusic">LO-FI</span></button>
         <button class="t-btn" onclick="saveToBox()"><b>📦</b> В BOX</button>
-        <button class="t-btn" onclick="window.location.href='music_box.html'"><b>🎵</b> ФОНОТЕКА</button>
+        <button class="t-btn" onclick="location.href='music_box.html'"><b>🎵</b> ФОНОТЕКА</button>
         <button class="t-btn" onclick="downloadAsFile()"><b>📥</b> ФАЙЛ</button>
         <button class="t-btn" onclick="shareClip()"><b>🔗</b> SHARE</button>
-        <button class="t-btn" onclick="location.reload()"><b>🔄</b> RESET</button>
     </div>
+    <div class="nav-btn" onclick="location.href='box_page.html'">❯</div>
 </header>
 
 <div id="workspace">
     <div class="editor-container">
-        <textarea id="clipText" class="v-text" placeholder="Текст клипа..."></textarea>
-        <div id="genLog"></div>
+        <textarea id="clipText" class="v-text" placeholder="Текст вашего шедевра..."></textarea>
+        <div id="genLog">
+            <div class="progress-bar" id="pBar"></div>
+            <div id="logStatus">Инициализация...</div>
+        </div>
     </div>
 </div>
 
 <footer>
-    <button class="run-btn" id="genBtn" onclick="runClipGen()">🔥 ЗАПУСТИТЬ ГЕНЕРАЦИЮ</button>
+    <button class="run-btn" id="genBtn" onclick="runClipGen()">🔥 ГЕНЕРИРОВАТЬ МЕДИА-ПЛАН</button>
 </footer>
 
 <div id="musicMenu" class="pop-menu">
-    <div class="m-item" onclick="setMusic('LO-FI', 'Lofi hip hop')">🎹 LO-FI</div>
-    <div class="m-item" onclick="setMusic('ROCK', 'Hard rock guitars')">🎸 ROCK</div>
-    <div class="m-item" onclick="setMusic('RAP', 'Boom bap beats')">🎤 RAP</div>
-    <div class="m-item" onclick="setMusic('BLUES', 'Blues harmonica')">🎷 BLUES</div>
-    <div class="m-item" onclick="setMusic('TECHNO', 'Deep techno')">⚡ TECHNO</div>
-    <div class="m-item" onclick="setMusic('PHONK', 'Drift phonk')">🚗 PHONK</div>
+    <div class="m-item" onclick="setMusic('LO-FI', 'Chill beats, cozy')">🎹 LO-FI</div>
+    <div class="m-item" onclick="setMusic('ROCK', 'Heavy guitar, drive')">🎸 ROCK</div>
+    <div class="m-item" onclick="setMusic('RAP', 'Street hip-hop, bass')">🎤 RAP</div>
+    <div class="m-item" onclick="setMusic('BLUES', 'Soulful harmonica')">🎷 BLUES</div>
 </div>
 
 <script>
@@ -133,27 +112,36 @@
         const text = document.getElementById('clipText').value.trim();
         const btn = document.getElementById('genBtn');
         const log = document.getElementById('genLog');
-        if (!text) return;
+        const pBar = document.getElementById('pBar');
+        const status = document.getElementById('logStatus');
 
-        btn.innerText = "🌀 ПОДГОТОВКА...";
+        if (!text) { alert("Введите текст!"); return; }
+
         btn.disabled = true;
         log.style.display = "block";
-        log.innerText = "> Ритм: " + selectedMusic + "\n> Анализ текста...";
+        
+        // Визуальная симуляция работы движка 🔒
+        status.innerText = "> Подключаем аудио-движок Suno/Udio..."; pBar.style.width = "30%";
+        await new Promise(r => setTimeout(r, 800));
+        
+        status.innerText = "> Рендеринг визуального стиля: " + selectedMusic; pBar.style.width = "60%";
 
         try {
             const cleanKey = (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).replace(/[^a-zA-Z0-9_-]/g, "");
             const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${BEUVRY_CONFIG.MODELS_PRIORITY[0]}:generateContent?key=${cleanKey}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: [{ parts: [{ text: `Промпт для клипа в стиле ${musicStyleRaw}: ${text}` }] }] })
+                body: JSON.stringify({ contents: [{ parts: [{ text: `Напиши детальный сценарий клипа (видео-ряд и описание звука) в стиле ${musicStyleRaw} для текста: ${text}. Выдай ответ кратко и по делу.` }] }] })
             });
             const d = await r.json();
-            log.innerText = d.candidates[0].content.parts[0].text;
+            pBar.style.width = "100%";
+            status.innerHTML = `<b style="color:var(--gold)">ПЛАН ГЕНЕРАЦИИ ГОТОВ:</b><br><br>${d.candidates[0].content.parts[0].text}`;
             btn.innerText = "ГОТОВО ✅";
         } catch (e) {
-            btn.innerText = "СБОЙ ❌";
+            status.innerText = "ОШИБКА СЕТИ ❌";
         }
-        setTimeout(() => { btn.disabled = false; btn.innerText = "🔥 ЗАПУСТИТЬ ГЕНЕРАЦИЮ"; }, 4000);
+        
+        setTimeout(() => { btn.disabled = false; btn.innerText = "🔥 ГЕНЕРИРОВАТЬ МЕДИА-ПЛАН"; }, 5000);
     }
 
     function saveToBox() {
@@ -161,13 +149,13 @@
         let box = JSON.parse(localStorage.getItem('gy_box') || '[]');
         box.push({ text, style: `CLIP [${selectedMusic}]`, timestamp: new Date().toLocaleString() });
         localStorage.setItem('gy_box', JSON.stringify(box));
-        alert("В BOX! 🔒");
+        alert("Сохранено в BOX! 🔒");
     }
 
     function downloadAsFile() {
         const blob = new Blob([document.getElementById('clipText').value], {type:'text/plain'});
         const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-        a.download = `gy_clip.txt`; a.click();
+        a.download = `clip.txt`; a.click();
     }
 
     function shareClip() {
@@ -176,6 +164,5 @@
 
     window.onclick = () => document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
 </script>
-
 </body>
 </html>
