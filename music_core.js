@@ -1,76 +1,70 @@
 
 /* MODULE: GY-GY Music Core
-   VERSION: 2.0.0 (Markov Jazz Edition)
-   DATE: 2026-03-30
-   LOGIC: Markov Chain II-V-I Progression, Swing Rhythm, Stochastic Sax Improvisation.
+   VERSION: 3.0.0 (The Multi-Tool Orchestra)
+   LOGIC: Hierarchical Markov Chains (Genre + Harmony + Rhythm)
 */
-
-const GY_MUSIC = { 
-   // ... далее весь код, который мы обсудили выше ...
-};
 
 const GY_MUSIC = {
     ctx: null,
-    isPlaying: false,
-    
-    // Матрица вероятностей Маркова для джазовой прогрессии II-V-I
-    // Состояния: 0 (II ступень), 1 (V ступень), 2 (I ступень)
-    markovChain: {
-        0: [1, 1, 0],    // После II чаще идет V
-        1: [2, 2, 0],    // После V чаще идет I, иногда возврат к II
-        2: [0, 2, 1]     // После I можно начать заново или остаться в покое
-    },
-    currentState: 0,
+    currentGenre: 'JAZZ', // По умолчанию начинаем с джаза
 
-    // Ноты для аккордов (Частоты в Гц)
-    scales: {
-        0: [293.66, 349.23, 440.00, 523.25], // Dm7 (II)
-        1: [392.00, 493.88, 587.33, 698.46], // G7 (V)
-        2: [261.63, 329.63, 392.00, 493.88]  // Cmaj7 (I)
+    // МАРКОВСКИЙ ДИСПЕТЧЕР ЖАНРОВ
+    genreMatrix: {
+        'JAZZ': ['JAZZ', 'JAZZ', 'ROCK'], // В основном джаз, но может "сорваться" в рок
+        'ROCK': ['ROCK', 'ROCK', 'JAZZ']  // В основном рок, но может остыть до джаза
     },
 
     init() {
         if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
     },
 
-    // Главный цикл джазовой импровизации
-    playJazzStep() {
+    // ЕДИНАЯ КНОПКА "СДЕЛАТЬ КРАСИВО"
+    playNext(moodSeed = 1) {
         this.init();
         const t = this.ctx.currentTime;
-        
-        // 1. Выбираем следующий шаг по цепи Маркова
-        const choices = this.markovChain[this.currentState];
-        this.currentState = choices[Math.floor(Math.random() * choices.length)];
-        
-        // 2. Генерируем "Свинг" (неровный ритм: длинная-короткая)
-        const isSwing = Math.random() > 0.5;
-        const duration = isSwing ? 0.6 : 0.3;
 
-        // 3. Играем аккорд (Пианино)
-        this.scales[this.currentState].forEach(freq => {
-            this.createPianoNote(freq, t, duration * 2);
-        });
+        // 1. Марков решает, какой жанр играть сейчас
+        const nextGenres = this.genreMatrix[this.currentGenre];
+        this.currentGenre = nextGenres[Math.floor(Math.random() * nextGenres.length)];
 
-        // 4. Добавляем "Синкопу" (Случайная высокая нота саксофона "мимо" бита)
-        if (Math.random() > 0.4) {
-            const highNote = this.scales[this.currentState][Math.floor(Math.random()*4)] * 2;
-            this.createSaxNote(highNote, t + 0.2, 0.4);
+        // 2. Раскладываем по полкам
+        if (this.currentGenre === 'JAZZ') {
+            this.playJazzNode(t);
+        } else {
+            this.playRockNode(t);
         }
+        
+        // 3. Всегда добавляем Бас (Фундамент)
+        this.createBassLine(t);
     },
 
-    createPianoNote(f, t, len) {
+    // ПОЛКА ДЖАЗА
+    playJazzNode(t) {
+        const freq = [261.63, 329.63, 392.00][Math.floor(Math.random()*3)];
+        this.synth(freq, t, 0.8, 'triangle'); // Мягкий звук
+    },
+
+    // ПОЛКА РОКА
+    playRockNode(t) {
+        const freq = [110, 164, 220][Math.floor(Math.random()*3)];
+        this.synth(freq, t, 0.4, 'sawtooth'); // Грубый звук
+    },
+
+    // НИЖНЯЯ ПОЛКА (БАС)
+    createBassLine(t) {
+        const freq = 55; // Очень низкая Ля
         const o = this.ctx.createOscillator(), g = this.ctx.createGain();
-        o.type = 'triangle'; o.frequency.value = f;
-        g.gain.setValueAtTime(0.1, t);
-        g.gain.exponentialRampToValueAtTime(0.001, t + len);
+        o.type = 'sine'; o.frequency.value = freq;
+        g.gain.setValueAtTime(0.2, t);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
         o.connect(g); g.connect(this.ctx.destination);
-        o.start(t); o.stop(t + len);
+        o.start(t); o.stop(t + 0.5);
     },
 
-    createSaxNote(f, t, len) {
+    synth(f, t, len, type) {
         const o = this.ctx.createOscillator(), g = this.ctx.createGain();
-        o.type = 'sawtooth'; o.frequency.value = f;
-        g.gain.setValueAtTime(0.05, t);
+        o.type = type; o.frequency.value = f;
+        g.gain.setValueAtTime(0.1, t);
         g.gain.exponentialRampToValueAtTime(0.001, t + len);
         o.connect(g); g.connect(this.ctx.destination);
         o.start(t); o.stop(t + len);
