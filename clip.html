@@ -3,32 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | GLOBAL MIX v33.5.50 🔒</title>
+    <title>GY-GY | MOVIE v33.5.51 🔒</title>
     <style>
         :root { --gold: #ffd700; --bg: #000; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Courier New', monospace; overflow: hidden; display: flex; flex-direction: column; }
-        
-        header { height: 60px; display: flex; align-items: center; border-bottom: 1px solid var(--gold); background: #000; padding: 0 10px; gap: 10px; z-index: 1000; flex-shrink: 0; }
-        .nav-btn { width: 40px; height: 40px; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--gold); text-decoration: none; font-weight: bold; }
-        .logo-gy { font-size: 1rem; font-weight: 900; letter-spacing: 2px; padding: 0 10px; border-right: 1px solid #222; }
-
+        header { height: 60px; display: flex; align-items: center; border-bottom: 1px solid var(--gold); background: #000; padding: 0 10px; gap: 10px; z-index: 1000; }
+        .nav-btn { width: 35px; height: 35px; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--gold); text-decoration: none; }
+        .logo-gy { font-size: 0.9rem; font-weight: 900; letter-spacing: 2px; padding: 0 10px; border-right: 1px solid #222; }
         .scroll-tools { display: flex; align-items: center; gap: 8px; overflow-x: auto; flex-grow: 1; scrollbar-width: none; }
-        .scroll-tools::-webkit-scrollbar { display: none; }
-        .t-btn { height: 40px; padding: 0 15px; border: 1px solid var(--gold); background: #000; color: var(--gold); font-size: 0.65rem; text-transform: uppercase; cursor: pointer; white-space: nowrap; }
+        .t-btn { height: 35px; padding: 0 12px; border: 1px solid var(--gold); background: #000; color: var(--gold); font-size: 0.6rem; text-transform: uppercase; cursor: pointer; white-space: nowrap; }
 
-        #stage { flex-grow: 1; position: relative; background: #000; overflow: hidden; display: flex; justify-content: center; align-items: center; }
-        .particle { position: absolute; background: var(--gold); border-radius: 50%; pointer-events: none; }
+        #stage { flex-grow: 1; position: relative; background: #000; overflow: hidden; display: flex; justify-content: center; align-items: center; transition: background 0.5s; }
+        
+        /* ЭФФЕКТ ВСПЫШЕК 🔒 */
+        .flash { position: absolute; width: 100%; height: 100%; background: var(--gold); opacity: 0; pointer-events: none; z-index: 5; }
+        .particle { position: absolute; background: var(--gold); border-radius: 50%; pointer-events: none; z-index: 1; }
 
-        .overlay { position: relative; z-index: 10; width: 90%; text-align: center; }
-        .v-text { width: 100%; min-height: 200px; background: transparent; border: none; color: #fff; font-size: 1.8rem; text-align: center; outline: none; resize: none; font-family: inherit; text-shadow: 0 0 20px #000; }
+        .overlay { position: relative; z-index: 10; width: 90%; transition: transform 0.1s ease-out; }
+        .v-text { width: 100%; min-height: 150px; background: transparent; border: none; color: #fff; font-size: 2.2rem; text-align: center; outline: none; resize: none; font-family: inherit; text-shadow: 0 0 30px #000; }
 
         footer { padding: 15px; background: #000; border-top: 1px solid #111; z-index: 100; }
-        .run-btn { width: 100%; height: 60px; border: 1px solid var(--gold); background: #000; color: var(--gold); font-weight: 900; cursor: pointer; text-transform: uppercase; letter-spacing: 3px; }
-
-        /* МЕНЮ ЖАНРОВ: ЗОЛОТО НА ЧЕРНОМ 🔒 */
-        .pop-menu { display: none; position: absolute; background: #000; border: 1px solid var(--gold); z-index: 10000; width: 240px; top: 60px; left: 80px; box-shadow: 0 10px 50px #000; }
-        .m-item { padding: 12px 15px; border-bottom: 1px solid #111; cursor: pointer; font-size: 0.75rem; color: var(--gold); }
-        .m-item:hover { background: #111; }
+        .run-btn { width: 100%; height: 55px; border: 1px solid var(--gold); background: #000; color: var(--gold); font-weight: 900; cursor: pointer; text-transform: uppercase; letter-spacing: 3px; }
+        .pop-menu { display: none; position: absolute; background: #000; border: 1px solid var(--gold); z-index: 10000; width: 200px; top: 60px; left: 50px; }
+        .m-item { padding: 12px; border-bottom: 1px solid #111; cursor: pointer; font-size: 0.7rem; color: var(--gold); }
     </style>
 </head>
 <body>
@@ -39,83 +36,91 @@
     <div class="scroll-tools">
         <button class="t-btn" onclick="toggleM('musicMenu', event)">🎹 <span id="curStyle">TECHNO</span></button>
         <button class="t-btn" onclick="saveToBox()">📦 В BOX</button>
-        <button class="t-btn" onclick="location.href='music_box.html'">🎵 ФОНО</button>
     </div>
     <div class="nav-btn" onclick="location.href='box_page.html'">❯</div>
 </header>
 
 <main id="stage">
-    <div class="overlay"><textarea id="clipText" class="v-text" placeholder="Текст для шоу..."></textarea></div>
+    <div class="flash" id="vFlash"></div>
+    <div class="overlay" id="vOverlay">
+        <textarea id="clipText" class="v-text" placeholder="Текст твоего фильма..."></textarea>
+    </div>
 </main>
 
 <footer>
-    <button class="run-btn" id="genBtn" onclick="toggleClub()">🔥 ЗАПУСТИТЬ КЛИП</button>
+    <button class="run-btn" id="genBtn" onclick="startMovie()">🎬 СМОТРЕТЬ КЛИП</button>
 </footer>
 
 <div id="musicMenu" class="pop-menu">
-    <div class="m-item" onclick="setS('LO-FI', 80, 150, 'sine')">🌌 LO-FI (Slow & Chill)</div>
-    <div class="m-item" onclick="setS('TECHNO', 128, 60, 'sawtooth')">⚡ TECHNO (Industrial)</div>
-    <div class="m-item" onclick="setS('TRAP', 145, 180, 'square')">👟 TRAP (808 Bass)</div>
-    <div class="m-item" onclick="setS('HIP-HOP', 92, 110, 'triangle')">🎤 HIP-HOP (Old School)</div>
-    <div class="m-item" onclick="setS('ROCK', 115, 250, 'sawtooth')">🎸 ROCK (Hard Kick)</div>
-    <div class="m-item" onclick="setS('DUBSTEP', 70, 40, 'square')">🔊 DUBSTEP (Bass Face)</div>
-    <div class="m-item" onclick="setS('FUNK', 105, 95, 'sine')">🕺 FUNK (Disco Groove)</div>
-    <div class="m-item" onclick="setS('PHONK', 135, 130, 'sawtooth')">🚗 PHONK (Cowbell vibe)</div>
-    <div class="m-item" onclick="setS('CYBER', 160, 50, 'square')">🦾 CYBER (Neural link)</div>
+    <div class="m-item" onclick="setS('LO-FI', 85, 100)">🌌 LO-FI (Slow)</div>
+    <div class="m-item" onclick="setS('CLUB', 128, 60)">⚡ CLUB (Fast)</div>
+    <div class="m-item" onclick="setS('TRAP', 140, 150)">👟 TRAP (Hard)</div>
 </div>
 
 <script>
-    let audioCtx = null, isPlaying = false, bpm = 128, kFreq = 60, oscType = 'sawtooth', bCount = 0;
+    let audioCtx = null, isPlaying = false, bpm = 128, beat = 0, kFreq = 60;
 
     function toggleM(id, e) { if (e) e.stopPropagation(); const m = document.getElementById(id); m.style.display = (m.style.display==='block')?'none':'block'; }
-    
-    function setS(n, b, f, t) { 
-        document.getElementById('curStyle').innerText = n; 
-        bpm = b; kFreq = f; oscType = t;
-        document.getElementById('musicMenu').style.display = 'none';
-        if(isPlaying) { isPlaying = false; toggleClub(); }
-    }
+    function setS(n, b, f) { document.getElementById('curStyle').innerText = n; bpm = b; kFreq = f; }
 
-    function playSound(t, f, type, vol, len) {
+    function playNote(f, type, vol, len, t) {
         const o = audioCtx.createOscillator(), g = audioCtx.createGain();
         o.type = type; o.frequency.setValueAtTime(f, t);
-        if(type === 'kick') o.frequency.exponentialRampToValueAtTime(0.01, t + len);
+        if(type==='sine') o.frequency.exponentialRampToValueAtTime(0.01, t + len);
         g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.001, t + len);
         o.connect(g); g.connect(audioCtx.destination);
         o.start(t); o.stop(t + len);
     }
 
-    function spawn(size, speed) {
-        const s = document.getElementById('stage'), p = document.createElement('div');
-        p.className = 'particle'; p.style.width = p.style.height = size+'px';
+    function visualHit(power) {
+        const ov = document.getElementById('vOverlay');
+        const fl = document.getElementById('vFlash');
+        ov.style.transform = `scale(${1 + power})`;
+        setTimeout(() => ov.style.transform = 'scale(1)', 100);
+        if(power > 0.1) {
+            fl.style.opacity = "0.2";
+            setTimeout(() => fl.style.opacity = "0", 150);
+        }
+        // Частицы
+        const p = document.createElement('div'); p.className = 'particle';
+        p.style.width = p.style.height = (power*100)+'px';
         p.style.left = Math.random()*100+'%'; p.style.top = Math.random()*100+'%';
-        s.appendChild(p);
-        p.animate([{transform:'scale(0)', opacity:1}, {transform:'scale(25)', opacity:0}], {duration:speed, fill:'forwards'});
-        setTimeout(()=>p.remove(), speed);
+        document.getElementById('stage').appendChild(p);
+        p.animate([{transform:'scale(0)', opacity:1}, {transform:'scale(10)', opacity:0}], 800);
+        setTimeout(()=>p.remove(), 800);
     }
 
-    function scheduler() {
+    function runEngine() {
         if(!isPlaying) return;
         const t = audioCtx.currentTime;
-        playSound(t, kFreq, 'sine', 0.8, 0.5); // KICK
-        spawn(10, 800);
         
-        if(bCount % 2 === 1) { playSound(t, 400, 'triangle', 0.2, 0.2); spawn(20, 400); } // SNARE
-        if(bCount % 1 === 0) { playSound(t + (30/bpm), 6000, 'square', 0.05, 0.05); spawn(2, 200); } // HAT
-        if(bCount % 8 === 0) { playSound(t, 220, oscType, 0.1, 1.5); } // VOICE/PAD
+        // СТРУКТУРА КЛИПА 🔒
+        playNote(kFreq, 'sine', 0.8, 0.4, t); // Базовый удар
+        visualHit(0.05);
 
-        bCount++;
-        setTimeout(scheduler, (60/bpm)*1000);
+        if(beat % 2 === 1) { // Малый барабан
+            playNote(400, 'triangle', 0.3, 0.2, t);
+            visualHit(0.15);
+        }
+
+        if(beat % 8 >= 4) { // Развитие: добавляем мелодию ("Вокал")
+            const scale = [220, 261, 329, 392];
+            playNote(scale[beat % 4], 'sawtooth', 0.05, 0.6, t);
+        }
+
+        beat++;
+        setTimeout(runEngine, (60/bpm)*1000);
     }
 
-    function toggleClub() {
+    function startMovie() {
         if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        if(isPlaying) { isPlaying = false; document.getElementById('genBtn').innerText = "🔥 ЗАПУСТИТЬ КЛИП"; }
-        else { isPlaying = true; bCount = 0; document.getElementById('genBtn').innerText = "⏸ СТОП МАШИНА 😂"; scheduler(); }
+        if(isPlaying) { isPlaying = false; document.getElementById('genBtn').innerText = "🎬 СМОТРЕТЬ КЛИП"; }
+        else { 
+            isPlaying = true; beat = 0; 
+            document.getElementById('genBtn').innerText = "⏸ СТОП МАШИНА 😂";
+            runEngine(); 
+        }
     }
-
-    function saveToBox() { alert("В заначку закинул! 🔒"); }
-    window.onclick = () => document.querySelectorAll('.pop-menu').forEach(m=>m.style.display='none');
 </script>
 </body>
 </html>
