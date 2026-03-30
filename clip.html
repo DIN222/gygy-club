@@ -3,85 +3,147 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY | V4.0.0 HIGH-FIDELITY</title>
+    <title>GY-GY | V4.2.0 HYBRID 🎷🎸</title>
     <style>
-        body { background: #0b0b0b; color: #ffd700; font-family: 'Courier New', serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .monitor { border: 2px solid #ffd700; padding: 30px; text-align: center; background: #000; box-shadow: 0 0 50px rgba(255,215,0,0.1); }
-        .loading-bar { width: 0%; height: 5px; background: #ffd700; margin-top: 10px; transition: 0.3s; }
-        .btn { margin-top: 20px; padding: 15px 40px; border: 1px solid #ffd700; background: none; color: #ffd700; cursor: pointer; font-weight: bold; visibility: hidden; }
+        :root { --gold: #ffd700; --red: #ff4500; --bg: #0b0b0b; }
+        body { background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; margin: 0; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
+        
+        .panel { z-index: 10; text-align: center; border: 2px solid var(--gold); padding: 40px; background: rgba(0,0,0,0.9); box-shadow: 0 0 50px rgba(255,215,0,0.1); }
+        .energy-slider { width: 300px; margin: 20px 0; cursor: pointer; accent-color: var(--gold); }
+        .btn { padding: 20px 50px; border: 2px solid var(--gold); background: transparent; color: var(--gold); cursor: pointer; font-weight: 900; font-size: 1.2rem; letter-spacing: 3px; transition: 0.3s; }
+        .btn:hover { background: var(--gold); color: #000; box-shadow: 0 0 30px var(--gold); }
+        .visualizer { position: absolute; top:0; left:0; width:100%; height:100%; z-index:1; pointer-events: none; opacity: 0.5; }
+        .label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; margin-top: 10px; display: block; }
     </style>
 </head>
 <body>
 
-    <div class="monitor">
-        <h1 id="status">ЗАГРУЗКА ЖИВОГО ЗВУКА...</h1>
-        <div id="progress" class="loading-bar"></div>
-        <button id="startBtn" class="btn" onclick="startOrchestra()">🎸 ПУСТИТЬ ЖИВОЙ ДЖАЗ</button>
+    <canvas id="viz" class="visualizer"></canvas>
+
+    <div class="panel">
+        <h1 id="mode-title">MARKOV DYNAMICS v4.2</h1>
+        
+        <label class="label">Энергия Клуба (Vibe Control)</label>
+        <input type="range" id="energy" class="energy-slider" min="0" max="100" value="30">
+        
+        <br><br>
+        <button id="startBtn" class="btn" onclick="toggleEngine()">ЗАПУСТИТЬ КЛУБ</button>
+        <span id="status" class="label">System: Standby</span>
     </div>
 
 <script>
-const GY_SAMPLES = {
-    ctx: new (window.AudioContext || window.webkitAudioContext)(),
-    buffers: {},
-    // Ссылки на качественные сэмплы (GitHub репозитории аудио-библиотек)
-    sources: {
-        kick: 'https://raw.githubusercontent.com/the-maldridge/claps-and-kicks/master/kicks/kick1.wav',
-        snare: 'https://raw.githubusercontent.com/the-maldridge/claps-and-kicks/master/snares/snare1.wav',
-        bass: 'https://teropa.info/music-mouse-js/samples/bass.mp3',
-        sax: 'https://raw.githubusercontent.com/mra73/GarageBand-Samples/master/Sax%20Alto/Sax%20Alto_01.wav'
+/* --- ГЕНЕРАТОР ЖИВОГО ШУМА (Чтобы не качать тяжелые файлы) --- */
+const AudioEngine = {
+    ctx: null,
+    isPlaying: false,
+    interval: null,
+
+    init() {
+        if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
     },
 
-    async loadAll() {
-        let loaded = 0;
-        const keys = Object.keys(this.sources);
-        
-        for (let key of keys) {
-            const response = await fetch(this.sources[key]);
-            const arrayBuffer = await response.arrayBuffer();
-            this.buffers[key] = await this.ctx.decodeAudioData(arrayBuffer);
-            loaded++;
-            document.getElementById('progress').style.width = (loaded / keys.length * 100) + '%';
-        }
-        
-        document.getElementById('status').innerText = "ОРКЕСТР ГОТОВ";
-        document.getElementById('startBtn').style.visibility = 'visible';
-    },
-
-    play(name, time, vol = 0.5) {
-        const source = this.ctx.createBufferSource();
-        source.buffer = this.buffers[name];
+    // Создаем "жирный" звук синтетически, имитируя живые инструменты
+    createOrganicSound(freq, type, decay, energy) {
+        const t = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
-        gain.gain.value = vol;
-        source.connect(gain);
+        const filter = this.ctx.createBiquadFilter();
+
+        osc.type = type; // 'triangle' для джаза, 'sawtooth' для рока
+        osc.frequency.setValueAtTime(freq, t);
+        
+        // Динамический фильтр (v4.1.0 logic)
+        filter.type = "lowpass";
+        filter.frequency.setValueAtTime(500 + (energy * 4000), t);
+        filter.Q.setValueAtTime(energy * 10, t);
+
+        gain.gain.setValueAtTime(0.2 * energy, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + decay);
+
+        osc.connect(filter);
+        filter.connect(gain);
         gain.connect(this.ctx.destination);
-        source.start(time);
+
+        osc.start(t);
+        osc.stop(t + decay);
+    },
+
+    playStep() {
+        const energy = document.getElementById('energy').value / 100;
+        const t = this.ctx.currentTime;
+
+        // 1. БАС (Всегда есть)
+        this.createOrganicSound(55, 'sine', 0.8, energy + 0.2);
+
+        // 2. МАРКОВСКИЙ ВЫБОР
+        if (energy < 0.5) {
+            // ДЖАЗОВЫЙ РЕЖИМ
+            if (Math.random() > 0.3) this.createOrganicSound(261.63, 'triangle', 0.6, energy); // До
+            if (Math.random() > 0.7) this.createOrganicSound(329.63, 'triangle', 0.6, energy); // Ми
+        } else {
+            // РОК-РЕЖИМ (Грязный звук)
+            this.createOrganicSound(110, 'sawtooth', 0.4, energy); // Низкая Ля
+            if (Math.random() > 0.5) this.createOrganicSound(164.81, 'sawtooth', 0.3, energy); // Ми
+        }
+
+        // 3. ПЕРКУССИЯ (Имитация клика/удара)
+        if (Math.random() > 0.5) this.createNoiseHit(t, energy);
+        
+        drawViz(energy);
+    },
+
+    createNoiseHit(t, energy) {
+        const bufferSize = this.ctx.sampleRate * 0.1;
+        const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+
+        const noise = this.ctx.createBufferSource();
+        noise.buffer = buffer;
+        const noiseFilter = this.ctx.createBiquadFilter();
+        noiseFilter.type = "highpass";
+        noiseFilter.frequency.value = 2000 + (energy * 3000);
+
+        const noiseGain = this.ctx.createGain();
+        noiseGain.gain.setValueAtTime(0.05 * energy, t);
+        noiseGain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
+
+        noise.connect(noiseFilter);
+        noiseFilter.connect(noiseGain);
+        noiseGain.connect(this.ctx.destination);
+        noise.start(t);
     }
 };
 
-// Запускаем загрузку сразу
-GY_SAMPLES.loadAll();
+/* --- ВИЗУАЛИЗАЦИЯ --- */
+const canvas = document.getElementById('viz');
+const vctx = canvas.getContext('2d');
 
-let engine;
-function startOrchestra() {
-    GY_SAMPLES.ctx.resume();
-    if (engine) clearInterval(engine);
-    
-    let step = 0;
-    engine = setInterval(() => {
-        const t = GY_SAMPLES.ctx.currentTime;
-        
-        // Марковский ритм-блок
-        if (step % 2 === 0) GY_SAMPLES.play('kick', t, 0.8);
-        if (step % 4 === 2) GY_SAMPLES.play('snare', t, 0.4);
-        
-        // Случайные вставки баса и саксофона (Марков v3 внутри)
-        if (Math.random() > 0.6) GY_SAMPLES.play('bass', t, 0.6);
-        if (Math.random() > 0.8) GY_SAMPLES.play('sax', t, 0.3);
+function drawViz(energy) {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const color = energy > 0.5 ? `rgba(255, 69, 0, ${energy})` : `rgba(255, 215, 0, ${energy})`;
+    vctx.fillStyle = color;
+    vctx.beginPath();
+    vctx.arc(canvas.width/2, canvas.height/2, energy * 300, 0, Math.PI*2);
+    vctx.fill();
+}
 
-        step++;
-    }, 400); // Темп
-    
-    document.getElementById('startBtn').innerText = "🔊 ИГРАЕТ LIVE";
+/* --- УПРАВЛЕНИЕ --- */
+function toggleEngine() {
+    AudioEngine.init();
+    if (AudioEngine.isPlaying) {
+        clearInterval(AudioEngine.interval);
+        AudioEngine.isPlaying = false;
+        document.getElementById('startBtn').innerText = "ЗАПУСТИТЬ КЛУБ";
+        document.getElementById('status').innerText = "System: Halted";
+    } else {
+        AudioEngine.isPlaying = true;
+        AudioEngine.ctx.resume();
+        AudioEngine.interval = setInterval(() => AudioEngine.playStep(), 400);
+        document.getElementById('startBtn').innerText = "ОСТАНОВИТЬ";
+        document.getElementById('status').innerText = "System: Live Dynamic Mode";
+    }
 }
 </script>
 </body>
