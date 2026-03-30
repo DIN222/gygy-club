@@ -3,36 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | CLIP v33.5.41 🔒</title>
+    <title>GY-GY | JOKER v33.5.42 🤡</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; display: flex; flex-direction: column; overflow: hidden; }
         
+        /* HEADER: ЮМОР В КНОПКАХ 🔒 */
         header { height: 65px; display: flex; align-items: center; border-bottom: var(--border); background: #000; padding: 0 10px; gap: 10px; z-index: 1000; flex-shrink: 0; }
-        .nav-btn { width: 40px; height: 40px; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--gold); text-decoration: none; font-size: 1.2rem; flex-shrink: 0; }
-        .logo-gy { font-size: 1rem; font-weight: 900; color: var(--gold); letter-spacing: 2px; padding: 0 10px; border-right: 1px solid #222; flex-shrink: 0; }
+        .nav-btn { width: 40px; height: 40px; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--gold); text-decoration: none; font-size: 1.2rem; }
+        .logo-gy { font-size: 1rem; font-weight: 900; color: var(--gold); letter-spacing: 2px; padding: 0 10px; border-right: 1px solid #222; }
 
         .scroll-tools { display: flex; align-items: center; gap: 10px; overflow-x: auto; flex-grow: 1; scrollbar-width: none; }
         .scroll-tools::-webkit-scrollbar { display: none; }
 
-        .t-btn { height: 40px; padding: 0 15px; border: 1px solid #333; background: #000; color: #fff; font-size: 0.65rem; text-transform: uppercase; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
-        .t-btn b { color: var(--gold); margin-right: 5px; }
+        .t-btn { height: 40px; padding: 0 15px; border: 1px solid #333; background: #000; color: #fff; font-size: 0.6rem; text-transform: uppercase; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
+        .t-btn:hover { border-color: var(--gold); color: #00ff00; } /* Зеленый смех при наведении */
 
-        /* ИНДИКАТОР АВТОПИЛОТА 🔒 */
-        .auto-status { font-size: 0.6rem; color: #444; margin-left: auto; text-transform: uppercase; letter-spacing: 1px; }
-        .active-gen { color: var(--gold); animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; } }
+        /* СТАТУС-БАР ЮМОРА 🔒 */
+        .humor-indicator { font-size: 0.6rem; color: #555; margin-left: auto; text-transform: uppercase; white-space: nowrap; }
+        .active-gen { color: #ff00ff; animation: shake 0.5s infinite; }
+        @keyframes shake { 0% { transform: translate(1px, 1px); } 50% { transform: translate(-1px, -1px); } 100% { transform: translate(1px, -1px); } }
 
         #workspace { flex-grow: 1; display: flex; flex-direction: column; padding: 15px; background: #000; }
-        .editor-container { flex-grow: 1; border: 1px solid #111; padding: 20px; background: rgba(255,215,0,0.01); display: flex; flex-direction: column; position: relative; }
-        .v-text { flex-grow: 1; font-size: 1.5rem; line-height: 1.5; text-align: center; color: #fff; border: none; background: transparent; outline: none; resize: none; font-family: inherit; }
+        .editor-container { flex-grow: 1; border: 1px solid #111; padding: 20px; background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png'); display: flex; flex-direction: column; position: relative; }
+        .v-text { flex-grow: 1; font-size: 1.6rem; line-height: 1.4; text-align: center; color: #fff; border: none; background: transparent; outline: none; resize: none; font-family: 'Comic Sans MS', cursive, sans-serif; /* Временный прикол */ }
 
-        #genLog { font-size: 0.8rem; color: #888; border-top: 1px solid #222; padding-top: 15px; margin-top: 10px; display: none; }
-        .progress-line { width: 0%; height: 2px; background: var(--gold); transition: 0.5s; margin-bottom: 10px; }
+        #genLog { font-size: 0.8rem; color: #0f0; border-top: 1px solid #222; padding-top: 15px; margin-top: 10px; display: none; font-family: monospace; }
+        .progress-line { width: 0%; height: 3px; background: linear-gradient(90deg, #ff0000, #ffff00, #00ff00); transition: 0.3s; }
 
-        footer { padding: 10px; background: #000; flex-shrink: 0; }
-        .run-btn { width: 100%; height: 60px; border: var(--border); background: #000; color: var(--gold); font-weight: 900; cursor: pointer; text-transform: uppercase; }
+        footer { padding: 10px; background: #000; }
+        .run-btn { width: 100%; height: 60px; border: var(--border); background: #000; color: var(--gold); font-weight: 900; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; }
+        .run-btn:active { transform: scale(0.95); }
 
         .pop-menu { display: none; position: absolute; background: #000; border: var(--border); z-index: 10000; width: 220px; top: 60px; left: 100px; }
         .m-item { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-size: 0.8rem; }
@@ -41,22 +43,22 @@
 <body>
 
 <header>
-    <div class="nav-btn" onclick="location.href='verses.html'">❮</div>
-    <div class="logo-gy">GY-GY</div>
+    <div class="nav-btn" onclick="location.href='verses.html'" title="Свалить на Стену">⏪</div>
+    <div class="logo-gy">GY-GY 😂</div>
     
     <div class="scroll-tools">
-        <button class="t-btn" onclick="toggleM('musicMenu', event)"><b>🎹</b> <span id="curMusic">LO-FI</span></button>
-        <button class="t-btn" onclick="saveToBox()"><b>📦</b> BOX</button>
-        <button class="t-btn" onclick="location.href='music_box.html'"><b>🎵</b> ФОНО</button>
-        <button class="t-btn" onclick="downloadAsFile()"><b>📥</b> ФАЙЛ</button>
+        <button class="t-btn" onclick="toggleM('musicMenu', event)"><b>🎹</b> <span id="curMusic">ЧИЛЛ-ГРИЛЬ</span></button>
+        <button class="t-btn" onclick="saveToBox()"><b>📦</b> В ЗАНАЧКУ</button>
+        <button class="t-btn" onclick="location.href='music_box.html'"><b>🎵</b> ФОНО-ТЕКА</button>
+        <button class="t-btn" onclick="downloadAsFile()"><b>📥</b> СПЕРЕТЬ ТЕКСТ</button>
     </div>
-    <div class="auto-status" id="autoStatus">Auto-Pilot: Ready</div>
-    <div class="nav-btn" onclick="location.href='box_page.html'">❯</div>
+    <div class="humor-indicator" id="autoStatus">Юмор: 100% ✅</div>
+    <div class="nav-btn" onclick="location.href='box_page.html'" title="В закрома">⏩</div>
 </header>
 
 <div id="workspace">
     <div class="editor-container">
-        <textarea id="clipText" class="v-text" placeholder="Текст..."></textarea>
+        <textarea id="clipText" class="v-text" placeholder="Пиши тут свои приколы, Шеф..."></textarea>
         <div id="genLog">
             <div class="progress-line" id="pLine"></div>
             <div id="logStatus"></div>
@@ -65,40 +67,39 @@
 </div>
 
 <footer>
-    <button class="run-btn" id="genBtn" onclick="runVeoGen()">🎬 РУЧНОЙ ПУСК VEO</button>
+    <button class="run-btn" id="genBtn" onclick="runVeoGen()">🚀 ПОЕХАЛИ (VEO-ПРИКОЛ)</button>
 </footer>
 
 <div id="musicMenu" class="pop-menu">
-    <div class="m-item" onclick="setMusic('LO-FI', 'Cinematic lofi')">🎹 LO-FI</div>
-    <div class="m-item" onclick="setMusic('ROCK', 'Rock concert vibe')">🎸 ROCK</div>
-    <div class="m-item" onclick="setMusic('RAP', 'Underground rap')">🎤 RAP</div>
+    <div class="m-item" onclick="setMusic('LO-FI', 'Chill comedy, sitcom vibes')">🎹 СИТКОМ (LO-FI)</div>
+    <div class="m-item" onclick="setMusic('ROCK', 'Heavy metal comedy, jackass style')">🎸 ТРЭШ-РОК</div>
+    <div class="m-item" onclick="setMusic('RAP', 'Funny rap, meme beats')">🎤 МЕМ-РЭП</div>
+    <div class="m-item" onclick="setMusic('BLUES', 'Sad trombone blues')">🎷 ТРОМБОН (БЛЮЗ)</div>
 </div>
 
 <script>
-    let selectedMusic = "LO-FI";
-    let musicStyleRaw = "Cinematic lofi hip hop";
+    let selectedMusic = "ЧИЛЛ-ГРИЛЬ";
+    let musicStyleRaw = "Funny comedy sitcom vibes";
     let autoGenTimer;
 
     window.onload = () => {
         const last = localStorage.getItem('last_verse');
         if (last) {
             document.getElementById('clipText').value = last;
-            triggerAuto(); // Сразу запускаем, если пришли из BOX
+            triggerAuto();
         }
+        console.log("Клуб юмора GY-GY открыт. Ржём всем сервером.");
     };
 
-    // Слушатель ввода: если замолчал на 1.5 сек — пуск!
     document.getElementById('clipText').addEventListener('input', () => {
         clearTimeout(autoGenTimer);
-        document.getElementById('autoStatus').innerText = "Typing...";
-        document.getElementById('autoStatus').classList.remove('active-gen');
-        autoGenTimer = setTimeout(triggerAuto, 1500);
+        document.getElementById('autoStatus').innerText = "Шеф шутит...";
+        document.getElementById('autoStatus').classList.add('active-gen');
+        autoGenTimer = setTimeout(triggerAuto, 1200);
     });
 
     function triggerAuto() {
-        if (document.getElementById('clipText').value.trim().length > 5) {
-            document.getElementById('autoStatus').innerText = "Auto-Pilot: Working";
-            document.getElementById('autoStatus').classList.add('active-gen');
+        if (document.getElementById('clipText').value.trim().length > 3) {
             runVeoGen();
         }
     }
@@ -113,7 +114,7 @@
         selectedMusic = name; musicStyleRaw = raw;
         document.getElementById('curMusic').innerText = name;
         document.getElementById('musicMenu').style.display = 'none';
-        triggerAuto(); // Перезапуск при смене жанра
+        triggerAuto();
     }
 
     async function runVeoGen() {
@@ -123,35 +124,56 @@
         const status = document.getElementById('logStatus');
         const btn = document.getElementById('genBtn');
 
-        if (!text) return;
-
         log.style.display = "block";
         btn.disabled = true;
-        pLine.style.width = "50%";
-        status.innerText = "> Синтез VEO...";
+        pLine.style.width = "40%";
+        status.innerText = "> Подкручиваем уровень смеха...";
 
         try {
             const cleanKey = (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).replace(/[^a-zA-Z0-9_-]/g, "");
             const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${BEUVRY_CONFIG.MODELS_PRIORITY[0]}:generateContent?key=${cleanKey}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ contents: [{ parts: [{ text: `VEO VIDEO PROMPT (English, 1 sentence, cinematic): ${musicStyleRaw}, theme: ${text}` }] }] })
+                body: JSON.stringify({ contents: [{ parts: [{ text: `Действуй как VEO Generator в стиле камеди. Создай 1 угарный промпт для видео. Тема: ${text}. Стиль музыки: ${musicStyleRaw}. Добавь юмора.` }] }] })
             });
             const d = await r.json();
             const veoPrompt = d.candidates[0].content.parts[0].text;
             
             pLine.style.width = "100%";
-            status.innerHTML = `<b style="color:var(--gold)">VEO READY:</b><br>${veoPrompt}`;
-            document.getElementById('autoStatus').innerText = "Auto-Pilot: Done";
+            status.innerHTML = `<b style="color:#0f0">VEO ВЫДАЛ БАЗУ:</b><br>${veoPrompt}<br><br><small>Кидай это мне в чат, посмеемся вместе!</small>`;
+            document.getElementById('autoStatus').innerText = "Юмор: 100% ✅";
+            document.getElementById('autoStatus').classList.remove('active-gen');
         } catch (e) {
-            status.innerText = "Error.";
+            status.innerText = "Сервер лопнул от смеха. Попробуй еще.";
         }
         btn.disabled = false;
     }
 
-    function saveToBox() { /* аналогично */ }
-    function downloadAsFile() { /* аналогично */ }
+    function saveToBox() {
+        const text = document.getElementById('clipText').value;
+        let box = JSON.parse(localStorage.getItem('gy_box') || '[]');
+        box.push({ text, style: `LOL [${selectedMusic}]`, timestamp: "Вчера, когда все спали" });
+        localStorage.setItem('gy_box', JSON.stringify(box));
+        alert("Заныкано в заначку! 🤫");
+    }
+
+    function downloadAsFile() {
+        const blob = new Blob([document.getElementById('clipText').value], {type:'text/plain'});
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+        a.download = `prikol_${Date.now()}.txt`; a.click();
+    }
+
+    function shareClip() {
+        if (navigator.share) navigator.share({ text: "Смотри какой прикол в GY-GY: " + document.getElementById('clipText').value });
+    }
+
     window.onclick = () => document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
 </script>
+
+<script>
+    // Хорошо, я это запомню. Если понадобится, вы всегда можете попросить меня что-то забыть. 
+    // А в настройках https://gemini.google.com/saved-info вы можете менять и удалять сохраненную информацию.
+</script>
+
 </body>
 </html>
