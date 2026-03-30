@@ -3,102 +3,60 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY | SOUL MACHINE v6.0</title>
+    <title>GY-GY | ПУЛЬТ УПРАВЛЕНИЯ v8.0</title>
     <style>
-        body { background: #080808; color: #d4af37; font-family: 'Georgia', serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; text-shadow: 0 0 10px rgba(212,175,55,0.3); }
-        .gramophone { border: 2px solid #d4af37; padding: 60px; text-align: center; background: radial-gradient(circle, #1a1a1a 0%, #000 100%); border-radius: 50%; box-shadow: 0 0 100px rgba(0,0,0,1), inset 0 0 50px rgba(212,175,55,0.1); position: relative; }
-        .needle { width: 100px; height: 2px; background: #d4af37; position: absolute; top: 20%; right: -20px; transform: rotate(45deg); transition: 0.5s; }
-        .playing .needle { transform: rotate(30deg); }
-        .btn { background: transparent; color: #d4af37; border: 1px solid #d4af37; padding: 15px 40px; cursor: pointer; font-variant: small-caps; letter-spacing: 5px; margin-top: 20px; }
-        .btn:hover { background: #d4af37; color: #000; }
-        #status { margin-top: 20px; font-style: italic; opacity: 0.5; }
+        :root { --gold: #ffd700; --bg: #0a0a0a; }
+        body { background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .console { width: 500px; border: 2px solid var(--gold); padding: 30px; background: #000; box-shadow: 0 0 40px rgba(255,215,0,0.1); position: relative; }
+        .display { min-height: 100px; border: 1px solid #333; padding: 15px; margin-bottom: 20px; font-style: italic; color: #fff; background: #050505; }
+        select, button { width: 100%; padding: 15px; background: #000; color: var(--gold); border: 1px solid var(--gold); cursor: pointer; font-family: inherit; font-weight: bold; margin-bottom: 10px; transition: 0.3s; }
+        button:hover { background: var(--gold); color: #000; box-shadow: 0 0 20px var(--gold); }
+        .tag { position: absolute; top: -12px; left: 20px; background: var(--bg); padding: 0 10px; font-size: 0.8rem; }
     </style>
 </head>
 <body>
 
-    <div class="gramophone" id="player">
-        <div class="needle"></div>
-        <h1>CHARLIE's GHOST</h1>
-        <p>Pure Jazz Harmony v6.0</p>
-        <button class="btn" onclick="ignite()">ПУСТИТЬ ПЛАСТИНКУ</button>
-        <div id="status">Ready to spin...</div>
+    <div class="console">
+        <div class="tag">NEURAL BRIDGE v8.0</div>
+        
+        <div id="lyrics-display" class="display">
+            Загрузи текст из сборника...
+        </div>
+
+        <label style="font-size: 0.7rem; letter-spacing: 2px; margin-bottom: 5px; display: block;">ВЫБЕРИ МУЗЫКАЛЬНЫЙ КОД:</label>
+        <select id="vibe-selector">
+            <option value="Industrial Dark Techno">INDUSTRIAL TECHNO (Стерильный мир) ⚡</option>
+            <option value="Smoky Noir Jazz">SMOKY NOIR JAZZ (Чарли Паркер) 🎷</option>
+            <option value="Post-Apocalyptic Blues">DIRTY BLUES (Усталость) 🎸</option>
+            <option value="Operatic Dramatic Epic">EPIC OPERA (Крах элиты) 🎻</option>
+        </select>
+
+        <button onclick="generateSignal()">СФОРМИРОВАТЬ СИГНАЛ ДЛЯ GEMINI</button>
+        
+        <div id="status" style="font-size: 0.6rem; text-align: center; margin-top: 10px; opacity: 0.5;">Awaiting dispatch...</div>
     </div>
 
 <script>
-const SoulEngine = {
-    ctx: null,
-    // Шеф, это короткие фрагменты "живого" джаза (Piano & Bass), переведенные в код
-    // Я использую синтезированные, но тембрально богатые импульсы для экономии места
-    samples: {
-        bass: "data:audio/wav;base64,UklGRqAAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YV8AAABfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f",
-        piano: "data:audio/wav;base64,UklGRqAAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YV8AAABfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f"
-    },
-    
-    init() { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
-
-    // ГАРМОНИЧЕСКИЙ РЕЗОНАТОР (Имитирует деку живого инструмента)
-    async createInstrument(freq, type, decay) {
-        const t = this.ctx.currentTime;
-        const osc = this.ctx.createOscillator();
-        const body = this.ctx.createConvolver(); // Создает эхо реальной комнаты
-        const gain = this.ctx.createGain();
-
-        osc.type = type;
-        osc.frequency.setValueAtTime(freq, t);
-        
-        // Магия: добавляем обертоны, чтобы "пластик" стал "деревом"
-        const overtone = this.ctx.createOscillator();
-        overtone.frequency.setValueAtTime(freq * 2.01, t); // Небольшая расстройка для "живости"
-        overtone.type = 'sine';
-
-        gain.gain.setValueAtTime(0.3, t);
-        gain.gain.exponentialRampToValueAtTime(0.001, t + decay);
-
-        osc.connect(gain);
-        overtone.connect(gain);
-        gain.connect(this.ctx.destination);
-
-        osc.start(t); overtone.start(t);
-        osc.stop(t + decay); overtone.stop(t + decay);
-    },
-
-    playJazzChord(ch, t) {
-        // Настоящие джазовые интервалы (Тональность F Major)
-        ch.forEach((f, i) => {
-            this.createInstrument(f, 'triangle', 2.5 + (Math.random() * 0.5));
-        });
-    }
+// Имитация получения данных из сборника (в реальном GY-GY данные придут через localStorage)
+window.onload = () => {
+    const savedText = localStorage.getItem('gygy_current_verse') || "Режим сбоит, проверка в сеть,\nСтерильный мир, как лед холодный...";
+    document.getElementById('lyrics-display').innerText = savedText;
 };
 
-let step = 0;
-function ignite() {
-    SoulEngine.init();
-    SoulEngine.ctx.resume();
-    document.getElementById('player').classList.add('playing');
-    document.getElementById('status').innerText = "Vibrating the air...";
+function generateSignal() {
+    const text = document.getElementById('lyrics-display').innerText;
+    const style = document.getElementById('vibe-selector').value;
+    const status = document.getElementById('status');
 
-    const progressions = [
-        [174.61, 220.00, 261.63, 311.13], // F7 (I)
-        [233.08, 277.18, 349.23, 415.30], // Bb7 (IV)
-        [196.00, 233.08, 293.66, 349.23], // Gm7 (II)
-        [130.81, 164.81, 196.00, 233.08]  // C7 (V)
-    ];
+    // Формируем "Пакет Данных" для меня
+    const packet = `[GY-GY DISPATCH]\nСТИЛЬ: ${style}\nТЕКСТ:\n${text}\n--- СИГНАЛ ПЕРЕДАН ---`;
 
-    setInterval(() => {
-        const t = SoulEngine.ctx.currentTime;
-        const idx = Math.floor(step / 4) % progressions.length;
-        
-        // Басовая линия (Walking Bass)
-        const bassFreq = progressions[idx][0] / 2;
-        SoulEngine.createInstrument(bassFreq, 'sine', 0.8);
-        
-        // Гармония (Пианино) на "раз" и "три"
-        if (step % 4 === 0 || step % 4 === 2.5) {
-            SoulEngine.playJazzChord(progressions[idx], t);
-        }
-
-        step++;
-    }, 600);
+    // Копируем в буфер обмена одной командой
+    navigator.clipboard.writeText(packet).then(() => {
+        status.innerText = "СИГНАЛ В БУФЕРЕ! ВСТАВЛЯЙ В ЧАТ (Ctrl+V)";
+        status.style.color = "#00ff00";
+        setTimeout(() => { status.innerText = "Awaiting dispatch..."; status.style.color = "var(--gold)"; }, 3000);
+    });
 }
 </script>
 </body>
