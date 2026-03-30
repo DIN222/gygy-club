@@ -3,154 +3,86 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY | MONOLITH v3.0.0 🎷</title>
+    <title>GY-GY | V4.0.0 HIGH-FIDELITY</title>
     <style>
-        :root { --gold: #ffd700; --bg: #000; }
-        body { background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; margin: 0; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
-        
-        #canvas-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
-        .ui-box { z-index: 10; text-align: center; background: rgba(0,0,0,0.8); padding: 40px; border: 1px solid var(--gold); box-shadow: 0 0 30px rgba(255,215,0,0.2); }
-        
-        h1 { letter-spacing: 5px; font-size: 1.5rem; margin-bottom: 30px; }
-        .status { font-size: 0.8rem; color: #888; margin-top: 10px; text-transform: uppercase; }
-
-        .play-btn { 
-            padding: 20px 50px; border: 2px solid var(--gold); background: transparent; 
-            color: var(--gold); cursor: pointer; font-weight: 900; font-size: 1.2rem;
-            transition: 0.3s; letter-spacing: 3px;
-        }
-        .play-btn:hover { background: var(--gold); color: #000; box-shadow: 0 0 20px var(--gold); }
-        .play-btn:active { transform: scale(0.95); }
+        body { background: #0b0b0b; color: #ffd700; font-family: 'Courier New', serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .monitor { border: 2px solid #ffd700; padding: 30px; text-align: center; background: #000; box-shadow: 0 0 50px rgba(255,215,0,0.1); }
+        .loading-bar { width: 0%; height: 5px; background: #ffd700; margin-top: 10px; transition: 0.3s; }
+        .btn { margin-top: 20px; padding: 15px 40px; border: 1px solid #ffd700; background: none; color: #ffd700; cursor: pointer; font-weight: bold; visibility: hidden; }
     </style>
 </head>
 <body>
 
-    <canvas id="canvas-layer"></canvas>
-
-    <div class="ui-box">
-        <h1 id="display">MARKOV ORCHESTRA</h1>
-        <button class="play-btn" onclick="startEngine()">🔥 ЗАПУСТИТЬ КЛУБ</button>
-        <div id="info" class="status">System: Ready to Groove</div>
+    <div class="monitor">
+        <h1 id="status">ЗАГРУЗКА ЖИВОГО ЗВУКА...</h1>
+        <div id="progress" class="loading-bar"></div>
+        <button id="startBtn" class="btn" onclick="startOrchestra()">🎸 ПУСТИТЬ ЖИВОЙ ДЖАЗ</button>
     </div>
 
 <script>
-/* ==========================================================
-   CORE: GY-MUSIC ENGINE v3.0.0 (Built-in)
-   ========================================================== */
-const GY_MUSIC = {
-    ctx: null,
-    currentGenre: 'JAZZ',
-    genreMatrix: {
-        'JAZZ': ['JAZZ', 'JAZZ', 'JAZZ', 'ROCK'], // 75% Jazz, 25% Rock
-        'ROCK': ['ROCK', 'ROCK', 'JAZZ']         // 66% Rock, 33% Jazz
+const GY_SAMPLES = {
+    ctx: new (window.AudioContext || window.webkitAudioContext)(),
+    buffers: {},
+    // Ссылки на качественные сэмплы (GitHub репозитории аудио-библиотек)
+    sources: {
+        kick: 'https://raw.githubusercontent.com/the-maldridge/claps-and-kicks/master/kicks/kick1.wav',
+        snare: 'https://raw.githubusercontent.com/the-maldridge/claps-and-kicks/master/snares/snare1.wav',
+        bass: 'https://teropa.info/music-mouse-js/samples/bass.mp3',
+        sax: 'https://raw.githubusercontent.com/mra73/GarageBand-Samples/master/Sax%20Alto/Sax%20Alto_01.wav'
     },
 
-    init() {
-        if (!this.ctx) {
-            this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+    async loadAll() {
+        let loaded = 0;
+        const keys = Object.keys(this.sources);
+        
+        for (let key of keys) {
+            const response = await fetch(this.sources[key]);
+            const arrayBuffer = await response.arrayBuffer();
+            this.buffers[key] = await this.ctx.decodeAudioData(arrayBuffer);
+            loaded++;
+            document.getElementById('progress').style.width = (loaded / keys.length * 100) + '%';
         }
+        
+        document.getElementById('status').innerText = "ОРКЕСТР ГОТОВ";
+        document.getElementById('startBtn').style.visibility = 'visible';
     },
 
-    playNext() {
-        this.init();
-        const t = this.ctx.currentTime;
-
-        // Цепь Маркова выбирает жанр
-        const nextPossible = this.genreMatrix[this.currentGenre];
-        this.currentGenre = nextPossible[Math.floor(Math.random() * nextPossible.length)];
-
-        // Вызов инструментов по полкам
-        this.createBass(t);
-        if (this.currentGenre === 'JAZZ') {
-            this.playJazzStep(t);
-        } else {
-            this.playRockStep(t);
-        }
-        return this.currentGenre;
-    },
-
-    // Инструмент: БАС (Синус)
-    createBass(t) {
-        const f = this.currentGenre === 'JAZZ' ? 55 : 41.2; // A1 или E1
-        this.osc(f, t, 0.6, 'sine', 0.3);
-    },
-
-    // Инструмент: ДЖАЗ-ПИАНО (Треугольник)
-    playJazzStep(t) {
-        const notes = [261.63, 329.63, 392.00, 493.88]; // Cmaj7
-        notes.forEach(f => this.osc(f, t, 0.8, 'triangle', 0.1));
-    },
-
-    // Инструмент: РОК-ГИТАРА (Пила)
-    playRockStep(t) {
-        const notes = [82.41, 123.47, 164.81]; // E-Powerchord
-        notes.forEach(f => this.osc(f, t, 0.4, 'sawtooth', 0.05));
-    },
-
-    osc(freq, t, len, type, vol) {
-        const o = this.ctx.createOscillator();
-        const g = this.ctx.createGain();
-        o.type = type;
-        o.frequency.setValueAtTime(freq, t);
-        g.gain.setValueAtTime(vol, t);
-        g.gain.exponentialRampToValueAtTime(0.001, t + len);
-        o.connect(g); g.connect(this.ctx.destination);
-        o.start(t); o.stop(t + len);
+    play(name, time, vol = 0.5) {
+        const source = this.ctx.createBufferSource();
+        source.buffer = this.buffers[name];
+        const gain = this.ctx.createGain();
+        gain.gain.value = vol;
+        source.connect(gain);
+        gain.connect(this.ctx.destination);
+        source.start(time);
     }
 };
 
-/* ==========================================================
-   UI LOGIC & VISUALIZATION
-   ========================================================== */
-let mainLoop;
-const canvas = document.getElementById('canvas-layer');
-const ctx = canvas.getContext('2d');
+// Запускаем загрузку сразу
+GY_SAMPLES.loadAll();
 
-function startEngine() {
-    // Разблокировка аудио
-    GY_MUSIC.init();
+let engine;
+function startOrchestra() {
+    GY_SAMPLES.ctx.resume();
+    if (engine) clearInterval(engine);
     
-    if (mainLoop) clearInterval(mainLoop);
-    
-    const btn = document.querySelector('.play-btn');
-    btn.innerText = "⏸ ОСТАНОВИТЬ";
-    btn.onclick = stopEngine;
+    let step = 0;
+    engine = setInterval(() => {
+        const t = GY_SAMPLES.ctx.currentTime;
+        
+        // Марковский ритм-блок
+        if (step % 2 === 0) GY_SAMPLES.play('kick', t, 0.8);
+        if (step % 4 === 2) GY_SAMPLES.play('snare', t, 0.4);
+        
+        // Случайные вставки баса и саксофона (Марков v3 внутри)
+        if (Math.random() > 0.6) GY_SAMPLES.play('bass', t, 0.6);
+        if (Math.random() > 0.8) GY_SAMPLES.play('sax', t, 0.3);
 
-    mainLoop = setInterval(() => {
-        const genre = GY_MUSIC.playNext();
-        document.getElementById('info').innerText = `Current Genre: ${genre}`;
-        visualize(genre);
-    }, 600); // Темп 100 BPM
+        step++;
+    }, 400); // Темп
+    
+    document.getElementById('startBtn').innerText = "🔊 ИГРАЕТ LIVE";
 }
-
-function stopEngine() {
-    clearInterval(mainLoop);
-    mainLoop = null;
-    const btn = document.querySelector('.play-btn');
-    btn.innerText = "🔥 ЗАПУСТИТЬ КЛУБ";
-    btn.onclick = startEngine;
-    document.getElementById('info').innerText = "System: Paused";
-}
-
-function visualize(genre) {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    
-    const color = genre === 'JAZZ' ? 'rgba(255, 215, 0, 0.3)' : 'rgba(255, 50, 0, 0.3)';
-    ctx.fillStyle = color;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    setTimeout(() => {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }, 150);
-}
-
-// Ресайз окна
-window.onresize = () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-};
 </script>
 </body>
 </html>
