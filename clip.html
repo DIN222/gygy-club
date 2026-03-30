@@ -2,138 +2,62 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | JAZZ DUET v33.5.55 🔒</title>
+    <title>GY-GY | CLIP GENERATOR</title>
+    <script src="music_core.js"></script>
     <style>
-        :root { --gold: #ffd700; --bg: #000; }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Courier New', monospace; overflow: hidden; display: flex; flex-direction: column; }
+        :root { --gold: #ffd700; }
+        body { background: #000; color: var(--gold); font-family: 'Courier New', monospace; margin: 0; overflow: hidden; display: flex; flex-direction: column; height: 100vh; }
         
-        header { height: 60px; display: flex; align-items: center; border-bottom: 1px solid var(--gold); background: #000; padding: 0 15px; z-index: 1000; }
-        .logo-gy { font-size: 1.2rem; font-weight: 900; letter-spacing: 4px; flex-grow: 1; text-align: center; color: var(--gold); }
-        .nav-btn { width: 40px; height: 40px; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--gold); text-decoration: none; font-weight: bold; }
+        #display { flex-grow: 1; display: flex; align-items: center; justify-content: center; position: relative; }
+        #text-layer { z-index: 10; font-size: 2.5rem; text-align: center; padding: 20px; text-shadow: 0 0 20px var(--gold); }
+        
+        /* Визуализация пульсации */
+        #visualizer { position: absolute; width: 100%; height: 100%; background: radial-gradient(circle, #1a1a00 0%, #000 100%); z-index: 1; }
 
-        #stage { flex-grow: 1; position: relative; background: #000; overflow: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
-
-        .overlay { position: relative; z-index: 10; width: 85%; transition: all 0.5s ease; }
-        .v-text { 
-            width: 100%; min-height: 180px; background: transparent; border: none; 
-            color: #fff; font-size: 2.2rem; font-weight: 100; text-align: center; 
-            outline: none; resize: none; font-family: 'Times New Roman', serif; font-style: italic;
-            text-shadow: 0 0 15px rgba(255,215,0,0.4); pointer-events: auto;
-        }
-
-        footer { padding: 20px; background: #000; border-top: 1px solid #1a1a1a; z-index: 100; }
-        .run-btn { 
-            width: 100%; height: 65px; border: 2px solid var(--gold); 
-            background: #000; color: var(--gold); font-weight: 900; 
-            cursor: pointer; text-transform: uppercase; letter-spacing: 5px;
-            box-shadow: 0 0 20px rgba(255,215,0,0.1);
-        }
+        footer { height: 100px; border-top: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; gap: 20px; }
+        .btn { padding: 15px 30px; border: 2px solid var(--gold); background: transparent; color: var(--gold); cursor: pointer; font-weight: 900; letter-spacing: 2px; }
+        .btn:hover { background: var(--gold); color: #000; }
     </style>
 </head>
 <body>
 
-<header>
-    <div class="nav-btn" onclick="location.href='verses.html'">❮</div>
-    <div class="logo-gy">GY-GY 😂</div>
-    <div class="nav-btn" onclick="location.href='box_page.html'">❯</div>
-</header>
-
-<main id="stage">
-    <canvas id="jazzCanvas"></canvas>
-    <div class="overlay">
-        <textarea id="clipText" class="v-text" placeholder="Твоя джазовая история..."></textarea>
-    </div>
+<main id="display">
+    <div id="visualizer"></div>
+    <div id="text-layer">ЖДУ ТЕКСТ ИЗ ВЕРСИЙ...</div>
 </main>
 
 <footer>
-    <button class="run-btn" id="genBtn" onclick="toggleJazzShow()">🎷 ВКЛЮЧИТЬ МАЭСТРО</button>
+    <button class="btn" onclick="startShow()">🎸 ЗАПУСТИТЬ РОК</button>
+    <button class="btn" onclick="location.href='verses.html'">❮ К ТЕКСТАМ</button>
 </footer>
 
 <script>
-    let audioCtx, isPlaying = false, beat = 0;
-    const canvas = document.getElementById('jazzCanvas');
-    const ctx = canvas.getContext('2d');
+    // 1. Пытаемся достать текст, который гость выбрал в verses.html
+    const savedText = localStorage.getItem('selectedVerse') || "В Клубе GY-GY тишина... Пока что.";
+    document.getElementById('text-layer').innerText = savedText;
 
-    const blueNotes = [233.08, 261.63, 277.18, 311.13, 349.23, 392.00]; // Bb blues scale
-
-    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-    window.onresize = resize; resize();
-
-    function playPiano(freq, t) {
-        const o = audioCtx.createOscillator(), g = audioCtx.createGain();
-        o.type = 'triangle'; o.frequency.setValueAtTime(freq / 2, t);
-        g.gain.setValueAtTime(0.15, t); g.gain.exponentialRampToValueAtTime(0.001, t + 2);
-        o.connect(g); g.connect(audioCtx.destination);
-        o.start(t); o.stop(t + 2);
+    function startShow() {
+        // Инициализируем наш музыкальный движок
+        GY_MUSIC.init();
+        
+        // Запускаем цикл (ритм)
+        let beat = 0;
+        setInterval(() => {
+            // Каждые 4 удара - мощный аккорд
+            if (beat % 4 === 0) {
+                GY_MUSIC.playRock("1054321"); // Сюда потом вставим реальный ID гостя
+                animateBackground();
+            }
+            beat++;
+        }, 500);
+        
+        document.querySelector('.btn').innerText = "🤘 ИГРАЕТ РОК";
     }
 
-    function playSax(freq, t) {
-        const o = audioCtx.createOscillator(), g = audioCtx.createGain();
-        const lfo = audioCtx.createOscillator(), lfoGain = audioCtx.createGain();
-        
-        o.type = 'sawtooth'; o.frequency.setValueAtTime(freq, t);
-        // Вибрато (LFO)
-        lfo.frequency.setValueAtTime(5, t); lfoGain.gain.setValueAtTime(freq * 0.02, t);
-        lfo.connect(lfoGain); lfoGain.connect(o.frequency);
-        
-        g.gain.setValueAtTime(0, t);
-        g.gain.linearRampToValueAtTime(0.1, t + 0.1);
-        g.gain.exponentialRampToValueAtTime(0.001, t + 1.2);
-        
-        o.connect(g); g.connect(audioCtx.destination);
-        lfo.start(t); o.start(t); 
-        lfo.stop(t + 1.2); o.stop(t + 1.2);
-    }
-
-    function drawGoldSmoke() {
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.08)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-        for(let i=0; i<3; i++) {
-            ctx.beginPath();
-            const x = Math.random() * canvas.width;
-            const y = Math.random() * canvas.height;
-            const rad = Math.random() * 150 + 50;
-            const grad = ctx.createRadialGradient(x, y, 0, x, y, rad);
-            grad.addColorStop(0, 'rgba(212, 175, 55, 0.15)');
-            grad.addColorStop(1, 'transparent');
-            ctx.fillStyle = grad;
-            ctx.arc(x, y, rad, 0, Math.PI * 2); ctx.fill();
-        }
-    }
-
-    function engine() {
-        if(!isPlaying) return;
-        const t = audioCtx.currentTime;
-        
-        // Piano Chords on the 1
-        if(beat % 4 === 0) {
-            playPiano(blueNotes[0], t);
-            playPiano(blueNotes[2], t);
-            playPiano(blueNotes[4], t);
-        }
-
-        // Sax Improvisation (Swing Feel)
-        if(Math.random() > 0.3) {
-            const note = blueNotes[Math.floor(Math.random() * blueNotes.length)];
-            playSax(note, t + (Math.random() * 0.1));
-            drawGoldSmoke();
-        }
-
-        beat++;
-        setTimeout(engine, 600 + (Math.random() * 100)); // Swing rhythm
-    }
-
-    function toggleJazzShow() {
-        if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        if(isPlaying) {
-            isPlaying = false;
-            document.getElementById('genBtn').innerText = "🎷 ВКЛЮЧИТЬ МАЭСТРО";
-        } else {
-            isPlaying = true;
-            document.getElementById('genBtn').innerText = "⏸ ТИШЕ, ИДЕТ ЗАПИСЬ 😂";
-            engine();
-        }
+    function animateBackground() {
+        const v = document.getElementById('visualizer');
+        v.style.backgroundColor = "#332a00";
+        setTimeout(() => { v.style.backgroundColor = "#000"; }, 100);
     }
 </script>
 </body>
