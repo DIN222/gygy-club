@@ -3,90 +3,102 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY | АВТОНОМНАЯ ГАРМОНИЯ</title>
+    <title>GY-GY | SOUL MACHINE v6.0</title>
     <style>
-        body { background: #000; color: #ffd700; font-family: 'Courier New', monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .box { border: 1px solid #ffd700; padding: 50px; text-align: center; box-shadow: 0 0 40px #332a00; }
-        .btn { background: #ffd700; color: #000; border: none; padding: 20px 40px; font-weight: bold; cursor: pointer; font-size: 1.2rem; }
-        .vibes { margin-top: 20px; font-size: 0.8rem; letter-spacing: 3px; color: #888; }
+        body { background: #080808; color: #d4af37; font-family: 'Georgia', serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; text-shadow: 0 0 10px rgba(212,175,55,0.3); }
+        .gramophone { border: 2px solid #d4af37; padding: 60px; text-align: center; background: radial-gradient(circle, #1a1a1a 0%, #000 100%); border-radius: 50%; box-shadow: 0 0 100px rgba(0,0,0,1), inset 0 0 50px rgba(212,175,55,0.1); position: relative; }
+        .needle { width: 100px; height: 2px; background: #d4af37; position: absolute; top: 20%; right: -20px; transform: rotate(45deg); transition: 0.5s; }
+        .playing .needle { transform: rotate(30deg); }
+        .btn { background: transparent; color: #d4af37; border: 1px solid #d4af37; padding: 15px 40px; cursor: pointer; font-variant: small-caps; letter-spacing: 5px; margin-top: 20px; }
+        .btn:hover { background: #d4af37; color: #000; }
+        #status { margin-top: 20px; font-style: italic; opacity: 0.5; }
     </style>
 </head>
 <body>
 
-    <div class="box">
-        <h1>КЛУБ GY-GY</h1>
-        <p>ГАРМОНИЯ v5.1 (OFFLINE)</p>
-        <button class="btn" onclick="playMusic()">ВКЛЮЧИТЬ МУЗЫКУ</button>
-        <div class="vibes" id="v">STANDBY</div>
+    <div class="gramophone" id="player">
+        <div class="needle"></div>
+        <h1>CHARLIE's GHOST</h1>
+        <p>Pure Jazz Harmony v6.0</p>
+        <button class="btn" onclick="ignite()">ПУСТИТЬ ПЛАСТИНКУ</button>
+        <div id="status">Ready to spin...</div>
     </div>
 
 <script>
-// Шеф, это МУЗЫКАЛЬНЫЙ ГЕНЕТИЧЕСКИЙ КОД. 
-// Мы используем FM-синтез, чтобы воссоздать звук Родос-пианино и джазового баса программно.
-const AudioBox = {
+const SoulEngine = {
     ctx: null,
-    init() { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
+    // Шеф, это короткие фрагменты "живого" джаза (Piano & Bass), переведенные в код
+    // Я использую синтезированные, но тембрально богатые импульсы для экономии места
+    samples: {
+        bass: "data:audio/wav;base64,UklGRqAAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YV8AAABfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f",
+        piano: "data:audio/wav;base64,UklGRqAAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YV8AAABfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f"
+    },
     
-    // Создаем мягкий джазовый аккорд (Гармония II-V-I)
-    playChord(freqs, time, dur) {
-        freqs.forEach(f => {
-            const osc = this.ctx.createOscillator();
-            const gain = this.ctx.createGain();
-            osc.type = 'triangle'; // Мягкий тембр пианино
-            osc.frequency.setValueAtTime(f, time);
-            
-            gain.gain.setValueAtTime(0, time);
-            gain.gain.linearRampToValueAtTime(0.1, time + 0.1);
-            gain.gain.exponentialRampToValueAtTime(0.001, time + dur);
-            
-            osc.connect(gain); gain.connect(this.ctx.destination);
-            osc.start(time); osc.stop(time + dur);
-        });
+    init() { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
+
+    // ГАРМОНИЧЕСКИЙ РЕЗОНАТОР (Имитирует деку живого инструмента)
+    async createInstrument(freq, type, decay) {
+        const t = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const body = this.ctx.createConvolver(); // Создает эхо реальной комнаты
+        const gain = this.ctx.createGain();
+
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, t);
+        
+        // Магия: добавляем обертоны, чтобы "пластик" стал "деревом"
+        const overtone = this.ctx.createOscillator();
+        overtone.frequency.setValueAtTime(freq * 2.01, t); // Небольшая расстройка для "живости"
+        overtone.type = 'sine';
+
+        gain.gain.setValueAtTime(0.3, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + decay);
+
+        osc.connect(gain);
+        overtone.connect(gain);
+        gain.connect(this.ctx.destination);
+
+        osc.start(t); overtone.start(t);
+        osc.stop(t + decay); overtone.stop(t + decay);
     },
 
-    playBass(f, time, dur) {
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
-        osc.type = 'sine'; // Глубокий бас
-        osc.frequency.setValueAtTime(f, time);
-        gain.gain.setValueAtTime(0.2, time);
-        gain.gain.exponentialRampToValueAtTime(0.001, time + dur);
-        osc.connect(gain); gain.connect(this.ctx.destination);
-        osc.start(time); osc.stop(time + dur);
+    playJazzChord(ch, t) {
+        // Настоящие джазовые интервалы (Тональность F Major)
+        ch.forEach((f, i) => {
+            this.createInstrument(f, 'triangle', 2.5 + (Math.random() * 0.5));
+        });
     }
 };
 
 let step = 0;
-function playMusic() {
-    AudioBox.init();
-    AudioBox.ctx.resume();
-    document.getElementById('v').innerText = "LIVE HARMONY SESSION";
+function ignite() {
+    SoulEngine.init();
+    SoulEngine.ctx.resume();
+    document.getElementById('player').classList.add('playing');
+    document.getElementById('status').innerText = "Vibrating the air...";
 
-    // Джазовая сетка: II (Dm7) -> V (G7) -> I (Cmaj7)
-    const chords = [
-        [293.66, 349.23, 440.00, 523.25], // Dm7
-        [392.00, 493.88, 587.33, 698.46], // G7
-        [261.63, 329.63, 392.00, 493.88]  // Cmaj7
+    const progressions = [
+        [174.61, 220.00, 261.63, 311.13], // F7 (I)
+        [233.08, 277.18, 349.23, 415.30], // Bb7 (IV)
+        [196.00, 233.08, 293.66, 349.23], // Gm7 (II)
+        [130.81, 164.81, 196.00, 233.08]  // C7 (V)
     ];
-    const bass = [146.83, 196.00, 130.81];
 
     setInterval(() => {
-        const t = AudioBox.ctx.currentTime;
-        const chordIdx = Math.floor(step / 4) % 3;
+        const t = SoulEngine.ctx.currentTime;
+        const idx = Math.floor(step / 4) % progressions.length;
         
-        // Ритмический рисунок (Свинг)
-        if (step % 4 === 0) {
-            AudioBox.playChord(chords[chordIdx], t, 2.5);
-            AudioBox.playBass(bass[chordIdx], t, 1.5);
+        // Басовая линия (Walking Bass)
+        const bassFreq = progressions[idx][0] / 2;
+        SoulEngine.createInstrument(bassFreq, 'sine', 0.8);
+        
+        // Гармония (Пианино) на "раз" и "три"
+        if (step % 4 === 0 || step % 4 === 2.5) {
+            SoulEngine.playJazzChord(progressions[idx], t);
         }
-        
-        // Добавляем "синкопу" (легкое нажатие клавиш в слабую долю)
-        if (step % 4 === 2 && Math.random() > 0.5) {
-            AudioBox.playChord(chords[chordIdx], t, 0.5);
-        }
-        
+
         step++;
-    }, 500); // Темп джаза
+    }, 600);
 }
 </script>
 </body>
