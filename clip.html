@@ -3,60 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | INTERNAL v33.5.46 🔒</title>
+    <title>GY-GY | MEGA-MIX v33.5.48 🔒</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; overflow: hidden; display: flex; flex-direction: column; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Courier New', monospace; overflow: hidden; display: flex; flex-direction: column; }
         
-        /* HEADER 🔒 */
         header { height: 65px; display: flex; align-items: center; border-bottom: 1px solid var(--gold); background: #000; padding: 0 10px; gap: 10px; z-index: 1000; flex-shrink: 0; }
-        .nav-btn { width: 40px; height: 40px; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--gold); text-decoration: none; font-size: 1.2rem; font-weight: bold; }
+        .nav-btn { width: 40px; height: 40px; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--gold); text-decoration: none; font-size: 1.2rem; }
         .logo-gy { font-size: 1rem; font-weight: 900; letter-spacing: 2px; padding: 0 10px; border-right: 1px solid #222; }
 
         .scroll-tools { display: flex; align-items: center; gap: 10px; overflow-x: auto; flex-grow: 1; scrollbar-width: none; }
         .scroll-tools::-webkit-scrollbar { display: none; }
         .t-btn { height: 40px; padding: 0 15px; border: 1px solid var(--gold); background: #000; color: var(--gold); font-size: 0.65rem; text-transform: uppercase; cursor: pointer; white-space: nowrap; }
 
-        /* ВНУТРЕННИЙ ВИЗУАЛЬНЫЙ ДВИЖОК 🔒 */
-        #stage { 
-            flex-grow: 1; position: relative; background: #000; overflow: hidden; 
-            display: flex; flex-direction: column; justify-content: center; align-items: center; 
-        }
-
-        /* Генерируемый фон (вместо видео-файла) */
-        #visualEngine {
-            position: absolute; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, #1a1a00 0%, #000 70%);
-            opacity: 0; transition: opacity 1.5s ease; z-index: 1;
-        }
-
-        /* Эффект частиц/шума */
-        .stars {
-            position: absolute; width: 2px; height: 2px; background: var(--gold);
-            border-radius: 50%; opacity: 0.5; animation: fly 3s linear infinite;
-        }
-        @keyframes fly {
-            from { transform: translateZ(0) scale(1); opacity: 1; }
-            to { transform: translateZ(1000px) scale(5); opacity: 0; }
-        }
+        #stage { flex-grow: 1; position: relative; background: #000; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+        .particle { position: absolute; background: var(--gold); border-radius: 50%; pointer-events: none; }
 
         .overlay { position: relative; z-index: 10; width: 90%; text-align: center; }
-        .v-text { 
-            width: 100%; min-height: 250px; background: transparent; border: none; 
-            color: #fff; font-size: 1.8rem; text-align: center; outline: none; 
-            resize: none; font-family: inherit; text-shadow: 0 0 15px #000;
-        }
+        .v-text { width: 100%; min-height: 200px; background: transparent; border: none; color: #fff; font-size: 1.8rem; text-align: center; outline: none; resize: none; font-family: inherit; text-shadow: 0 0 20px #000; }
 
-        footer { padding: 15px; background: #000; z-index: 100; border-top: 1px solid #111; }
-        .run-btn { 
-            width: 100%; height: 60px; border: 1px solid var(--gold); 
-            background: #000; color: var(--gold); font-weight: 900; 
-            cursor: pointer; text-transform: uppercase; letter-spacing: 3px; 
-        }
+        footer { padding: 15px; background: #000; border-top: 1px solid #111; }
+        .run-btn { width: 100%; height: 60px; border: 1px solid var(--gold); background: #000; color: var(--gold); font-weight: 900; cursor: pointer; text-transform: uppercase; letter-spacing: 3px; }
 
-        .pop-menu { display: none; position: absolute; background: #000; border: 1px solid var(--gold); z-index: 10000; width: 220px; top: 65px; left: 100px; }
-        .m-item { padding: 15px; border-bottom: 1px solid #111; cursor: pointer; font-size: 0.8rem; color: var(--gold); }
+        /* МЕНЮ НА 7 СТИЛЕЙ 🔒 */
+        .pop-menu { display: none; position: absolute; background: #000; border: 1px solid var(--gold); z-index: 10000; width: 220px; top: 65px; left: 80px; box-shadow: 0 10px 50px rgba(0,0,0,1); }
+        .m-item { padding: 12px 15px; border-bottom: 1px solid #111; cursor: pointer; font-size: 0.75rem; color: var(--gold); transition: 0.2s; }
+        .m-item:hover { background: #111; padding-left: 20px; }
     </style>
 </head>
 <body>
@@ -68,78 +41,81 @@
         <button class="t-btn" onclick="toggleM('musicMenu', event)">🎹 <span id="curMusic">LO-FI</span></button>
         <button class="t-btn" onclick="saveToBox()">📦 В BOX</button>
         <button class="t-btn" onclick="location.href='music_box.html'">🎵 ФОНО</button>
-        <button class="t-btn" onclick="downloadAsFile()">📥 ФАЙЛ</button>
     </div>
     <div class="nav-btn" onclick="location.href='box_page.html'">❯</div>
 </header>
 
 <main id="stage">
-    <div id="visualEngine"></div>
-    
-    <div class="overlay">
-        <textarea id="clipText" class="v-text" placeholder="Текст хита Клуба..."></textarea>
-    </div>
+    <div class="overlay"><textarea id="clipText" class="v-text" placeholder="Текст для шоу..."></textarea></div>
 </main>
 
 <footer>
-    <button class="run-btn" id="genBtn" onclick="activateEngine()">🔥 ЗАПУСТИТЬ КЛИП</button>
+    <button class="run-btn" id="genBtn" onclick="toggleShow()">🔥 ЗАПУСТИТЬ КЛИП</button>
 </footer>
 
 <div id="musicMenu" class="pop-menu">
-    <div class="m-item" onclick="setMode('LO-FI')">🎹 LO-FI CHILL</div>
-    <div class="m-item" onclick="setMode('ROCK')">🎸 HARD ROCK</div>
-    <div class="m-item" onclick="setMode('RAP')">🎤 STREET RAP</div>
-    <div class="m-item" onclick="setMode('TECHNO')">⚡ TECHNO BEAT</div>
+    <div class="m-item" onclick="setG('LO-FI', 80, 150)">🎹 LO-FI (Slow & Deep)</div>
+    <div class="m-item" onclick="setG('BOOM-BAP', 92, 120)">🎤 BOOM-BAP (Classic)</div>
+    <div class="m-item" onclick="setG('TECHNO', 128, 60)">⚡ TECHNO (Berlin Night)</div>
+    <div class="m-item" onclick="setG('HARD-ROCK', 110, 250)">🎸 HARD-ROCK (Kick-Drum)</div>
+    <div class="m-item" onclick="setG('TRAP', 140, 180)">👟 TRAP (Fast-Kick)</div>
+    <div class="m-item" onclick="setG('DUBSTEP', 70, 40)">🔊 DUBSTEP (Sub-Bass)</div>
+    <div class="m-item" onclick="setG('FUNK', 105, 90)">🕺 FUNK (Groove-Beat)</div>
 </div>
 
 <script>
-    window.onload = () => {
-        const last = localStorage.getItem('last_verse');
-        if (last) document.getElementById('clipText').value = last;
-    };
+    let audioCtx = null, isPlaying = false, bpm = 80, kickFreq = 150, timer = null;
 
-    function toggleM(id, e) {
-        if (e) e.stopPropagation();
-        const menu = document.getElementById(id);
-        menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
-    }
-
-    function setMode(name) {
+    function toggleM(id, e) { if (e) e.stopPropagation(); const m = document.getElementById(id); m.style.display = (m.style.display==='block')?'none':'block'; }
+    
+    function setG(name, newBpm, freq) {
         document.getElementById('curMusic').innerText = name;
+        bpm = newBpm; kickFreq = freq;
         document.getElementById('musicMenu').style.display = 'none';
-        activateEngine();
+        if(isPlaying) { stopAudio(); startAudio(); }
     }
 
-    function activateEngine() {
-        const engine = document.getElementById('visualEngine');
-        const btn = document.getElementById('genBtn');
-        
-        btn.innerText = "🌀 СИНХРОНИЗАЦИЯ...";
-        engine.innerHTML = ''; // Очистка
-        engine.style.opacity = "1";
-
-        // Генерация золотых частиц в реальном времени
-        for (let i = 0; i < 50; i++) {
-            const star = document.createElement('div');
-            star.className = 'stars';
-            star.style.left = Math.random() * 100 + '%';
-            star.style.top = Math.random() * 100 + '%';
-            star.style.animationDelay = Math.random() * 2 + 's';
-            engine.appendChild(star);
-        }
-
-        setTimeout(() => {
-            btn.innerText = "КЛИП В ЭФИРЕ 😂";
-        }, 1000);
-
-        setTimeout(() => {
-            btn.innerText = "🔥 ЗАПУСТИТЬ КЛИП";
-        }, 4000);
+    function createKick(t) {
+        const osc = audioCtx.createOscillator(), g = audioCtx.createGain();
+        osc.connect(g); g.connect(audioCtx.destination);
+        osc.frequency.setValueAtTime(kickFreq, t);
+        osc.frequency.exponentialRampToValueAtTime(0.01, t + 0.4);
+        g.gain.setValueAtTime(1, t); g.gain.exponentialRampToValueAtTime(0.01, t + 0.4);
+        osc.start(t); osc.stop(t + 0.4);
     }
 
-    function saveToBox() { alert("Схоронил в заначку! 🔒"); }
-    function downloadAsFile() { /* Скачивание */ }
-    window.onclick = () => document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
+    function spawn() {
+        const s = document.getElementById('stage'), p = document.createElement('div');
+        p.className = 'particle'; const sz = Math.random()*8+2;
+        p.style.width = p.style.height = sz+'px'; p.style.left = Math.random()*100+'%'; p.style.top = Math.random()*100+'%';
+        s.appendChild(p);
+        p.animate([{transform:'scale(0)', opacity:1}, {transform:'scale(15)', opacity:0}], {duration:800, fill:'forwards'});
+        setTimeout(()=>p.remove(), 800);
+    }
+
+    function scheduler() {
+        if(!isPlaying) return;
+        createKick(audioCtx.currentTime); spawn();
+        setTimeout(scheduler, (60/bpm)*1000);
+    }
+
+    function toggleShow() {
+        if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if(isPlaying) { stopAudio(); } else { startAudio(); }
+    }
+
+    function startAudio() {
+        isPlaying = true; document.getElementById('genBtn').innerText = "⏸ ОСТАНОВИТЬ 😂";
+        if(audioCtx.state === 'suspended') audioCtx.resume();
+        scheduler();
+    }
+
+    function stopAudio() {
+        isPlaying = false; document.getElementById('genBtn').innerText = "🔥 ЗАПУСТИТЬ КЛИП";
+    }
+
+    function saveToBox() { alert("В заначке! 🔒"); }
+    window.onclick = () => document.querySelectorAll('.pop-menu').forEach(m=>m.style.display='none');
 </script>
 </body>
 </html>
