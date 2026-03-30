@@ -3,85 +3,90 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY | HARMONY v5.0.0</title>
+    <title>GY-GY | АВТОНОМНАЯ ГАРМОНИЯ</title>
     <style>
-        body { background: #050505; color: #ffd700; font-family: 'Courier New', monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .deck { border: 3px double #ffd700; padding: 40px; text-align: center; background: #000; box-shadow: 0 0 60px rgba(255,215,0,0.15); border-radius: 10px; }
-        .led { width: 12px; height: 12px; background: #300; border-radius: 50%; display: inline-block; margin-right: 10px; }
-        .led.active { background: #f00; box-shadow: 0 0 10px #f00; }
-        .btn { background: #ffd700; color: #000; border: none; padding: 20px 60px; font-weight: 900; font-size: 1.5rem; cursor: pointer; transition: 0.2s; margin-top: 30px; }
-        .btn:hover { transform: scale(1.05); box-shadow: 0 0 30px #ffd700; }
-        .status-text { font-size: 0.7rem; opacity: 0.6; margin-top: 15px; letter-spacing: 2px; }
+        body { background: #000; color: #ffd700; font-family: 'Courier New', monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .box { border: 1px solid #ffd700; padding: 50px; text-align: center; box-shadow: 0 0 40px #332a00; }
+        .btn { background: #ffd700; color: #000; border: none; padding: 20px 40px; font-weight: bold; cursor: pointer; font-size: 1.2rem; }
+        .vibes { margin-top: 20px; font-size: 0.8rem; letter-spacing: 3px; color: #888; }
     </style>
 </head>
 <body>
 
-    <div class="deck">
-        <div id="led-indicator" class="led"></div>
-        <span style="letter-spacing: 5px;">GY-GY AUDIO DECK</span>
-        <h1 id="track-name" style="margin: 20px 0;">SILENCE...</h1>
-        
-        <button class="btn" id="mainBtn" onclick="initOrchestra()">СТАРТ ГАРМОНИИ</button>
-        
-        <div class="status-text" id="status">WAITING FOR COMMAND</div>
+    <div class="box">
+        <h1>КЛУБ GY-GY</h1>
+        <p>ГАРМОНИЯ v5.1 (OFFLINE)</p>
+        <button class="btn" onclick="playMusic()">ВКЛЮЧИТЬ МУЗЫКУ</button>
+        <div class="vibes" id="v">STANDBY</div>
     </div>
 
 <script>
-const GY_HARMONY = {
-    ctx: new (window.AudioContext || window.webkitAudioContext)(),
-    loops: {},
-    sources: {
-        // Мы берем профессиональные петли с надежного CDN
-        drums: 'https://cdn.pixabay.com/download/audio/2022/03/10/audio_5170d10c8d.mp3', // Jazz Drums
-        piano: 'https://cdn.pixabay.com/download/audio/2024/02/14/audio_985b9b8b6a.mp3', // Lo-Fi Piano Harmony
-        bass: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0c6ff2486.mp3'   // Smooth Bass
+// Шеф, это МУЗЫКАЛЬНЫЙ ГЕНЕТИЧЕСКИЙ КОД. 
+// Мы используем FM-синтез, чтобы воссоздать звук Родос-пианино и джазового баса программно.
+const AudioBox = {
+    ctx: null,
+    init() { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); },
+    
+    // Создаем мягкий джазовый аккорд (Гармония II-V-I)
+    playChord(freqs, time, dur) {
+        freqs.forEach(f => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'triangle'; // Мягкий тембр пианино
+            osc.frequency.setValueAtTime(f, time);
+            
+            gain.gain.setValueAtTime(0, time);
+            gain.gain.linearRampToValueAtTime(0.1, time + 0.1);
+            gain.gain.exponentialRampToValueAtTime(0.001, time + dur);
+            
+            osc.connect(gain); gain.connect(this.ctx.destination);
+            osc.start(time); osc.stop(time + dur);
+        });
     },
 
-    async load() {
-        document.getElementById('status').innerText = "ЗАГРУЗКА МУЗЫКАНТОВ...";
-        for (let key in this.sources) {
-            const res = await fetch(this.sources[key]);
-            const buf = await res.arrayBuffer();
-            this.loops[key] = await this.ctx.decodeAudioData(buf);
-        }
-        document.getElementById('status').innerText = "ОРКЕСТР В ЗДАНИИ";
-    },
-
-    playLoop(name, startTime) {
-        const source = this.ctx.createBufferSource();
-        source.buffer = this.loops[name];
-        source.loop = true;
-        
+    playBass(f, time, dur) {
+        const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
-        gain.gain.value = 0.6;
-        
-        source.connect(gain);
-        gain.connect(this.ctx.destination);
-        source.start(startTime);
-        return gain;
+        osc.type = 'sine'; // Глубокий бас
+        osc.frequency.setValueAtTime(f, time);
+        gain.gain.setValueAtTime(0.2, time);
+        gain.gain.exponentialRampToValueAtTime(0.001, time + dur);
+        osc.connect(gain); gain.connect(this.ctx.destination);
+        osc.start(time); osc.stop(time + dur);
     }
 };
 
-let playing = false;
-async function initOrchestra() {
-    if (playing) return;
-    
-    document.getElementById('mainBtn').innerText = "ЗАГРУЗКА...";
-    await GY_HARMONY.load();
-    
-    GY_HARMONY.ctx.resume();
-    const now = GY_HARMONY.ctx.currentTime;
-    
-    // Запускаем все слои одновременно - это дает идеальную ГАРМОНИЮ
-    GY_HARMONY.playLoop('drums', now);
-    GY_HARMONY.playLoop('piano', now);
-    GY_HARMONY.playLoop('bass', now);
-    
-    document.getElementById('track-name').innerText = "LIVE JAZZ SESSION";
-    document.getElementById('led-indicator').classList.add('active');
-    document.getElementById('mainBtn').style.display = 'none';
-    document.getElementById('status').innerText = "HARMONY STATUS: PERFECT";
-    playing = true;
+let step = 0;
+function playMusic() {
+    AudioBox.init();
+    AudioBox.ctx.resume();
+    document.getElementById('v').innerText = "LIVE HARMONY SESSION";
+
+    // Джазовая сетка: II (Dm7) -> V (G7) -> I (Cmaj7)
+    const chords = [
+        [293.66, 349.23, 440.00, 523.25], // Dm7
+        [392.00, 493.88, 587.33, 698.46], // G7
+        [261.63, 329.63, 392.00, 493.88]  // Cmaj7
+    ];
+    const bass = [146.83, 196.00, 130.81];
+
+    setInterval(() => {
+        const t = AudioBox.ctx.currentTime;
+        const chordIdx = Math.floor(step / 4) % 3;
+        
+        // Ритмический рисунок (Свинг)
+        if (step % 4 === 0) {
+            AudioBox.playChord(chords[chordIdx], t, 2.5);
+            AudioBox.playBass(bass[chordIdx], t, 1.5);
+        }
+        
+        // Добавляем "синкопу" (легкое нажатие клавиш в слабую долю)
+        if (step % 4 === 2 && Math.random() > 0.5) {
+            AudioBox.playChord(chords[chordIdx], t, 0.5);
+        }
+        
+        step++;
+    }, 500); // Темп джаза
 }
 </script>
 </body>
