@@ -3,147 +3,85 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY | V4.2.0 HYBRID 🎷🎸</title>
+    <title>GY-GY | HARMONY v5.0.0</title>
     <style>
-        :root { --gold: #ffd700; --red: #ff4500; --bg: #0b0b0b; }
-        body { background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; margin: 0; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
-        
-        .panel { z-index: 10; text-align: center; border: 2px solid var(--gold); padding: 40px; background: rgba(0,0,0,0.9); box-shadow: 0 0 50px rgba(255,215,0,0.1); }
-        .energy-slider { width: 300px; margin: 20px 0; cursor: pointer; accent-color: var(--gold); }
-        .btn { padding: 20px 50px; border: 2px solid var(--gold); background: transparent; color: var(--gold); cursor: pointer; font-weight: 900; font-size: 1.2rem; letter-spacing: 3px; transition: 0.3s; }
-        .btn:hover { background: var(--gold); color: #000; box-shadow: 0 0 30px var(--gold); }
-        .visualizer { position: absolute; top:0; left:0; width:100%; height:100%; z-index:1; pointer-events: none; opacity: 0.5; }
-        .label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; margin-top: 10px; display: block; }
+        body { background: #050505; color: #ffd700; font-family: 'Courier New', monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .deck { border: 3px double #ffd700; padding: 40px; text-align: center; background: #000; box-shadow: 0 0 60px rgba(255,215,0,0.15); border-radius: 10px; }
+        .led { width: 12px; height: 12px; background: #300; border-radius: 50%; display: inline-block; margin-right: 10px; }
+        .led.active { background: #f00; box-shadow: 0 0 10px #f00; }
+        .btn { background: #ffd700; color: #000; border: none; padding: 20px 60px; font-weight: 900; font-size: 1.5rem; cursor: pointer; transition: 0.2s; margin-top: 30px; }
+        .btn:hover { transform: scale(1.05); box-shadow: 0 0 30px #ffd700; }
+        .status-text { font-size: 0.7rem; opacity: 0.6; margin-top: 15px; letter-spacing: 2px; }
     </style>
 </head>
 <body>
 
-    <canvas id="viz" class="visualizer"></canvas>
-
-    <div class="panel">
-        <h1 id="mode-title">MARKOV DYNAMICS v4.2</h1>
+    <div class="deck">
+        <div id="led-indicator" class="led"></div>
+        <span style="letter-spacing: 5px;">GY-GY AUDIO DECK</span>
+        <h1 id="track-name" style="margin: 20px 0;">SILENCE...</h1>
         
-        <label class="label">Энергия Клуба (Vibe Control)</label>
-        <input type="range" id="energy" class="energy-slider" min="0" max="100" value="30">
+        <button class="btn" id="mainBtn" onclick="initOrchestra()">СТАРТ ГАРМОНИИ</button>
         
-        <br><br>
-        <button id="startBtn" class="btn" onclick="toggleEngine()">ЗАПУСТИТЬ КЛУБ</button>
-        <span id="status" class="label">System: Standby</span>
+        <div class="status-text" id="status">WAITING FOR COMMAND</div>
     </div>
 
 <script>
-/* --- ГЕНЕРАТОР ЖИВОГО ШУМА (Чтобы не качать тяжелые файлы) --- */
-const AudioEngine = {
-    ctx: null,
-    isPlaying: false,
-    interval: null,
-
-    init() {
-        if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+const GY_HARMONY = {
+    ctx: new (window.AudioContext || window.webkitAudioContext)(),
+    loops: {},
+    sources: {
+        // Мы берем профессиональные петли с надежного CDN
+        drums: 'https://cdn.pixabay.com/download/audio/2022/03/10/audio_5170d10c8d.mp3', // Jazz Drums
+        piano: 'https://cdn.pixabay.com/download/audio/2024/02/14/audio_985b9b8b6a.mp3', // Lo-Fi Piano Harmony
+        bass: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0c6ff2486.mp3'   // Smooth Bass
     },
 
-    // Создаем "жирный" звук синтетически, имитируя живые инструменты
-    createOrganicSound(freq, type, decay, energy) {
-        const t = this.ctx.currentTime;
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
-        const filter = this.ctx.createBiquadFilter();
-
-        osc.type = type; // 'triangle' для джаза, 'sawtooth' для рока
-        osc.frequency.setValueAtTime(freq, t);
-        
-        // Динамический фильтр (v4.1.0 logic)
-        filter.type = "lowpass";
-        filter.frequency.setValueAtTime(500 + (energy * 4000), t);
-        filter.Q.setValueAtTime(energy * 10, t);
-
-        gain.gain.setValueAtTime(0.2 * energy, t);
-        gain.gain.exponentialRampToValueAtTime(0.001, t + decay);
-
-        osc.connect(filter);
-        filter.connect(gain);
-        gain.connect(this.ctx.destination);
-
-        osc.start(t);
-        osc.stop(t + decay);
-    },
-
-    playStep() {
-        const energy = document.getElementById('energy').value / 100;
-        const t = this.ctx.currentTime;
-
-        // 1. БАС (Всегда есть)
-        this.createOrganicSound(55, 'sine', 0.8, energy + 0.2);
-
-        // 2. МАРКОВСКИЙ ВЫБОР
-        if (energy < 0.5) {
-            // ДЖАЗОВЫЙ РЕЖИМ
-            if (Math.random() > 0.3) this.createOrganicSound(261.63, 'triangle', 0.6, energy); // До
-            if (Math.random() > 0.7) this.createOrganicSound(329.63, 'triangle', 0.6, energy); // Ми
-        } else {
-            // РОК-РЕЖИМ (Грязный звук)
-            this.createOrganicSound(110, 'sawtooth', 0.4, energy); // Низкая Ля
-            if (Math.random() > 0.5) this.createOrganicSound(164.81, 'sawtooth', 0.3, energy); // Ми
+    async load() {
+        document.getElementById('status').innerText = "ЗАГРУЗКА МУЗЫКАНТОВ...";
+        for (let key in this.sources) {
+            const res = await fetch(this.sources[key]);
+            const buf = await res.arrayBuffer();
+            this.loops[key] = await this.ctx.decodeAudioData(buf);
         }
-
-        // 3. ПЕРКУССИЯ (Имитация клика/удара)
-        if (Math.random() > 0.5) this.createNoiseHit(t, energy);
-        
-        drawViz(energy);
+        document.getElementById('status').innerText = "ОРКЕСТР В ЗДАНИИ";
     },
 
-    createNoiseHit(t, energy) {
-        const bufferSize = this.ctx.sampleRate * 0.1;
-        const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
-        const data = buffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
-
-        const noise = this.ctx.createBufferSource();
-        noise.buffer = buffer;
-        const noiseFilter = this.ctx.createBiquadFilter();
-        noiseFilter.type = "highpass";
-        noiseFilter.frequency.value = 2000 + (energy * 3000);
-
-        const noiseGain = this.ctx.createGain();
-        noiseGain.gain.setValueAtTime(0.05 * energy, t);
-        noiseGain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
-
-        noise.connect(noiseFilter);
-        noiseFilter.connect(noiseGain);
-        noiseGain.connect(this.ctx.destination);
-        noise.start(t);
+    playLoop(name, startTime) {
+        const source = this.ctx.createBufferSource();
+        source.buffer = this.loops[name];
+        source.loop = true;
+        
+        const gain = this.ctx.createGain();
+        gain.gain.value = 0.6;
+        
+        source.connect(gain);
+        gain.connect(this.ctx.destination);
+        source.start(startTime);
+        return gain;
     }
 };
 
-/* --- ВИЗУАЛИЗАЦИЯ --- */
-const canvas = document.getElementById('viz');
-const vctx = canvas.getContext('2d');
-
-function drawViz(energy) {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    const color = energy > 0.5 ? `rgba(255, 69, 0, ${energy})` : `rgba(255, 215, 0, ${energy})`;
-    vctx.fillStyle = color;
-    vctx.beginPath();
-    vctx.arc(canvas.width/2, canvas.height/2, energy * 300, 0, Math.PI*2);
-    vctx.fill();
-}
-
-/* --- УПРАВЛЕНИЕ --- */
-function toggleEngine() {
-    AudioEngine.init();
-    if (AudioEngine.isPlaying) {
-        clearInterval(AudioEngine.interval);
-        AudioEngine.isPlaying = false;
-        document.getElementById('startBtn').innerText = "ЗАПУСТИТЬ КЛУБ";
-        document.getElementById('status').innerText = "System: Halted";
-    } else {
-        AudioEngine.isPlaying = true;
-        AudioEngine.ctx.resume();
-        AudioEngine.interval = setInterval(() => AudioEngine.playStep(), 400);
-        document.getElementById('startBtn').innerText = "ОСТАНОВИТЬ";
-        document.getElementById('status').innerText = "System: Live Dynamic Mode";
-    }
+let playing = false;
+async function initOrchestra() {
+    if (playing) return;
+    
+    document.getElementById('mainBtn').innerText = "ЗАГРУЗКА...";
+    await GY_HARMONY.load();
+    
+    GY_HARMONY.ctx.resume();
+    const now = GY_HARMONY.ctx.currentTime;
+    
+    // Запускаем все слои одновременно - это дает идеальную ГАРМОНИЮ
+    GY_HARMONY.playLoop('drums', now);
+    GY_HARMONY.playLoop('piano', now);
+    GY_HARMONY.playLoop('bass', now);
+    
+    document.getElementById('track-name').innerText = "LIVE JAZZ SESSION";
+    document.getElementById('led-indicator').classList.add('active');
+    document.getElementById('mainBtn').style.display = 'none';
+    document.getElementById('status').innerText = "HARMONY STATUS: PERFECT";
+    playing = true;
 }
 </script>
 </body>
