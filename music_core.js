@@ -1,72 +1,43 @@
 
-/* MODULE: GY-GY Music Core
-   VERSION: 3.0.0 (The Multi-Tool Orchestra)
-   LOGIC: Hierarchical Markov Chains (Genre + Harmony + Rhythm)
+/* MODULE: GY-GY Music Core 
+   VERSION: 4.1.0 (Emotional Dynamics) 
+   LOGIC: Velocity Layers + Real-time Bi-Quad Filtering
 */
 
 const GY_MUSIC = {
-    ctx: null,
-    currentGenre: 'JAZZ', // По умолчанию начинаем с джаза
+    // ... (загрузка сэмплов из v4.0.0) ...
 
-    // МАРКОВСКИЙ ДИСПЕТЧЕР ЖАНРОВ
-    genreMatrix: {
-        'JAZZ': ['JAZZ', 'JAZZ', 'ROCK'], // В основном джаз, но может "сорваться" в рок
-        'ROCK': ['ROCK', 'ROCK', 'JAZZ']  // В основном рок, но может остыть до джаза
-    },
-
-    init() {
-        if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-    },
-
-    // ЕДИНАЯ КНОПКА "СДЕЛАТЬ КРАСИВО"
-    playNext(moodSeed = 1) {
-        this.init();
+    playWithEnergy(energy = 0.5) {
         const t = this.ctx.currentTime;
+        
+        // Создаем динамический фильтр (как в FL Studio)
+        const filter = this.ctx.createBiquadFilter();
+        filter.type = "lowpass";
+        // Если энергия низкая (0.1), звук будет глухим (500Hz)
+        // Если высокая (1.0), звук будет ярким (5000Hz)
+        filter.frequency.value = 500 + (energy * 4500); 
+        filter.connect(this.ctx.destination);
 
-        // 1. Марков решает, какой жанр играть сейчас
-        const nextGenres = this.genreMatrix[this.currentGenre];
-        this.currentGenre = nextGenres[Math.floor(Math.random() * nextGenres.length)];
-
-        // 2. Раскладываем по полкам
-        if (this.currentGenre === 'JAZZ') {
-            this.playJazzNode(t);
-        } else {
-            this.playRockNode(t);
+        // Марков выбирает инструмент, но ГРОМКОСТЬ зависит от энергии
+        const volume = 0.2 + (energy * 0.8);
+        
+        if (Math.random() < energy) {
+            this.triggerSample('kick', t, volume, filter);
         }
         
-        // 3. Всегда добавляем Бас (Фундамент)
-        this.createBassLine(t);
+        if (energy > 0.8) {
+            // Если энергия зашкаливает, добавляем "грязный" рок-слой
+            this.triggerSample('rock_guitar', t, volume, filter);
+        }
     },
 
-    // ПОЛКА ДЖАЗА
-    playJazzNode(t) {
-        const freq = [261.63, 329.63, 392.00][Math.floor(Math.random()*3)];
-        this.synth(freq, t, 0.8, 'triangle'); // Мягкий звук
-    },
-
-    // ПОЛКА РОКА
-    playRockNode(t) {
-        const freq = [110, 164, 220][Math.floor(Math.random()*3)];
-        this.synth(freq, t, 0.4, 'sawtooth'); // Грубый звук
-    },
-
-    // НИЖНЯЯ ПОЛКА (БАС)
-    createBassLine(t) {
-        const freq = 55; // Очень низкая Ля
-        const o = this.ctx.createOscillator(), g = this.ctx.createGain();
-        o.type = 'sine'; o.frequency.value = freq;
-        g.gain.setValueAtTime(0.2, t);
-        g.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
-        o.connect(g); g.connect(this.ctx.destination);
-        o.start(t); o.stop(t + 0.5);
-    },
-
-    synth(f, t, len, type) {
-        const o = this.ctx.createOscillator(), g = this.ctx.createGain();
-        o.type = type; o.frequency.value = f;
-        g.gain.setValueAtTime(0.1, t);
-        g.gain.exponentialRampToValueAtTime(0.001, t + len);
-        o.connect(g); g.connect(this.ctx.destination);
-        o.start(t); o.stop(t + len);
+    triggerSample(name, time, vol, target) {
+        const source = this.ctx.createBufferSource();
+        source.buffer = this.buffers[name];
+        const gain = this.ctx.createGain();
+        gain.gain.value = vol;
+        source.connect(gain);
+        gain.connect(target); // Подключаем к фильтру, а не сразу в колонки
+        source.start(time);
     }
 };
