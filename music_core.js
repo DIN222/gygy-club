@@ -1,4 +1,13 @@
-/* GY-GY MUSIC CORE v2.0 | MARKOV JAZZ EDITION 🔒 */
+
+/* MODULE: GY-GY Music Core
+   VERSION: 2.0.0 (Markov Jazz Edition)
+   DATE: 2026-03-30
+   LOGIC: Markov Chain II-V-I Progression, Swing Rhythm, Stochastic Sax Improvisation.
+*/
+
+const GY_MUSIC = { 
+   // ... далее весь код, который мы обсудили выше ...
+};
 
 const GY_MUSIC = {
     ctx: null,
