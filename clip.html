@@ -1,64 +1,156 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY | CLIP GENERATOR</title>
-    <script src="music_core.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GY-GY | MONOLITH v3.0.0 🎷</title>
     <style>
-        :root { --gold: #ffd700; }
-        body { background: #000; color: var(--gold); font-family: 'Courier New', monospace; margin: 0; overflow: hidden; display: flex; flex-direction: column; height: 100vh; }
+        :root { --gold: #ffd700; --bg: #000; }
+        body { background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; margin: 0; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
         
-        #display { flex-grow: 1; display: flex; align-items: center; justify-content: center; position: relative; }
-        #text-layer { z-index: 10; font-size: 2.5rem; text-align: center; padding: 20px; text-shadow: 0 0 20px var(--gold); }
+        #canvas-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+        .ui-box { z-index: 10; text-align: center; background: rgba(0,0,0,0.8); padding: 40px; border: 1px solid var(--gold); box-shadow: 0 0 30px rgba(255,215,0,0.2); }
         
-        /* Визуализация пульсации */
-        #visualizer { position: absolute; width: 100%; height: 100%; background: radial-gradient(circle, #1a1a00 0%, #000 100%); z-index: 1; }
+        h1 { letter-spacing: 5px; font-size: 1.5rem; margin-bottom: 30px; }
+        .status { font-size: 0.8rem; color: #888; margin-top: 10px; text-transform: uppercase; }
 
-        footer { height: 100px; border-top: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; gap: 20px; }
-        .btn { padding: 15px 30px; border: 2px solid var(--gold); background: transparent; color: var(--gold); cursor: pointer; font-weight: 900; letter-spacing: 2px; }
-        .btn:hover { background: var(--gold); color: #000; }
+        .play-btn { 
+            padding: 20px 50px; border: 2px solid var(--gold); background: transparent; 
+            color: var(--gold); cursor: pointer; font-weight: 900; font-size: 1.2rem;
+            transition: 0.3s; letter-spacing: 3px;
+        }
+        .play-btn:hover { background: var(--gold); color: #000; box-shadow: 0 0 20px var(--gold); }
+        .play-btn:active { transform: scale(0.95); }
     </style>
 </head>
 <body>
 
-<main id="display">
-    <div id="visualizer"></div>
-    <div id="text-layer">ЖДУ ТЕКСТ ИЗ ВЕРСИЙ...</div>
-</main>
+    <canvas id="canvas-layer"></canvas>
 
-<footer>
-    <button class="btn" onclick="startShow()">🎸 ЗАПУСТИТЬ РОК</button>
-    <button class="btn" onclick="location.href='verses.html'">❮ К ТЕКСТАМ</button>
-</footer>
+    <div class="ui-box">
+        <h1 id="display">MARKOV ORCHESTRA</h1>
+        <button class="play-btn" onclick="startEngine()">🔥 ЗАПУСТИТЬ КЛУБ</button>
+        <div id="info" class="status">System: Ready to Groove</div>
+    </div>
 
 <script>
-    // 1. Пытаемся достать текст, который гость выбрал в verses.html
-    const savedText = localStorage.getItem('selectedVerse') || "В Клубе GY-GY тишина... Пока что.";
-    document.getElementById('text-layer').innerText = savedText;
+/* ==========================================================
+   CORE: GY-MUSIC ENGINE v3.0.0 (Built-in)
+   ========================================================== */
+const GY_MUSIC = {
+    ctx: null,
+    currentGenre: 'JAZZ',
+    genreMatrix: {
+        'JAZZ': ['JAZZ', 'JAZZ', 'JAZZ', 'ROCK'], // 75% Jazz, 25% Rock
+        'ROCK': ['ROCK', 'ROCK', 'JAZZ']         // 66% Rock, 33% Jazz
+    },
 
-    function startShow() {
-        // Инициализируем наш музыкальный движок
-        GY_MUSIC.init();
-        
-        // Запускаем цикл (ритм)
-        let beat = 0;
-        setInterval(() => {
-            // Каждые 4 удара - мощный аккорд
-            if (beat % 4 === 0) {
-                GY_MUSIC.playRock("1054321"); // Сюда потом вставим реальный ID гостя
-                animateBackground();
-            }
-            beat++;
-        }, 500);
-        
-        document.querySelector('.btn').innerText = "🤘 ИГРАЕТ РОК";
-    }
+    init() {
+        if (!this.ctx) {
+            this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+    },
 
-    function animateBackground() {
-        const v = document.getElementById('visualizer');
-        v.style.backgroundColor = "#332a00";
-        setTimeout(() => { v.style.backgroundColor = "#000"; }, 100);
+    playNext() {
+        this.init();
+        const t = this.ctx.currentTime;
+
+        // Цепь Маркова выбирает жанр
+        const nextPossible = this.genreMatrix[this.currentGenre];
+        this.currentGenre = nextPossible[Math.floor(Math.random() * nextPossible.length)];
+
+        // Вызов инструментов по полкам
+        this.createBass(t);
+        if (this.currentGenre === 'JAZZ') {
+            this.playJazzStep(t);
+        } else {
+            this.playRockStep(t);
+        }
+        return this.currentGenre;
+    },
+
+    // Инструмент: БАС (Синус)
+    createBass(t) {
+        const f = this.currentGenre === 'JAZZ' ? 55 : 41.2; // A1 или E1
+        this.osc(f, t, 0.6, 'sine', 0.3);
+    },
+
+    // Инструмент: ДЖАЗ-ПИАНО (Треугольник)
+    playJazzStep(t) {
+        const notes = [261.63, 329.63, 392.00, 493.88]; // Cmaj7
+        notes.forEach(f => this.osc(f, t, 0.8, 'triangle', 0.1));
+    },
+
+    // Инструмент: РОК-ГИТАРА (Пила)
+    playRockStep(t) {
+        const notes = [82.41, 123.47, 164.81]; // E-Powerchord
+        notes.forEach(f => this.osc(f, t, 0.4, 'sawtooth', 0.05));
+    },
+
+    osc(freq, t, len, type, vol) {
+        const o = this.ctx.createOscillator();
+        const g = this.ctx.createGain();
+        o.type = type;
+        o.frequency.setValueAtTime(freq, t);
+        g.gain.setValueAtTime(vol, t);
+        g.gain.exponentialRampToValueAtTime(0.001, t + len);
+        o.connect(g); g.connect(this.ctx.destination);
+        o.start(t); o.stop(t + len);
     }
+};
+
+/* ==========================================================
+   UI LOGIC & VISUALIZATION
+   ========================================================== */
+let mainLoop;
+const canvas = document.getElementById('canvas-layer');
+const ctx = canvas.getContext('2d');
+
+function startEngine() {
+    // Разблокировка аудио
+    GY_MUSIC.init();
+    
+    if (mainLoop) clearInterval(mainLoop);
+    
+    const btn = document.querySelector('.play-btn');
+    btn.innerText = "⏸ ОСТАНОВИТЬ";
+    btn.onclick = stopEngine;
+
+    mainLoop = setInterval(() => {
+        const genre = GY_MUSIC.playNext();
+        document.getElementById('info').innerText = `Current Genre: ${genre}`;
+        visualize(genre);
+    }, 600); // Темп 100 BPM
+}
+
+function stopEngine() {
+    clearInterval(mainLoop);
+    mainLoop = null;
+    const btn = document.querySelector('.play-btn');
+    btn.innerText = "🔥 ЗАПУСТИТЬ КЛУБ";
+    btn.onclick = startEngine;
+    document.getElementById('info').innerText = "System: Paused";
+}
+
+function visualize(genre) {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    const color = genre === 'JAZZ' ? 'rgba(255, 215, 0, 0.3)' : 'rgba(255, 50, 0, 0.3)';
+    ctx.fillStyle = color;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    setTimeout(() => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }, 150);
+}
+
+// Ресайз окна
+window.onresize = () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+};
 </script>
 </body>
 </html>
