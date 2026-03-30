@@ -3,79 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | CLUB EDITION v33.5.44 🔒</title>
+    <title>GY-GY | PURE GOLD v33.5.45 🔒</title>
     <script src="config.js"></script>
     <style>
-        :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Courier New', monospace; overflow: hidden; }
+        :root { --gold: #ffd700; --bg: #000; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; overflow: hidden; display: flex; flex-direction: column; }
         
-        /* HEADER 🔒 */
-        header { height: 60px; display: flex; align-items: center; border-bottom: var(--border); background: #000; padding: 0 10px; gap: 10px; z-index: 1000; }
-        .nav-btn { width: 35px; height: 35px; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--gold); text-decoration: none; }
-        .logo-gy { font-size: 0.9rem; font-weight: 900; letter-spacing: 2px; flex-shrink: 0; }
-        
-        .scroll-tools { display: flex; align-items: center; gap: 8px; overflow-x: auto; flex-grow: 1; scrollbar-width: none; }
+        /* HEADER: ТОЛЬКО ЗОЛОТО 🔒 */
+        header { height: 65px; display: flex; align-items: center; border-bottom: 1px solid var(--gold); background: #000; padding: 0 10px; gap: 10px; z-index: 1000; flex-shrink: 0; }
+        .nav-btn { width: 40px; height: 40px; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--gold); text-decoration: none; font-size: 1.2rem; flex-shrink: 0; }
+        .logo-gy { font-size: 1rem; font-weight: 900; color: var(--gold); letter-spacing: 2px; padding: 0 10px; border-right: 1px solid #333; flex-shrink: 0; }
+
+        .scroll-tools { display: flex; align-items: center; gap: 10px; overflow-x: auto; flex-grow: 1; scrollbar-width: none; }
         .scroll-tools::-webkit-scrollbar { display: none; }
-        .t-btn { height: 35px; padding: 0 12px; border: 1px solid #333; background: #000; color: #fff; font-size: 0.6rem; text-transform: uppercase; cursor: pointer; white-space: nowrap; }
 
-        /* VIDEO STAGE (ТЕРРИТОРИЯ КЛУБА) 🔒 */
-        #stage { 
-            flex-grow: 1; 
-            position: relative; 
-            background: #050505; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center; 
-            align-items: center;
-            overflow: hidden;
+        /* КНОПКИ БЕЗ ПОДСВЕТКИ 🔒 */
+        .t-btn { height: 40px; padding: 0 15px; border: 1px solid var(--gold); background: #000; color: var(--gold); font-size: 0.65rem; text-transform: uppercase; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
+        .t-btn:active { background: #111; }
+
+        /* ТЕРРИТОРИЯ КЛУБА (ВИДЕО-ЗОНА) 🔒 */
+        #stage { flex-grow: 1; position: relative; background: #000; overflow: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        
+        #vCanvas { 
+            position: absolute; width: 100%; height: 100%; 
+            object-fit: cover; opacity: 0; transition: opacity 2s ease-in-out; z-index: 1; 
         }
 
-        #bgVideo {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0.4; /* Чтобы текст читался */
-            display: none;
-        }
-
-        .content-overlay {
-            position: relative;
-            z-index: 10;
-            width: 90%;
-            text-align: center;
-        }
-
+        .overlay { position: relative; z-index: 10; width: 85%; pointer-events: none; }
         .v-text { 
-            width: 100%; 
-            background: transparent; 
-            border: none; 
-            color: #fff; 
-            font-size: 1.8rem; 
-            text-align: center; 
-            outline: none; 
-            resize: none; 
-            font-family: inherit;
-            text-shadow: 0 0 15px rgba(0,0,0,1), 0 0 5px var(--gold);
+            width: 100%; height: 200px; background: transparent; border: none; 
+            color: #fff; font-size: 2rem; text-align: center; outline: none; 
+            resize: none; font-family: inherit; pointer-events: auto;
+            text-shadow: 2px 2px 10px #000;
         }
 
-        /* КНОПКА ПУСКА ДЛЯ ГОСТЯ 🔒 */
-        footer { padding: 10px; background: #000; }
+        /* ГЛАВНАЯ КНОПКА (НИЖНЯЯ) 🔒 */
+        footer { padding: 15px; background: #000; z-index: 100; border-top: 1px solid #111; }
         .run-btn { 
-            width: 100%; 
-            height: 55px; 
-            border: 2px solid var(--gold); 
-            background: transparent; 
-            color: var(--gold); 
-            font-weight: 900; 
-            cursor: pointer; 
-            text-transform: uppercase;
-            box-shadow: 0 0 10px rgba(255,215,0,0.2);
+            width: 100%; height: 60px; border: 1px solid var(--gold); 
+            background: #000; color: var(--gold); font-weight: 900; 
+            cursor: pointer; text-transform: uppercase; letter-spacing: 3px; 
         }
-        .run-btn:hover { background: var(--gold); color: #000; }
 
-        .pop-menu { display: none; position: absolute; background: #000; border: var(--border); z-index: 10000; width: 200px; top: 60px; left: 80px; }
-        .m-item { padding: 12px; border-bottom: 1px solid #222; cursor: pointer; font-size: 0.7rem; }
+        .pop-menu { display: none; position: absolute; background: #000; border: 1px solid var(--gold); z-index: 10000; width: 220px; top: 65px; left: 100px; }
+        .m-item { padding: 15px; border-bottom: 1px solid #111; cursor: pointer; font-size: 0.8rem; color: var(--gold); }
     </style>
 </head>
 <body>
@@ -84,33 +55,37 @@
     <div class="nav-btn" onclick="location.href='verses.html'">❮</div>
     <div class="logo-gy">GY-GY 😂</div>
     <div class="scroll-tools">
-        <button class="t-btn" onclick="toggleM('musicMenu', event)">🎹 <span id="curMusic">LO-FI</span></button>
-        <button class="t-btn" onclick="saveToBox()">📦 В ЗАНАЧКУ</button>
-        <button class="t-btn" onclick="location.href='music_box.html'">🎵 ФОНОТЕКА</button>
+        <button class="t-btn" onclick="toggleM('musicMenu', event)">🎹 <span id="curMusic">ЖАНР</span></button>
+        <button class="t-btn" onclick="saveToBox()">📦 В BOX</button>
+        <button class="t-btn" onclick="location.href='music_box.html'">🎵 ФОНО</button>
+        <button class="t-btn" onclick="downloadAsFile()">📥 ФАЙЛ</button>
     </div>
     <div class="nav-btn" onclick="location.href='box_page.html'">❯</div>
 </header>
 
 <main id="stage">
-    <video id="bgVideo" loop muted playsinline></video>
+    <video id="vCanvas" loop muted playsinline preload="auto">
+        <source id="vSource" src="" type="video/mp4">
+    </video>
     
-    <div class="content-overlay">
-        <textarea id="clipText" class="v-text" placeholder="Пиши хит здесь..."></textarea>
+    <div class="overlay">
+        <textarea id="clipText" class="v-text" placeholder="Пиши хит, Шеф..."></textarea>
     </div>
 </main>
 
 <footer>
-    <button class="run-btn" id="genBtn" onclick="generateClipForGuest()">🔥 ЗАПУСТИТЬ КЛИП СЕЙЧАС</button>
+    <button class="run-btn" id="genBtn" onclick="runClip()">🔥 ЗАПУСТИТЬ КЛИП</button>
 </footer>
 
 <div id="musicMenu" class="pop-menu">
-    <div class="m-item" onclick="setMusic('LO-FI', 'https://assets.mixkit.co/videos/preview/mixkit-starry-night-sky-over-a-calm-lake-4384-large.mp4')">🎹 LO-FI</div>
-    <div class="m-item" onclick="setMusic('ROCK', 'https://assets.mixkit.co/videos/preview/mixkit-concert-stage-with-crowd-and-lights-34563-large.mp4')">🎸 ROCK</div>
-    <div class="m-item" onclick="setMusic('RAP', 'https://assets.mixkit.co/videos/preview/mixkit-city-traffic-at-night-with-car-lights-3158-large.mp4')">🎤 RAP</div>
+    <div class="m-item" onclick="setM('LO-FI', 'https://v.ftn.su/lofi.mp4')">🎹 LO-FI</div>
+    <div class="m-item" onclick="setM('ROCK', 'https://v.ftn.su/rock.mp4')">🎸 ROCK</div>
+    <div class="m-item" onclick="setM('RAP', 'https://v.ftn.su/rap.mp4')">🎤 RAP</div>
+    <div class="m-item" onclick="setM('BLUES', 'https://v.ftn.su/blues.mp4')">🎷 BLUES</div>
 </div>
 
 <script>
-    let videoUrl = 'https://assets.mixkit.co/videos/preview/mixkit-starry-night-sky-over-a-calm-lake-4384-large.mp4';
+    let currentV = "https://v.ftn.su/lofi.mp4"; // Дефолтный поток
 
     window.onload = () => {
         const last = localStorage.getItem('last_verse');
@@ -123,41 +98,39 @@
         menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
     }
 
-    function setMusic(name, url) {
+    function setM(name, url) {
         document.getElementById('curMusic').innerText = name;
-        videoUrl = url;
+        currentV = url;
         document.getElementById('musicMenu').style.display = 'none';
-        generateClipForGuest(); // Сразу переключаем фон
+        runClip(); // Сразу переключаем атмосферу
     }
 
-    function generateClipForGuest() {
-        const video = document.getElementById('bgVideo');
+    async function runClip() {
+        const v = document.getElementById('vCanvas');
+        const s = document.getElementById('vSource');
         const btn = document.getElementById('genBtn');
-        const text = document.getElementById('clipText').value;
-
-        if (!text) { alert("Шеф, гостю нужен текст!"); return; }
-
-        btn.innerText = "🎬 МОНТАЖ В ПРОЦЕССЕ...";
-        btn.disabled = true;
-
-        // Имитируем "подгрузку из нейросети" 🔒
+        
+        btn.innerText = "🌀 ВХОД В ТРАНС...";
+        
+        // Магия проявления
+        v.style.opacity = "0";
         setTimeout(() => {
-            video.src = videoUrl;
-            video.style.display = 'block';
-            video.play();
-            
-            btn.innerText = "КЛИП ГОТОВ! РЖЁМ 😂";
-            btn.disabled = false;
-            
-            // Добавим немного вибрации для эффекта
-            document.getElementById('stage').style.boxShadow = "inset 0 0 100px var(--gold)";
-        }, 1500);
+            s.src = currentV;
+            v.load();
+            v.play().then(() => {
+                v.style.opacity = "0.5"; // Золотая середина прозрачности
+                btn.innerText = "КЛИП В ЭФИРЕ 😂";
+            }).catch(e => {
+                btn.innerText = "ОШИБКА ПОТОКА ❌";
+                console.log("Видео-сервер клуба отдыхает.");
+            });
+        }, 500);
+
+        setTimeout(() => { btn.innerText = "🔥 ЗАПУСТИТЬ КЛИП"; }, 3000);
     }
 
-    function saveToBox() {
-        alert("Заныкано в закрома Клуба! 🔒");
-    }
-
+    function saveToBox() { alert("Схоронил! 🔒"); }
+    function downloadAsFile() { /* Скачивание текста */ }
     window.onclick = () => document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
 </script>
 </body>
