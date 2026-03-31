@@ -30,6 +30,6 @@ app.listen(8080, () => {
     console.log("-----------------------------------------");
     console.log("✅ СЕРВЕР GY-GY ПОЛНОСТЬЮ УКОМПЛЕКТОВАН!");
     console.log("📂 РАБОЧАЯ ПАПКА:", __dirname);
-    console.log("👉 ЗАХОДИ СЮДА: http://localhost:3000/clip.html");
+    console.log("👉 ЗАХОДИ СЮДА: http://localhost:8080/clip.html");
     console.log("-----------------------------------------");
 });
