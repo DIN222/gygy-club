@@ -4,27 +4,24 @@ const path = require('path');
 const fs = require('fs');
 const app = express();
 
-app.use(express.json());
-
-// Главный отладочный маршрут
 app.get('/clip.html', (req, res) => {
-    const fullPath = path.join(__dirname, 'clip.html');
+    const file = path.join(__dirname, 'clip.html');
     
+    // ЛОГ В КОНСОЛЬ (СМОТРИ В СИНЕЕ ОКНО!)
     console.log("-----------------------------------------");
-    console.log("🔍 ЗАПРОС ПРИНЯТ!");
-    console.log("📂 Я ищу файл тут:", fullPath);
+    console.log("🔍 КТО-ТО ПРИШЕЛ ЗА КЛИПОМ!");
+    console.log("📍 Я ИЩУ ФАЙЛ ТУТ:", file);
     
-    if (fs.existsSync(fullPath)) {
-        console.log("✅ ФАЙЛ НАЙДЕН! Отправляю в браузер...");
-        res.sendFile(fullPath);
+    if (fs.existsSync(file)) {
+        console.log("✅ НАШЕЛ! ОТПРАВЛЯЮ...");
+        res.sendFile(file);
     } else {
-        console.log("❌ ОШИБКА: Файла по этому адресу НЕТ!");
-        console.log("📂 Список файлов в моей папке:", fs.readdirSync(__dirname));
-        res.status(404).send(`Ошибка: Сервер не видит файл clip.html в папке ${__dirname}`);
+        console.log("❌ ОШИБКА: ФАЙЛА НЕТ!");
+        console.log("📂 ВОТ ЧТО Я ВИЖУ В ПАПКЕ:", fs.readdirSync(__dirname));
+        res.status(404).send("Сервер работает, но файл clip.html не найден в " + __dirname);
     }
 });
 
 app.listen(9999, () => {
-    console.log("🚀 СЕРВЕР ЗАПУЩЕН НА ПОРТУ 9999");
-    console.log("📍 ТЕКУЩАЯ РАБОЧАЯ ДИРЕКТОРИЯ:", __dirname);
+    console.log("🚀 СЕРВЕР НА ПОРТУ 9999 ЗАПУЩЕН!");
 });
