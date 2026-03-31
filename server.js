@@ -7,10 +7,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ГЛАВНЫЙ СЕКРЕТ: Указываем серверу, что файлы лежат ПРЯМО ТУТ
+// ГЛАВНЫЙ СЕКРЕТ: Указываем серверу брать файлы из текущей папки
 app.use(express.static(__dirname));
 
-// Принудительный маршрут для главной страницы клипа
+// Принудительный маршрут: если просят /clip.html, отдаем его из папки
 app.get('/clip.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'clip.html'));
 });
@@ -22,14 +22,16 @@ app.post('/generate-jazz', (req, res) => {
     console.log("Выбранный жанр:", req.body.genre);
     console.log("-----------------------------------------");
     
-    // Пока что отдаем тестовый джаз
+    // Тестовая ссылка на музыку
     res.json({ audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" });
 });
 
-app.listen(9999, () => {
+const PORT = 9999;
+app.listen(PORT, () => {
     console.log("-----------------------------------------");
-    console.log("✅ СЕРВЕР GY-GY ПОЛНОСТЬЮ УКОМПЛЕКТОВАН!");
-    console.log("📂 РАБОЧАЯ ПАПКА:", __dirname);
-    console.log("👉 ЗАХОДИ СЮДА: http://localhost:9999/clip.html");
+    console.log("✅ СЕРВЕР GY-GY ЗАПУЩЕН НА ПОРТУ", PORT);
+    console.log("📂 ПРОВЕРЬ: Файл clip.html должен лежать здесь:");
+    console.log(path.join(__dirname, 'clip.html'));
+    console.log(`👉 ЗАХОДИ: http://localhost:${PORT}/clip.html`);
     console.log("-----------------------------------------");
 });
