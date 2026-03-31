@@ -4,24 +4,25 @@ const path = require('path');
 const fs = require('fs');
 const app = express();
 
-app.get('/clip.html', (req, res) => {
-    const file = path.join(__dirname, 'clip.html');
+app.use(express.json());
+
+// ПЕРЕХВАТЧИК: Отдаст первый попавшийся HTML файл в папке
+app.get('/', (req, res) => {
+    const files = fs.readdirSync(__dirname);
+    const htmlFile = files.find(f => f.toLowerCase().includes('html'));
     
-    // ЛОГ В КОНСОЛЬ (СМОТРИ В СИНЕЕ ОКНО!)
-    console.log("-----------------------------------------");
-    console.log("🔍 КТО-ТО ПРИШЕЛ ЗА КЛИПОМ!");
-    console.log("📍 Я ИЩУ ФАЙЛ ТУТ:", file);
-    
-    if (fs.existsSync(file)) {
-        console.log("✅ НАШЕЛ! ОТПРАВЛЯЮ...");
-        res.sendFile(file);
+    if (htmlFile) {
+        console.log(`✅ Нашел файл: ${htmlFile}. Отправляю в браузер!`);
+        res.sendFile(path.join(__dirname, htmlFile));
     } else {
-        console.log("❌ ОШИБКА: ФАЙЛА НЕТ!");
-        console.log("📂 ВОТ ЧТО Я ВИЖУ В ПАПКЕ:", fs.readdirSync(__dirname));
-        res.status(404).send("Сервер работает, но файл clip.html не найден в " + __dirname);
+        res.status(404).send("🆘 ОШИБКА: В папке E:/GY-GY-CLUB нет ни одного .html файла!");
     }
 });
 
-app.listen(9999, () => {
-    console.log("🚀 СЕРВЕР НА ПОРТУ 9999 ЗАПУЩЕН!");
+const PORT = 9999;
+app.listen(PORT, () => {
+    console.log("-----------------------------------------");
+    console.log("🚀 СУПЕР-СЕРВЕР GY-GY ЗАПУЩЕН!");
+    console.log("👉 ЗАХОДИ ПРОСТО: http://localhost:9999");
+    console.log("-----------------------------------------");
 });
