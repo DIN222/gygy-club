@@ -1,36 +1,22 @@
 
 const express = require('express');
-const cors = require('cors');
 const path = require('path');
 const app = express();
 
-app.use(cors());
 app.use(express.json());
+app.use(express.static(__dirname));
 
-// ГЛАВНЫЙ СЕКРЕТ: Указываем серверу брать статические файлы из текущей папки
-app.use(express.static(path.join(__dirname)));
-
-// Прямой маршрут для нашего клипа
 app.get('/clip.html', (req, res) => {
-    res.sendFile(path.join(__dirname, 'clip.html'));
+    // Эта строка выведет в терминал точный путь, по которому сервер лезет за файлом
+    const filePath = path.join(__dirname, 'clip.html');
+    console.log("🔍 Ищу файл по адресу:", filePath); 
+    res.sendFile(filePath);
 });
 
-// Обработка сигналов от кнопок
-app.post('/generate-jazz', (req, res) => {
+app.listen(9999, () => {
     console.log("-----------------------------------------");
-    console.log("🚀 ЕСТЬ КОНТАКТ! КЛИП ПРИСЛАЛ ДАННЫЕ:");
-    console.log("Текст:", req.body.text);
-    console.log("Жанр:", req.body.genre);
-    console.log("-----------------------------------------");
-    res.json({ audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" });
-});
-
-const PORT = 9999;
-app.listen(PORT, () => {
-    console.log("-----------------------------------------");
-    console.log("✅ СЕРВЕР GY-GY ЗАПУЩЕН!");
-    console.log("📂 ПРОВЕРЬ: Файл clip.html должен лежать ТУТ:");
-    console.log(path.join(__dirname, 'clip.html'));
-    console.log(`👉 АДРЕС: http://localhost:${PORT}/clip.html`);
+    console.log("🚀 СЕРВЕР GY-GY: ПРОВЕРКА ПУТЕЙ");
+    console.log("📂 ТЕКУЩАЯ ПАПКА:", __dirname);
+    console.log("👉 ССЫЛКА: http://localhost:9999/clip.html");
     console.log("-----------------------------------------");
 });
