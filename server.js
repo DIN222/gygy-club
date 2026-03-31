@@ -4,20 +4,35 @@ const path = require('path');
 const fs = require('fs');
 const app = express();
 
-app.get('/clip.html', (req, res) => {
-    const filePath = path.join(__dirname, 'clip.html');
-    console.log("-----------------------------------------");
-    console.log("📂 Я ищу файл по адресу:", filePath);
-    
-    if (fs.existsSync(filePath)) {
-        res.sendFile(filePath);
+app.use(express.json());
+
+// Авто-поиск любого HTML файла в папке
+app.get('/', (req, res) => {
+    const files = fs.readdirSync(__dirname);
+    const htmlFile = files.find(f => f.toLowerCase().includes('html'));
+
+    if (htmlFile) {
+        console.log(`✅ СИСТЕМА: Нашел файл "${htmlFile}" и отправляю его!`);
+        res.sendFile(path.join(__dirname, htmlFile));
     } else {
-        console.log("❌ ОШИБКА: Файла clip.html нет в папке!");
-        console.log("📂 Список всех файлов, которые я вижу:", fs.readdirSync(__dirname));
-        res.status(404).send("Сервер не видит файл clip.html в папке " + __dirname);
+        console.log("❌ СИСТЕМА: В папке вообще нет HTML-файлов!");
+        console.log("📂 Вижу только это:", files);
+        res.status(404).send("Ошибка: Файл не найден. Проверь консоль PowerShell.");
     }
 });
 
+// Маршрут для приема данных от кнопки
+app.post('/generate-jazz', (req, res) => {
+    console.log("-----------------------------------------");
+    console.log("🚀 ЕСТЬ КОНТАКТ! ДАННЫЕ ПРИШЛИ:");
+    console.log("Текст из BOX:", req.body.text);
+    console.log("-----------------------------------------");
+    res.json({ status: "success", message: "Сигнал принят Клубом!" });
+});
+
 app.listen(9999, () => {
-    console.log("🚀 СЕРВЕР ЗАПУЩЕН! Проверь: http://localhost:9999/clip.html");
+    console.log("-----------------------------------------");
+    console.log("🔥 СЕРВЕР ПЕРЕЗАГРУЖЕН В РЕЖИМЕ ПОИСКА!");
+    console.log("👉 ЗАХОДИ СЮДА: http://localhost:9999");
+    console.log("-----------------------------------------");
 });
