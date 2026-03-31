@@ -1,3 +1,4 @@
+
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -6,23 +7,29 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ГЛАВНЫЙ СЕКРЕТ: говорим серверу брать файлы из ПАПКИ, где лежит сам server.js
+// ГЛАВНЫЙ СЕКРЕТ: Указываем серверу, что файлы лежат ПРЯМО ТУТ
 app.use(express.static(__dirname));
 
-// Маршрут для генерации музыки
+// Принудительный маршрут для главной страницы клипа
+app.get('/clip.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'clip.html'));
+});
+
 app.post('/generate-jazz', (req, res) => {
     console.log("-----------------------------------------");
-    console.log("🚀 КОНТАКТ ЕСТЬ! СИГНАЛ ПРИНЯТ!");
-    console.log("Текст:", req.body.text);
+    console.log("🚀 ЕСТЬ КОНТАКТ! КЛИП ПРИСЛАЛ ДАННЫЕ:");
+    console.log("Текст куплетов:", req.body.text);
+    console.log("Выбранный жанр:", req.body.genre);
     console.log("-----------------------------------------");
+    
+    // Пока что отдаем тестовый джаз
     res.json({ audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" });
 });
 
 app.listen(3000, () => {
     console.log("-----------------------------------------");
-    console.log("✅ КЛУБНЫЙ ХОСТИНГ ЗАПУЩЕН");
-    console.log("📂 ПРОВЕРЬ: Файл clip.html должен лежать здесь:");
-    console.log(path.join(__dirname, 'clip.html'));
-    console.log("👉 ССЫЛКА: http://localhost:3000/clip.html");
+    console.log("✅ СЕРВЕР GY-GY ПОЛНОСТЬЮ УКОМПЛЕКТОВАН!");
+    console.log("📂 РАБОЧАЯ ПАПКА:", __dirname);
+    console.log("👉 ЗАХОДИ СЮДА: http://localhost:3000/clip.html");
     console.log("-----------------------------------------");
 });
