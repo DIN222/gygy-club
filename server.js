@@ -1,38 +1,29 @@
 
 const express = require('express');
-const path = require('path');
 const fs = require('fs');
+const path = require('path');
 const app = express();
 
-app.use(express.json());
-
-// Авто-поиск любого HTML файла в папке
 app.get('/', (req, res) => {
-    const files = fs.readdirSync(__dirname);
-    const htmlFile = files.find(f => f.toLowerCase().includes('html'));
-
-    if (htmlFile) {
-        console.log(`✅ СИСТЕМА: Нашел файл "${htmlFile}" и отправляю его!`);
-        res.sendFile(path.join(__dirname, htmlFile));
-    } else {
-        console.log("❌ СИСТЕМА: В папке вообще нет HTML-файлов!");
-        console.log("📂 Вижу только это:", files);
-        res.status(404).send("Ошибка: Файл не найден. Проверь консоль PowerShell.");
-    }
-});
-
-// Маршрут для приема данных от кнопки
-app.post('/generate-jazz', (req, res) => {
+    // Получаем список ВСЕХ файлов в текущей папке
+    const allFiles = fs.readdirSync(__dirname);
+    
     console.log("-----------------------------------------");
-    console.log("🚀 ЕСТЬ КОНТАКТ! ДАННЫЕ ПРИШЛИ:");
-    console.log("Текст из BOX:", req.body.text);
+    console.log("📂 СЕРВЕР ВИДИТ СЛЕДУЮЩИЕ ФАЙЛЫ:");
+    console.log(allFiles);
     console.log("-----------------------------------------");
-    res.json({ status: "success", message: "Сигнал принят Клубом!" });
+
+    // Отправляем этот список прямо в браузер, чтобы ты его увидел
+    res.send(`
+        <h1>Ошибка: HTML-файл не найден!</h1>
+        <p>Я ищу в папке: <b>${__dirname}</b></p>
+        <p>Вот список файлов, которые я там вижу:</p>
+        <ul>${allFiles.map(f => `<li>${f}</li>`).join('')}</ul>
+        <hr>
+        <p><i>Совет: Если твой файл называется clip.html.txt, переименуй его в clip.html</i></p>
+    `);
 });
 
 app.listen(9999, () => {
-    console.log("-----------------------------------------");
-    console.log("🔥 СЕРВЕР ПЕРЕЗАГРУЖЕН В РЕЖИМЕ ПОИСКА!");
-    console.log("👉 ЗАХОДИ СЮДА: http://localhost:9999");
-    console.log("-----------------------------------------");
+    console.log("🚀 СКАНЕР ЗАПУЩЕН! Зайди на http://localhost:9999");
 });
