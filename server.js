@@ -26,10 +26,10 @@ app.post('/generate-jazz', (req, res) => {
     res.json({ audioUrl: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" });
 });
 
-app.listen(8080, () => {
+app.listen(9999, () => {
     console.log("-----------------------------------------");
     console.log("✅ СЕРВЕР GY-GY ПОЛНОСТЬЮ УКОМПЛЕКТОВАН!");
     console.log("📂 РАБОЧАЯ ПАПКА:", __dirname);
-    console.log("👉 ЗАХОДИ СЮДА: http://localhost:8080/clip.html");
+    console.log("👉 ЗАХОДИ СЮДА: http://localhost:9999/clip.html");
     console.log("-----------------------------------------");
 });
