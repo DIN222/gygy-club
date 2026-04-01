@@ -3,97 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | VERSES CONSOLE v34.4</title>
+    <title>GY-GY | VERSES v34.5</title>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; display: flex; flex-direction: column; overflow: hidden; }
 
-        /* HEADER 🔒 ПОСТОЯННЫЕ АТРИБУТЫ */
-        header { height: 70px; display: flex; align-items: center; justify-content: space-between; border-bottom: var(--border); padding: 0 10px; flex-shrink: 0; z-index: 1000; background: #000; }
+        /* HEADER 🔒 КОНСТАНТА */
+        header { height: 70px; display: flex; align-items: center; justify-content: space-between; border-bottom: var(--border); padding: 0 10px; flex-shrink: 0; background: #000; z-index: 1000; }
         .nav-fix { width: 45px; height: 45px; border: var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--gold); text-decoration: none; font-weight: 900; font-size: 1.4rem; }
-        .logo-gy { font-size: 1.2rem; font-weight: 900; letter-spacing: 2px; }
-        .lang-trigger { width: 40px; height: 40px; border: 1px solid #444; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.1rem; color: var(--gold); }
-        #google_translate_element { display: none !important; }
+        .logo-gy { font-size: 1.1rem; font-weight: 900; letter-spacing: 2px; }
 
-        /* WALL 🔒 ЧИСТОЕ ПОЛЕ */
-        #wall { flex-grow: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 20px; scroll-behavior: smooth; background: #050505; }
-        .v-card { border: 1px solid #333; background: #000; padding: 15px; position: relative; animation: slideIn 0.3s ease; }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* WALL */
+        #wall { flex-grow: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; background: #050505; }
+        .v-card { border: 1px solid #333; background: #000; padding: 15px; border-left: 3px solid var(--gold); }
+        .v-text { font-size: 1.2rem; color: #fff; outline: none; white-space: pre-wrap; margin: 10px 0; line-height: 1.4; }
+        .v-ctrl { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 10px; border-top: 1px solid #222; padding-top: 8px; }
+        .v-btn { background: none; border: 1px solid #444; color: #888; padding: 6px; cursor: pointer; flex: 1; font-size: 0.8rem; }
+        .v-btn.klip { border-color: var(--gold); color: var(--gold); font-weight: 900; }
+
+        /* FOOTER ПУЛЬТ */
+        footer { height: 100px; display: flex; align-items: center; padding: 0 10px; gap: 10px; border-top: var(--border); background: #000; flex-shrink: 0; }
         
-        .v-words { font-size: 0.7rem; color: #666; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px; }
-        .v-text { font-size: 1.3rem; line-height: 1.4; color: #fff; outline: none; white-space: pre-wrap; margin-bottom: 15px; }
-        .v-text:focus { border-bottom: 1px dashed var(--gold); }
-
-        /* КНОПКИ КАРТОЧКИ (6 ШТ) */
-        .v-ctrl { display: flex; gap: 8px; flex-wrap: wrap; border-top: 1px solid #222; padding-top: 10px; }
-        .v-btn { background: none; border: 1px solid #444; color: #888; padding: 8px; cursor: pointer; font-size: 0.9rem; transition: 0.2s; flex: 1; min-width: 40px; text-align: center; }
-        .v-btn:hover { border-color: var(--gold); color: var(--gold); }
-        .v-btn.klip { border-color: var(--gold); color: var(--gold); font-weight: 900; flex: 2; } /* Золотая кнопка Клип */
-
-        /* FOOTER 🔒 КОНСОЛЬНЫЙ ПУЛЬТ */
-        footer { height: 90px; display: flex; align-items: center; padding: 0 10px; gap: 8px; border-top: var(--border); background: #000; flex-shrink: 0; z-index: 1001; position: relative; }
+        /* КОНТЕЙНЕР СТИЛЕЙ */
+        .style-section { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .style-label { font-size: 0.6rem; color: #666; letter-spacing: 1px; }
         
-        /* КНОПКА-ОКНО СТИЛЯ */
-        .style-box { width: 90px; height: 50px; border: var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; background: #111; font-size: 0.65rem; color: var(--gold); position: relative; }
-        .style-box b { font-size: 0.75rem; text-transform: uppercase; }
+        /* СКРОЛЛ-КНОПКА */
+        .style-scroll-box { 
+            width: 100px; height: 50px; border: var(--border); 
+            background: #111; overflow-x: auto; overflow-y: hidden;
+            display: flex; align-items: center; scroll-snap-type: x mandatory;
+            scrollbar-width: none; /* Hide scrollbar Firefox */
+        }
+        .style-scroll-box::-webkit-scrollbar { display: none; } /* Hide scrollbar Chrome/Safari */
+        
+        .s-opt { 
+            min-width: 100%; height: 100%; display: flex; 
+            align-items: center; justify-content: center; 
+            scroll-snap-align: center; font-size: 0.75rem; 
+            font-weight: 900; color: var(--gold); text-transform: uppercase;
+            flex-shrink: 0;
+        }
 
-        #in { flex-grow: 1; height: 50px; background: #000; border: 1px solid #333; color: var(--gold); padding: 0 12px; font-size: 1rem; outline: none; border-radius: 0; }
-        .btn-ok { height: 50px; padding: 0 20px; background: var(--gold); border: none; color: #000; font-weight: 900; cursor: pointer; }
-
-        /* СКРОЛЛ-МЕНЮ СТИЛЕЙ */
-        .style-menu { display: none; position: absolute; bottom: 85px; left: 10px; width: 200px; background: #000; border: var(--border); z-index: 2000; max-height: 300px; overflow-y: auto; }
-        .s-item { padding: 12px; border-bottom: 1px solid #222; cursor: pointer; font-size: 0.8rem; color: #fff; text-transform: uppercase; }
-        .s-item:hover { background: var(--gold); color: #000; }
+        #in { flex-grow: 1; height: 50px; background: #000; border: 1px solid #333; color: var(--gold); padding: 0 12px; outline: none; }
+        .btn-ok { height: 50px; padding: 0 15px; background: var(--gold); color: #000; border: none; font-weight: 900; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <header>
     <a href="ai_room_core_v8.html" class="nav-fix">❮</a>
-    <div class="lang-trigger" onclick="alert('Выбор языка')">文<sub>A</sub></div>
+    <div style="font-family: sans-serif; font-weight: bold; cursor:pointer;">文A</div>
     <div class="logo-gy">GY-GY</div>
     <a href="box_page.html" class="nav-fix">❯</a>
 </header>
 
 <div id="wall">
+    <div class="v-card" style="border-left: 1px solid #333; color: #555;">
+        Введи 4 слова. Крути СТИЛИ прямо в окне (влево/вправо).
     </div>
+</div>
 
 <footer>
-    <div class="style-box" onclick="toggleStyles(event)">
-        <span>СТИЛЬ</span>
-        <b id="cur-style">§ БЫТ</b>
+    <div class="style-section">
+        <div class="style-label">СТИЛИ</div>
+        <div class="style-scroll-box" id="s-box" onscroll="updateStyle()">
+            <div class="s-opt">§ БЫТ</div>
+            <div class="s-opt">ø АБСУРД</div>
+            <div class="s-opt">† ПРОЖАРКА</div>
+            <div class="s-opt">¶ САТИРА</div>
+            <div class="s-opt">🌫 НУАР</div>
+            <div class="s-opt">🎸 РОК</div>
+            <div class="s-opt">⌛ КЛАССИКА</div>
+            <div class="s-opt">‡ ХЛЕСТКО</div>
+        </div>
     </div>
 
-    <input type="text" id="in" placeholder="Напиши 4 слова..." onkeydown="if(event.key==='Enter') generate()">
-    
+    <input type="text" id="in" placeholder="4 слова..." onkeydown="if(event.key==='Enter') generate()">
     <button class="btn-ok" onclick="generate()">ОК</button>
-
-    <div id="style-menu" class="style-menu">
-        <div class="s-item" onclick="setS('§ БЫТ')">§ БЫТ</div>
-        <div class="s-item" onclick="setS('ø АБСУРД')">ø АБСУРД</div>
-        <div class="s-item" onclick="setS('† ПРОЖАРКА')">† ПРОЖАРКА</div>
-        <div class="s-item" onclick="setS('¶ САТИРА')">¶ САТИРА</div>
-        <div class="s-item" onclick="setS('🌫 НУАР')">🌫 НУАР</div>
-        <div class="s-item" onclick="setS('🎸 РОК')">🎸 РОК</div>
-        <div class="s-item" onclick="setS('⌛ КЛАССИКА')">⌛ КЛАССИКА</div>
-        <div class="s-item" onclick="setS('‡ ХЛЕСТКО')">‡ ХЛЕСТКО</div>
-    </div>
 </footer>
 
 <script>
+    // --- КОНФИГ ---
+    const API_KEY = "AIzaSyDLQrvoPx4AYyfSKD0BWvl3-zc2ROfCa-E"; // Проверь этот ключ!
     let currentStyle = "§ БЫТ";
 
-    function toggleStyles(e) {
-        e.stopPropagation();
-        const m = document.getElementById('style-menu');
-        m.style.display = (m.style.display === 'block') ? 'none' : 'block';
-    }
-
-    function setS(s) {
-        currentStyle = s;
-        document.getElementById('cur-style').innerText = s;
-        document.getElementById('style-menu').style.display = 'none';
+    function updateStyle() {
+        const box = document.getElementById('s-box');
+        const index = Math.round(box.scrollLeft / 100);
+        const opts = box.querySelectorAll('.s-opt');
+        if(opts[index]) currentStyle = opts[index].innerText;
     }
 
     async function generate() {
@@ -104,60 +104,60 @@
         const wall = document.getElementById('wall');
         const cardId = "v-" + Date.now();
         
-        // Создаем пустую карточку (лоадер)
         const card = document.createElement('div');
         card.className = 'v-card';
         card.id = cardId;
-        card.innerHTML = `<div class="v-words">${val}</div><div class="v-text">Генерирую куплет...</div>`;
+        card.innerHTML = `<div class="v-text">Сварка ритма в стиле ${currentStyle}...</div>`;
         wall.appendChild(card);
         input.value = "";
         wall.scrollTop = wall.scrollHeight;
 
         try {
-            // Внимание: Здесь используется твой API ключ напрямую для теста
-            const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyDLQrvoPx4AYyfSKD0BWvl3-zc2ROfCa-E`, {
+            const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    contents: [{ parts: [{ text: `Напиши 4 строки стиха на русском. Тема (4 слова): ${val}. Стиль юмора: ${currentStyle}. Строго 4 строки.` }] }]
+                    contents: [{ parts: [{ text: `Напиши 4 строки стиха на русском. Тема (4 слова): ${val}. Стиль: ${currentStyle}. Только текст стиха.` }] }]
                 })
             });
+            
             const d = await r.json();
+            
+            if (d.error) {
+                card.innerHTML = `<div style="color:red">Ошибка API: ${d.error.message}</div>`;
+                return;
+            }
+
             const text = d.candidates[0].content.parts[0].text.trim();
 
             card.innerHTML = `
-                <div class="v-words">#${val.split(' ').join(' #')} | ${currentStyle}</div>
+                <div style="font-size:0.6rem; color:#444;">#${val.split(' ').join(' #')} | ${currentStyle}</div>
                 <div class="v-text" contenteditable="true">${text}</div>
                 <div class="v-ctrl">
-                    <button class="v-btn" onclick="alert('Еще вариант для: ${val}')" title="Еще">🔄</button>
-                    <button class="v-btn" onclick="saveToDevice('${cardId}')" title="Сохранить">💾</button>
-                    <button class="v-btn" onclick="alert('Telegram Share')" title="Переслать">✈</button>
-                    <button class="v-btn" onclick="alert('В ленту GY-GY')" title="Опубликовать">📢</button>
+                    <button class="v-btn" onclick="saveTxt('${cardId}')">💾</button>
+                    <button class="v-btn" onclick="alert('Shared')">✈</button>
+                    <button class="v-btn" onclick="alert('Public')">📢</button>
                     <button class="v-btn klip" onclick="toKlip('${cardId}')">🎬 KLIP</button>
-                    <button class="v-btn" onclick="document.getElementById('${cardId}').remove()" title="Удалить">🗑</button>
+                    <button class="v-btn" onclick="document.getElementById('${cardId}').remove()">🗑</button>
                 </div>
             `;
         } catch (e) {
-            card.innerHTML = "Ошибка связи. Проверь API ключ.";
+            card.innerHTML = `<div style="color:red">Сбой сети. Проверь Localhost или Ключ.</div>`;
         }
+        wall.scrollTop = wall.scrollHeight;
     }
 
-    function saveToDevice(id) {
-        const txt = document.getElementById(id).querySelector('.v-text').innerText;
-        const blob = new Blob([txt], {type: "text/plain"});
-        const a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = "gy-gy-verse.txt";
-        a.click();
+    function saveTxt(id) {
+        const t = document.getElementById(id).querySelector('.v-text').innerText;
+        localStorage.setItem('saved_verse_' + id, t);
+        alert("Сохранено в память браузера!");
     }
 
     function toKlip(id) {
-        const txt = document.getElementById(id).querySelector('.v-text').innerText;
-        localStorage.setItem('gy_current_verse', txt);
-        location.href = 'klip_page.html'; // Переход на страницу клипов
+        const t = document.getElementById(id).querySelector('.v-text').innerText;
+        localStorage.setItem('current_clip_text', t);
+        location.href = 'klip_page.html';
     }
-
-    window.onclick = () => document.getElementById('style-menu').style.display = 'none';
 </script>
 
 </body>
