@@ -3,185 +3,162 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | CORE v33.5.33 🔒</title>
-    <script src="config.js"></script>
+    <title>GY-GY | VERSES CONSOLE v34.4</title>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Courier New', monospace; display: flex; flex-direction: column; overflow: hidden; }
+
+        /* HEADER 🔒 ПОСТОЯННЫЕ АТРИБУТЫ */
+        header { height: 70px; display: flex; align-items: center; justify-content: space-between; border-bottom: var(--border); padding: 0 10px; flex-shrink: 0; z-index: 1000; background: #000; }
+        .nav-fix { width: 45px; height: 45px; border: var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--gold); text-decoration: none; font-weight: 900; font-size: 1.4rem; }
+        .logo-gy { font-size: 1.2rem; font-weight: 900; letter-spacing: 2px; }
+        .lang-trigger { width: 40px; height: 40px; border: 1px solid #444; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.1rem; color: var(--gold); }
+        #google_translate_element { display: none !important; }
+
+        /* WALL 🔒 ЧИСТОЕ ПОЛЕ */
+        #wall { flex-grow: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 20px; scroll-behavior: smooth; background: #050505; }
+        .v-card { border: 1px solid #333; background: #000; padding: 15px; position: relative; animation: slideIn 0.3s ease; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* HEADER 🔒 */
-        header { height: 70px; display: flex; align-items: center; border-bottom: var(--border); background: #000; padding: 0 10px; gap: 8px; z-index: 1000; flex-shrink: 0; position: relative; }
-        .nav-fix { width: 40px; height: 40px; border: var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--gold); text-decoration: none; font-weight: bold; font-size: 1.1rem; flex-shrink: 0; }
-        .logo-gy { font-size: 1.1rem; font-weight: 900; color: var(--gold); letter-spacing: 1px; flex-shrink: 0; margin-left: auto; margin-right: 5px; }
-        .btn-act { color: var(--gold); font-size: 0.65rem; cursor: pointer; border: var(--border); padding: 8px 10px; background: #000; text-transform: uppercase; flex-shrink: 0; white-space: nowrap; min-width: 80px; text-align: center; }
-        #google_translate_element { transform: scale(0.8); transform-origin: left center; min-width: 130px; }
+        .v-words { font-size: 0.7rem; color: #666; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px; }
+        .v-text { font-size: 1.3rem; line-height: 1.4; color: #fff; outline: none; white-space: pre-wrap; margin-bottom: 15px; }
+        .v-text:focus { border-bottom: 1px dashed var(--gold); }
 
-        /* WALL 🔒 */
-        #wall { flex-grow: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; scroll-behavior: smooth; }
-        .bubble { padding: 12px; max-width: 85%; border: 1px solid #333; border-radius: 4px; line-height: 1.4; font-size: 1rem; position: relative; }
-        .u { align-self: flex-start; border-left: 3px solid var(--gold); background: rgba(255,215,0,0.02); color: #fff; }
-        .a { align-self: flex-end; border-right: 3px solid #fff; background: rgba(255,255,255,0.02); text-align: right; }
-        .v-text { margin: 10px 0; outline: none; white-space: pre-wrap; word-wrap: break-word; }
+        /* КНОПКИ КАРТОЧКИ (6 ШТ) */
+        .v-ctrl { display: flex; gap: 8px; flex-wrap: wrap; border-top: 1px solid #222; padding-top: 10px; }
+        .v-btn { background: none; border: 1px solid #444; color: #888; padding: 8px; cursor: pointer; font-size: 0.9rem; transition: 0.2s; flex: 1; min-width: 40px; text-align: center; }
+        .v-btn:hover { border-color: var(--gold); color: var(--gold); }
+        .v-btn.klip { border-color: var(--gold); color: var(--gold); font-weight: 900; flex: 2; } /* Золотая кнопка Клип */
 
-        /* FOOTER 🔒 */
-        footer { height: 80px; display: flex; align-items: center; padding: 0 10px; gap: 10px; border-top: 1px solid #222; background: #000; flex-shrink: 0; z-index: 1001; }
-        .btn-mode { width: 50px; height: 50px; border: 1px solid #444; background: #000; color: var(--gold); cursor: pointer; font-size: 1.2rem; }
-        #in { flex-grow: 1; background: #000; border: 1px solid #333; color: var(--gold); padding: 15px; font-size: 1rem; outline: none; border-radius: 0; }
-        .btn-ok { height: 50px; padding: 0 20px; background: #000; border: var(--border); color: var(--gold); font-weight: 900; cursor: pointer; }
-
-        /* POPUP MENUS: ТОЛЬКО ЗОЛОТО НА ЧЕРНОМ 🔒 */
-        .pop-menu { display: none; position: absolute; background: #000; border: var(--border); z-index: 10000; box-shadow: 0 0 20px rgba(255,215,0,0.2); overflow: hidden; }
-        #actMenu { top: 75px; right: 10px; width: 230px; }
-        #modeMenu { bottom: 85px; left: 10px; width: 280px; }
-        .m-item { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-size: 0.8rem; color: #fff; text-transform: uppercase; text-align: left; transition: 0.2s; }
-        .m-item b { display: block; color: var(--gold); margin-bottom: 3px; letter-spacing: 1px; }
-        .m-item span { color: #888; font-size: 0.7rem; text-transform: none; line-height: 1.2; display: block; margin-top: 4px; }
+        /* FOOTER 🔒 КОНСОЛЬНЫЙ ПУЛЬТ */
+        footer { height: 90px; display: flex; align-items: center; padding: 0 10px; gap: 8px; border-top: var(--border); background: #000; flex-shrink: 0; z-index: 1001; position: relative; }
         
-        /* HOVER БЕЗ ЗАЛИВКИ 🔒 */
-        .m-item:hover { border-left: 5px solid var(--gold); color: var(--gold); background: #000; }
-        .m-item:hover b { text-shadow: 0 0 5px var(--gold); }
+        /* КНОПКА-ОКНО СТИЛЯ */
+        .style-box { width: 90px; height: 50px; border: var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; background: #111; font-size: 0.65rem; color: var(--gold); position: relative; }
+        .style-box b { font-size: 0.75rem; text-transform: uppercase; }
+
+        #in { flex-grow: 1; height: 50px; background: #000; border: 1px solid #333; color: var(--gold); padding: 0 12px; font-size: 1rem; outline: none; border-radius: 0; }
+        .btn-ok { height: 50px; padding: 0 20px; background: var(--gold); border: none; color: #000; font-weight: 900; cursor: pointer; }
+
+        /* СКРОЛЛ-МЕНЮ СТИЛЕЙ */
+        .style-menu { display: none; position: absolute; bottom: 85px; left: 10px; width: 200px; background: #000; border: var(--border); z-index: 2000; max-height: 300px; overflow-y: auto; }
+        .s-item { padding: 12px; border-bottom: 1px solid #222; cursor: pointer; font-size: 0.8rem; color: #fff; text-transform: uppercase; }
+        .s-item:hover { background: var(--gold); color: #000; }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="nav-fix" onclick="goBackToCore()" title="Назад">❮</div>
-    <div id="google_translate_element"></div>
-    <div class="btn-act" onclick="toggleM('actMenu', event)">ДЕЙСТВИЯ ▾</div>
+    <a href="ai_room_core_v8.html" class="nav-fix">❮</a>
+    <div class="lang-trigger" onclick="alert('Выбор языка')">文<sub>A</sub></div>
     <div class="logo-gy">GY-GY</div>
     <a href="box_page.html" class="nav-fix">❯</a>
-
-    <div id="actMenu" class="pop-menu">
-        <div class="m-item" onclick="copyWall()">📋 КЛИП <span>Копировать всё в буфер</span></div>
-        <div class="m-item" onclick="shareWall()">🔗 ПЕРЕСЛАТЬ <span>Отправить последний стих</span></div>
-        <div class="m-item" onclick="document.getElementById('wall').innerHTML = ''">🗑 ОЧИСТИТЬ <span>Стереть текущую стену</span></div>
-        <div class="m-item" onclick="location.href='box_page.html'">📦 BOX <span>Открыть хранилище</span></div>
-        <div class="m-item" onclick="location.reload()">🔄 РЕСТАРТ <span>Обновить сессию</span></div>
-    </div>
 </header>
 
 <div id="wall">
-    <div class="bubble a">Система v33.5.32. <br><small>Режим "Золото на черном" активен. 🔒</small></div>
-</div>
+    </div>
 
 <footer>
-    <button class="btn-mode" onclick="toggleM('modeMenu', event)">▲</button>
-    <input type="text" id="in" placeholder="Стиль: § Быт..." onkeydown="if(event.key==='Enter') send()">
-    <button class="btn-ok" onclick="send()">ОК</button>
+    <div class="style-box" onclick="toggleStyles(event)">
+        <span>СТИЛЬ</span>
+        <b id="cur-style">§ БЫТ</b>
+    </div>
 
-    <div id="modeMenu" class="pop-menu">
-        <div class="m-item" onclick="setM('ø Абсурд', 'Логика сна: соединение несоединимого, сюрреалистичные образы, разрушение здравого смысла.')">
-            <b>ø Абсурд</b><span>Сюрреализм и безумие</span>
-        </div>
-        <div class="m-item" onclick="setM('§ Быт', 'Комедия наблюдений: узнаваемые житейские ситуации, ирония над повседневностью, эффект «жизы».')">
-            <b>§ Быт</b><span>Житейская ирония</span>
-        </div>
-        <div class="m-item" onclick="setM('† Прожарка', 'Агрессивный юмор: острое высмеивание недостатков, сарказм, едкие и прямые попадания в цель.')">
-            <b>† Прожарка</b><span>Жесткий сарказм</span>
-        </div>
-        <div class="m-item" onclick="setM('¶ Сатира', 'Социальный юмор: высмеивание общественных явлений, человеческих пороков и системы через иронию.')">
-            <b>¶ Сатира</b><span>Острая социалка</span>
-        </div>
-        <div class="m-item" onclick="setM('‡ Хлестко', 'Минимализм: одна-две строки, афоризм, парадоксальный вывод, максимально сжатый смысл.')">
-            <b>‡ Хлестко</b><span>Ударный афоризм</span>
-        </div>
+    <input type="text" id="in" placeholder="Напиши 4 слова..." onkeydown="if(event.key==='Enter') generate()">
+    
+    <button class="btn-ok" onclick="generate()">ОК</button>
+
+    <div id="style-menu" class="style-menu">
+        <div class="s-item" onclick="setS('§ БЫТ')">§ БЫТ</div>
+        <div class="s-item" onclick="setS('ø АБСУРД')">ø АБСУРД</div>
+        <div class="s-item" onclick="setS('† ПРОЖАРКА')">† ПРОЖАРКА</div>
+        <div class="s-item" onclick="setS('¶ САТИРА')">¶ САТИРА</div>
+        <div class="s-item" onclick="setS('🌫 НУАР')">🌫 НУАР</div>
+        <div class="s-item" onclick="setS('🎸 РОК')">🎸 РОК</div>
+        <div class="s-item" onclick="setS('⌛ КЛАССИКА')">⌛ КЛАССИКА</div>
+        <div class="s-item" onclick="setS('‡ ХЛЕСТКО')">‡ ХЛЕСТКО</div>
     </div>
 </footer>
 
 <script>
-    let curName = "§ Быт";
-    let curDesc = "Комедия наблюдений: узнаваемые житейские ситуации, ирония над повседневностью.";
+    let currentStyle = "§ БЫТ";
 
-    function goBackToCore() {
-        if (window.history.length > 1 && document.referrer.includes('ai_room_core_v8.html')) {
-            window.history.back();
-        } else {
-            window.location.href = 'ai_room_core_v8.html';
-        }
+    function toggleStyles(e) {
+        e.stopPropagation();
+        const m = document.getElementById('style-menu');
+        m.style.display = (m.style.display === 'block') ? 'none' : 'block';
     }
 
-    function toggleM(id, e) {
-        if (e) e.stopPropagation();
-        document.querySelectorAll('.pop-menu').forEach(m => {
-            if(m.id !== id) m.style.display = 'none';
-        });
-        const menu = document.getElementById(id);
-        menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+    function setS(s) {
+        currentStyle = s;
+        document.getElementById('cur-style').innerText = s;
+        document.getElementById('style-menu').style.display = 'none';
     }
 
-    function setM(name, desc) {
-        curName = name; curDesc = desc;
-        document.getElementById('in').placeholder = `${name}...`;
-        document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
-    }
-
-    async function send() {
+    async function generate() {
         const input = document.getElementById('in');
-        const wall = document.getElementById('wall');
         const val = input.value.trim();
         if (!val) return;
 
-        const entryId = "entry-" + Date.now();
-        const wrap = document.createElement('div');
-        wrap.id = entryId;
-        wrap.style.cssText = "display:flex; flex-direction:column; gap:5px; margin-bottom:15px;";
-        wrap.innerHTML = `<div class="bubble u">${val}</div>`;
-        wall.appendChild(wrap);
+        const wall = document.getElementById('wall');
+        const cardId = "v-" + Date.now();
+        
+        // Создаем пустую карточку (лоадер)
+        const card = document.createElement('div');
+        card.className = 'v-card';
+        card.id = cardId;
+        card.innerHTML = `<div class="v-words">${val}</div><div class="v-text">Генерирую куплет...</div>`;
+        wall.appendChild(card);
         input.value = "";
         wall.scrollTop = wall.scrollHeight;
 
         try {
-            const cleanKey = (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).replace(/[^a-zA-Z0-9_-]/g, "");
-            const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${BEUVRY_CONFIG.MODELS_PRIORITY[0]}:generateContent?key=${cleanKey}`, {
+            // Внимание: Здесь используется твой API ключ напрямую для теста
+            const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyDLQrvoPx4AYyfSKD0BWvl3-zc2ROfCa-E`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    contents: [{ parts: [{ text: BEUVRY_CONFIG.PROMPT + `\n[РЕЖИМ: ${curName}]\n[УСТАНОВКА: ${curDesc}]\n[ВВОД: ${val}]` }] }] 
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: `Напиши 4 строки стиха на русском. Тема (4 слова): ${val}. Стиль юмора: ${currentStyle}. Строго 4 строки.` }] }]
                 })
             });
             const d = await r.json();
-            if (d.candidates) {
-                const res = d.candidates[0].content.parts[0].text.trim();
-                const aMsg = document.createElement('div');
-                aMsg.className = 'bubble a';
-                const modeLabel = document.querySelector(`.m-item[onclick*="${curName}"] span`)?.innerText || "";
+            const text = d.candidates[0].content.parts[0].text.trim();
 
-                aMsg.innerHTML = `
-                    <small style="opacity:0.5; font-size:0.7rem; letter-spacing:1px; color:var(--gold)">${curName} — ${modeLabel}</small>
-                    <div class="v-text" contentEditable="true">${res}</div>
-                    <div class="v-ctrl" style="display:flex; gap:10px; justify-content:flex-end; border-top:1px solid rgba(255,215,0,0.1); padding-top:8px;">
-                        <span onclick="document.getElementById('${entryId}').remove()" style="cursor:pointer; color:#ff4444; font-size:0.65rem; border:1px solid #ff4444; padding:2px 6px;">УДАЛИТЬ</span>
-                        <span onclick="lockAndSave('${entryId}', this)" style="cursor:pointer; color:var(--gold); font-size:0.65rem; border:1px solid var(--gold); padding:2px 6px;">СОХРАНИТЬ</span>
-                    </div>`;
-                wrap.appendChild(aMsg);
-            }
-        } catch (e) { console.error(e); }
-        wall.scrollTop = wall.scrollHeight;
+            card.innerHTML = `
+                <div class="v-words">#${val.split(' ').join(' #')} | ${currentStyle}</div>
+                <div class="v-text" contenteditable="true">${text}</div>
+                <div class="v-ctrl">
+                    <button class="v-btn" onclick="alert('Еще вариант для: ${val}')" title="Еще">🔄</button>
+                    <button class="v-btn" onclick="saveToDevice('${cardId}')" title="Сохранить">💾</button>
+                    <button class="v-btn" onclick="alert('Telegram Share')" title="Переслать">✈</button>
+                    <button class="v-btn" onclick="alert('В ленту GY-GY')" title="Опубликовать">📢</button>
+                    <button class="v-btn klip" onclick="toKlip('${cardId}')">🎬 KLIP</button>
+                    <button class="v-btn" onclick="document.getElementById('${cardId}').remove()" title="Удалить">🗑</button>
+                </div>
+            `;
+        } catch (e) {
+            card.innerHTML = "Ошибка связи. Проверь API ключ.";
+        }
     }
 
-    function lockAndSave(id, btn) {
-        const entry = document.getElementById(id);
-        const text = entry.querySelector('.v-text').innerText;
-        let box = JSON.parse(localStorage.getItem('gy_box') || '[]');
-        box.push({ text: text, style: curName, timestamp: new Date().toLocaleString() });
-        localStorage.setItem('gy_box', JSON.stringify(box));
-        btn.parentElement.innerHTML = `<small style="color:var(--gold); letter-spacing:1px;">ЗАФИКСИРОВАНО 🔒</small>`;
+    function saveToDevice(id) {
+        const txt = document.getElementById(id).querySelector('.v-text').innerText;
+        const blob = new Blob([txt], {type: "text/plain"});
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "gy-gy-verse.txt";
+        a.click();
     }
 
-    function copyWall() {
-        const texts = Array.from(document.querySelectorAll('.v-text')).map(el => el.innerText).join('\n---\n');
-        if (texts) navigator.clipboard.writeText(texts).then(() => alert("Стена скопирована в КЛИП"));
+    function toKlip(id) {
+        const txt = document.getElementById(id).querySelector('.v-text').innerText;
+        localStorage.setItem('gy_current_verse', txt);
+        location.href = 'klip_page.html'; // Переход на страницу клипов
     }
 
-    function shareWall() {
-        const last = Array.from(document.querySelectorAll('.v-text')).pop();
-        if (last && navigator.share) navigator.share({ title: 'GY-GY', text: last.innerText });
-    }
-
-    window.onclick = () => document.querySelectorAll('.pop-menu').forEach(m => m.style.display = 'none');
+    window.onclick = () => document.getElementById('style-menu').style.display = 'none';
 </script>
 
-<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-<script>function googleTranslateElementInit(){new google.translate.TranslateElement({pageLanguage:'ru'},'google_translate_element');}</script>
 </body>
 </html>
