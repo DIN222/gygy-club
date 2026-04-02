@@ -96,56 +96,66 @@
         if(opts[index]) currentStyle = opts[index].innerText;
     }
 
-    async function generate() {
-        const input = document.getElementById('in');
-        const val = input.value.trim();
-        if (!val) return;
+async function generate() {
+    const input = document.getElementById('in');
+    const val = input.value.trim();
+    if (!val) return;
 
-        const wall = document.getElementById('wall');
-        const cardId = "v-" + Date.now();
+    const wall = document.getElementById('wall');
+    const cardId = "v-" + Date.now();
+    
+    const card = document.createElement('div');
+    card.className = 'v-card';
+    card.id = cardId;
+    card.innerHTML = `<div class="v-text">Сварка ритма в стиле ${currentStyle}...</div>`;
+    wall.appendChild(card);
+    input.value = "";
+    wall.scrollTop = wall.scrollHeight;
+
+    try {
+        // СБОРКА КЛЮЧА ИЗ ТВОЕГО CONFIG.JS
+        const cleanKey = (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).replace(/[^a-zA-Z0-9_-]/g, "");
         
-        const card = document.createElement('div');
-        card.className = 'v-card';
-        card.id = cardId;
-        card.innerHTML = `<div class="v-text">Сварка ритма в стиле ${currentStyle}...</div>`;
-        wall.appendChild(card);
-        input.value = "";
-        wall.scrollTop = wall.scrollHeight;
+        // ВЫБОР МОДЕЛИ (Берем первую из твоего списка приоритетов)
+        const modelName = BEUVRY_CONFIG.MODELS_PRIORITY[0];
 
-        try {
-            const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: `Напиши 4 строки стиха на русском. Тема (4 слова): ${val}. Стиль: ${currentStyle}. Только текст стиха.` }] }]
-                })
-            });
-            
-            const d = await r.json();
-            
-            if (d.error) {
-                card.innerHTML = `<div style="color:red">Ошибка API: ${d.error.message}</div>`;
-                return;
-            }
+        // ОБНОВЛЕННЫЙ URL (v1beta/models/...)
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${cleanKey}`;
 
-            const text = d.candidates[0].content.parts[0].text.trim();
-
-            card.innerHTML = `
-                <div style="font-size:0.6rem; color:#444;">#${val.split(' ').join(' #')} | ${currentStyle}</div>
-                <div class="v-text" contenteditable="true">${text}</div>
-                <div class="v-ctrl">
-                    <button class="v-btn" onclick="saveTxt('${cardId}')">💾</button>
-                    <button class="v-btn" onclick="alert('Shared')">✈</button>
-                    <button class="v-btn" onclick="alert('Public')">📢</button>
-                    <button class="v-btn klip" onclick="toKlip('${cardId}')">🎬 KLIP</button>
-                    <button class="v-btn" onclick="document.getElementById('${cardId}').remove()">🗑</button>
-                </div>
-            `;
-        } catch (e) {
-            card.innerHTML = `<div style="color:red">Сбой сети. Проверь Localhost или Ключ.</div>`;
+        const r = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: `Напиши 4 строки юмористического стиха на русском. Тема (4 слова): ${val}. Стиль: ${currentStyle}. Только текст стиха, без кавычек и лишних слов.` }] }]
+            })
+        });
+        
+        const d = await r.json();
+        
+        if (d.error) {
+            // Если модель не найдена, пробуем запасной вариант
+            card.innerHTML = `<div style="color:red">Ошибка API: ${d.error.message}</div>`;
+            return;
         }
-        wall.scrollTop = wall.scrollHeight;
+
+        const text = d.candidates[0].content.parts[0].text.trim();
+
+        card.innerHTML = `
+            <div style="font-size:0.6rem; color:#444;">#${val.split(' ').join(' #')} | ${currentStyle}</div>
+            <div class="v-text" contenteditable="true">${text}</div>
+            <div class="v-ctrl">
+                <button class="v-btn" onclick="saveTxt('${cardId}')">💾</button>
+                <button class="v-btn" onclick="alert('Shared')">✈</button>
+                <button class="v-btn" onclick="alert('Public')">📢</button>
+                <button class="v-btn klip" onclick="toKlip('${cardId}')">🎬 KLIP</button>
+                <button class="v-btn" onclick="document.getElementById('${cardId}').remove()">🗑</button>
+            </div>
+        `;
+    } catch (e) {
+        card.innerHTML = `<div style="color:red">Сбой сети. Проверь Localhost и config.js</div>`;
     }
+    wall.scrollTop = wall.scrollHeight;
+}
 
     function saveTxt(id) {
         const t = document.getElementById(id).querySelector('.v-text').innerText;
