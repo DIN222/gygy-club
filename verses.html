@@ -70,7 +70,16 @@
     <button class="btn-ok" onclick="generate()">ОК</button>
 </footer>
 
-<div id="google_translate_element" style="display:none"></div>
+<div id="google_translate_element" style="
+    position: absolute; 
+    top: 15px; 
+    right: 55px; 
+    opacity: 0; 
+    width: 1px; 
+    height: 1px; 
+    overflow: hidden;
+    pointer-events: none;">
+</div>
 
 <script>
    let currentStyle = "§ БЫТ"; // Убедись, что эта переменная объявлена в начале скрипта
