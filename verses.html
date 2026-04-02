@@ -1,15 +1,16 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY CLUB v37</title>
+    <title>GY-GY CLUB v4.0</title>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
         
         body, html { 
-            margin: 0; padding: 0; width: 100%; height: 100%; 
+            width: 100%; height: 100%; 
             background: var(--bg); color: var(--gold); 
             font-family: 'Courier New', monospace; 
             display: flex; flex-direction: column; overflow: hidden; 
@@ -18,35 +19,43 @@
         /* HEADER */
         header { 
             height: 60px; display: flex; align-items: center; justify-content: space-between; 
-            border-bottom: var(--border); padding: 0 15px; flex-shrink: 0; background: #000; z-index: 1000; 
+            border-bottom: var(--border); padding: 0 10px; flex-shrink: 0; background: #000; z-index: 1000; 
         }
-        .logo-gy { font-size: 1.2rem; font-weight: 900; letter-spacing: 2px; }
-        .nav-fix { width: 40px; height: 40px; border: 1px solid #444; display: flex; align-items: center; justify-content: center; cursor: pointer; text-decoration: none; color: var(--gold); }
+        .logo-gy { font-size: 1.1rem; font-weight: 900; letter-spacing: 2px; text-align: center; flex-grow: 1; }
+        
+        /* Кнопки навигации (Стрелка и Глобус) */
+        .nav-fix { 
+            width: 42px; height: 42px; border: 1px solid #333; 
+            display: flex; align-items: center; justify-content: center; 
+            cursor: pointer; text-decoration: none; color: var(--gold); 
+            font-size: 1.5rem; border-radius: 5px; background: #111;
+        }
 
         /* WALL */
         #wall { 
             flex-grow: 1; overflow-y: auto; padding: 15px; 
             display: flex; flex-direction: column; gap: 15px; 
-            background: #050505; padding-bottom: 80px; 
+            background: #050505; padding-bottom: 20px; 
         }
         .v-card { border: 1px solid #333; background: #000; padding: 15px; border-left: 3px solid var(--gold); animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
         .v-text { font-size: 1.1rem; color: #fff; outline: none; white-space: pre-wrap; margin: 10px 0; line-height: 1.4; }
         .v-ctrl { display: flex; gap: 5px; margin-top: 10px; border-top: 1px solid #222; padding-top: 8px; }
-        .v-btn { background: #111; border: 1px solid #444; color: #888; padding: 8px; cursor: pointer; flex: 1; font-size: 0.9rem; border-radius: 4px; }
+        .v-btn { background: #111; border: 1px solid #444; color: #888; padding: 10px; cursor: pointer; flex: 1; font-size: 0.9rem; border-radius: 4px; }
         .v-btn.klip { border-color: var(--gold); color: var(--gold); font-weight: 900; }
 
-        /* FOOTER — МОНОЛИТНАЯ ЛИНИЯ */
+        /* FOOTER — ПАНЕЛЬ-МОНОЛИТ */
         footer { 
-            height: 60px; display: flex; align-items: stretch; 
-            padding: 8px; gap: 6px; border-top: var(--border); 
+            height: 65px; display: flex; align-items: stretch; 
+            padding: 10px; gap: 8px; border-top: var(--border); 
             background: #000; flex-shrink: 0; 
         }
 
-        /* СКРОЛЛ СТИЛЕЙ */
+        /* 1. БЛОК СТИЛЕЙ (СКРОЛЛ) */
         .style-scroll-box { 
-            flex: 1; background: #111; border: 1px solid #333; 
+            flex: 0 0 110px; /* Фиксированная ширина для скролла */
+            background: #111; border: 1px solid #333; 
             border-radius: 4px; overflow-x: auto; display: flex; 
             align-items: center; scroll-snap-type: x mandatory; 
         }
@@ -54,20 +63,22 @@
         .s-opt { 
             min-width: 100%; height: 100%; display: flex; 
             align-items: center; justify-content: center; 
-            scroll-snap-align: center; font-size: 0.7rem; 
+            scroll-snap-align: center; font-size: 0.65rem; 
             font-weight: 900; color: var(--gold); text-transform: uppercase; 
+            flex-shrink: 0; padding: 0 5px; text-align: center;
         }
 
-        /* ПОЛЕ ВВОДА */
+        /* 2. ПОЛЕ ВВОДА */
         #in { 
-            flex: 2; background: #000; border: 1px solid #333; 
+            flex: 1; background: #000; border: 1px solid #333; 
             color: var(--gold); padding: 0 12px; font-size: 1rem; 
             outline: none; border-radius: 4px; font-family: inherit;
         }
 
-        /* КНОПКА ОК */
+        /* 3. КНОПКА ОК */
         .btn-ok { 
-            flex: 0.6; background: var(--gold); color: #000; 
+            flex: 0 0 55px; /* Аккуратная фиксированная кнопка */
+            background: var(--gold); color: #000; 
             border: none; font-weight: 900; cursor: pointer; 
             border-radius: 4px; display: flex; align-items: center; justify-content: center;
         }
@@ -78,7 +89,7 @@
 <body onload="init()">
 
 <header>
-    <div class="nav-fix" onclick="history.back()">←</div>
+    <div class="nav-fix" onclick="history.back()">&#8592;</div>
     <div class="logo-gy">GY-GY CLUB</div>
     <div class="nav-fix">🌐</div>
 </header>
@@ -99,7 +110,7 @@
         <div class="s-opt">§ БЫТ</div>
     </div>
 
-    <input type="text" id="in" placeholder="4 words..." onkeydown="if(event.key==='Enter') generate()">
+    <input type="text" id="in" placeholder="4 слова..." onkeydown="if(event.key==='Enter') generate()">
     
     <button class="btn-ok" onclick="generate()">ОК</button>
 </footer>
@@ -110,11 +121,13 @@
     function updateStyle() {
         const box = document.getElementById('s-box');
         const index = Math.round(box.scrollLeft / box.clientWidth);
-        currentStyle = box.children[index].innerText;
+        if (box.children[index]) {
+            currentStyle = box.children[index].innerText;
+        }
     }
 
     function init() {
-        console.log("GY-GY Club Ready. Current Style:", currentStyle);
+        console.log("Клуб GY-GY готов. Стиль:", currentStyle);
     }
 
     async function generate() {
@@ -124,32 +137,26 @@
         const wall = document.getElementById('wall');
         const card = document.createElement('div');
         card.className = 'v-card';
-        card.innerHTML = `<div class="v-text" style="color:#555;">Brewing magic [${currentStyle}]...</div>`;
+        card.innerHTML = `<div class="v-text" style="color:#444;">Генерирую безумие [${currentStyle}]...</div>`;
         wall.prepend(card);
         document.getElementById('in').value = '';
 
         try {
-            // ТУТ ТВОЙ КОД ОБРАЩЕНИЯ К GEMINI С ТВОИМИ КЛЮЧАМИ
-            // Используй switch(currentStyle) для выбора customPrompt, как мы обсуждали
-            
-            // Временная заглушка для теста верстки:
+            // Здесь будет твой fetch к Gemini
+            // Имитация ответа для теста:
             setTimeout(() => {
-                const cardId = 'c' + Date.now();
-                card.id = cardId;
-                const verse = "The toaster is red,\nThe butter is blue,\nI sold my left leg,\nTo dance with a shoe!"; 
-                
+                const verse = "The cat is a laser,\nThe moon is a pie,\nI'm eating my blazer,\nDon't even ask why!";
                 card.innerHTML = `
                     <div style="font-size:0.6rem; color:#444;">#${val} | ${currentStyle}</div>
-                    <div class="v-text" translate="yes" onclick="this.contentEditable=true;">${verse}</div>
+                    <div class="v-text" contenteditable="true">${verse}</div>
                     <div class="v-ctrl">
-                        <button class="v-btn" onclick="alert('Saved')">💾</button>
+                        <button class="v-btn" onclick="alert('💾 Сохранено')">💾</button>
                         <button class="v-btn" onclick="this.closest('.v-card').remove()">🗑</button>
                     </div>
                 `;
-            }, 1000);
-
+            }, 1500);
         } catch (e) {
-            card.innerHTML = "Error in the Matrix...";
+            card.innerHTML = "Ошибка связи с космосом...";
         }
     }
 </script>
