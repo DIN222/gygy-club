@@ -1,8 +1,8 @@
 // config.js - Интеллектуальное хранилище Беври v4.3
 const BEUVRY_CONFIG = {
     // Твой новый рабочий ключ (склеивается автоматически)
-    PART_1: "AIzaSyBfioRTS8xDmvI", 
-    PART_2: "FtaZLO4itv0UDgqW7F2Y",
+    PART_1: "AIzaSyBcQuu3UrLJ8_t", 
+    PART_2: "Esee_GWy0kWpZ6gk1j5c",
     
   MODELS_PRIORITY: [
     "gemini-3.1-flash-lite-preview", // Самая свежая и легкая
