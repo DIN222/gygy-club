@@ -1,11 +1,12 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY CLUB v7.4</title>
+    <title>GY-GY CLUB v8.0</title>
     <style>
-        :root { --gold: #ffd700; --bg: #000; }
+        :root { --gold: #ffd700; --bg: #000; --border: 2px solid #ffd700; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
         
         body, html { 
@@ -14,19 +15,19 @@
             display: flex; flex-direction: column; overflow: hidden; 
         }
 
-        /* HEADER — ЖЕСТКАЯ СТАТИКА */
+        /* HEADER — СИСТЕМА ПЕРЕХОДОВ */
         header { 
             height: 75px; display: flex; align-items: center; justify-content: space-between; 
-            border-bottom: 2px solid var(--gold); padding: 0 15px; flex-shrink: 0; 
+            border-bottom: var(--border); padding: 0 15px; flex-shrink: 0; 
         }
         .logo-gy { font-size: 1.3rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; }
 
-        /* КНОПКИ НАВИГАЦИИ — БЕЗ ЭФФЕКТОВ МЕРЦАНИЯ */
-        .nav-btn { 
-            width: 50px; height: 50px; border: 2px solid var(--gold); 
+        /* СТРЕЛКИ — ТЕПЕРЬ ЭТО ССЫЛКИ */
+        .nav-link { 
+            width: 50px; height: 50px; border: var(--border); 
             display: flex; align-items: center; justify-content: center; 
-            cursor: pointer; color: var(--gold); font-size: 1.6rem; font-weight: 900;
-            background: transparent;
+            text-decoration: none; color: var(--gold); font-size: 1.6rem; font-weight: 900;
+            background: #111;
         }
 
         /* WALL */
@@ -40,10 +41,10 @@
         /* FOOTER (100PX) */
         footer { 
             height: 100px; display: flex; align-items: center; 
-            padding: 0 15px; gap: 10px; border-top: 2px solid var(--gold); flex-shrink: 0; 
+            padding: 0 15px; gap: 10px; border-top: var(--border); flex-shrink: 0; 
         }
 
-        /* СКРОЛЛ СТИЛЕЙ — ВОССТАНОВЛЕННЫЙ */
+        /* ИСПРАВЛЕННЫЙ СКРОЛЛ СТИЛЕЙ */
         #s-box { 
             width: 130px; height: 60px; border: 1px solid var(--gold); 
             overflow-x: scroll; display: flex; align-items: center; 
@@ -67,9 +68,9 @@
 <body>
 
 <header>
-    <div class="nav-btn" onclick="history.back()">&#10094;</div>
+    <a href="ai_room_core_v8.html" class="nav-link">&#10094;</a>
     <div class="logo-gy">GY-GY CLUB</div>
-    <div class="nav-btn" onclick="history.forward()">&#10095;</div>
+    <a href="box_page.html" class="nav-link">&#10095;</a>
 </header>
 
 <main id="wall"></main>
@@ -94,7 +95,6 @@
     let activeStyle = "🚀 ШИЗА-ЛЮКС";
     const sBox = document.getElementById('s-box');
 
-    // Исправленный скролл: теперь он ловит каждый элемент
     function syncStyle() {
         const index = Math.round(sBox.scrollLeft / sBox.offsetWidth);
         if (sBox.children[index]) {
@@ -102,7 +102,6 @@
         }
     }
 
-    // Добавление карточки (КЛИП и ПЕРЕВОД внутри)
     function addCard() {
         const input = document.getElementById('in');
         const wall = document.getElementById('wall');
@@ -113,7 +112,7 @@
         card.className = 'v-card';
         card.innerHTML = `
             <div style="font-size:0.7rem; color:#666;">#${val} | ${activeStyle}</div>
-            <div class="v-text" contenteditable="true">Generation active...</div>
+            <div class="v-text" contenteditable="true">V8.0 Connected...</div>
             <div class="v-ctrl">
                 <button class="v-btn" onclick="copyText(this)">КЛИП</button>
                 <button class="v-btn" onclick="translateText(this)">ПЕРЕВЕСТИ</button>
@@ -127,9 +126,8 @@
     function copyText(btn) {
         const txt = btn.closest('.v-card').querySelector('.v-text').innerText;
         navigator.clipboard.writeText(txt);
-        const old = btn.innerText;
-        btn.innerText = "ГОТОВО";
-        setTimeout(() => btn.innerText = old, 1000);
+        btn.innerText = "OK";
+        setTimeout(() => btn.innerText = "КЛИП", 1000);
     }
 
     function translateText(btn) {
