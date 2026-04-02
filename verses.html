@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | VERSES CONSOLE 4</title>
+    <title>GY-GY | VERSES CONSOLE 5</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
@@ -47,7 +47,6 @@
 
 <header>
     <a href="ai_room_core_v8.html" class="nav-fix">❮</a>
-    <div class="lang-trigger" onclick="openTranslate()">文<sub>A</sub></div>
     <div class="logo-gy">GY-GY</div>
     <a href="box_page.html" class="nav-fix">❯</a>
 </header>
@@ -55,26 +54,29 @@
 <div id="wall">
     <div id="status-msg" style="color: #444; font-size: 0.8rem; text-align: center;">Система GY-GY готова</div>
 </div>
+<footer class="v-footer">
+    <div class="input-row">
+        <div id="s-box" class="style-scroll-box" onscroll="updateStyle()">
+            <div class="s-opt">🚀 ШИЗА-ЛЮКС</div>
+            <div class="s-opt">🍗 ПРОЖАРКА</div>
+            <div class="s-opt">🎩 ЛОРД-АБСУРД</div>
+            <div class="s-opt">🧪 КИБЕР-ГОГОЛЬ</div>
+            <div class="s-opt">§ БЫТ</div>
+            <div class="s-opt">🚀 ШИЗА-ЛЮКС</div>
+            <div class="s-opt">🕺 ДИСКО-ПАНИКА</div>
+            <div class="s-opt">👵 БАБУШКА-ХАКЕР</div>
+            <div class="s-opt">🛸 ЗОНА 51</div>
 
-<footer>
-   <div class="style-section">
-    <div class="style-label">СТИЛИ</div>
-    <div class="style-scroll-box" id="s-box" onscroll="updateStyle()">
-        <div class="s-opt">🚀 ШИЗА-ЛЮКС</div>
-        <div class="s-opt">🍗 ПРОЖАРКА</div>
-        <div class="s-opt">🎩 ЛОРД-АБСУРД</div>
-        <div class="s-opt">🧪 КИБЕР-ГОГОЛЬ</div>
-        <div class="s-opt">🧟‍♂️ ТРЭШ-ОПТИМИЗМ</div>
-        <div class="s-opt">§ БЫТ</div>
-        <div class="s-opt">🌫 НУАР</div>
-        <div class="s-opt">⌛ КЛАССИКА</div>
+        </div>
+
+        <input type="text" id="in" placeholder="4 слова..." onkeydown="if(event.key==='Enter') generate()">
+        
+        <button class="btn-ok" onclick="generate()">ОК</button>
     </div>
-</div>
-    <input type="text" id="in" placeholder="4 слова..." onkeydown="if(event.key==='Enter') generate()">
-    <button class="btn-ok" onclick="generate()">ОК</button>
 </footer>
 
-<div id="google_translate_element" style="
+<div id="google_translate_element" style="position: absolute; opacity: 0; width: 1px; height: 1px; overflow: hidden; pointer-events: none;"></div>
+
     position: absolute; 
     top: 15px; 
     right: 55px; 
