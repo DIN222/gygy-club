@@ -54,21 +54,24 @@
 
 <header>
     <a href="ai_room_core_v8.html" class="nav-fix">❮</a>
-    <div style="font-family: sans-serif; font-weight: bold; cursor:pointer;">文A</div>
+    <div class="lang-trigger" onclick="openTranslate()" title="Translate">
+        文<sub>A</sub>
+        <div id="google_translate_element" style="position:absolute; opacity:0; pointer-events:none;"></div>
+    </div>
     <div class="logo-gy">GY-GY</div>
     <a href="box_page.html" class="nav-fix">❯</a>
 </header>
 
 <div id="wall">
-    <div class="v-card" style="border-left: 1px solid #333; color: #555;">
-        Введи 4 слова. Крути СТИЛИ прямо в окне (влево/вправо).
+    <div class="v-card" id="status-msg" style="border-left: 1px solid #333; color: #555; font-size: 0.8rem;">
+        Система готова. Если видишь "Сбой сети" — проверь, запущен ли Localhost и лежит ли config.js в той же папке.
     </div>
 </div>
 
 <footer>
     <div class="style-section">
         <div class="style-label">СТИЛИ</div>
-        <div class="style-scroll-box" id="s-box" onscroll="updateStyle()">
+        <div class="style-scroll-box" id="s-box" onwheel="handleWheel(event)" onscroll="updateStyle()">
             <div class="s-opt">§ БЫТ</div>
             <div class="s-opt">ø АБСУРД</div>
             <div class="s-opt">† ПРОЖАРКА</div>
@@ -85,88 +88,89 @@
 </footer>
 
 <script>
-    // --- КОНФИГ ---
-    const API_KEY = "AIzaSyBcQuu3UrLJ8_tEsee_GWy0kWpZ6gk1j5c"; // Проверь этот ключ!
-    let currentStyle = "§ БЫТ";
-
-    function updateStyle() {
-        const box = document.getElementById('s-box');
-        const index = Math.round(box.scrollLeft / 100);
-        const opts = box.querySelectorAll('.s-opt');
-        if(opts[index]) currentStyle = opts[index].innerText;
+    // 1. ПОДДЕРЖКА МЫШИ ДЛЯ СТИЛЕЙ
+    function handleWheel(e) {
+        e.preventDefault();
+        document.getElementById('s-box').scrollLeft += e.deltaY;
     }
 
-async function generate() {
-    const input = document.getElementById('in');
-    const val = input.value.trim();
-    if (!val) return;
+    // 2. ВЫЗОВ ПЕРЕВОДЧИКА
+    function openTranslate() {
+        const sel = document.querySelector('.goog-te-combo');
+        if (sel) {
+            sel.style.opacity = "1";
+            sel.style.pointerEvents = "auto";
+            // Имитируем клик или фокус, чтобы пользователь выбрал язык
+            alert("Выберите язык в появившемся меню Google");
+        } else {
+            // Если виджет еще не подгрузился
+            const script = document.createElement('script');
+            script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+            document.body.appendChild(script);
+        }
+    }
 
-    const wall = document.getElementById('wall');
-    const cardId = "v-" + Date.now();
-    
-    const card = document.createElement('div');
-    card.className = 'v-card';
-    card.id = cardId;
-    card.innerHTML = `<div class="v-text">Сварка ритма в стиле ${currentStyle}...</div>`;
-    wall.appendChild(card);
-    input.value = "";
-    wall.scrollTop = wall.scrollHeight;
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({pageLanguage: 'ru'}, 'google_translate_element');
+    }
 
-    try {
-        // СБОРКА КЛЮЧА ИЗ ТВОЕГО CONFIG.JS
-        const cleanKey = (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).replace(/[^a-zA-Z0-9_-]/g, "");
-        
-        // ВЫБОР МОДЕЛИ (Берем первую из твоего списка приоритетов)
-        const modelName = BEUVRY_CONFIG.MODELS_PRIORITY[0];
-
-        // ОБНОВЛЕННЫЙ URL (v1beta/models/...)
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${cleanKey}`;
-
-        const r = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: [{ parts: [{ text: `Напиши 4 строки юмористического стиха на русском. Тема (4 слова): ${val}. Стиль: ${currentStyle}. Только текст стиха, без кавычек и лишних слов.` }] }]
-            })
-        });
-        
-        const d = await r.json();
-        
-        if (d.error) {
-            // Если модель не найдена, пробуем запасной вариант
-            card.innerHTML = `<div style="color:red">Ошибка API: ${d.error.message}</div>`;
+    // 3. ГЕНЕРАЦИЯ С ПРОВЕРКОЙ CONFIG
+    async function generate() {
+        if (typeof BEUVRY_CONFIG === 'undefined') {
+            alert("Критическая ошибка: Файл config.js не найден!");
             return;
         }
 
-        const text = d.candidates[0].content.parts[0].text.trim();
+        const input = document.getElementById('in');
+        const val = input.value.trim();
+        if (!val) return;
 
-        card.innerHTML = `
-            <div style="font-size:0.6rem; color:#444;">#${val.split(' ').join(' #')} | ${currentStyle}</div>
-            <div class="v-text" contenteditable="true">${text}</div>
-            <div class="v-ctrl">
-                <button class="v-btn" onclick="saveTxt('${cardId}')">💾</button>
-                <button class="v-btn" onclick="alert('Shared')">✈</button>
-                <button class="v-btn" onclick="alert('Public')">📢</button>
-                <button class="v-btn klip" onclick="toKlip('${cardId}')">🎬 KLIP</button>
-                <button class="v-btn" onclick="document.getElementById('${cardId}').remove()">🗑</button>
-            </div>
-        `;
-    } catch (e) {
-        card.innerHTML = `<div style="color:red">Сбой сети. Проверь Localhost и config.js</div>`;
-    }
-    wall.scrollTop = wall.scrollHeight;
-}
+        const wall = document.getElementById('wall');
+        const cardId = "v-" + Date.now();
+        const card = document.createElement('div');
+        card.className = 'v-card';
+        card.id = cardId;
+        card.innerHTML = `<div class="v-text">Сварка ритма (${currentStyle})...</div>`;
+        wall.appendChild(card);
+        input.value = "";
+        wall.scrollTop = wall.scrollHeight;
 
-    function saveTxt(id) {
-        const t = document.getElementById(id).querySelector('.v-text').innerText;
-        localStorage.setItem('saved_verse_' + id, t);
-        alert("Сохранено в память браузера!");
-    }
+        try {
+            const cleanKey = (BEUVRY_CONFIG.PART_1 + BEUVRY_CONFIG.PART_2).replace(/[^a-zA-Z0-9_-]/g, "");
+            const model = BEUVRY_CONFIG.MODELS_PRIORITY[0];
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${cleanKey}`;
 
-    function toKlip(id) {
-        const t = document.getElementById(id).querySelector('.v-text').innerText;
-        localStorage.setItem('current_clip_text', t);
-        location.href = 'klip_page.html';
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: `Напиши 4 строки юмористического стиха на русском. Тема (4 слова): ${val}. Стиль: ${currentStyle}. Только текст.` }] }]
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.error) {
+                card.innerHTML = `<div style="color:red">API Error: ${data.error.message}</div>`;
+                return;
+            }
+
+            const resultText = data.candidates[0].content.parts[0].text.trim();
+            card.innerHTML = `
+                <div style="font-size:0.6rem; color:#444;">#${val.split(' ').join(' #')} | ${currentStyle}</div>
+                <div class="v-text" contenteditable="true">${resultText}</div>
+                <div class="v-ctrl">
+                    <button class="v-btn" onclick="saveTxt('${cardId}')">💾</button>
+                    <button class="v-btn" onclick="alert('Shared')">✈</button>
+                    <button class="v-btn" onclick="alert('Public')">📢</button>
+                    <button class="v-btn klip" onclick="toKlip('${cardId}')">🎬 KLIP</button>
+                    <button class="v-btn" onclick="document.getElementById('${cardId}').remove()">🗑</button>
+                </div>
+            `;
+        } catch (e) {
+            card.innerHTML = `<div style="color:red">Сбой сети. Проверь консоль браузера (F12). Возможно, блокировка CORS или путь к config.js.</div>`;
+        }
+        wall.scrollTop = wall.scrollHeight;
     }
 </script>
 
