@@ -4,65 +4,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY CLUB v8.0</title>
+    <title>GY-GY CLUB v8.1</title>
     <style>
-        :root { --gold: #ffd700; --bg: #000; --border: 2px solid #ffd700; }
+        :root { --gold: #ffd700; --bg: #000; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
         
         body, html { 
             width: 100%; height: 100%; background: var(--bg); color: var(--gold); 
-            font-family: 'Courier New', Courier, monospace; 
-            display: flex; flex-direction: column; overflow: hidden; 
+            font-family: monospace; display: flex; flex-direction: column; overflow: hidden; 
         }
 
-        /* HEADER — СИСТЕМА ПЕРЕХОДОВ */
+        /* HEADER — ТОНКАЯ ЛИНИЯ */
         header { 
-            height: 75px; display: flex; align-items: center; justify-content: space-between; 
-            border-bottom: var(--border); padding: 0 15px; flex-shrink: 0; 
+            height: 60px; display: flex; align-items: center; justify-content: space-between; 
+            border-bottom: 1px solid var(--gold); padding: 0 10px; flex-shrink: 0; 
         }
-        .logo-gy { font-size: 1.3rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; }
-
-        /* СТРЕЛКИ — ТЕПЕРЬ ЭТО ССЫЛКИ */
+        .logo-gy { font-size: 1.1rem; font-weight: 900; }
         .nav-link { 
-            width: 50px; height: 50px; border: var(--border); 
+            width: 40px; height: 40px; border: 1px solid var(--gold); 
             display: flex; align-items: center; justify-content: center; 
-            text-decoration: none; color: var(--gold); font-size: 1.6rem; font-weight: 900;
-            background: #111;
+            text-decoration: none; color: var(--gold); font-weight: 900;
         }
 
         /* WALL */
-        #wall { flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 20px; }
-        .v-card { border: 1px solid #444; background: #000; padding: 15px; border-left: 5px solid var(--gold); }
-        .v-text { font-size: 1.25rem; color: #fff; margin: 10px 0; outline: none; white-space: pre-wrap; line-height: 1.4; }
+        #wall { flex-grow: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; }
+        .v-card { border: 1px solid #333; background: #050505; padding: 12px; border-left: 3px solid var(--gold); }
+        .v-text { font-size: 1.1rem; color: #fff; margin: 8px 0; outline: none; white-space: pre-wrap; }
+        .v-trans-area { font-size: 0.9rem; color: #888; border-top: 1px dashed #444; margin-top: 8px; padding-top: 8px; display: none; }
 
-        .v-ctrl { display: flex; gap: 8px; margin-top: 10px; border-top: 1px solid #333; padding-top: 10px; }
-        .v-btn { background: #000; border: 1px solid var(--gold); color: var(--gold); padding: 10px; cursor: pointer; flex: 1; font-weight: 900; font-size: 0.8rem; }
+        .v-ctrl { display: flex; gap: 5px; margin-top: 10px; }
+        .v-btn { background: #111; border: 1px solid #444; color: var(--gold); padding: 8px; cursor: pointer; flex: 1; font-size: 0.75rem; font-weight: 900; }
 
-        /* FOOTER (100PX) */
+        /* FOOTER — 100PX, ТОНКАЯ ЛИНИЯ */
         footer { 
             height: 100px; display: flex; align-items: center; 
-            padding: 0 15px; gap: 10px; border-top: var(--border); flex-shrink: 0; 
+            padding: 0 10px; gap: 8px; border-top: 1px solid var(--gold); flex-shrink: 0; 
         }
 
-        /* ИСПРАВЛЕННЫЙ СКРОЛЛ СТИЛЕЙ */
+        /* СКРОЛЛ СТИЛЕЙ — ФИКСИРОВАННЫЙ */
         #s-box { 
-            width: 130px; height: 60px; border: 1px solid var(--gold); 
-            overflow-x: scroll; display: flex; align-items: center; 
-            scroll-snap-type: x mandatory; background: #111; flex-shrink: 0;
-            scrollbar-width: none;
+            width: 110px; height: 50px; border: 1px solid var(--gold); 
+            overflow-x: auto; display: flex; scroll-snap-type: x mandatory; 
+            background: #111; flex-shrink: 0; scrollbar-width: none;
         }
         #s-box::-webkit-scrollbar { display: none; }
-        
         .s-opt { 
-            min-width: 100%; height: 100%; display: flex; 
-            align-items: center; justify-content: center; 
-            scroll-snap-align: center; font-size: 0.65rem; font-weight: 900; 
-            color: var(--gold); text-align: center; padding: 0 5px;
-            white-space: normal; line-height: 1.1; flex-shrink: 0;
+            min-width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; 
+            scroll-snap-align: center; font-size: 0.6rem; font-weight: 900; text-align: center; padding: 0 4px;
         }
 
-        #in { flex-grow: 1; height: 60px; background: #000; border: 1px solid #444; color: var(--gold); padding: 0 15px; font-size: 1.1rem; outline: none; }
-        .btn-ok { height: 60px; padding: 0 25px; background: var(--gold); color: #000; border: none; font-weight: 900; font-size: 1.1rem; cursor: pointer; }
+        #in { flex-grow: 1; height: 50px; background: #000; border: 1px solid #333; color: var(--gold); padding: 0 10px; font-size: 1rem; outline: none; }
+        .btn-ok { height: 50px; padding: 0 15px; background: var(--gold); color: #000; border: none; font-weight: 900; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -76,7 +68,7 @@
 <main id="wall"></main>
 
 <footer>
-    <div id="s-box" onscroll="syncStyle()">
+    <div id="s-box" onscroll="sync()">
         <div class="s-opt">🚀 ШИЗА-ЛЮКС</div>
         <div class="s-opt">🍗 ПРОЖАРКА</div>
         <div class="s-opt">🕺 ДИСКО-ПАНИКА</div>
@@ -87,55 +79,60 @@
         <div class="s-opt">🧟‍♂️ ТРЭШ-ОПТИМИЗМ</div>
         <div class="s-opt">§ БЫТ</div>
     </div>
-    <input type="text" id="in" placeholder="Введите текст...">
-    <button class="btn-ok" onclick="addCard()">ОК</button>
+    <input type="text" id="in" placeholder="Слова...">
+    <button class="btn-ok" onclick="push()">ОК</button>
 </footer>
 
 <script>
-    let activeStyle = "🚀 ШИЗА-ЛЮКС";
-    const sBox = document.getElementById('s-box');
+    let curStyle = "🚀 ШИЗА-ЛЮКС";
+    const box = document.getElementById('s-box');
 
-    function syncStyle() {
-        const index = Math.round(sBox.scrollLeft / sBox.offsetWidth);
-        if (sBox.children[index]) {
-            activeStyle = sBox.children[index].innerText;
-        }
+    function sync() {
+        const idx = Math.round(box.scrollLeft / box.offsetWidth);
+        if (box.children[idx]) curStyle = box.children[idx].innerText;
     }
 
-    function addCard() {
+    function push() {
         const input = document.getElementById('in');
-        const wall = document.getElementById('wall');
         const val = input.value.trim();
         if(!val) return;
 
         const card = document.createElement('div');
         card.className = 'v-card';
         card.innerHTML = `
-            <div style="font-size:0.7rem; color:#666;">#${val} | ${activeStyle}</div>
-            <div class="v-text" contenteditable="true">V8.0 Connected...</div>
+            <div style="font-size:0.6rem; color:#555;">#${val} | ${curStyle}</div>
+            <div class="v-text" contenteditable="true">Generation...</div>
+            <div class="v-trans-area"></div>
             <div class="v-ctrl">
-                <button class="v-btn" onclick="copyText(this)">КЛИП</button>
-                <button class="v-btn" onclick="translateText(this)">ПЕРЕВЕСТИ</button>
+                <button class="v-btn" onclick="copy(this)">КЛИП</button>
+                <button class="v-btn" onclick="tr(this)">ПЕРЕВОД</button>
                 <button class="v-btn" onclick="this.closest('.v-card').remove()">🗑</button>
             </div>
         `;
-        wall.prepend(card);
+        document.getElementById('wall').prepend(card);
         input.value = '';
+
+        // Имитация генерации
+        setTimeout(() => {
+            card.querySelector('.v-text').innerText = "Gold lines are thin,\nLet the fun begin,\nMemory is a win,\nWithout any sin!";
+        }, 600);
     }
 
-    function copyText(btn) {
-        const txt = btn.closest('.v-card').querySelector('.v-text').innerText;
-        navigator.clipboard.writeText(txt);
-        btn.innerText = "OK";
-        setTimeout(() => btn.innerText = "КЛИП", 1000);
+    function copy(b) {
+        const t = b.closest('.v-card').querySelector('.v-text').innerText;
+        navigator.clipboard.writeText(t);
+        b.innerText = "OK"; setTimeout(() => b.innerText = "КЛИП", 800);
     }
 
-    function translateText(btn) {
-        const txt = btn.closest('.v-card').querySelector('.v-text').innerText;
-        window.open(`https://translate.google.com/?text=${encodeURIComponent(txt)}`, '_blank');
+    function tr(b) {
+        const card = b.closest('.v-card');
+        const area = card.querySelector('.v-trans-area');
+        // В реальности тут будет запрос к API перевода, сейчас - имитация
+        area.innerText = "Золотые линии тонки, пусть начнется веселье, память — это победа, без всякого греха!";
+        area.style.display = area.style.display === 'block' ? 'none' : 'block';
     }
 
-    document.getElementById('in').onkeydown = (e) => { if(e.key==='Enter') addCard(); };
+    document.getElementById('in').onkeydown = (e) => { if(e.key==='Enter') push(); };
 </script>
 </body>
 </html>
