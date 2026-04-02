@@ -73,14 +73,16 @@
 <div id="google_translate_element" style="display:none"></div>
 
 <script>
-    let currentStyle = "§ БЫТ";
+   let currentStyle = "§ БЫТ"; // Убедись, что эта переменная объявлена в начале скрипта
 
     // Поддержка колесика мыши для выбора стиля
     const sBox = document.getElementById('s-box');
-    sBox.addEventListener('wheel', (e) => {
-        e.preventDefault();
-        sBox.scrollLeft += e.deltaY;
-    });
+    if(sBox) {
+        sBox.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            sBox.scrollLeft += e.deltaY;
+        });
+    }
 
     function updateStyle() {
         const index = Math.round(sBox.scrollLeft / 100);
@@ -112,11 +114,14 @@
             const model = BEUVRY_CONFIG.MODELS_PRIORITY[0];
             const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${cleanKey}`;
 
+            // Инструкция теперь учитывает глобальный язык Клуба для генерации
+            const clubLang = localStorage.getItem('gy_lang') || 'ru';
+            
             const response = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    contents: [{ parts: [{ text: `Напиши 4 строки стиха на русском. Тема: ${val}. Стиль юмора: ${currentStyle}. Только текст.` }] }]
+                    contents: [{ parts: [{ text: `Напиши 4 строки юмористического стиха. Язык: ${clubLang}. Тема: ${val}. Стиль: ${currentStyle}. Только текст.` }] }]
                 })
             });
 
@@ -127,12 +132,17 @@
             }
 
             const verse = data.candidates[0].content.parts[0].text.trim();
+            
+            // СБОРКА КАРТОЧКИ С КНОПКОЙ 文A И СКРЫТЫМ ПОЛЕМ
             card.innerHTML = `
                 <div style="font-size:0.6rem; color:#444;">#${val.split(' ').join(' #')} | ${currentStyle}</div>
                 <div class="v-text" contenteditable="true">${verse}</div>
+                
+                <div id="trans-${cardId}" style="display:none; color:#888; font-size:0.9rem; border-top:1px dashed #333; padding-top:8px; margin-top:8px; font-style:italic;"></div>
+
                 <div class="v-ctrl">
-                    <button class="v-btn" onclick="saveTxt('${cardId}')">💾</button>
-                    <button class="v-btn" onclick="alert('Переслано')">✈</button>
+                    <button class="v-btn" onclick="saveTxt('${cardId}')" title="Копировать">💾</button>
+                    <button class="v-btn" onclick="toggleTranslation('${cardId}')" title="Перевести">文A</button>
                     <button class="v-btn klip" onclick="toKlip('${cardId}')">🎬 KLIP</button>
                     <button class="v-btn" onclick="document.getElementById('${cardId}').remove()">🗑</button>
                 </div>
@@ -143,27 +153,40 @@
         wall.scrollTop = wall.scrollHeight;
     }
 
+    // НОВАЯ ФУНКЦИЯ УМНОГО ПЕРЕВОДА
+    async function toggleTranslation(id) {
+        const transDiv = document.getElementById(`trans-${id}`);
+        const originalText = document.getElementById(id).querySelector('.v-text').innerText;
+        const targetLang = localStorage.getItem('gy_lang') || 'en';
+
+        if (transDiv.style.display === 'block') {
+            transDiv.style.display = 'none';
+            return;
+        }
+
+        if (transDiv.innerText === "") {
+            transDiv.innerText = "...";
+            transDiv.style.display = 'block';
+            try {
+                const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLang}&dt=t&q=${encodeURI(originalText)}`);
+                const data = await res.json();
+                transDiv.innerHTML = `<span style="color:var(--gold)">🌍</span> ` + data[0].map(x => x[0]).join('');
+            } catch (e) { transDiv.innerText = "Error translation"; }
+        } else {
+            transDiv.style.display = 'block';
+        }
+    }
+
     function saveTxt(id) {
         const t = document.getElementById(id).querySelector('.v-text').innerText;
-        alert("Текст сохранен в буфер!");
         navigator.clipboard.writeText(t);
+        alert("Текст скопирован!");
     }
 
     function toKlip(id) {
         const t = document.getElementById(id).querySelector('.v-text').innerText;
         localStorage.setItem('current_verse', t);
         location.href = 'klip_page.html';
-    }
-
-    function openTranslate() {
-        const script = document.createElement('script');
-        script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-        document.body.appendChild(script);
-        alert("Google Translate активирован. Выберите язык в панели.");
-    }
-
-    function googleTranslateElementInit() {
-        new google.translate.TranslateElement({pageLanguage: 'ru'}, 'google_translate_element');
     }
 </script>
 
