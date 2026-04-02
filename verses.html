@@ -1,143 +1,173 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY CLUB v6.2</title>
+    <title>GY-GY CLUB v7.1</title>
     <style>
         :root { 
             --gold: #ffd700; 
             --bg: #000; 
-            --border: 1px solid #ffd700; 
+            --border: 2px solid #ffd700; 
         }
+        
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
         
         body, html { 
             width: 100%; height: 100%; 
             background: var(--bg); color: var(--gold); 
-            font-family: 'Courier New', monospace; 
+            font-family: 'Courier New', Courier, monospace; 
             display: flex; flex-direction: column; overflow: hidden; 
         }
 
-        /* HEADER — С НОМЕРОМ ВЕРСИИ */
+        /* HEADER */
         header { 
-            height: 70px; display: flex; align-items: center; justify-content: space-between; 
-            border-bottom: var(--border); padding: 0 10px; flex-shrink: 0; background: #000; z-index: 1000; 
+            height: 75px; display: flex; align-items: center; justify-content: space-between; 
+            border-bottom: var(--border); padding: 0 15px; flex-shrink: 0; background: #000;
         }
-        .logo-area { text-align: center; }
-        .logo-gy { font-size: 1.1rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; }
-        .v-num { font-size: 0.6rem; color: #555; display: block; margin-top: -2px; }
+        
+        .logo-area { text-align: center; flex-grow: 1; }
+        .logo-gy { font-size: 1.3rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; }
+        .v-tag { font-size: 0.75rem; color: #ff0000; font-weight: 900; }
 
-        .nav-fix { 
-            width: 45px; height: 45px; border: var(--border); 
+        .nav-btn { 
+            width: 50px; height: 50px; border: var(--border); 
             display: flex; align-items: center; justify-content: center; 
-            cursor: pointer; color: var(--gold); font-weight: 900; font-size: 1.4rem; 
+            cursor: pointer; color: var(--gold); font-size: 1.6rem; font-weight: 900;
+            background: #111;
         }
+        .nav-btn:active { background: var(--gold); color: #000; }
 
         /* WALL */
-        #wall { flex-grow: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; background: #050505; }
-        .v-card { border: 1px solid #333; background: #000; padding: 15px; border-left: 3px solid var(--gold); animation: fadeIn 0.3s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        #wall { flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 20px; background: #080808; }
         
-        .v-text { font-size: 1.2rem; color: #fff; outline: none; white-space: pre-wrap; margin: 10px 0; line-height: 1.4; }
-        
-        /* КНОПКИ УПРАВЛЕНИЯ */
-        .v-ctrl { display: flex; gap: 5px; margin-top: 10px; border-top: 1px solid #222; padding-top: 8px; }
-        .v-btn { background: #111; border: 1px solid #444; color: var(--gold); padding: 10px; cursor: pointer; flex: 1; font-size: 0.8rem; font-weight: 900; }
+        .v-card { border: 1px solid #444; background: #000; padding: 15px; border-left: 5px solid var(--gold); position: relative; }
+        .v-meta { font-size: 0.7rem; color: #666; margin-bottom: 8px; text-transform: uppercase; }
+        .v-text { font-size: 1.25rem; color: #fff; margin: 10px 0; outline: none; white-space: pre-wrap; line-height: 1.5; }
+
+        .v-ctrl { display: flex; gap: 8px; margin-top: 15px; border-top: 1px solid #333; padding-top: 12px; }
+        .v-btn { background: #1a1a1a; border: 1px solid var(--gold); color: var(--gold); padding: 12px; cursor: pointer; flex: 1; font-weight: 900; font-size: 0.85rem; text-transform: uppercase; }
 
         /* FOOTER (100PX) */
         footer { 
             height: 100px; display: flex; align-items: center; 
-            padding: 0 10px; gap: 8px; border-top: var(--border); 
+            padding: 0 15px; gap: 10px; border-top: var(--border); 
             background: #000; flex-shrink: 0; 
         }
 
-        .style-scroll-box { 
-            flex: 0 0 115px; height: 55px; background: #111; border: var(--border); 
-            border-radius: 4px; overflow-x: auto; display: flex; 
-            align-items: center; scroll-snap-type: x mandatory; scrollbar-width: none;
+        /* СКРОЛЛ СТИЛЕЙ — ВОЗВРАТ ПОЛНЫХ НАЗВАНИЙ */
+        #s-box { 
+            width: 130px; height: 60px; border: 1px solid var(--gold); 
+            overflow-x: scroll; display: flex; align-items: center; 
+            scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+            background: #111; flex-shrink: 0;
         }
-        .style-scroll-box::-webkit-scrollbar { display: none; }
+        #s-box::-webkit-scrollbar { display: none; }
+        
         .s-opt { 
-            min-width: 100%; height: 100%; display: flex; 
-            align-items: center; justify-content: center; 
-            scroll-snap-align: center; font-size: 0.7rem; 
-            font-weight: 900; color: var(--gold); text-transform: uppercase; 
-            flex-shrink: 0; 
+            min-width: 128px; 
+            height: 100%; display: flex; align-items: center; justify-content: center; 
+            scroll-snap-align: center; font-size: 0.65rem; font-weight: 900; 
+            color: var(--gold); flex-shrink: 0; text-align: center; padding: 0 5px;
+            white-space: normal; line-height: 1.1;
         }
 
-        #in { flex: 1; height: 55px; background: #000; border: 1px solid #333; color: var(--gold); padding: 0 12px; font-size: 1rem; outline: none; }
-        .btn-ok { height: 55px; padding: 0 20px; background: var(--gold); color: #000; border: none; font-weight: 900; cursor: pointer; }
+        #in { flex-grow: 1; height: 60px; background: #000; border: 1px solid #444; color: var(--gold); padding: 0 15px; font-size: 1.1rem; outline: none; font-family: inherit; }
+        .btn-ok { height: 60px; padding: 0 25px; background: var(--gold); color: #000; border: none; font-weight: 900; cursor: pointer; font-size: 1.1rem; }
 
     </style>
 </head>
-<body onload="console.log('GY-GY CLUB v6.2 LOADED')">
+<body>
 
 <header>
-    <div class="nav-fix" onclick="window.history.back()">&#10094;</div>
+    <div class="nav-btn" onclick="window.history.back()">&#10094;</div>
     <div class="logo-area">
         <div class="logo-gy">GY-GY CLUB</div>
-        <span class="v-num">build: v6.2 [stable]</span>
+        <div class="v-tag">BUILD: v7.1 [FULL_DATA]</div>
     </div>
-    <div class="nav-fix" onclick="window.history.forward()">&#10095;</div>
+    <div class="nav-btn" onclick="window.history.forward()">&#10095;</div>
 </header>
 
-<main id="wall"></main>
+<main id="wall">
+    </main>
 
 <footer>
-    <div id="s-box" class="style-scroll-box" onscroll="updateStyle()">
+    <div id="s-box" onscroll="updateCurrentStyle()">
         <div class="s-opt">🚀 ШИЗА-ЛЮКС</div>
         <div class="s-opt">🍗 ПРОЖАРКА</div>
         <div class="s-opt">🕺 ДИСКО-ПАНИКА</div>
         <div class="s-opt">👵 БАБУШКА-ХАКЕР</div>
         <div class="s-opt">🛸 ЗОНА 51</div>
+        <div class="s-opt">🎩 ЛОРД-АБСУРД</div>
         <div class="s-opt">🧪 КИБЕР-ГОГОЛЬ</div>
+        <div class="s-opt">🧟‍♂️ ТРЭШ-ОПТИМИЗМ</div>
         <div class="s-opt">§ БЫТ</div>
     </div>
-    <input type="text" id="in" placeholder="4 слова..." onkeydown="if(event.key==='Enter') generate()">
-    <button class="btn-ok" onclick="generate()">ОК</button>
+    <input type="text" id="in" placeholder="Введите 4 слова..." autocomplete="off">
+    <button class="btn-ok" onclick="handleGenerate()">ОК</button>
 </footer>
 
 <script>
-    let currentStyle = "🚀 ШИЗА-ЛЮКС";
+    let activeStyle = "🚀 ШИЗА-ЛЮКС";
+    const wall = document.getElementById('wall');
+    const input = document.getElementById('in');
+    const sBox = document.getElementById('s-box');
 
-    function updateStyle() {
-        const box = document.getElementById('s-box');
-        const index = Math.round(box.scrollLeft / box.clientWidth);
-        if (box.children[index]) currentStyle = box.children[index].innerText;
+    // Функция обновления стиля при скролле
+    function updateCurrentStyle() {
+        const index = Math.round(sBox.scrollLeft / sBox.clientWidth);
+        if (sBox.children[index]) {
+            activeStyle = sBox.children[index].innerText;
+        }
     }
 
-    function generate() {
-        const val = document.getElementById('in').value;
-        if(!val) return;
-        const wall = document.getElementById('wall');
+    // Основная генерация
+    function handleGenerate() {
+        const text = input.value.trim();
+        if (!text) return;
+
         const card = document.createElement('div');
         card.className = 'v-card';
         card.innerHTML = `
-            <div style="font-size:0.6rem; color:#444;">#${val} | ${currentStyle}</div>
-            <div class="v-text" contenteditable="true">Wait for Gemini response...</div>
+            <div class="v-meta">#${text} | СТИЛЬ: ${activeStyle}</div>
+            <div class="v-text" contenteditable="true">Подключаю нейронные связи для "${activeStyle}"...</div>
             <div class="v-ctrl">
-                <button class="v-btn" onclick="copyClip(this)">КЛИП</button>
-                <button class="v-btn" onclick="translateThis(this)">ПЕРЕВЕСТИ</button>
+                <button class="v-btn" onclick="copyCard(this)">КЛИП</button>
+                <button class="v-btn" onclick="translateCard(this)">ПЕРЕВЕСТИ</button>
                 <button class="v-btn" onclick="this.closest('.v-card').remove()">🗑</button>
             </div>
         `;
         wall.prepend(card);
-        document.getElementById('in').value = '';
+        input.value = '';
+
+        // Имитация ответа (сюда пойдет запрос к Gemini)
+        setTimeout(() => {
+            card.querySelector('.v-text').innerText = "The logic is pure,\nThe humor is sure,\nGY-GY is the cure,\nThat we all endure!";
+        }, 1000);
     }
 
-    function copyClip(btn) {
+    // КЛИП
+    function copyCard(btn) {
         const txt = btn.closest('.v-card').querySelector('.v-text').innerText;
-        navigator.clipboard.writeText(txt);
-        btn.innerText = "OK!";
-        setTimeout(() => btn.innerText = "КЛИП", 1000);
+        navigator.clipboard.writeText(txt).then(() => {
+            const old = btn.innerText;
+            btn.innerText = "СКОПИРОВАНО";
+            setTimeout(() => btn.innerText = old, 1000);
+        });
     }
 
-    function translateThis(btn) {
+    // ПЕРЕВОД
+    function translateCard(btn) {
         const txt = btn.closest('.v-card').querySelector('.v-text').innerText;
-        window.open(`https://translate.google.com/?text=${encodeURIComponent(txt)}`, '_blank');
+        window.open(`https://translate.google.com/?sl=auto&tl=ru&text=${encodeURIComponent(txt)}&op=translate`, '_blank');
     }
+
+    // Enter
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') handleGenerate();
+    });
+
 </script>
-
 </body>
 </html>
