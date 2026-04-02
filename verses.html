@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY CLUB v4.0</title>
+    <title>GY-GY CLUB v5.0 — TOTAL RECOVERY</title>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
@@ -16,69 +16,69 @@
             display: flex; flex-direction: column; overflow: hidden; 
         }
 
-        /* HEADER */
+        /* HEADER — КЛАССИКА GY-GY */
         header { 
-            height: 60px; display: flex; align-items: center; justify-content: space-between; 
+            height: 70px; display: flex; align-items: center; justify-content: space-between; 
             border-bottom: var(--border); padding: 0 10px; flex-shrink: 0; background: #000; z-index: 1000; 
         }
-        .logo-gy { font-size: 1.1rem; font-weight: 900; letter-spacing: 2px; text-align: center; flex-grow: 1; }
+        .logo-gy { font-size: 1.1rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; }
         
-        /* Кнопки навигации (Стрелка и Глобус) */
+        /* ТЕ САМЫЕ СТРЕЛКИ (ДО КАТАСТРОФЫ) */
         .nav-fix { 
-            width: 42px; height: 42px; border: 1px solid #333; 
+            width: 45px; height: 45px; border: var(--border); 
             display: flex; align-items: center; justify-content: center; 
             cursor: pointer; text-decoration: none; color: var(--gold); 
-            font-size: 1.5rem; border-radius: 5px; background: #111;
+            font-weight: 900; font-size: 1.4rem; background: transparent;
         }
 
         /* WALL */
         #wall { 
             flex-grow: 1; overflow-y: auto; padding: 15px; 
             display: flex; flex-direction: column; gap: 15px; 
-            background: #050505; padding-bottom: 20px; 
+            background: #050505; 
         }
         .v-card { border: 1px solid #333; background: #000; padding: 15px; border-left: 3px solid var(--gold); animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
         .v-text { font-size: 1.1rem; color: #fff; outline: none; white-space: pre-wrap; margin: 10px 0; line-height: 1.4; }
         .v-ctrl { display: flex; gap: 5px; margin-top: 10px; border-top: 1px solid #222; padding-top: 8px; }
-        .v-btn { background: #111; border: 1px solid #444; color: #888; padding: 10px; cursor: pointer; flex: 1; font-size: 0.9rem; border-radius: 4px; }
+        .v-btn { background: #111; border: 1px solid #444; color: #888; padding: 10px; cursor: pointer; flex: 1; font-size: 0.9rem; }
         .v-btn.klip { border-color: var(--gold); color: var(--gold); font-weight: 900; }
 
-        /* FOOTER — ПАНЕЛЬ-МОНОЛИТ */
+        /* FOOTER — ИДЕАЛЬНАЯ ЛИНИЯ */
         footer { 
             height: 65px; display: flex; align-items: stretch; 
             padding: 10px; gap: 8px; border-top: var(--border); 
             background: #000; flex-shrink: 0; 
         }
 
-        /* 1. БЛОК СТИЛЕЙ (СКРОЛЛ) */
+        /* РАБОЧИЙ СКРОЛЛ СТИЛЕЙ */
         .style-scroll-box { 
-            flex: 0 0 110px; /* Фиксированная ширина для скролла */
-            background: #111; border: 1px solid #333; 
+            flex: 0 0 115px; background: #111; border: 1px solid #333; 
             border-radius: 4px; overflow-x: auto; display: flex; 
             align-items: center; scroll-snap-type: x mandatory; 
+            scrollbar-width: none;
         }
         .style-scroll-box::-webkit-scrollbar { display: none; }
+
         .s-opt { 
             min-width: 100%; height: 100%; display: flex; 
             align-items: center; justify-content: center; 
             scroll-snap-align: center; font-size: 0.65rem; 
             font-weight: 900; color: var(--gold); text-transform: uppercase; 
-            flex-shrink: 0; padding: 0 5px; text-align: center;
+            flex-shrink: 0; white-space: nowrap; padding: 0 5px;
         }
 
-        /* 2. ПОЛЕ ВВОДА */
+        /* ПОЛЕ ВВОДА */
         #in { 
             flex: 1; background: #000; border: 1px solid #333; 
             color: var(--gold); padding: 0 12px; font-size: 1rem; 
             outline: none; border-radius: 4px; font-family: inherit;
         }
 
-        /* 3. КНОПКА ОК */
+        /* КНОПКА ОК */
         .btn-ok { 
-            flex: 0 0 55px; /* Аккуратная фиксированная кнопка */
-            background: var(--gold); color: #000; 
+            flex: 0 0 60px; background: var(--gold); color: #000; 
             border: none; font-weight: 900; cursor: pointer; 
             border-radius: 4px; display: flex; align-items: center; justify-content: center;
         }
@@ -89,9 +89,9 @@
 <body onload="init()">
 
 <header>
-    <div class="nav-fix" onclick="history.back()">&#8592;</div>
+    <div class="nav-fix" onclick="history.back()">&#10094;</div>
     <div class="logo-gy">GY-GY CLUB</div>
-    <div class="nav-fix">🌐</div>
+    <div class="nav-fix" onclick="location.reload()">&#8634;</div>
 </header>
 
 <main id="wall">
@@ -127,7 +127,7 @@
     }
 
     function init() {
-        console.log("Клуб GY-GY готов. Стиль:", currentStyle);
+        console.log("GY-GY System Online. Style:", currentStyle);
     }
 
     async function generate() {
@@ -137,27 +137,23 @@
         const wall = document.getElementById('wall');
         const card = document.createElement('div');
         card.className = 'v-card';
-        card.innerHTML = `<div class="v-text" style="color:#444;">Генерирую безумие [${currentStyle}]...</div>`;
+        card.innerHTML = `<div class="v-text" style="color:#444;">Магия в процессе [${currentStyle}]...</div>`;
         wall.prepend(card);
         document.getElementById('in').value = '';
 
-        try {
-            // Здесь будет твой fetch к Gemini
-            // Имитация ответа для теста:
-            setTimeout(() => {
-                const verse = "The cat is a laser,\nThe moon is a pie,\nI'm eating my blazer,\nDon't even ask why!";
-                card.innerHTML = `
-                    <div style="font-size:0.6rem; color:#444;">#${val} | ${currentStyle}</div>
-                    <div class="v-text" contenteditable="true">${verse}</div>
-                    <div class="v-ctrl">
-                        <button class="v-btn" onclick="alert('💾 Сохранено')">💾</button>
-                        <button class="v-btn" onclick="this.closest('.v-card').remove()">🗑</button>
-                    </div>
-                `;
-            }, 1500);
-        } catch (e) {
-            card.innerHTML = "Ошибка связи с космосом...";
-        }
+        // Здесь ты вставишь свой реальный запрос к Gemini
+        // Тестовая заглушка:
+        setTimeout(() => {
+            const verse = "The cat is on fire,\nThe moon is a tire,\nI'm part of the choir,\nIn a glitchy empire!";
+            card.innerHTML = `
+                <div style="font-size:0.6rem; color:#444;">#${val} | ${currentStyle}</div>
+                <div class="v-text" contenteditable="true">${verse}</div>
+                <div class="v-ctrl">
+                    <button class="v-btn" onclick="alert('💾')">💾</button>
+                    <button class="v-btn" onclick="this.closest('.v-card').remove()">🗑</button>
+                </div>
+            `;
+        }, 1200);
     }
 </script>
 
