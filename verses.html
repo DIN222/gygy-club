@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY | VERSES CONSOLE 2</title>
+    <title>GY-GY | VERSES CONSOLE 3</title>
     <script src="config.js"></script>
     <style>
         :root { --gold: #ffd700; --bg: #000; --border: 1px solid #ffd700; }
@@ -115,6 +115,11 @@
         card.id = cardId;
         card.innerHTML = `<div class="v-text">Стиль: ${currentStyle}. Варка...</div>`;
         wall.appendChild(card);
+        card.innerHTML = `
+    <div class="v-text" style="color: #666; font-style: italic;" translate="no">
+        [${currentStyle}] Brewing magic... 🧪
+    </div>
+`;
         input.value = "";
         wall.scrollTop = wall.scrollHeight;
 
@@ -143,19 +148,26 @@
             const verse = data.candidates[0].content.parts[0].text.trim();
             
             // СБОРКА КАРТОЧКИ С КНОПКОЙ 文A И СКРЫТЫМ ПОЛЕМ
-            card.innerHTML = `
-                <div style="font-size:0.6rem; color:#444;">#${val.split(' ').join(' #')} | ${currentStyle}</div>
-                <div class="v-text" contenteditable="true">${verse}</div>
-                
-                <div id="trans-${cardId}" style="display:none; color:#888; font-size:0.9rem; border-top:1px dashed #333; padding-top:8px; margin-top:8px; font-style:italic;"></div>
+            // СБОРКА КАРТОЧКИ (v35.8 - Дружелюбная к Chrome и Safari)
+card.innerHTML = `
+    <div style="font-size:0.6rem; color:#444;">#${val.split(' ').join(' #')} | ${currentStyle}</div>
+    
+    <div class="v-text" 
+         translate="yes"
+         onclick="this.contentEditable=true; this.focus();" 
+         style="cursor: text; min-height: 50px;">${verse}</div>
+    
+    <div id="trans-${cardId}" style="display:none; color:#ffd700; font-size:0.9rem; border-top:1px dashed #333; padding-top:8px; margin-top:8px; font-style:italic; opacity: 0.8;"></div>
 
-                <div class="v-ctrl">
-                    <button class="v-btn" onclick="saveTxt('${cardId}')" title="Копировать">💾</button>
-                    <button class="v-btn" onclick="toggleTranslation('${cardId}')" title="Перевести">文A</button>
-                    <button class="v-btn klip" onclick="toKlip('${cardId}')">🎬 KLIP</button>
-                    <button class="v-btn" onclick="document.getElementById('${cardId}').remove()">🗑</button>
-                </div>
-            `;
+    <div class="v-ctrl">
+        <button class="v-btn" onclick="saveTxt('${cardId}')" title="Копировать">💾</button>
+        
+        <button class="v-btn" onclick="toggleTranslation('${cardId}')" title="Translate">文A</button>
+        
+        <button class="v-btn klip" onclick="toKlip('${cardId}')">🎬 KLIP</button>
+        <button class="v-btn" onclick="document.getElementById('${cardId}').remove()">🗑</button>
+    </div>
+`;
         } catch (e) {
             card.innerHTML = `<div style="color:red">Сбой. Проверь Localhost.</div>`;
         }
