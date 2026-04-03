@@ -1,156 +1,165 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY CLUB v8.6</title>
+    <title>GY-GY CLUB | AI Room: Verses8.7</title>
     <style>
-        :root { --gold: #ffd700; --bg: #000; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-        
-        body, html { 
-            width: 100%; height: 100%; background: var(--bg); color: var(--gold); 
-            font-family: 'Courier New', monospace; display: flex; flex-direction: column; overflow: hidden; 
+        body {
+            background-color: #000; /* Чистый черный — основа */
+            color: #ffd700; /* Золото — свет сути */
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            overflow: hidden;
         }
 
-        header { 
-            height: 65px; display: flex; align-items: center; justify-content: space-between; 
-            border-bottom: 1px solid var(--gold); padding: 0 15px; flex-shrink: 0; 
-        }
-        .nav-link { 
-            width: 45px; height: 45px; border: 1px solid var(--gold); 
-            display: flex; align-items: center; justify-content: center; 
-            text-decoration: none; color: var(--gold); font-weight: 900;
-        }
-
-        #wall { flex-grow: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; }
-        
-        .v-card { border: 1px solid #333; background: #000; padding: 15px; border-left: 4px solid var(--gold); animation: slideIn 0.3s ease; }
-        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
-
-        .v-meta { font-size: 0.7rem; color: #555; margin-bottom: 8px; text-transform: uppercase; }
-        .v-text { font-size: 1.2rem; color: #fff; margin: 10px 0; outline: none; white-space: pre-wrap; line-height: 1.4; }
-        .v-trans-area { font-size: 1rem; color: #aaa; border-top: 1px dashed #444; margin-top: 10px; padding-top: 10px; display: none; font-style: italic; }
-
-        .v-ctrl { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 10px; }
-        .v-btn { background: #111; border: 1px solid #444; color: var(--gold); padding: 10px; cursor: pointer; font-size: 0.75rem; font-weight: 900; }
-
-        footer { 
-            height: 100px; display: flex; align-items: center; 
-            padding: 0 10px; gap: 10px; border-top: 1px solid var(--gold); flex-shrink: 0; 
+        /* ВЕРХНЯЯ ПАНЕЛЬ: ГЕНЕРАТОР ИСКР */
+        #idea-panel {
+            width: 100%;
+            height: 60px;
+            background: #0a0a0a;
+            border-bottom: 1px solid #333;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            box-sizing: border-box;
+            justify-content: space-between;
         }
 
-        #s-box { 
-            width: 120px; height: 60px; border: 1px solid var(--gold); 
-            overflow-x: auto; white-space: nowrap; display: block; 
-            scroll-snap-type: x mandatory; background: #111; flex-shrink: 0;
-            scrollbar-width: none;
-        }
-        #s-box::-webkit-scrollbar { display: none; }
-        .s-opt { 
-            display: inline-flex; width: 100%; height: 100%; 
-            align-items: center; justify-content: center; 
-            scroll-snap-align: start; font-size: 0.65rem; font-weight: 900; 
-            color: var(--gold); text-align: center; white-space: normal;
+        .vector-btn {
+            background: transparent;
+            border: 1px solid #ffd700;
+            color: #ffd700;
+            padding: 5px 15px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 2px;
         }
 
-        #in { flex-grow: 1; height: 60px; background: #000; border: 1px solid #333; color: var(--gold); padding: 0 12px; font-size: 1.1rem; outline: none; }
-        .btn-ok { height: 60px; padding: 0 20px; background: var(--gold); color: #000; border: none; font-weight: 900; cursor: pointer; }
+        .vector-btn:hover {
+            background: #ffd700;
+            color: #000;
+            box-shadow: 0 0 15px #ffd700;
+        }
+
+        #idea-display {
+            flex-grow: 1;
+            text-align: center;
+            font-style: italic;
+            color: #888;
+            transition: opacity 0.5s;
+        }
+
+        /* ОСНОВНАЯ ЗОНА: КУПЛЕТЫ */
+        #workspace {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: calc(100vh - 60px);
+        }
+
+        #verse-input {
+            width: 60%;
+            height: 200px;
+            background: #050505;
+            border: 1px solid #222;
+            color: #fff;
+            padding: 20px;
+            font-size: 18px;
+            resize: none;
+            outline: none;
+            box-shadow: inset 0 0 10px #000;
+        }
+
+        #verse-input:focus {
+            border-color: #ffd700;
+        }
+
+        .status-bar {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #444;
+        }
+
+        /* ЭФФЕКТ ГЛУБИНЫ */
+        .depth-mode {
+            text-shadow: 0 0 8px #ffd700;
+            animation: breathe 4s infinite;
+        }
+
+        @keyframes breathe {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
     </style>
 </head>
 <body>
 
-<header>
-    <a href="ai_room_core_v8.html" class="nav-link">&#10094;</a>
-    <div style="font-weight:900; letter-spacing:2px;">GY-GY CLUB</div>
-    <a href="box_page.html" class="nav-link">&#10095;</a>
-</header>
-
-<main id="wall"></main>
-
-<footer>
-    <div id="s-box" onscroll="updateStyle()" onwheel="handleWheel(event)">
-        <div class="s-opt">🚀 ШИЗА-ЛЮКС</div>
-        <div class="s-opt">🍗 ПРОЖАРКА</div>
-        <div class="s-opt">🕺 ДИСКО-ПАНИКА</div>
-        <div class="s-opt">👵 БАБУШКА-ХАКЕР</div>
-        <div class="s-opt">🛸 ЗОНА 51</div>
-        <div class="s-opt">🎩 ЛОРД-АБСУРД</div>
-        <div class="s-opt">🧪 КИБЕР-ГОГОЛЬ</div>
-        <div class="s-opt">🧟‍♂️ ТРЭШ-ОПТИМИЗМ</div>
-        <div class="s-opt">§ БЫТ</div>
+    <div id="idea-panel">
+        <button class="vector-btn" onclick="getSpark('impulse')">⚡ Импульс</button>
+        <div id="idea-display">Выберите вектор, чтобы высечь искру...</div>
+        <div>
+            <button class="vector-btn" onclick="getSpark('depth')">🌀 Глубина</button>
+            <button class="vector-btn" onclick="getSpark('gy-gy')">🃏 ГИ-ГИ</button>
+        </div>
     </div>
-    <input type="text" id="in" placeholder="Напишите 4 слова...">
-    <button class="btn-ok" onclick="generate()">ОК</button>
-</footer>
 
-<script>
-    let activeStyle = "🚀 ШИЗА-ЛЮКС";
-    const sBox = document.getElementById('s-box');
+    <div id="workspace">
+        <textarea id="verse-input" placeholder="Пиши здесь... или лови искру сверху."></textarea>
+        <div class="status-bar">Статус: <span id="current-mode">Ожидание...</span></div>
+        <button class="vector-btn" style="margin-top:20px;" onclick="generateClip()">🎬 СОЗДАТЬ КЛИП</button>
+    </div>
 
-    function handleWheel(e) {
-        if (e.deltaY !== 0) { e.preventDefault(); sBox.scrollLeft += e.deltaY; }
-    }
+    <script>
+        const ideas = {
+            impulse: [
+                "Твой стакан наполовину полон амбициями, которые не влезают в этот город!",
+                "Падаешь? Нет, парень, ты ЛЕТИШЬ! Опиши этот ветер.",
+                "Ритм сердца — это твой главный бит сегодня. Не сбивайся."
+            ],
+            depth: [
+                "На черном видна только суть. Что осталось в твоем осадке?",
+                "Тишина весит больше слов. Попробуй измерить её вечность...",
+                "Глубина — это не дно, это свобода без гравитации."
+            ],
+            'gy-gy': [
+                "Если рифма не идет — добавь коня. Конь всегда выведет.",
+                "Оптимист даже в пропасти ищет Wi-Fi. А что ищешь ты?",
+                "Твой виски так долго стоял, что уже сам начал писать стихи."
+            ]
+        };
 
-    function updateStyle() {
-        const idx = Math.round(sBox.scrollLeft / sBox.clientWidth);
-        if (sBox.children[idx]) activeStyle = sBox.children[idx].innerText;
-    }
+        function getSpark(vector) {
+            const display = document.getElementById('idea-display');
+            const mode = document.getElementById('current-mode');
+            const input = document.getElementById('verse-input');
+            
+            // Анимация затухания
+            display.style.opacity = 0;
+            
+            setTimeout(() => {
+                const list = ideas[vector];
+                const randomIdea = list[Math.floor(Math.random() * list.length)];
+                display.innerText = randomIdea;
+                display.style.opacity = 1;
+                
+                // Настройка режима
+                mode.innerText = vector.toUpperCase();
+                if (vector === 'depth') {
+                    display.className = 'depth-mode';
+                } else {
+                    display.className = '';
+                }
+            }, 300);
+        }
 
-    function generate() {
-        const input = document.getElementById('in');
-        const val = input.value.trim();
-        if(!val) return;
-
-        const card = document.createElement('div');
-        card.className = 'v-card';
-        card.innerHTML = `
-            <div class="v-meta">#${val} | ${activeStyle}</div>
-            <div class="v-text" contenteditable="true">Смешиваю смыслы...</div>
-            <div class="v-trans-area"></div>
-            <div class="v-ctrl">
-                <button class="v-btn" onclick="copy(this)">КЛИП</button>
-                <button class="v-btn" onclick="trans(this)">ПЕРЕВОД</button>
-                <button class="v-btn" onclick="share(this)">ПЕРЕСЛАТЬ</button>
-                <button class="v-btn" onclick="this.closest('.v-card').remove()">🗑</button>
-            </div>
-        `;
-        document.getElementById('wall').prepend(card);
-        
-        const words = val.split(' ');
-        const w1 = words[0] || "Target";
-        const w2 = words[1] || "Aim";
-        const w3 = words[2] || "Fly";
-        const w4 = words[3] || "Write";
-
-        setTimeout(() => {
-            card.querySelector('.v-text').innerText = 
-                `The ${w1} is set, no time to wait,\nYour ${w2} is locked by iron fate.\nTo ${w3} so high, to ${w4} the lines,\nIn GY-GY club, the spirit shines!`;
-            input.value = '';
-        }, 700);
-    }
-
-    function copy(b) {
-        const t = b.closest('.v-card').querySelector('.v-text').innerText;
-        navigator.clipboard.writeText(t);
-        b.innerText = "ГОТОВО"; setTimeout(() => b.innerText = "КЛИП", 800);
-    }
-
-    function trans(b) {
-        const card = b.closest('.v-card');
-        const area = card.querySelector('.v-trans-area');
-        area.innerText = "Перевод: Первая цель поставлена, нет времени ждать. Твоя цель заперта железной судьбой. Лететь так высоко, писать эти строки... В клубе GY-GY дух сияет!";
-        area.style.display = area.style.display === 'block' ? 'none' : 'block';
-    }
-
-    function share(b) {
-        const text = b.closest('.v-card').querySelector('.v-text').innerText;
-        if (navigator.share) { navigator.share({ text: text }); } 
-        else { alert("Текст скопирован для вставки!"); navigator.clipboard.writeText(text); }
-    }
-
-    document.getElementById('in').onkeydown = (e) => { if(e.key==='Enter') generate(); };
-</script>
+        function generateClip() {
+            alert('Запуск Lyria 3 и Veo... Готовим клип на основе твоей Сути!');
+        }
+    </script>
 </body>
 </html>
+
