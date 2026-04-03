@@ -2,164 +2,172 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY CLUB | AI Room: Verses8.7</title>
+    <title>GY-GY CLUB | AI Room: Verses8.8</title>
     <style>
         body {
-            background-color: #000; /* Чистый черный — основа */
-            color: #ffd700; /* Золото — свет сути */
+            background-color: #000; /* На черном видна только суть */
+            color: #ffd700; 
             font-family: 'Courier New', monospace;
             margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
             overflow: hidden;
         }
 
-        /* ВЕРХНЯЯ ПАНЕЛЬ: ГЕНЕРАТОР ИСКР */
-        #idea-panel {
-            width: 100%;
-            height: 60px;
+        /* ПОСТОЯННЫЙ ВЕРХНИЙ БЛОК (ШАПКА КЛУБА) */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
             background: #0a0a0a;
-            border-bottom: 1px solid #333;
+            border-bottom: 2px solid #222;
+        }
+
+        .logo-area {
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 5px;
+            color: #ffd700;
+        }
+
+        .nav-controls {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .btn-nav {
+            background: transparent;
+            border: 1px solid #444;
+            color: #888;
+            padding: 5px 10px;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 10px;
+        }
+
+        .btn-nav:hover {
+            color: #ffd700;
+            border-color: #ffd700;
+        }
+
+        /* ПАНЕЛЬ ГЕНЕРАТОРА (ВТОРОЙ УРОВЕНЬ) */
+        #generator-bar {
+            height: 50px;
+            background: #111;
             display: flex;
             align-items: center;
             padding: 0 20px;
-            box-sizing: border-box;
-            justify-content: space-between;
+            border-bottom: 1px solid #ffd700;
         }
 
         .vector-btn {
-            background: transparent;
-            border: 1px solid #ffd700;
-            color: #ffd700;
-            padding: 5px 15px;
-            cursor: pointer;
-            transition: 0.3s;
-            text-transform: uppercase;
-            font-size: 12px;
-            letter-spacing: 2px;
-        }
-
-        .vector-btn:hover {
             background: #ffd700;
             color: #000;
-            box-shadow: 0 0 15px #ffd700;
+            border: none;
+            padding: 4px 12px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 0 10px;
+            font-size: 12px;
         }
 
         #idea-display {
             flex-grow: 1;
             text-align: center;
             font-style: italic;
-            color: #888;
-            transition: opacity 0.5s;
+            color: #ffd700;
+            font-size: 14px;
         }
 
-        /* ОСНОВНАЯ ЗОНА: КУПЛЕТЫ */
-        #workspace {
+        /* РАБОЧЕЕ ПРОСТРАНСТВО */
+        main {
+            flex-grow: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: calc(100vh - 60px);
+            position: relative;
         }
 
         #verse-input {
-            width: 60%;
-            height: 200px;
-            background: #050505;
-            border: 1px solid #222;
+            width: 70%;
+            height: 300px;
+            background: transparent;
+            border: 1px solid #333;
             color: #fff;
-            padding: 20px;
-            font-size: 18px;
-            resize: none;
+            padding: 30px;
+            font-size: 20px;
             outline: none;
-            box-shadow: inset 0 0 10px #000;
-        }
-
-        #verse-input:focus {
-            border-color: #ffd700;
-        }
-
-        .status-bar {
-            margin-top: 20px;
-            font-size: 14px;
-            color: #444;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.05);
         }
 
         /* ЭФФЕКТ ГЛУБИНЫ */
-        .depth-mode {
-            text-shadow: 0 0 8px #ffd700;
-            animation: breathe 4s infinite;
+        .depth-active {
+            text-shadow: 0 0 15px #ffd700;
+            transition: 2s ease-in-out;
         }
 
-        @keyframes breathe {
-            0% { opacity: 0.6; }
-            50% { opacity: 1; }
-            100% { opacity: 0.6; }
+        /* ПОДВАЛ / СТАТУС */
+        footer {
+            padding: 10px;
+            font-size: 10px;
+            color: #333;
+            text-align: center;
         }
     </style>
 </head>
 <body>
 
-    <div id="idea-panel">
-        <button class="vector-btn" onclick="getSpark('impulse')">⚡ Импульс</button>
-        <div id="idea-display">Выберите вектор, чтобы высечь искру...</div>
-        <div>
-            <button class="vector-btn" onclick="getSpark('depth')">🌀 Глубина</button>
-            <button class="vector-btn" onclick="getSpark('gy-gy')">🃏 ГИ-ГИ</button>
+    <header>
+        <div class="logo-area">GY-GY</div>
+        
+        <div class="nav-controls">
+            <div class="lang-panel">
+                <button class="btn-nav">RU</button>
+                <button class="btn-nav">EN</button>
+            </div>
+            <button class="btn-nav" onclick="history.back()">← НАЗАД</button>
         </div>
+    </header>
+
+    <div id="generator-bar">
+        <button class="vector-btn" onclick="spawnSpark('impulse')">⚡ ИМПУЛЬС</button>
+        <div id="idea-display">На черном видна только суть... выбери вектор.</div>
+        <button class="vector-btn" onclick="spawnSpark('depth')">🌀 ГЛУБИНА</button>
+        <button class="vector-btn" onclick="spawnSpark('gy-gy')">🃏 ГИ-ГИ</button>
     </div>
 
-    <div id="workspace">
-        <textarea id="verse-input" placeholder="Пиши здесь... или лови искру сверху."></textarea>
-        <div class="status-bar">Статус: <span id="current-mode">Ожидание...</span></div>
-        <button class="vector-btn" style="margin-top:20px;" onclick="generateClip()">🎬 СОЗДАТЬ КЛИП</button>
-    </div>
+    <main>
+        <textarea id="verse-input" placeholder="Лови искру или пиши свой полет..."></textarea>
+        <button class="vector-btn" style="margin-top: 30px; padding: 10px 40px;" onclick="alert('Lyria 3 на связи...')">🎬 СОЗДАТЬ КЛИП</button>
+    </main>
+
+    <footer>GY-GY CLUB © 2026 | AI ROOM | VERSES.HTML</footer>
 
     <script>
-        const ideas = {
-            impulse: [
-                "Твой стакан наполовину полон амбициями, которые не влезают в этот город!",
-                "Падаешь? Нет, парень, ты ЛЕТИШЬ! Опиши этот ветер.",
-                "Ритм сердца — это твой главный бит сегодня. Не сбивайся."
-            ],
-            depth: [
-                "На черном видна только суть. Что осталось в твоем осадке?",
-                "Тишина весит больше слов. Попробуй измерить её вечность...",
-                "Глубина — это не дно, это свобода без гравитации."
-            ],
-            'gy-gy': [
-                "Если рифма не идет — добавь коня. Конь всегда выведет.",
-                "Оптимист даже в пропасти ищет Wi-Fi. А что ищешь ты?",
-                "Твой виски так долго стоял, что уже сам начал писать стихи."
-            ]
+        const library = {
+            impulse: ["Взлетай сейчас! Пропасть — это просто отсутствие пола.", "Твой стакан полон на 100%, остальное — пена."],
+            depth: ["Суть тяжелее слов. Погружайся.", "В тишине слышно, как растет твоя амбиция."],
+            'gy-gy': ["Если рифма хромает — подари ей костыль юмора.", "Конь на входе просил передать: пиши веселее!"]
         };
 
-        function getSpark(vector) {
-            const display = document.getElementById('idea-display');
-            const mode = document.getElementById('current-mode');
+        function spawnSpark(v) {
+            const disp = document.getElementById('idea-display');
             const input = document.getElementById('verse-input');
+            const spark = library[v][Math.floor(Math.random() * library[v].length)];
             
-            // Анимация затухания
-            display.style.opacity = 0;
+            disp.innerText = spark;
             
-            setTimeout(() => {
-                const list = ideas[vector];
-                const randomIdea = list[Math.floor(Math.random() * list.length)];
-                display.innerText = randomIdea;
-                display.style.opacity = 1;
-                
-                // Настройка режима
-                mode.innerText = vector.toUpperCase();
-                if (vector === 'depth') {
-                    display.className = 'depth-mode';
-                } else {
-                    display.className = '';
-                }
-            }, 300);
-        }
-
-        function generateClip() {
-            alert('Запуск Lyria 3 и Veo... Готовим клип на основе твоей Сути!');
+            // Визуальный отклик на "Глубину"
+            if(v === 'depth') {
+                input.classList.add('depth-active');
+            } else {
+                input.classList.remove('depth-active');
+            }
         }
     </script>
 </body>
 </html>
-
