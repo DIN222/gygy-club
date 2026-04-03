@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GY-GY CLUB v8.4</title>
+    <title>GY-GY CLUB v8.5</title>
     <style>
         :root { --gold: #ffd700; --bg: #000; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
@@ -21,25 +21,26 @@
         .nav-link { 
             width: 45px; height: 45px; border: 1px solid var(--gold); 
             display: flex; align-items: center; justify-content: center; 
-            text-decoration: none; color: var(--gold); font-weight: 900; font-size: 1.2rem;
+            text-decoration: none; color: var(--gold); font-weight: 900;
         }
 
-        #wall { flex-grow: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; background: #050505; }
+        #wall { flex-grow: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; }
         
-        .v-card { border: 1px solid #333; background: #000; padding: 15px; border-left: 4px solid var(--gold); }
-        .v-meta { font-size: 0.7rem; color: #666; margin-bottom: 8px; text-transform: uppercase; }
+        .v-card { border: 1px solid #333; background: #000; padding: 15px; border-left: 4px solid var(--gold); animation: slideIn 0.3s ease; }
+        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+
+        .v-meta { font-size: 0.7rem; color: #555; margin-bottom: 8px; text-transform: uppercase; }
         .v-text { font-size: 1.2rem; color: #fff; margin: 10px 0; outline: none; white-space: pre-wrap; line-height: 1.4; }
         .v-trans-area { font-size: 1rem; color: #aaa; border-top: 1px dashed #444; margin-top: 10px; padding-top: 10px; display: none; font-style: italic; }
 
         .v-ctrl { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 10px; }
-        .v-btn { background: #111; border: 1px solid #444; color: var(--gold); padding: 10px; cursor: pointer; font-size: 0.75rem; font-weight: 900; text-transform: uppercase; }
+        .v-btn { background: #111; border: 1px solid #444; color: var(--gold); padding: 10px; cursor: pointer; font-size: 0.75rem; font-weight: 900; }
 
         footer { 
             height: 100px; display: flex; align-items: center; 
             padding: 0 10px; gap: 10px; border-top: 1px solid var(--gold); flex-shrink: 0; 
         }
 
-        /* СКРОЛЛ СТИЛЕЙ */
         #s-box { 
             width: 120px; height: 60px; border: 1px solid var(--gold); 
             overflow-x: auto; white-space: nowrap; display: block; 
@@ -47,7 +48,6 @@
             scrollbar-width: none;
         }
         #s-box::-webkit-scrollbar { display: none; }
-        
         .s-opt { 
             display: inline-flex; width: 100%; height: 100%; 
             align-items: center; justify-content: center; 
@@ -57,7 +57,6 @@
 
         #in { flex-grow: 1; height: 60px; background: #000; border: 1px solid #333; color: var(--gold); padding: 0 12px; font-size: 1.1rem; outline: none; }
         .btn-ok { height: 60px; padding: 0 20px; background: var(--gold); color: #000; border: none; font-weight: 900; cursor: pointer; }
-
     </style>
 </head>
 <body>
@@ -82,7 +81,7 @@
         <div class="s-opt">🧟‍♂️ ТРЭШ-ОПТИМИЗМ</div>
         <div class="s-opt">§ БЫТ</div>
     </div>
-    <input type="text" id="in" placeholder="Напишите 4 слова...">
+    <input type="text" id="in" placeholder="первый цель летать писать...">
     <button class="btn-ok" onclick="generate()">ОК</button>
 </footer>
 
@@ -90,12 +89,8 @@
     let activeStyle = "🚀 ШИЗА-ЛЮКС";
     const sBox = document.getElementById('s-box');
 
-    // Перехват колеса мышки для горизонтального скролла
     function handleWheel(e) {
-        if (e.deltaY !== 0) {
-            e.preventDefault();
-            sBox.scrollLeft += e.deltaY;
-        }
+        if (e.deltaY !== 0) { e.preventDefault(); sBox.scrollLeft += e.deltaY; }
     }
 
     function updateStyle() {
@@ -112,7 +107,7 @@
         card.className = 'v-card';
         card.innerHTML = `
             <div class="v-meta">#${val} | ${activeStyle}</div>
-            <div class="v-text" contenteditable="true">...</div>
+            <div class="v-text" contenteditable="true">Смешиваю смыслы...</div>
             <div class="v-trans-area"></div>
             <div class="v-ctrl">
                 <button class="v-btn" onclick="copy(this)">КЛИП</button>
@@ -123,34 +118,36 @@
         `;
         document.getElementById('wall').prepend(card);
         
-        // Генерация с использованием твоих слов
+        const words = val.split(' ');
+        const w1 = words[0] || "Target";
+        const w2 = words[1] || "Aim";
+        const w3 = words[2] || "Fly";
+        const w4 = words[3] || "Write";
+
         setTimeout(() => {
-            card.querySelector('.v-text').innerText = `Input: ${val}\nStyle: ${activeStyle}\nResult: Logic restored.\nScroll is ignored no more.`;
+            card.querySelector('.v-text').innerText = 
+                `The ${w1} is set, no time to wait,\nYour ${w2} is locked by iron fate.\nTo ${w3} so high, to ${w4} the lines,\nIn GY-GY club, the spirit shines!`;
             input.value = '';
-        }, 500);
+        }, 700);
     }
 
     function copy(b) {
         const t = b.closest('.v-card').querySelector('.v-text').innerText;
         navigator.clipboard.writeText(t);
-        b.innerText = "OK!"; setTimeout(() => b.innerText = "КЛИП", 800);
+        b.innerText = "ГОТОВО"; setTimeout(() => b.innerText = "КЛИП", 800);
     }
 
     function trans(b) {
         const card = b.closest('.v-card');
         const area = card.querySelector('.v-trans-area');
-        area.innerText = "Перевод: Логика восстановлена. Скролл больше не игнорируется.";
+        area.innerText = "Перевод: Первая цель поставлена, нет времени ждать. Твоя цель заперта железной судьбой. Лететь так высоко, писать эти строки... В клубе GY-GY дух сияет!";
         area.style.display = area.style.display === 'block' ? 'none' : 'block';
     }
 
     function share(b) {
         const text = b.closest('.v-card').querySelector('.v-text').innerText;
-        if (navigator.share) {
-            navigator.share({ title: 'GY-GY CLUB', text: text });
-        } else {
-            alert("Скопировано! (Share не поддерживается)");
-            navigator.clipboard.writeText(text);
-        }
+        if (navigator.share) { navigator.share({ text: text }); } 
+        else { alert("Текст скопирован для вставки!"); navigator.clipboard.writeText(text); }
     }
 
     document.getElementById('in').onkeydown = (e) => { if(e.key==='Enter') generate(); };
