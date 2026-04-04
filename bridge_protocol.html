@@ -2,99 +2,100 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>GY-GY | BRIDGE PROTOCOL 1.0</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>GY-GY | BRIDGE PROTOCOL0.2</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #d4af37; --neon: rgba(212, 175, 55, 0.3); }
+        :root { --gold: #d4af37; }
         
-        * { box-sizing: border-box; -webkit-user-select: none; user-select: none; }
+        * { -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; outline: none; }
         
-        body, html { 
-            margin: 0; padding: 0; width: 100%; height: 100%; 
-            background: #000; color: var(--gold); 
-            font-family: 'Share Tech Mono', monospace; 
-            overflow: hidden; display: flex; flex-direction: column; 
+        html, body { 
+            width: 100%; height: 100%; background: #000; color: var(--gold); 
+            font-family: 'Share Tech Mono', monospace; margin: 0; overflow: hidden; 
         }
 
-        /* ОБЯЗАТЕЛЬНЫЕ АТРИБУТЫ КЛУБА */
+        /* ПОСТОЯННЫЕ АТРИБУТЫ КЛУБА */
+        #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000; }
         .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000; font-size: 24px; letter-spacing: 5px; font-weight: bold; }
-        .ui-lang { position: fixed; top: 15px; left: 15px; z-index: 1000; font-size: 12px; border: 1px solid var(--gold); padding: 5px 10px; cursor: pointer; }
-        .btn-back { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: none; border: 1px solid var(--gold); color: var(--gold); padding: 10px 30px; cursor: pointer; text-transform: uppercase; font-size: 14px; transition: 0.3s; z-index: 1000; }
-        .btn-back:hover { background: var(--gold); color: #000; }
-
-        /* ЭКРАН ПОГРУЖЕНИЯ */
-        .bridge-container { 
-            flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            padding: 20px; text-align: center; position: relative;
-        }
-
-        .quote-vibe { 
-            font-family: 'Playfair Display', serif; font-style: italic; font-size: 24px; 
-            margin-bottom: 40px; opacity: 0; transition: 2s; 
-        }
-
-        .matrix-box {
-            width: 280px; padding: 20px; border: 1px solid var(--gold);
-            background: rgba(212, 175, 55, 0.05); position: relative;
-        }
-
-        .status-line { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; height: 15px; }
         
-        .progress-wrap { width: 100%; height: 2px; background: rgba(212, 175, 55, 0.2); margin: 15px 0; overflow: hidden; }
-        .progress-bar { width: 0%; height: 100%; background: var(--gold); box-shadow: 0 0 10px var(--gold); }
-
-        .access-btn { 
-            display: none; width: 100%; padding: 15px; background: transparent; 
-            border: 1px solid var(--gold); color: var(--gold); cursor: pointer;
-            font-family: 'Share Tech Mono'; font-weight: bold; text-transform: uppercase;
-            margin-top: 20px; animation: blink 1s infinite;
+        /* КНОПКА ВОЗВРАТА (Стандартный нижний уровень) */
+        .ui-back-btn { 
+            position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 1000;
+            background: transparent; border: 1px solid var(--gold); color: var(--gold);
+            padding: 12px 24px; cursor: pointer; font-family: 'Share Tech Mono'; 
+            font-size: 14px; text-transform: uppercase; border-radius: 4px; transition: 0.3s;
         }
 
-        @keyframes blink { 50% { opacity: 0.5; } }
+        /* КОНТЕНТ ПРОТОКОЛА */
+        .bridge-wrapper { 
+            position: absolute; inset: 0; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; padding: 20px; 
+        }
+
+        .vibe-text { 
+            font-family: 'Playfair Display', serif; font-style: italic; font-size: 28px; 
+            text-align: center; margin-bottom: 40px; line-height: 1.3; 
+        }
+
+        .loading-zone { width: 270px; display: flex; flex-direction: column; align-items: center; }
+        
+        .progress-container { width: 100%; height: 2px; background: rgba(212, 175, 55, 0.1); margin: 20px 0; }
+        #progress-fill { width: 0%; height: 100%; background: var(--gold); transition: width 0.3s; }
+
+        .btn-gy { 
+            min-width: 270px; padding: 14px; background: transparent; 
+            border: 2px solid var(--gold); color: var(--gold); cursor: pointer; 
+            text-transform: uppercase; font-weight: 900; font-family: 'Share Tech Mono'; 
+            display: none; /* Появится после загрузки */
+        }
+
+        .status-msg { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; height: 15px; }
     </style>
 </head>
-<body>
+<body oncontextmenu="return false;">
 
-    <div class="ui-lang" onclick="alert('Language Toggle')">RU / EN</div>
+    <div id="google_translate_element"></div>
     <div class="ui-header-right">GY-GY</div>
+    
+    <button class="ui-back-btn" onclick="location.href='index.html'">Вернуться в бар</button>
 
-    <div class="bridge-container">
-        <div id="vibe" class="quote-vibe">«Синхронизация души и кода...»</div>
+    <div class="bridge-wrapper">
+        <div class="vibe-text">«Инициация квантового скачка»</div>
         
-        <div class="matrix-box">
-            <div id="status" class="status-line">Инициализация...</div>
-            <div class="progress-wrap"><div id="bar" class="progress-bar"></div></div>
-            <div id="id-display" style="font-size: 12px; opacity: 0.6;">CHECKING ID...</div>
-            <button id="entry-btn" class="access-btn" onclick="location.href='verses.html'">ВОЙТИ В AI ROOM</button>
+        <div class="loading-zone">
+            <div id="status" class="status-msg">CHECKING AUTHENTICITY...</div>
+            <div class="progress-container"><div id="progress-fill"></div></div>
+            <button id="btn-enter" class="btn-gy" onclick="location.href='ai_room_core_v8.html'">ВХОД В AI ROOM</button>
         </div>
     </div>
 
-    <button class="btn-back" onclick="history.back()">ВЕРНУТЬСЯ В БАР</button>
-
     <script>
-        // Эффект появления цитаты
-        setTimeout(() => { document.getElementById('vibe').style.opacity = "1"; }, 500);
-
-        // Симуляция входа в систему
-        let p = 0;
-        const steps = ["ЗАХВАТ ПОТОКА", "АНАЛИЗ ПЕРСОНЫ", "КВАНТОВЫЙ МОСТ", "ДОСТУП ОТКРЫТ"];
-        const bar = document.getElementById('bar');
+        // Имитация входа в систему (по стандартам Ядра)
+        let progress = 0;
+        const bar = document.getElementById('progress-fill');
         const status = document.getElementById('status');
-        const btn = document.getElementById('entry-btn');
+        const btn = document.getElementById('btn-enter');
+        
+        const phases = ["SCANNING ID", "DECRYPTING LINK", "ESTABLISHING CORE", "READY"];
 
-        const timer = setInterval(() => {
-            p += Math.random() * 15;
-            if (p >= 100) {
-                p = 100;
-                clearInterval(timer);
-                status.innerText = "READY FOR SYNTHESIS";
-                status.style.color = "#fff";
-                btn.style.display = "block";
+        const interval = setInterval(() => {
+            progress += Math.random() * 20;
+            if (progress >= 100) {
+                progress = 100;
+                clearInterval(interval);
+                status.innerText = phases[3];
+                btn.style.display = 'block';
+            } else {
+                status.innerText = phases[Math.floor(progress / 33)];
             }
-            bar.style.width = p + "%";
-            if (p < 95) status.innerText = steps[Math.floor(p / 25)];
-        }, 300);
+            bar.style.width = progress + "%";
+        }, 400);
+
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage: 'ru', autoDisplay: false}, 'google_translate_element');
+        }
     </script>
+    <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
