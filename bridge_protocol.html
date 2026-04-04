@@ -2,81 +2,99 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY | BRIDGE PROTOCOL</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>GY-GY | BRIDGE PROTOCOL 1.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #d4af37; --gold-dim: rgba(212, 175, 55, 0.3); }
+        :root { --gold: #d4af37; --neon: rgba(212, 175, 55, 0.3); }
+        
+        * { box-sizing: border-box; -webkit-user-select: none; user-select: none; }
+        
         body, html { 
             margin: 0; padding: 0; width: 100%; height: 100%; 
             background: #000; color: var(--gold); 
             font-family: 'Share Tech Mono', monospace; 
-            overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            overflow: hidden; display: flex; flex-direction: column; 
         }
 
-        .terminal { width: 90%; max-width: 600px; text-align: center; }
-        .scan-line { width: 100%; height: 2px; background: var(--gold); opacity: 0.3; position: absolute; top: 0; animation: scan 3s linear infinite; }
-        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+        /* ОБЯЗАТЕЛЬНЫЕ АТРИБУТЫ КЛУБА */
+        .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000; font-size: 24px; letter-spacing: 5px; font-weight: bold; }
+        .ui-lang { position: fixed; top: 15px; left: 15px; z-index: 1000; font-size: 12px; border: 1px solid var(--gold); padding: 5px 10px; cursor: pointer; }
+        .btn-back { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: none; border: 1px solid var(--gold); color: var(--gold); padding: 10px 30px; cursor: pointer; text-transform: uppercase; font-size: 14px; transition: 0.3s; z-index: 1000; }
+        .btn-back:hover { background: var(--gold); color: #000; }
 
-        .status-text { font-size: 1.2rem; letter-spacing: 3px; margin-bottom: 20px; text-transform: uppercase; }
-        .loading-bar { width: 100%; height: 4px; border: 1px solid var(--gold); position: relative; margin-bottom: 40px; }
-        .progress { width: 0%; height: 100%; background: var(--gold); transition: width 0.4s; }
-
-        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; }
-        .bridge-btn { 
-            border: 1px solid var(--gold-dim); padding: 20px; color: var(--gold-dim); 
-            text-transform: uppercase; cursor: pointer; transition: 0.3s; text-decoration: none;
+        /* ЭКРАН ПОГРУЖЕНИЯ */
+        .bridge-container { 
+            flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            padding: 20px; text-align: center; position: relative;
         }
-        .bridge-btn:hover { border-color: var(--gold); color: var(--gold); background: rgba(212, 175, 55, 0.05); }
+
+        .quote-vibe { 
+            font-family: 'Playfair Display', serif; font-style: italic; font-size: 24px; 
+            margin-bottom: 40px; opacity: 0; transition: 2s; 
+        }
+
+        .matrix-box {
+            width: 280px; padding: 20px; border: 1px solid var(--gold);
+            background: rgba(212, 175, 55, 0.05); position: relative;
+        }
+
+        .status-line { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; height: 15px; }
         
-        .version { position: fixed; bottom: 20px; font-size: 0.7rem; opacity: 0.4; }
+        .progress-wrap { width: 100%; height: 2px; background: rgba(212, 175, 55, 0.2); margin: 15px 0; overflow: hidden; }
+        .progress-bar { width: 0%; height: 100%; background: var(--gold); box-shadow: 0 0 10px var(--gold); }
+
+        .access-btn { 
+            display: none; width: 100%; padding: 15px; background: transparent; 
+            border: 1px solid var(--gold); color: var(--gold); cursor: pointer;
+            font-family: 'Share Tech Mono'; font-weight: bold; text-transform: uppercase;
+            margin-top: 20px; animation: blink 1s infinite;
+        }
+
+        @keyframes blink { 50% { opacity: 0.5; } }
     </style>
 </head>
 <body>
 
-    <div class="scan-line"></div>
+    <div class="ui-lang" onclick="alert('Language Toggle')">RU / EN</div>
+    <div class="ui-header-right">GY-GY</div>
 
-    <div class="terminal">
-        <div class="status-text" id="status">Инициализация протокола...</div>
-        <div class="loading-bar"><div class="progress" id="bar"></div></div>
-
-        <div class="menu-grid" id="menu" style="display: none;">
-            <a href="verses.html" class="bridge-btn">Генератор куплетов</a>
-            <a href="clip.html" class="bridge-btn">Студия клипов</a>
-            <a href="manifesto.html" class="bridge-btn">Манифест клуба</a>
-            <div class="bridge-btn" onclick="history.back()">Вернуться в бар</div>
+    <div class="bridge-container">
+        <div id="vibe" class="quote-vibe">«Синхронизация души и кода...»</div>
+        
+        <div class="matrix-box">
+            <div id="status" class="status-line">Инициализация...</div>
+            <div class="progress-wrap"><div id="bar" class="progress-bar"></div></div>
+            <div id="id-display" style="font-size: 12px; opacity: 0.6;">CHECKING ID...</div>
+            <button id="entry-btn" class="access-btn" onclick="location.href='verses.html'">ВОЙТИ В AI ROOM</button>
         </div>
     </div>
 
-    <div class="version">CORE v.4.4.57 | ENCRYPTED LINK</div>
+    <button class="btn-back" onclick="history.back()">ВЕРНУТЬСЯ В БАР</button>
 
     <script>
-        // Имитация подключения к нейросети при входе
+        // Эффект появления цитаты
+        setTimeout(() => { document.getElementById('vibe').style.opacity = "1"; }, 500);
+
+        // Симуляция входа в систему
         let p = 0;
+        const steps = ["ЗАХВАТ ПОТОКА", "АНАЛИЗ ПЕРСОНЫ", "КВАНТОВЫЙ МОСТ", "ДОСТУП ОТКРЫТ"];
         const bar = document.getElementById('bar');
         const status = document.getElementById('status');
-        const menu = document.getElementById('menu');
+        const btn = document.getElementById('entry-btn');
 
-        const steps = ["Загрузка ключей...", "Проверка ID...", "Синхронизация с ядром...", "Доступ разрешен"];
-
-        const interval = setInterval(() => {
-            p += Math.random() * 25;
+        const timer = setInterval(() => {
+            p += Math.random() * 15;
             if (p >= 100) {
                 p = 100;
-                clearInterval(interval);
-                status.innerText = "LINK ESTABLISHED";
-                menu.style.display = 'grid';
+                clearInterval(timer);
+                status.innerText = "READY FOR SYNTHESIS";
+                status.style.color = "#fff";
+                btn.style.display = "block";
             }
             bar.style.width = p + "%";
-            if(p < 90) status.innerText = steps[Math.floor(p/25)];
-        }, 400);
-
-        // Слушаем ответы от Оболочки (index.html)
-        window.addEventListener('message', (event) => {
-            if (event.data.type === 'GY_RESULT') {
-                // Если мы на этой странице что-то генерируем, обрабатываем здесь
-                console.log("Получены данные от ядра:", event.data.text);
-            }
-        });
+            if (p < 95) status.innerText = steps[Math.floor(p / 25)];
+        }, 300);
     </script>
 </body>
 </html>
