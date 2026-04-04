@@ -59,54 +59,36 @@
 </footer>
 
 <script>
-  // 1. ПРИЕМНИК: Слушаем ответы от Ядра Клуба (index.html)
-    window.addEventListener('message', (event) => {
-        const data = event.data;
-        
-        // Когда Ядро прислало готовый стих
-        if (data.type === 'GY_RESULT') {
-            finalizeCard(data.targetId, data.text);
+ window.addEventListener('message', (event) => {
+        if (event.data.type === 'GY_RESULT') {
+            finalizeCard(event.data.targetId, event.data.text);
             document.getElementById('run-btn').disabled = false;
         }
-        
-        // Когда Ядро прислало идею (слово) по нажатию кнопки GEN
-        if (data.type === 'IDEA_RESULT') {
-            document.getElementById('words').value = data.text;
+        if (event.data.type === 'IDEA_RESULT') {
+            document.getElementById('words').value = event.data.text;
         }
     });
 
-    // 2. ФУНКЦИЯ ЗАПРОСА (на кнопку OK)
     async function askAI() {
         const input = document.getElementById('words');
         const style = document.getElementById('style').value;
         const wall = document.getElementById('wall');
         const btn = document.getElementById('run-btn');
-
         if (!input.value) return;
 
-        // Создаем временную карточку загрузки
         const cardId = 'v' + Date.now();
         const card = document.createElement('div');
         card.className = 'card loading';
         card.id = cardId;
-        card.innerHTML = `<div class="content">Синтезирую смыслы по теме: ${input.value}...</div>`;
+        card.innerHTML = `<div class="content">Синтезирую смыслы: ${input.value}...</div>`;
         wall.appendChild(card);
         wall.scrollTop = wall.scrollHeight;
 
         btn.disabled = true;
-
-        // ОТПРАВЛЯЕМ ЗАПРОС В ЯДРО (index.html)
-        window.parent.postMessage({ 
-            type: 'GY_GENERATE', 
-            prompt: input.value,
-            style: style,
-            targetId: cardId // ID карточки, чтобы Ядро знало, куда вернуть текст
-        }, '*');
-
+        window.parent.postMessage({ type: 'GY_GENERATE', prompt: input.value, style: style, targetId: cardId }, '*');
         input.value = '';
     }
 
-    // 3. ЗАВЕРШЕНИЕ КАРТОЧКИ (когда текст пришел)
     function finalizeCard(id, text) {
         const card = document.getElementById(id);
         if (!card) return;
@@ -121,12 +103,7 @@
             </div>`;
     }
 
-    // 4. ГЕНЕРАТОР ИДЕЙ (кнопка GEN)
-    function setIdea() { 
-        // Вместо своего списка просим идею у Ядра
-        window.parent.postMessage({ type: 'GET_AI_IDEA' }, '*');
-    }
-
+    function setIdea() { window.parent.postMessage({ type: 'GET_AI_IDEA' }, '*'); } 
     function bridge(action, id) {
         const text = document.querySelector(`#${id} .content`).innerText;
         if(action === 'CLIP') { localStorage.setItem('currentVerse', text); location.href = 'clip.html'; }
