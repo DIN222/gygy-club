@@ -59,6 +59,23 @@
 </footer>
 
 <script>
+  // 1. ПРИЕМНИК: Слушаем ответы от Ядра Клуба (index.html)
+    window.addEventListener('message', (event) => {
+        const data = event.data;
+        
+        // Когда Ядро прислало готовый стих
+        if (data.type === 'GY_RESULT') {
+            finalizeCard(data.targetId, data.text);
+            document.getElementById('run-btn').disabled = false;
+        }
+        
+        // Когда Ядро прислало идею (слово) по нажатию кнопки GEN
+        if (data.type === 'IDEA_RESULT') {
+            document.getElementById('words').value = data.text;
+        }
+    });
+
+    // 2. ФУНКЦИЯ ЗАПРОСА (на кнопку OK)
     async function askAI() {
         const input = document.getElementById('words');
         const style = document.getElementById('style').value;
@@ -68,39 +85,31 @@
         if (!input.value) return;
 
         // Создаем временную карточку загрузки
-        const id = 'v' + Date.now();
+        const cardId = 'v' + Date.now();
         const card = document.createElement('div');
         card.className = 'card loading';
-        card.id = id;
+        card.id = cardId;
         card.innerHTML = `<div class="content">Синтезирую смыслы по теме: ${input.value}...</div>`;
         wall.appendChild(card);
         wall.scrollTop = wall.scrollHeight;
 
-        const prompt = `Напиши короткий дерзкий стих в стиле ${style} используя слова: ${input.value}. Только текст стиха.`;
-        input.value = '';
         btn.disabled = true;
 
-        try {
-            // Реальный вызов (через наш внутренний протокол связи)
-            const response = await window.parent.postMessage({ type: 'GENERATE_VERSE', prompt: prompt }, '*');
-            
-            // Если мы работаем автономно, здесь сработает имитация, 
-            // но при вставке в систему Клуба — подцепится мой реальный движок.
-            // Для теста сейчас — имитируем задержку:
-            setTimeout(() => {
-                const resultText = "Грохочет джаз, горит неон,\nВ системе ГИ-ГИ свой закон.\nМы гоним код, мы ловим ритм,\nСтирая грани и лимит.";
-                finalizeCard(id, resultText);
-                btn.disabled = false;
-            }, 1500);
+        // ОТПРАВЛЯЕМ ЗАПРОС В ЯДРО (index.html)
+        window.parent.postMessage({ 
+            type: 'GY_GENERATE', 
+            prompt: input.value,
+            style: style,
+            targetId: cardId // ID карточки, чтобы Ядро знало, куда вернуть текст
+        }, '*');
 
-        } catch (e) {
-            finalizeCard(id, "Ошибка связи с ядром. Попробуй еще раз.");
-            btn.disabled = false;
-        }
+        input.value = '';
     }
 
+    // 3. ЗАВЕРШЕНИЕ КАРТОЧКИ (когда текст пришел)
     function finalizeCard(id, text) {
         const card = document.getElementById(id);
+        if (!card) return;
         card.classList.remove('loading');
         card.innerHTML = `
             <div class="content" contenteditable="true">${text}</div>
@@ -112,14 +121,15 @@
             </div>`;
     }
 
+    // 4. ГЕНЕРАТОР ИДЕЙ (кнопка GEN)
+    function setIdea() { 
+        // Вместо своего списка просим идею у Ядра
+        window.parent.postMessage({ type: 'GET_AI_IDEA' }, '*');
+    }
+
     function bridge(action, id) {
         const text = document.querySelector(`#${id} .content`).innerText;
         if(action === 'CLIP') { localStorage.setItem('currentVerse', text); location.href = 'clip.html'; }
-    }
-
-    function setIdea() { 
-        const ideas = ["Реголит", "Неон", "Драйв", "Код"];
-        document.getElementById('words').value = ideas.sort(() => .5 - Math.random()).slice(0,3).join(' ');
     }
 </script>
 
