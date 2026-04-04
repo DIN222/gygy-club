@@ -2,240 +2,177 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY CLUB | VERSES v.1.1</title>
+    <title>GY-GY CLUB | VERSES v.1.2</title>
     <style>
         :root {
             --gold: #ffd700;
-            --bg-dark: #000000;
-            --card-bg: #0a0a0a;
-            --gray: #444;
-            --text-white: #e0e0e0;
+            --black: #000000;
+            --gray: #222;
         }
 
         body {
-            background-color: var(--bg-dark);
+            background-color: var(--black);
             color: var(--gold);
             font-family: 'Courier New', Courier, monospace;
             margin: 0;
             display: flex;
             flex-direction: column;
             height: 100vh;
-            overflow: hidden;
         }
 
-        /* 1. ВЕРХНЯЯ ПАНЕЛЬ */
+        /* ВЕРХНЯЯ ПАНЕЛЬ v.1.2 */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 20px;
-            border-bottom: 1px solid var(--gray);
-            background: var(--card-bg);
+            padding: 15px 25px;
+            border-bottom: 1px solid var(--gold); /* Тонкая золотая линия раздела */
+            background: var(--black);
         }
 
-        .nav-group { display: flex; align-items: center; gap: 20px; }
-        .logo { font-weight: bold; font-size: 22px; letter-spacing: 3px; }
-        .nav-btn { cursor: pointer; font-size: 20px; transition: 0.3s; }
-        .nav-btn:hover { color: #fff; }
-        
-        .user-info { display: flex; align-items: center; gap: 15px; }
-        .avatar-box {
-            width: 45px;
-            height: 45px;
+        .nav-section { display: flex; align-items: center; gap: 20px; }
+
+        /* Общий стиль золотых рамок */
+        .gold-border-btn {
             border: 1px solid var(--gold);
-            border-radius: 50%;
-            background: #111;
+            background: transparent;
+            color: var(--gold);
+            padding: 5px 15px;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.2s;
+        }
+        .gold-border-btn:hover { opacity: 0.7; }
+
+        .arrow-btn { width: 40px; height: 30px; font-size: 18px; }
+
+        .avatar-frame {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--gold);
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 10px;
-            overflow: hidden;
+            font-size: 9px;
         }
 
-        .btn-idea {
-            background: var(--gold);
-            color: #000;
-            border: none;
-            padding: 8px 15px;
+        .logo-text {
+            font-size: 24px;
             font-weight: bold;
-            cursor: pointer;
-            text-transform: uppercase;
-            font-size: 11px;
+            letter-spacing: 5px;
+            color: var(--gold);
         }
 
-        /* 2. ЦЕНТРАЛЬНАЯ СТЕНА */
+        .lang-switch { font-size: 12px; color: var(--gold); cursor: pointer; }
+
+        /* СТЕНА */
         #wall {
             flex: 1;
             overflow-y: auto;
-            padding: 30px;
+            padding: 40px;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 25px;
-            scroll-behavior: smooth;
+            gap: 30px;
         }
 
         .verse-card {
-            width: 100%;
-            max-width: 650px;
-            background: var(--card-bg);
-            border: 1px solid #222;
+            border: 1px solid var(--gray);
             padding: 20px;
-            position: relative;
-            transition: border 0.3s;
+            background: var(--black);
+            max-width: 600px;
+            align-self: center;
+            width: 100%;
         }
-
         .verse-card:hover { border-color: var(--gold); }
 
-        .verse-content {
-            color: var(--text-white);
-            font-size: 16px;
-            line-height: 1.6;
-            min-height: 80px;
-            margin-bottom: 15px;
-            white-space: pre-line;
-            outline: none; /* Для редактирования */
-        }
+        .verse-content { color: #fff; outline: none; white-space: pre-line; margin-bottom: 20px; }
 
-        /* МИКРО-ПУЛЬТ */
-        .micro-remote {
-            display: flex;
-            gap: 15px;
-            border-top: 1px solid #222;
-            padding-top: 10px;
-            font-size: 12px;
-        }
+        /* ПУЛЬТ КАРТОЧКИ */
+        .card-tools { display: flex; gap: 20px; border-top: 1px solid var(--gray); padding-top: 10px; font-size: 11px; }
+        .tool { cursor: pointer; color: #666; }
+        .tool:hover { color: var(--gold); }
 
-        .remote-btn {
-            cursor: pointer;
-            color: var(--gray);
-            transition: 0.3s;
-        }
-
-        .remote-btn:hover { color: var(--gold); }
-        .btn-del:hover { color: #ff4d4d; }
-
-        /* 3. НИЖНЯЯ ПАНЕЛЬ */
-        footer {
-            background: var(--card-bg);
-            border-top: 1px solid var(--gray);
-            padding: 20px;
-        }
-
-        .input-area {
-            max-width: 900px;
-            margin: 0 auto;
-            display: flex;
-            gap: 15px;
-        }
-
-        select, input[type="text"] {
+        /* НИЖНИЙ БЛОК */
+        footer { padding: 30px; border-top: 1px solid var(--gray); }
+        .input-row { max-width: 800px; margin: 0 auto; display: flex; gap: 10px; }
+        
+        input, select {
             background: #000;
-            border: 1px solid var(--gray);
-            color: var(--text-white);
-            padding: 12px;
+            border: 1px solid var(--gold);
+            color: #fff;
+            padding: 10px;
             font-family: inherit;
         }
+        input { flex: 1; }
 
-        input[type="text"] { flex: 1; }
-        
-        .btn-ok {
-            background: var(--gold);
-            color: #000;
-            border: none;
-            padding: 0 30px;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        .version-tag {
-            position: absolute;
-            bottom: 5px;
-            right: 10px;
-            font-size: 9px;
-            color: #333;
-        }
+        .version-label { position: fixed; bottom: 5px; right: 10px; font-size: 10px; color: #333; }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="nav-group">
-        <div class="nav-btn">⟵</div>
-        <div class="logo">GY-GY</div>
-        <div class="nav-btn">⟶</div>
+    <div class="nav-section">
+        <button class="gold-border-btn arrow-btn" onclick="goBack()">⟵</button>
+        <div class="lang-switch">RU | EN</div>
+        <div class="avatar-frame">ID:01</div>
+        <button class="gold-border-btn" onclick="getIdea()">ГЕНЕРАТОР ИДЕЙ</button>
     </div>
-    <div class="user-info">
-        <button class="btn-idea" onclick="triggerIdea()">Генератор идей</button>
-        <div style="font-size: 12px;">RU | EN</div>
-        <div class="avatar-box">ID:001</div>
+
+    <div class="logo-text">GY-GY</div>
+    
+    <div class="nav-section">
+        <button class="gold-border-btn arrow-btn" onclick="goForward()">⟶</button>
     </div>
 </header>
 
-<main id="wall">
+<div id="wall">
     <div class="verse-card">
-        <div class="verse-content" contenteditable="true">
-            И-го-го! Ядро готово к резонансу. 
-            Введите 4 слова, и мы создадим искру.
-        </div>
-        <div class="version-tag">v.1.1</div>
+        <div class="verse-content" contenteditable="true">v.1.2: Панель перестроена согласно Уставу. 
+        Золото только в рамках. Ожидание 4-х слов...</div>
     </div>
-</main>
+</div>
 
 <footer>
-    <div class="input-area">
-        <select id="styleSelector">
-            <option value="noir">НУАР-ДЖАЗ</option>
-            <option value="opti">ОПТИМИЗМ</option>
-            <option value="gygy">ГИ-ГИ</option>
+    <div class="input-row">
+        <select id="style">
+            <option>НУАР-ДЖАЗ</option>
+            <option>ОПТИМИЗМ</option>
         </select>
-        <input type="text" id="wordInput" placeholder="Введите 4 слова...">
-        <button class="btn-ok" onclick="processWords()">OK</button>
+        <input type="text" id="words" placeholder="Введите 4 слова">
+        <button class="gold-border-btn" style="padding: 0 30px;" onclick="addVerse()">OK</button>
     </div>
 </footer>
 
+<div class="version-label">v.1.2</div>
+
 <script>
-    function processWords() {
-        const input = document.getElementById('wordInput');
+    function addVerse() {
+        const val = document.getElementById('words').value;
+        if(!val) return;
         const wall = document.getElementById('wall');
-        const style = document.getElementById('styleSelector').value;
-
-        if (input.value.trim() === "") return;
-
-        // Создаем новую карточку по Уставу
         const card = document.createElement('div');
         card.className = 'verse-card';
-        
-        // Имитация ответа ИИ (в будущем здесь будет запрос к API)
-        const text = `На входе: ${input.value}\nСтиль: ${style}\n\nСтихи родятся здесь,\nВ нуарной тишине.\nКопыта бьют о жесть,\nИстина — в вине.`;
-
         card.innerHTML = `
-            <div class="verse-content" contenteditable="true">${text}</div>
-            <div class="micro-remote">
-                <div class="remote-btn" onclick="sendTo('clip')">🎬 CLIP</div>
-                <div class="remote-btn" onclick="sendTo('tg')">✈️ TELEGRAM</div>
-                <div class="remote-btn" onclick="sendTo('archive')">🏛️ TO ARCHIVE</div>
-                <div class="remote-btn btn-del" onclick="this.closest('.verse-card').remove()">❌ DELETE</div>
+            <div class="verse-content" contenteditable="true">Вы ввели: ${val}\nИИ генерирует рифму...\nЗолото в рамках, стиль соблюден.</div>
+            <div class="card-tools">
+                <span class="tool">🎬 CLIP</span>
+                <span class="tool">✈️ TG</span>
+                <span class="tool">🏛️ ARCHIVE</span>
+                <span class="tool" onclick="this.closest('.verse-card').remove()">❌ DEL</span>
             </div>
-            <div class="version-tag">v.1.1</div>
         `;
-
         wall.appendChild(card);
-        input.value = "";
+        document.getElementById('words').value = '';
         wall.scrollTop = wall.scrollHeight;
     }
 
-    function triggerIdea() {
-        const ideas = ["Реголит", "Джаз", "Струна", "Холод"];
-        document.getElementById('wordInput').value = ideas.join(' ');
-    }
-
-    function sendTo(dest) {
-        alert("Устав в действии: Передача объекта в " + dest.toUpperCase());
-        // Здесь будет логика редиректа или API-вызова
-    }
+    function getIdea() { document.getElementById('words').value = "Конь Бармен Джаз Ночь"; }
+    function goBack() { alert('Возврат на уровень назад'); }
+    function goForward() { alert('Переход на Лунную Базу'); }
 </script>
 
 </body>
