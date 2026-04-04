@@ -3,163 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MANIFESTO | v2.4 (Internal 4.3)</title>
+    <title>GY-GY | BRIDGE PROTOCOL</title>
     <style>
-        :root {
-            --gold-bright: #ffd700;
-            --gold-dim: rgba(255, 215, 0, 0.4); /* Приглушенное золото */
+        :root { --gold: #d4af37; --gold-dim: rgba(212, 175, 55, 0.3); }
+        body, html { 
+            margin: 0; padding: 0; width: 100%; height: 100%; 
+            background: #000; color: var(--gold); 
+            font-family: 'Share Tech Mono', monospace; 
+            overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
 
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #000;
-            font-family: Arial, sans-serif;
-            color: #fff;
-            overflow-y: auto;
-        }
+        .terminal { width: 90%; max-width: 600px; text-align: center; }
+        .scan-line { width: 100%; height: 2px; background: var(--gold); opacity: 0.3; position: absolute; top: 0; animation: scan 3s linear infinite; }
+        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
 
-        .manifesto-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 100px 20px;
-            min-height: 100vh;
-            box-sizing: border-box;
-        }
+        .status-text { font-size: 1.2rem; letter-spacing: 3px; margin-bottom: 20px; text-transform: uppercase; }
+        .loading-bar { width: 100%; height: 4px; border: 1px solid var(--gold); position: relative; margin-bottom: 40px; }
+        .progress { width: 0%; height: 100%; background: var(--gold); transition: width 0.4s; }
 
-        #google_translate_element {
-            position: fixed;
-            top: 25px;
-            left: 30px;
-            z-index: 1000;
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; }
+        .bridge-btn { 
+            border: 1px solid var(--gold-dim); padding: 20px; color: var(--gold-dim); 
+            text-transform: uppercase; cursor: pointer; transition: 0.3s; text-decoration: none;
         }
-
-        .brand-logo {
-            position: fixed;
-            top: 25px;
-            right: 40px;
-            color: var(--gold-bright);
-            font-size: 2.2rem;
-            font-weight: 900;
-            letter-spacing: 5px;
-            z-index: 1000;
-        }
-
-        h1 { 
-            color: var(--gold-bright); 
-            text-transform: uppercase; 
-            letter-spacing: 6px; 
-            font-size: 3rem;
-            margin-bottom: 40px;
-            text-align: center;
-        }
-
-        .manifesto-text {
-            max-width: 800px;
-            width: 100%;
-            line-height: 1.8;
-            font-size: 1.2rem;
-            color: #ccc;
-            margin-bottom: 50px;
-            text-align: justify;
-        }
-
-        /* СТРОГАЯ КНОПКА: ПРИГЛУШЕННАЯ -> ЯРКАЯ */
-        .std-gold-btn {
-            display: inline-block;
-            background: transparent; /* Без заливки */
-            border: 1px solid var(--gold-dim); /* Приглушенная рамка */
-            color: var(--gold-dim); /* Приглушенные буквы */
-            padding: 15px 50px;
-            text-decoration: none;
-            text-transform: uppercase;
-            font-weight: bold;
-            letter-spacing: 2px;
-            cursor: pointer;
-            margin-bottom: 100px;
-            transition: all 0.3s ease;
-        }
-
-        .std-gold-btn:hover {
-            background: transparent; /* Остается черной внутри */
-            border-color: var(--gold-bright); /* Рамка становится яркой */
-            color: var(--gold-bright); /* Буквы становятся яркими */
-            box-shadow: none; /* Никакого лишнего свечения */
-        }
-
-        .btn-back {
-            position: fixed;
-            bottom: 25px;
-            left: 30px;
-            background: none;
-            border: 1px solid #fff;
-            color: #fff;
-            padding: 8px 20px;
-            cursor: pointer;
-            z-index: 1000;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            opacity: 0.5;
-            transition: 0.3s;
-        }
-
-        .btn-back:hover {
-            opacity: 1;
-        }
-
-        .version-tag {
-            position: fixed;
-            bottom: 15px;
-            right: 25px;
-            color: rgba(255,255,255,0.2);
-            font-size: 0.7rem;
-        }
+        .bridge-btn:hover { border-color: var(--gold); color: var(--gold); background: rgba(212, 175, 55, 0.05); }
+        
+        .version { position: fixed; bottom: 20px; font-size: 0.7rem; opacity: 0.4; }
     </style>
 </head>
 <body>
 
-    <div id="google_translate_element"></div>
-    <div class="brand-logo">GY-GY</div>
-    <button class="btn-back" onclick="history.back()">← BACK</button>
-    <div class="version-tag">MANIFESTO v2.3 | CORE v4.3</div>
+    <div class="scan-line"></div>
 
-    <div class="manifesto-wrapper">
-        <h1>Manifesto</h1>
-        
-        <div class="manifesto-text">
-            <p>
-                Мы существуем в пространстве, где цифровая идентичность важнее физического присутствия. 
-                Ваш уникальный ID — это не просто номер, это ваш след в вечности.
-            </p>
-            <p>
-                В версии 4.3 мы внедрили протоколы непрерывности. Теперь, заходя в клуб, 
-                вы остаетесь собой, независимо от устройства или времени. 
-                Магия Cookie-recognition и стабильность Telegram создают мост, который невозможно разрушить.
-            </p>
-            <p>
-                Наш интерфейс — это зеркало ваших намерений. Здесь нет лишнего шума, только чистота кода 
-                и строгость линий. Мы уважаем ваш выбор языка и вашу приватность.
-            </p>
-            <p>
-                Добро пожаловать домой. Добро пожаловать в GY-GY.
-            </p>
+    <div class="terminal">
+        <div class="status-text" id="status">Инициализация протокола...</div>
+        <div class="loading-bar"><div class="progress" id="bar"></div></div>
+
+        <div class="menu-grid" id="menu" style="display: none;">
+            <a href="verses.html" class="bridge-btn">Генератор куплетов</a>
+            <a href="clip.html" class="bridge-btn">Студия клипов</a>
+            <a href="manifesto.html" class="bridge-btn">Манифест клуба</a>
+            <div class="bridge-btn" onclick="history.back()">Вернуться в бар</div>
         </div>
-
-       <a href="ai_room_core_v8.html" class="std-gold-btn">проходите в АИ рум</a>
     </div>
 
-<script type="text/javascript">
-    function googleTranslateElementInit() {
-        new google.translate.TranslateElement({
-            pageLanguage: 'ru',
-            autoDisplay: false
-        }, 'google_translate_element');
-    }
-</script>
-<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <div class="version">CORE v.4.4.57 | ENCRYPTED LINK</div>
 
+    <script>
+        // Имитация подключения к нейросети при входе
+        let p = 0;
+        const bar = document.getElementById('bar');
+        const status = document.getElementById('status');
+        const menu = document.getElementById('menu');
+
+        const steps = ["Загрузка ключей...", "Проверка ID...", "Синхронизация с ядром...", "Доступ разрешен"];
+
+        const interval = setInterval(() => {
+            p += Math.random() * 25;
+            if (p >= 100) {
+                p = 100;
+                clearInterval(interval);
+                status.innerText = "LINK ESTABLISHED";
+                menu.style.display = 'grid';
+            }
+            bar.style.width = p + "%";
+            if(p < 90) status.innerText = steps[Math.floor(p/25)];
+        }, 400);
+
+        // Слушаем ответы от Оболочки (index.html)
+        window.addEventListener('message', (event) => {
+            if (event.data.type === 'GY_RESULT') {
+                // Если мы на этой странице что-то генерируем, обрабатываем здесь
+                console.log("Получены данные от ядра:", event.data.text);
+            }
+        });
+    </script>
 </body>
 </html>
