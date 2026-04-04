@@ -220,41 +220,21 @@
         function googleTranslateElementInit() { 
             new google.translate.TranslateElement({pageLanguage: 'ru', autoDisplay: false}, 'google_translate_element'); 
         }
-        // --- ЦЕНТРАЛЬНЫЙ НЕЙРОННЫЙ ХАБ КЛУБА ---
-        // Этот код превращает index.html в "мозги", которые отвечают на запросы из комнат
+       // --- ЦЕНТРАЛЬНЫЙ НЕЙРОННЫЙ ХАБ (v.4.4.55) ---
         window.addEventListener('message', async (event) => {
             const request = event.data;
             
-            // 1. Обработка запроса на генерацию ИДЕЙ
             if (request.type === 'GET_AI_IDEA') {
-                const pool = ["Реголит", "Джаз", "Неон", "Драйв", "Код", "Вакуум", "Конверт", "Луна", "Синтез", "Ритм", "Тень", "Сталь", "Импульс", "Сдвиг", "Поток"];
+                const pool = ["Реголит", "Джаз", "Неон", "Драйв", "Код", "Вакуум", "Луна", "Синтез"];
                 const randomIdea = pool[Math.floor(Math.random() * pool.length)];
-                
-                // Отправляем идею обратно в verses.html
-                event.source.postMessage({
-                    type: 'IDEA_RESULT',
-                    text: randomIdea
-                }, '*');
+                event.source.postMessage({ type: 'IDEA_RESULT', text: randomIdea }, '*');
             }
 
-            // 2. Обработка запроса на генерацию КУПЛЕТОВ
             if (request.type === 'GY_GENERATE') {
-                console.log("CORE: Синтезирую стих для ID:", currentID);
-                
-                // Имитация работы нейросети (задержка 1.5 сек)
                 setTimeout(() => {
-                    const result = `[SYSTEM: ${request.style.toUpperCase()}]\n` +
-                                   `В клубе GY-GY полночь бьет,\n` +
-                                   `Цифровой виски разум жжет.\n` +
-                                   `Тема "${request.prompt}" принята в код,\n` +
-                                   `Ваш ID ${currentID} — в вечность полет.`;
-
-                    event.source.postMessage({
-                        type: 'GY_RESULT',
-                        text: result,
-                        targetId: request.targetId
-                    }, '*');
-                }, 1500);
+                    const result = `[ID: ${currentID}]\nТема: ${request.prompt}\n\nВ системе GY-GY плавится лед,\nЦифровой неон по венам течет.\nТвой код уникален, твой путь предрешен,\nВ золоте истина, в черном — закон.`;
+                    event.source.postMessage({ type: 'GY_RESULT', text: result, targetId: request.targetId }, '*');
+                }, 1000);
             }
         });
     </script>
