@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY CLUB | VERSES v.2.5</title>
+    <title>GY-GY CLUB | VERSES v.2.6</title>
     <style>
         :root { 
             --gold: #ffd700; 
@@ -51,8 +51,8 @@
         }
         .ui-box:hover { background: rgba(255, 215, 0, 0.1); }
         
-        /* Компактные стрелки */
-        .arrow { font-size: 28px; width: 60px; }
+        /* Компактные ДВОЙНЫЕ стрелки */
+        .arrow { font-size: 32px; width: 60px; font-family: sans-serif; } /* Шрифт заменен для четкости кавычек */
         .avatar { width: var(--h-unit); padding: 0; font-size: 12px; }
         .logo { font-size: 30px; font-weight: bold; letter-spacing: 6px; cursor: default; padding: 0 10px; }
 
@@ -63,7 +63,7 @@
 
         /* REMOTE */
         .remote { display: flex; gap: 20px; border-top: 1px solid #222; padding-top: 15px; font-size: 13px; }
-        .remote-btn { cursor: pointer; color: #777; text-transform: uppercase; }
+        .remote-btn { cursor: pointer; color: #777; text-transform: uppercase; display: flex; align-items: center; gap: 5px; }
         .remote-btn:hover { color: var(--gold); }
 
         /* FOOTER */
@@ -94,7 +94,7 @@
 
 <header>
     <div class="header-left">
-        <button class="ui-box arrow" onclick="location.href='ai_room_core_v8.html'">⟵</button>
+        <button class="ui-box arrow" onclick="location.href='ai_room_core_v8.html'">«</button>
         <div class="ui-box" style="border:none; padding: 0 5px;">RU</div>
         <div class="ui-box avatar">ID</div>
         <button class="ui-box" onclick="setIdea()">GEN</button>
@@ -103,18 +103,19 @@
     <div class="logo">GY-GY</div>
     
     <div class="header-right">
-        <button class="ui-box arrow" onclick="location.href='clip.html'">⟶</button>
+        <button class="ui-box arrow" onclick="location.href='clip.html'">»</button>
     </div>
 </header>
 
 <main id="wall">
     <div class="card" id="v1">
-        <div class="content" contenteditable="true">v.2.5 Balanced.
-Стрелки и ОК стали компактными.
-Центральные поля получили максимум места.</div>
+        <div class="content" contenteditable="true">v.2.6 Machine.
+Стрелки заменены на двойные затворы.
+Самолет заменен на конверт. 
+Стиль стал строже.</div>
         <div class="remote">
             <span class="remote-btn" onclick="bridge('CLIP', 'v1')">🎬 CLIP</span>
-            <span class="remote-btn" onclick="bridge('TG', 'v1')">✈️ TG</span>
+            <span class="remote-btn" onclick="bridge('TG', 'v1')">✉ TG</span>
             <span class="remote-btn" onclick="bridge('ARCHIVE', 'v1')">🏛️ ARCH</span>
             <span class="remote-btn" onclick="this.closest('.card').remove()" style="color:#aa0000">❌ DEL</span>
         </div>
@@ -141,6 +142,7 @@
             location.href = 'clip.html'; 
         }
         if(action === 'ARCHIVE') alert("В архиве!");
+        if(action === 'TG') alert("✉ Подготовка письма в Telegram:\n\n" + text);
     }
 
     function createVerse() {
@@ -151,10 +153,10 @@
         card.className = 'card';
         card.id = id;
         card.innerHTML = `
-            <div class="content" contenteditable="true">Синтез: ${val}\n\nКомпактный штрих, широкий жест,\nВ Клубе хватит всем нам мест.\nОК нажал — и полетел,\nТуда, где разум не предел.</div>
+            <div class="content" contenteditable="true">Синтез: ${val}\n\nДвойной затвор, стальной конверт,\nВ Клубе гаснет ложный свет.\n✉ Отправлен стих, нажат затвор,\nМы продолжаем разговор.</div>
             <div class="remote">
                 <span class="remote-btn" onclick="bridge('CLIP', '${id}')">🎬 CLIP</span>
-                <span class="remote-btn" onclick="bridge('TG', '${id}')">✈️ TG</span>
+                <span class="remote-btn" onclick="bridge('TG', '${id}')">✉ TG</span>
                 <span class="remote-btn" onclick="bridge('ARCHIVE', '${id}')">🏛️ ARCH</span>
                 <span class="remote-btn" onclick="this.closest('.card').remove()" style="color:#aa0000">❌ DEL</span>
             </div>`;
@@ -164,7 +166,7 @@
     }
 
     function setIdea() { 
-        const ideas = ["Стиль", "Ритм", "Код", "Клуб"];
+        const ideas = ["Код", "Машина", "Стиль", "Письмо"];
         document.getElementById('words').value = ideas.join(' ');
     }
 </script>
