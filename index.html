@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.55 | FULL MASTER</title>
+    <title>GY-GY Club v4.4.56 | FULL MASTER</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -220,6 +220,43 @@
         function googleTranslateElementInit() { 
             new google.translate.TranslateElement({pageLanguage: 'ru', autoDisplay: false}, 'google_translate_element'); 
         }
+        // --- ЦЕНТРАЛЬНЫЙ НЕЙРОННЫЙ ХАБ КЛУБА ---
+        // Этот код превращает index.html в "мозги", которые отвечают на запросы из комнат
+        window.addEventListener('message', async (event) => {
+            const request = event.data;
+            
+            // 1. Обработка запроса на генерацию ИДЕЙ
+            if (request.type === 'GET_AI_IDEA') {
+                const pool = ["Реголит", "Джаз", "Неон", "Драйв", "Код", "Вакуум", "Конверт", "Луна", "Синтез", "Ритм", "Тень", "Сталь", "Импульс", "Сдвиг", "Поток"];
+                const randomIdea = pool[Math.floor(Math.random() * pool.length)];
+                
+                // Отправляем идею обратно в verses.html
+                event.source.postMessage({
+                    type: 'IDEA_RESULT',
+                    text: randomIdea
+                }, '*');
+            }
+
+            // 2. Обработка запроса на генерацию КУПЛЕТОВ
+            if (request.type === 'GY_GENERATE') {
+                console.log("CORE: Синтезирую стих для ID:", currentID);
+                
+                // Имитация работы нейросети (задержка 1.5 сек)
+                setTimeout(() => {
+                    const result = `[SYSTEM: ${request.style.toUpperCase()}]\n` +
+                                   `В клубе GY-GY полночь бьет,\n` +
+                                   `Цифровой виски разум жжет.\n` +
+                                   `Тема "${request.prompt}" принята в код,\n` +
+                                   `Ваш ID ${currentID} — в вечность полет.`;
+
+                    event.source.postMessage({
+                        type: 'GY_RESULT',
+                        text: result,
+                        targetId: request.targetId
+                    }, '*');
+                }, 1500);
+            }
+        });
     </script>
     <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
