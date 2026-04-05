@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.65 | FULL MASTER</title>
+    <title>GY-GY Club v4.4.66 | FULL MASTER</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -173,7 +173,7 @@
             backBtn.style.opacity = "1";
         }
 
-     function swapButtons(hideId, showId) {
+   function swapButtons(hideId, showId) {
     const hideBtn = document.getElementById(hideId);
     const showBtn = document.getElementById(showId);
     
@@ -181,43 +181,70 @@
     if (showBtn) {
         showBtn.classList.remove('btn-sleep');
         showBtn.style.display = 'block';
+        showBtn.style.pointerEvents = 'auto'; // Чтобы точно кликалось
     }
 
     // Если нажата кнопка СОХРАНИТЬ
     if(hideId === 'btn-save') {
         console.log("Финализация регистрации GY-GY...");
 
-        // 1. Генерируем QR прямо сейчас (вызываем функцию, которую добавили ранее)
-        if (typeof generateQR === 'function') {
-            generateQR("GY-ID:" + currentID);
+        // 1. ГЕНЕРАЦИЯ QR (Прямо здесь, без посредников)
+        const qrSource = document.getElementById('qr-box-reg');
+        if (qrSource && typeof QRCode !== "undefined") {
+            qrSource.innerHTML = ""; // Очищаем надпись "QR КОД"
+            new QRCode(qrSource, {
+                text: "GY-ID:" + currentID,
+                width: 80,
+                height: 80,
+                colorDark: "#000000",
+                colorLight: "#ffffff"
+            });
         }
 
-        // 2. Переносим ID в финальную карточку Холла
+        // 2. ПЕРЕНОС ID В ХОЛЛ
         document.getElementById('h-id').innerText = "#" + currentID;
 
-        // 3. Выбираем, что пойдет в Холл: фото или аватар
+        // 3. ПЕРЕНОС ФОТО ИЛИ АВАТАРА
         const userPhoto = document.getElementById('pp');
         const clubAvatar = document.getElementById('club-avatar-img');
         const finalImg = document.getElementById('h-photo');
 
-        // Если загружено фото (src не пустой и не заглушка)
-        if (userPhoto && userPhoto.style.display !== 'none') {
+        // Проверка: что именно отображается в блоке регистрации?
+        if (userPhoto && userPhoto.style.display === 'block') {
             finalImg.src = userPhoto.src;
-        } 
-        // Иначе, если сгенерирован аватар
-        else if (clubAvatar && clubAvatar.style.display !== 'none') {
+        } else if (clubAvatar && clubAvatar.style.display === 'block') {
             finalImg.src = clubAvatar.src;
         }
 
-        // 4. Копируем QR в финальную карточку (в Холл)
-        const qrSource = document.getElementById('qr-box-reg');
-        const qrTarget = document.getElementById('h-qr');
-        if (qrSource && qrTarget) {
-            qrTarget.innerHTML = qrSource.innerHTML;
-        }
+        // 4. КОПИРОВАНИЕ QR В КАРТОЧКУ ХОЛЛА
+        // Делаем небольшую паузу (100мс), чтобы QR успел отрисоваться в первом окне
+        setTimeout(() => {
+            const qrTarget = document.getElementById('h-qr');
+            if (qrSource && qrTarget) {
+                qrTarget.innerHTML = qrSource.innerHTML;
+            }
+        }, 100);
     }
 }
 
+// ОТДЕЛЬНАЯ ФУНКЦИЯ ДЛЯ КНОПКИ АВАТАРА (Добавь её рядом)
+function generateAvatar() {
+    const img = document.getElementById('club-avatar-img');
+    const txt = document.getElementById('txt-avatar');
+    const userPhoto = document.getElementById('pp');
+    const txtPhoto = document.getElementById('txt-photo');
+
+    const seed = Math.floor(Math.random() * 10000);
+    img.src = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${seed}&backgroundColor=d4af37`;
+    
+    img.onload = () => {
+        img.style.display = 'block';
+        txt.style.display = 'none';
+        // Если выбрали аватар — прячем загруженное фото
+        if (userPhoto) userPhoto.style.display = 'none';
+        if (txtPhoto) txtPhoto.style.display = 'block';
+    };
+}
         // КРИТИЧЕСКАЯ ФУНКЦИЯ ДЛЯ ВХОДА В AI ROOM
         function deepDive() {
             console.log("Вход в AI ROOM...");
