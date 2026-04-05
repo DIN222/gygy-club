@@ -132,11 +132,16 @@
         let currentID = "";
 
         // ФУНКЦИЯ ГЛУБОКОГО ПОГРУЖЕНИЯ В МОСТ
-        function deepDive() {
-            document.body.style.transition = "opacity 1.2s ease, filter 1.2s ease";
-            document.body.style.opacity = "0";
-            document.body.style.filter = "blur(10px) brightness(0)";
-            setTimeout(() => { window.location.href = 'bridge_protocol.html'; }, 1200);
+        
+       function deepDive() {
+            const stage = document.getElementById('club-stage');
+            // Загружаем Мост внутрь нашей Сцены
+            stage.src = 'bridge_protocol.html';
+            stage.style.display = 'block';
+            
+            // Эффект затухания основного интерфейса Бара
+            document.body.style.transition = "filter 1.2s ease";
+            document.body.style.filter = "blur(15px) brightness(0.2)";
         }
 
         function portalTransition(nextId) {
