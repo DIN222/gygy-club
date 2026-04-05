@@ -2,84 +2,89 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY | Bridge Protocol 1.4</title> <style>
-        :root { --gold: #d4af37; }
-        body { 
-            margin: 0; padding: 0; background: #000; 
-            font-family: 'Courier New', monospace; color: var(--gold); 
-            overflow: hidden; height: 100vh;
+    <title>GY-GY | Bridge Protocol 1.6</title>
+    <style>
+        :root { --gold: #d4af37; --glow: rgba(212, 175, 55, 0.5); }
+        
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            background: #000; overflow: hidden;
+            font-family: 'Courier New', monospace; color: var(--gold);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
 
+        /* ТВОЙ ФОН СЕРВЕРНОЙ */
         .bridge-bg {
             position: fixed; inset: 0;
             background: 
-                linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), 
+                linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.9)), 
                 url('banana_server_room.jpg') center/cover no-repeat;
             z-index: -1;
-            filter: blur(10px) brightness(0.5);
-            animation: focusVision 2.5s forwards cubic-bezier(0.4, 0, 0.2, 1);
+            filter: blur(10px) brightness(0.2);
+            animation: focusVision 2.5s forwards ease-out;
         }
 
         @keyframes focusVision {
             to { filter: blur(0px) brightness(1); }
         }
 
-        /* Атрибуты Клуба */
+        /* ИНТЕРФЕЙС КЛУБА */
         .header-ui {
-            position: fixed; top: 0; width: 100%; padding: 20px;
+            position: fixed; top: 0; width: 100%; padding: 25px;
             display: flex; justify-content: space-between; align-items: center;
             box-sizing: border-box; z-index: 10;
         }
-        .logo { font-size: 24px; font-weight: 900; text-shadow: 0 0 10px var(--gold); }
-        .lang { border: 1px solid var(--gold); padding: 5px 10px; font-size: 12px; }
+        .logo { font-size: 22px; font-weight: 900; text-shadow: 0 0 15px var(--gold); letter-spacing: 5px; }
+        .lang { border: 1px solid var(--gold); padding: 5px 12px; font-size: 11px; cursor: pointer; opacity: 0.6; }
 
-        /* Центральный Шлюз */
+        /* НЕВИДИМЫЙ ПОРТАЛ НА ДВЕРИ */
         .ai-portal {
-            width: 320px; padding: 50px 20px;
-            border: 2px solid var(--gold); background: rgba(0,0,0,0.8);
-            text-align: center; cursor: pointer; transition: 0.5s;
-            box-shadow: 0 0 30px rgba(212,175,55,0.2);
-        }
-        .ai-portal:hover {
-            box-shadow: 0 0 60px var(--gold);
-            transform: translateY(-5px);
-            background: rgba(212,175,55,0.1);
+            position: relative;
+            width: 350px; height: 350px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; z-index: 5;
+            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s;
+            border: none; background: none;
         }
 
-        /* ДОБАВЛЕННЫЕ СТИЛИ ДЛЯ КНОПКИ */
-        .portal-main-btn {
-            font-weight: 900; letter-spacing: 6px; font-size: 22px;
-            margin-top: 15px; text-transform: uppercase;
-            text-shadow: 0 0 10px rgba(212,175,55,0.5);
-        }
-        
-        .status-dot {
-            animation: blink 1s infinite;
-            margin-right: 5px;
-        }
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
+        /* ЭФФЕКТ ПРЫЖКА В ЯДРО (БЕЗ СКРУЧИВАНИЯ) */
+        .portal-jump-active {
+            transform: translate(0, 0) scale(12) !important;
+            opacity: 0 !important;
+            pointer-events: none;
         }
 
+        .portal-label {
+            font-size: 28px; font-weight: 900; letter-spacing: 15px;
+            text-transform: uppercase; opacity: 0; transition: 0.5s;
+            text-shadow: 0 0 25px var(--gold);
+        }
+
+        .ai-portal:hover .portal-label { opacity: 1; transform: scale(1.1); }
+        .ai-portal:hover #status-hint { opacity: 0.8 !important; }
+
+        .status-dot { color: #fff; animation: blink 0.6s infinite; margin-right: 8px; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+
+        /* КНОПКА ОТКАТА */
+        .btn-exit {
+            position: fixed; bottom: 40px;
+            background: none; border: 1px solid rgba(212,175,55,0.2);
+            color: rgba(212,175,55,0.4); padding: 10px 30px; cursor: pointer;
+            text-transform: uppercase; font-size: 10px; transition: 0.4s;
+            letter-spacing: 2px;
+        }
+        .btn-exit:hover { color: var(--gold); border-color: var(--gold); box-shadow: 0 0 20px var(--glow); }
+
+        /* СВЕТОВАЯ ВСПЫШКА */
         #flash {
             position: fixed; inset: 0; background: #fff; 
             opacity: 0; z-index: 1000; pointer-events: none;
         }
         .flash-active { animation: flashAnim 1.5s ease-out; }
         @keyframes flashAnim {
-            0%, 100% { opacity: 0; }
-            15%, 35% { opacity: 0.8; }
-            20%, 40% { opacity: 0; }
+            0% { opacity: 0; } 20% { opacity: 1; } 100% { opacity: 0; }
         }
-
-        .btn-exit {
-            margin-top: 60px; background: none; border: 1px solid #444;
-            color: #444; padding: 10px 25px; cursor: pointer;
-            text-transform: uppercase; font-size: 11px; transition: 0.3s;
-        }
-        .btn-exit:hover { color: var(--gold); border-color: var(--gold); }
     </style>
 </head>
 <body>
@@ -92,70 +97,67 @@
         <div class="lang">RU | EN</div>
     </div>
 
-    <div class="ai-portal" onclick="location.href='verses.html'" style="
-        position: absolute; 
-        top: 50%; left: 50%; 
-        transform: translate(-50%, -50%);
-        width: 350px; height: 350px; /* Размер зоны под надпись AI ROOM */
-        border: none; background: none; box-shadow: none;
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
-        cursor: pointer; z-index: 5;">
-        
-        <div class="portal-main-btn" style="opacity: 0; transition: 0.5s; letter-spacing: 15px;">
-            ENTER
-        </div>
-        
-        <div style="font-family: 'Courier New', monospace; font-size: 10px; opacity: 0; transition: 1s;" id="status-hint">
-            <span class="status-dot">●</span> SYSTEM READY
+    <div class="ai-portal" onclick="jumpToCore()">
+        <div class="portal-label">ENTER</div>
+        <div id="status-hint" style="font-size: 9px; opacity: 0; transition: 1s; letter-spacing: 2px; margin-top: 15px;">
+            <span class="status-dot">●</span> LINKING TO CORE_V8...
         </div>
     </div>
 
-    <button class="btn-exit" onclick="exitToReality()">Назад в реальность</button>
+    <button class="btn-exit" onclick="exitToReality()">BACK TO REALITY</button>
 
-    <audio id="snd-server" loop>
+    <audio id="snd-bridge" loop>
         <source src="bridge_ambient.mp3" type="audio/mpeg">
     </audio>
 
     <script>
-        // Эффект появления текста при наведении на дверь
-        const portal = document.querySelector('.ai-portal');
-        const btnText = document.querySelector('.portal-main-btn');
-        const statusHint = document.getElementById('status-hint');
-
-        portal.onmouseenter = () => {
-            btnText.style.opacity = "1";
-            statusHint.style.opacity = "0.6";
-        };
-        portal.onmouseleave = () => {
-            btnText.style.opacity = "0";
-            statusHint.style.opacity = "0";
-        };
+        const audio = document.getElementById('snd-bridge');
 
         window.onload = function() {
+            // Вспышка ламп при входе в серверную
             document.getElementById('flash').classList.add('flash-active');
-            const audio = document.getElementById('snd-server');
+            
+            // Плавное нарастание "волосодыбительного" гула
             audio.volume = 0;
             const playPromise = audio.play();
-            
             if (playPromise !== undefined) {
                 playPromise.then(() => {
                     let v = 0;
                     const fadeIn = setInterval(() => {
-                        if (v < 0.6) { v += 0.05; audio.volume = v; }
+                        if (v < 0.7) { v += 0.05; audio.volume = v; }
                         else { clearInterval(fadeIn); }
-                    }, 200);
-                }).catch(() => { console.log("Кликните для звука"); });
+                    }, 150);
+                }).catch(() => { console.log("Кликни для активации системы"); });
             }
         };
 
+        // ФУНКЦИЯ ПЕРЕХОДА В ЯДРО
+        function jumpToCore() {
+            const portal = document.querySelector('.ai-portal');
+            
+            // Включаем анимацию полета
+            portal.classList.add('portal-jump-active');
+            
+            // Резко задираем громкость перед прыжком для эффекта
+            let v = audio.volume;
+            const sfx = setInterval(() => {
+                if (v < 1) { v += 0.1; audio.volume = v; }
+                else { clearInterval(sfx); }
+            }, 30);
+
+            // Через 1.2 секунды мы внутри Ядра
+            setTimeout(() => {
+                window.location.href = 'ai_room_core_v8.html';
+            }, 1200);
+        }
+
         function exitToReality() {
-            const audio = document.getElementById('snd-server');
             let v = audio.volume;
             const fadeOut = setInterval(() => {
                 if (v > 0.05) { v -= 0.05; audio.volume = v; }
                 else { 
                     clearInterval(fadeOut); 
-                    location.href = 'index.html'; 
+                    window.location.href = 'index.html'; 
                 }
             }, 50);
         }
