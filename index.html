@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.60 | FULL MASTER</title>
+    <title>GY-GY Club v4.4.61 | FULL MASTER</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -129,129 +129,74 @@
     </div>
 
     <script>
-        let currentID = "";
+      // 1. ИМИТАЦИЯ ОТВЕТА ЯДРА (Встроено в модуль)
+    function callClubAI(prompt, style, cardId) {
+        // Создаем задержку, как будто ИИ думает
+        setTimeout(() => {
+            const rhymes = [
+                "В системе ГИ-ГИ свой закон,\nЗдесь золото и черный фон.\nМы пишем код, мы строим мост,\nВзлетая выше ярких звезд.",
+                "Дерзкий ритм и честный слог,\nКлуб открыл сто тыщ дорог.\nЗолото на черном — стиль,\nПревращаем хаос в пыль.",
+                "Синтез смыслов, блеск неона,\nВне привычного закона.\nAI Room чеканит шаг,\nРазгоняя старый мрак."
+            ];
+            const randomRhyme = rhymes[Math.floor(Math.random() * rhymes.length)];
+            const result = `[CORE RESPONSE OK]\nSTYLE: ${style.toUpperCase()}\n\n${randomRhyme}`;
+            
+            finalizeCard(cardId, result);
+            document.getElementById('run-btn').disabled = false;
+        }, 1500);
+    }
 
-        // ФУНКЦИЯ ГЛУБОКОГО ПОГРУЖЕНИЯ В МОСТ
+    // 2. ГЛАВНАЯ ФУНКЦИЯ ЗАПРОСА
+    async function askAI() {
+        const input = document.getElementById('words');
+        const style = document.getElementById('style').value;
+        const wall = document.getElementById('wall');
+        const btn = document.getElementById('run-btn');
+        if (!input.value) return;
+
+        // Создаем карточку
+        const cardId = 'v' + Date.now();
+        const card = document.createElement('div');
+        card.className = 'card loading';
+        card.id = cardId;
+        card.innerHTML = `<div class="content">Синтезирую смыслы Клуба: ${input.value}...</div>`;
+        wall.appendChild(card);
+        wall.scrollTop = wall.scrollHeight;
+
+        btn.disabled = true;
+
+        // ВЫЗЫВАЕМ ВНУТРЕННИЙ ИИ (Поскольку мост через iframe не задался)
+        callClubAI(input.value, style, cardId);
         
-       function deepDive() {
-         const stage = document.getElementById('club-stage');
-            
-            // 1. Сначала задаем адрес
-            stage.src = 'bridge_protocol.html';
-            
-            // 2. Ждем микро-секунду, чтобы браузер «проглотил» адрес, и включаем видимость
-            stage.onload = () => {
-                stage.style.display = 'block';
-                console.log("SYSTEM: Мост загружен в кадр.");
-            };
-            
-            // 3. Плавное исчезновение Бара
-            document.body.style.transition = "filter 0.8s ease, opacity 0.8s ease";
-            document.body.style.filter = "blur(20px) brightness(0.1)";
-            // Оставляем звук, но «приглушаем» картинку
+        input.value = '';
+    }
+
+    function finalizeCard(id, text) {
+        const card = document.getElementById(id);
+        if (!card) return;
+        card.classList.remove('loading');
+        card.innerHTML = `
+            <div class="content" contenteditable="true">${text}</div>
+            <div class="remote">
+                <span class="remote-btn" onclick="bridge('CLIP', '${id}')">🎬 CLIP</span>
+                <span class="remote-btn" onclick="bridge('TG', '${id}')">✉ TG</span>
+                <span class="remote-btn" onclick="bridge('ARCHIVE', '${id}')">🏛️ ARCH</span>
+                <span class="remote-btn" onclick="this.closest('.card').remove()" style="color:#aa0000">❌ DEL</span>
+            </div>`;
+    }
+
+    function setIdea() {
+        const ideas = ["Реголит", "Неон", "Драйв", "Код", "Синтез", "Вакуум"];
+        document.getElementById('words').value = ideas[Math.floor(Math.random()*ideas.length)];
+    }
+
+    function bridge(action, id) {
+        const text = document.querySelector(`#${id} .content`).innerText;
+        if(action === 'CLIP') { 
+            localStorage.setItem('currentVerse', text); 
+            location.href = 'clip.html'; 
         }
-
-        function portalTransition(nextId) {
-            const current = document.querySelector('.block.active');
-            const backBtn = document.getElementById('btn-global-back');
-            const amb = document.getElementById('snd-ambient');
-
-            if(current) { current.style.opacity = "0"; current.style.pointerEvents = "none"; }
-            backBtn.style.opacity = "0";
-
-            setTimeout(() => {
-                if(current) { current.classList.remove('active'); current.style.display = "none"; }
-                const next = document.getElementById(nextId);
-                next.style.display = "flex";
-
-                setTimeout(() => { 
-                    next.classList.add('active'); 
-                    next.style.opacity = "1";
-                    next.style.pointerEvents = "auto";
-
-                    setTimeout(() => {
-                        if (nextId === 'block-bar') fadeAudio(amb, 1, 800);
-                        if (nextId === 'block-tables') {
-                            backBtn.style.display = 'block';
-                            setTimeout(() => { backBtn.style.opacity = "1"; }, 50);
-                            fadeAudio(amb, 0, 800);
-                        } else { backBtn.style.display = 'none'; }
-                    }, 800);
-
-                    if(nextId === 'block-bar' && (!current || current.id !== 'block-tables')) {
-                        setTimeout(() => { document.getElementById('snd-khe').play(); }, 800);
-                        setTimeout(() => { document.getElementById('snd-pour').play(); }, 2200);
-                    }
-                }, 50);
-            }, 800);
-        }
-
-        function handleDoor() {
-            const d = document.getElementById('main-door');
-            document.getElementById('snd-door').play();
-            d.style.transform = "scale(5)"; d.style.opacity = "0";
-            d.style.pointerEvents = "none";
-            
-            currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
-            document.getElementById('id-label').innerText = currentID;
-            document.getElementById('h-id').innerText = currentID;
-            
-            document.getElementById('qr-box-reg').innerHTML = "";
-            new QRCode(document.getElementById("qr-box-reg"), { text: currentID, width: 85, height: 85 });
-            document.getElementById('h-qr').innerHTML = "";
-            new QRCode(document.getElementById("h-qr"), { text: currentID, width: 75, height: 75 });
-            
-            setTimeout(() => { 
-                portalTransition('block-welcome'); 
-                const a = document.getElementById('snd-ambient'); a.volume = 0; a.play(); fadeAudio(a, 1, 2000); 
-            }, 1800);
-        }
-
-        function fadeAudio(audio, target, duration) {
-            const start = audio.volume; const startTime = Date.now();
-            const interval = setInterval(() => {
-                const progress = Math.min((Date.now() - startTime) / duration, 1);
-                audio.volume = start + (target - start) * progress;
-                if (progress === 1) clearInterval(interval);
-            }, 50);
-        }
-
-        function preview(i) {
-            if(i.files && i.files[0]) {
-                const r = new FileReader();
-                r.onload = (e) => { 
-                    document.getElementById('pp').src = e.target.result; document.getElementById('pp').style.display = "block";
-                    document.getElementById('h-photo').src = e.target.result; document.getElementById('txt-photo').style.display = "none";
-                };
-                r.readAsDataURL(i.files[0]);
-            }
-        }
-
-        function swapButtons(a, s) { 
-            document.getElementById(a).classList.add('btn-sleep'); 
-            document.getElementById(s).classList.remove('btn-sleep'); 
-        }
-
-        function googleTranslateElementInit() { 
-            new google.translate.TranslateElement({pageLanguage: 'ru', autoDisplay: false}, 'google_translate_element'); 
-        }
-       // --- ЦЕНТРАЛЬНЫЙ НЕЙРОННЫЙ ХАБ (v.4.4.55) ---
-        window.addEventListener('message', async (event) => {
-            const request = event.data;
-            
-            if (request.type === 'GET_AI_IDEA') {
-                const pool = ["Реголит", "Джаз", "Неон", "Драйв", "Код", "Вакуум", "Луна", "Синтез"];
-                const randomIdea = pool[Math.floor(Math.random() * pool.length)];
-                event.source.postMessage({ type: 'IDEA_RESULT', text: randomIdea }, '*');
-            }
-
-            if (request.type === 'GY_GENERATE') {
-                setTimeout(() => {
-                    const result = `[ID: ${currentID}]\nТема: ${request.prompt}\n\nВ системе GY-GY плавится лед,\nЦифровой неон по венам течет.\nТвой код уникален, твой путь предрешен,\nВ золоте истина, в черном — закон.`;
-                    event.source.postMessage({ type: 'GY_RESULT', text: result, targetId: request.targetId }, '*');
-                }, 1000);
-            }
-        });
+    }
     </script>
     <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
