@@ -1,150 +1,155 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY | Bridge Protocol Final 1,6</title>
+    <title>GY-GY | GATEWAY v1.6</title>
     <style>
-        :root { --gold: #d4af37; }
+        :root { --gold: #d4af37; --bg-blur: 5px; }
         
+        * { box-sizing: border-box; }
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
             background: #000; overflow: hidden;
             font-family: 'Courier New', monospace;
         }
 
-        /* ГЛАВНОЕ: ТВОЕ ФОТО СЕРВЕРНОЙ */
-        .bridge-bg {
+        /* [ФОН] v1.6: Исправлено отображение и центровка */
+        .server-room-bg {
             position: fixed;
             inset: 0;
-            /* Убедись, что файл лежит в той же папке */
             background: url('banana_server_room.jpg') center center / cover no-repeat;
             z-index: 1;
-            /* Легкое затемнение, чтобы интерфейс читался */
-            box-shadow: inset 0 0 200px #000;
+            filter: brightness(0.4) contrast(1.2);
+            transition: filter 2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* ИНТЕРФЕЙС ПОВЕРХ ФОТО */
-        .ui-layer {
+        /* [ИНТЕРФЕЙС] v1.6: Чистая навигация */
+        .overlay {
             position: relative;
             z-index: 10;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
         }
 
         .header-ui {
-            position: absolute; top: 0; width: 100%; padding: 25px;
-            display: flex; justify-content: space-between; box-sizing: border-box;
+            position: absolute; top: 0; width: 100%; padding: 30px 50px;
+            display: flex; justify-content: space-between; align-items: center;
         }
-        .logo { color: var(--gold); font-size: 24px; font-weight: 900; letter-spacing: 5px; }
+        .logo-v1-6 { 
+            color: var(--gold); font-size: 26px; font-weight: 900; 
+            letter-spacing: 6px; text-shadow: 0 0 15px var(--gold); 
+        }
 
-        /* НЕВИДИМЫЙ, НО КЛИКАБЕЛЬНЫЙ ШЛЮЗ (НА ДВЕРИ) */
-        .ai-portal {
-            width: 300px;
-            height: 300px;
+        /* [ПОРТАЛ] v1.6: Точка входа в CORE_V8 */
+        .door-trigger {
+            width: 400px; height: 400px;
             cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            transition: transform 1.3s cubic-bezier(0.19, 1, 0.22, 1);
         }
 
-        .portal-label {
-            color: var(--gold);
-            font-size: 32px;
-            font-weight: 900;
-            letter-spacing: 15px;
-            opacity: 0;
-            transition: 0.5s;
-            text-shadow: 0 0 20px #000, 0 0 10px var(--gold);
+        .enter-label {
+            color: #fff; font-size: 45px; font-weight: 900;
+            letter-spacing: 25px; opacity: 0;
+            transition: 0.6s; text-shadow: 0 0 30px var(--gold);
         }
 
-        .ai-portal:hover .portal-label {
-            opacity: 1;
-        }
+        .door-trigger:hover .enter-label { opacity: 1; transform: scale(1.1); }
 
-        /* ЭФФЕКТ ПРЫЖКА (ПРОЛЕТ СКВОЗЬ ДВЕРЬ) */
-        .jump-active {
-            transform: scale(15) !important;
+        /* Эффект полета v1.6 (без искажений) */
+        .jump-sequence {
+            transform: scale(25) !important;
             opacity: 0 !important;
+            pointer-events: none;
         }
 
-        .btn-exit {
-            position: absolute; bottom: 40px;
-            background: none; border: 1px solid var(--gold);
-            color: var(--gold); padding: 10px 20px; cursor: pointer;
-            font-size: 10px; letter-spacing: 2px;
+        /* [КНОПКИ] v1.6: Удален конфликт "В бар" */
+        .btn-return {
+            position: absolute; bottom: 45px;
+            background: none; border: 1px solid rgba(212,175,55,0.4);
+            color: var(--gold); padding: 12px 35px; cursor: pointer;
+            font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+            transition: 0.4s;
         }
+        .btn-return:hover { background: var(--gold); color: #000; box-shadow: 0 0 25px var(--gold); }
 
-        /* ВСПЫШКА */
-        #flash {
-            position: fixed; inset: 0; background: #fff; 
-            opacity: 0; z-index: 100; pointer-events: none;
+        #flash-v6 {
+            position: fixed; inset: 0; background: #fff; opacity: 0; z-index: 1000; pointer-events: none;
         }
-        .flash-active { animation: fff 1s ease-out; }
-        @keyframes fff { 0% {opacity:0} 10% {opacity:1} 100% {opacity:0} }
     </style>
 </head>
-<body onclick="startAmbiance()">
+<body onclick="activateSystemV6()">
 
-    <div id="flash"></div>
-    <div class="bridge-bg"></div>
+    <div id="flash-v6"></div>
+    <div class="server-room-bg" id="main-bg"></div>
 
-    <div class="ui-layer">
+    <div class="overlay">
         <div class="header-ui">
-            <div class="logo">GY-GY</div>
-            <div style="color:var(--gold); border:1px solid; padding:5px;">RU</div>
+            <div class="logo-v1-6">GY-GY <span style="font-size: 10px; vertical-align: top; opacity: 0.5;">v1.6</span></div>
+            <div style="color:var(--gold); border:1px solid; padding:5px 15px; font-size: 12px;">CORE LINK: READY</div>
         </div>
 
-        <div class="ai-portal" onclick="jumpToCore()">
-            <div class="portal-label">ENTER</div>
-            <div style="color:var(--gold); font-size:10px; margin-top:10px; opacity:0.5;">[ ACCESS POINT ]</div>
+        <div class="door-trigger" onclick="initJump()">
+            <div class="enter-label">ENTER</div>
+            <div style="color:var(--gold); font-size:9px; margin-top:25px; letter-spacing:5px; opacity:0.6;">
+                ACCESSING AI_ROOM_CORE_V8
+            </div>
         </div>
 
-        <button class="btn-exit" onclick="location.href='index.html'">BACK TO REALITY</button>
+        <button class="btn-return" onclick="location.href='index.html'">В ХОЛЛ</button>
     </div>
 
-    <audio id="snd" loop>
+    <audio id="core-ambience" loop>
         <source src="bridge_ambient.mp3" type="audio/mpeg">
     </audio>
 
     <script>
-        const audio = document.getElementById('snd');
-        let audioStarted = false;
+        const snd = document.getElementById('core-ambience');
+        let sysActive = false;
 
-        // Запуск музыки при первом клике в любом месте (защита браузера)
-        function startAmbiance() {
-            if (!audioStarted) {
-                audio.volume = 0;
-                audio.play();
-                let v = 0;
-                const fadeIn = setInterval(() => {
-                    if (v < 0.6) { v += 0.05; audio.volume = v; }
-                    else { clearInterval(fadeIn); }
-                }, 100);
-                audioStarted = true;
+        // v1.6: Активация звука при первом клике
+        function activateSystemV6() {
+            if (!sysActive) {
+                snd.volume = 0;
+                snd.play().then(() => {
+                    let vol = 0;
+                    const fade = setInterval(() => {
+                        if (vol < 0.7) { vol += 0.05; snd.volume = vol; }
+                        else { clearInterval(fade); }
+                    }, 100);
+                });
+                sysActive = true;
             }
         }
 
-        function jumpToCore() {
-            document.getElementById('flash').classList.add('flash-active');
-            document.querySelector('.ai-portal').classList.add('jump-active');
+        // v1.6: Логика прыжка в Ядро
+        function initJump() {
+            const flash = document.getElementById('flash-v6');
+            const portal = document.querySelector('.door-trigger');
+            const bg = document.getElementById('main-bg');
+
+            // Запускаем спецэффекты
+            flash.style.animation = "flashKey 1.2s forwards";
+            portal.classList.add('jump-sequence');
+            bg.style.filter = "brightness(3) blur(20px)";
             
-            // Форсаж звука перед прыжком
-            audio.volume = 1;
+            // Форсаж аудио
+            snd.volume = 1.0;
 
             setTimeout(() => {
                 window.location.href = 'ai_room_core_v8.html';
-            }, 1000);
+            }, 1100);
         }
 
-        window.onload = () => {
-            document.getElementById('flash').classList.add('flash-active');
-        };
+        // CSS Анимация вспышки внутри скрипта для чистоты
+        const styleSheet = document.createElement('style');
+        styleSheet.innerHTML = `@keyframes flashKey { 0% {opacity:0} 15% {opacity:1} 100% {opacity:0} }`;
+        document.head.appendChild(styleSheet);
+
+        window.onload = () => { console.log("Bridge Protocol v1.6 Loaded."); };
     </script>
 </body>
 </html>
