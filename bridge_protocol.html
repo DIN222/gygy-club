@@ -1,116 +1,127 @@
 
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY | GATEWAY v1.7</title>
+    <title>GY-GY | GATEWAY v1.9 [ORIGINAL RATIO]</title>
     <style>
         :root { --gold: #d4af37; }
-        * { box-sizing: border-box; }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; overflow: hidden; font-family: 'Courier New', monospace; }
-
-        /* 1. ЖЕСТКИЙ ФОН (Никаких слоев сверху, кроме UI) */
-        .full-bg {
-            position: absolute; inset: 0;
-            background: url('banana_server_room.jpg') center center / cover no-repeat;
-            z-index: 1;
-            filter: brightness(0.5);
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body, html { 
+            width: 100%; height: 100%; 
+            background: #000; overflow: hidden; 
+            font-family: 'Courier New', monospace; 
         }
 
-        /* 2. СЛОЙ ИНТЕРФЕЙСА */
-        .ui-wrapper {
+        /* [ФОН] v1.9: Центрируем оригинал без обрезки */
+        .viewport {
+            position: fixed; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+            background: #000; /* Черные поля по бокам, если экран широкий */
+            z-index: 1;
+        }
+
+        .original-img {
+            height: 100vh; /* Фото всегда по высоте экрана */
+            width: auto;
+            object-fit: contain;
+            filter: brightness(0.7) contrast(1.1);
+            transition: 1.5s ease-in-out;
+        }
+
+        /* [ИНТЕРФЕЙС] */
+        .ui-container {
             position: absolute; inset: 0;
             z-index: 10;
             display: flex; flex-direction: column;
             align-items: center; justify-content: center;
         }
 
-        /* ШАПКА */
-        .nav-top {
-            position: absolute; top: 0; width: 100%; padding: 30px 50px;
-            display: flex; justify-content: space-between; align-items: center;
+        .header {
+            position: absolute; top: 0; width: 100%; padding: 30px;
+            display: flex; justify-content: space-between;
         }
-        .logo-text { color: var(--gold); font-size: 26px; font-weight: 900; letter-spacing: 5px; }
+        .logo { color: var(--gold); font-size: 22px; font-weight: 900; letter-spacing: 5px; text-shadow: 0 0 10px #000; }
 
-        /* ЦЕНТРАЛЬНАЯ КНОПКА-НЕВИДИМКА (НА ВСЮ ДВЕРЬ) */
+        /* [АКТИВНАЯ ЗОНА] Накладываем точно на дверь на картинке */
         .portal-gate {
-            width: 300px; height: 400px;
+            width: 30vh; height: 50vh; /* Пропорции под дверь на фото */
             cursor: pointer;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            border: 1px solid rgba(212,175,55,0.1); /* Едва заметная рамка для теста */
-            transition: 1s cubic-bezier(0.19, 1, 0.22, 1);
+            display: flex; align-items: center; justify-content: center;
+            border: 1px solid rgba(212,175,55,0); /* Полная прозрачность */
+            transition: 0.5s;
         }
-        .portal-gate:hover { border-color: var(--gold); background: rgba(212,175,55,0.05); }
-        .portal-gate:hover .enter-btn { opacity: 1; transform: scale(1.1); }
+        .portal-gate:hover { border: 1px solid rgba(212,175,55,0.3); background: rgba(212,175,55,0.05); }
 
-        .enter-btn {
-            color: #fff; font-size: 40px; font-weight: 900;
-            letter-spacing: 15px; opacity: 0; transition: 0.5s;
-            text-shadow: 0 0 20px var(--gold);
+        .enter-txt {
+            color: #fff; font-size: 30px; font-weight: 900; letter-spacing: 15px;
+            opacity: 0; transition: 0.4s; text-shadow: 0 0 20px var(--gold);
         }
+        .portal-gate:hover .enter-txt { opacity: 1; }
 
-        /* АНИМАЦИЯ ПРЫЖКА v1.7 */
-        .jump-v7 { transform: scale(30) !important; opacity: 0 !important; }
-
-        /* НИЖНЯЯ КНОПКА (ЕДИНСТВЕННАЯ) */
-        .back-home {
-            position: absolute; bottom: 40px;
+        /* [КНОПКИ] */
+        .btn-back {
+            position: absolute; bottom: 30px;
             background: none; border: 1px solid var(--gold);
-            color: var(--gold); padding: 10px 30px; cursor: pointer;
-            text-transform: uppercase; font-size: 11px; letter-spacing: 3px;
+            color: var(--gold); padding: 10px 25px; cursor: pointer;
+            font-size: 10px; letter-spacing: 2px;
         }
 
-        /* ВСПЫШКА */
-        #fx-flash { position: fixed; inset: 0; background: #fff; opacity: 0; z-index: 1000; pointer-events: none; }
-        @keyframes flashEffect { 0% {opacity:0} 15% {opacity:1} 100% {opacity:0} }
+        /* ЭФФЕКТ ПРЫЖКА */
+        .jump-v1-9 { transform: scale(15); opacity: 0; pointer-events: none; }
+
+        #flash { position: fixed; inset: 0; background: #fff; opacity: 0; z-index: 1000; pointer-events: none; }
     </style>
 </head>
-<body onclick="startSoundV7()">
+<body onclick="startSoundV19()">
 
-    <div id="fx-flash"></div>
-    <div class="full-bg"></div>
+    <div id="flash"></div>
 
-    <div class="ui-wrapper">
-        <div class="nav-top">
-            <div class="logo-text">GY-GY v1.7</div>
-            <div style="color:var(--gold); border:1px solid; padding:5px 10px; font-size:10px;">SYSTEM: ONLINE</div>
-        </div>
-
-        <div class="portal-gate" onclick="goCoreV7()">
-            <div class="enter-btn">ENTER</div>
-            <div style="color:var(--gold); font-size:9px; margin-top:20px; opacity:0.5; letter-spacing:3px;">[ КЛИКНИ ПО ДВЕРИ ]</div>
-        </div>
-
-        <button class="back-home" onclick="location.href='index.html'">Назад в холл</button>
+    <div class="viewport">
+        <img src="banana_server_room.jpg" class="original-img" id="gate-img">
     </div>
 
-    <audio id="bg-snd" loop>
+    <div class="ui-container">
+        <div class="header">
+            <div class="logo">GY-GY v1.9</div>
+            <div style="color:var(--gold); border:1px solid; padding:5px 10px; font-size:10px;">CORE LINK: STANDBY</div>
+        </div>
+
+        <div class="portal-gate" onclick="doJump()">
+            <div class="enter-txt">ENTER</div>
+        </div>
+
+        <button class="btn-back" onclick="location.href='index.html'">НАЗАД В ХОЛЛ</button>
+    </div>
+
+    <audio id="amb-snd" loop>
         <source src="bridge_ambient.mp3" type="audio/mpeg">
     </audio>
 
     <script>
-        const audio = document.getElementById('bg-snd');
+        const snd = document.getElementById('amb-snd');
         let playing = false;
 
-        function startSoundV7() {
+        function startSoundV19() {
             if (!playing) {
-                audio.volume = 0.6;
-                audio.play();
+                snd.volume = 0.5;
+                snd.play();
                 playing = true;
             }
         }
 
-        function goCoreV7() {
-            document.getElementById('fx-flash').style.animation = "flashEffect 1s forwards";
-            document.querySelector('.portal-gate').classList.add('jump-v7');
-            audio.volume = 1.0;
-            
-            setTimeout(() => {
-                window.location.href = 'ai_room_core_v8.html';
-            }, 1000);
+        function doJump() {
+            document.getElementById('flash').style.animation = "flashKey 1s forwards";
+            document.getElementById('gate-img').classList.add('jump-v1-9');
+            snd.volume = 1;
+            setTimeout(() => { window.location.href = 'ai_room_core_v8.html'; }, 1000);
         }
+
+        const styleSheet = document.createElement('style');
+        styleSheet.innerHTML = `@keyframes flashKey { 0% {opacity:0} 15% {opacity:1} 100% {opacity:0} }`;
+        document.head.appendChild(styleSheet);
     </script>
 </body>
 </html>
+
