@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.69 | FULL MASTER</title>
+    <title>GY-GY Club v4.4.70 | FULL MASTER</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -98,11 +98,13 @@
             <span id="txt-photo" style="color:#000; font-size:9px; font-weight:900;">ИЛИ ФОТО</span>
         </div>
 
-        <div class="box-final" onclick="useAvatar()" style="border-color:var(--gold); cursor:pointer; background:rgba(212,175,55,0.1);">
-            <img id="club-avatar-img" style="display:none; width:100%; height:100%; object-fit:cover;">
-            <span id="txt-avatar" style="color:#000; font-size:9px; font-weight:900;">ИЛИ АВАТАР</span>
-        </div>
-    </div>
+       <div class="box-final" onclick="useAvatar()" style="border: 2px solid var(--gold); cursor:pointer; background:rgba(212,175,55,0.1); display:flex; align-items:center; justify-content:center; width:140px; height:140px;">
+    <img id="club-avatar-img" style="display:none; width:100%; height:100%; object-fit:cover;">
+    
+    <span id="txt-avatar" style="color:var(--gold); font-size:12px; font-weight:900; letter-spacing:2px; text-transform:uppercase; text-align:center;">
+        ИЛИ<br>АВАТАР
+    </span>
+</div>
 
     <button id="btn-save" class="btn-gy" onclick="finalizeRegistration()">СОХРАНИТЬ</button>
     <button id="btn-pass" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')" style="display:none;">ПРОЙТИ В ХОЛЛ</button>
