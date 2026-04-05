@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.61 | FULL MASTER</title>
+    <title>GY-GY Club v4.4.63 | FULL MASTER</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -56,8 +56,8 @@
 </head>
 <body oncontextmenu="return false;">
   <iframe id="club-stage" name="club-stage" src="about:blank" 
-        style="position:fixed; top:0; left:0; width:100%; height:100%; border:none; z-index:9999999; display:none; background-color:#000;">
-    </iframe>
+    style="position:fixed; inset:0; width:100%; height:100%; border:none; z-index:9999999; display:none; background:#000; pointer-events:none;">
+</iframe>
 
     <div id="google_translate_element"></div>
     <div class="ui-header-right">GY-GY</div>
@@ -129,74 +129,84 @@
     </div>
 
     <script>
-      // 1. ИМИТАЦИЯ ОТВЕТА ЯДРА (Встроено в модуль)
-    function callClubAI(prompt, style, cardId) {
-        // Создаем задержку, как будто ИИ думает
-        setTimeout(() => {
-            const rhymes = [
-                "В системе ГИ-ГИ свой закон,\nЗдесь золото и черный фон.\nМы пишем код, мы строим мост,\nВзлетая выше ярких звезд.",
-                "Дерзкий ритм и честный слог,\nКлуб открыл сто тыщ дорог.\nЗолото на черном — стиль,\nПревращаем хаос в пыль.",
-                "Синтез смыслов, блеск неона,\nВне привычного закона.\nAI Room чеканит шаг,\nРазгоняя старый мрак."
-            ];
-            const randomRhyme = rhymes[Math.floor(Math.random() * rhymes.length)];
-            const result = `[CORE RESPONSE OK]\nSTYLE: ${style.toUpperCase()}\n\n${randomRhyme}`;
-            
-            finalizeCard(cardId, result);
-            document.getElementById('run-btn').disabled = false;
-        }, 1500);
-    }
-
-    // 2. ГЛАВНАЯ ФУНКЦИЯ ЗАПРОСА
-    async function askAI() {
-        const input = document.getElementById('words');
-        const style = document.getElementById('style').value;
-        const wall = document.getElementById('wall');
-        const btn = document.getElementById('run-btn');
-        if (!input.value) return;
-
-        // Создаем карточку
-        const cardId = 'v' + Date.now();
-        const card = document.createElement('div');
-        card.className = 'card loading';
-        card.id = cardId;
-        card.innerHTML = `<div class="content">Синтезирую смыслы Клуба: ${input.value}...</div>`;
-        wall.appendChild(card);
-        wall.scrollTop = wall.scrollHeight;
-
-        btn.disabled = true;
-
-        // ВЫЗЫВАЕМ ВНУТРЕННИЙ ИИ (Поскольку мост через iframe не задался)
-        callClubAI(input.value, style, cardId);
+    let currentID = "GY-" + Math.floor(1000 + Math.random() * 9000);
         
-        input.value = '';
-    }
-
-    function finalizeCard(id, text) {
-        const card = document.getElementById(id);
-        if (!card) return;
-        card.classList.remove('loading');
-        card.innerHTML = `
-            <div class="content" contenteditable="true">${text}</div>
-            <div class="remote">
-                <span class="remote-btn" onclick="bridge('CLIP', '${id}')">🎬 CLIP</span>
-                <span class="remote-btn" onclick="bridge('TG', '${id}')">✉ TG</span>
-                <span class="remote-btn" onclick="bridge('ARCHIVE', '${id}')">🏛️ ARCH</span>
-                <span class="remote-btn" onclick="this.closest('.card').remove()" style="color:#aa0000">❌ DEL</span>
-            </div>`;
-    }
-
-    function setIdea() {
-        const ideas = ["Реголит", "Неон", "Драйв", "Код", "Синтез", "Вакуум"];
-        document.getElementById('words').value = ideas[Math.floor(Math.random()*ideas.length)];
-    }
-
-    function bridge(action, id) {
-        const text = document.querySelector(`#${id} .content`).innerText;
-        if(action === 'CLIP') { 
-            localStorage.setItem('currentVerse', text); 
-            location.href = 'clip.html'; 
+        // 1. НАВИГАЦИЯ И ЗВУК
+        function handleDoor() {
+            const door = document.getElementById('main-door');
+            const snd = document.getElementById('snd-door');
+            const ambient = document.getElementById('snd-ambient');
+            
+            snd.play();
+            door.style.transform = "scale(4) rotateY(-110deg)";
+            door.style.opacity = "0";
+            
+            setTimeout(() => {
+                portalTransition('block-welcome');
+                ambient.play();
+                document.getElementById('id-label').innerText = "#" + currentID;
+            }, 1500);
         }
-    }
+
+        function portalTransition(targetId) {
+            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
+            const target = document.getElementById(targetId);
+            target.classList.add('active');
+            
+            // Показываем кнопку возврата, если мы не на входе и не в холле
+            const backBtn = document.getElementById('btn-global-back');
+            backBtn.style.display = (targetId === 'block-bar' || targetId === 'block-tables') ? 'block' : 'none';
+            backBtn.style.opacity = "1";
+        }
+
+        function swapButtons(hideId, showId) {
+            document.getElementById(hideId).style.display = 'none';
+            const showBtn = document.getElementById(showId);
+            showBtn.classList.remove('btn-sleep');
+            showBtn.style.display = 'block';
+            
+            if(hideId === 'btn-save') {
+                document.getElementById('h-id').innerText = "#" + currentID;
+                document.getElementById('h-photo').src = document.getElementById('pp').src;
+                // Тут можно добавить генерацию QR если нужно
+            }
+        }
+
+        // КРИТИЧЕСКАЯ ФУНКЦИЯ ДЛЯ ВХОДА В AI ROOM
+        function deepDive() {
+            console.log("Вход в AI ROOM...");
+            window.location.href = 'bridge_protocol.html';
+        }
+
+        // 2. РАБОТА С ФОТО
+        function preview(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.getElementById('pp');
+                    img.src = e.target.result;
+                    img.style.display = 'block';
+                    document.getElementById('txt-photo').style.display = 'none';
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // 3. СЛУШАТЕЛЬ ДЛЯ НЕЙРОНКИ (v.4.4.62)
+        window.addEventListener('message', (event) => {
+            if (event.data.type === 'GY_GENERATE') {
+                const result = `[ID: ${currentID}]\n\nВ системе GY-GY плавится лед,\nЦифровой неон по венам течет.\nТвой код уникален, твой путь предрешен,\nВ золоте истина, в черном — закон.`;
+                event.source.postMessage({ 
+                    type: 'GY_RESULT', 
+                    text: result, 
+                    targetId: event.data.targetId 
+                }, '*');
+            }
+        });
+
+        function googleTranslateElementInit() { 
+            new google.translate.TranslateElement({pageLanguage: 'ru', autoDisplay: false}, 'google_translate_element'); 
+        }
     </script>
     <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
