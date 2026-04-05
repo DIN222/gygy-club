@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.66 | FULL MASTER</title>
+    <title>GY-GY Club v4.4.68 | FULL MASTER</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -80,35 +80,33 @@
         <button class="btn-gy" onclick="portalTransition('block-identity')">ПОЛУЧИТЬ ID</button>
     </div>
 
-   <div id="block-identity" class="block">
-        <div class="quote-text">«Шампанского много не бывает»</div>
-        
-        <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; margin-bottom:25px;">
-            <div class="box-final" style="background:transparent; border-color:var(--gold); color:var(--gold); flex-direction:column;">
-                <span style="font-size:8px; margin-bottom:5px;">ID КЛУБА</span>
-                <div id="id-label" style="font-size:11px; font-weight:900;">#ID</div>
-            </div>
-
-            <div class="box-final" id="qr-box-reg" style="border-color:var(--gold); flex-direction:column;">
-                <span id="qr-placeholder" style="font-size:8px; color:#000;">QR КОД</span>
-            </div>
-
-            <div class="box-final" style="border-color:var(--gold); position:relative; flex-direction:column;">
-                <input type="file" onchange="preview(this)" style="position:absolute; inset:0; opacity:0; z-index:10; cursor:pointer;">
-                <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
-                <span id="txt-photo" style="color:#000; font-size:8px; font-weight:900;">ЗАГРУЗИТЬ ФОТО</span>
-            </div>
-
-            <div class="box-final" id="avatar-box" style="border-color:var(--gold); position:relative; cursor:pointer; flex-direction:column;" onclick="generateAvatar()">
-                <img id="club-avatar-img" style="display:none; width:100%; height:100%; object-fit:cover;">
-                <span id="txt-avatar" style="color:#000; font-size:8px; font-weight:900; text-align:center;">ГЕНЕРИРОВАТЬ АВАТАР</span>
-            </div>
+  <div id="block-identity" class="block">
+    <div class="quote-text">«Шампанского много не бывает»</div>
+    
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:20px; width: 320px;">
+        <div class="box-final" style="border-color:var(--gold); color:var(--gold); flex-direction:column;">
+            <span style="font-size:8px; opacity:0.7;">ID КЛУБА</span>
+            <div id="id-label" style="font-size:12px; font-weight:900;">#GY-XXXX</div>
         </div>
 
-        <button id="btn-save" class="btn-gy" onclick="finalizeRegistration()">СОХРАНИТЬ</button>
-        <button id="btn-pass" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')" style="display:none;">ПРОЙТИ В ХОЛЛ</button>
+        <div class="box-final" id="qr-box-reg" style="border-color:var(--gold); background:#fff;">
+            </div>
+
+        <div class="box-final" id="photo-container" style="border-color:var(--gold); position:relative;">
+            <input type="file" accept="image/*" onchange="usePhoto(this)" style="position:absolute; inset:0; opacity:0; z-index:10; cursor:pointer;">
+            <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
+            <span id="txt-photo" style="color:#000; font-size:9px; font-weight:900;">ИЛИ ФОТО</span>
+        </div>
+
+        <div class="box-final" onclick="useAvatar()" style="border-color:var(--gold); cursor:pointer; background:rgba(212,175,55,0.1);">
+            <img id="club-avatar-img" style="display:none; width:100%; height:100%; object-fit:cover;">
+            <span id="txt-avatar" style="color:#000; font-size:9px; font-weight:900;">ИЛИ АВАТАР</span>
+        </div>
     </div>
 
+    <button id="btn-save" class="btn-gy" onclick="finalizeRegistration()">СОХРАНИТЬ</button>
+    <button id="btn-pass" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')" style="display:none;">ПРОЙТИ В ХОЛЛ</button>
+</div>
     <div id="block-hall" class="block">
         <div style="position:absolute; inset:0; background:url('hall_bg_jpg.jpg') center/cover; z-index:15;"></div>
         <div style="position:absolute; top: 8%; width: 100%; text-align: center; color: var(--door-wood); font-size: 38px; font-weight: 900; font-style: italic; font-family: 'Playfair Display', serif; z-index: 25;">«Всё будет GY-GY»</div>
@@ -143,143 +141,135 @@
     </div>
 
     <script>
+   // --- 1. ГЛОБАЛЬНЫЕ НАСТРОЙКИ ---
     let currentID = "GY-" + Math.floor(1000 + Math.random() * 9000);
-        
-        // 1. НАВИГАЦИЯ И ЗВУК
-        function handleDoor() {
-            const door = document.getElementById('main-door');
-            const snd = document.getElementById('snd-door');
-            const ambient = document.getElementById('snd-ambient');
-            
-            snd.play();
-            door.style.transform = "scale(4) rotateY(-110deg)";
-            door.style.opacity = "0";
-            
-            setTimeout(() => {
-                portalTransition('block-welcome');
-                ambient.play();
-                document.getElementById('id-label').innerText = "#" + currentID;
-            }, 1500);
+
+    // --- 2. НАВИГАЦИЯ И ПЕРЕХОДЫ ---
+    function portalTransition(targetId) {
+        document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
+        const target = document.getElementById(targetId);
+        target.classList.add('active');
+
+        // Если вошли в блок регистрации - сразу рисуем ID и QR
+        if(targetId === 'block-identity') {
+            document.getElementById('id-label').innerText = "#" + currentID;
+            generateQRInReg(); 
         }
 
-        function portalTransition(targetId) {
-            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
-            const target = document.getElementById(targetId);
-            target.classList.add('active');
-            
-            // Показываем кнопку возврата, если мы не на входе и не в холле
-            const backBtn = document.getElementById('btn-global-back');
+        // Показываем кнопку возврата, если мы в Баре или за Столиками
+        const backBtn = document.getElementById('btn-global-back');
+        if (backBtn) {
             backBtn.style.display = (targetId === 'block-bar' || targetId === 'block-tables') ? 'block' : 'none';
             backBtn.style.opacity = "1";
         }
-
-   function swapButtons(hideId, showId) {
-    const hideBtn = document.getElementById(hideId);
-    const showBtn = document.getElementById(showId);
-    
-    if (hideBtn) hideBtn.style.display = 'none';
-    if (showBtn) {
-        showBtn.classList.remove('btn-sleep');
-        showBtn.style.display = 'block';
-        showBtn.style.pointerEvents = 'auto'; // Чтобы точно кликалось
     }
 
-    // Если нажата кнопка СОХРАНИТЬ
-    if(hideId === 'btn-save') {
-        console.log("Финализация регистрации GY-GY...");
+    // --- 3. ЛОГИКА ДВЕРИ (ВХОД) ---
+    function handleDoor() {
+        const door = document.getElementById('main-door');
+        const snd = document.getElementById('snd-door');
+        const ambient = document.getElementById('snd-ambient');
+        
+        if(snd) snd.play();
+        door.style.transform = "scale(4) rotateY(-110deg)";
+        door.style.opacity = "0";
+        
+        setTimeout(() => {
+            portalTransition('block-welcome');
+            if(ambient) ambient.play();
+        }, 1500);
+    }
 
-        // 1. ГЕНЕРАЦИЯ QR (Прямо здесь, без посредников)
-        const qrSource = document.getElementById('qr-box-reg');
-        if (qrSource && typeof QRCode !== "undefined") {
-            qrSource.innerHTML = ""; // Очищаем надпись "QR КОД"
-            new QRCode(qrSource, {
+    // --- 4. СИСТЕМА РЕГИСТРАЦИИ (ФОТО / АВАТАР / QR) ---
+    function usePhoto(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('pp');
+                img.src = e.target.result;
+                img.style.display = 'block';
+                document.getElementById('txt-photo').style.display = 'none';
+                
+                // Выселяем Аватар
+                const avImg = document.getElementById('club-avatar-img');
+                avImg.style.display = 'none';
+                avImg.src = "";
+                document.getElementById('txt-avatar').style.display = 'block';
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function useAvatar() {
+        const avImg = document.getElementById('club-avatar-img');
+        const seed = Math.floor(Math.random() * 9999);
+        avImg.src = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${seed}&backgroundColor=d4af37`;
+        
+        avImg.onload = () => {
+            avImg.style.display = 'block';
+            document.getElementById('txt-avatar').style.display = 'none';
+            
+            // Выселяем Фото
+            const ppImg = document.getElementById('pp');
+            ppImg.style.display = 'none';
+            ppImg.src = "";
+            document.getElementById('txt-photo').style.display = 'block';
+        };
+    }
+
+    function generateQRInReg() {
+        const box = document.getElementById("qr-box-reg");
+        if (!box) return;
+        box.innerHTML = "";
+        if(typeof QRCode !== "undefined") {
+            new QRCode(box, {
                 text: "GY-ID:" + currentID,
-                width: 80,
-                height: 80,
-                colorDark: "#000000",
-                colorLight: "#ffffff"
+                width: 80, height: 80
             });
         }
-
-        // 2. ПЕРЕНОС ID В ХОЛЛ
-        document.getElementById('h-id').innerText = "#" + currentID;
-
-        // 3. ПЕРЕНОС ФОТО ИЛИ АВАТАРА
-        const userPhoto = document.getElementById('pp');
-        const clubAvatar = document.getElementById('club-avatar-img');
-        const finalImg = document.getElementById('h-photo');
-
-        // Проверка: что именно отображается в блоке регистрации?
-        if (userPhoto && userPhoto.style.display === 'block') {
-            finalImg.src = userPhoto.src;
-        } else if (clubAvatar && clubAvatar.style.display === 'block') {
-            finalImg.src = clubAvatar.src;
-        }
-
-        // 4. КОПИРОВАНИЕ QR В КАРТОЧКУ ХОЛЛА
-        // Делаем небольшую паузу (100мс), чтобы QR успел отрисоваться в первом окне
-        setTimeout(() => {
-            const qrTarget = document.getElementById('h-qr');
-            if (qrSource && qrTarget) {
-                qrTarget.innerHTML = qrSource.innerHTML;
-            }
-        }, 100);
     }
-}
 
-// ОТДЕЛЬНАЯ ФУНКЦИЯ ДЛЯ КНОПКИ АВАТАРА (Добавь её рядом)
-function generateAvatar() {
-    const img = document.getElementById('club-avatar-img');
-    const txt = document.getElementById('txt-avatar');
-    const userPhoto = document.getElementById('pp');
-    const txtPhoto = document.getElementById('txt-photo');
-
-    const seed = Math.floor(Math.random() * 10000);
-    img.src = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${seed}&backgroundColor=d4af37`;
-    
-    img.onload = () => {
-        img.style.display = 'block';
-        txt.style.display = 'none';
-        // Если выбрали аватар — прячем загруженное фото
-        if (userPhoto) userPhoto.style.display = 'none';
-        if (txtPhoto) txtPhoto.style.display = 'block';
-    };
-}
-        // КРИТИЧЕСКАЯ ФУНКЦИЯ ДЛЯ ВХОДА В AI ROOM
-        function deepDive() {
-            console.log("Вход в AI ROOM...");
-            window.location.href = 'bridge_protocol.html';
+    function finalizeRegistration() {
+        // Перенос данных в Холл
+        document.getElementById('h-id').innerText = "#" + currentID;
+        
+        const pp = document.getElementById('pp');
+        const av = document.getElementById('club-avatar-img');
+        const final = document.getElementById('h-photo');
+        
+        if(pp && pp.style.display === 'block') {
+            final.src = pp.src;
+        } else if(av && av.style.display === 'block') {
+            final.src = av.src;
         }
 
-        // 2. РАБОТА С ФОТО
-        function preview(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = document.getElementById('pp');
-                    img.src = e.target.result;
-                    img.style.display = 'block';
-                    document.getElementById('txt-photo').style.display = 'none';
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
+        const qrSource = document.getElementById('qr-box-reg');
+        const qrTarget = document.getElementById('h-qr');
+        if(qrSource && qrTarget) qrTarget.innerHTML = qrSource.innerHTML;
 
-        // 3. СЛУШАТЕЛЬ ДЛЯ НЕЙРОНКИ (v.4.4.62)
-        window.addEventListener('message', (event) => {
-            if (event.data.type === 'GY_GENERATE') {
-                const result = `[ID: ${currentID}]\n\nВ системе GY-GY плавится лед,\nЦифровой неон по венам течет.\nТвой код уникален, твой путь предрешен,\nВ золоте истина, в черном — закон.`;
-                event.source.postMessage({ 
-                    type: 'GY_RESULT', 
-                    text: result, 
-                    targetId: event.data.targetId 
-                }, '*');
-            }
-        });
+        // Переключение кнопок
+        document.getElementById('btn-save').style.display = 'none';
+        const pass = document.getElementById('btn-pass');
+        pass.style.display = 'block';
+        pass.classList.remove('btn-sleep');
+    }
 
-        function googleTranslateElementInit() { 
-            new google.translate.TranslateElement({pageLanguage: 'ru', autoDisplay: false}, 'google_translate_element'); 
+    // --- 5. ПЕРЕХОД В AI ROOM ---
+    function deepDive() {
+        window.location.href = 'bridge_protocol.html';
+    }
+
+    // --- 6. СЕРВИСНЫЕ ФУНКЦИИ (ПЕРЕВОД / ХАБ) ---
+    function googleTranslateElementInit() { 
+        new google.translate.TranslateElement({pageLanguage: 'ru', autoDisplay: false}, 'google_translate_element'); 
+    }
+
+    window.addEventListener('message', (event) => {
+        if (event.data.type === 'GY_GENERATE') {
+            const result = `[ID: ${currentID}]\n\nВ системе GY-GY плавится лед,\nЦифровой неон по венам течет.\nТвой код уникален, твой путь предрешен,\nВ золоте истина, в черном — закон.`;
+            event.source.postMessage({ type: 'GY_RESULT', text: result, targetId: event.data.targetId }, '*');
         }
+    });
     </script>
     <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
