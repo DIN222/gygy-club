@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.64 | FULL MASTER</title>
+    <title>GY-GY Club v4.4.65 | FULL MASTER</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -173,18 +173,50 @@
             backBtn.style.opacity = "1";
         }
 
-        function swapButtons(hideId, showId) {
-            document.getElementById(hideId).style.display = 'none';
-            const showBtn = document.getElementById(showId);
-            showBtn.classList.remove('btn-sleep');
-            showBtn.style.display = 'block';
-            
-            if(hideId === 'btn-save') {
-                document.getElementById('h-id').innerText = "#" + currentID;
-                document.getElementById('h-photo').src = document.getElementById('pp').src;
-                // Тут можно добавить генерацию QR если нужно
-            }
+     function swapButtons(hideId, showId) {
+    const hideBtn = document.getElementById(hideId);
+    const showBtn = document.getElementById(showId);
+    
+    if (hideBtn) hideBtn.style.display = 'none';
+    if (showBtn) {
+        showBtn.classList.remove('btn-sleep');
+        showBtn.style.display = 'block';
+    }
+
+    // Если нажата кнопка СОХРАНИТЬ
+    if(hideId === 'btn-save') {
+        console.log("Финализация регистрации GY-GY...");
+
+        // 1. Генерируем QR прямо сейчас (вызываем функцию, которую добавили ранее)
+        if (typeof generateQR === 'function') {
+            generateQR("GY-ID:" + currentID);
         }
+
+        // 2. Переносим ID в финальную карточку Холла
+        document.getElementById('h-id').innerText = "#" + currentID;
+
+        // 3. Выбираем, что пойдет в Холл: фото или аватар
+        const userPhoto = document.getElementById('pp');
+        const clubAvatar = document.getElementById('club-avatar-img');
+        const finalImg = document.getElementById('h-photo');
+
+        // Если загружено фото (src не пустой и не заглушка)
+        if (userPhoto && userPhoto.style.display !== 'none') {
+            finalImg.src = userPhoto.src;
+        } 
+        // Иначе, если сгенерирован аватар
+        else if (clubAvatar && clubAvatar.style.display !== 'none') {
+            finalImg.src = clubAvatar.src;
+        }
+
+        // 4. Копируем QR в финальную карточку (в Холл)
+        const qrSource = document.getElementById('qr-box-reg');
+        const qrTarget = document.getElementById('h-qr');
+        if (qrSource && qrTarget) {
+            qrTarget.innerHTML = qrSource.innerHTML;
+        }
+    }
+}
 
         // КРИТИЧЕСКАЯ ФУНКЦИЯ ДЛЯ ВХОДА В AI ROOM
         function deepDive() {
