@@ -52,6 +52,16 @@
         
         #block-tables { background: url('lounge.jpg') no-repeat center bottom / contain #000; }
         .lamp-zone { position: absolute; width: 42px; height: 42px; border-radius: 50%; cursor: pointer; z-index: 100; background: radial-gradient(circle, var(--neon-glow) 0%, transparent 75%); border: 1px solid var(--violet); box-shadow: 0 0 18px var(--neon-glow); transform: translate(-50%, -50%); pointer-events: auto !important; }
+   /* --- СЮДА ВСТАВЛЯЕМ СТИЛЬ АНИМАЦИИ --- */
+.door-exit-active {
+    transform-origin: center center !important;
+    transform: translate(-50%, -50%) scale(5) !important;
+    opacity: 0 !important;
+    transition: transform 1.2s ease-in, opacity 1s ease-out !important;
+    pointer-events: none;
+    z-index: 9999;
+}
+/* --- КОНЕЦ ВСТАВКИ СТИЛЯ --- */     
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -289,6 +299,21 @@
         }
         console.log("Личность подтверждена. Добро пожаловать в Бар!");
     }
+        // --- ФУНКЦИЯ ПОЛЕТА СКВОЗЬ ДВЕРЬ ---
+function enterClub() {
+    // Находим твою дверь/кнопку. Убедись, что класс совпадает!
+    const door = document.querySelector('.ai-portal'); 
+    
+    if (door) {
+        door.classList.add('door-exit-active');
+        
+        // Переход в bridge_protocol через 1.2 сек
+        setTimeout(() => {
+            window.location.href = 'bridge_protocol.html';
+        }, 1200);
+    }
+}
+// --- КОНЕЦ ФУНКЦИИ ---
     </script>
     <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
