@@ -85,7 +85,9 @@
         wall.scrollTop = wall.scrollHeight;
 
         btn.disabled = true;
-        window.parent.postMessage({ type: 'GY_GENERATE', prompt: input.value, style: style, targetId: cardId }, '*');
+       // Пробуем докричаться до верхушки иерархии (top)
+        const target = window.top; 
+        target.postMessage({ type: 'GY_GENERATE', prompt: input.value, style: style, targetId: cardId }, '*');
         input.value = '';
     }
 
