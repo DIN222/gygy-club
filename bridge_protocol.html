@@ -92,16 +92,21 @@
         <div class="lang">RU | EN</div>
     </div>
 
-    <div class="ai-portal" onclick="location.href='verses.html'">
-        <div style="font-family: 'Courier New', monospace; font-size: 10px; opacity: 0.7; letter-spacing: 2px;">
-            <span class="status-dot">●</span> 
-            STATUS: STABLE.PROTOCOL_RUNNING
+    <div class="ai-portal" onclick="location.href='verses.html'" style="
+        position: absolute; 
+        top: 50%; left: 50%; 
+        transform: translate(-50%, -50%);
+        width: 350px; height: 350px; /* Размер зоны под надпись AI ROOM */
+        border: none; background: none; box-shadow: none;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        cursor: pointer; z-index: 5;">
+        
+        <div class="portal-main-btn" style="opacity: 0; transition: 0.5s; letter-spacing: 15px;">
+            ENTER
         </div>
-
-        <div class="portal-main-btn">ENTER AI ROOM</div>
-
-        <div style="font-size: 9px; opacity: 0.4; margin-top: 20px;">
-            Neural Link Protocol v1.5 | 🍌 Security Layer Check: OK
+        
+        <div style="font-family: 'Courier New', monospace; font-size: 10px; opacity: 0; transition: 1s;" id="status-hint">
+            <span class="status-dot">●</span> SYSTEM READY
         </div>
     </div>
 
@@ -112,6 +117,20 @@
     </audio>
 
     <script>
+        // Эффект появления текста при наведении на дверь
+        const portal = document.querySelector('.ai-portal');
+        const btnText = document.querySelector('.portal-main-btn');
+        const statusHint = document.getElementById('status-hint');
+
+        portal.onmouseenter = () => {
+            btnText.style.opacity = "1";
+            statusHint.style.opacity = "0.6";
+        };
+        portal.onmouseleave = () => {
+            btnText.style.opacity = "0";
+            statusHint.style.opacity = "0";
+        };
+
         window.onload = function() {
             document.getElementById('flash').classList.add('flash-active');
             const audio = document.getElementById('snd-server');
@@ -125,9 +144,7 @@
                         if (v < 0.6) { v += 0.05; audio.volume = v; }
                         else { clearInterval(fadeIn); }
                     }, 200);
-                }).catch(() => {
-                    console.log("Кликните для активации");
-                });
+                }).catch(() => { console.log("Кликните для звука"); });
             }
         };
 
