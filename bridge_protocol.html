@@ -1,87 +1,131 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY | Bridge Protocol1.1</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <title>GY-GY | Bridge Protocol</title>
     <style>
         :root { --gold: #d4af37; }
         body { 
-            margin: 0; background: #000; color: var(--gold); 
-            font-family: monospace; display: flex; 
-            flex-direction: column; align-items: center; 
-            justify-content: center; height: 100vh; overflow: hidden;
+            margin: 0; padding: 0; background: #000; 
+            font-family: 'Courier New', monospace; color: var(--gold); 
+            overflow: hidden; height: 100vh;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
 
-        /* Эффект мерцания ламп */
-        .glitch-overlay {
+        /* ТВОЯ НОВАЯ КАРТИНКА ОТ БАНАНО */
+        .bridge-bg {
+            position: fixed; inset: 0;
+            background: 
+                linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7)), 
+                url('banana_server_room.jpg') center/cover no-repeat;
+            z-index: -1;
+            filter: blur(10px) brightness(0.5); /* Начальное состояние */
+            animation: focusVision 2.5s forwards cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes focusVision {
+            to { filter: blur(0px) brightness(1); }
+        }
+
+        /* Атрибуты Клуба */
+        .header-ui {
+            position: fixed; top: 0; width: 100%; padding: 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-sizing: border-box; z-index: 10;
+        }
+        .logo { font-size: 24px; font-weight: 900; text-shadow: 0 0 10px var(--gold); }
+        .lang { border: 1px solid var(--gold); padding: 5px 10px; font-size: 12px; }
+
+        /* Центральный Шлюз */
+        .ai-portal {
+            width: 320px; padding: 50px 20px;
+            border: 2px solid var(--gold); background: rgba(0,0,0,0.8);
+            text-align: center; cursor: pointer; transition: 0.5s;
+            box-shadow: 0 0 30px rgba(212,175,55,0.2);
+        }
+        .ai-portal:hover {
+            box-shadow: 0 0 60px var(--gold);
+            transform: translateY(-5px);
+            background: rgba(212,175,55,0.1);
+        }
+
+        /* Эффект вспышки */
+        #flash {
             position: fixed; inset: 0; background: #fff; 
             opacity: 0; z-index: 1000; pointer-events: none;
         }
-        .flashing { animation: flashTrigger 1.5s ease-out; }
-        @keyframes flashTrigger {
-            0% { opacity: 0; } 10% { opacity: 0.8; } 20% { opacity: 0; }
-            30% { opacity: 0.9; } 40% { opacity: 0; }
+        .flash-active { animation: flashAnim 1.5s ease-out; }
+        @keyframes flashAnim {
+            0%, 100% { opacity: 0; }
+            15%, 35% { opacity: 0.8; }
+            20%, 40% { opacity: 0; }
         }
 
-        .bridge-bg {
-            position: fixed; inset: 0;
-            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), 
-                        url('server_room.jpg') center/cover;
-            filter: blur(10px); animation: clear 3s forwards; z-index: -1;
+        .btn-exit {
+            margin-top: 60px; background: none; border: 1px solid #444;
+            color: #444; padding: 10px 25px; cursor: pointer;
+            text-transform: uppercase; font-size: 11px; transition: 0.3s;
         }
-        @keyframes clear { to { filter: blur(0px); } }
-
-        .ai-portal {
-            border: 2px solid var(--gold); padding: 50px;
-            text-align: center; cursor: pointer; transition: 0.5s;
-            background: rgba(0,0,0,0.9); box-shadow: 0 0 20px rgba(212,175,55,0.2);
-        }
-        .ai-portal:hover { transform: scale(1.05); box-shadow: 0 0 50px var(--gold); }
+        .btn-exit:hover { color: var(--gold); border-color: var(--gold); }
     </style>
 </head>
 <body>
 
-    <div id="flash-layer" class="glitch-overlay"></div>
+    <div id="flash"></div>
     <div class="bridge-bg"></div>
+
+    <div class="header-ui">
+        <div class="logo">GY-GY</div>
+        <div class="lang">RU | EN</div>
+    </div>
+
+    <div class="ai-portal" onclick="location.href='verses.html'">
+        <div style="font-size: 70px; margin-bottom: 20px;">🧠</div>
+        <div style="font-weight: 900; letter-spacing: 6px; font-size: 20px;">ENTER AI ROOM</div>
+        <div style="font-size: 10px; opacity: 0.5; margin-top: 15px;">STABLE NEURAL LINK ESTABLISHED</div>
+    </div>
+
+    <button class="btn-exit" onclick="exitToReality()">Назад в реальность</button>
 
     <audio id="snd-server" loop>
         <source src="bridge_ambient.mp3" type="audio/mpeg">
     </audio>
 
-    <div class="ai-portal" onclick="location.href='verses.html'">
-        <div style="font-size:60px;">🧠</div>
-        <div style="font-size:20px; margin-top:20px; letter-spacing:5px;">ENTER AI ROOM</div>
-    </div>
-
-    <button onclick="exitToReality()" style="margin-top:50px; background:none; border:1px solid #444; color:#444; cursor:pointer; padding:10px 20px;">EXIT TO REALITY</button>
-
     <script>
         window.onload = function() {
-            // 1. Блымание светом
-            document.getElementById('flash-layer').classList.add('flashing');
+            // 1. Вспышка ламп
+            document.getElementById('flash').classList.add('flash-active');
             
-            // 2. Плавное нарастание гула серверной
-            const snd = document.getElementById('snd-server');
-            snd.volume = 0;
-            snd.play().catch(e => console.log("Нужен клик для звука"));
+            // 2. Нарастание гула
+            const audio = document.getElementById('snd-server');
+            audio.volume = 0;
+            const playPromise = audio.play();
             
-            let v = 0;
-            const fadeIn = setInterval(() => {
-                if (v < 0.6) { v += 0.05; snd.volume = v; }
-                else { clearInterval(fadeIn); }
-            }, 200);
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    let v = 0;
+                    const fadeIn = setInterval(() => {
+                        if (v < 0.6) { v += 0.05; audio.volume = v; }
+                        else { clearInterval(fadeIn); }
+                    }, 200);
+                }).catch(() => {
+                    console.log("Кликните для активации протокола");
+                });
+            }
         };
 
         function exitToReality() {
-            const snd = document.getElementById('snd-server');
-            let v = snd.volume;
+            const audio = document.getElementById('snd-server');
+            let v = audio.volume;
             const fadeOut = setInterval(() => {
-                if (v > 0.05) { v -= 0.05; snd.volume = v; }
-                else { clearInterval(fadeOut); location.href = 'index.html'; }
+                if (v > 0.05) { v -= 0.05; audio.volume = v; }
+                else { 
+                    clearInterval(fadeOut); 
+                    location.href = 'index.html'; 
+                }
             }, 50);
         }
     </script>
 </body>
 </html>
+
