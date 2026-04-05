@@ -1,103 +1,87 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY | BRIDGE PROTOCOL0.3</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <title>GY-GY | Bridge Protocol0.1</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root { --gold: #d4af37; }
-        
-        * { -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; outline: none; }
-        
-        html, body { 
-            width: 100%; height: 100%; background: #000; color: var(--gold); 
-            font-family: 'Share Tech Mono', monospace; margin: 0; overflow: hidden; 
+        body { 
+            margin: 0; background: #000; color: var(--gold); 
+            font-family: monospace; display: flex; 
+            flex-direction: column; align-items: center; 
+            justify-content: center; height: 100vh; overflow: hidden;
         }
 
-        /* ПОСТОЯННЫЕ АТРИБУТЫ КЛУБА */
-        #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000; }
-        .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000; font-size: 24px; letter-spacing: 5px; font-weight: bold; }
-        
-        /* КНОПКА ВОЗВРАТА (Стандартный нижний уровень) */
-        .ui-back-btn { 
-            position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 1000;
-            background: transparent; border: 1px solid var(--gold); color: var(--gold);
-            padding: 12px 24px; cursor: pointer; font-family: 'Share Tech Mono'; 
-            font-size: 14px; text-transform: uppercase; border-radius: 4px; transition: 0.3s;
+        /* Эффект мерцания ламп */
+        .glitch-overlay {
+            position: fixed; inset: 0; background: #fff; 
+            opacity: 0; z-index: 1000; pointer-events: none;
+        }
+        .flashing { animation: flashTrigger 1.5s ease-out; }
+        @keyframes flashTrigger {
+            0% { opacity: 0; } 10% { opacity: 0.8; } 20% { opacity: 0; }
+            30% { opacity: 0.9; } 40% { opacity: 0; }
         }
 
-        /* КОНТЕНТ ПРОТОКОЛА */
-        .bridge-wrapper { 
-            position: absolute; inset: 0; display: flex; flex-direction: column; 
-            align-items: center; justify-content: center; padding: 20px; 
+        .bridge-bg {
+            position: fixed; inset: 0;
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), 
+                        url('server_room.jpg') center/cover;
+            filter: blur(10px); animation: clear 3s forwards; z-index: -1;
         }
+        @keyframes clear { to { filter: blur(0px); } }
 
-        .vibe-text { 
-            font-family: 'Playfair Display', serif; font-style: italic; font-size: 28px; 
-            text-align: center; margin-bottom: 40px; line-height: 1.3; 
+        .ai-portal {
+            border: 2px solid var(--gold); padding: 50px;
+            text-align: center; cursor: pointer; transition: 0.5s;
+            background: rgba(0,0,0,0.9); box-shadow: 0 0 20px rgba(212,175,55,0.2);
         }
-
-        .loading-zone { width: 270px; display: flex; flex-direction: column; align-items: center; }
-        
-        .progress-container { width: 100%; height: 2px; background: rgba(212, 175, 55, 0.1); margin: 20px 0; }
-        #progress-fill { width: 0%; height: 100%; background: var(--gold); transition: width 0.3s; }
-
-        .btn-gy { 
-            min-width: 270px; padding: 14px; background: transparent; 
-            border: 2px solid var(--gold); color: var(--gold); cursor: pointer; 
-            text-transform: uppercase; font-weight: 900; font-family: 'Share Tech Mono'; 
-            display: none; /* Появится после загрузки */
-        }
-
-        .status-msg { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; height: 15px; }
+        .ai-portal:hover { transform: scale(1.05); box-shadow: 0 0 50px var(--gold); }
     </style>
 </head>
-<body oncontextmenu="return false;">
+<body>
 
-    <div id="google_translate_element"></div>
-    <div class="ui-header-right">GY-GY</div>
-    
-    <button class="ui-back-btn" onclick="location.href='index.html'">Вернуться в бар</button>
+    <div id="flash-layer" class="glitch-overlay"></div>
+    <div class="bridge-bg"></div>
 
-    <div class="bridge-wrapper">
-        <div class="vibe-text">«Инициация квантового скачка»</div>
-        
-        <div class="loading-zone">
-            <div id="status" class="status-msg">CHECKING AUTHENTICITY...</div>
-            <div class="progress-container"><div id="progress-fill"></div></div>
-            <button id="btn-enter" class="btn-gy" onclick="location.href='ai_room_core_v8.html'">ВХОД В AI ROOM</button>
-        </div>
+    <audio id="snd-server" loop>
+        <source src="bridge_ambient.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="ai-portal" onclick="location.href='verses.html'">
+        <div style="font-size:60px;">🧠</div>
+        <div style="font-size:20px; margin-top:20px; letter-spacing:5px;">ENTER AI ROOM</div>
     </div>
 
+    <button onclick="exitToReality()" style="margin-top:50px; background:none; border:1px solid #444; color:#444; cursor:pointer; padding:10px 20px;">EXIT TO REALITY</button>
+
     <script>
-        // Имитация входа в систему (по стандартам Ядра)
-        let progress = 0;
-        const bar = document.getElementById('progress-fill');
-        const status = document.getElementById('status');
-        const btn = document.getElementById('btn-enter');
-        
-        const phases = ["SCANNING ID", "DECRYPTING LINK", "ESTABLISHING CORE", "READY"];
+        window.onload = function() {
+            // 1. Блымание светом
+            document.getElementById('flash-layer').classList.add('flashing');
+            
+            // 2. Плавное нарастание гула серверной
+            const snd = document.getElementById('snd-server');
+            snd.volume = 0;
+            snd.play().catch(e => console.log("Нужен клик для звука"));
+            
+            let v = 0;
+            const fadeIn = setInterval(() => {
+                if (v < 0.6) { v += 0.05; snd.volume = v; }
+                else { clearInterval(fadeIn); }
+            }, 200);
+        };
 
-        const interval = setInterval(() => {
-            progress += Math.random() * 20;
-            if (progress >= 100) {
-                progress = 100;
-                clearInterval(interval);
-                status.innerText = phases[3];
-              btn.style.display = 'block';
-                // Авто-переход через 1 сек или по кнопке
-                btn.onclick = () => { window.location.href = 'ai_room_core_v8.html'; };
-            } else {
-                status.innerText = phases[Math.floor(progress / 33)];
-            }
-            bar.style.width = progress + "%";
-        }, 400);
-
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({pageLanguage: 'ru', autoDisplay: false}, 'google_translate_element');
+        function exitToReality() {
+            const snd = document.getElementById('snd-server');
+            let v = snd.volume;
+            const fadeOut = setInterval(() => {
+                if (v > 0.05) { v -= 0.05; snd.volume = v; }
+                else { clearInterval(fadeOut); location.href = 'index.html'; }
+            }, 50);
         }
     </script>
-    <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
