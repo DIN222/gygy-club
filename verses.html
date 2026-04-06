@@ -2,124 +2,110 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY | VERSES v4.1 CLOUD-GEN</title>
+    <title>GY-GY | ВЕРЛИБР-МАШИНА v5.0</title>
     <style>
-        :root { --gold: #d4af37; --neon: #00f2ff; }
+        :root { --gold: #d4af37; --neon: #00f2ff; --bg: #0a0a0a; }
         body { 
-            margin: 0; background: #000; color: var(--gold); 
+            margin: 0; background: var(--bg); color: var(--gold); 
             font-family: 'Courier New', monospace; overflow: hidden;
             display: flex; flex-direction: column; height: 100vh;
         }
 
-        .terminal-header {
-            padding: 15px 30px; border-bottom: 1px solid var(--gold);
-            display: flex; justify-content: space-between; font-size: 12px;
-            background: rgba(212,175,55,0.05);
+        /* --- СТАНДАРТНЫЕ АТРИБУТЫ КЛУБА --- */
+        .top-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 20px; border-bottom: 2px solid var(--gold);
+            background: #000; box-shadow: 0 0 15px rgba(212,175,55,0.3);
         }
+        .logo { font-size: 24px; font-weight: 900; letter-spacing: 5px; color: var(--gold); text-shadow: 2px 2px #555; }
+        .lang-panel span { cursor: pointer; margin-left: 10px; font-size: 12px; border: 1px solid var(--gold); padding: 2px 5px; }
+        .back-btn { cursor: pointer; color: var(--neon); font-weight: bold; text-decoration: underline; }
 
+        /* --- ТЕРМИНАЛ ГЕНЕРАЦИИ --- */
         #poetry-stream {
             flex: 1; padding: 40px; overflow-y: auto;
             display: flex; flex-direction: column-reverse; 
+            background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
         }
 
         .live-stanza {
-            margin-bottom: 30px; padding: 20px;
-            border-left: 3px solid var(--neon);
-            background: rgba(0, 242, 255, 0.02);
-            animation: glitch 0.3s ease;
+            margin-bottom: 30px; padding: 25px;
+            border-left: 5px solid var(--neon);
+            background: rgba(0, 242, 255, 0.03);
+            position: relative;
         }
 
-        @keyframes glitch {
-            0% { transform: skew(10deg); opacity: 0; }
-            100% { transform: skew(0deg); opacity: 1; }
-        }
+        .v-line { font-size: 22px; font-weight: 900; line-height: 1.4; text-transform: uppercase; }
+        .v-meta { font-size: 10px; color: var(--neon); margin-bottom: 10px; opacity: 0.7; }
 
-        .v-line { font-size: 20px; font-weight: 900; line-height: 1.4; text-transform: uppercase; white-space: pre-wrap; }
-        .v-meta { font-size: 10px; color: var(--neon); margin-bottom: 10px; letter-spacing: 2px; }
-
+        /* --- ПАНЕЛЬ УПРАВЛЕНИЯ --- */
         .gen-panel {
-            padding: 40px; background: #050505;
-            display: flex; justify-content: center; gap: 30px;
-            border-top: 1px solid rgba(212,175,55,0.2);
+            padding: 30px; background: #000;
+            display: flex; justify-content: center; gap: 20px;
+            border-top: 1px solid var(--gold);
         }
 
         .trigger-btn {
-            background: none; border: 2px solid var(--neon); color: var(--neon);
-            padding: 20px 40px; cursor: pointer; font-weight: 900;
-            letter-spacing: 5px; transition: 0.2s;
+            background: #000; border: 3px solid var(--neon); color: var(--neon);
+            padding: 15px 30px; cursor: pointer; font-weight: 900;
+            text-transform: uppercase; transition: 0.3s;
         }
-        .trigger-btn:hover:not(:disabled) { background: var(--neon); color: #000; box-shadow: 0 0 30px var(--neon); }
-        .trigger-btn:disabled { opacity: 0.5; cursor: wait; border-color: #555; color: #555; }
+        .trigger-btn:hover { background: var(--neon); color: #000; transform: scale(1.05); }
+        .gold-btn { border-color: var(--gold); color: var(--gold); }
+        .gold-btn:hover { background: var(--gold); color: #000; }
     </style>
 </head>
 <body>
 
-    <div class="terminal-header">
-        <div>MODULE: GEN_CORE_v4.1_CLOUD</div>
-        <div id="status-indicator">STATUS: READY_FOR_UPLINK</div>
-        <div onclick="location.href='ai_room_core_v8.html'" style="cursor:pointer;">[ EXIT_TO_CORE ]</div>
-    </div>
+    <header class="top-bar">
+        <div class="back-btn" onclick="location.href='ai_room_core_v8.html'">← [ НАЗАД_В_ЯДРО ]</div>
+        <div class="logo">GY-GY</div>
+        <div class="lang-panel">
+            <span>RU</span><span style="opacity:0.5">EN</span><span style="opacity:0.5">ZH</span>
+        </div>
+    </header>
 
-    <main id="poetry-stream"></main>
+    <main id="poetry-stream">
+        <div style="text-align:center; opacity:0.5;">[ СИСТЕМА ГОТОВА К ГЫ-ГЫКАНИЮ ]</div>
+    </main>
 
     <footer class="gen-panel">
-        <button id="btn-dark" class="trigger-btn" onclick="synthesize('DARK')">DARK GEN</button>
-        <button id="btn-gold" class="trigger-btn" style="border-color: var(--gold); color: var(--gold);" onclick="synthesize('GOLD')">GOLD GEN</button>
+        <button class="trigger-btn" onclick="synthesize('DARK')">МРАЧНЫЙ КИБЕР-ГЫ</button>
+        <button class="trigger-btn gold-btn" onclick="synthesize('GOLD')">ЗОЛОТОЙ БАНАН</button>
     </footer>
 
     <script>
-        // 🔗 ВСТАВЬ СЮДА ССЫЛКУ НА СВОЙ WORKER
+        // ТУТ ВСТАВЬ СВОЮ ССЫЛКУ ИЗ WORKER
         const CLOUD_URL = "https://gygy-club.2work21955.workers.dev"; 
 
         async function synthesize(style) {
             const stream = document.getElementById('poetry-stream');
-            const status = document.getElementById('status-indicator');
-            const btns = document.querySelectorAll('.trigger-btn');
-
-            // Блокируем кнопки и меняем статус
-            btns.forEach(b => b.disabled = true);
-            status.innerText = "STATUS: CLOUD_SYNTHESIS_IN_PROGRESS...";
-
-            // Создаем временный блок ожидания
+            
+            // Визуальный эффект ожидания
             const tempID = "gen-" + Date.now();
-            const loadingHtml = `
-                <div class="live-stanza" id="${tempID}" style="border-color: #444; opacity: 0.6;">
-                    <div class="v-meta">GEN_TIMESTAMP: ${new Date().toLocaleTimeString()} | MODE: ${style}</div>
-                    <div class="v-line" style="color: #666">УСТАНОВКА СВЯЗИ С ОБЛАКОМ GY-GY...<br>СКАНИРОВАНИЕ НЕЙРОНОВ...</div>
-                </div>`;
-            stream.prepend(document.createRange().createContextualFragment(loadingHtml));
+            const loading = `<div class="live-stanza" id="${tempID}" style="border-color:#555">
+                <div class="v-line">НЕЙРОНЫ ШЕВЕЛЯТСЯ... ЖДИ...</div>
+            </div>`;
+            stream.prepend(document.createRange().createContextualFragment(loading));
 
             try {
                 const response = await fetch(CLOUD_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        mode: style, 
-                        userPrompt: "напиши стих о киберпанке и клубе Гы-Гы" 
-                    })
+                    body: JSON.stringify({ mode: style, userPrompt: "юмор, киберпанк, клуб гы-гы" })
                 });
-
                 const data = await response.json();
+                
                 const stanza = document.getElementById(tempID);
-
-                if (data.status === "success") {
-                    stanza.style.opacity = "1";
+                if(data.status === "success") {
                     stanza.style.borderColor = (style === 'GOLD') ? '#d4af37' : '#00f2ff';
                     stanza.innerHTML = `
-                        <div class="v-meta">ORIGIN: CLOUD_CORE_v1.1 | MODE: ${style}</div>
-                        <div class="v-line" style="color: ${style === 'GOLD' ? '#d4af37' : '#00f2ff'}">${data.text}</div>
+                        <div class="v-meta">ID: ${tempID} | STYLE: ${style}</div>
+                        <div class="v-line" style="color:${(style === 'GOLD') ? '#d4af37' : '#00f2ff'}">${data.text}</div>
                     `;
-                } else {
-                    throw new Error("API_REJECTED");
                 }
-
-            } catch (err) {
-                const stanza = document.getElementById(tempID);
-                stanza.innerHTML = `<div class="v-meta" style="color:red">ERROR: UPLINK_FAILED</div><div class="v-line" style="color:red">ОШИБКА ОБЛАКА. ПРОВЕРЬТЕ GEMINI_KEY.</div>`;
-            } finally {
-                // Возвращаем кнопки в строй
-                btns.forEach(b => b.disabled = false);
-                status.innerText = "STATUS: READY_FOR_UPLINK";
+            } catch (e) {
+                document.getElementById(tempID).innerHTML = "ОШИБКА: ОБЛАКО УШЛО НА ПЕРЕРЫВ.";
             }
         }
     </script>
