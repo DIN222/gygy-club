@@ -71,27 +71,25 @@
         
         #block-tables { background: url('lounge.jpg') no-repeat center bottom / contain #000; }
         .lamp-zone { position: absolute; width: 42px; height: 42px; border-radius: 50%; cursor: pointer; z-index: 100; background: radial-gradient(circle, var(--neon-glow) 0%, transparent 75%); border: 1px solid var(--violet); box-shadow: 0 0 18px var(--neon-glow); transform: translate(-50%, -50%); pointer-events: auto !important; }
-  /* --- НОВЫЙ СТИЛЬ ДЛЯ КНОПОК ПЕРЕХОДА --- */
-.nav-btn {
-    background: rgba(0, 0, 0, 0.8) !important; 
-    border: 2px solid var(--gold) !important; 
-    color: var(--gold) !important;
-    padding: 14px;
-    font-size: 14px; 
-    font-family: 'Share Tech Mono', monospace; 
-    font-weight: 900;
-    cursor: pointer;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    text-align: center;
-    transition: 0.3s;
+/* --- СТРОГО ПО ОБРАЗУ И ПОДОБИЮ .btn-gy --- */
+.nav-btn-bridge {
     min-width: 145px;
+    padding: 14px;
+    background: rgba(0, 0, 0, 0.6); 
+    border: 2px solid var(--gold); 
+    color: var(--gold);
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: 900;
+    font-family: 'Share Tech Mono', monospace;
+    transition: 0.3s;
+    pointer-events: auto !important;
 }
 
-.nav-btn:hover {
-    background: var(--gold) !important;
-    color: #000 !important;
-    box-shadow: 0 0 15px var(--gold);
+/* Обычный инвертированный ховер без лишнего сияния */
+.nav-btn-bridge:hover {
+    background: var(--gold);
+    color: #000;
 }
         /* --- СЮДА ВСТАВЛЯЕМ СТИЛЬ АНИМАЦИИ --- */
 .door-exit-active {
