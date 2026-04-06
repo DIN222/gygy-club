@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.81 | FULL MASTER</title>
+    <title>GY-GY Club v4.4.82 | FULL MASTER</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
 <style>
-    /* 1. ПЕРЕМЕННЫЕ И БАЗОВЫЕ СБРОСЫ */
     :root { --gold: #d4af37; --door-wood: #3E2723; --violet: #8A2BE2; --neon-glow: rgba(138, 43, 226, 0.6); }
     
     * { -webkit-tap-highlight-color: transparent !important; -webkit-touch-callout: none !important; -webkit-user-select: none !important; user-select: none !important; outline: none !important; }
@@ -17,208 +16,145 @@
 
     html, body { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; position: fixed; margin:0; }
     
-    /* 2. UI ЭЛЕМЕНТЫ ВЕРХНЕГО УРОВНЯ */
     #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000001; pointer-events: auto; }
     .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000000; font-size: 24px; letter-spacing: 5px; font-weight: bold; color: var(--gold); pointer-events: none; }
     
-    .ui-back-to-bar { 
-        position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 1000005;
-        background: rgba(0,0,0,0.85); border: 1px solid var(--gold); color: var(--gold);
-        padding: 12px 24px; cursor: pointer; font-family: 'Share Tech Mono'; 
-        font-size: 14px; text-transform: uppercase; display: none; border-radius: 4px; opacity: 0; transition: opacity 0.5s ease;
-    }
-
     .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; z-index: 10; opacity: 0; transition: opacity 0.8s ease-in-out; pointer-events: none; }
     .block.active { display: flex !important; opacity: 1; pointer-events: auto; }
 
-    /* 3. ТЕКСТ И КНОПКИ (БЕЗ ОШИБОК ВЛОЖЕННОСТИ) */
-    .quote-text { 
-        font-family: 'Playfair Display', serif; font-style: italic; font-size: 28px; color: var(--gold); 
-        text-align: center; max-width: 85%; line-height: 1.3; margin-bottom: 30px; letter-spacing: 1px;
-    }
+    .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 28px; color: var(--gold); text-align: center; max-width: 85%; line-height: 1.3; margin-bottom: 30px; letter-spacing: 1px; }
 
     .btn-gy { min-width: 270px; padding: 14px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; text-transform: uppercase; font-weight: 900; margin: 8px 0; font-family: 'Share Tech Mono'; transition: 0.3s; pointer-events: auto !important; }
     .btn-gy:hover { background: var(--gold); color: #000; }
     .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
 
-    /* КНОПКА ПЕРЕХОДА (ТВОЙ СТИЛЬ) */
-    .nav-btn-bridge {
-        min-width: 145px;
-        padding: 14px;
-        background: rgba(0, 0, 0, 0.6); 
-        border: 2px solid var(--gold); 
-        color: var(--gold);
-        cursor: pointer;
-        text-transform: uppercase;
-        font-weight: 900;
-        font-family: 'Share Tech Mono', monospace;
-        transition: 0.3s;
-        pointer-events: auto !important;
+    /* ДВЕРЬ - ВЕРХНИЙ СЛОЙ ДЛЯ КЛИКА */
+    #main-door { 
+        width: 280px; 
+        cursor: pointer; 
+        transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s; 
+        z-index: 999999; /* Выше всех фоновых блоков */
+        pointer-events: auto !important; 
+        position: relative; 
     }
-    .nav-btn-bridge:hover { background: var(--gold); color: #000; }
 
-    /* 4. БАРНЫЙ КОНТЕЙНЕР (ПРОСТРЕЛИВАЕМЫЙ СКВОЗЬ ЦЕНТР) */
     .bar-ui-container { position: absolute; bottom: 5vh; left: 50%; transform: translateX(-50%); width: 100%; max-width: 380px; z-index: 1000; pointer-events: none; display: flex; flex-direction: column; align-items: center; }
     .bar-side-buttons { width: 100%; display: flex; justify-content: space-between; margin-bottom: 12px; pointer-events: none; }
     .bar-side-buttons button, .bar-bottom-button button { pointer-events: auto; min-width: 145px; background: rgba(0,0,0,0.6); }
     .bar-bottom-button button { min-width: 270px; }
 
-    /* 5. ДВЕРЬ - ВЕРХНИЙ СЛОЙ */
-    #main-door { 
-        width: 280px; 
-        cursor: pointer; 
-        transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s; 
-        z-index: 9999; 
-        pointer-events: auto !important; 
-        position: relative; 
-    }
-    
-    #block-tables { background: url('lounge.jpg') no-repeat center bottom / contain #000; }
-    
-    .lamp-zone { position: absolute; width: 42px; height: 42px; border-radius: 50%; cursor: pointer; z-index: 100; background: radial-gradient(circle, var(--neon-glow) 0%, transparent 75%); border: 1px solid var(--violet); box-shadow: 0 0 18px var(--neon-glow); transform: translate(-50%, -50%); pointer-events: auto !important; }
-
-    /* 6. АНИМАЦИЯ ВЫХОДА */
-    .door-exit-active {
-        transform-origin: center center !important;
-        transform: translate(-50%, -50%) scale(5) !important;
-        opacity: 0 !important;
-        transition: transform 1.2s ease-in, opacity 1s ease-out !important;
-        pointer-events: none;
-        z-index: 9999;
-    }
+    .id-card-hall { position: absolute; top: 72%; left: 50%; transform: translate(-50%,-50%); width: 220px; padding: 15px; border: 2px solid var(--gold); background: #F5F5DC; border-radius: 12px; display: flex; flex-direction: column; align-items: center; color: #000; z-index: 30; }
+    .box-final { width: 85px; height: 85px; border: 2px solid #000; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
 </style>
 </head>
 <body oncontextmenu="return false;">
-  <iframe id="club-stage" name="club-stage" src="about:blank" 
-    style="position:fixed; inset:0; width:100%; height:100%; border:none; z-index:9999999; display:none; background:#000; pointer-events:none;">
-</iframe>
+
+    <iframe id="club-stage" style="position:fixed; inset:0; width:100%; height:100%; border:none; z-index:1; display:none; background:#000;"></iframe>
 
     <div id="google_translate_element"></div>
     <div class="ui-header-right">GY-GY</div>
-   
+    
     <audio id="snd-door" preload="auto"><source src="door_open.mp3" type="audio/mpeg"></audio>
     <audio id="snd-ambient" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
-    <audio id="snd-khe" preload="auto"><source src="charlie_bar_fx.mp3" type="audio/mpeg"></audio>
-    <audio id="snd-pour" preload="auto"><source src="pour_whisky.mp3" type="audio/mpeg"></audio>
 
-    <div id="block-entrance" class="block active" style="opacity: 1; display: flex; pointer-events: auto;">
+    <div id="block-entrance" class="block active">
         <img src="door_1.jpg" id="main-door" onclick="handleDoor()">
     </div>
 
     <div id="block-welcome" class="block" style="justify-content: flex-start; padding-top: 5vh;">
-        <div class="quote-text" style="margin-bottom: 5px;">«В каждой шутке есть доля виски»</div>
-        <img src="horse_welcome.png" style="max-height: 45vh; width: auto; margin-bottom: 0px;">
-        <div style="font-family: 'Playfair Display', serif; font-size: 38px; font-weight: 700; letter-spacing: 12px; margin-bottom: 15px; color: var(--gold); text-transform: uppercase; font-style: italic;">WELCOME</div>
-        <button id="btn-w-hall" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">ПРОХОДИТЕ В ХОЛЛ</button>
+        <div class="quote-text">«В каждой шутке есть доля виски»</div>
+        <img src="horse_welcome.png" style="max-height: 45vh; width: auto;">
+        <div style="font-family: 'Playfair Display', serif; font-size: 38px; font-weight: 700; letter-spacing: 12px; color: var(--gold); text-transform: uppercase;">WELCOME</div>
+        <button class="btn-gy btn-sleep">ПРОХОДИТЕ В ХОЛЛ</button>
         <button class="btn-gy" onclick="portalTransition('block-identity')">ПОЛУЧИТЬ ID</button>
     </div>
 
-  <div id="block-identity" class="block">
-    <div class="quote-text">«Шампанского много не бывает»</div>
-    
-<div style="display: grid; grid-template-columns: 140px 140px; gap: 15px; margin: 0 auto 25px auto; width: 295px; justify-content: center;">
-    
-    <div class="box-final" style="width: 140px; height: 140px; border: 1px solid var(--gold); color: var(--gold); display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(0,0,0,0.5); box-sizing: border-box;">
-        <span style="font-size: 8px; opacity: 0.7; letter-spacing: 1px;">ID КЛУБА</span>
-        <div id="id-label" style="font-size: 12px; font-weight: 900; margin-top: 5px;">#GY-XXXX</div>
-    </div>
-
-    <div class="box-final" id="qr-box-reg" style="width: 140px; height: 140px; border: 1px solid var(--gold); background: #fff; display: flex; align-items: center; justify-content: center; box-sizing: border-box;">
+    <div id="block-identity" class="block">
+        <div class="quote-text">«Шампанского много не бывает»</div>
+        <div style="display: grid; grid-template-columns: 140px 140px; gap: 15px; margin-bottom: 25px;">
+            <div class="box-final" style="background: rgba(0,0,0,0.5); color: var(--gold); flex-direction: column; border: 1px solid var(--gold);">
+                <span style="font-size: 8px;">ID КЛУБА</span>
+                <div id="id-label" style="font-size: 12px; font-weight: 900;">#GY-XXXX</div>
+            </div>
+            <div class="box-final" id="qr-box-reg" style="background: #fff; border: 1px solid var(--gold);"></div>
+            <div class="box-final" id="photo-container" style="background: #fff; border: 1px solid var(--gold);">
+                <input type="file" accept="image/*" onchange="usePhoto(this)" style="position: absolute; inset: 0; opacity: 0; z-index: 10; cursor: pointer;">
+                <img id="pp" style="display: none; width: 100%; height: 100%; object-fit: cover;">
+                <span id="txt-photo" style="color: #000; font-size: 11px; font-weight: 900;">ФОТО</span>
+            </div>
+            <div class="box-final" onclick="useAvatar()" style="border: 1px solid var(--gold); cursor: pointer;">
+                <img id="club-avatar-img" style="display: none; width: 100%; height: 100%; object-fit: cover;">
+                <span id="txt-avatar" style="color: var(--gold); font-size: 11px; font-weight: 900;">АВАТАР</span>
+            </div>
         </div>
-
-    <div class="box-final" id="photo-container" style="width: 140px; height: 140px; border: 1px solid var(--gold); position: relative; display: flex; align-items: center; justify-content: center; background: #fff; box-sizing: border-box;">
-        <input type="file" accept="image/*" onchange="usePhoto(this)" style="position: absolute; inset: 0; opacity: 0; z-index: 10; cursor: pointer;">
-        <img id="pp" style="display: none; width: 100%; height: 100%; object-fit: cover;">
-        <span id="txt-photo" style="color: #000; font-size: 11px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; text-align: center; line-height: 1.2;">
-            ИЛИ<br>ФОТО
-        </span>
+        <button id="btn-save" class="btn-gy" onclick="finalizeRegistration()">СОХРАНИТЬ</button>
+        <button id="btn-pass" class="btn-gy" onclick="portalTransition('block-hall')" style="display:none;">ПРОЙТИ В ХОЛЛ</button>
     </div>
 
-    <div class="box-final" onclick="useAvatar()" style="width: 140px; height: 140px; border: 1px solid var(--gold); cursor: pointer; background: rgba(212,175,55,0.1); display: flex; align-items: center; justify-content: center; box-sizing: border-box;">
-        <img id="club-avatar-img" style="display: none; width: 100%; height: 100%; object-fit: cover;">
-        <span id="txt-avatar" style="color: var(--gold); font-size: 11px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; text-align: center; line-height: 1.2;">
-            ИЛИ<br>АВАТАР
-        </span>
-    </div>
-</div>
-
-    <button id="btn-save" class="btn-gy" onclick="finalizeRegistration()">СОХРАНИТЬ</button>
-    <button id="btn-pass" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')" style="display:none;">ПРОЙТИ В ХОЛЛ</button>
-</div>
     <div id="block-hall" class="block">
         <div style="position:absolute; inset:0; background:url('hall_bg_jpg.jpg') center/cover; z-index:15;"></div>
-        <div style="position:absolute; top: 8%; width: 100%; text-align: center; color: var(--door-wood); font-size: 38px; font-weight: 900; font-style: italic; font-family: 'Playfair Display', serif; z-index: 25;">«Всё будет GY-GY»</div>
         <div class="id-card-hall">
             <div id="h-id" style="font-weight:900; font-size:14px; margin-bottom:12px;">#ID</div>
             <div style="display:flex; gap:15px; margin-bottom:12px;">
                 <div class="box-final"><img id="h-photo" style="width:100%; height:100%; object-fit:cover;"></div>
                 <div class="box-final" id="h-qr"></div>
             </div>
-            <button id="btn-confirm" class="btn-gy" style="min-width:100%; border-color:#000; color:#000; padding:10px;" onclick="confirmHall()">ПОДТВЕРДИТЬ</button>
-            <button id="btn-enter-bar" class="btn-gy btn-sleep" style="min-width:100%; border-color:#000; color:#000; padding:10px;" onclick="portalTransition('block-bar')">ВХОД В БАР</button>
+            <button id="btn-confirm" class="btn-gy" style="min-width:100%; border-color:#000; color:#000;" onclick="confirmHall()">ПОДТВЕРДИТЬ</button>
+            <button id="btn-enter-bar" class="btn-gy btn-sleep" style="min-width:100%; border-color:#000; color:#000; display:none;" onclick="portalTransition('block-bar')">ВХОД В БАР</button>
         </div>
     </div>
 
     <div id="block-bar" class="block" style="padding:0; justify-content: flex-end;">
-        <div class="quote-text" style="position:absolute; top:8vh; z-index:100;">«Игого, сейчас начнем!</div>
-      <div class="bar-ui-container">
-    <div class="bar-side-buttons">
-        <button class="btn-gy" style="min-width: 145px;" onclick="showBlock('tables')">ЗА СТОЛИКИ</button>
-        <button class="btn-gy" style="min-width: 145px;" onclick="showBlock('hall')">В ХОЛЛ</button>
-    </div>
-    <div class="bar-bottom-button">
-        <button class="btn-gy" onclick="goToBridge()">В АИ РУМ</button>
-    </div>
-</div>
+        <div class="bar-ui-container">
+            <div class="bar-side-buttons">
+                <button class="btn-gy" onclick="portalTransition('block-hall')">В ХОЛЛ</button>
+                <button class="btn-gy" onclick="portalTransition('block-entrance')">ВЫХОД</button>
+            </div>
+            <div class="bar-bottom-button">
+                <button class="btn-gy" onclick="goToBridge()">В АИ РУМ</button>
+            </div>
+        </div>
         <img src="horse_bar.png" style="height: 80vh; width: auto; object-fit: contain; margin-bottom: -10px;">
     </div>
 
-    <div id="block-tables" class="block">
-        <div id="table-1" class="lamp-zone" style="bottom: 49.2%; left: 49.9%;"></div>
-        <div id="table-2" class="lamp-zone" style="bottom: 22.1%; left: 35.7%;"></div>
-    </div>
-
-    <script>
-   // --- 1. ГЛОБАЛЬНЫЕ НАСТРОЙКИ ---
+<script>
     let currentID = "GY-" + Math.floor(1000 + Math.random() * 9000);
 
-    // --- 2. НАВИГАЦИЯ И ПЕРЕХОДЫ ---
     function portalTransition(targetId) {
-        document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.block').forEach(b => {
+            b.classList.remove('active');
+            b.style.opacity = "0";
+            b.style.display = "none";
+        });
         const target = document.getElementById(targetId);
-        target.classList.add('active');
+        target.style.display = "flex";
+        setTimeout(() => {
+            target.classList.add('active');
+            target.style.opacity = "1";
+        }, 50);
 
-        // Если вошли в блок регистрации - сразу рисуем ID и QR
         if(targetId === 'block-identity') {
             document.getElementById('id-label').innerText = "#" + currentID;
             generateQRInReg(); 
         }
-
-        // Показываем кнопку возврата, если мы в Баре или за Столиками
-        const backBtn = document.getElementById('btn-global-back');
-        if (backBtn) {
-            backBtn.style.display = (targetId === 'block-bar' || targetId === 'block-tables') ? 'block' : 'none';
-            backBtn.style.opacity = "1";
-        }
     }
 
-    // --- 3. ЛОГИКА ДВЕРИ (ВХОД) ---
     function handleDoor() {
         const door = document.getElementById('main-door');
         const snd = document.getElementById('snd-door');
         const ambient = document.getElementById('snd-ambient');
         
-        if(snd) snd.play();
+        if(snd) snd.play().catch(e => console.log("Audio block"));
+        
         door.style.transform = "scale(4) rotateY(-110deg)";
         door.style.opacity = "0";
         
         setTimeout(() => {
             portalTransition('block-welcome');
-            if(ambient) ambient.play();
+            if(ambient) ambient.play().catch(e => console.log("Audio block"));
         }, 1500);
     }
 
-    // --- 4. СИСТЕМА РЕГИСТРАЦИИ (ФОТО / АВАТАР / QR) ---
     function usePhoto(input) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();
@@ -227,12 +163,6 @@
                 img.src = e.target.result;
                 img.style.display = 'block';
                 document.getElementById('txt-photo').style.display = 'none';
-                
-                // Выселяем Аватар
-                const avImg = document.getElementById('club-avatar-img');
-                avImg.style.display = 'none';
-                avImg.src = "";
-                document.getElementById('txt-avatar').style.display = 'block';
             }
             reader.readAsDataURL(input.files[0]);
         }
@@ -240,120 +170,42 @@
 
     function useAvatar() {
         const avImg = document.getElementById('club-avatar-img');
-        const seed = Math.floor(Math.random() * 9999);
-        avImg.src = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${seed}&backgroundColor=d4af37`;
-        
+        avImg.src = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${Math.random()}&backgroundColor=d4af37`;
         avImg.onload = () => {
             avImg.style.display = 'block';
             document.getElementById('txt-avatar').style.display = 'none';
-            
-            // Выселяем Фото
-            const ppImg = document.getElementById('pp');
-            ppImg.style.display = 'none';
-            ppImg.src = "";
-            document.getElementById('txt-photo').style.display = 'block';
         };
     }
 
     function generateQRInReg() {
         const box = document.getElementById("qr-box-reg");
-        if (!box) return;
         box.innerHTML = "";
-        if(typeof QRCode !== "undefined") {
-            new QRCode(box, {
-                text: "GY-ID:" + currentID,
-                width: 80, height: 80
-            });
-        }
+        new QRCode(box, { text: "GY-ID:" + currentID, width: 80, height: 80 });
     }
 
     function finalizeRegistration() {
-        // Перенос данных в Холл
         document.getElementById('h-id').innerText = "#" + currentID;
-        
         const pp = document.getElementById('pp');
         const av = document.getElementById('club-avatar-img');
         const final = document.getElementById('h-photo');
-        
-        if(pp && pp.style.display === 'block') {
-            final.src = pp.src;
-        } else if(av && av.style.display === 'block') {
-            final.src = av.src;
-        }
+        final.src = (pp.style.display === 'block') ? pp.src : av.src;
 
-        const qrSource = document.getElementById('qr-box-reg');
-        const qrTarget = document.getElementById('h-qr');
-        if(qrSource && qrTarget) qrTarget.innerHTML = qrSource.innerHTML;
-
-        // Переключение кнопок
+        document.getElementById('h-qr').innerHTML = document.getElementById('qr-box-reg').innerHTML;
         document.getElementById('btn-save').style.display = 'none';
-        const pass = document.getElementById('btn-pass');
-        pass.style.display = 'block';
-        pass.classList.remove('btn-sleep');
+        document.getElementById('btn-pass').style.display = 'block';
     }
 
-    // --- 5. ПЕРЕХОД В AI ROOM ---
-    function deepDive() {
-        window.location.href = 'bridge_protocol.html';
-    }
-
-    // --- 6. СЕРВИСНЫЕ ФУНКЦИИ (ПЕРЕВОД / ХАБ) ---
-    function googleTranslateElementInit() { 
-        new google.translate.TranslateElement({pageLanguage: 'ru', autoDisplay: false}, 'google_translate_element'); 
-    }
-
-    window.addEventListener('message', (event) => {
-        if (event.data.type === 'GY_GENERATE') {
-            const result = `[ID: ${currentID}]\n\nВ системе GY-GY плавится лед,\nЦифровой неон по венам течет.\nТвой код уникален, твой путь предрешен,\nВ золоте истина, в черном — закон.`;
-            event.source.postMessage({ type: 'GY_RESULT', text: result, targetId: event.data.targetId }, '*');
-        }
-    });
-        // --- 7. ЛОГИКА ХОЛЛА ---
     function confirmHall() {
-        // Прячем кнопку подтверждения
-        const confBtn = document.getElementById('btn-confirm');
-        confBtn.style.display = 'none';
-        
-        // Показываем и активируем кнопку входа в бар
-        const enterBtn = document.getElementById('btn-enter-bar');
-        if (enterBtn) {
-            enterBtn.classList.remove('btn-sleep');
-            enterBtn.style.display = 'block';
-            enterBtn.style.pointerEvents = 'auto';
-        }
-        console.log("Личность подтверждена. Добро пожаловать в Бар!");
+        document.getElementById('btn-confirm').style.display = 'none';
+        document.getElementById('btn-enter-bar').style.display = 'block';
+        document.getElementById('btn-enter-bar').classList.remove('btn-sleep');
     }
-        // --- ФУНКЦИЯ ПОЛЕТА СКВОЗЬ ДВЕРЬ ---
-function enterClub() {
-    // Находим твою дверь/кнопку. Убедись, что класс совпадает!
-    const door = document.querySelector('.ai-portal'); 
-    
-    if (door) {
-        door.classList.add('door-exit-active');
-        
-        // Переход в bridge_protocol через 1.2 сек
-        setTimeout(() => {
-            window.location.href = 'bridge_protocol.html';
-        }, 1200);
+
+    function goToBridge() {
+        document.body.style.transition = "opacity 1.5s";
+        document.body.style.opacity = "0";
+        setTimeout(() => { window.location.href = 'bridge_protocol.html'; }, 1500);
     }
-}
-// --- КОНЕЦ ФУНКЦИИ ---
-    <script>
-function goToBridge() {
-    // 1. Находим основной контейнер или всё тело
-    const mainContent = document.body;
-    
-    // 2. Включаем плавность
-    mainContent.style.transition = "opacity 1.5s ease-in-out";
-    
-    // 3. Гасим Бар (Конь, кнопки и всё остальное уходит в ноль)
-    mainContent.style.opacity = "0";
-    
-    // 4. Только когда стало темно — уходим на страницу Моста
-    setTimeout(() => {
-        window.location.href = 'bridge_protocol.html';
-    }, 1500);
-}
 </script>
 </body>
 </html>
