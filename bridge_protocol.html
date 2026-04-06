@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY | AMBIENT CORE 11</title>
+    <title>GY-GY | BRIDGE PROTOCOL 13</title>
     <style>
         :root { --gold: #d4af37; --neon: #00f2ff; }
         
@@ -14,77 +14,103 @@
             font-family: 'Courier New', monospace;
         }
 
-        /* --- СТАНДАРТНЫЕ АТРИБУТЫ КЛУБА --- */
+        /* --- ВЕРХНЯЯ ПАНЕЛЬ (АТРИБУТЫ КЛУБА) --- */
         .top-bar {
             position: absolute; top: 0; left: 0; width: 100%;
             display: flex; justify-content: space-between; align-items: center;
             padding: 15px 25px; box-sizing: border-box;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent);
+            background: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent);
             z-index: 100;
         }
-        .logo { font-size: 24px; font-weight: 900; color: var(--gold); letter-spacing: 5px; }
-        .back-btn { cursor: pointer; color: var(--neon); font-size: 12px; text-transform: uppercase; }
+        .logo { font-size: 24px; font-weight: 900; color: var(--gold); letter-spacing: 5px; text-shadow: 0 0 10px var(--gold); }
+        .back-btn { cursor: pointer; color: var(--neon); font-size: 12px; text-transform: uppercase; font-weight: bold; border: 1px solid var(--neon); padding: 5px 10px; transition: 0.3s; }
+        .back-btn:hover { background: var(--neon); color: #000; }
 
-        /* --- ФОНОВАЯ КАРТИНКА --- */
-        .bg-image {
+        /* --- СЛОИ ВИЗУАЛА --- */
+        .layer {
             position: absolute; top: 0; left: 0;
             width: 100%; height: 100%;
             object-fit: cover;
-            z-index: 1;
-            transition: transform 1.5s ease-in, filter 1.5s;
+            transition: opacity 4s ease-in-out; /* Время растворения Коня */
         }
 
-        /* --- НЕВИДИМЫЙ СКРЫТЫЙ ПЕРЕХОД --- */
-        .invisible-gateway {
-            position: relative; z-index: 10;
+        /* Слой 1: Конь (начинает видимым) */
+        #horse-bg { z-index: 10; opacity: 1; }
+
+        /* Слой 2: Серверная (ждет под Конем) */
+        #server-bg { z-index: 5; opacity: 0; transform: scale(1.05); transition: opacity 4s ease-in-out, transform 15s linear; }
+
+        /* Эффект при активации Серверной */
+        .visible { opacity: 1 !important; transform: scale(1) !important; }
+        .hidden { opacity: 0 !important; }
+
+        /* Финальный прыжок (Варп) */
+        .warp-effect {
+            transform: scale(15) !important;
+            filter: blur(50px) brightness(5) !important;
+            opacity: 0 !important;
+            transition: all 1.5s ease-in !important;
+        }
+
+        /* Зона клика (прозрачная, на весь экран) */
+        #click-gate {
+            position: absolute; top: 0; left: 0;
             width: 100%; height: 100%;
-            display: flex; justify-content: center; align-items: center;
-            cursor: pointer;
+            z-index: 150; cursor: pointer;
         }
-
-        /* Эффект гиперпрыжка */
-        .warp { transform: scale(10); filter: blur(30px) brightness(3); opacity: 0; }
     </style>
 </head>
 <body>
 
     <header class="top-bar">
-        <div class="back-btn" onclick="history.back()">[ BACK ]</div>
+        <div class="back-btn" onclick="location.href='index.html'">← [ EXIT ]</div>
         <div class="logo">GY-GY</div>
-        <div style="width: 50px;"></div> </header>
+        <div style="width: 80px;"></div> 
+    </header>
 
-    <img src="banana_server_room.jpg" alt="Server Core" class="bg-image" id="mainBg">
+    <img src="horse_in_bar.jpg" id="horse-bg" class="layer">
+    <img src="banana_server_room.jpg" id="server-bg" class="layer">
 
-    <div class="invisible-gateway" onclick="activateCore()"></div>
+    <div id="click-gate" onclick="startSequence()"></div>
 
-    <audio id="ambient" loop src="bridge_ambient.mp3"></audio>
+    <audio id="ambient-sound" loop src="bridge_ambient.mp3"></audio>
 
     <script>
-        let isActivated = false;
+        let sequenceStarted = false;
 
-        function activateCore() {
-            const ambient = document.getElementById('ambient');
-            const bg = document.getElementById('mainBg');
+        function startSequence() {
+            if (sequenceStarted) return;
+            sequenceStarted = true;
 
-            if (!isActivated) {
-                // 1. Включаем фоновый эмбиент при первом клике
-                ambient.volume = 0.4;
-                ambient.play().catch(e => console.log("Audio waiting for interaction"));
+            const horse = document.getElementById('horse-bg');
+            const server = document.getElementById('server-bg');
+            const ambient = document.getElementById('ambient-sound');
+
+            // 1. ЗАПУСК МУЗЫКИ (с постепенным нарастанием громкости)
+            ambient.volume = 0;
+            ambient.play().catch(e => console.log("Audio interaction required"));
+            let vol = 0;
+            const fadeIn = setInterval(() => {
+                if (vol < 0.5) { vol += 0.05; ambient.volume = vol; }
+                else { clearInterval(fadeIn); }
+            }, 300);
+
+            // 2. РАСТВОРЕНИЕ КОНЯ И ПРОЯВЛЕНИЕ СЕРВЕРНОЙ
+            horse.classList.add('hidden');
+            server.classList.add('visible');
+
+            // 3. ФИНАЛЬНЫЙ ПРЫЖОК В CORE (через 6 секунд после начала)
+            setTimeout(() => {
+                server.classList.add('warp-effect');
                 
-                // 2. Запускаем эффект перехода
-                bg.classList.add('warp');
+                // Звук варп-прыжка (если есть файл)
+                const warpAudio = new Audio('warp_drive.mp3');
+                warpAudio.play().catch(() => {});
 
-                // 3. Если есть звук прыжка — добавляем его
-                const warpSound = new Audio('warp_drive.mp3');
-                warpSound.play().catch(() => {});
-
-                // 4. Переход в следующую комнату
                 setTimeout(() => {
                     window.location.href = 'ai_room_core_v8.html';
-                }, 1400);
-
-                isActivated = true;
-            }
+                }, 1400); // Время самого прыжка перед сменой страницы
+            }, 6000); 
         }
     </script>
 </body>
