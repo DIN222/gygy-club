@@ -58,25 +58,28 @@
         <div class="title">START BRIDGE<br>PROTOCOL</div>
         <div class="status">v2.0 [ CLOUD_ENABLED ]</div>
     </div>
-
-    <script>
+<script>
         function startWarp() {
-            // Находим картинку и интерфейс
+            // 1. Создаем объект звука "на лету"
+            const warpSound = new Audio('warp_drive.mp3'); 
+            
+            // 2. Находим элементы для анимации
             const img = document.querySelector('.bg-image');
             const overlay = document.querySelector('.protocol-overlay');
             
-            // Запускаем анимацию прыжка
-            img.classList.add('warp');
-            overlay.classList.add('warp');
+            // 3. ВКЛЮЧАЕМ ЗВУК (Громко и четко!)
+            warpSound.play().catch(e => console.log("Браузер просит сначала кликнуть, но мы и так кликаем!"));
 
-            // Звуковой эффект (если он есть в папке)
-            // const audio = new Audio('jump.mp3'); audio.play();
+            // 4. Запускаем визуальный хаос
+            img.style.animation = "warp-speed 1.5s ease-out forwards";
+            overlay.style.animation = "warp-speed 1.5s ease-out forwards";
 
-            // Переход в Ядро через 1.5 секунды
+            // 5. Улетаем в Ядро, когда звук и анимация почти кончились
             setTimeout(() => {
                 location.href = 'ai_room_core_v8.html'; 
-            }, 1500);
+            }, 1400);
         }
     </script>
+ 
 </body>
 </html>
