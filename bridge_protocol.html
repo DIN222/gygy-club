@@ -4,109 +4,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY | BRIDGE PROTOCOL v2.1</title>
+    <title>GY-GY | AMBIENT CORE 11</title>
     <style>
-        :root { --gold: #d4af37; --neon: #00f2ff; --bg: #000; }
+        :root { --gold: #d4af37; --neon: #00f2ff; }
         
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
-            overflow: hidden; background-color: var(--bg);
+            overflow: hidden; background-color: #000;
             font-family: 'Courier New', monospace;
         }
 
-        /* --- СТАНДАРТНЫЕ АТРИБУТЫ КЛУБА (TOP BAR) --- */
+        /* --- СТАНДАРТНЫЕ АТРИБУТЫ КЛУБА --- */
         .top-bar {
             position: absolute; top: 0; left: 0; width: 100%;
             display: flex; justify-content: space-between; align-items: center;
             padding: 15px 25px; box-sizing: border-box;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
-            z-index: 100; border-bottom: 1px solid rgba(212,175,55,0.2);
+            background: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent);
+            z-index: 100;
         }
-        .logo { font-size: 26px; font-weight: 900; letter-spacing: 6px; color: var(--gold); text-shadow: 0 0 10px var(--gold); }
-        .lang-panel span { cursor: pointer; margin-left: 12px; font-size: 13px; border: 1px solid var(--gold); padding: 3px 7px; color: var(--gold); }
-        .back-btn { cursor: pointer; color: var(--neon); font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+        .logo { font-size: 24px; font-weight: 900; color: var(--gold); letter-spacing: 5px; }
+        .back-btn { cursor: pointer; color: var(--neon); font-size: 12px; text-transform: uppercase; }
 
-        /* --- ЗАДНИЙ ФОН: БАНАНОВЫЙ КЛАСТЕР --- */
+        /* --- ФОНОВАЯ КАРТИНКА --- */
         .bg-image {
             position: absolute; top: 0; left: 0;
             width: 100%; height: 100%;
-            object-fit: cover; /* СПАСАЕТ ОТ МУТНОСТИ */
+            object-fit: cover;
             z-index: 1;
-            animation: fadeIn 2.5s ease-in;
+            transition: transform 1.5s ease-in, filter 1.5s;
         }
 
-        /* --- ЦЕНТРАЛЬНЫЙ ШЛЮЗ --- */
-        .main-container {
+        /* --- НЕВИДИМЫЙ СКРЫТЫЙ ПЕРЕХОД --- */
+        .invisible-gateway {
             position: relative; z-index: 10;
             width: 100%; height: 100%;
             display: flex; justify-content: center; align-items: center;
+            cursor: pointer;
         }
 
-        .protocol-overlay {
-            background: rgba(0,0,0,0.75);
-            padding: 45px; border: 3px solid var(--gold);
-            text-align: center; cursor: pointer;
-            box-shadow: 0 0 40px rgba(212,175,55,0.3);
-            transition: 0.4s; backdrop-filter: blur(5px);
-        }
-        .protocol-overlay:hover {
-            box-shadow: 0 0 60px var(--neon);
-            border-color: var(--neon);
-            transform: scale(1.02);
-        }
-
-        .status { font-size: 11px; letter-spacing: 4px; color: var(--neon); text-transform: uppercase; margin-bottom: 10px; }
-        .title { font-size: 38px; font-weight: 900; color: var(--gold); text-shadow: 0 0 15px var(--gold); margin: 20px 0; line-height: 1; }
-        .action { font-size: 14px; letter-spacing: 2px; color: #fff; opacity: 0.8; text-decoration: underline; }
-
-        /* --- ЭФФЕКТЫ --- */
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
-        @keyframes warp-speed {
-            0% { transform: scale(1); filter: blur(0px) brightness(1); }
-            100% { transform: scale(15); filter: blur(50px) brightness(5); opacity: 0; }
-        }
-        .warp { animation: warp-speed 1.6s ease-in forwards !important; }
+        /* Эффект гиперпрыжка */
+        .warp { transform: scale(10); filter: blur(30px) brightness(3); opacity: 0; }
     </style>
 </head>
 <body>
 
     <header class="top-bar">
-        <div class="back-btn" onclick="history.back()">← [ EXIT_LEVEL ]</div>
+        <div class="back-btn" onclick="history.back()">[ BACK ]</div>
         <div class="logo">GY-GY</div>
-        <div class="lang-panel">
-            <span>RU</span><span style="opacity:0.4">EN</span>
-        </div>
-    </header>
+        <div style="width: 50px;"></div> </header>
 
-    <img src="banana_server_room.jpg" alt="GY-GY Server Room" class="bg-image" id="mainBg">
+    <img src="banana_server_room.jpg" alt="Server Core" class="bg-image" id="mainBg">
 
-    <div class="main-container">
-        <div class="protocol-overlay" id="gateway" onclick="initiateBridge()">
-            <div class="status">:: UPLINK READY ::</div>
-            <div class="title">CONNECT TO<br>AI CORE</div>
-            <div class="action">CLICK TO START PROTOCOL</div>
-            <div class="status" style="margin-top:15px; font-size:9px;">CLUSTER: BANANA_S_ROOM</div>
-        </div>
-    </div>
+    <div class="invisible-gateway" onclick="activateCore()"></div>
+
+    <audio id="ambient" loop src="bridge_ambient.mp3"></audio>
 
     <script>
-        function initiateBridge() {
-            // 1. ЗВУКОВОЙ УДАР (файл должен быть в папке!)
-            const audio = new Audio('warp_drive.mp3');
-            audio.play().catch(e => console.log("Sound blocked or missing"));
+        let isActivated = false;
 
-            // 2. ЗАПУСК ГИПЕРПРЫЖКА
+        function activateCore() {
+            const ambient = document.getElementById('ambient');
             const bg = document.getElementById('mainBg');
-            const overlay = document.getElementById('gateway');
-            
-            bg.classList.add('warp');
-            overlay.classList.add('warp');
 
-            // 3. ПЕРЕХОД В ЯДРО
-            setTimeout(() => {
-                window.location.href = 'ai_room_core_v8.html';
-            }, 1500);
+            if (!isActivated) {
+                // 1. Включаем фоновый эмбиент при первом клике
+                ambient.volume = 0.4;
+                ambient.play().catch(e => console.log("Audio waiting for interaction"));
+                
+                // 2. Запускаем эффект перехода
+                bg.classList.add('warp');
+
+                // 3. Если есть звук прыжка — добавляем его
+                const warpSound = new Audio('warp_drive.mp3');
+                warpSound.play().catch(() => {});
+
+                // 4. Переход в следующую комнату
+                setTimeout(() => {
+                    window.location.href = 'ai_room_core_v8.html';
+                }, 1400);
+
+                isActivated = true;
+            }
         }
     </script>
 </body>
