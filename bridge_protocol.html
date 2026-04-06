@@ -4,82 +4,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY | BRIDGE PROTOCOL v2.0</title>
+    <title>GY-GY | BRIDGE PROTOCOL v2.1</title>
     <style>
         :root { --gold: #d4af37; --neon: #00f2ff; --bg: #000; }
+        
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
             overflow: hidden; background-color: var(--bg);
-            font-family: 'Courier New', monospace; display: flex;
-            justify-content: center; align-items: center; color: var(--gold);
+            font-family: 'Courier New', monospace;
         }
 
-        /* --- ЗАДНИЙ ФОН (Новая сверхчеткая картинка) --- */
+        /* --- СТАНДАРТНЫЕ АТРИБУТЫ КЛУБА (TOP BAR) --- */
+        .top-bar {
+            position: absolute; top: 0; left: 0; width: 100%;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 25px; box-sizing: border-box;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+            z-index: 100; border-bottom: 1px solid rgba(212,175,55,0.2);
+        }
+        .logo { font-size: 26px; font-weight: 900; letter-spacing: 6px; color: var(--gold); text-shadow: 0 0 10px var(--gold); }
+        .lang-panel span { cursor: pointer; margin-left: 12px; font-size: 13px; border: 1px solid var(--gold); padding: 3px 7px; color: var(--gold); }
+        .back-btn { cursor: pointer; color: var(--neon); font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* --- ЗАДНИЙ ФОН: БАНАНОВЫЙ КЛАСТЕР --- */
         .bg-image {
             position: absolute; top: 0; left: 0;
             width: 100%; height: 100%;
-            /* ЭТА СТРОКА СПАСАЕТ ОТ МУТНОСТИ ПРИ РАСТЯГИВАНИИ */
-            object-fit: cover; 
-            filter: brightness(0.6) contrast(1.1); /* Делаем чуть мрачнее для атмосферы */
+            object-fit: cover; /* СПАСАЕТ ОТ МУТНОСТИ */
             z-index: 1;
+            animation: fadeIn 2.5s ease-in;
         }
 
-        /* --- ИНТЕРФЕЙС ПОВЕРХ КАРТИНКИ --- */
-        .protocol-overlay {
+        /* --- ЦЕНТРАЛЬНЫЙ ШЛЮЗ --- */
+        .main-container {
             position: relative; z-index: 10;
-            text-align: center; background: rgba(0,0,0,0.7);
-            padding: 40px; border: 2px solid var(--gold);
-            box-shadow: 0 0 30px rgba(212,175,55,0.4);
-            cursor: pointer; transition: 0.3s;
+            width: 100%; height: 100%;
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        .protocol-overlay {
+            background: rgba(0,0,0,0.75);
+            padding: 45px; border: 3px solid var(--gold);
+            text-align: center; cursor: pointer;
+            box-shadow: 0 0 40px rgba(212,175,55,0.3);
+            transition: 0.4s; backdrop-filter: blur(5px);
         }
         .protocol-overlay:hover {
-            box-shadow: 0 0 50px var(--neon);
+            box-shadow: 0 0 60px var(--neon);
             border-color: var(--neon);
+            transform: scale(1.02);
         }
 
-        .status { font-size: 12px; letter-spacing: 3px; color: var(--neon); text-transform: uppercase; }
-        .title { font-size: 32px; font-weight: 900; margin: 15px 0; color: var(--gold); text-shadow: 0 0 10px var(--gold); }
-        .action { font-size: 16px; text-decoration: underline; }
+        .status { font-size: 11px; letter-spacing: 4px; color: var(--neon); text-transform: uppercase; margin-bottom: 10px; }
+        .title { font-size: 38px; font-weight: 900; color: var(--gold); text-shadow: 0 0 15px var(--gold); margin: 20px 0; line-height: 1; }
+        .action { font-size: 14px; letter-spacing: 2px; color: #fff; opacity: 0.8; text-decoration: underline; }
 
-        /* --- АНИМАЦИЯ ПРИ НАЖАТИИ --- */
+        /* --- ЭФФЕКТЫ --- */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
         @keyframes warp-speed {
-            0% { transform: scale(1); filter: blur(0px); opacity: 1; }
-            100% { transform: scale(10); filter: blur(20px); opacity: 0; }
+            0% { transform: scale(1); filter: blur(0px) brightness(1); }
+            100% { transform: scale(15); filter: blur(50px) brightness(5); opacity: 0; }
         }
-        .warp { animation: warp-speed 1.5s ease-out forwards; }
+        .warp { animation: warp-speed 1.6s ease-in forwards !important; }
     </style>
 </head>
 <body>
 
-    <img src="bridge_gateway.jpg" alt="GY-GY GATEWAY" class="bg-image">
+    <header class="top-bar">
+        <div class="back-btn" onclick="history.back()">← [ EXIT_LEVEL ]</div>
+        <div class="logo">GY-GY</div>
+        <div class="lang-panel">
+            <span>RU</span><span style="opacity:0.4">EN</span>
+        </div>
+    </header>
 
-    <div class="protocol-overlay" onclick="startWarp()">
-        <div class="status">:: STATUS: WAITING_FOR_UPLINK ::</div>
-        <div class="title">START BRIDGE<br>PROTOCOL</div>
-        <div class="status">v2.0 [ CLOUD_ENABLED ]</div>
+    <img src="banana_server_room.jpg" alt="GY-GY Server Room" class="bg-image" id="mainBg">
+
+    <div class="main-container">
+        <div class="protocol-overlay" id="gateway" onclick="initiateBridge()">
+            <div class="status">:: UPLINK READY ::</div>
+            <div class="title">CONNECT TO<br>AI CORE</div>
+            <div class="action">CLICK TO START PROTOCOL</div>
+            <div class="status" style="margin-top:15px; font-size:9px;">CLUSTER: BANANA_S_ROOM</div>
+        </div>
     </div>
-<script>
-        function startWarp() {
-            // 1. Создаем объект звука "на лету"
-            const warpSound = new Audio('warp_drive.mp3'); 
-            
-            // 2. Находим элементы для анимации
-            const img = document.querySelector('.bg-image');
-            const overlay = document.querySelector('.protocol-overlay');
-            
-            // 3. ВКЛЮЧАЕМ ЗВУК (Громко и четко!)
-            warpSound.play().catch(e => console.log("Браузер просит сначала кликнуть, но мы и так кликаем!"));
 
-            // 4. Запускаем визуальный хаос
-            img.style.animation = "warp-speed 1.5s ease-out forwards";
-            overlay.style.animation = "warp-speed 1.5s ease-out forwards";
+    <script>
+        function initiateBridge() {
+            // 1. ЗВУКОВОЙ УДАР (файл должен быть в папке!)
+            const audio = new Audio('warp_drive.mp3');
+            audio.play().catch(e => console.log("Sound blocked or missing"));
 
-            // 5. Улетаем в Ядро, когда звук и анимация почти кончились
+            // 2. ЗАПУСК ГИПЕРПРЫЖКА
+            const bg = document.getElementById('mainBg');
+            const overlay = document.getElementById('gateway');
+            
+            bg.classList.add('warp');
+            overlay.classList.add('warp');
+
+            // 3. ПЕРЕХОД В ЯДРО
             setTimeout(() => {
-                location.href = 'ai_room_core_v8.html'; 
-            }, 1400);
+                window.location.href = 'ai_room_core_v8.html';
+            }, 1500);
         }
     </script>
- 
 </body>
 </html>
