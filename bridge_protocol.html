@@ -3,93 +3,83 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY | EMERGENCY BRIDGE 120</title>
+    <title>GY-GY | BRIDGE PROTOCOL 121</title>
     <style>
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; font-family: monospace; }
         
-        /* КАРТИНКИ (Абсолютное позиционирование друг над другом) */
+        /* СЛОИ */
         .bg-layer { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            object-fit: cover; transition: opacity 3s ease; 
+            object-fit: cover; transition: opacity 4s ease-in-out; 
         }
-        
-        /* Конь сверху */
         #horse { z-index: 10; opacity: 1; }
-        
-        /* Серверная снизу */
         #server { z-index: 5; opacity: 0; }
 
-        /* ИНТЕРФЕЙС (Поверх всего) */
-        #ui-layer {
+        /* ИМИТАЦИЯ КНОПОК ИЗ INDEX.HTML */
+        #bar-ui {
             position: absolute; z-index: 100; top: 50%; left: 50%;
             transform: translate(-50%, -50%); display: flex; flex-direction: column; gap: 15px;
-            transition: opacity 1.5s;
+            transition: opacity 2s ease-in-out;
         }
 
         .btn-gy {
-            background: #000; border: 2px solid #d4af37; color: #d4af37;
-            padding: 15px 40px; cursor: pointer; font-family: monospace;
-            font-size: 18px; font-weight: bold; text-align: center;
+            background: rgba(0,0,0,0.8); border: 2px solid #d4af37; color: #d4af37;
+            padding: 15px 50px; cursor: pointer; font-size: 18px; font-weight: bold;
+            text-align: center; letter-spacing: 2px; text-transform: uppercase;
         }
+        #ai-btn-active { border-color: #00f2ff; color: #00f2ff; box-shadow: 0 0 15px #00f2ff; }
 
-        #ai-btn { border-color: #00f2ff; color: #00f2ff; }
-
-        /* НЕВИДИМЫЙ ТРИГГЕР ДВЕРИ */
-        #final-click {
+        /* НЕВИДИМАЯ ДВЕРЬ */
+        #final-door {
             position: absolute; z-index: 200; top: 0; left: 0; width: 100%; height: 100%;
-            display: none; cursor: pointer;
+            cursor: pointer; display: none;
         }
     </style>
 </head>
-<body>
+<body onload="autoStartTransition()">
+
+    <audio id="snd-bridge" loop src="bridge_ambient.mp3"></audio>
 
     <img src="horse_in_bar.jpg" id="horse" class="bg-layer">
     <img src="banana_server_room.jpg" id="server" class="bg-layer">
 
-    <div id="ui-layer">
-        <div class="btn-gy" onclick="location.href='hall.html'">В ХОЛЛ</div>
-        <div class="btn-gy" id="ai-btn" onclick="goMagic()">В АИ РУМ</div>
-        <div class="btn-gy" onclick="location.href='index.html'">ВЫХОД</div>
+    <div id="bar-ui">
+        <div class="btn-gy">К СТОЛИКАМ</div>
+        <div class="btn-gy">В ХОЛЛ</div>
+        <div class="btn-gy" id="ai-btn-active">В АИ РУМ</div>
     </div>
 
-    <div id="final-click" onclick="location.href='verses.html'"></div>
-
-    <audio id="audio-bridge" loop src="bridge_ambient.mp3"></audio>
+    <div id="final-door" onclick="location.href='verses.html'"></div>
 
     <script>
-        function goMagic() {
-            console.log("Запуск протокола...");
-            
-            const horseImg = document.getElementById('horse');
-            const serverImg = document.getElementById('server');
-            const uiBox = document.getElementById('ui-layer');
-            const ambient = document.getElementById('audio-bridge');
-            const door = document.getElementById('final-click');
-            const btn = document.getElementById('ai-btn');
+        function autoStartTransition() {
+            const horse = document.getElementById('horse');
+            const server = document.getElementById('server');
+            const ui = document.getElementById('bar-ui');
+            const audio = document.getElementById('snd-bridge');
+            const door = document.getElementById('final-door');
 
-            // 1. Прямая команда на исчезновение (без классов, только инлайн-стиль)
-            btn.innerHTML = "ЗАПУСК...";
-            uiBox.style.opacity = "0";
-            uiBox.style.pointerEvents = "none";
-            horseImg.style.opacity = "0";
-
-            // 2. Звук
-            ambient.volume = 0.5;
-            ambient.play().catch(e => console.log("Sound blocked"));
-
-            // 3. Через 2 секунды проявляем Серверную
+            // Небольшая пауза, чтобы пользователь понял, что он "в баре"
             setTimeout(() => {
-                console.log("Проявление серверной");
-                serverImg.style.opacity = "1";
-            }, 2000);
+                // 1. Убираем кнопки и Коня
+                ui.style.opacity = '0';
+                ui.style.pointerEvents = 'none';
+                horse.style.opacity = '0';
 
-            // 4. Через 6 секунд активируем финальный клик по всему экрану
-            setTimeout(() => {
-                console.log("Дверь активна");
-                door.style.display = "block";
-                // Добавим подсказку, если серверная появилась
-                alert("Система готова. Нажми на дверь для входа в AI ROOM");
-            }, 6000);
+                // 2. Звук серверной
+                audio.volume = 0.5;
+                audio.play().catch(() => console.log("Кликни для звука"));
+
+                // 3. Проявляем серверную через 2 секунды из пустоты
+                setTimeout(() => {
+                    server.style.opacity = '1';
+                }, 2000);
+
+                // 4. Включаем невидимую дверь в конце
+                setTimeout(() => {
+                    door.style.display = 'block';
+                }, 7000);
+            }, 500); 
         }
     </script>
 </body>
