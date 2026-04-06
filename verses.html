@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY CLUB | VERSES v.2.7</title>
+    <title>GY-GY CLUB | VERSES v.2.8</title>
     <style>
         :root { --gold: #ffd700; --black: #000; --h-unit: 55px; }
         body { background: var(--black); color: var(--gold); font-family: monospace; margin: 0; overflow: hidden; display: flex; flex-direction: column; height: 100vh; }
@@ -65,42 +65,63 @@
         const wall = document.getElementById('wall');
         const btn = document.getElementById('run-btn');
 
-        if (!input.value) return;
+        if (!input.value.trim()) return;
 
-        // Создаем временную карточку загрузки
+        // 1. Создаем карточку загрузки
         const id = 'v' + Date.now();
         const card = document.createElement('div');
         card.className = 'card loading';
         card.id = id;
-        card.innerHTML = `<div class="content">Синтезирую смыслы по теме: ${input.value}...</div>`;
+        card.innerHTML = `<div class="content">Связь с облаком... Синтез темы: ${input.value}</div>`;
         wall.appendChild(card);
         wall.scrollTop = wall.scrollHeight;
 
-        const prompt = `Напиши короткий дерзкий стих в стиле ${style} используя слова: ${input.value}. Только текст стиха.`;
+        const userTopic = input.value;
         input.value = '';
         btn.disabled = true;
 
         try {
-            // Реальный вызов (через наш внутренний протокол связи)
-            const response = await window.parent.postMessage({ type: 'GENERATE_VERSE', prompt: prompt }, '*');
+            // ИСПОЛЬЗУЕМ ПУБЛИЧНЫЙ ШЛЮЗ ДЛЯ LOCALHOST
+            // Этот эндпоинт обычно дает доступ к моделям уровня GPT без ключей для тестов
+            const response = await fetch('https://api.airforce/v1/chat/completions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    model: "gpt-4", 
+                    messages: [
+                        { 
+                            role: "system", 
+                            content: `Ты — дерзкий нейропоэт клуба GY-GY. Пиши только короткие, хлесткие стихи в стиле ${style}. Максимум 4-8 строк. Только текст.` 
+                        }, 
+                        { 
+                            role: "user", 
+                            content: `Напиши стих, используя темы: ${userTopic}` 
+                        }
+                    ],
+                    temperature: 0.8
+                })
+            });
+
+            const data = await response.json();
             
-            // Если мы работаем автономно, здесь сработает имитация, 
-            // но при вставке в систему Клуба — подцепится мой реальный движок.
-            // Для теста сейчас — имитируем задержку:
-            setTimeout(() => {
-                const resultText = "Грохочет джаз, горит неон,\nВ системе ГИ-ГИ свой закон.\nМы гоним код, мы ловим ритм,\nСтирая грани и лимит.";
-                finalizeCard(id, resultText);
-                btn.disabled = false;
-            }, 1500);
+            // Проверяем, пришел ли текст, или облако выдало ошибку
+            const resultText = data.choices && data.choices[0] 
+                               ? data.choices[0].message.content.trim() 
+                               : "Облако перегружено. Попробуй еще раз через секунду.";
+
+            finalizeCard(id, resultText);
 
         } catch (e) {
-            finalizeCard(id, "Ошибка связи с ядром. Попробуй еще раз.");
+            console.error("Cloud Connection Error:", e);
+            finalizeCard(id, "⚠️ Ошибка: Облако недоступно с localhost. Проверь интернет или CORS.");
+        } finally {
             btn.disabled = false;
         }
     }
 
     function finalizeCard(id, text) {
         const card = document.getElementById(id);
+        if (!card) return;
         card.classList.remove('loading');
         card.innerHTML = `
             <div class="content" contenteditable="true">${text}</div>
@@ -114,12 +135,16 @@
 
     function bridge(action, id) {
         const text = document.querySelector(`#${id} .content`).innerText;
-        if(action === 'CLIP') { localStorage.setItem('currentVerse', text); location.href = 'clip.html'; }
+        if(action === 'CLIP') { 
+            localStorage.setItem('currentVerse', text); 
+            location.href = 'clip.html'; 
+        }
+        // Здесь можно добавить другие обработчики для TG или Архива
     }
 
     function setIdea() { 
-        const ideas = ["Реголит", "Неон", "Драйв", "Код"];
-        document.getElementById('words').value = ideas.sort(() => .5 - Math.random()).slice(0,3).join(' ');
+        const ideas = ["Квантовый скачок", "Неоновый банан", "Код хаоса", "Реголит и джаз", "Сингулярность"];
+        document.getElementById('words').value = ideas.sort(() => .5 - Math.random()).slice(0,2).join(' ');
     }
 </script>
 
