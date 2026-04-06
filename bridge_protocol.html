@@ -3,28 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY | BAR & BRIDGE 016</title>
+    <title>GY-GY | BAR TRANSITION 017</title>
     <style>
         :root { --gold: #d4af37; --neon: #00f2ff; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; font-family: 'Courier New', monospace; }
 
-        /* --- ФОНОВЫЕ СЛОИ --- */
+        /* --- СЛОИ ФОНА --- */
         .layer { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
             object-fit: cover; transition: opacity 4s ease-in-out; 
         }
+        
+        /* Конь (начальное состояние) */
         #horse-bg { z-index: 10; opacity: 1; }
+        
+        /* Серверная (спрятана под Конем) */
         #server-bg { 
             z-index: 5; opacity: 0; 
-            transform: scale(1.1); 
+            transform: scale(1.1); /* Легкий наезд для глубины */
             transition: opacity 5s ease-in-out, transform 10s linear; 
         }
 
-        /* --- ТВОИ КНОПКИ (Оставляем структуру, как ты просил) --- */
+        /* --- ТВОИ КНОПКИ --- */
         .ui-container {
             position: absolute; z-index: 100; top: 50%; left: 50%;
             transform: translate(-50%, -50%); display: flex; flex-direction: column; gap: 20px;
-            transition: opacity 1s ease-out;
+            transition: opacity 1.5s ease-out;
         }
         .nav-btn {
             background: rgba(0, 0, 0, 0.8); border: 2px solid var(--gold); color: var(--gold);
@@ -32,16 +36,17 @@
             text-transform: uppercase; text-align: center; font-weight: bold; transition: 0.3s;
         }
         .nav-btn:hover { box-shadow: 0 0 20px var(--gold); background: var(--gold); color: #000; }
+        
+        /* Кнопка-триггер */
         .ai-btn { border-color: var(--neon); color: var(--neon); }
-        .ai-btn:hover { box-shadow: 0 0 20px var(--neon); background: var(--neon); color: #000; }
 
-        /* --- НЕВИДИМАЯ ДВЕРЬ (Триггер для перехода в verses.html) --- */
+        /* --- СКРЫТАЯ ДВЕРЬ (для финального клика) --- */
         #door-trigger {
             position: absolute; z-index: 150; top: 25%; left: 35%; width: 30%; height: 50%;
-            cursor: pointer; display: none; /* Ждет своего часа */
+            cursor: pointer; display: none;
         }
 
-        /* Технические классы для анимации */
+        /* Классы для анимации */
         .fade-out { opacity: 0 !important; pointer-events: none; }
         .fade-in { opacity: 1 !important; transform: scale(1) !important; }
     </style>
@@ -54,55 +59,57 @@
     <img src="horse_in_bar.jpg" id="horse-bg" class="layer">
     <img src="banana_server_room.jpg" id="server-bg" class="layer">
 
-    <div class="ui-container" id="bar-interface">
+    <div class="ui-container" id="bar-ui">
         <div class="nav-btn" onclick="location.href='tables.html'">К СТОЛИКАМ</div>
         <div class="nav-btn" onclick="location.href='hall.html'">В ХОЛЛ</div>
-        <div class="nav-btn ai-btn" onclick="runAiTransformation()">В АИ РУМ</div>
+        <div class="nav-btn ai-btn" onclick="startTransformation()">В АИ РУМ</div>
     </div>
 
     <div id="door-trigger" onclick="location.href='verses.html'"></div>
 
     <script>
-        // Запуск атмосферы бара при входе
+        // Активация звуков бара при первом клике в любом месте
         window.addEventListener('mousedown', () => {
             const barSnd = document.getElementById('bar-sounds');
             if(barSnd.paused) barSnd.play().catch(() => {});
         }, { once: true });
 
-        function runAiTransformation() {
+        function startTransformation() {
             const horse = document.getElementById('horse-bg');
             const server = document.getElementById('server-bg');
-            const ui = document.getElementById('bar-interface');
+            const ui = document.getElementById('bar-ui');
             const barSnd = document.getElementById('bar-sounds');
             const bridgeSnd = document.getElementById('bridge-ambient');
             const door = document.getElementById('door-trigger');
 
-            // 1. Убираем кнопки и Коня (тают в пустоту)
+            // 1. Исчезают кнопки и Конь (эффект Пустоты)
             ui.classList.add('fade-out');
             horse.classList.add('fade-out');
 
-            // 2. Микшируем звук: Бар тише, Серверная громче
-            let fadeBar = setInterval(() => {
+            // 2. Звуковая трансформация
+            // Гасим бар
+            let fadeOut = setInterval(() => {
                 if (barSnd.volume > 0.1) barSnd.volume -= 0.1;
-                else { barSnd.pause(); clearInterval(fadeBar); }
-            }, 200);
-
-            bridgeSnd.volume = 0;
-            bridgeSnd.play();
-            let fadeBridge = setInterval(() => {
-                if (bridgeSnd.volume < 0.7) bridgeSnd.volume += 0.05;
-                else clearInterval(fadeBridge);
+                else { barSnd.pause(); clearInterval(fadeOut); }
             }, 300);
 
-            // 3. Проявляем Серверную из пустоты
+            // Включаем Серверную (bridge_ambient)
+            bridgeSnd.volume = 0;
+            bridgeSnd.play();
+            let fadeIn = setInterval(() => {
+                if (bridgeSnd.volume < 0.8) bridgeSnd.volume += 0.05;
+                else clearInterval(fadeIn);
+            }, 300);
+
+            // 3. Через 2 секунды из темноты проступает Серверная
             setTimeout(() => {
                 server.classList.add('fade-in');
             }, 2000);
 
-            // 4. Когда картинка стала четкой, активируем дверь
+            // 4. Когда Серверная полностью проявилась, активируем клик по двери
             setTimeout(() => {
                 door.style.display = 'block';
-                console.log("Дверь в AI ROOM активна. Жмите на центр!");
+                console.log("Доступ к AI Core открыт. Нажмите на дверь.");
             }, 7500);
         }
     </script>
