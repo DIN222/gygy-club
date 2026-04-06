@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY | VERSES v3.0 LIVE-GEN</title>
+    <title>GY-GY | VERSES v4.1 CLOUD-GEN</title>
     <style>
         :root { --gold: #d4af37; --neon: #00f2ff; }
         body { 
@@ -19,7 +19,7 @@
 
         #poetry-stream {
             flex: 1; padding: 40px; overflow-y: auto;
-            display: flex; flex-direction: column-reverse; /* Новое всегда сверху */
+            display: flex; flex-direction: column-reverse; 
         }
 
         .live-stanza {
@@ -34,7 +34,7 @@
             100% { transform: skew(0deg); opacity: 1; }
         }
 
-        .v-line { font-size: 22px; font-weight: 900; line-height: 1.6; text-transform: uppercase; }
+        .v-line { font-size: 20px; font-weight: 900; line-height: 1.4; text-transform: uppercase; white-space: pre-wrap; }
         .v-meta { font-size: 10px; color: var(--neon); margin-bottom: 10px; letter-spacing: 2px; }
 
         .gen-panel {
@@ -48,66 +48,79 @@
             padding: 20px 40px; cursor: pointer; font-weight: 900;
             letter-spacing: 5px; transition: 0.2s;
         }
-        .trigger-btn:hover { background: var(--neon); color: #000; box-shadow: 0 0 30px var(--neon); }
+        .trigger-btn:hover:not(:disabled) { background: var(--neon); color: #000; box-shadow: 0 0 30px var(--neon); }
+        .trigger-btn:disabled { opacity: 0.5; cursor: wait; border-color: #555; color: #555; }
     </style>
 </head>
 <body>
 
     <div class="terminal-header">
-        <div>MODULE: GEN_CORE_v3.0</div>
-        <div>STATUS: REAL_TIME_COMPILING</div>
+        <div>MODULE: GEN_CORE_v4.1_CLOUD</div>
+        <div id="status-indicator">STATUS: READY_FOR_UPLINK</div>
         <div onclick="location.href='ai_room_core_v8.html'" style="cursor:pointer;">[ EXIT_TO_CORE ]</div>
     </div>
 
     <main id="poetry-stream"></main>
 
     <footer class="gen-panel">
-        <button class="trigger-btn" onclick="synthesize('DARK')">DARK GEN</button>
-        <button class="trigger-btn" style="border-color: var(--gold); color: var(--gold);" onclick="synthesize('GOLD')">GOLD GEN</button>
+        <button id="btn-dark" class="trigger-btn" onclick="synthesize('DARK')">DARK GEN</button>
+        <button id="btn-gold" class="trigger-btn" style="border-color: var(--gold); color: var(--gold);" onclick="synthesize('GOLD')">GOLD GEN</button>
     </footer>
 
     <script>
-        // СЛОВАРНЫЕ МАТРИЦЫ (Тут нет готовых фраз, только "кирпичи")
-        const matrix = {
-            subjects: ["Кибер-конь", "Бинарный шум", "Неоновый лорд", "Код Gemini", "Дверь в пустоту", "Матрица Гы-Гы", "Синтетик-банан", "Цифровой нерв"],
-            actions: ["взламывает", "шифрует", "сжигает", "рисует", "пульсирует в", "крадет", "возводит", "ломает"],
-            objects: ["память зеркал", "старые сны", "пульс серверов", "золото линз", "бездну частот", "скрипты бытия", "неон в баре", "логи души"],
-            final: ["навечно.", "в потоке.", "сейчас.", "вне схем.", "без прав.", "в огне.", "под бит.", "v3.0."]
-        };
+        // 🔗 ВСТАВЬ СЮДА ССЫЛКУ НА СВОЙ WORKER
+        const CLOUD_URL = "https://gygy-club.2work21955.workers.dev"; 
 
-        function synthesize(style) {
+        async function synthesize(style) {
             const stream = document.getElementById('poetry-stream');
-            const stanza = document.createElement('div');
-            stanza.className = 'live-stanza';
-            if(style === 'GOLD') stanza.style.borderColor = '#d4af37';
+            const status = document.getElementById('status-indicator');
+            const btns = document.querySelectorAll('.trigger-btn');
 
-            // Алгоритм живой сборки (каждый раз новая структура)
-            const linesCount = 4;
-            let poemHTML = `<div class="v-meta">GEN_TIMESTAMP: ${Date.now()} | MODE: ${style}</div>`;
+            // Блокируем кнопки и меняем статус
+            btns.forEach(b => b.disabled = true);
+            status.innerText = "STATUS: CLOUD_SYNTHESIS_IN_PROGRESS...";
 
-            for (let i = 0; i < linesCount; i++) {
-                const s = matrix.subjects[Math.floor(Math.random() * matrix.subjects.length)];
-                const a = matrix.actions[Math.floor(Math.random() * matrix.actions.length)];
-                const o = matrix.objects[Math.floor(Math.random() * matrix.objects.length)];
-                const f = matrix.final[Math.floor(Math.random() * matrix.final.length)];
-                
-                // Перемешиваем структуру предложения для каждой строки
-                const structures = [
-                    `${s} ${a} ${o}`,
-                    `${a} ${o} — ${f}`,
-                    `${o} и ${s} ${f}`,
-                    `${s} ${f}`
-                ];
-                
-                const lineText = structures[Math.floor(Math.random() * structures.length)];
-                poemHTML += `<div class="v-line" style="color: ${style === 'GOLD' ? '#d4af37' : '#00f2ff'}">${lineText}</div>`;
+            // Создаем временный блок ожидания
+            const tempID = "gen-" + Date.now();
+            const loadingHtml = `
+                <div class="live-stanza" id="${tempID}" style="border-color: #444; opacity: 0.6;">
+                    <div class="v-meta">GEN_TIMESTAMP: ${new Date().toLocaleTimeString()} | MODE: ${style}</div>
+                    <div class="v-line" style="color: #666">УСТАНОВКА СВЯЗИ С ОБЛАКОМ GY-GY...<br>СКАНИРОВАНИЕ НЕЙРОНОВ...</div>
+                </div>`;
+            stream.prepend(document.createRange().createContextualFragment(loadingHtml));
+
+            try {
+                const response = await fetch(CLOUD_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        mode: style, 
+                        userPrompt: "напиши стих о киберпанке и клубе Гы-Гы" 
+                    })
+                });
+
+                const data = await response.json();
+                const stanza = document.getElementById(tempID);
+
+                if (data.status === "success") {
+                    stanza.style.opacity = "1";
+                    stanza.style.borderColor = (style === 'GOLD') ? '#d4af37' : '#00f2ff';
+                    stanza.innerHTML = `
+                        <div class="v-meta">ORIGIN: CLOUD_CORE_v1.1 | MODE: ${style}</div>
+                        <div class="v-line" style="color: ${style === 'GOLD' ? '#d4af37' : '#00f2ff'}">${data.text}</div>
+                    `;
+                } else {
+                    throw new Error("API_REJECTED");
+                }
+
+            } catch (err) {
+                const stanza = document.getElementById(tempID);
+                stanza.innerHTML = `<div class="v-meta" style="color:red">ERROR: UPLINK_FAILED</div><div class="v-line" style="color:red">ОШИБКА ОБЛАКА. ПРОВЕРЬТЕ GEMINI_KEY.</div>`;
+            } finally {
+                // Возвращаем кнопки в строй
+                btns.forEach(b => b.disabled = false);
+                status.innerText = "STATUS: READY_FOR_UPLINK";
             }
-
-            stanza.innerHTML = poemHTML;
-            stream.prepend(stanza); // Новое сверху
-
-            // Звуковой эффект синтеза (если аудио прикручено)
-            // playSynthesizeTick();
         }
     </script>
 </body>
