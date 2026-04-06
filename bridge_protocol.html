@@ -3,125 +3,80 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY | GATEWAY v1.9 [ORIGINAL RATIO]</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GY-GY | BRIDGE PROTOCOL v2.0</title>
     <style>
-        :root { --gold: #d4af37; }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        
-        body, html { 
-            width: 100%; height: 100%; 
-            background: #000; overflow: hidden; 
-            font-family: 'Courier New', monospace; 
+        :root { --gold: #d4af37; --neon: #00f2ff; --bg: #000; }
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            overflow: hidden; background-color: var(--bg);
+            font-family: 'Courier New', monospace; display: flex;
+            justify-content: center; align-items: center; color: var(--gold);
         }
 
-        /* [ФОН] v1.9: Центрируем оригинал без обрезки */
-        .viewport {
-            position: fixed; inset: 0;
-            display: flex; align-items: center; justify-content: center;
-            background: #000; /* Черные поля по бокам, если экран широкий */
+        /* --- ЗАДНИЙ ФОН (Новая сверхчеткая картинка) --- */
+        .bg-image {
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%;
+            /* ЭТА СТРОКА СПАСАЕТ ОТ МУТНОСТИ ПРИ РАСТЯГИВАНИИ */
+            object-fit: cover; 
+            filter: brightness(0.6) contrast(1.1); /* Делаем чуть мрачнее для атмосферы */
             z-index: 1;
         }
 
-        .original-img {
-            height: 100vh; /* Фото всегда по высоте экрана */
-            width: auto;
-            object-fit: contain;
-            filter: brightness(0.7) contrast(1.1);
-            transition: 1.5s ease-in-out;
+        /* --- ИНТЕРФЕЙС ПОВЕРХ КАРТИНКИ --- */
+        .protocol-overlay {
+            position: relative; z-index: 10;
+            text-align: center; background: rgba(0,0,0,0.7);
+            padding: 40px; border: 2px solid var(--gold);
+            box-shadow: 0 0 30px rgba(212,175,55,0.4);
+            cursor: pointer; transition: 0.3s;
+        }
+        .protocol-overlay:hover {
+            box-shadow: 0 0 50px var(--neon);
+            border-color: var(--neon);
         }
 
-        /* [ИНТЕРФЕЙС] */
-        .ui-container {
-            position: absolute; inset: 0;
-            z-index: 10;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
+        .status { font-size: 12px; letter-spacing: 3px; color: var(--neon); text-transform: uppercase; }
+        .title { font-size: 32px; font-weight: 900; margin: 15px 0; color: var(--gold); text-shadow: 0 0 10px var(--gold); }
+        .action { font-size: 16px; text-decoration: underline; }
+
+        /* --- АНИМАЦИЯ ПРИ НАЖАТИИ --- */
+        @keyframes warp-speed {
+            0% { transform: scale(1); filter: blur(0px); opacity: 1; }
+            100% { transform: scale(10); filter: blur(20px); opacity: 0; }
         }
-
-        .header {
-            position: absolute; top: 0; width: 100%; padding: 30px;
-            display: flex; justify-content: space-between;
-        }
-        .logo { color: var(--gold); font-size: 22px; font-weight: 900; letter-spacing: 5px; text-shadow: 0 0 10px #000; }
-
-        /* [АКТИВНАЯ ЗОНА] Накладываем точно на дверь на картинке */
-        .portal-gate {
-            width: 30vh; height: 50vh; /* Пропорции под дверь на фото */
-            cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            border: 1px solid rgba(212,175,55,0); /* Полная прозрачность */
-            transition: 0.5s;
-        }
-        .portal-gate:hover { border: 1px solid rgba(212,175,55,0.3); background: rgba(212,175,55,0.05); }
-
-        .enter-txt {
-            color: #fff; font-size: 30px; font-weight: 900; letter-spacing: 15px;
-            opacity: 0; transition: 0.4s; text-shadow: 0 0 20px var(--gold);
-        }
-        .portal-gate:hover .enter-txt { opacity: 1; }
-
-        /* [КНОПКИ] */
-        .btn-back {
-            position: absolute; bottom: 30px;
-            background: none; border: 1px solid var(--gold);
-            color: var(--gold); padding: 10px 25px; cursor: pointer;
-            font-size: 10px; letter-spacing: 2px;
-        }
-
-        /* ЭФФЕКТ ПРЫЖКА */
-        .jump-v1-9 { transform: scale(15); opacity: 0; pointer-events: none; }
-
-        #flash { position: fixed; inset: 0; background: #fff; opacity: 0; z-index: 1000; pointer-events: none; }
+        .warp { animation: warp-speed 1.5s ease-out forwards; }
     </style>
 </head>
-<body onclick="startSoundV19()">
+<body>
 
-    <div id="flash"></div>
+    <img src="bridge_gateway.jpg" alt="GY-GY GATEWAY" class="bg-image">
 
-    <div class="viewport">
-        <img src="banana_server_room.jpg" class="original-img" id="gate-img">
+    <div class="protocol-overlay" onclick="startWarp()">
+        <div class="status">:: STATUS: WAITING_FOR_UPLINK ::</div>
+        <div class="title">START BRIDGE<br>PROTOCOL</div>
+        <div class="status">v2.0 [ CLOUD_ENABLED ]</div>
     </div>
-
-    <div class="ui-container">
-        <div class="header">
-            <div class="logo">GY-GY v1.9</div>
-            <div style="color:var(--gold); border:1px solid; padding:5px 10px; font-size:10px;">CORE LINK: STANDBY</div>
-        </div>
-
-        <div class="portal-gate" onclick="doJump()">
-            <div class="enter-txt">ENTER</div>
-        </div>
-
-        <button class="btn-back" onclick="location.href='index.html'">НАЗАД В ХОЛЛ</button>
-    </div>
-
-    <audio id="amb-snd" loop>
-        <source src="bridge_ambient.mp3" type="audio/mpeg">
-    </audio>
 
     <script>
-        const snd = document.getElementById('amb-snd');
-        let playing = false;
+        function startWarp() {
+            // Находим картинку и интерфейс
+            const img = document.querySelector('.bg-image');
+            const overlay = document.querySelector('.protocol-overlay');
+            
+            // Запускаем анимацию прыжка
+            img.classList.add('warp');
+            overlay.classList.add('warp');
 
-        function startSoundV19() {
-            if (!playing) {
-                snd.volume = 0.5;
-                snd.play();
-                playing = true;
-            }
+            // Звуковой эффект (если он есть в папке)
+            // const audio = new Audio('jump.mp3'); audio.play();
+
+            // Переход в Ядро через 1.5 секунды
+            setTimeout(() => {
+                location.href = 'ai_room_core_v8.html'; 
+            }, 1500);
         }
-
-        function doJump() {
-            document.getElementById('flash').style.animation = "flashKey 1s forwards";
-            document.getElementById('gate-img').classList.add('jump-v1-9');
-            snd.volume = 1;
-            setTimeout(() => { window.location.href = 'ai_room_core_v8.html'; }, 1000);
-        }
-
-        const styleSheet = document.createElement('style');
-        styleSheet.innerHTML = `@keyframes flashKey { 0% {opacity:0} 15% {opacity:1} 100% {opacity:0} }`;
-        document.head.appendChild(styleSheet);
     </script>
 </body>
 </html>
-
