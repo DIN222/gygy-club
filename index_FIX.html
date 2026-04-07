@@ -210,52 +210,57 @@ function googleTranslateElementInit() {
             if(id === 'block-tables') GY_Audio.fade('amb', 0.1, 1000);
         }
     };
-
 const GY_Core = {
         initEngine() {
-            // 1. Инициализация аудио-модуля
-            GY_Audio.init();
-            
-            // 2. Силовой разблок звука (пробиваем защиту браузера)
-            const unlock = () => {
-                Object.values(GY_Audio.s).forEach(t => { 
-                    if(t) { 
-                        t.play().then(() => { t.pause(); t.currentTime = 0; }).catch(() => {}); 
-                    }
-                });
-            };
-            unlock();
+            console.log("🔊 Попытка силового запуска звука...");
 
-            // 3. Хлопок двери и нарастающий шум бара
-            GY_Audio.play('door', 1); 
-            GY_Audio.play('amb', 0); 
-            GY_Audio.fade('amb', 0.3, 2000); 
-            
-            // 4. Анимация входа (Чистый вектор, масштаб 10)
-            const door = document.getElementById('main-door');
-            if(door) {
-                door.style.transform = "scale(10)";
-                door.style.opacity = "0";
-                door.style.pointerEvents = "none";
+            // 1. ПРЯМОЙ ХВАТ ЭЛЕМЕНТОВ (Без посредников)
+            const doorSound = document.getElementById('s-door');
+            const ambSound = document.getElementById('s-amb');
+
+            // 2. МГНОВЕННЫЙ "ПИНОК" ДЛЯ БРАУЗЕРА
+            // Мы заставляем браузер поверить, что пользователь ХОЧЕТ слышать всё
+            if (doorSound) {
+                doorSound.volume = 1;
+                doorSound.play().catch(e => console.error("Ошибка двери:", e));
             }
-            
-            // 5. Генерация ID в фоне
+
+            if (ambSound) {
+                ambSound.volume = 0;
+                ambSound.play().then(() => {
+                    // Плавный нарастающий звук бара через прямой интервал
+                    let vol = 0;
+                    const fadeUp = setInterval(() => {
+                        vol += 0.05;
+                        ambSound.volume = vol;
+                        if (vol >= 0.3) clearInterval(fadeUp);
+                    }, 200);
+                }).catch(e => console.error("Ошибка бара:", e));
+            }
+
+            // 3. АНИМАЦИЯ (Та самая, что вам понравилась)
+            const doorImg = document.getElementById('main-door');
+            if (doorImg) {
+                doorImg.style.transform = "scale(10)";
+                doorImg.style.opacity = "0";
+                doorImg.style.pointerEvents = "none";
+            }
+
+            // 4. ГЕНЕРАЦИЯ И ПЕРЕХОД
             GY_Identity.create();
-            
-            // 6. Переход к следующему блоку
             setTimeout(() => {
                 GY_Nav.go('block-welcome');
             }, 1500);
-            
-            console.log("🔊 Движок запущен успешно");
         },
         deepDive() {
-            GY_Audio.fade('amb', 0, 1000);
+            const amb = document.getElementById('s-amb');
+            if (amb) amb.pause();
             document.body.style.transition = "2s";
             document.body.style.filter = "blur(40px) brightness(0)";
             setTimeout(() => window.location.href = 'bridge_protocol.html', 1800);
         }
     };
+
     </script>
     
     <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
