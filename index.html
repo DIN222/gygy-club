@@ -3,51 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.63 | UI RESTORED</title>
+    <title>GY-GY Club v4.4.67 | FULL ARCHIVE</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
         :root { --gold: #d4af37; --violet: #8A2BE2; --neon-glow: rgba(212, 175, 55, 0.4); }
         
-        * { -webkit-tap-highlight-color: transparent !important; box-sizing: border-box; }
+        * { -webkit-tap-highlight-color: transparent !important; box-sizing: border-box; -webkit-user-select: none; user-select: none; }
         html, body { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; position: fixed; margin:0; }
         
+        /* Глобальные атрибуты */
         #google_translate_element { position: fixed; top: 10px; left: 10px; z-index: 1000001; }
-        .ui-header-right { position: fixed; top: 15px; right: 20px; z-index: 1000000; font-size: 20px; letter-spacing: 3px; font-weight: bold; }
+        .ui-header-right { position: fixed; top: 15px; right: 20px; z-index: 1000000; font-size: 20px; letter-spacing: 3px; font-weight: bold; color: var(--gold); }
         
         .ui-back-to-bar { 
             position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 1000005;
             background: rgba(0,0,0,0.8); border: 1px solid var(--gold); color: var(--gold);
-            padding: 10px 20px; cursor: pointer; display: none; text-transform: uppercase;
+            padding: 10px 20px; cursor: pointer; display: none; text-transform: uppercase; border-radius: 4px;
         }
 
         .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; z-index: 10; opacity: 0; transition: opacity 0.8s ease; pointer-events: none; }
         .block.active { display: flex !important; opacity: 1; pointer-events: auto; }
 
+        /* Юмор и стиль */
         .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 22px; color: var(--gold); text-align: center; max-width: 85%; margin-bottom: 15px; }
         .welcome-img { max-height: 35vh; width: auto; margin-bottom: 10px; }
         
         .btn-gy { min-width: 260px; padding: 12px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; text-transform: uppercase; font-weight: 900; margin: 5px 0; font-family: 'Share Tech Mono'; transition: 0.4s; pointer-events: auto !important; }
-        .btn-gy:hover { box-shadow: 0 0 15px var(--neon-glow); }
+        .btn-gy:hover { box-shadow: 0 0 15px var(--neon-glow); background: transparent !important; }
         .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
 
+        /* Система ID и Аватары */
         .id-card-hall { position: absolute; top: 65%; left: 50%; transform: translate(-50%,-50%); width: 220px; padding: 15px; border: 2px solid var(--gold); background: #F5F5DC; border-radius: 12px; display: flex; flex-direction: column; align-items: center; color: #000; z-index: 30; }
-        .box-final { width: 80px; height: 80px; border: 1px solid #000; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .box-final { width: 80px; height: 80px; border: 1px solid #000; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
         
         #main-door { width: 250px; cursor: pointer; transition: transform 2s, opacity 1.5s; z-index: 9999; }
         
+        /* Бар и Кнопки на фото */
+        .bar-ui-overlay { position: absolute; bottom: 10vh; left: 50%; transform: translateX(-50%); width: 100%; max-width: 380px; z-index: 1000; pointer-events: none; display: flex; flex-direction: column; align-items: center; }
+        .bar-row { width: 100%; display: flex; justify-content: space-between; padding: 0 15px; pointer-events: none; }
+        .bar-row .btn-gy { min-width: 160px; background: rgba(0,0,0,0.5); border-width: 1px; }
+
         #block-tables { background: url('lounge.jpg') no-repeat center bottom / contain #000; }
         .lamp-zone { position: absolute; width: 40px; height: 40px; border-radius: 50%; background: radial-gradient(circle, var(--neon-glow) 0%, transparent 70%); border: 1px solid var(--violet); box-shadow: 0 0 15px var(--neon-glow); transform: translate(-50%, -50%); cursor: pointer; }
-
-        /* ИСПРАВЛЕННЫЙ КОНТЕЙНЕР КНОПОК В БАРЕ */
-        .bar-ui-overlay { 
-            position: absolute; bottom: 8vh; left: 50%; transform: translateX(-50%); 
-            width: 100%; max-width: 380px; z-index: 1000; pointer-events: none; 
-            display: flex; flex-direction: column; align-items: center; 
-        }
-        .bar-row { width: 100%; display: flex; justify-content: space-between; padding: 0 10px; pointer-events: none; }
-        .bar-row .btn-gy { min-width: 160px; background: rgba(0,0,0,0.6); }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -59,7 +58,7 @@
     <audio id="snd-door" preload="auto"><source src="door_open.mp3" type="audio/mpeg"></audio>
     <audio id="snd-ambient" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
     <audio id="snd-khe" preload="auto"><source src="charlie_bar_fx.mp3" type="audio/mpeg"></audio>
-    <audio id="snd-server" loop preload="auto"><source src="server_room_hum.mp3" type="audio/mpeg"></audio>
+    <audio id="snd-server" loop preload="auto"><source src="bridge_ambient.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active">
         <img src="door_1.jpg" id="main-door" onclick="handleDoor()">
@@ -78,8 +77,8 @@
         <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:10px; margin-bottom:20px;">
             <div class="box-final" style="background:transparent; border-color:var(--gold); color:var(--gold); font-size:10px;" id="id-label">#ID</div>
             <div class="box-final" id="qr-box-reg" style="border-color:var(--gold);"></div>
-            <div class="box-final" style="border-color:var(--gold); position:relative; cursor:pointer;">
-                <input type="file" accept="image/*" onchange="preview(this)" style="position:absolute; inset:0; opacity:0; z-index: 10;">
+            <div class="box-final" style="border-color:var(--gold); cursor:pointer;">
+                <input type="file" accept="image/*" onchange="preview(this)" style="position:absolute; inset:0; opacity:0; z-index:10;">
                 <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
                 <span id="txt-photo" style="color:#000; font-size:10px; font-weight:900;">ФОТО</span>
             </div>
@@ -114,15 +113,15 @@
                 <button class="btn-gy" onclick="deepDive()">AI ROOM</button>
             </div>
             <div style="margin-top: 10px; pointer-events: none;">
-                <button class="btn-gy" style="min-width: 220px; background: rgba(0,0,0,0.6);" onclick="portalTransition('block-hall')">В ХОЛЛ</button>
+                <button class="btn-gy" style="min-width: 240px; background: rgba(0,0,0,0.5);" onclick="portalTransition('block-hall')">В ХОЛЛ</button>
             </div>
         </div>
         <img src="horse_bar.png" style="height: 80vh; width: auto; object-fit: contain; margin-bottom: -5px; position: relative; z-index: 5;">
     </div>
 
     <div id="block-tables" class="block">
-        <div class="lamp-zone" style="bottom: 50%; left: 50%;"></div>
-        <div class="lamp-zone" style="bottom: 25%; left: 35%;"></div>
+        <div class="lamp-zone" style="bottom: 50%; left: 50%;" onclick="alert('Столик забронирован!')"></div>
+        <div class="lamp-zone" style="bottom: 25%; left: 35%;" onclick="alert('Здесь будет меню')"></div>
     </div>
 
     <script>
@@ -131,15 +130,12 @@
 
         function portalTransition(nextId) {
             const current = document.querySelector('.block.active');
-            const backBtn = document.getElementById('btn-global-back');
             const amb = document.getElementById('snd-ambient');
+            const backBtn = document.getElementById('btn-global-back');
 
             if(current) { current.style.opacity = "0"; current.style.pointerEvents = "none"; }
-            
-            // Кнопка возврата только для столиков
             backBtn.style.display = (nextId === 'block-tables') ? "block" : "none";
-            setTimeout(() => { if(nextId === 'block-tables') backBtn.style.opacity = "1"; }, 100);
-
+            
             setTimeout(() => {
                 if(current) { current.classList.remove('active'); current.style.display = "none"; }
                 const next = document.getElementById(nextId);
@@ -159,8 +155,8 @@
                         fadeAudio(amb, 0.8, 1000);
                         setTimeout(() => document.getElementById('snd-khe').play(), 500);
                     }
-                    if (nextId === 'block-tables') fadeAudio(amb, 0.2, 1000);
                     if (nextId === 'block-hall') fadeAudio(amb, 0.3, 1000);
+                    if (nextId === 'block-tables') fadeAudio(amb, 0.2, 1000);
                 }, 50);
             }, 800);
         }
@@ -179,35 +175,14 @@
             }, 1500);
         }
 
-        function deepDive() {
-            const amb = document.getElementById('snd-ambient');
-            const srv = document.getElementById('snd-server');
-            fadeAudio(amb, 0, 1200);
-            
-            document.body.style.transition = "opacity 1.5s, filter 1.5s";
-            document.body.style.opacity = "0";
-            document.body.style.filter = "blur(10px)";
-            
-            srv.volume = 0; srv.play().catch(()=>{});
-            fadeAudio(srv, 0.6, 2000);
-            setTimeout(() => { window.location.href = 'bridge_protocol.html'; }, 1500);
-        }
-
-        function fadeAudio(audio, target, duration) {
-            const start = audio.volume; const startTime = Date.now();
-            const interval = setInterval(() => {
-                const progress = Math.min((Date.now() - startTime) / duration, 1);
-                audio.volume = start + (target - start) * progress;
-                if (progress === 1) clearInterval(interval);
-            }, 50);
-        }
-
         function preview(i) {
             if(i.files && i.files[0]) {
                 const r = new FileReader();
                 r.onload = (e) => { 
                     document.getElementById('pp').src = e.target.result; document.getElementById('pp').style.display = "block";
                     document.getElementById('txt-photo').style.display = "none";
+                    document.getElementById('av').style.display = "none";
+                    document.getElementById('txt-avatar').style.display = "block";
                     finalImageData = e.target.result;
                 };
                 r.readAsDataURL(i.files[0]);
@@ -218,6 +193,8 @@
             const url = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${Math.random()}&backgroundColor=d4af37`;
             document.getElementById('av').src = url; document.getElementById('av').style.display = "block";
             document.getElementById('txt-avatar').style.display = "none";
+            document.getElementById('pp').style.display = "none";
+            document.getElementById('txt-photo').style.display = "block";
             finalImageData = url;
         }
 
@@ -232,7 +209,28 @@
         function swapButtons(a, s) { 
             document.getElementById(a).style.display = 'none';
             document.getElementById(s).classList.remove('btn-sleep');
-            if(s === 'btn-enter-bar') document.getElementById(s).style.display = 'block';
+            document.getElementById(s).style.display = 'block';
+        }
+
+        function deepDive() {
+            const amb = document.getElementById('snd-ambient');
+            const srv = document.getElementById('snd-server');
+            fadeAudio(amb, 0, 1500);
+            document.body.style.transition = "opacity 1.5s, filter 1.5s";
+            document.body.style.opacity = "0";
+            document.body.style.filter = "blur(15px)";
+            srv.volume = 0; srv.play().catch(()=>{});
+            fadeAudio(srv, 0.7, 2500);
+            setTimeout(() => { window.location.href = 'bridge_protocol.html'; }, 2000);
+        }
+
+        function fadeAudio(audio, target, duration) {
+            const start = audio.volume; const startTime = Date.now();
+            const interval = setInterval(() => {
+                const progress = Math.min((Date.now() - startTime) / duration, 1);
+                audio.volume = start + (target - start) * progress;
+                if (progress === 1) clearInterval(interval);
+            }, 50);
         }
 
         function googleTranslateElementInit() { 
