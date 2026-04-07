@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.67 | AUDIO ENGINE REBUILT</title>
+    <title>GY-GY Club v4.4.68 | AUDIO MONOLITH</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -29,12 +29,11 @@
         
         .btn-gy { min-width: 260px; padding: 12px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; text-transform: uppercase; font-weight: 900; margin: 5px 0; font-family: 'Share Tech Mono'; transition: 0.4s; pointer-events: auto !important; }
         .btn-gy:hover { box-shadow: 0 0 15px var(--neon-glow); }
-        .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
-
+        
         .id-card-hall { position: absolute; top: 65%; left: 50%; transform: translate(-50%,-50%); width: 220px; padding: 15px; border: 2px solid var(--gold); background: #F5F5DC; border-radius: 12px; display: flex; flex-direction: column; align-items: center; color: #000; z-index: 30; }
         .box-final { width: 80px; height: 80px; border: 1px solid #000; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
         
-        #main-door { width: 250px; cursor: pointer; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s; z-index: 9999; }
+        #main-door { width: 250px; cursor: pointer; transition: 2.5s cubic-bezier(0.4, 0, 0.2, 1); z-index: 9999; }
         
         .bar-ui-overlay { position: absolute; bottom: 10vh; left: 50%; transform: translateX(-50%); width: 100%; max-width: 380px; z-index: 1000; pointer-events: none; display: flex; flex-direction: column; align-items: center; }
         .bar-row { width: 100%; display: flex; justify-content: space-between; padding: 0 15px; pointer-events: none; }
@@ -50,20 +49,20 @@
     <div class="ui-header-right">GY-GY</div>
     <button class="ui-back-to-bar" id="btn-global-back" onclick="portalTransition('block-bar')">Назад в бар</button>
 
-    <audio id="snd-door" preload="auto"><source src="door_open.mp3" type="audio/mpeg"></audio>
-    <audio id="snd-ambient" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
-    <audio id="snd-khe" preload="auto"><source src="charlie_bar_fx.mp3" type="audio/mpeg"></audio>
-    <audio id="snd-server" loop preload="auto"><source src="bridge_ambient.mp3" type="audio/mpeg"></audio>
+    <audio id="raw-door" src="door_open.mp3"></audio>
+    <audio id="raw-ambient" src="bar_ambient.mp3" loop></audio>
+    <audio id="raw-khe" src="charlie_bar_fx.mp3"></audio>
+    <audio id="raw-server" src="bridge_ambient.mp3" loop></audio>
 
     <div id="block-entrance" class="block active">
-        <img src="door_1.jpg" id="main-door" onclick="handleDoor()">
+        <img src="door_1.jpg" id="main-door" onclick="unlockAndEnter()">
     </div>
 
     <div id="block-welcome" class="block" style="justify-content: flex-start; padding-top: 8vh;">
         <div class="quote-text">«В каждой шутке есть доля виски»</div>
         <img src="horse_welcome.png" class="welcome-img">
         <div style="font-family:'Playfair Display'; font-size:32px; letter-spacing:8px; font-style:italic;">WELCOME</div>
-        <button id="btn-w-hall" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">ПРОХОДИТЕ В ХОЛЛ</button>
+        <button id="btn-w-hall" class="btn-gy" style="opacity:0.15; pointer-events:none;" onclick="portalTransition('block-hall')">ПРОХОДИТЕ В ХОЛЛ</button>
         <button class="btn-gy" onclick="portalTransition('block-identity')">ПОЛУЧИТЬ ID</button>
     </div>
 
@@ -83,20 +82,19 @@
             </div>
         </div>
         <button id="btn-save" class="btn-gy" onclick="finalizeReg()">СОХРАНИТЬ</button>
-        <button id="btn-pass" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">ПРОЙТИ В ХОЛЛ</button>
+        <button id="btn-pass" class="btn-gy" style="display:none;" onclick="portalTransition('block-hall')">ПРОЙТИ В ХОЛЛ</button>
     </div>
 
     <div id="block-hall" class="block">
         <div style="position:absolute; inset:0; background:url('hall_bg_jpg.jpg') center/cover; z-index:15;"></div>
-        <div style="position:absolute; top: 10%; width: 100%; text-align: center; color: #3E2723; font-size: 32px; font-weight: 900; font-style: italic; font-family: 'Playfair Display', serif; z-index: 25;">«Всё будет GY-GY»</div>
         <div class="id-card-hall">
             <div id="h-id" style="font-weight:900; font-size:14px; margin-bottom:10px;">#ID</div>
             <div style="display:flex; gap:10px; margin-bottom:10px;">
                 <div class="box-final"><img id="h-photo" style="width:100%; height:100%; object-fit:cover;"></div>
                 <div class="box-final" id="h-qr"></div>
             </div>
-            <button id="btn-confirm" class="btn-gy" style="min-width:100%; border-color:#000; color:#000;" onclick="swapButtons('btn-confirm', 'btn-enter-bar')">ПОДТВЕРДИТЬ</button>
-            <button id="btn-enter-bar" class="btn-gy btn-sleep" style="min-width:100%; border-color:#000; color:#000; display:none;" onclick="portalTransition('block-bar')">ВХОД В БАР</button>
+            <button id="btn-confirm" class="btn-gy" style="min-width:100%; border-color:#000; color:#000;" onclick="confirmIdentity()">ПОДТВЕРДИТЬ</button>
+            <button id="btn-enter-bar" class="btn-gy" style="min-width:100%; border-color:#000; color:#000; display:none;" onclick="portalTransition('block-bar')">ВХОД В БАР</button>
         </div>
     </div>
 
@@ -112,55 +110,50 @@
     </div>
 
     <div id="block-tables" class="block">
-        <div class="lamp-zone" style="bottom: 50%; left: 50%;" onclick="alert('Столик забронирован!')"></div>
-        <div class="lamp-zone" style="bottom: 25%; left: 35%;" onclick="alert('Меню GY-GY в разработке')"></div>
+        <div class="lamp-zone" style="bottom: 50%; left: 50%;" onclick="alert('Забронировано')"></div>
     </div>
 
     <script>
         let currentID = "";
         let finalImageData = "";
-        const amb = document.getElementById('snd-ambient');
-        const srv = document.getElementById('snd-server');
-        const door = document.getElementById('snd-door');
-        const khe = document.getElementById('snd-khe');
+        let audioCtx, ambNode, srvNode, gainAmb, gainSrv;
 
-        // Глобальная очистка интервалов для плавности
-        function clearFades(audio) {
-            if (audio.fadeInterval) clearInterval(audio.fadeInterval);
+        // Инициализация звука при первом клике (обход блокировки браузера)
+        function initAudio() {
+            if (audioCtx) return;
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            
+            const rawAmb = document.getElementById('raw-ambient');
+            const rawSrv = document.getElementById('raw-server');
+            
+            ambNode = audioCtx.createMediaElementSource(rawAmb);
+            srvNode = audioCtx.createMediaElementSource(rawSrv);
+            
+            gainAmb = audioCtx.createGain();
+            gainSrv = audioCtx.createGain();
+            
+            ambNode.connect(gainAmb).connect(audioCtx.destination);
+            srvNode.connect(gainSrv).connect(audioCtx.destination);
+            
+            gainAmb.gain.value = 0;
+            gainSrv.gain.value = 0;
+            
+            rawAmb.play();
+            rawSrv.play();
         }
 
-        function fadeTo(audio, targetVol, duration) {
-            clearFades(audio);
-            if (targetVol > 0 && audio.paused) audio.play().catch(e => console.log("Audio play blocked"));
-            
-            const startVol = audio.volume;
-            const step = (targetVol - startVol) / (duration / 50);
-            
-            audio.fadeInterval = setInterval(() => {
-                let newVal = audio.volume + step;
-                if ((step > 0 && newVal >= targetVol) || (step < 0 && newVal <= targetVol)) {
-                    audio.volume = targetVol;
-                    if (targetVol === 0) audio.pause();
-                    clearInterval(audio.fadeInterval);
-                } else {
-                    audio.volume = Math.max(0, Math.min(1, newVal));
-                }
-            }, 50);
-        }
-
-        function handleDoor() {
-            door.play().catch(()=>{});
-            const dImg = document.getElementById('main-door');
-            dImg.style.transform = "scale(8) translateZ(0)";
-            dImg.style.opacity = "0";
+        function unlockAndEnter() {
+            initAudio();
+            document.getElementById('raw-door').play();
+            const d = document.getElementById('main-door');
+            d.style.transform = "scale(8)"; d.style.opacity = "0";
             
             currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
             document.getElementById('id-label').innerText = currentID;
 
-            // Звук бара включается СРАЗУ при клике на дверь, чтобы браузер разрешил аудио
-            amb.volume = 0;
-            amb.play().then(() => fadeTo(amb, 0.4, 4000)).catch(e => console.log("Unlock sound on click"));
-
+            // Плавное появление звука бара через Web Audio
+            gainAmb.gain.setTargetAtTime(0.3, audioCtx.currentTime, 1.5);
+            
             setTimeout(() => { portalTransition('block-welcome'); }, 1500);
         }
 
@@ -182,73 +175,64 @@
                 }
 
                 setTimeout(() => { 
-                    next.classList.add('active'); 
-                    next.style.opacity = "1";
-                    next.style.pointerEvents = "auto";
+                    next.classList.add('active'); next.style.opacity = "1"; next.style.pointerEvents = "auto";
                     
                     if (nextId === 'block-bar') {
-                        fadeTo(amb, 0.8, 1200);
-                        fadeTo(srv, 0, 1000);
-                        setTimeout(() => khe.play(), 600);
+                        gainAmb.gain.setTargetAtTime(0.8, audioCtx.currentTime, 0.5);
+                        gainSrv.gain.setTargetAtTime(0, audioCtx.currentTime, 0.3);
+                        document.getElementById('raw-khe').play();
                     }
-                    if (nextId === 'block-hall') fadeTo(amb, 0.4, 1000);
-                    if (nextId === 'block-tables') fadeTo(amb, 0.3, 1000);
+                    if (nextId === 'block-hall') gainAmb.gain.setTargetAtTime(0.3, audioCtx.currentTime, 0.5);
                 }, 50);
             }, 800);
         }
 
         function deepDive() {
-            // Мгновенный запуск сервера для синхронизации
-            srv.volume = 0;
-            srv.play().catch(()=>{});
-            
-            fadeTo(amb, 0, 2000);
-            fadeTo(srv, 0.7, 2500);
+            // Кроссфейд: Бар вниз, Сервер вверх
+            gainAmb.gain.setTargetAtTime(0, audioCtx.currentTime, 1.0);
+            gainSrv.gain.setTargetAtTime(0.7, audioCtx.currentTime, 1.5);
 
             document.body.style.transition = "opacity 2s, filter 2s";
             document.body.style.opacity = "0";
             document.body.style.filter = "blur(20px)";
 
             setTimeout(() => { 
-                // Сохраняем состояние звука в localStorage для bridge_protocol.html
-                localStorage.setItem('gygy_audio_time', srv.currentTime);
+                // Сохраняем прогресс звука
+                localStorage.setItem('gygy_audio_time', document.getElementById('raw-server').currentTime);
                 window.location.href = 'bridge_protocol.html'; 
             }, 2200);
         }
 
-        // --- ФУНКЦИИ РЕГИСТРАЦИИ (БЕЗ ЧИСТОК) ---
+        // --- ЛОГИКА РЕГИСТРАЦИИ (БЕЗ ЧИСТОК) ---
         function preview(i) {
             if(i.files && i.files[0]) {
                 const r = new FileReader();
                 r.onload = (e) => { 
                     document.getElementById('pp').src = e.target.result; document.getElementById('pp').style.display = "block";
                     document.getElementById('txt-photo').style.display = "none";
-                    document.getElementById('av').style.display = "none";
-                    document.getElementById('txt-avatar').style.display = "block";
                     finalImageData = e.target.result;
                 };
                 r.readAsDataURL(i.files[0]);
             }
         }
         function generateAvatar() {
-            const url = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${Math.random()}&backgroundColor=d4af37`;
+            const url = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${Math.random()}`;
             document.getElementById('av').src = url; document.getElementById('av').style.display = "block";
             document.getElementById('txt-avatar').style.display = "none";
-            document.getElementById('pp').style.display = "none";
-            document.getElementById('txt-photo').style.display = "block";
             finalImageData = url;
         }
         function finalizeReg() {
             document.getElementById('h-id').innerText = currentID;
             document.getElementById('h-photo').src = finalImageData || "";
             document.getElementById('h-qr').innerHTML = document.getElementById('qr-box-reg').innerHTML;
-            swapButtons('btn-save', 'btn-pass');
-            document.getElementById('btn-w-hall').classList.remove('btn-sleep');
+            document.getElementById('btn-save').style.display = 'none';
+            document.getElementById('btn-pass').style.display = 'block';
+            document.getElementById('btn-w-hall').style.opacity = "1";
+            document.getElementById('btn-w-hall').style.pointerEvents = "auto";
         }
-        function swapButtons(a, s) { 
-            document.getElementById(a).style.display = 'none';
-            document.getElementById(s).classList.remove('btn-sleep');
-            document.getElementById(s).style.display = 'block';
+        function confirmIdentity() {
+            document.getElementById('btn-confirm').style.display = 'none';
+            document.getElementById('btn-enter-bar').style.display = 'block';
         }
         function googleTranslateElementInit() { 
             new google.translate.TranslateElement({pageLanguage: 'ru', autoDisplay: false}, 'google_translate_element'); 
