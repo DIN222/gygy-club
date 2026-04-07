@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.62 | UI RESTORED</title>
+    <title>GY-GY Club v4.4.63 | AUDIO RESTORED</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -40,7 +40,6 @@
         #block-tables { background: url('lounge.jpg') no-repeat center bottom / contain #000; }
         .lamp-zone { position: absolute; width: 40px; height: 40px; border-radius: 50%; background: radial-gradient(circle, var(--neon-glow) 0%, transparent 70%); border: 1px solid var(--violet); box-shadow: 0 0 15px var(--neon-glow); transform: translate(-50%, -50%); cursor: pointer; }
 
-        /* ИСПРАВЛЕННЫЙ КОНТЕЙНЕР КНОПОК В БАРЕ */
         .bar-ui-overlay { 
             position: absolute; bottom: 8vh; left: 50%; transform: translateX(-50%); 
             width: 100%; max-width: 380px; z-index: 1000; pointer-events: none; 
@@ -59,6 +58,7 @@
     <audio id="snd-door" preload="auto"><source src="door_open.mp3" type="audio/mpeg"></audio>
     <audio id="snd-ambient" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
     <audio id="snd-khe" preload="auto"><source src="charlie_bar_fx.mp3" type="audio/mpeg"></audio>
+    <audio id="snd-pour" preload="auto"><source src="pour_whisky.mp3" type="audio/mpeg"></audio>
     <audio id="snd-server" loop preload="auto"><source src="server_room_hum.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active">
@@ -136,7 +136,6 @@
 
             if(current) { current.style.opacity = "0"; current.style.pointerEvents = "none"; }
             
-            // Кнопка возврата только для столиков
             backBtn.style.display = (nextId === 'block-tables') ? "block" : "none";
             setTimeout(() => { if(nextId === 'block-tables') backBtn.style.opacity = "1"; }, 100);
 
@@ -157,7 +156,9 @@
                     
                     if (nextId === 'block-bar') {
                         fadeAudio(amb, 0.8, 1000);
-                        setTimeout(() => document.getElementById('snd-khe').play(), 500);
+                        // Эффекты присутствия Чарли
+                        setTimeout(() => document.getElementById('snd-khe').play(), 600);
+                        setTimeout(() => document.getElementById('snd-pour').play(), 2500);
                     }
                     if (nextId === 'block-tables') fadeAudio(amb, 0.2, 1000);
                     if (nextId === 'block-hall') fadeAudio(amb, 0.3, 1000);
@@ -166,15 +167,26 @@
         }
 
         function handleDoor() {
+            // Принудительная активация аудио-контекста для всех звуков бара
+            const amb = document.getElementById('snd-ambient');
+            const khe = document.getElementById('snd-khe');
+            const pour = document.getElementById('snd-pour');
+            
+            [amb, khe, pour].forEach(s => { 
+                s.play().then(() => s.pause()).catch(() => {}); 
+                s.volume = 0;
+            });
+
             document.getElementById('snd-door').play().catch(()=>{});
             const d = document.getElementById('main-door');
             d.style.transform = "scale(5)"; d.style.opacity = "0";
+            
             currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
             document.getElementById('id-label').innerText = currentID;
+            
             setTimeout(() => { 
                 portalTransition('block-welcome'); 
-                const amb = document.getElementById('snd-ambient');
-                amb.volume = 0; amb.play().catch(()=>{});
+                amb.play().catch(()=>{});
                 fadeAudio(amb, 0.3, 3000);
             }, 1500);
         }
@@ -194,11 +206,13 @@
         }
 
         function fadeAudio(audio, target, duration) {
+            if(!audio) return;
+            clearInterval(audio.fader);
             const start = audio.volume; const startTime = Date.now();
-            const interval = setInterval(() => {
+            audio.fader = setInterval(() => {
                 const progress = Math.min((Date.now() - startTime) / duration, 1);
                 audio.volume = start + (target - start) * progress;
-                if (progress === 1) clearInterval(interval);
+                if (progress === 1) clearInterval(audio.fader);
             }, 50);
         }
 
