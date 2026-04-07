@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY CLUB v5.1.5 | index_FIX</title>
+    <title>GY-GY CLUB v5.1.6 | index_FIX</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
@@ -49,11 +49,14 @@
         <img src="door_1.jpg" id="main-door" onclick="GY_Core.initEngine()">
     </div>
 
-    <div id="block-welcome" class="block">
+  <div id="block-welcome" class="block">
+        <h1 style="font-family: 'Playfair Display'; color: var(--gold); font-size: 40px; margin: 0; letter-spacing: 10px;">WELCOME</h1>
         <div class="quote">«В каждой шутке есть доля виски»</div>
-        <img src="horse_welcome.png" style="height: 38vh; margin-bottom: 20px;">
-        <button id="btn-to-hall-wait" class="btn-gy btn-sleep" onclick="GY_Nav.go('block-hall')">В ХОЛЛ</button>
-        <button class="btn-gy" onclick="GY_Nav.go('block-reg')">РЕГИСТРАЦИЯ</button>
+        <img src="horse_welcome.png" style="height: 35vh; margin-bottom: 20px; filter: drop-shadow(0 0 15px var(--gold));">
+        <div style="display:flex; gap:10px;">
+            <button id="btn-to-hall-wait" class="btn-gy btn-sleep" onclick="GY_Nav.go('block-hall')">В ХОЛЛ</button>
+            <button class="btn-gy" onclick="GY_Nav.go('block-reg')">РЕГИСТРАЦИЯ</button>
+        </div>
     </div>
 
     <div id="block-reg" class="block">
@@ -181,24 +184,37 @@ function googleTranslateElementInit() {
             btn.classList.remove('btn-sleep');
         }
     };
-
-    const GY_Nav = {
+const GY_Nav = {
         go(to) {
             const active = document.querySelector('.block.active');
-            const masterBtn = document.getElementById('master-back');
             if(active) { active.style.opacity = 0; active.style.pointerEvents = 'none'; }
-            masterBtn.style.display = (to === 'block-tables') ? 'block' : 'none';
-            setTimeout(() => { if(to === 'block-tables') masterBtn.style.opacity = 1; }, 100);
+            
             setTimeout(() => {
                 if(active) active.classList.remove('active');
                 const next = document.getElementById(to);
                 next.style.display = 'flex';
+                
+                // СИЛОВОЙ ЗАПУСК ЗВУКА ПРИ ПЕРЕХОДЕ
+                if(to === 'block-welcome' || to === 'block-bar') {
+                    const amb = document.getElementById('s-amb');
+                    if (amb && amb.paused) {
+                        amb.play().catch(() => console.log("Ждем клика для звука"));
+                        GY_Audio.fade('amb', 0.3, 2000);
+                    }
+                }
+
                 setTimeout(() => {
-                    next.classList.add('active'); next.style.opacity = 1; next.style.pointerEvents = 'auto';
-                    this.onBlockChange(to);
+                    next.classList.add('active'); 
+                    next.style.opacity = 1; 
+                    next.style.pointerEvents = 'auto';
                 }, 50);
             }, 600);
-        },
+        }
+    };
+
+    // Обновите HTML-блок Welcome, чтобы добавить слово WELCOME
+    // Просто найдите <div id="block-welcome" ...> и замените его содержимое:
+ 
         onBlockChange(id) {
             if(id === 'block-bar') {
                 GY_Audio.play('amb', 0);
