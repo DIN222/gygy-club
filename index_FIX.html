@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY CLUB v5.1.1 | index_FIX</title>
+    <title>GY-GY CLUB v5.1.2 | index_FIX</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
@@ -102,23 +102,25 @@
     <div id="block-tables" class="block" style="background:url('lounge.jpg') center bottom/contain no-repeat;"></div>
 
     <script>
-    function googleTranslateElementInit() { 
+function googleTranslateElementInit() { 
         new google.translate.TranslateElement({pageLanguage: 'ru', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element'); 
     }
 
     const GY_Audio = {
         s: {},
         init() {
+            // ИСПРАВЛЕНО: соответствие ID в HTML (s-door, s-amb и т.д.)
             this.s.door = document.getElementById('s-door');
             this.s.amb = document.getElementById('s-amb');
             this.s.khe = document.getElementById('s-khe');
             this.s.pour = document.getElementById('s-pour');
-            console.log("✅ Модуль Аудио: Инициализирован");
+            console.log("✅ Аудио готово");
         },
         play(key, vol = 1) {
-            if(this.s[key]) {
-                this.s[key].volume = vol;
-                this.s[key].play().catch(() => console.warn(`🔇 Звук ${key} заблокирован браузером`));
+            const track = this.s[key];
+            if(track) {
+                track.volume = vol;
+                track.play().catch(e => console.warn("Блокировка звука:", e));
             }
         },
         fade(key, target, time) {
@@ -143,7 +145,6 @@
             const qr = document.getElementById('reg-qr-wrap');
             qr.innerHTML = "";
             new QRCode(qr, { text: this.id, width: 95, height: 95 });
-            console.log(`🆔 ID Создан: ${this.id}`);
         },
         handleFile(input) {
             if (input.files && input.files[0]) {
@@ -153,7 +154,6 @@
                     img.src = e.target.result; img.style.display = 'block';
                     document.getElementById('reg-label-photo').style.display = 'none';
                     this.pic = e.target.result;
-                    console.log("📸 Фото загружено");
                 };
                 r.readAsDataURL(input.files[0]);
             }
@@ -164,24 +164,21 @@
             img.src = url; img.style.display = 'block';
             document.getElementById('reg-label-av').style.display = 'none';
             this.pic = url;
-            console.log("🤖 Аватар сгенерирован");
         },
         finalize() {
-            if(!this.pic) return alert("Шеф, без лица не пустим!");
+            if(!this.pic) return alert("Шеф, выбери фото!");
             document.getElementById('hall-id-display').innerText = this.id;
             document.getElementById('hall-pic').src = this.pic;
             document.getElementById('hall-qr').innerHTML = document.getElementById('reg-qr-wrap').innerHTML;
             document.getElementById('reg-btn-save').style.display = 'none';
             document.getElementById('reg-btn-next').classList.remove('btn-sleep');
             document.getElementById('btn-to-hall-wait').classList.remove('btn-sleep');
-            console.log("💾 Данные сохранены");
         },
         verify() {
             document.getElementById('hall-btn-confirm').style.display = 'none';
             const btn = document.getElementById('hall-btn-enter');
             btn.style.display = 'block';
             btn.classList.remove('btn-sleep');
-            console.log("🛡️ Верификация пройдена");
         }
     };
 
@@ -201,10 +198,10 @@
                     this.onBlockChange(to);
                 }, 50);
             }, 600);
-            console.log(`🚀 Переход: ${to}`);
         },
         onBlockChange(id) {
             if(id === 'block-bar') {
+                GY_Audio.play('amb', 0);
                 GY_Audio.fade('amb', 0.8, 1000);
                 setTimeout(() => GY_Audio.play('khe'), 700);
                 setTimeout(() => GY_Audio.play('pour'), 2500);
@@ -217,17 +214,24 @@
     const GY_Core = {
         initEngine() {
             GY_Audio.init();
-            Object.values(GY_Audio.s).forEach(track => { track.play(); track.pause(); track.volume = 0; });
-            GY_Audio.play('door');
+            
+            // ИСПРАВЛЕНО: Принудительная разблокировка звука при клике
+            const unlock = () => {
+                Object.values(GY_Audio.s).forEach(t => { t.play(); t.pause(); t.currentTime = 0; });
+                document.removeEventListener('click', unlock);
+            };
+            unlock();
+
+            GY_Audio.play('door'); // Звук двери
+            
             document.getElementById('main-door').style.transform = "scale(8) rotate(5deg)";
             document.getElementById('main-door').style.opacity = "0";
+            
             GY_Identity.create();
+            
             setTimeout(() => {
                 GY_Nav.go('block-welcome');
-                GY_Audio.play('amb', 0);
-                GY_Audio.fade('amb', 0.3, 3000);
             }, 1500);
-            console.log("🔥 GY-GY Core Online");
         },
         deepDive() {
             GY_Audio.fade('amb', 0, 1000);
