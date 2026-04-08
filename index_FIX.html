@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY CLUB v5.1.9 | index_FIX</title>
+    <title>GY-GY CLUB v5.1.10 | index_FIX</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
@@ -31,24 +31,29 @@
     justify-content: center;
 }
         .btn-gy {
-            padding: 10px 20px; /* Было 12/25 */
-            font-size: 14px;    /* Было 16 */
+            padding: 8px 18px;
+            font-size: 13px;
             font-family: 'Share Tech Mono', monospace;
             background: transparent;
             color: var(--gold);
             border: 1px solid var(--gold);
             cursor: pointer;
-            transition: 0.3s;
+            transition: 0.2s;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            /* Анимация pulse удалена */
+            letter-spacing: 1.5px;
+            box-shadow: none !important; /* Убираем любую подсветку */
+            outline: none;
         }
         .btn-gy:hover {
             background: var(--gold);
             color: black;
-            box-shadow: 0 0 15px var(--gold);
+            box-shadow: none !important; /* Даже при наведении никакой подсветки */
         }
-        .btn-sleep { opacity: 0.2 !important; pointer-events: none !important; filter: grayscale(1); }
+        .btn-sleep {
+            opacity: 0.3;
+            filter: grayscale(1);
+            pointer-events: none;
+        }
 
         #main-door { width: 260px; cursor: pointer; transition: 2s cubic-bezier(0.4, 0, 0.2, 1); z-index: 9999; filter: drop-shadow(0 0 20px rgba(212,175,55,0.3)); }
         .quote { font-family: 'Playfair Display', serif; font-style: italic; font-size: 24px; text-align: center; padding: 0 30px; margin-bottom: 25px; line-height: 1.3; }
@@ -134,7 +139,7 @@
         new google.translate.TranslateElement({pageLanguage: 'ru', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element'); 
     }
 
-    const GY_Identity = {
+   const GY_Identity = {
         id: "",
         create() {
             this.id = `#GY-${Math.floor(100+Math.random()*899)}-2026`;
@@ -143,76 +148,82 @@
             const qr = document.getElementById('reg-qr-wrap');
             if(qr) { qr.innerHTML = ""; new QRCode(qr, { text: this.id, width: 95, height: 95 }); }
         },
+        // ФУНКЦИЯ ЗАГРУЗКИ ФОТО
         uploadPhoto() {
             const input = document.createElement('input');
-            input.type = 'file'; input.accept = 'image/*';
+            input.type = 'file';
+            input.accept = 'image/*';
             input.onchange = e => {
+                const file = e.target.files[0];
+                if(!file) return;
                 const reader = new FileReader();
-                reader.onload = ev => { document.getElementById('reg-avatar-main').src = ev.target.result; this.unlockHall(); };
-                reader.readAsDataURL(e.target.files[0]);
+                reader.onload = ev => {
+                    document.getElementById('reg-avatar-main').src = ev.target.result;
+                    this.unlockHall();
+                };
+                reader.readAsDataURL(file);
             };
             input.click();
         },
+        // ФУНКЦИЯ АВАТАРА
         setAvatar() {
-            const url = `https://api.dicebear.com/7.x/bottts/svg?seed=${Math.random()}`;
-            document.getElementById('reg-avatar-main').src = url;
+            const seed = Math.random().toString(36).substring(7);
+            document.getElementById('reg-avatar-main').src = `https://api.dicebear.com/7.x/bottts/svg?seed=${seed}`;
             this.unlockHall();
         },
         unlockHall() {
             const btn = document.getElementById('btn-to-hall-wait');
-            if(btn) { btn.classList.remove('btn-sleep'); btn.style.opacity = "1"; btn.innerText = "ВХОД В ХОЛЛ"; }
-        }
-    };
-
-    const GY_Nav = {
-        go(to) {
-            const active = document.querySelector('.block.active');
-            if(active) { active.style.opacity = 0; active.style.pointerEvents = 'none'; }
-            setTimeout(() => {
-                if(active) active.classList.remove('active');
-                const next = document.getElementById(to);
-                if(next) {
-                    next.style.display = 'flex';
-                    setTimeout(() => { next.classList.add('active'); next.style.opacity = 1; next.style.pointerEvents = 'auto'; }, 50);
-                }
-            }, 600);
+            if(btn) {
+                btn.classList.remove('btn-sleep');
+                btn.innerText = "ВХОД В ХОЛЛ";
+                btn.style.opacity = "1";
+            }
         }
     };
 
     const GY_Core = {
         initEngine() {
-            // ЗВУК
-            new Audio('door_open.mp3').play().catch(() => {});
-            window.clubAmb = new Audio('bar_ambient.mp3');
-            window.clubAmb.loop = true; window.clubAmb.volume = 0;
-            window.clubAmb.play().then(() => {
-                let v = 0;
-                let f = setInterval(() => { v += 0.02; window.clubAmb.volume = v; if(v >= 0.3) clearInterval(f); }, 100);
-            }).catch(() => {});
+            // Пытаемся запустить аудио через существующие теги (самый надежный путь)
+            const sDoor = document.getElementById('s-door');
+            const sAmb = document.getElementById('s-amb');
 
-            // ДВЕРЬ
-            const door = document.getElementById('main-door');
-            if(door) { door.style.transform = "scale(12)"; door.style.opacity = "0"; door.style.pointerEvents = "none"; }
+            if(sDoor) { sDoor.volume = 1; sDoor.play().catch(e => console.log("Audio fail")); }
+            
+            if(sAmb) {
+                sAmb.volume = 0;
+                sAmb.play().then(() => {
+                    let v = 0;
+                    let f = setInterval(() => {
+                        v += 0.02;
+                        sAmb.volume = v;
+                        if(v >= 0.3) clearInterval(f);
+                    }, 100);
+                }).catch(e => console.log("Amb fail"));
+            }
+
+            const doorImg = document.getElementById('main-door');
+            if(doorImg) {
+                doorImg.style.transform = "scale(12)";
+                doorImg.style.opacity = "0";
+                doorImg.style.pointerEvents = "none";
+            }
             
             GY_Identity.create();
             setTimeout(() => { GY_Nav.go('block-welcome'); }, 1500);
         }
     };
 
-    // АВТОРЕАНИМАТОР (Запускает клики и Язык)
+    // Привязываем всё при загрузке страницы
     window.onload = () => {
-        // Оживляем дверь
-        const d = document.getElementById('main-door');
-        if(d) d.onclick = () => GY_Core.initEngine();
-        
-        // Оживляем кнопки регистрации (находим их по тексту, если ID нет)
-        const btns = document.querySelectorAll('.btn-gy');
-        btns.forEach(b => {
-            if(b.innerText.includes("ФОТО")) b.onclick = () => GY_Identity.uploadPhoto();
-            if(b.innerText.includes("АВАТАР")) b.onclick = () => GY_Identity.setAvatar();
+        const door = document.getElementById('main-door');
+        if(door) door.onclick = () => GY_Core.initEngine();
+
+        // Ищем кнопки в регистрации и даем им команды
+        const regBtns = document.querySelectorAll('#block-reg .btn-gy');
+        regBtns.forEach(btn => {
+            if(btn.innerText.includes("ФОТО")) btn.onclick = () => GY_Identity.uploadPhoto();
+            if(btn.innerText.includes("АВАТАР")) btn.onclick = () => GY_Identity.setAvatar();
         });
-        
-        console.log("✅ Клуб GY-GY готов к работе. Язык и Дверь активны.");
     };
     </script>
     
