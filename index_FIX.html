@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY CLUB v5.1.6 | index_FIX</title>
+    <title>GY-GY CLUB v5.1.7 | index_FIX</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
@@ -49,10 +49,10 @@
         <img src="door_1.jpg" id="main-door" onclick="GY_Core.initEngine()">
     </div>
 
-  <div id="block-welcome" class="block">
-        <h1 style="font-family: 'Playfair Display'; color: var(--gold); font-size: 40px; margin: 0; letter-spacing: 10px;">WELCOME</h1>
+<div id="block-welcome" class="block">
+        <h1 style="font-family: 'Playfair Display'; color: var(--gold); font-size: 45px; margin-bottom: 0; letter-spacing: 8px;">WELCOME</h1>
         <div class="quote">«В каждой шутке есть доля виски»</div>
-        <img src="horse_welcome.png" style="height: 35vh; margin-bottom: 20px; filter: drop-shadow(0 0 15px var(--gold));">
+        <img src="horse_welcome.png" style="height: 35vh; margin-bottom: 20px;">
         <div style="display:flex; gap:10px;">
             <button id="btn-to-hall-wait" class="btn-gy btn-sleep" onclick="GY_Nav.go('block-hall')">В ХОЛЛ</button>
             <button class="btn-gy" onclick="GY_Nav.go('block-reg')">РЕГИСТРАЦИЯ</button>
@@ -112,19 +112,13 @@ function googleTranslateElementInit() {
     const GY_Audio = {
         s: {},
         init() {
-            // ИСПРАВЛЕНО: соответствие ID в HTML (s-door, s-amb и т.д.)
             this.s.door = document.getElementById('s-door');
             this.s.amb = document.getElementById('s-amb');
-            this.s.khe = document.getElementById('s-khe');
-            this.s.pour = document.getElementById('s-pour');
-            console.log("✅ Аудио готово");
+            console.log("✅ Аудио-узлы найдены");
         },
         play(key, vol = 1) {
             const track = this.s[key];
-            if(track) {
-                track.volume = vol;
-                track.play().catch(e => console.warn("Блокировка звука:", e));
-            }
+            if(track) { track.volume = vol; track.play().catch(() => {}); }
         },
         fade(key, target, time) {
             const track = this.s[key];
@@ -148,43 +142,10 @@ function googleTranslateElementInit() {
             const qr = document.getElementById('reg-qr-wrap');
             qr.innerHTML = "";
             new QRCode(qr, { text: this.id, width: 95, height: 95 });
-        },
-        handleFile(input) {
-            if (input.files && input.files[0]) {
-                const r = new FileReader();
-                r.onload = (e) => {
-                    const img = document.getElementById('reg-img-preview');
-                    img.src = e.target.result; img.style.display = 'block';
-                    document.getElementById('reg-label-photo').style.display = 'none';
-                    this.pic = e.target.result;
-                };
-                r.readAsDataURL(input.files[0]);
-            }
-        },
-        handleAvatar() {
-            const url = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${Math.random()}`;
-            const img = document.getElementById('reg-avatar-preview');
-            img.src = url; img.style.display = 'block';
-            document.getElementById('reg-label-av').style.display = 'none';
-            this.pic = url;
-        },
-        finalize() {
-            if(!this.pic) return alert("Шеф, выбери фото!");
-            document.getElementById('hall-id-display').innerText = this.id;
-            document.getElementById('hall-pic').src = this.pic;
-            document.getElementById('hall-qr').innerHTML = document.getElementById('reg-qr-wrap').innerHTML;
-            document.getElementById('reg-btn-save').style.display = 'none';
-            document.getElementById('reg-btn-next').classList.remove('btn-sleep');
-            document.getElementById('btn-to-hall-wait').classList.remove('btn-sleep');
-        },
-        verify() {
-            document.getElementById('hall-btn-confirm').style.display = 'none';
-            const btn = document.getElementById('hall-btn-enter');
-            btn.style.display = 'block';
-            btn.classList.remove('btn-sleep');
         }
     };
-const GY_Nav = {
+
+    const GY_Nav = {
         go(to) {
             const active = document.querySelector('.block.active');
             if(active) { active.style.opacity = 0; active.style.pointerEvents = 'none'; }
@@ -194,13 +155,10 @@ const GY_Nav = {
                 const next = document.getElementById(to);
                 next.style.display = 'flex';
                 
-                // СИЛОВОЙ ЗАПУСК ЗВУКА ПРИ ПЕРЕХОДЕ
-                if(to === 'block-welcome' || to === 'block-bar') {
-                    const amb = document.getElementById('s-amb');
-                    if (amb && amb.paused) {
-                        amb.play().catch(() => console.log("Ждем клика для звука"));
-                        GY_Audio.fade('amb', 0.3, 2000);
-                    }
+                // Включаем шум бара при переходе к Лошади
+                if(to === 'block-welcome') {
+                    GY_Audio.play('amb', 0);
+                    GY_Audio.fade('amb', 0.3, 2500);
                 }
 
                 setTimeout(() => {
@@ -212,71 +170,42 @@ const GY_Nav = {
         }
     };
 
-    // Обновите HTML-блок Welcome, чтобы добавить слово WELCOME
-    // Просто найдите <div id="block-welcome" ...> и замените его содержимое:
- 
-        onBlockChange(id) {
-            if(id === 'block-bar') {
-                GY_Audio.play('amb', 0);
-                GY_Audio.fade('amb', 0.8, 1000);
-                setTimeout(() => GY_Audio.play('khe'), 700);
-                setTimeout(() => GY_Audio.play('pour'), 2500);
-            }
-            if(id === 'block-hall') GY_Audio.fade('amb', 0.3, 800);
-            if(id === 'block-tables') GY_Audio.fade('amb', 0.1, 1000);
-        }
-    };
-const GY_Core = {
+    const GY_Core = {
         initEngine() {
-            console.log("🔊 Попытка силового запуска звука...");
+            GY_Audio.init();
+            
+            // Пробиваем звук
+            const unlock = () => {
+                Object.values(GY_Audio.s).forEach(t => { if(t){t.play(); t.pause(); t.currentTime = 0;} });
+            };
+            unlock();
 
-            // 1. ПРЯМОЙ ХВАТ ЭЛЕМЕНТОВ (Без посредников)
-            const doorSound = document.getElementById('s-door');
-            const ambSound = document.getElementById('s-amb');
-
-            // 2. МГНОВЕННЫЙ "ПИНОК" ДЛЯ БРАУЗЕРА
-            // Мы заставляем браузер поверить, что пользователь ХОЧЕТ слышать всё
-            if (doorSound) {
-                doorSound.volume = 1;
-                doorSound.play().catch(e => console.error("Ошибка двери:", e));
-            }
-
-            if (ambSound) {
-                ambSound.volume = 0;
-                ambSound.play().then(() => {
-                    // Плавный нарастающий звук бара через прямой интервал
-                    let vol = 0;
-                    const fadeUp = setInterval(() => {
-                        vol += 0.05;
-                        ambSound.volume = vol;
-                        if (vol >= 0.3) clearInterval(fadeUp);
-                    }, 200);
-                }).catch(e => console.error("Ошибка бара:", e));
-            }
-
-            // 3. АНИМАЦИЯ (Та самая, что вам понравилась)
-            const doorImg = document.getElementById('main-door');
-            if (doorImg) {
-                doorImg.style.transform = "scale(10)";
-                doorImg.style.opacity = "0";
-                doorImg.style.pointerEvents = "none";
-            }
-
-            // 4. ГЕНЕРАЦИЯ И ПЕРЕХОД
+            GY_Audio.play('door', 1); 
+            
+            const door = document.getElementById('main-door');
+            door.style.transform = "scale(12)";
+            door.style.opacity = "0";
+            door.style.pointerEvents = "none";
+            
             GY_Identity.create();
-            setTimeout(() => {
-                GY_Nav.go('block-welcome');
-            }, 1500);
+            
+            setTimeout(() => { GY_Nav.go('block-welcome'); }, 1500);
         },
         deepDive() {
-            const amb = document.getElementById('s-amb');
-            if (amb) amb.pause();
-            document.body.style.transition = "2s";
+            GY_Audio.fade('amb', 0, 1000);
             document.body.style.filter = "blur(40px) brightness(0)";
             setTimeout(() => window.location.href = 'bridge_protocol.html', 1800);
         }
     };
 
+    // ГЛАВНЫЙ ФИКС: Принудительно вешаем клик на дверь после загрузки
+    window.onload = () => {
+        const doorImg = document.getElementById('main-door');
+        if(doorImg) {
+            doorImg.onclick = () => GY_Core.initEngine();
+            console.log("🚪 Дверь готова к вышибанию");
+        }
+    };
     </script>
     
     <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
