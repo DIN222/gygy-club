@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY CLUB v5.1.10 | index_FIX</title>
+    <title>GY-GY CLUB v5.1.11 | index_FIX</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
@@ -134,38 +134,39 @@
     <div id="block-tables" class="block" style="background:url('lounge.jpg') center bottom/contain no-repeat;"></div>
 
     <script>
-// 1. Инициализация перевода
+// 1. Инициализация Google Translate
     function googleTranslateElementInit() { 
-        new google.translate.TranslateElement({pageLanguage: 'ru', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element'); 
+        new google.translate.TranslateElement({
+            pageLanguage: 'ru', 
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+        }, 'google_translate_element'); 
     }
 
-   const GY_Identity = {
+    const GY_Identity = {
         id: "",
         create() {
-            this.id = `#GY-${Math.floor(100+Math.random()*899)}-2026`;
+            this.id = `#GY-${Math.floor(100 + Math.random() * 899)}-2026`;
             const el = document.getElementById('reg-id-val');
-            if(el) el.innerText = this.id;
+            if (el) el.innerText = this.id;
             const qr = document.getElementById('reg-qr-wrap');
-            if(qr) { qr.innerHTML = ""; new QRCode(qr, { text: this.id, width: 95, height: 95 }); }
+            if (qr && typeof QRCode !== 'undefined') { 
+                qr.innerHTML = ""; 
+                new QRCode(qr, { text: this.id, width: 95, height: 95 }); 
+            }
         },
-        // ФУНКЦИЯ ЗАГРУЗКИ ФОТО
         uploadPhoto() {
             const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*';
+            input.type = 'file'; input.accept = 'image/*';
             input.onchange = e => {
-                const file = e.target.files[0];
-                if(!file) return;
                 const reader = new FileReader();
-                reader.onload = ev => {
-                    document.getElementById('reg-avatar-main').src = ev.target.result;
-                    this.unlockHall();
+                reader.onload = ev => { 
+                    document.getElementById('reg-avatar-main').src = ev.target.result; 
+                    this.unlockHall(); 
                 };
-                reader.readAsDataURL(file);
+                reader.readAsDataURL(e.target.files[0]);
             };
             input.click();
         },
-        // ФУНКЦИЯ АВАТАРА
         setAvatar() {
             const seed = Math.random().toString(36).substring(7);
             document.getElementById('reg-avatar-main').src = `https://api.dicebear.com/7.x/bottts/svg?seed=${seed}`;
@@ -173,57 +174,89 @@
         },
         unlockHall() {
             const btn = document.getElementById('btn-to-hall-wait');
-            if(btn) {
-                btn.classList.remove('btn-sleep');
-                btn.innerText = "ВХОД В ХОЛЛ";
-                btn.style.opacity = "1";
+            if (btn) { 
+                btn.classList.remove('btn-sleep'); 
+                btn.style.opacity = "1"; 
+                btn.style.pointerEvents = "auto";
+                btn.innerText = "ВХОД В ХОЛЛ"; 
             }
+        }
+    };
+
+    const GY_Nav = {
+        go(to) {
+            const active = document.querySelector('.block.active');
+            if (active) { 
+                active.style.opacity = "0"; 
+                active.style.pointerEvents = "none"; 
+            }
+            
+            setTimeout(() => {
+                if (active) active.classList.remove('active');
+                const next = document.getElementById(to);
+                if (next) {
+                    next.style.display = 'flex';
+                    // Плавное проявление, чтобы не было темного экрана
+                    setTimeout(() => {
+                        next.classList.add('active');
+                        next.style.opacity = "1";
+                        next.style.pointerEvents = "auto";
+                    }, 50);
+                }
+            }, 400);
         }
     };
 
     const GY_Core = {
         initEngine() {
-            // Пытаемся запустить аудио через существующие теги (самый надежный путь)
-            const sDoor = document.getElementById('s-door');
-            const sAmb = document.getElementById('s-amb');
+            // СИЛОВОЙ ЗАПУСК ЗВУКА
+            // Пробуем найти существующие теги или создаем новые
+            let sDoor = document.getElementById('s-door') || new Audio('door_open.mp3');
+            let sAmb = document.getElementById('s-amb') || new Audio('bar_ambient.mp3');
 
-            if(sDoor) { sDoor.volume = 1; sDoor.play().catch(e => console.log("Audio fail")); }
-            
-            if(sAmb) {
-                sAmb.volume = 0;
-                sAmb.play().then(() => {
-                    let v = 0;
-                    let f = setInterval(() => {
-                        v += 0.02;
-                        sAmb.volume = v;
-                        if(v >= 0.3) clearInterval(f);
-                    }, 100);
-                }).catch(e => console.log("Amb fail"));
-            }
+            sDoor.volume = 1;
+            sDoor.play().catch(() => console.log("Звук двери ждет клика"));
 
+            sAmb.loop = true;
+            sAmb.volume = 0;
+            sAmb.play().then(() => {
+                let v = 0;
+                let f = setInterval(() => {
+                    v += 0.02;
+                    sAmb.volume = v;
+                    if (v >= 0.3) clearInterval(f);
+                }, 100);
+            }).catch(() => console.log("Эмбиент заблокирован"));
+
+            // АНИМАЦИЯ ДВЕРИ
             const doorImg = document.getElementById('main-door');
-            if(doorImg) {
+            if (doorImg) {
                 doorImg.style.transform = "scale(12)";
                 doorImg.style.opacity = "0";
                 doorImg.style.pointerEvents = "none";
             }
             
             GY_Identity.create();
-            setTimeout(() => { GY_Nav.go('block-welcome'); }, 1500);
+            // Переход к лошади через 1.2 сек
+            setTimeout(() => { GY_Nav.go('block-welcome'); }, 1200);
         }
     };
 
-    // Привязываем всё при загрузке страницы
+    // ПРИВЯЗКА СОБЫТИЙ (window.onload гарантирует, что всё подгрузилось)
     window.onload = () => {
-        const door = document.getElementById('main-door');
-        if(door) door.onclick = () => GY_Core.initEngine();
-
-        // Ищем кнопки в регистрации и даем им команды
-        const regBtns = document.querySelectorAll('#block-reg .btn-gy');
-        regBtns.forEach(btn => {
-            if(btn.innerText.includes("ФОТО")) btn.onclick = () => GY_Identity.uploadPhoto();
-            if(btn.innerText.includes("АВАТАР")) btn.onclick = () => GY_Identity.setAvatar();
-        });
+        // Дверь
+        const d = document.getElementById('main-door');
+        if (d) d.onclick = () => GY_Core.initEngine();
+        
+        // Кнопки регистрации
+        const regBlock = document.getElementById('block-reg');
+        if (regBlock) {
+            const btns = regBlock.querySelectorAll('.btn-gy');
+            btns.forEach(b => {
+                if (b.innerText.includes("ФОТО")) b.onclick = () => GY_Identity.uploadPhoto();
+                if (b.innerText.includes("АВАТАР")) b.onclick = () => GY_Identity.setAvatar();
+            });
+        }
     };
     </script>
     
