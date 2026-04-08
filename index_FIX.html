@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY  v5.1.26 | index_FIX</title>
+    <title>GY-GY  v5.1.27 | index_FIX</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
@@ -126,6 +126,7 @@
 
     <div id="google_translate_element"></div>
     <div class="ui-brand">GY-GY CLUB</div>
+    
     <button class="btn-back" id="master-back" onclick="GY_Nav.go('block-bar')">НАЗАД В БАР</button>
 
     <div style="display:none;">
@@ -134,7 +135,9 @@
     </div>
 
     <div id="block-entrance" class="block active" style="opacity:1;">
-        <img src="door_1.jpg" id="main-door" onclick="GY_Core.initEngine()">
+        <img src="door_1.jpg" id="main-door" 
+             style="cursor: pointer; position: relative; z-index: 10000; pointer-events: auto;" 
+             onclick="GY_Core.initEngine()">
     </div>
 
     <div id="block-welcome" class="block">
@@ -151,28 +154,40 @@
 
     <div id="block-hall" class="block">
         <div style="position:absolute; inset:0; background:url('hall_bg_jpg.jpg') center/cover; opacity:0.4;"></div>
-        <div class="card-hall" style="z-index:20; background: #F5F5DC; border: 4px solid var(--gold); padding: 20px; color: #000; text-align: center;">
-            <div id="hall-id-display" style="font-weight:900; margin-bottom:15px;">#ID-CHECK</div>
+        
+        <div class="card-hall">
+            <div id="hall-id-display" style="font-weight:900; margin-bottom:15px; letter-spacing:1px; font-family:'Share Tech Mono';">#ID-CHECK</div>
+            
             <div style="display:flex; gap:12px; margin-bottom:20px;">
-                <div class="cell" style="width:85px; height:85px; border:1px solid #000;"><img id="hall-pic" style="width:100%; height:100%; object-fit:cover;"></div>
-                <div class="cell" id="hall-qr" style="width:85px; height:85px; border:1px solid #000;"></div>
+                <div class="cell" style="width:85px; height:85px; border:1px solid #000; background:#fff;">
+                    <img id="hall-pic" style="width:100%; height:100%; object-fit:cover;">
+                </div>
+                <div class="cell" id="hall-qr" style="width:85px; height:85px; border:1px solid #000; background:#fff;"></div>
             </div>
-            <button id="hall-btn-confirm" class="btn-gy" style="border-color:#000; color:#000;" onclick="GY_Identity.verify()">ВЕРИФИКАЦИЯ</button>
+
+            <button id="hall-btn-confirm" class="btn-gy" 
+                    style="border-color:#000; color:#000; width:100%;" 
+                    onclick="GY_Identity.verify()">ПОДТВЕРДИТЬ</button>
+            
+            <button id="hall-btn-enter" class="btn-gy btn-sleep" 
+                    style="border-color:#000; color:#000; width:100%; margin-top:10px; display:none;" 
+                    onclick="GY_Nav.go('block-bar')">ВОЙТИ В БАР</button>
         </div>
     </div>
 
     <div id="block-bar" class="block" style="justify-content: flex-end; background: #000;">
-    <div style="margin-bottom: 6vh; z-index:100; display:flex; flex-direction:column; align-items:center; gap:12px;">
-        <h2 style="color:var(--gold); letter-spacing:5px;">THE CLUB BAR</h2>
-        <div style="display:flex; gap:10px;">
-            <button class="btn-gy" onclick="GY_Nav.go('block-tables')">СТОЛИКИ</button>
-            <button class="btn-gy" onclick="GY_Nav.go('block-hall')">ВЫЙТИ</button>
+        <div style="margin-bottom: 6vh; z-index:100; display:flex; flex-direction:column; align-items:center; gap:12px;">
+            <h2 style="color:var(--gold); letter-spacing:5px; font-family:'Playfair Display';">THE CLUB BAR</h2>
+            <div style="display:flex; gap:10px;">
+                <button class="btn-gy" onclick="GY_Nav.go('block-tables')">СТОЛИКИ</button>
+                <button class="btn-gy" onclick="GY_Nav.go('block-hall')">ВЫЙТИ</button>
+            </div>
         </div>
+        <img src="horse_bar.png" style="height: 75vh; position:relative; z-index:5;">
     </div>
-    <img src="horse_bar.png" style="height: 75vh; position:relative; z-index:5;">
-</div>
 
     <script>
+    /* Сюда вставляем скрипты из предыдущего шага */
 // 1. БЛОК ЯЗЫКА
 function googleTranslateElementInit() { 
     new google.translate.TranslateElement({pageLanguage: 'ru', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element'); 
