@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY CLUB v5.1.16 | index_FIX</title>
+    <title>GY-GY CLUB v5.1.17 | index_FIX</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
@@ -31,25 +31,22 @@
     justify-content: center;
 }
   .btn-gy {
-            padding: 8px 18px;
-            font-size: 13px;
-            font-family: 'Share Tech Mono', monospace;
-            background: transparent !important; /* Всегда прозрачный фон */
-            color: var(--gold);
-            border: 1px solid var(--gold);
-            cursor: pointer;
-            transition: 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            box-shadow: none !important;
-            animation: none !important;
-            outline: none;
-        }
-        .btn-gy:hover {
-            color: white; /* При наведении меняем только цвет текста */
-            border-color: white;
-            background: transparent !important; /* Заливки не будет */
-        }
+    padding: 8px 18px;
+    font-size: 13px;
+    background: transparent !important;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    cursor: pointer;
+    transition: 0.3s;
+    text-transform: uppercase;
+    box-shadow: none !important;
+    animation: none !important;
+}
+.btn-gy:hover {
+    color: white;
+    border-color: white;
+    background: transparent !important;
+}
         .btn-sleep {
             opacity: 0.2;
             filter: grayscale(1);
@@ -87,21 +84,26 @@
         <button class="btn-gy" onclick="GY_Nav.go('block-reg')">РЕГИСТРАЦИЯ</button>
     </div>
 </div>
-<div id="block-reg" class="block">
-    <div class="reg-container">
-        <div style="width:150px; height:150px; border:1px solid var(--gold); margin-bottom:15px;">
-            <img id="reg-avatar-main" src="" style="width:100%; height:100%; object-fit:cover; display:block;">
-        </div>
-        
-        <div style="display:flex; gap:10px;">
-            <button class="btn-gy">ФОТО</button>
-            <button class="btn-gy">АВАТАР</button>
-        </div>
-        
-        <div class="cell-id" id="reg-id-val" style="margin-top:20px; padding:10px; border:2px solid var(--gold);">
-            #GY-000-2026
-        </div>
+<div id="block-reg" class="block" style="display:none; flex-direction:column; align-items:center;">
+    <div style="width:160px; height:160px; border:1px solid var(--gold); margin-bottom:20px; overflow:hidden; background: rgba(212,175,55,0.05); display:flex; align-items:center; justify-content:center;">
+        <img id="reg-avatar-main" src="" style="width:100%; height:100%; object-fit:cover; display:none;">
+        <span id="pic-hint" style="color:var(--gold); opacity:0.5; font-size:10px;">НЕТ ФОТО</span>
     </div>
+
+    <div style="display:flex; gap:15px; margin-bottom:30px;">
+        <button class="btn-gy" onclick="GY_Identity.uploadPhoto()">ФОТО</button>
+        <button class="btn-gy" onclick="GY_Identity.setAvatar()">АВАТАР</button>
+    </div>
+
+    <div style="display:flex; flex-direction:column; align-items:center; gap:15px;">
+        <div class="cell-id" id="reg-id-val" style="min-width:180px; padding:10px; border:2px solid var(--gold); font-family:'Share Tech Mono'; color:var(--gold); text-align:center;">
+            #GY-WAIT-2026
+        </div>
+        <div id="reg-qr-wrap" style="padding:5px; background:white; border:2px solid var(--gold); width:105px; height:105px;">
+            </div>
+    </div>
+
+    <button class="btn-gy" style="margin-top:40px; font-size:10px; border-color:rgba(212,175,55,0.3);" onclick="GY_Nav.go('block-welcome')">НАЗАД</button>
 </div>
     
         <button id="reg-btn-save" class="btn-gy" onclick="GY_Identity.finalize()">СОХРАНИТЬ ДАННЫЕ</button>
@@ -135,13 +137,6 @@
     <div id="block-tables" class="block" style="background:url('lounge.jpg') center bottom/contain no-repeat;"></div>
 
     <script>
-// 1. Инициализация перевода Google
-function googleTranslateElementInit() { 
-    new google.translate.TranslateElement({
-        pageLanguage: 'ru', 
-        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-    }, 'google_translate_element'); 
-}
 const GY_Identity = {
     id: "",
     create() {
@@ -155,32 +150,33 @@ const GY_Identity = {
             new QRCode(qrWrap, { text: this.id, width: 95, height: 95 }); 
         }
     },
-
     uploadPhoto() {
         const input = document.createElement('input');
-        input.type = 'file'; 
-        input.accept = 'image/*';
+        input.type = 'file'; input.accept = 'image/*';
         input.onchange = e => {
-            const file = e.target.files[0];
             const reader = new FileReader();
             reader.onload = ev => { 
                 const img = document.getElementById('reg-avatar-main');
+                const hint = document.getElementById('pic-hint');
                 if(img) {
                     img.src = ev.target.result; 
-                    img.style.objectFit = "cover";
+                    img.style.display = "block";
+                    if(hint) hint.style.display = "none";
                     this.unlockHall(); 
                 }
             };
-            reader.readAsDataURL(file);
+            reader.readAsDataURL(e.target.files[0]);
         };
         input.click();
     },
     setAvatar() {
         const seed = Math.random().toString(36).substring(7);
-        const url = `https://api.dicebear.com/7.x/bottts/svg?seed=${seed}`;
         const img = document.getElementById('reg-avatar-main');
+        const hint = document.getElementById('pic-hint');
         if(img) {
-            img.src = url;
+            img.src = `https://api.dicebear.com/7.x/bottts/svg?seed=${seed}`;
+            img.style.display = "block";
+            if(hint) hint.style.display = "none";
             this.unlockHall();
         }
     },
@@ -189,7 +185,6 @@ const GY_Identity = {
         if (btn) { 
             btn.classList.remove('btn-sleep'); 
             btn.style.opacity = "1"; 
-            btn.style.pointerEvents = "auto";
             btn.innerText = "ВХОД В ХОЛЛ"; 
         }
     }
@@ -197,77 +192,38 @@ const GY_Identity = {
 
 const GY_Nav = {
     go(to) {
-        const active = document.querySelector('.block.active');
-        if (active) { 
-            active.style.opacity = "0"; 
-            active.style.pointerEvents = "none"; 
+        document.querySelectorAll('.block').forEach(b => {
+            b.style.display = 'none';
+            b.classList.remove('active');
+        });
+        const next = document.getElementById(to);
+        if (next) {
+            next.style.display = 'flex';
+            setTimeout(() => { next.classList.add('active'); next.style.opacity = "1"; }, 50);
         }
-        
-        setTimeout(() => {
-            if (active) active.classList.remove('active');
-            const next = document.getElementById(to);
-            if (next) {
-                next.style.display = 'flex';
-                setTimeout(() => {
-                    next.classList.add('active');
-                    next.style.opacity = "1";
-                    next.style.pointerEvents = "auto";
-                }, 50);
-            }
-        }, 400);
     }
 };
 
 const GY_Core = {
-    audioCtx: null,
     initEngine() {
-        // Инициализация AudioContext для обхода блокировок
-        if (!this.audioCtx) {
-            this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
-        if (this.audioCtx.state === 'suspended') {
-            this.audioCtx.resume();
-        }
-
-        // Звук двери
-        const sDoor = new Audio('door_open.mp3');
-        sDoor.play().catch(() => {});
-
-        // Звук бара (Ambience)
+        // Звук
+        new Audio('door_open.mp3').play().catch(() => {});
         window.clubAmb = new Audio('bar_ambient.mp3');
-        window.clubAmb.loop = true;
-        window.clubAmb.volume = 0.4;
-        window.clubAmb.play().catch(e => console.log("Sound blocked"));
+        window.clubAmb.loop = true; window.clubAmb.volume = 0.4;
+        window.clubAmb.play().catch(() => {});
 
-        // Анимация двери
-        const doorImg = document.getElementById('main-door');
-        if (doorImg) {
-            doorImg.style.transform = "scale(12)";
-            doorImg.style.opacity = "0";
-            doorImg.style.pointerEvents = "none";
-        }
+        // Анимация
+        const door = document.getElementById('main-door');
+        if (door) { door.style.transform = "scale(12)"; door.style.opacity = "0"; }
         
         GY_Identity.create();
         setTimeout(() => { GY_Nav.go('block-welcome'); }, 1200);
     }
 };
 
-// ГЛАВНЫЙ ЗАПУСК СОБЫТИЙ
 window.onload = () => {
-    // Дверь
     const d = document.getElementById('main-door');
     if (d) d.onclick = () => GY_Core.initEngine();
-    
-    // Привязка кнопок ФОТО и АВАТАР
-    document.querySelectorAll('.btn-gy').forEach(btn => {
-        const text = btn.innerText.toUpperCase();
-        if (text.includes("ФОТО")) {
-            btn.onclick = (e) => { e.preventDefault(); GY_Identity.uploadPhoto(); };
-        }
-        if (text.includes("АВАТАР")) {
-            btn.onclick = (e) => { e.preventDefault(); GY_Identity.setAvatar(); };
-        }
-    });
 };
     </script>
     
