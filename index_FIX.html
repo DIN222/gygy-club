@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY CLUB v5.1.35</title>
+    <title>GY-GY CLUB v5.1.36</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
@@ -43,19 +43,22 @@
 
     <div id="google_translate_element"></div>
     <div class="ui-brand">GY-GY</div>
+<div id="block-entrance" class="block active">
+    <img src="door_1.jpg" id="main-door" onclick="GY_Core.initEngine()">
+</div>
 
-    <div id="block-entrance" class="block active">
-        <img src="door_1.jpg" id="main-door" onclick="GY_Core.initEngine()">
+<div id="block-welcome" class="block">
+    <div class="quote">«В каждой шутке есть доля виски»</div>
+    <img src="horse_welcome.png" style="height: 35vh; margin-bottom: 20px;">
+    <h1 style="font-family: 'Playfair Display'; color: var(--gold); font-size: 42px; margin: 10px 0; letter-spacing: 8px;">WELCOME</h1>
+    <div style="display:flex; gap:10px; margin-top: 15px;">
+        <button id="btn-to-hall-wait" class="btn-gy btn-sleep" onclick="GY_Nav.go('block-hall')">В ХОЛЛ</button>
+        <button class="btn-gy" onclick="GY_Nav.go('block-reg')">РЕГИСТРАЦИЯ</button>
     </div>
+</div>
 
-    <div id="block-welcome" class="block">
-        <div class="quote">«В каждой шутке есть доля виски»</div>
-        <img src="horse_welcome.png" style="height: 35vh; margin-bottom: 20px;">
-        <div style="display:flex; gap:10px;">
-            <button id="btn-to-hall-wait" class="btn-gy btn-sleep" onclick="GY_Nav.go('block-hall')">В ХОЛЛ</button>
-            <button class="btn-gy" onclick="GY_Nav.go('block-reg')">РЕГИСТРАЦИЯ</button>
-        </div>
-    </div>
+<div id="block-reg" class="block"></div>
+ 
 
     <div id="block-reg" class="block"></div>
 
