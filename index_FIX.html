@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY CLUB v5.1.14 | index_FIX</title>
+    <title>GY-GY CLUB v5.1.15 | index_FIX</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
@@ -30,30 +30,28 @@
     align-items: center;
     justify-content: center;
 }
-   .btn-gy {
+  .btn-gy {
             padding: 8px 18px;
             font-size: 13px;
             font-family: 'Share Tech Mono', monospace;
-            background: transparent;
+            background: transparent !important; /* Всегда прозрачный фон */
             color: var(--gold);
             border: 1px solid var(--gold);
             cursor: pointer;
-            transition: 0.2s;
+            transition: 0.3s;
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            /* Убираем все вспышки и тени */
             box-shadow: none !important;
-            text-shadow: none !important;
             animation: none !important;
             outline: none;
         }
         .btn-gy:hover {
-            background: var(--gold);
-            color: black;
-            box-shadow: none !important;
+            color: white; /* При наведении меняем только цвет текста */
+            border-color: white;
+            background: transparent !important; /* Заливки не будет */
         }
         .btn-sleep {
-            opacity: 0.3;
+            opacity: 0.2;
             filter: grayscale(1);
             pointer-events: none;
         }
@@ -136,128 +134,142 @@
     <div id="block-tables" class="block" style="background:url('lounge.jpg') center bottom/contain no-repeat;"></div>
 
     <script>
+// 1. Инициализация перевода Google
 function googleTranslateElementInit() { 
-        new google.translate.TranslateElement({pageLanguage: 'ru', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element'); 
-    }
+    new google.translate.TranslateElement({
+        pageLanguage: 'ru', 
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+    }, 'google_translate_element'); 
+}
 
-    const GY_Identity = {
-        id: "",
-        create() {
-            this.id = `#GY-${Math.floor(100 + Math.random() * 899)}-2026`;
-            const el = document.getElementById('reg-id-val');
-            if (el) el.innerText = this.id;
-            const qr = document.getElementById('reg-qr-wrap');
-            if (qr && typeof QRCode !== 'undefined') { 
-                qr.innerHTML = ""; 
-                new QRCode(qr, { text: this.id, width: 95, height: 95 }); 
-            }
-        },
-        uploadPhoto() {
-            const input = document.createElement('input');
-            input.type = 'file'; input.accept = 'image/*';
-            input.onchange = e => {
-                const file = e.target.files[0];
-                console.log("📂 Файл выбран:", file.name);
-                const reader = new FileReader();
-                reader.onload = ev => { 
-                    const img = document.getElementById('reg-avatar-main');
-                    if(img) {
-                        img.src = ev.target.result;
-                        console.log("✅ Фото установлено в превью");
-                        this.unlockHall();
-                    }
-                };
-                reader.readAsDataURL(file);
-            };
-            input.click();
-        },
-        setAvatar() {
-            const seed = Math.random().toString(36).substring(7);
-            const url = `https://api.dicebear.com/7.x/bottts/svg?seed=${seed}`;
-            const img = document.getElementById('reg-avatar-main');
-            if(img) {
-                img.src = url;
-                console.log("✅ Аватар сгенерирован:", url);
-                this.unlockHall();
-            }
-        },
-        unlockHall() {
-            const btn = document.getElementById('btn-to-hall-wait');
-            if (btn) { 
-                btn.classList.remove('btn-sleep'); 
-                btn.style.opacity = "1"; 
-                btn.style.pointerEvents = "auto";
-                btn.innerText = "ВХОД В ХОЛЛ"; 
-            }
-        }
-    };
-
-    const GY_Nav = {
-        go(to) {
-            const active = document.querySelector('.block.active');
-            if (active) { active.style.opacity = "0"; active.style.pointerEvents = "none"; }
-            setTimeout(() => {
-                if (active) active.classList.remove('active');
-                const next = document.getElementById(to);
-                if (next) {
-                    next.style.display = 'flex';
-                    setTimeout(() => {
-                        next.classList.add('active');
-                        next.style.opacity = "1";
-                        next.style.pointerEvents = "auto";
-                    }, 50);
-                }
-            }, 400);
-        }
-    };
-
-    const GY_Core = {
-        audioCtx: null,
-        initEngine() {
-            console.log("🔊 Запуск движка...");
-            
-            // СИЛОВОЙ ПРОБРОС АУДИО
-            if (!this.audioCtx) {
-                this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            }
-            if (this.audioCtx.state === 'suspended') {
-                this.audioCtx.resume();
-            }
-
-            const sDoor = new Audio('door_open.mp3');
-            sDoor.play().catch(e => console.warn("Дверь молчит:", e));
-
-            window.clubAmb = new Audio('bar_ambient.mp3');
-            window.clubAmb.loop = true;
-            window.clubAmb.volume = 0.4; // Громкость 40%
-            window.clubAmb.play().then(() => {
-                console.log("🎶 Бар зашумел!");
-            }).catch(e => console.error("Ошибка эмбиента:", e));
-
-            const doorImg = document.getElementById('main-door');
-            if (doorImg) {
-                doorImg.style.transform = "scale(12)";
-                doorImg.style.opacity = "0";
-                doorImg.style.pointerEvents = "none";
-            }
-            
-            GY_Identity.create();
-            setTimeout(() => { GY_Nav.go('block-welcome'); }, 1200);
-        }
-    };
-
-    window.onload = () => {
-        const d = document.getElementById('main-door');
-        if (d) d.onclick = () => GY_Core.initEngine();
+const GY_Identity = {
+    id: "",
+    create() {
+        // Генерация ID
+        this.id = `#GY-${Math.floor(100 + Math.random() * 899)}-2026`;
+        const el = document.getElementById('reg-id-val');
+        if (el) el.innerText = this.id;
         
-        // Прямая привязка кнопок по тексту
-        document.querySelectorAll('.btn-gy').forEach(btn => {
-            const txt = btn.innerText.toUpperCase();
-            if (txt.includes("ФОТО")) btn.onclick = () => GY_Identity.uploadPhoto();
-            if (txt.includes("АВАТАР")) btn.onclick = () => GY_Identity.setAvatar();
-        });
-        console.log("🛡️ Система GY-GY готова к работе.");
-    };
+        // Генерация QR
+        const qrWrap = document.getElementById('reg-qr-wrap');
+        if (qrWrap && typeof QRCode !== 'undefined') { 
+            qrWrap.innerHTML = ""; 
+            new QRCode(qrWrap, { text: this.id, width: 95, height: 95 }); 
+        }
+    },
+    uploadPhoto() {
+        const input = document.createElement('input');
+        input.type = 'file'; 
+        input.accept = 'image/*';
+        input.onchange = e => {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onload = ev => { 
+                const img = document.getElementById('reg-avatar-main');
+                if(img) {
+                    img.src = ev.target.result; 
+                    img.style.objectFit = "cover";
+                    this.unlockHall(); 
+                }
+            };
+            reader.readAsDataURL(file);
+        };
+        input.click();
+    },
+    setAvatar() {
+        const seed = Math.random().toString(36).substring(7);
+        const url = `https://api.dicebear.com/7.x/bottts/svg?seed=${seed}`;
+        const img = document.getElementById('reg-avatar-main');
+        if(img) {
+            img.src = url;
+            this.unlockHall();
+        }
+    },
+    unlockHall() {
+        const btn = document.getElementById('btn-to-hall-wait');
+        if (btn) { 
+            btn.classList.remove('btn-sleep'); 
+            btn.style.opacity = "1"; 
+            btn.style.pointerEvents = "auto";
+            btn.innerText = "ВХОД В ХОЛЛ"; 
+        }
+    }
+};
+
+const GY_Nav = {
+    go(to) {
+        const active = document.querySelector('.block.active');
+        if (active) { 
+            active.style.opacity = "0"; 
+            active.style.pointerEvents = "none"; 
+        }
+        
+        setTimeout(() => {
+            if (active) active.classList.remove('active');
+            const next = document.getElementById(to);
+            if (next) {
+                next.style.display = 'flex';
+                setTimeout(() => {
+                    next.classList.add('active');
+                    next.style.opacity = "1";
+                    next.style.pointerEvents = "auto";
+                }, 50);
+            }
+        }, 400);
+    }
+};
+
+const GY_Core = {
+    audioCtx: null,
+    initEngine() {
+        // Инициализация AudioContext для обхода блокировок
+        if (!this.audioCtx) {
+            this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (this.audioCtx.state === 'suspended') {
+            this.audioCtx.resume();
+        }
+
+        // Звук двери
+        const sDoor = new Audio('door_open.mp3');
+        sDoor.play().catch(() => {});
+
+        // Звук бара (Ambience)
+        window.clubAmb = new Audio('bar_ambient.mp3');
+        window.clubAmb.loop = true;
+        window.clubAmb.volume = 0.4;
+        window.clubAmb.play().catch(e => console.log("Sound blocked"));
+
+        // Анимация двери
+        const doorImg = document.getElementById('main-door');
+        if (doorImg) {
+            doorImg.style.transform = "scale(12)";
+            doorImg.style.opacity = "0";
+            doorImg.style.pointerEvents = "none";
+        }
+        
+        GY_Identity.create();
+        setTimeout(() => { GY_Nav.go('block-welcome'); }, 1200);
+    }
+};
+
+// ГЛАВНЫЙ ЗАПУСК СОБЫТИЙ
+window.onload = () => {
+    // Дверь
+    const d = document.getElementById('main-door');
+    if (d) d.onclick = () => GY_Core.initEngine();
+    
+    // Привязка кнопок ФОТО и АВАТАР
+    document.querySelectorAll('.btn-gy').forEach(btn => {
+        const text = btn.innerText.toUpperCase();
+        if (text.includes("ФОТО")) {
+            btn.onclick = (e) => { e.preventDefault(); GY_Identity.uploadPhoto(); };
+        }
+        if (text.includes("АВАТАР")) {
+            btn.onclick = (e) => { e.preventDefault(); GY_Identity.setAvatar(); };
+        }
+    });
+};
     </script>
     
     <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
