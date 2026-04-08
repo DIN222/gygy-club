@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY CLUB v5.1.7 | index_FIX</title>
+    <title>GY-GY CLUB v5.1.8 | index_FIX</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
@@ -30,8 +30,24 @@
     align-items: center;
     justify-content: center;
 }
-        .btn-gy { min-width: 270px; padding: 16px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; text-transform: uppercase; font-weight: 900; margin: 8px 0; font-family: 'Share Tech Mono'; transition: 0.3s; letter-spacing: 1px; }
-        .btn-gy:active { background: var(--gold); color: #000; transform: scale(0.98); }
+        .btn-gy {
+            padding: 10px 20px; /* Было 12/25 */
+            font-size: 14px;    /* Было 16 */
+            font-family: 'Share Tech Mono', monospace;
+            background: transparent;
+            color: var(--gold);
+            border: 1px solid var(--gold);
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            /* Анимация pulse удалена */
+        }
+        .btn-gy:hover {
+            background: var(--gold);
+            color: black;
+            box-shadow: 0 0 15px var(--gold);
+        }
         .btn-sleep { opacity: 0.2 !important; pointer-events: none !important; filter: grayscale(1); }
 
         #main-door { width: 260px; cursor: pointer; transition: 2s cubic-bezier(0.4, 0, 0.2, 1); z-index: 9999; filter: drop-shadow(0 0 20px rgba(212,175,55,0.3)); }
@@ -178,40 +194,74 @@ function googleTranslateElementInit() {
         }
     };
 const GY_Core = {
+
         initEngine() {
+
             GY_Audio.init();
+
             
+
             // Прямой доступ к звукам
+
             const sDoor = document.getElementById('s-door');
+
             const sAmb = document.getElementById('s-amb');
 
+
+
             // Хлопок двери
+
             if(sDoor) { sDoor.volume = 1; sDoor.play(); }
 
+
+
             // ПРИНУДИТЕЛЬНЫЙ СТАРТ БАРА
+
             if(sAmb) {
+
                 sAmb.volume = 0;
+
                 sAmb.play().then(() => {
+
                     // Плавный подъем громкости через прямой интервал
+
                     let v = 0;
+
                     let f = setInterval(() => {
+
                         v += 0.02;
+
                         sAmb.volume = v;
+
                         if(v >= 0.3) clearInterval(f);
+
                     }, 100);
+
                 }).catch(e => console.log("Звук заблокирован"));
+
             }
+
             
+
             const door = document.getElementById('main-door');
+
             if(door) {
+
                 door.style.transform = "scale(12)";
+
                 door.style.opacity = "0";
+
                 door.style.pointerEvents = "none";
+
             }
+
             
+
             GY_Identity.create();
+
             setTimeout(() => { GY_Nav.go('block-welcome'); }, 1500);
-        },
+
+        }, этот блок заменить
         deepDive() {
             const amb = document.getElementById('s-amb');
             if(amb) amb.pause();
