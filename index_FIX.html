@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY CLUB v5.1.31</title>
+    <title>GY-GY CLUB v5.1.32</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
@@ -77,6 +77,45 @@
     border: 3px solid var(--gold);
     box-shadow: 0 -10px 30px rgba(0,0,0,0.1); /* Тень вверх, так как карта внизу */
 }
+    /* ... тут ваши старые стили ... */
+
+        /* 1. СТИЛИ ДЛЯ РЕГИСТРАЦИИ (КНОПКИ В РЯД) */
+        .reg-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            width: 300px; 
+            margin-top: 20px;
+        }
+
+        /* 2. СВЕТЛЫЙ ХОЛЛ И КАРТОЧКА ВНИЗУ */
+        #block-hall {
+            background: #fdfdfd !important; /* !important гарантирует светлый фон */
+            justify-content: flex-end !important; 
+            padding-bottom: 5vh;
+            pointer-events: none; /* Чтобы фон не мешал кликам */
+        }
+        #block-hall.active { pointer-events: auto; }
+
+        .card-hall {
+            background: #F5F5DC !important;
+            border: 3px solid var(--gold);
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.1);
+        }
+
+        /* 3. ЖИВИТЕЛЬНЫЙ ПИННОК ДЛЯ ДВЕРИ (ВСТАВИТЬ ОБЯЗАТЕЛЬНО) */
+        #block-entrance.active {
+            display: flex !important;
+            z-index: 99999 !important; /* Поднимаем над всеми слоями */
+            pointer-events: auto !important;
+        }
+
+        #main-door {
+            position: relative;
+            z-index: 100000 !important;
+            pointer-events: auto !important;
+            cursor: pointer;
+        }
     </style>
     
 </head>
@@ -92,9 +131,11 @@
         <audio id="s-amb" loop preload="auto"><source src="bar_ambient.mp3"></audio>
     </div>
 
-    <div id="block-entrance" class="block active" style="opacity:1;">
-        <img src="door_1.jpg" id="main-door" onclick="GY_Core.initEngine()">
-    </div>
+   <div id="block-entrance" class="block active" style="opacity:1; display:flex;">
+    <img src="door_1.jpg" id="main-door" 
+         onclick="GY_Core.initEngine()" 
+         style="width: 260px; pointer-events: auto;">
+</div>
 
     <div id="block-welcome" class="block">
         <div class="quote">«В каждой шутке есть доля виски»</div>
@@ -242,30 +283,29 @@ const GY_Nav = {
 
 const GY_Core = {
     initEngine() {
-        console.log("КЛИК ПО ДВЕРИ — ЗАПУСК...");
-        
-        // Пытаемся запустить звук
-        try {
-            const d = document.getElementById('s-door');
-            const a = document.getElementById('s-amb');
-            if(d) d.play();
-            if(a) { a.volume = 0.4; a.play(); }
-        } catch(e) { console.warn("Звук заблокирован до взаимодействия"); }
+        console.log("Дверь: клик зафиксирован!");
+        // Временная проверка — если увидите это окно, значит JS работает
+        // alert("Дверь открывается!"); 
 
-        const doorImg = document.getElementById('main-door');
-        if(doorImg) {
-            doorImg.style.transform = "scale(12)";
-            doorImg.style.opacity = "0";
-            doorImg.style.pointerEvents = "none";
+        try {
+            const sDoor = document.getElementById('s-door');
+            const sAmb = document.getElementById('s-amb');
+            if(sDoor) sDoor.play();
+            if(sAmb) { sAmb.volume = 0.4; sAmb.play(); }
+        } catch(e) { console.log("Звук ждет действия пользователя"); }
+
+        const door = document.getElementById('main-door');
+        if(door) {
+            door.style.transform = "scale(12)";
+            door.style.opacity = "0";
+            door.style.pointerEvents = "none";
         }
 
-        // Переходим на экран приветствия
         setTimeout(() => { 
             GY_Nav.go('block-welcome'); 
-        }, 1000);
+        }, 1200);
     }
 };
-
 function googleTranslateElementInit() {
     new google.translate.TranslateElement({pageLanguage: 'ru', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
 }
