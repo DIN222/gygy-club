@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY CLUB v5.1.30</title>
+    <title>GY-GY CLUB v5.1.31</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
@@ -242,17 +242,27 @@ const GY_Nav = {
 
 const GY_Core = {
     initEngine() {
-        const d = document.getElementById('s-door');
-        const a = document.getElementById('s-amb');
-        if(d) d.play().catch(()=>{});
-        if(a) { a.volume = 0.4; a.play().catch(()=>{}); }
+        console.log("КЛИК ПО ДВЕРИ — ЗАПУСК...");
+        
+        // Пытаемся запустить звук
+        try {
+            const d = document.getElementById('s-door');
+            const a = document.getElementById('s-amb');
+            if(d) d.play();
+            if(a) { a.volume = 0.4; a.play(); }
+        } catch(e) { console.warn("Звук заблокирован до взаимодействия"); }
 
         const doorImg = document.getElementById('main-door');
-        doorImg.style.transform = "scale(12)";
-        doorImg.style.opacity = "0";
-        doorImg.style.pointerEvents = "none";
+        if(doorImg) {
+            doorImg.style.transform = "scale(12)";
+            doorImg.style.opacity = "0";
+            doorImg.style.pointerEvents = "none";
+        }
 
-        setTimeout(() => { GY_Nav.go('block-welcome'); }, 1200);
+        // Переходим на экран приветствия
+        setTimeout(() => { 
+            GY_Nav.go('block-welcome'); 
+        }, 1000);
     }
 };
 
