@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY CLUB v5.1.18 | index_FIX</title>
+    <title>GY-GY CLUB v5.1.19 | index_FIX</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
@@ -137,35 +137,36 @@
     <div id="block-tables" class="block" style="background:url('lounge.jpg') center bottom/contain no-repeat;"></div>
 
     <script>
-// 1. БЛОК ЯЗЫКА (ЗАЩИЩЕННЫЙ СТЫК)
+// 1. БЛОК ЯЗЫКА (ЗАПУСКАЕТСЯ ПЕРВЫМ)
 function googleTranslateElementInit() { 
-    new google.translate.TranslateElement({
-        pageLanguage: 'ru', 
-        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-    }, 'google_translate_element'); 
+    new google.translate.TranslateElement({pageLanguage: 'ru', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element'); 
 }
 
-// 2. ЭТАЛОН РЕГИСТРАЦИИ (ЗАПРЕТ НА ИЗМЕНЕНИЕ СТРУКТУРЫ)
+// 2. ЭТАЛОН РЕГИСТРАЦИИ (НЕПРИКОСНОВЕННЫЙ БЛОК)
 const REG_TEMPLATE = `
     <div style="display: grid; grid-template-columns: 140px 140px; gap: 20px; margin-bottom: 25px;">
-        <div class="reg-sq" style="width:140px; height:140px; border:1px solid var(--gold); position:relative;">
+        <div style="width:140px; height:140px; border:1px solid var(--gold); position:relative; background: rgba(0,0,0,0.3); display:flex; align-items:center; justify-content:center;">
             <img id="reg-avatar-main" style="width:100%; height:100%; object-fit:cover; display:none;">
-            <span id="pic-hint" style="color:var(--gold); opacity:0.4; font-size:9px; position:absolute; top:45%; left:25%;">PHOTO ZONE</span>
-            <button class="btn-gy" style="position:absolute; bottom:-12px; left:25%; font-size:8px; padding:2px 5px;" onclick="GY_Identity.uploadPhoto()">ФОТО</button>
+            <span id="pic-hint" style="color:var(--gold); opacity:0.6; font-size:10px; text-align:center; font-family:'Share Tech Mono';">PHOTO<br>ZONE</span>
+            <button class="btn-gy" style="position:absolute; bottom:-12px; font-size:8px; padding:2px 6px;" onclick="GY_Identity.uploadPhoto()">ФОТО</button>
         </div>
-        <div class="reg-sq" style="width:140px; height:140px; border:1px solid var(--gold); position:relative;">
+        <div style="width:140px; height:140px; border:1px solid var(--gold); position:relative; background: rgba(0,0,0,0.3); display:flex; align-items:center; justify-content:center;">
             <img id="reg-avatar-alt" style="width:100%; height:100%; object-fit:cover; display:none;">
-            <span id="alt-hint" style="color:var(--gold); opacity:0.4; font-size:9px; position:absolute; top:45%; left:25%;">AVATAR ZONE</span>
-            <button class="btn-gy" style="position:absolute; bottom:-12px; left:25%; font-size:8px; padding:2px 5px;" onclick="GY_Identity.setAvatar()">АВАТАР</button>
+            <span id="alt-hint" style="color:var(--gold); opacity:0.6; font-size:10px; text-align:center; font-family:'Share Tech Mono';">AVATAR<br>ZONE</span>
+            <button class="btn-gy" style="position:absolute; bottom:-12px; font-size:8px; padding:2px 6px;" onclick="GY_Identity.setAvatar()">АВАТАР</button>
         </div>
-        <div class="reg-sq" style="width:140px; height:140px; border:1px solid var(--gold); display:flex; align-items:center; justify-content:center; padding:5px;">
+        <div style="width:140px; height:140px; border:1px solid var(--gold); display:flex; align-items:center; justify-content:center; padding:10px; background: rgba(212,175,55,0.05);">
             <div id="reg-id-val" style="font-family:'Share Tech Mono'; color:var(--gold); font-size:11px; text-align:center;">#GY-WAIT-2026</div>
         </div>
-        <div class="reg-sq" id="reg-qr-wrap" style="width:140px; height:140px; border:1px solid var(--gold); background:white; padding:5px; box-sizing:border-box;"></div>
+        <div id="reg-qr-wrap" style="width:140px; height:140px; border:1px solid var(--gold); background:white; padding:10px; box-sizing:border-box;"></div>
     </div>
-    <div style="display:flex; gap:15px; margin-top:20px;">
-        <button id="btn-save-reg" class="btn-gy" onclick="GY_Identity.saveIdentity()">СОХРАНИТЬ</button>
-        <button class="btn-gy" onclick="GY_Nav.go('block-welcome')">ОТМЕНА</button>
+
+    <div style="display:flex; flex-direction:column; align-items:center; gap:15px; width:100%;">
+        <div style="display:flex; gap:15px;">
+            <button id="btn-save-reg" class="btn-gy" style="font-weight:bold;" onclick="GY_Identity.saveIdentity()">СОХРАНИТЬ</button>
+            <button class="btn-gy" style="opacity:0.5;" onclick="GY_Nav.go('block-welcome')">ОТМЕНА</button>
+        </div>
+        <button id="btn-to-hall-final" class="btn-gy btn-sleep" style="width:200px; display:none; border-width:2px;" onclick="GY_Nav.go('block-hall')">ВХОД В ХОЛЛ</button>
     </div>
 `;
 
@@ -177,7 +178,7 @@ const GY_Identity = {
         if (el) el.innerText = this.id;
         const qr = document.getElementById('reg-qr-wrap');
         if (qr && typeof QRCode !== 'undefined') { 
-            qr.innerHTML = ""; new QRCode(qr, { text: this.id, width: 130, height: 130 }); 
+            qr.innerHTML = ""; new QRCode(qr, { text: this.id, width: 120, height: 120 }); 
         }
     },
     uploadPhoto() {
@@ -186,7 +187,10 @@ const GY_Identity = {
             const reader = new FileReader();
             reader.onload = ev => { 
                 const img = document.getElementById('reg-avatar-main');
-                if(img) { img.src = ev.target.result; img.style.display = "block"; document.getElementById('pic-hint').style.display = "none"; }
+                if(img) { 
+                    img.src = ev.target.result; img.style.display = "block"; 
+                    const hint = document.getElementById('pic-hint'); if(hint) hint.style.display = "none";
+                }
             };
             reader.readAsDataURL(e.target.files[0]);
         };
@@ -195,16 +199,23 @@ const GY_Identity = {
     setAvatar() {
         const seed = Math.random().toString(36).substring(7);
         const img = document.getElementById('reg-avatar-alt');
-        if(img) { img.src = `https://api.dicebear.com/7.x/bottts/svg?seed=${seed}`; img.style.display = "block"; document.getElementById('alt-hint').style.display = "none"; }
+        if(img) { 
+            img.src = `https://api.dicebear.com/7.x/bottts/svg?seed=${seed}`; img.style.display = "block"; 
+            const hint = document.getElementById('alt-hint'); if(hint) hint.style.display = "none";
+        }
     },
     saveIdentity() {
         const btn = document.getElementById('btn-save-reg');
-        btn.innerText = "СОХРАНЕНО ✓"; btn.style.color = "#00ff00";
-        setTimeout(() => { GY_Nav.go('block-welcome'); this.unlockHall(); }, 800);
-    },
-    unlockHall() {
-        const hBtn = document.getElementById('btn-to-hall-wait');
-        if(hBtn) { hBtn.classList.remove('btn-sleep'); hBtn.style.opacity = "1"; hBtn.style.pointerEvents = "auto"; }
+        const hallBtn = document.getElementById('btn-to-hall-final');
+        if(btn) {
+            btn.innerText = "СОХРАНЕНО ✓"; btn.style.color = "#00ff00"; btn.style.borderColor = "#00ff00";
+            setTimeout(() => {
+                if(hallBtn) {
+                    hallBtn.style.display = "block";
+                    setTimeout(() => { hallBtn.classList.remove('btn-sleep'); hallBtn.style.opacity = "1"; }, 50);
+                }
+            }, 500);
+        }
     }
 };
 
@@ -213,9 +224,12 @@ const GY_Nav = {
         document.querySelectorAll('.block').forEach(b => { b.style.display = 'none'; b.classList.remove('active'); });
         const next = document.getElementById(to);
         if (next) {
-            if (to === 'block-reg') next.innerHTML = REG_TEMPLATE; // ВОССТАНОВЛЕНИЕ ЭТАЛОНА ПРИ КАЖДОМ ВХОДЕ
+            if (to === 'block-reg') next.innerHTML = REG_TEMPLATE; 
             next.style.display = 'flex';
-            setTimeout(() => { next.classList.add('active'); next.style.opacity = "1"; if(to === 'block-reg') GY_Identity.create(); }, 50);
+            setTimeout(() => { 
+                next.classList.add('active'); next.style.opacity = "1"; 
+                if(to === 'block-reg') GY_Identity.create(); 
+            }, 50);
         }
     }
 };
@@ -232,15 +246,12 @@ const GY_Core = {
     }
 };
 
-// СТЫКОВКА ВСЕХ СИСТЕМ
 window.onload = () => {
-    googleTranslateElementInit(); // Возвращаем язык
+    googleTranslateElementInit();
     const d = document.getElementById('main-door');
     if (d) d.onclick = () => GY_Core.initEngine();
 };
 
-// ЗАМОРОЗКА ОБЪЕКТОВ (ЗАПРЕТ НА ПРАВКИ)
-Object.freeze(REG_TEMPLATE);
 Object.freeze(GY_Core);
     </script>
     
