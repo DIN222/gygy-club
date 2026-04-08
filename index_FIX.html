@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY CLUB v5.1.29</title>
+    <title>GY-GY CLUB v5.1.30</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
@@ -56,7 +56,29 @@
         }
 
         .btn-back { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 10005; background: rgba(0,0,0,0.9); border: 2px solid var(--gold); color: var(--gold); padding: 12px 30px; cursor: pointer; display: none; text-transform: uppercase; font-weight: 900; opacity: 0; transition: 0.5s; }
+    /* Для равномерного распределения кнопок */
+.reg-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    width: 300px; /* Ширина под сеткой квадратов */
+    margin-top: 20px;
+}
+
+/* Холл: позиционирование карточки внизу */
+#block-hall {
+    background: #fdfdfd; /* Светлый фон */
+    justify-content: flex-end; /* Опускаем контент вниз */
+    padding-bottom: 5vh;
+}
+
+.card-hall {
+    background: #F5F5DC;
+    border: 3px solid var(--gold);
+    box-shadow: 0 -10px 30px rgba(0,0,0,0.1); /* Тень вверх, так как карта внизу */
+}
     </style>
+    
 </head>
 <body oncontextmenu="return false;">
 
@@ -101,52 +123,63 @@
         </div>
     </div>
 
-    <div id="block-bar" class="block" style="justify-content: flex-end; background: #000;">
-        <div style="margin-bottom: 6vh; z-index:100; display:flex; flex-direction:column; align-items:center; gap:12px;">
-            <h2 style="color:var(--gold); letter-spacing:5px; font-family:'Playfair Display';">THE CLUB BAR</h2>
-            <div style="display:flex; gap:10px;">
-                <button class="btn-gy" onclick="GY_Nav.go('block-tables')">СТОЛИКИ</button>
-                <button class="btn-gy" onclick="GY_Nav.go('block-hall')">В ХОЛЛ</button>
-            </div>
+   <div id="block-bar" class="block" style="justify-content: flex-end; background: #000;">
+    <div style="margin-bottom: 5vh; z-index:100; display:flex; flex-direction:column; align-items:center; gap:12px;">
+        <h2 style="color:var(--gold); letter-spacing:5px; font-family:'Playfair Display';">THE CLUB BAR</h2>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <button class="btn-gy" onclick="GY_Nav.go('block-tables')">СТОЛИКИ</button>
+            <button class="btn-gy" onclick="GY_Nav.go('block-ai-room')">AI ROOM</button>
+            <button class="btn-gy" onclick="GY_Nav.go('block-hall')">В ХОЛЛ</button>
+            <button class="btn-gy" style="opacity:0.6;" onclick="GY_Nav.go('block-welcome')">ВЫХОД</button>
         </div>
-        <img src="horse_bar.png" style="height: 75vh; position:relative; z-index:5;">
     </div>
+    <img src="horse_bar.png" style="height: 70vh; position:relative; z-index:5;">
+</div>
 
     <script>
 // 1. ПЕРЕМЕННЫЕ
+// 1. Шаблон регистрации со слоганом и 3 кнопками
 const REG_TEMPLATE = `
+    <div style="text-align:center; color:var(--gold); margin-bottom:20px; font-family:'Playfair Display'; font-style:italic;">
+        «Твой цифровой след в истории юмора»
+    </div>
     <div style="display: grid; grid-template-columns: 140px 140px; gap: 20px; margin-bottom: 25px;">
         <div class="reg-zone" onclick="GY_Identity.uploadPhoto()">
             <img id="reg-avatar-main" style="width:100%; height:100%; object-fit:cover; display:none;">
-            <span id="pic-hint" style="color:#000; opacity:0.6; font-size:10px; text-align:center;">НАЖМИ<br>ИЛИ ФОТО</span>
+            <span id="pic-hint" style="color:#000; opacity:0.6; font-size:10px; text-align:center;">ИЛИ ФОТО</span>
         </div>
         <div class="reg-zone" onclick="GY_Identity.setAvatar()">
             <img id="reg-avatar-alt" style="width:100%; height:100%; object-fit:cover; display:none;">
-            <span id="alt-hint" style="color:#000; opacity:0.6; font-size:10px; text-align:center;">НАЖМИ<br>ИЛИ АВАТАР</span>
+            <span id="alt-hint" style="color:#000; opacity:0.6; font-size:10px; text-align:center;">ИЛИ АВАТАР</span>
         </div>
         <div style="width:140px; height:140px; border:1px solid var(--gold); display:flex; align-items:center; justify-content:center; background: rgba(212,175,55,0.05);">
-            <div id="reg-id-val" style="color:var(--gold); font-size:11px; text-align:center;">#GY-WAIT-2026</div>
+            <div id="reg-id-val" style="color:var(--gold); font-size:11px; text-align:center;">#ID-GEN</div>
         </div>
         <div id="reg-qr-wrap" style="width:140px; height:140px; border:1px solid var(--gold); background:white; padding:10px; box-sizing:border-box;"></div>
     </div>
-    <div style="display:flex; gap:15px;">
-        <button id="btn-save-reg" class="btn-gy" onclick="GY_Identity.saveIdentity()">ПОДТВЕРДИТЬ</button>
-        <button class="btn-gy" style="opacity:0.5;" onclick="GY_Nav.go('block-welcome')">НАЗАД</button>
+    <div class="reg-actions">
+        <button class="btn-gy" style="font-size:10px; padding:10px 5px;" onclick="GY_Identity.saveIdentity()">СОХРАНИТЬ</button>
+        <button id="btn-to-hall-direct" class="btn-gy btn-sleep" style="font-size:10px; padding:10px 5px;" onclick="GY_Nav.go('block-hall')">В ХОЛЛ</button>
+        <button class="btn-gy" style="font-size:10px; padding:10px 5px; opacity:0.7;" onclick="GY_Nav.go('block-welcome')">НАЗАД</button>
     </div>
 `;
 
-// 2. ЛОГИКА
-const GY_Identity = {
-    id: "", pic: "",
-    create() {
-        this.id = `#GY-${Math.floor(100 + Math.random() * 899)}-2026`;
-        document.getElementById('reg-id-val').innerText = this.id;
-        const qrBox = document.getElementById('reg-qr-wrap');
-        if (qrBox && typeof QRCode !== 'undefined') {
-            qrBox.innerHTML = "";
-            new QRCode(qrBox, { text: this.id, width: 120, height: 120 });
-        }
-    },
+// 2. Обновление функций сохранения
+GY_Identity.saveIdentity = function() {
+    if(!this.pic) { alert("Выберите образ!"); return; }
+    
+    // Синхронизация с холлом
+    document.getElementById('hall-id-display').innerText = this.id;
+    document.getElementById('hall-pic').src = this.pic;
+    const hQR = document.getElementById('hall-qr');
+    if(hQR) { hQR.innerHTML = ""; new QRCode(hQR, { text: this.id, width: 85, height: 85 }); }
+    
+    // Разблокировка кнопки "В ХОЛЛ" в регистрации и в приветствии
+    document.getElementById('btn-to-hall-direct').classList.remove('btn-sleep');
+    document.getElementById('btn-to-hall-wait').classList.remove('btn-sleep');
+    
+    alert("Данные сохранены");
+};
     uploadPhoto() {
         const input = document.createElement('input'); input.type = 'file'; input.accept = 'image/*';
         input.onchange = e => {
