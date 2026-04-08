@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY CLUB v5.1.8 | index_FIX</title>
+    <title>GY-GY CLUB v5.1.9 | index_FIX</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
@@ -129,43 +129,38 @@
     <div id="block-tables" class="block" style="background:url('lounge.jpg') center bottom/contain no-repeat;"></div>
 
     <script>
-function googleTranslateElementInit() { 
+// 1. Инициализация перевода
+    function googleTranslateElementInit() { 
         new google.translate.TranslateElement({pageLanguage: 'ru', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element'); 
     }
 
-    const GY_Audio = {
-        s: {},
-        init() {
-            this.s.door = document.getElementById('s-door');
-            this.s.amb = document.getElementById('s-amb');
-            console.log("✅ Аудио-узлы найдены");
-        },
-        play(key, vol = 1) {
-            const track = this.s[key];
-            if(track) { track.volume = vol; track.play().catch(() => {}); }
-        },
-        fade(key, target, time) {
-            const track = this.s[key];
-            if(!track) return;
-            clearInterval(track.f);
-            let start = track.volume;
-            let startT = Date.now();
-            track.f = setInterval(() => {
-                let p = Math.min((Date.now() - startT) / time, 1);
-                track.volume = start + (target - start) * p;
-                if(p === 1) clearInterval(track.f);
-            }, 50);
-        }
-    };
-
     const GY_Identity = {
-        id: "", pic: "",
+        id: "",
         create() {
             this.id = `#GY-${Math.floor(100+Math.random()*899)}-2026`;
-            document.getElementById('reg-id-val').innerText = this.id;
+            const el = document.getElementById('reg-id-val');
+            if(el) el.innerText = this.id;
             const qr = document.getElementById('reg-qr-wrap');
-            qr.innerHTML = "";
-            new QRCode(qr, { text: this.id, width: 95, height: 95 });
+            if(qr) { qr.innerHTML = ""; new QRCode(qr, { text: this.id, width: 95, height: 95 }); }
+        },
+        uploadPhoto() {
+            const input = document.createElement('input');
+            input.type = 'file'; input.accept = 'image/*';
+            input.onchange = e => {
+                const reader = new FileReader();
+                reader.onload = ev => { document.getElementById('reg-avatar-main').src = ev.target.result; this.unlockHall(); };
+                reader.readAsDataURL(e.target.files[0]);
+            };
+            input.click();
+        },
+        setAvatar() {
+            const url = `https://api.dicebear.com/7.x/bottts/svg?seed=${Math.random()}`;
+            document.getElementById('reg-avatar-main').src = url;
+            this.unlockHall();
+        },
+        unlockHall() {
+            const btn = document.getElementById('btn-to-hall-wait');
+            if(btn) { btn.classList.remove('btn-sleep'); btn.style.opacity = "1"; btn.innerText = "ВХОД В ХОЛЛ"; }
         }
     };
 
@@ -173,110 +168,51 @@ function googleTranslateElementInit() {
         go(to) {
             const active = document.querySelector('.block.active');
             if(active) { active.style.opacity = 0; active.style.pointerEvents = 'none'; }
-            
             setTimeout(() => {
                 if(active) active.classList.remove('active');
                 const next = document.getElementById(to);
-                next.style.display = 'flex';
-                
-                // Включаем шум бара при переходе к Лошади
-                if(to === 'block-welcome') {
-                    GY_Audio.play('amb', 0);
-                    GY_Audio.fade('amb', 0.3, 2500);
+                if(next) {
+                    next.style.display = 'flex';
+                    setTimeout(() => { next.classList.add('active'); next.style.opacity = 1; next.style.pointerEvents = 'auto'; }, 50);
                 }
-
-                setTimeout(() => {
-                    next.classList.add('active'); 
-                    next.style.opacity = 1; 
-                    next.style.pointerEvents = 'auto';
-                }, 50);
             }, 600);
         }
     };
-const GY_Core = {
 
+    const GY_Core = {
         initEngine() {
+            // ЗВУК
+            new Audio('door_open.mp3').play().catch(() => {});
+            window.clubAmb = new Audio('bar_ambient.mp3');
+            window.clubAmb.loop = true; window.clubAmb.volume = 0;
+            window.clubAmb.play().then(() => {
+                let v = 0;
+                let f = setInterval(() => { v += 0.02; window.clubAmb.volume = v; if(v >= 0.3) clearInterval(f); }, 100);
+            }).catch(() => {});
 
-            GY_Audio.init();
-
-            
-
-            // Прямой доступ к звукам
-
-            const sDoor = document.getElementById('s-door');
-
-            const sAmb = document.getElementById('s-amb');
-
-
-
-            // Хлопок двери
-
-            if(sDoor) { sDoor.volume = 1; sDoor.play(); }
-
-
-
-            // ПРИНУДИТЕЛЬНЫЙ СТАРТ БАРА
-
-            if(sAmb) {
-
-                sAmb.volume = 0;
-
-                sAmb.play().then(() => {
-
-                    // Плавный подъем громкости через прямой интервал
-
-                    let v = 0;
-
-                    let f = setInterval(() => {
-
-                        v += 0.02;
-
-                        sAmb.volume = v;
-
-                        if(v >= 0.3) clearInterval(f);
-
-                    }, 100);
-
-                }).catch(e => console.log("Звук заблокирован"));
-
-            }
-
-            
-
+            // ДВЕРЬ
             const door = document.getElementById('main-door');
-
-            if(door) {
-
-                door.style.transform = "scale(12)";
-
-                door.style.opacity = "0";
-
-                door.style.pointerEvents = "none";
-
-            }
-
+            if(door) { door.style.transform = "scale(12)"; door.style.opacity = "0"; door.style.pointerEvents = "none"; }
             
-
             GY_Identity.create();
-
             setTimeout(() => { GY_Nav.go('block-welcome'); }, 1500);
-
-        }, этот блок заменить
-        deepDive() {
-            const amb = document.getElementById('s-amb');
-            if(amb) amb.pause();
-            document.body.style.filter = "blur(40px) brightness(0)";
-            setTimeout(() => window.location.href = 'bridge_protocol.html', 1800);
         }
     };
-   
-    // ГЛАВНЫЙ ФИКС: Принудительно вешаем клик на дверь после загрузки
+
+    // АВТОРЕАНИМАТОР (Запускает клики и Язык)
     window.onload = () => {
-        const doorImg = document.getElementById('main-door');
-        if(doorImg) {
-            doorImg.onclick = () => GY_Core.initEngine();
-            console.log("🚪 Дверь готова к вышибанию");
-        }
+        // Оживляем дверь
+        const d = document.getElementById('main-door');
+        if(d) d.onclick = () => GY_Core.initEngine();
+        
+        // Оживляем кнопки регистрации (находим их по тексту, если ID нет)
+        const btns = document.querySelectorAll('.btn-gy');
+        btns.forEach(b => {
+            if(b.innerText.includes("ФОТО")) b.onclick = () => GY_Identity.uploadPhoto();
+            if(b.innerText.includes("АВАТАР")) b.onclick = () => GY_Identity.setAvatar();
+        });
+        
+        console.log("✅ Клуб GY-GY готов к работе. Язык и Дверь активны.");
     };
     </script>
     
