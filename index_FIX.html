@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY CLUB v5.1.41</title>
+    <title>GY-GY CLUB v5.1.42</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
@@ -63,6 +63,33 @@
     gap: 15px;
     width: 100%;
 }
+        /* Языковая панель и Логотип — ПРИНУДИТЕЛЬНО НА ПЕРЕДНИЙ ПЛАН */
+#google_translate_element, .ui-brand {
+    z-index: 999999 !important; /* Самый высокий уровень */
+    pointer-events: auto !important;
+}
+
+/* Дверь — должна быть выше всех блоков, когда активна */
+#block-entrance.active {
+    display: flex !important;
+    z-index: 100000 !important;
+    pointer-events: auto !important;
+}
+
+#main-door {
+    cursor: pointer !important;
+    pointer-events: auto !important;
+    position: relative;
+    z-index: 100001 !important;
+}
+
+/* Исправляем блоки, чтобы они не воровали клики в невидимом состоянии */
+.block {
+    pointer-events: none; /* Все блоки "прозрачны" для клика */
+}
+.block.active {
+    pointer-events: auto !important; /* Только активный блок принимает клики */
+}
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -71,68 +98,42 @@
     <div class="ui-brand">GY-GY</div>
 
     <div id="block-entrance" class="block active">
-        <img src="door_1.jpg" id="main-door" onclick="GY_Core.initEngine()" title="Войти в клуб">
+        <img src="door_1.jpg" id="main-door" onclick="GY_Core.initEngine()">
     </div>
 
     <div id="block-welcome" class="block">
         <div class="quote">«В каждой шутке есть доля виски»</div>
         <img src="horse_welcome.png" style="height: 35vh; margin-bottom: 20px;">
-        <h1 style="font-family: 'Playfair Display'; color: var(--gold); font-size: 42px; margin: 10px 0; letter-spacing: 8px;">WELCOME</h1>
-        <div style="display:flex; gap:12px; margin-top: 15px;">
+        <div style="display:flex; gap:10px;">
             <button id="btn-to-hall-wait" class="btn-gy btn-sleep" onclick="GY_Nav.go('block-hall')">В ХОЛЛ</button>
             <button class="btn-gy" onclick="GY_Nav.go('block-reg')">РЕГИСТРАЦИЯ</button>
         </div>
     </div>
 
     <div id="block-reg" class="block"></div>
-<div id="block-hall" class="block">
-    <div class="card-hall">
-        <div id="hall-id-display" style="font-weight:900; margin-bottom:15px;">#ID-CHECK</div>
-        <div style="display:flex; gap:12px; margin-bottom:20px;">
-            <div style="width:85px; height:85px; border:1px solid #000; background:#fff; overflow:hidden;">
-                <img id="hall-pic" style="width:100%; height:100%; object-fit:cover;">
+
+    <div id="block-hall" class="block">
+        <div class="card-hall">
+            <div id="hall-id-display" style="font-weight:900; margin-bottom:15px;">#ID-CHECK</div>
+            <div style="display:flex; gap:12px; margin-bottom:20px;">
+                <div style="width:85px; height:85px; border:1px solid #000; background:#fff; overflow:hidden;">
+                    <img id="hall-pic" style="width:100%; height:100%; object-fit:cover;">
+                </div>
+                <div id="hall-qr" style="width:85px; height:85px; border:1px solid #000; background:#fff;"></div>
             </div>
-            <div id="hall-qr" style="width:85px; height:85px; border:1px solid #000; background:#fff;"></div>
-        </div>
-        
-        <button id="hall-btn-confirm" class="btn-gy" style="color:#000; border-color:#000; width:100%;" onclick="GY_Identity.verify()">ПОДТВЕРДИТЬ</button>
-        
-        <div id="hall-navigation" class="hall-nav" style="flex-direction: column; width: 100%;">
-            <p style="color:#000; font-size:10px; margin:10px 0 5px; text-align:center;">КУДА НАПРАВИМСЯ?</p>
-            <button class="btn-gy" style="color:#000; border-color:#000; margin-bottom:5px;" onclick="GY_Nav.go('block-bar')">В БАР</button>
-            <button class="btn-gy" style="color:#000; border-color:#000;" onclick="GY_Nav.go('block-atelier')">В АТЕЛЬЕ</button>
+            
+            <button id="hall-btn-confirm" class="btn-gy" style="color:#000; border-color:#000; width:100%;" onclick="GY_Identity.verify()">ПОДТВЕРДИТЬ</button>
+            
+            <div id="hall-navigation" class="hall-nav" style="flex-direction: column; width: 100%;">
+                <button class="btn-gy" style="color:#000; border-color:#000; margin-bottom:10px;" onclick="GY_Nav.go('block-bar')">В БАР</button>
+                <button class="btn-gy" style="color:#000; border-color:#000;" onclick="GY_Nav.go('block-atelier')">В АТЕЛЬЕ</button>
+            </div>
         </div>
     </div>
-</div>
 
-<div id="block-bar" class="block">
-    <div class="bar-controls">
-        <h2 style="font-family:'Playfair Display'; letter-spacing:3px; margin:0;">THE CLUB BAR</h2>
-        <div style="display:grid; grid-template-columns: 140px 140px; gap:12px;">
-            <button class="btn-gy" onclick="GY_Nav.go('block-tables')">СТОЛИКИ</button>
-            <button class="btn-gy" onclick="GY_Nav.go('block-server')">AI ROOM</button>
-            <button class="btn-gy" onclick="GY_Nav.go('block-hall')">В ХОЛЛ</button>
-            <button class="btn-gy" style="opacity:0.7;" onclick="GY_Nav.go('block-welcome')">ВЫХОД</button>
-        </div>
-    </div>
-    <img src="horse_bar.png" style="height: 70vh; position:absolute; bottom:0; z-index:5;">
-</div>
-
-<div id="block-tables" class="block" style="background: #1a1a1a;">
-    <h1 style="color:var(--gold);">ЗАЛ СО СТОЛИКАМИ</h1>
-    <p>Здесь пока пусто, но виски уже разлит.</p>
-    <button class="btn-gy" onclick="GY_Nav.go('block-bar')">ВЕРНУТЬСЯ В БАР</button>
-</div>
-
-<div id="block-atelier" class="block" style="background: #fff; color: #000;">
-    <h1 style="font-family: 'Playfair Display';">АТЕЛЬЕ</h1>
-    <p>Примерка цифровых образов...</p>
-    <button class="btn-gy" style="color:#000; border-color:#000;" onclick="GY_Nav.go('block-hall')">В ХОЛЛ</button>
-</div>
-  
-    <div id="block-bar" class="block" style="justify-content: flex-end;">
-        <div style="margin-bottom: 6vh; z-index:100; display:flex; flex-direction:column; align-items:center; gap:15px;">
-            <h2 style="font-family:'Playfair Display'; letter-spacing:3px; font-weight: 700;">THE CLUB BAR</h2>
+    <div id="block-bar" class="block">
+        <div class="bar-controls">
+            <h2 style="font-family:'Playfair Display'; letter-spacing:3px;">THE CLUB BAR</h2>
             <div style="display:grid; grid-template-columns: 140px 140px; gap:12px;">
                 <button class="btn-gy" onclick="GY_Nav.go('block-tables')">СТОЛИКИ</button>
                 <button class="btn-gy" onclick="GY_Nav.go('block-server')">AI ROOM</button>
@@ -140,32 +141,14 @@
                 <button class="btn-gy" style="opacity:0.7;" onclick="GY_Nav.go('block-welcome')">ВЫХОД</button>
             </div>
         </div>
-        <img src="horse_bar.png" style="height: 70vh; position:relative; z-index:5;">
+        <img src="horse_bar.png" style="height: 70vh; position:absolute; bottom:0; z-index:5;">
     </div>
 
-    <div id="block-server" class="block" style="background: #000; color: #00ff00; font-family: 'Share Tech Mono';">
-        <div style="text-align: center; border: 1px solid #00ff00; padding: 40px; background: rgba(0,255,0,0.05); max-width: 90%;">
-            <h1 style="letter-spacing: 5px; font-size: 20px;">SERVER ROOM :: AI UNIT</h1>
-            <p style="opacity: 0.8; font-size: 14px;">[ СТАТУС: ПОДКЛЮЧЕНО ]</p>
-            <div style="margin: 25px 0; font-size: 13px; color: #00ff00; text-align: left; line-height: 1.6; border-left: 2px solid #00ff00; padding-left: 15px;">
-                &gt; Инициализация нейронных связей... OK<br>
-                &gt; Анализ чувства юмора... В ПРОЦЕССЕ<br>
-                &gt; Синхронизация данных пользователя... OK<br>
-                &gt; Загрузка острот... 99%
-            </div>
-            <button class="btn-gy" style="border-color: #00ff00; color: #00ff00;" onclick="GY_Nav.go('block-bar')">ВЕРНУТЬСЯ В БАР</button>
-        </div>
-    </div>
+    <div id="block-server" class="block">... Серверная ...</div>
+    <div id="block-tables" class="block">... Столики ...</div>
+    <div id="block-atelier" class="block">... Ателье ...</div>
 
-    <div style="display:none;">
-        <audio id="s-door" preload="auto"><source src="door_open.mp3"></audio>
-        <audio id="s-amb" loop preload="auto"><source src="bar_ambient.mp3"></audio>
-    </div>
-
-    <script>
-        /* Весь твой JS остается без изменений ниже */
-    </script>
-
+    <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
     <script>
         const REG_TEMPLATE = `
