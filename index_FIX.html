@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY CLUB v5.1.40</title>
+    <title>GY-GY CLUB v5.1.41</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
@@ -37,6 +37,32 @@
         #block-hall .card-hall { width: 280px; padding: 25px; background: #F5F5DC; border: 3px solid var(--gold); border-radius: 20px; color: #000; display: flex; flex-direction: column; align-items: center; box-shadow: 0 -10px 30px rgba(0,0,0,0.1); }
 
         .quote { font-family: 'Playfair Display'; font-style: italic; font-size: 22px; text-align: center; padding: 0 20px; margin-bottom: 20px; }
+        /* Холл: Светлый фон и центровка выбора */
+#block-hall { 
+    background: #fdfdfd !important; 
+    justify-content: center !important; 
+}
+
+/* Навигация внутри Холла под карточкой */
+.hall-nav {
+    margin-top: 20px;
+    display: none; /* Скрыта до нажатия ПОДТВЕРДИТЬ */
+    gap: 10px;
+}
+
+/* Бар: Опускаем пульт управления в самый низ */
+.bar-controls {
+    position: absolute;
+    bottom: 5vh;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+}
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -59,21 +85,51 @@
     </div>
 
     <div id="block-reg" class="block"></div>
-
-    <div id="block-hall" class="block">
-        <div class="card-hall">
-            <div id="hall-id-display" style="font-weight:900; margin-bottom:15px; letter-spacing: 1px;">#ID-CHECK</div>
-            <div style="display:flex; gap:12px; margin-bottom:20px;">
-                <div style="width:85px; height:85px; border:1px solid #000; background:#fff; overflow:hidden;">
-                    <img id="hall-pic" style="width:100%; height:100%; object-fit:cover;">
-                </div>
-                <div id="hall-qr" style="width:85px; height:85px; border:1px solid #000; background:#fff;"></div>
+<div id="block-hall" class="block">
+    <div class="card-hall">
+        <div id="hall-id-display" style="font-weight:900; margin-bottom:15px;">#ID-CHECK</div>
+        <div style="display:flex; gap:12px; margin-bottom:20px;">
+            <div style="width:85px; height:85px; border:1px solid #000; background:#fff; overflow:hidden;">
+                <img id="hall-pic" style="width:100%; height:100%; object-fit:cover;">
             </div>
-            <button class="btn-gy" style="color:#000; border-color:#000; width:100%;" onclick="GY_Identity.verify()">ПОДТВЕРДИТЬ</button>
-            <button id="hall-btn-enter" class="btn-gy btn-sleep" style="color:#000; border-color:#000; width:100%; margin-top:10px; display:none;" onclick="GY_Nav.go('block-bar')">ВОЙТИ В БАР</button>
+            <div id="hall-qr" style="width:85px; height:85px; border:1px solid #000; background:#fff;"></div>
+        </div>
+        
+        <button id="hall-btn-confirm" class="btn-gy" style="color:#000; border-color:#000; width:100%;" onclick="GY_Identity.verify()">ПОДТВЕРДИТЬ</button>
+        
+        <div id="hall-navigation" class="hall-nav" style="flex-direction: column; width: 100%;">
+            <p style="color:#000; font-size:10px; margin:10px 0 5px; text-align:center;">КУДА НАПРАВИМСЯ?</p>
+            <button class="btn-gy" style="color:#000; border-color:#000; margin-bottom:5px;" onclick="GY_Nav.go('block-bar')">В БАР</button>
+            <button class="btn-gy" style="color:#000; border-color:#000;" onclick="GY_Nav.go('block-atelier')">В АТЕЛЬЕ</button>
         </div>
     </div>
+</div>
 
+<div id="block-bar" class="block">
+    <div class="bar-controls">
+        <h2 style="font-family:'Playfair Display'; letter-spacing:3px; margin:0;">THE CLUB BAR</h2>
+        <div style="display:grid; grid-template-columns: 140px 140px; gap:12px;">
+            <button class="btn-gy" onclick="GY_Nav.go('block-tables')">СТОЛИКИ</button>
+            <button class="btn-gy" onclick="GY_Nav.go('block-server')">AI ROOM</button>
+            <button class="btn-gy" onclick="GY_Nav.go('block-hall')">В ХОЛЛ</button>
+            <button class="btn-gy" style="opacity:0.7;" onclick="GY_Nav.go('block-welcome')">ВЫХОД</button>
+        </div>
+    </div>
+    <img src="horse_bar.png" style="height: 70vh; position:absolute; bottom:0; z-index:5;">
+</div>
+
+<div id="block-tables" class="block" style="background: #1a1a1a;">
+    <h1 style="color:var(--gold);">ЗАЛ СО СТОЛИКАМИ</h1>
+    <p>Здесь пока пусто, но виски уже разлит.</p>
+    <button class="btn-gy" onclick="GY_Nav.go('block-bar')">ВЕРНУТЬСЯ В БАР</button>
+</div>
+
+<div id="block-atelier" class="block" style="background: #fff; color: #000;">
+    <h1 style="font-family: 'Playfair Display';">АТЕЛЬЕ</h1>
+    <p>Примерка цифровых образов...</p>
+    <button class="btn-gy" style="color:#000; border-color:#000;" onclick="GY_Nav.go('block-hall')">В ХОЛЛ</button>
+</div>
+  
     <div id="block-bar" class="block" style="justify-content: flex-end;">
         <div style="margin-bottom: 6vh; z-index:100; display:flex; flex-direction:column; align-items:center; gap:15px;">
             <h2 style="font-family:'Playfair Display'; letter-spacing:3px; font-weight: 700;">THE CLUB BAR</h2>
@@ -177,12 +233,18 @@
                 document.getElementById('btn-to-hall-wait').classList.remove('btn-sleep');
                 
             },
-            verify() {
-                const enter = document.getElementById('hall-btn-enter');
-                enter.style.display = "block";
-                setTimeout(() => enter.classList.remove('btn-sleep'), 100);
-            }
-        };
+           verify() {
+    // Скрываем кнопку подтверждения
+    const btnConfirm = document.getElementById('hall-btn-confirm');
+    if(btnConfirm) btnConfirm.style.display = "none";
+    
+    // Показываем блок выбора пути (Бар или Ателье)
+    const nav = document.getElementById('hall-navigation');
+    if(nav) {
+        nav.style.display = "flex";
+        console.log("Доступ в Холл открыт. Выберите локацию.");
+    }
+}
 
         const GY_Nav = {
             go(to) {
