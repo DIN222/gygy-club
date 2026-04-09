@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY CLUB v5.1.42</title>
+    <title>GY-GY CLUB v5.1.50</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
@@ -11,85 +11,34 @@
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none; }
         html, body { width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Share Tech Mono', monospace; margin: 0; overflow: hidden; position: fixed; }
 
-        /* Глобальные атрибуты: Лого и Язык */
-        .ui-brand { position: fixed; top: 18px; right: 25px; z-index: 100000; font-size: 24px; font-weight: 900; letter-spacing: 4px; text-shadow: 0 0 10px rgba(212,175,55,0.5); pointer-events: none; }
-        #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 100000; }
+        /* СИСТЕМА СЛОЕВ */
+        .ui-brand { position: fixed; top: 18px; right: 25px; z-index: 1000000; font-size: 24px; font-weight: 900; letter-spacing: 4px; text-shadow: 0 0 10px rgba(212,175,55,0.5); pointer-events: none; }
+        #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000000; pointer-events: auto; }
 
-        /* Система блоков */
-        .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; opacity: 0; transition: opacity 0.5s ease; pointer-events: none; }
-        .block.active { display: flex !important; opacity: 1; pointer-events: auto; z-index: 1000; }
+        .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; opacity: 0; transition: opacity 0.5s ease; pointer-events: none; z-index: 10; }
+        .block.active { display: flex !important; opacity: 1; pointer-events: auto; z-index: 100; }
 
-        /* ДВЕРЬ - ФИНАЛЬНЫЙ ПРИОРИТЕТ */
-        #block-entrance.active { z-index: 99999 !important; }
-        #main-door { width: 260px; cursor: pointer; transition: 1.5s cubic-bezier(0.4, 0, 0.2, 1); z-index: 100000; pointer-events: auto !important; filter: drop-shadow(0 0 20px rgba(212,175,55,0.3)); }
+        /* ДВЕРЬ - ВЫСШИЙ КЛИК */
+        #block-entrance.active { z-index: 500000 !important; }
+        #main-door { width: 260px; cursor: pointer; transition: 1.5s ease; z-index: 600000 !important; pointer-events: auto !important; position: relative; filter: drop-shadow(0 0 20px rgba(212,175,55,0.3)); }
 
-        /* Кнопки GY-GY */
+        /* КНОПКИ */
         .btn-gy { padding: 10px 20px; font-size: 12px; background: transparent; color: var(--gold); border: 1px solid var(--gold); cursor: pointer; transition: 0.3s; text-transform: uppercase; font-family: 'Share Tech Mono'; }
         .btn-gy:hover { color: #ffcc00; border-color: #ffcc00; box-shadow: 0 0 10px rgba(255, 204, 0, 0.4); }
         .btn-sleep { opacity: 0.2; filter: grayscale(1); pointer-events: none; }
 
-        /* Регистрация */
+        /* ХОЛЛ */
+        #block-hall { background: #fdfdfd !important; justify-content: center !important; }
+        #block-hall .card-hall { width: 280px; padding: 25px; background: #F5F5DC; border: 3px solid var(--gold); border-radius: 20px; color: #000; display: flex; flex-direction: column; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .hall-nav { margin-top: 15px; display: none; flex-direction: column; width: 100%; gap: 8px; }
+
+        /* БАР */
+        .bar-controls { position: absolute; bottom: 5vh; left: 50%; transform: translateX(-50%); z-index: 1000; display: flex; flex-direction: column; align-items: center; gap: 15px; width: 100%; }
+
+        /* РЕГИСТРАЦИЯ */
         .reg-zone { width: 140px; height: 140px; border: 1px solid var(--gold); background: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; }
         .reg-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; width: 300px; margin-top: 20px; }
-
-        /* Холл: Светлый и прижат к низу */
-        #block-hall { background: #fdfdfd !important; justify-content: flex-end !important; padding-bottom: 5vh; }
-        #block-hall .card-hall { width: 280px; padding: 25px; background: #F5F5DC; border: 3px solid var(--gold); border-radius: 20px; color: #000; display: flex; flex-direction: column; align-items: center; box-shadow: 0 -10px 30px rgba(0,0,0,0.1); }
-
-        .quote { font-family: 'Playfair Display'; font-style: italic; font-size: 22px; text-align: center; padding: 0 20px; margin-bottom: 20px; }
-        /* Холл: Светлый фон и центровка выбора */
-#block-hall { 
-    background: #fdfdfd !important; 
-    justify-content: center !important; 
-}
-
-/* Навигация внутри Холла под карточкой */
-.hall-nav {
-    margin-top: 20px;
-    display: none; /* Скрыта до нажатия ПОДТВЕРДИТЬ */
-    gap: 10px;
-}
-
-/* Бар: Опускаем пульт управления в самый низ */
-.bar-controls {
-    position: absolute;
-    bottom: 5vh;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 100;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-    width: 100%;
-}
-        /* Языковая панель и Логотип — ПРИНУДИТЕЛЬНО НА ПЕРЕДНИЙ ПЛАН */
-#google_translate_element, .ui-brand {
-    z-index: 999999 !important; /* Самый высокий уровень */
-    pointer-events: auto !important;
-}
-
-/* Дверь — должна быть выше всех блоков, когда активна */
-#block-entrance.active {
-    display: flex !important;
-    z-index: 100000 !important;
-    pointer-events: auto !important;
-}
-
-#main-door {
-    cursor: pointer !important;
-    pointer-events: auto !important;
-    position: relative;
-    z-index: 100001 !important;
-}
-
-/* Исправляем блоки, чтобы они не воровали клики в невидимом состоянии */
-.block {
-    pointer-events: none; /* Все блоки "прозрачны" для клика */
-}
-.block.active {
-    pointer-events: auto !important; /* Только активный блок принимает клики */
-}
+        .quote { font-family: 'Playfair Display'; font-style: italic; font-size: 20px; text-align: center; padding: 0 20px; margin-bottom: 20px; }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -115,17 +64,13 @@
     <div id="block-hall" class="block">
         <div class="card-hall">
             <div id="hall-id-display" style="font-weight:900; margin-bottom:15px;">#ID-CHECK</div>
-            <div style="display:flex; gap:12px; margin-bottom:20px;">
-                <div style="width:85px; height:85px; border:1px solid #000; background:#fff; overflow:hidden;">
-                    <img id="hall-pic" style="width:100%; height:100%; object-fit:cover;">
-                </div>
+            <div style="display:flex; gap:10px; margin-bottom:20px;">
+                <div style="width:85px; height:85px; border:1px solid #000; background:#fff; overflow:hidden;"><img id="hall-pic" style="width:100%; height:100%; object-fit:cover;"></div>
                 <div id="hall-qr" style="width:85px; height:85px; border:1px solid #000; background:#fff;"></div>
             </div>
-            
             <button id="hall-btn-confirm" class="btn-gy" style="color:#000; border-color:#000; width:100%;" onclick="GY_Identity.verify()">ПОДТВЕРДИТЬ</button>
-            
-            <div id="hall-navigation" class="hall-nav" style="flex-direction: column; width: 100%;">
-                <button class="btn-gy" style="color:#000; border-color:#000; margin-bottom:10px;" onclick="GY_Nav.go('block-bar')">В БАР</button>
+            <div id="hall-navigation" class="hall-nav">
+                <button class="btn-gy" style="color:#000; border-color:#000;" onclick="GY_Nav.go('block-bar')">В БАР</button>
                 <button class="btn-gy" style="color:#000; border-color:#000;" onclick="GY_Nav.go('block-atelier')">В АТЕЛЬЕ</button>
             </div>
         </div>
@@ -144,35 +89,42 @@
         <img src="horse_bar.png" style="height: 70vh; position:absolute; bottom:0; z-index:5;">
     </div>
 
-    <div id="block-server" class="block">... Серверная ...</div>
-    <div id="block-tables" class="block">... Столики ...</div>
-    <div id="block-atelier" class="block">... Ателье ...</div>
+    <div id="block-server" class="block" style="color: #00ff00;">
+        <div style="text-align: center; border: 1px solid #00ff00; padding: 40px;">
+            <h1>SERVER ROOM</h1>
+            <p>> Загрузка юмора... 99%</p>
+            <button class="btn-gy" style="border-color: #00ff00; color: #00ff00;" onclick="GY_Nav.go('block-bar')">НАЗАД</button>
+        </div>
+    </div>
 
-    <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-</body>
+    <div id="block-tables" class="block">
+        <h1>ЗАЛ СО СТОЛИКАМИ</h1>
+        <button class="btn-gy" onclick="GY_Nav.go('block-bar')">В БАР</button>
+    </div>
+
+    <div id="block-atelier" class="block" style="background:white; color:black;">
+        <h1>АТЕЛЬЕ</h1>
+        <button class="btn-gy" style="color:black; border-color:black;" onclick="GY_Nav.go('block-hall')">В ХОЛЛ</button>
+    </div>
+
+    <div style="display:none;">
+        <audio id="s-door" preload="auto"><source src="door_open.mp3"></audio>
+        <audio id="s-amb" loop preload="auto"><source src="bar_ambient.mp3"></audio>
+    </div>
+
     <script>
         const REG_TEMPLATE = `
-            <div style="text-align:center; color:var(--gold); margin-bottom:30px; font-family:'Playfair Display'; font-style:italic;">
-                «Шампанского много не бывает»
-            </div>
+            <div class="quote">«Твой цифровой след»</div>
             <div style="display: grid; grid-template-columns: 140px 140px; gap: 20px; margin-bottom: 25px;">
-                <div class="reg-zone" onclick="GY_Identity.uploadPhoto()">
-                    <img id="reg-avatar-main" style="width:100%; height:100%; object-fit:cover; display:none;">
-                    <span id="pic-hint" style="color:#000; opacity:0.6; font-size:10px; text-align:center;">ФОТО</span>
-                </div>
-                <div class="reg-zone" onclick="GY_Identity.setAvatar()">
-                    <img id="reg-avatar-alt" style="width:100%; height:100%; object-fit:cover; display:none;">
-                    <span id="alt-hint" style="color:#000; opacity:0.6; font-size:10px; text-align:center;">АВАТАР</span>
-                </div>
-                <div style="width:140px; height:140px; border:1px solid var(--gold); display:flex; align-items:center; justify-content:center; background: rgba(212,175,55,0.1);">
-                    <div id="reg-id-val" style="color:var(--gold); font-size:11px;">#ID-GEN</div>
-                </div>
+                <div class="reg-zone" onclick="GY_Identity.uploadPhoto()"><img id="reg-avatar-main" style="width:100%; height:100%; object-fit:cover; display:none;"><span id="pic-hint" style="color:#000; opacity:0.6;">ФОТО</span></div>
+                <div class="reg-zone" onclick="GY_Identity.setAvatar()"><img id="reg-avatar-alt" style="width:100%; height:100%; object-fit:cover; display:none;"><span id="alt-hint" style="color:#000; opacity:0.6;">АВАТАР</span></div>
+                <div style="width:140px; height:140px; border:1px solid var(--gold); display:flex; align-items:center; justify-content:center; background: rgba(212,175,55,0.1);"><div id="reg-id-val" style="color:var(--gold); font-size:11px;">#ID-GEN</div></div>
                 <div id="reg-qr-wrap" style="width:140px; height:140px; background:white; padding:10px;"></div>
             </div>
             <div class="reg-actions">
-                <button class="btn-gy" style="font-size:9px;" onclick="GY_Identity.saveIdentity()">СОХРАНИТЬ</button>
-                <button id="btn-to-hall-direct" class="btn-gy btn-sleep" style="font-size:9px;" onclick="GY_Nav.go('block-hall')">В ХОЛЛ</button>
-                <button class="btn-gy" style="font-size:9px; opacity:0.7;" onclick="GY_Nav.go('block-welcome')">НАЗАД</button>
+                <button class="btn-gy" onclick="GY_Identity.saveIdentity()">СОХРАНИТЬ</button>
+                <button id="btn-to-hall-direct" class="btn-gy btn-sleep" onclick="GY_Nav.go('block-hall')">В ХОЛЛ</button>
+                <button class="btn-gy" onclick="GY_Nav.go('block-welcome')">НАЗАД</button>
             </div>
         `;
 
@@ -182,9 +134,7 @@
                 this.id = `#GY-${Math.floor(100 + Math.random() * 899)}-2026`;
                 document.getElementById('reg-id-val').innerText = this.id;
                 const qrBox = document.getElementById('reg-qr-wrap');
-                if (qrBox && typeof QRCode !== 'undefined') {
-                    qrBox.innerHTML = ""; new QRCode(qrBox, { text: this.id, width: 120, height: 120 });
-                }
+                if (qrBox) { qrBox.innerHTML = ""; new QRCode(qrBox, { text: this.id, width: 120, height: 120 }); }
             },
             uploadPhoto() {
                 const input = document.createElement('input'); input.type = 'file'; input.accept = 'image/*';
@@ -207,27 +157,19 @@
                 document.getElementById('alt-hint').style.display = "none";
             },
             saveIdentity() {
-                if(!this.pic) return alert("Выбери образ!");
+                if(!this.pic) return;
                 document.getElementById('hall-id-display').innerText = this.id;
                 document.getElementById('hall-pic').src = this.pic;
                 const hQR = document.getElementById('hall-qr');
                 if(hQR) { hQR.innerHTML = ""; new QRCode(hQR, { text: this.id, width: 85, height: 85 }); }
                 document.getElementById('btn-to-hall-direct').classList.remove('btn-sleep');
                 document.getElementById('btn-to-hall-wait').classList.remove('btn-sleep');
-                
             },
-           verify() {
-    // Скрываем кнопку подтверждения
-    const btnConfirm = document.getElementById('hall-btn-confirm');
-    if(btnConfirm) btnConfirm.style.display = "none";
-    
-    // Показываем блок выбора пути (Бар или Ателье)
-    const nav = document.getElementById('hall-navigation');
-    if(nav) {
-        nav.style.display = "flex";
-        console.log("Доступ в Холл открыт. Выберите локацию.");
-    }
-}
+            verify() {
+                document.getElementById('hall-btn-confirm').style.display = 'none';
+                document.getElementById('hall-navigation').style.display = 'flex';
+            }
+        };
 
         const GY_Nav = {
             go(to) {
