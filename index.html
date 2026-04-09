@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.57 | FULL MASTER</title>
+    <title>GY-GY Club v4.4.59 | FULL MASTER</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -77,19 +77,28 @@
         <button class="btn-gy" onclick="portalTransition('block-identity')">ПОЛУЧИТЬ ID</button>
     </div>
 
-   <div id="block-identity" class="block">
-    <div class="quote-text">«Шампанского много не бывает»</div>
-    
-    <div id="id-label" style="font-family:'Share Tech Mono'; color:var(--gold); font-size:18px; margin-bottom:20px; letter-spacing:3px; font-weight:bold;">#ID-GENERATING...</div>
-
-    <div style="display:flex; gap:15px; margin-bottom:30px; align-items:center; justify-content:center;">
-        <div class="box-final" id="qr-box-reg" style="border-color:var(--gold); width:85px; height:85px;"></div>
+<div id="block-identity" class="block">
+        <div class="quote-text">«Шампанского много не бывает»</div>
         
-        <div class="box-final" id="avatar-box" style="border-color:var(--gold); background:#fff; cursor:pointer; width:85px; height:85px;" onclick="setAvatar()">
-            <img id="ap" style="display:none; width:100%; height:100%; object-fit:cover;">
-            <span id="txt-avatar" style="color:#000; font-size:10px; font-weight:900; text-align:center;">AVATAR</span>
-        </div>
+        <div id="id-label" style="font-family:'Share Tech Mono'; color:var(--gold); font-size:18px; margin-bottom:20px; letter-spacing:3px; font-weight:bold;">#ID-GENERATING...</div>
 
+        <div style="display:flex; gap:15px; margin-bottom:30px; align-items:center; justify-content:center;">
+            <div class="box-final" id="qr-box-reg" style="border-color:var(--gold); width:85px; height:85px;"></div>
+            
+            <div class="box-final" id="avatar-box" style="border-color:var(--gold); background:#fff; cursor:pointer; width:85px; height:85px;" onclick="setAvatar()">
+                <img id="ap" style="display:none; width:100%; height:100%; object-fit:cover;">
+                <span id="txt-avatar" style="color:#000; font-size:10px; font-weight:900;">AVATAR</span>
+            </div>
+
+            <div class="box-final" style="border-color:var(--gold); position:relative; width:85px; height:85px;">
+                <input type="file" onchange="preview(this)" style="position:absolute; inset:0; opacity:0; z-index:10; cursor:pointer;">
+                <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
+                <span id="txt-photo" style="color:#000; font-size:10px; font-weight:900;">ФОТО</span>
+            </div>
+        </div>
+        <button id="btn-save" class="btn-gy" onclick="swapButtons('btn-save', 'btn-pass')">СОХРАНИТЬ</button>
+        <button id="btn-pass" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">ПРОЙТИ В ХОЛЛ</button>
+    </div>
         <div class="box-final" style="border-color:var(--gold); position:relative; width:85px; height:85px;">
             <input type="file" onchange="preview(this)" style="position:absolute; inset:0; opacity:0; z-index:10; cursor:pointer;">
             <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
@@ -186,27 +195,28 @@
             }, 800);
         }
 
-        function handleDoor() {
-            const d = document.getElementById('main-door');
-            document.getElementById('snd-door').play();
-            d.style.transform = "scale(5)"; d.style.opacity = "0";
-            d.style.pointerEvents = "none";
-            
-            currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
-            document.getElementById('id-label').innerText = currentID;
-            document.getElementById('h-id').innerText = currentID;
-            
-            document.getElementById('qr-box-reg').innerHTML = "";
-            new QRCode(document.getElementById("qr-box-reg"), { text: currentID, width: 85, height: 85 });
-            document.getElementById('h-qr').innerHTML = "";
-            new QRCode(document.getElementById("h-qr"), { text: currentID, width: 75, height: 75 });
-            
-            setTimeout(() => { 
-                portalTransition('block-welcome'); 
-                const a = document.getElementById('snd-ambient'); a.volume = 0; a.play(); fadeAudio(a, 1, 2000); 
-            }, 1800);
-        }
+        <div id="block-identity" class="block">
+        <div class="quote-text">«Шампанского много не бывает»</div>
+        
+        <div id="id-label" style="font-family:'Share Tech Mono'; color:var(--gold); font-size:18px; margin-bottom:20px; letter-spacing:3px; font-weight:bold;">#ID-GENERATING...</div>
 
+        <div style="display:flex; gap:15px; margin-bottom:30px; align-items:center; justify-content:center;">
+            <div class="box-final" id="qr-box-reg" style="border-color:var(--gold); width:85px; height:85px;"></div>
+            
+            <div class="box-final" id="avatar-box" style="border-color:var(--gold); background:#fff; cursor:pointer; width:85px; height:85px;" onclick="setAvatar()">
+                <img id="ap" style="display:none; width:100%; height:100%; object-fit:cover;">
+                <span id="txt-avatar" style="color:#000; font-size:10px; font-weight:900;">AVATAR</span>
+            </div>
+
+            <div class="box-final" style="border-color:var(--gold); position:relative; width:85px; height:85px;">
+                <input type="file" onchange="preview(this)" style="position:absolute; inset:0; opacity:0; z-index:10; cursor:pointer;">
+                <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
+                <span id="txt-photo" style="color:#000; font-size:10px; font-weight:900;">ФОТО</span>
+            </div>
+        </div>
+        <button id="btn-save" class="btn-gy" onclick="swapButtons('btn-save', 'btn-pass')">СОХРАНИТЬ</button>
+        <button id="btn-pass" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">ПРОЙТИ В ХОЛЛ</button>
+    </div>
         function fadeAudio(audio, target, duration) {
             const start = audio.volume; const startTime = Date.now();
             const interval = setInterval(() => {
@@ -216,27 +226,23 @@
             }, 50);
         }
 
-       function preview(i) {
-    if(i.files && i.files[0]) {
-        const r = new FileReader();
-        r.onload = (e) => { 
-            // 1. Показываем фото
-            const pp = document.getElementById('pp');
-            pp.src = e.target.result; 
-            pp.style.display = "block";
-            document.getElementById('txt-photo').style.display = "none";
+    function setAvatar() {
+            const seed = Math.floor(Math.random() * 9999);
+            const avatarUrl = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${seed}`;
             
-            // 2. ГАСИМ АВАТАР (скрываем картинку и возвращаем текст)
-            document.getElementById('ap').style.display = "none";
-            document.getElementById('ap').src = ""; // Очистка пути
-            document.getElementById('txt-avatar').style.display = "block";
+            // Показываем аватар
+            const ap = document.getElementById('ap');
+            ap.src = avatarUrl; ap.style.display = "block";
+            document.getElementById('txt-avatar').style.display = "none";
             
-            // 3. Отправляем в холл
-            document.getElementById('h-photo').src = e.target.result; 
-        };
-        r.readAsDataURL(i.files[0]);
-    }
-}
+            // ГАСИМ ФОТО
+            document.getElementById('pp').style.display = "none";
+            document.getElementById('pp').src = "";
+            document.getElementById('txt-photo').style.display = "block";
+            
+            // Синхрон в холл
+            document.getElementById('h-photo').src = avatarUrl;
+        }
 
         function swapButtons(a, s) { 
             document.getElementById(a).classList.add('btn-sleep'); 
@@ -247,23 +253,22 @@
             new google.translate.TranslateElement({pageLanguage: 'ru', autoDisplay: false}, 'google_translate_element'); 
         }
       function setAvatar() {
-    const seed = Math.floor(Math.random() * 9999);
-    const avatarUrl = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${seed}`;
-    
-    // 1. Показываем аватар
-    const ap = document.getElementById('ap');
-    ap.src = avatarUrl;
-    ap.style.display = "block";
-    document.getElementById('txt-avatar').style.display = "none";
-    
-    // 2. ГАСИМ ФОТО (сбрасываем превью и показываем текст)
-    document.getElementById('pp').style.display = "none";
-    document.getElementById('pp').src = ""; // Очистка пути
-    document.getElementById('txt-photo').style.display = "block";
-    
-    // 3. Отправляем в холл
-    document.getElementById('h-photo').src = avatarUrl;
-} 
+            const seed = Math.floor(Math.random() * 9999);
+            const avatarUrl = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${seed}`;
+            
+            // Показываем аватар
+            const ap = document.getElementById('ap');
+            ap.src = avatarUrl; ap.style.display = "block";
+            document.getElementById('txt-avatar').style.display = "none";
+            
+            // ГАСИМ ФОТО
+            document.getElementById('pp').style.display = "none";
+            document.getElementById('pp').src = "";
+            document.getElementById('txt-photo').style.display = "block";
+            
+            // Синхрон в холл
+            document.getElementById('h-photo').src = avatarUrl;
+        }
     </script>
     <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
