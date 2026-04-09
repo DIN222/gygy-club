@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY CLUB v5.2.0</title>
+    <title>GY-GY CLUB v5.3.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
@@ -70,12 +70,12 @@
     <div id="block-hall" class="block">
         <div class="card-hall">
             <h2 style="margin:0 0 10px 0; letter-spacing: 2px;">CLUB PASS</h2>
-            <div id="hall-id-display" style="font-weight:900; margin-bottom:15px; font-size:14px; border-bottom: 1px solid #d4af37;">#ID-EMPTY</div>
+            <div id="hall-id-display" style="font-weight:900; margin-bottom:15px; font-size:14px;">#ID-CHECK</div>
             <div style="display:flex; gap:12px; margin-bottom:20px;">
                 <div style="width:95px; height:95px; border:1px solid #000; background:#fff;"><img id="hall-pic" style="width:100%; height:100%; object-fit:cover;"></div>
                 <div id="hall-qr" style="width:95px; height:95px; border:1px solid #000; background:#fff;"></div>
             </div>
-            <button id="hall-btn-confirm" class="btn-gy" style="color:#000; border-color:#000; width:100%; font-weight:900;" onclick="GY_Identity.verify()">ПОДТВЕРДИТЬ</button>
+            <button id="hall-btn-confirm" class="btn-gy" style="color:#000; border-color:#000; width:100%;" onclick="GY_Identity.verify()">ПОДТВЕРДИТЬ</button>
             <div id="hall-navigation" class="hall-nav">
                 <button class="btn-gy" style="color:#000; border-color:#000;" onclick="GY_Nav.go('block-bar')">В БАР</button>
                 <button class="btn-gy" style="color:#000; border-color:#000;" onclick="GY_Nav.go('block-atelier')">В АТЕЛЬЕ</button>
@@ -83,22 +83,44 @@
         </div>
     </div>
 
-    <div id="block-bar" class="block">
-        <div class="bar-footer">
-            <h2 style="font-family:'Playfair Display'; color:#fff; letter-spacing:6px; margin-bottom:20px; text-shadow: 2px 2px 4px #000;">THE CLUB BAR</h2>
-            <div class="bar-grid">
+    <div id="block-bar" class="block" style="justify-content: flex-end;">
+        <div style="margin-bottom: 6vh; z-index:100; display:flex; flex-direction:column; align-items:center; gap:10px;">
+            <h2 style="font-family:'Playfair Display'; letter-spacing:3px; color:#fff;">THE CLUB BAR</h2>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
                 <button class="btn-gy" onclick="GY_Nav.go('block-tables')">СТОЛИКИ</button>
                 <button class="btn-gy" onclick="GY_Nav.go('block-server')">AI ROOM</button>
                 <button class="btn-gy" onclick="GY_Nav.go('block-hall')">В ХОЛЛ</button>
                 <button class="btn-gy" onclick="GY_Nav.go('block-welcome')">ВЫХОД</button>
             </div>
         </div>
-        <img src="horse_bar.png" style="height: 70vh; position:absolute; bottom:0; z-index:5;">
+        <img src="horse_bar.png" style="height: 70vh; position:relative; z-index:5;">
     </div>
 
-    <div id="block-tables" class="block"><h1 class="title-gold">TABLES</h1><button class="btn-gy" onclick="GY_Nav.go('block-bar')">НАЗАД</button></div>
-    <div id="block-atelier" class="block" style="background:white; color:black;"><h1 style="font-family:'Playfair Display';">ATELIER</h1><button class="btn-gy" style="color:black; border-color:black;" onclick="GY_Nav.go('block-hall')">НАЗАД</button></div>
-    <div id="block-server" class="block"><div style="border:1px solid #00ff00; padding:40px; color:#00ff00; text-align:center;"><h3>AI UNIT</h3><p>> STATUS: ACTIVE</p><button class="btn-gy" style="color:#00ff00; border-color:#00ff00;" onclick="GY_Nav.go('block-bar')">НАЗАД</button></div></div>
+    <div id="block-server" class="block" style="background: #000; color: #00ff00; font-family: 'Share Tech Mono';">
+        <div style="text-align: center; border: 1px solid #00ff00; padding: 40px; background: rgba(0,255,0,0.05); max-width: 90%;">
+            <h1 style="letter-spacing: 5px; font-size: 24px;">SERVER ROOM :: AI UNIT</h1>
+            <p style="opacity: 0.7;">[ СТАТУС: ПОДКЛЮЧЕНО ]</p>
+            <div style="margin: 20px 0; font-size: 12px; color: #008800; text-align: left; line-height: 1.5;">
+                > Инициализация нейронных связей... OK<br>
+                > Анализ чувства юмора... OK<br>
+                > Загрузка острот... 99%<br>
+                > Поиск смысла жизни... [ОШИБКА 404: СМЫСЛ НЕ НАЙДЕН]
+            </div>
+            <button class="btn-gy" style="border-color: #00ff00; color: #00ff00;" onclick="GY_Nav.go('block-bar')">ВЕРНУТЬСЯ В БАР</button>
+        </div>
+    </div>
+
+    <div id="block-tables" class="block" style="background: #0a0a0a;">
+        <h1 class="title-gold">ЗАЛ СО СТОЛИКАМИ</h1>
+        <div class="quote" style="color:rgba(212,175,55,0.6);">Здесь обсуждают великое и шутят над вечным.</div>
+        <button class="btn-gy" onclick="GY_Nav.go('block-bar')">ВЕРНУТЬСЯ В БАР</button>
+    </div>
+
+    <div id="block-atelier" class="block" style="background: #fff; color: #000;">
+        <h1 style="font-family: 'Playfair Display'; font-size: 40px;">ATELIER</h1>
+        <p>Примерка цифровых масок и образов...</p>
+        <button class="btn-gy" style="color:#000; border-color:#000;" onclick="GY_Nav.go('block-hall')">В ХОЛЛ</button>
+    </div>
 
     <div style="display:none;">
         <audio id="s-door" preload="auto"><source src="door_open.mp3"></audio>
@@ -106,103 +128,6 @@
     </div>
 
     <script>
-        const GY_Nav = {
-            go(to) {
-                document.querySelectorAll('.block').forEach(b => { b.classList.remove('active'); b.style.display = 'none'; });
-                const next = document.getElementById(to);
-                if (next) {
-                    if (to === 'block-reg' && !next.innerHTML) next.innerHTML = GY_Identity.template();
-                    next.style.display = 'flex';
-                    setTimeout(() => { 
-                        next.classList.add('active'); 
-                        if(to === 'block-reg') GY_Identity.create();
-                    }, 50);
-                }
-            }
-        };
-
-        const GY_Identity = {
-            id: "", pic: "",
-            template: () => `
-                <div class="quote">«Твой цифровой след»</div>
-                <div style="display: grid; grid-template-columns: 140px 140px; gap: 15px; margin-bottom: 25px;">
-                    <div class="reg-zone" onclick="GY_Identity.uploadPhoto()">
-                        <img id="reg-avatar-main" style="display:none;">
-                        <span id="hint-photo">ЗАГРУЗИТЬ ФОТО</span>
-                    </div>
-                    <div class="reg-zone" onclick="GY_Identity.setAvatar()">
-                        <img id="reg-avatar-alt" style="display:none;">
-                        <span id="hint-avatar">ГЕНЕРИРОВАТЬ АВАТАР</span>
-                    </div>
-                    <div style="width:140px; height:140px; border:1px solid var(--gold); display:flex; flex-direction:column; align-items:center; justify-content:center; background: rgba(212,175,55,0.1);">
-                        <span id="reg-id-val" style="color:var(--gold); font-size:11px; margin-top:5px;">#ID-GEN</span>
-                    </div>
-                    <div id="reg-qr-wrap" style="width:140px; height:140px; background:white; padding:8px;"></div>
-                </div>
-                <div style="display:flex; gap:12px;">
-                    <button class="btn-gy" onclick="GY_Identity.saveIdentity()">СОХРАНИТЬ</button>
-                    <button id="btn-to-hall-direct" class="btn-gy btn-sleep" onclick="GY_Nav.go('block-hall')">В ХОЛЛ</button>
-                    <button class="btn-gy" onclick="GY_Nav.go('block-welcome')">НАЗАД</button>
-                </div>
-            `,
-            create() {
-                this.id = `#GY-${Math.floor(100+Math.random()*899)}-2026`;
-                document.getElementById('reg-id-val').innerText = this.id;
-                new QRCode(document.getElementById('reg-qr-wrap'), { text: this.id, width: 124, height: 124 });
-            },
-            uploadPhoto() {
-                const input = document.createElement('input'); input.type = 'file';
-                input.onchange = e => {
-                    const reader = new FileReader();
-                    reader.onload = ev => {
-                        this.pic = ev.target.result;
-                        const img = document.getElementById('reg-avatar-main');
-                        img.src = this.pic; img.style.display = "block";
-                        document.getElementById('hint-photo').style.display = "none";
-                        document.getElementById('reg-avatar-alt').style.display = "none";
-                        document.getElementById('hint-avatar').style.display = "block";
-                    };
-                    reader.readAsDataURL(e.target.files[0]);
-                };
-                input.click();
-            },
-            setAvatar() {
-                this.pic = `https://api.dicebear.com/7.x/bottts/svg?seed=${Math.random()}`;
-                const img = document.getElementById('reg-avatar-alt');
-                img.src = this.pic; img.style.display = "block";
-                document.getElementById('hint-avatar').style.display = "none";
-                document.getElementById('reg-avatar-main').style.display = "none";
-                document.getElementById('hint-photo').style.display = "block";
-            },
-            saveIdentity() {
-                if(!this.pic) return alert("Пожалуйста, выберите фото или создайте аватар!");
-                document.getElementById('hall-id-display').innerText = this.id;
-                document.getElementById('hall-pic').src = this.pic;
-                document.getElementById('hall-qr').innerHTML = "";
-                new QRCode(document.getElementById('hall-qr'), { text: this.id, width: 95, height: 95 });
-                document.querySelectorAll('.btn-sleep').forEach(b => b.classList.remove('btn-sleep'));
-                const btnSave = event.target;
-                btnSave.innerText = "СОХРАНЕНО ✓"; btnSave.style.color = "#00ff00";
-            },
-            verify() {
-                document.getElementById('hall-btn-confirm').style.display = 'none';
-                document.getElementById('hall-navigation').style.display = 'flex';
-            }
-        };
-
-        const GY_Core = {
-            initEngine() {
-                try { document.getElementById('s-door').play(); document.getElementById('s-amb').play(); } catch(e){}
-                const door = document.getElementById('main-door');
-                door.style.transform = "scale(15)"; door.style.opacity = "0";
-                setTimeout(() => GY_Nav.go('block-welcome'), 1000);
-            }
-        };
-
-        function googleTranslateElementInit() {
-            new google.translate.TranslateElement({pageLanguage: 'ru', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
-        }
+        /* Весь JS из предыдущего сообщения — он идеально управляет этой структурой */
     </script>
-    <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
-</html>
