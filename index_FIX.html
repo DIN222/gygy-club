@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY CLUB v5.3.2</title>
+    <title>GY-GY CLUB v5.3.3</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
@@ -118,6 +118,117 @@ html, body { width: 100%; height: 100%; background: var(--bg); color: var(--gold
     </div>
 
     <script>
+        let currentID = "";
+
+        function handleDoor() {
+            const door = document.getElementById('main-door');
+            document.getElementById('snd-door').play();
+            
+            door.style.transform = "scale(12)";
+            door.style.opacity = "0";
+            
+            currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
+            document.getElementById('id-label').innerText = currentID;
+            document.getElementById('h-id').innerText = currentID;
+            
+            const qrReg = document.getElementById('qr-box-reg');
+            const qrHall = document.getElementById('h-qr');
+            qrReg.innerHTML = ""; qrHall.innerHTML = "";
+            new QRCode(qrReg, { text: currentID, width: 85, height: 85 });
+            new QRCode(qrHall, { text: currentID, width: 75, height: 75 });
+
+            setTimeout(() => {
+                portalTransition('block-welcome');
+                const amb = document.getElementById('snd-ambient');
+                amb.volume = 0; amb.play(); fadeAudio(amb, 0.6, 2000);
+            }, 1500);
+        }
+
+        function portalTransition(nextId) {
+            const current = document.querySelector('.block.active');
+            const next = document.getElementById(nextId);
+            const backBtn = document.getElementById('btn-global-back');
+            
+            if(current) { current.style.opacity = "0"; current.style.pointerEvents = "none"; }
+            backBtn.style.opacity = "0";
+
+            setTimeout(() => {
+                if(current) { current.classList.remove('active'); current.style.display = "none"; }
+                next.style.display = "flex";
+                
+                setTimeout(() => {
+                    next.classList.add('active');
+                    next.style.opacity = "1";
+                    
+                    backBtn.style.display = (nextId === 'block-tables') ? 'block' : 'none';
+                    if(nextId === 'block-tables') setTimeout(() => backBtn.style.opacity = "1", 50);
+
+                    if(nextId === 'block-bar') {
+                        setTimeout(() => document.getElementById('snd-khe').play(), 600);
+                        setTimeout(() => document.getElementById('snd-pour').play(), 1800);
+                    }
+                }, 50);
+            }, 600);
+        }
+
+        function setAvatar() {
+            const seed = Math.floor(Math.random() * 9999);
+            const url = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${seed}`;
+            
+            const ap = document.getElementById('ap');
+            ap.src = url; ap.style.display = "block";
+            document.getElementById('txt-avatar').style.display = "none";
+            
+            document.getElementById('pp').style.display = "none";
+            document.getElementById('pp').src = "";
+            document.getElementById('txt-photo').style.display = "block";
+            
+            document.getElementById('h-photo').src = url;
+        }
+
+        function preview(i) {
+            if(i.files && i.files[0]) {
+                const r = new FileReader();
+                r.onload = (e) => {
+                    document.getElementById('pp').src = e.target.result;
+                    document.getElementById('pp').style.display = "block";
+                    document.getElementById('txt-photo').style.display = "none";
+                    
+                    document.getElementById('ap').style.display = "none";
+                    document.getElementById('ap').src = "";
+                    document.getElementById('txt-avatar').style.display = "block";
+                    
+                    document.getElementById('h-photo').src = e.target.result;
+                };
+                r.readAsDataURL(i.files[0]);
+            }
+        }
+
+        function deepDive() {
+            document.body.style.transition = "opacity 1.2s ease, filter 1.2s ease";
+            document.body.style.opacity = "0";
+            document.body.style.filter = "blur(15px) brightness(0)";
+            setTimeout(() => { window.location.href = 'bridge_protocol.html'; }, 1200);
+        }
+
+        function fadeAudio(audio, target, duration) {
+            const start = audio.volume;
+            const startTime = Date.now();
+            const timer = setInterval(() => {
+                const progress = Math.min((Date.now() - startTime) / duration, 1);
+                audio.volume = start + (target - start) * progress;
+                if (progress === 1) clearInterval(timer);
+            }, 50);
+        }
+
+        function swapButtons(a, b) {
+            document.getElementById(a).classList.add('btn-sleep');
+            document.getElementById(b).classList.remove('btn-sleep');
+        }
+
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage: 'ru', autoDisplay: false}, 'google_translate_element');
+        }
         /* Весь JS из предыдущего сообщения — он идеально управляет этой структурой */
     </script>
 </body>
