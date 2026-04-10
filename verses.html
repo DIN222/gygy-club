@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY CLUB | VERSES v.3.2</title>
+    <title>GY-GY CLUB | VERSES v.3.3</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root { --gold: #ffd700; --black: #000; --h-unit: 55px; }
@@ -214,6 +214,46 @@
         }
 
         // Твои остальные функции (генератор, логика кнопок и т.д.) здесь...
+    // 1. "РУКИ" — Функция, которая физически вешает карточку на стену
+function GY_Cloud_Insert(style, text, clip) {
+    const wall = document.getElementById('wall'); // Убедись, что у тебя есть <div id="wall">
+    if (!wall) {
+        console.error("❌ Шеф, я не вижу стену! Добавь в HTML <div id='wall'></div>");
+        return;
+    }
+
+    const card = document.createElement('div');
+    card.className = 'card active'; // Твои стили
+    card.style.border = "1px solid var(--gold)";
+    card.style.margin = "15px";
+    card.style.padding = "15px";
+    card.style.background = "rgba(0,0,0,0.8)";
+    
+    card.innerHTML = `
+        <div style="color:var(--gold); font-size:11px;">[ОБЛАКО GY-GY: ${style.toUpperCase()}]</div>
+        <div class="verse-text" style="margin: 10px 0; line-height:1.5; color:#fff;">${text}</div>
+        <div style="font-size:10px; color:#aaa; font-style:italic;">🎬 Clip: ${clip}</div>
+        <button class="btn-gy" onclick="this.parentElement.remove()" style="margin-top:10px; cursor:pointer;">❌ УБРАТЬ</button>
+    `;
+    
+    wall.prepend(card); // Клеим в самый верх
+    console.log("✅ Карточка на стене!");
+}
+
+// 2. "УШИ" — Опрос сервера каждые 2 секунды
+setInterval(async () => {
+    try {
+        const response = await fetch('/api/pull');
+        const data = await response.json();
+        
+        if (data && data.text) {
+            console.log("🎁 ПОЙМАЛ ИМПУЛЬС:", data);
+            GY_Cloud_Insert(data.style, data.text, data.clip);
+        }
+    } catch (e) {
+        // Сервер молчит — не мешаем ему спать
+    }
+}, 2000);
     </script>
 </body>
 </html>
