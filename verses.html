@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY CLUB | VERSES v.2.10</title>
+    <title>GY-GY CLUB | VERSES v.2.11</title>
     <style>
         :root { --gold: #ffd700; --black: #000; --h-unit: 55px; }
         body { background: var(--black); color: var(--gold); font-family: monospace; margin: 0; overflow: hidden; display: flex; flex-direction: column; height: 100vh; }
@@ -95,7 +95,14 @@
 
         // Эмуляция ответа (здесь будет появляться мой текст)
         setTimeout(() => {
-            const mockText = `[ОЖИДАНИЕ ИНЪЕКЦИИ ИЗ ОБЛАКА]\nШеф, скопируй стих из чата сюда.\nТема: ${userTopic}`;
+            const mockText = `[ОЖИДАНИЕ ИНЪЕКЦИИ ИЗ ОБЛАКА]\nТучи сдавили неоновый город,
+Принять эту серость — как выстрел в упор.
+Снять бы со смыслов прокуренный ворот,
+Но в горле застрял ледяной приговор.
+Бутылка пуста, в ней лишь блики и эхо,
+Драйв растворился в полночном дожде.
+В клубе GY-GY не до пьяного смеха,
+Мы ищем просвет в абсолютной ниште.\nТема: ${userTopic}`;
             finalizeCard(id, mockText);
             btn.disabled = false;
         }, 1000);
