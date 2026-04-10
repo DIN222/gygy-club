@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY CLUB v5.3.4</title>
+    <title>GY-GY CLUB v5.3.6</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
@@ -116,32 +116,26 @@ html, body { width: 100%; height: 100%; background: var(--bg); color: var(--gold
         <audio id="s-door" preload="auto"><source src="door_open.mp3"></audio>
         <audio id="s-amb" loop preload="auto"><source src="bar_ambient.mp3"></audio>
     </div>
-
-    <script>
   <script>
     let currentID = "";
 
-    // Универсальный объект управления, который ищет HTML
     const GY_Core = {
         initEngine: function() {
             const door = document.getElementById('main-door');
             const snd = document.getElementById('s-door');
             if(snd) snd.play().catch(e => console.log("Sound muted"));
             
-            // Эффект входа
             door.style.transform = "scale(12)";
             door.style.opacity = "0";
             
-            // Генерация ID (Digital Trace)
+            // Генерация Digital Trace
             currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
-            
-            // Заполняем ID там, где они есть в HTML
-            const idDisplay = document.getElementById('hall-id-display');
-            if(idDisplay) idDisplay.innerText = currentID;
-            
-            // QR-код (только для холла, так как в регистрации блока пока нет)
+            const idLabel = document.getElementById('hall-id-display');
+            if(idLabel) idLabel.innerText = currentID;
+
+            // Генерация QR
             const qrHall = document.getElementById('hall-qr');
-            if(qrHall) {
+            if(qrHall && typeof QRCode !== 'undefined') {
                 qrHall.innerHTML = "";
                 new QRCode(qrHall, { text: currentID, width: 95, height: 95 });
             }
@@ -150,18 +144,18 @@ html, body { width: 100%; height: 100%; background: var(--bg); color: var(--gold
                 GY_Nav.go('block-welcome');
                 const amb = document.getElementById('s-amb');
                 if(amb) {
-                    amb.volume = 0; 
+                    amb.volume = 0;
                     amb.play().catch(e => console.log("Ambient muted"));
-                    GY_Core.fadeAudio(amb, 0.6, 2000);
+                    this.fadeAudio(amb, 0.5, 2000);
                 }
             }, 1200);
         },
 
         fadeAudio: function(audio, target, duration) {
-            const start = audio.volume;
-            const startTime = Date.now();
-            const timer = setInterval(() => {
-                const progress = Math.min((Date.now() - startTime) / duration, 1);
+            let start = audio.volume;
+            let startTime = Date.now();
+            let timer = setInterval(() => {
+                let progress = Math.min((Date.now() - startTime) / duration, 1);
                 audio.volume = start + (target - start) * progress;
                 if (progress === 1) clearInterval(timer);
             }, 50);
@@ -169,50 +163,37 @@ html, body { width: 100%; height: 100%; background: var(--bg); color: var(--gold
     };
 
     const GY_Nav = {
-        go: function(nextId) {
-            const current = document.querySelector('.block.active');
-            const next = document.getElementById(nextId);
-            
-            if(current) { 
-                current.style.opacity = "0"; 
-                setTimeout(() => {
-                    current.classList.remove('active');
-                    current.style.display = "none";
-                }, 400);
-            }
-
-            setTimeout(() => {
-                next.style.display = "flex";
+        go: function(id) {
+            document.querySelectorAll('.block').forEach(b => {
+                b.classList.remove('active');
+                b.style.display = 'none';
+                b.style.opacity = '0';
+            });
+            const next = document.getElementById(id);
+            if(next) {
+                next.style.display = 'flex';
                 setTimeout(() => {
                     next.classList.add('active');
-                    next.style.opacity = "1";
+                    next.style.opacity = '1';
                 }, 50);
-            }, 450);
+            }
         }
     };
 
     const GY_Identity = {
         verify: function() {
-            // Имитация загрузки аватара при верификации
             const seed = Math.floor(Math.random() * 9999);
             document.getElementById('hall-pic').src = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${seed}`;
-            
             document.getElementById('hall-navigation').style.display = 'flex';
             document.getElementById('hall-btn-confirm').style.display = 'none';
+            console.log("Личность подтверждена:", currentID);
         }
     };
 
     function googleTranslateElementInit() {
-        new google.translate.TranslateElement({pageLanguage: 'ru', autoDisplay: false}, 'google_translate_element');
+        new google.translate.TranslateElement({pageLanguage: 'ru'}, 'google_translate_element');
     }
-
-    // Авто-запуск скрипта переводчика
-    (function() {
-        var gt = document.createElement('script');
-        gt.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-        document.body.appendChild(gt);
-    })();
 </script>
-    </script>
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
