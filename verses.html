@@ -3,39 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY CLUB | VERSES v.2.12</title>
+    <title>GY-GY CLUB | VERSES v.3.1</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root { --gold: #ffd700; --black: #000; --h-unit: 55px; }
         body { background: var(--black); color: var(--gold); font-family: monospace; margin: 0; overflow: hidden; display: flex; flex-direction: column; height: 100vh; }
-        header { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 10px 15px; border-bottom: 2px solid var(--gold); }
+        
+        /* ШАПКА */
+        header { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 10px 15px; border-bottom: 2px solid var(--gold); background: #000; z-index: 10; }
         .header-left { display: flex; gap: 10px; align-items: center; }
         .header-right { display: flex; justify-content: flex-end; }
-        .ui-box { height: var(--h-unit); border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; padding: 0 15px; background: transparent; color: var(--gold); cursor: pointer; box-sizing: border-box; font-size: 18px; font-weight: bold; }
+        .ui-box { height: var(--h-unit); border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; padding: 0 15px; background: transparent; color: var(--gold); cursor: pointer; box-sizing: border-box; font-size: 18px; font-weight: bold; transition: 0.3s; }
+        .ui-box:hover { background: rgba(255,215,0,0.1); box-shadow: 0 0 15px var(--gold); }
         .arrow { font-size: 32px; width: 60px; font-family: sans-serif; }
-        .logo { font-size: 30px; font-weight: bold; letter-spacing: 6px; padding: 0 10px; }
-        #wall { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 20px; scroll-behavior: smooth; }
-        .card { border: 1px solid #333; padding: 20px; background: #050505; max-width: 800px; margin: 0 auto; width: 95%; transition: 0.3s; }
-        .card.loading { border-color: #555; opacity: 0.6; }
-        .content { color: #fff; min-height: 80px; outline: none; margin-bottom: 15px; white-space: pre-line; font-size: 20px; }
+        .logo { font-size: 30px; font-weight: bold; letter-spacing: 6px; padding: 0 10px; text-shadow: 0 0 10px var(--gold); }
+
+        /* СТЕНА */
+        #wall { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 20px; scroll-behavior: smooth; position: relative; }
+        #wall-placeholder { padding: 40px; text-align: center; color: rgba(255,215,0,0.4); font-size: 18px; line-height: 1.6; border: 1px dashed rgba(255,215,0,0.2); margin: 20px; border-radius: 15px; }
+        
+        /* КАРТОЧКИ */
+        .card { border: 1px solid #333; padding: 20px; background: #050505; max-width: 800px; margin: 0 auto; width: 95%; transition: 0.4s; position: relative; animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        .card.loading { border-color: var(--gold); opacity: 0.7; border-style: dashed; }
+        .content { color: #fff; min-height: 80px; outline: none; margin-bottom: 15px; white-space: pre-line; font-size: 20px; line-height: 1.4; }
+        
+        /* УПРАВЛЕНИЕ КАРТОЧКОЙ */
         .remote { display: flex; gap: 20px; border-top: 1px solid #222; padding-top: 15px; font-size: 13px; }
-        .remote-btn { cursor: pointer; color: #777; text-transform: uppercase; }
+        .remote-btn { cursor: pointer; color: #777; text-transform: uppercase; font-weight: bold; }
         .remote-btn:hover { color: var(--gold); }
-        footer { padding: 15px; border-top: 1px solid #222; }
+
+        /* ПОДВАЛ */
+        footer { padding: 15px; border-top: 2px solid var(--gold); background: #000; }
         .input-row { display: flex; gap: 10px; width: 100%; height: var(--h-unit); }
         input, select { background: #000; border: 1px solid var(--gold); color: #fff; padding: 0 15px; font-family: inherit; font-size: 18px; outline: none; }
         input { flex: 1; }
-        select { width: 140px; }
-        .btn-ok { width: 70px; font-size: 20px; background: rgba(255,215,0,0.1); }
+        input::placeholder { color: rgba(255,215,0,0.3); }
+        select { width: 150px; cursor: pointer; }
+        .btn-ok { width: 80px; font-size: 20px; background: rgba(255,215,0,0.1); }
     </style>
 </head>
 <body>
 
 <header>
     <div class="header-left">
-        <button class="ui-box arrow" onclick="location.href='ai_room_core_v8.html'">«</button>
+        <button class="ui-box arrow" onclick="location.href='index_FIX.html'">«</button>
         <div class="ui-box" style="border:none">RU</div>
-        <div class="ui-box" style="width:55px; padding:0">ID</div>
-        <button class="ui-box" onclick="setIdea()">GEN</button>
+        <button class="ui-box" style="width: auto; padding: 0 20px;" onclick="quickGen()">ГЕНЕРАТОР</button>
     </div>
     <div class="logo">GY-GY</div>
     <div class="header-right">
@@ -44,60 +58,83 @@
 </header>
 
 <main id="wall">
-    </main>
+    <div id="wall-placeholder">
+        Выберите тему (кнопка внизу), <br>
+        напишите 4 любых слова, нажмите <b>ОК</b> и кнопку <b>ГЕНЕРАТОР</b>, <br>
+        или после выбора темы сразу нажмите <b>ГЕНЕРАТОР</b>. <br><br>
+        <span style="color: var(--gold); opacity: 0.8;">Далее ориентируйтесь по навигации на странице.</span>
+    </div>
+</main>
 
 <footer>
     <div class="input-row">
         <select id="style">
-            <option value="noir">НУАР</option>
-            <option value="gygy">ГИ-ГИ</option>
-            <option value="rock">ROCK</option>
+            <option value="absurd">АБСУРД</option>
+            <option value="cyber">КИБЕР-КОНЬ</option>
+            <option value="luxury">ЗОЛОТО</option>
+            <option value="hardcore">ХАРДКОР</option>
+            <option value="minimal">МИНИМАЛ</option>
         </select>
-        <input type="text" id="words" placeholder="Темы для синтеза...">
-        <button class="ui-box btn-ok" id="run-btn" onclick="askAI()">OK</button>
+        <input type="text" id="words" placeholder="Напиши любые 4 слова...">
+        <button class="ui-box btn-ok" id="run-btn" onclick="quickGen()">OK</button>
     </div>
 </footer>
 
 <script>
-    // Имитация облачного ответа, пока мы не пробросили мост через мой интерфейс
-    async function askAI() {
+    function checkWall() {
+        const wall = document.getElementById('wall');
+        const placeholder = document.getElementById('wall-placeholder');
+        const cards = wall.querySelectorAll('.card');
+        
+        if (cards.length > 0) {
+            if (placeholder) placeholder.style.display = 'none';
+        } else {
+            if (placeholder) placeholder.style.display = 'block';
+        }
+    }
+
+    async function quickGen() {
         const input = document.getElementById('words');
         const style = document.getElementById('style').value;
         const wall = document.getElementById('wall');
-        const btn = document.getElementById('run-btn');
+        
+        let userWords = input.value.trim();
+        let finalTopic = "";
+        let mode = "";
 
-        if (!input.value.trim()) return;
+        // ЛОГИКА: Человек или Автомат
+        if (userWords) {
+            finalTopic = userWords;
+            mode = "ЧЕЛОВЕК VS МАШИНА";
+        } else {
+            const autoThemes = {
+                absurd: "Пьяный кактус поет караоке в открытом космосе",
+                cyber: "Нейро-конь взламывает терминал за порцию овса",
+                luxury: "Алмазные слезы на золотом капоте лимузина",
+                hardcore: "Разрыв шаблона в ритме отбойного молотка",
+                minimal: "Точка. Тишина. Взрыв."
+            };
+            finalTopic = autoThemes[style] || "Случайный драйв системы";
+            mode = "ГЕНЕРЕЛЛО-ИНТУИЦИЯ";
+        }
 
         const id = 'v' + Date.now();
-        const userTopic = input.value;
-        
-        // Создаем карточку
         const card = document.createElement('div');
         card.className = 'card loading';
         card.id = id;
-        card.innerHTML = `<div class="content">ОБЛАКО ПРИНЯЛО СИГНАЛ... ТЕМА: ${userTopic}</div>`;
-        wall.appendChild(card);
-        wall.scrollTop = wall.scrollHeight;
-
+        card.innerHTML = `<div class="content">[${mode}] СИНТЕЗ В СТИЛЕ ${style.toUpperCase()}... \n Тема: ${finalTopic}</div>`;
+        
+        // Вставляем новую карточку перед остальными (в начало списка)
+        const placeholder = document.getElementById('wall-placeholder');
+        wall.insertBefore(card, wall.firstChild);
+        
         input.value = '';
-        btn.disabled = true;
+        checkWall();
 
-        // ВАЖНО: Так как api.airforce не существует, 
-        // мы отправляем этот запрос в консоль для синхронизации со мной
-        console.log(`GY-GY-CLOUD-REQUEST: style=${style}, topic=${userTopic}`);
-
-        // Эмуляция ответа (здесь будет появляться мой текст)
+        // Имитация ответа от облака
         setTimeout(() => {
-            const mockText = `[ОЖИДАНИЕ ИНЪЕКЦИИ ИЗ ОБЛАКА]\nТучи сдавили неоновый город,
-Принять эту серость — как выстрел в упор.
-Снять бы со смыслов прокуренный ворот,
-Но в горле застрял ледяной приговор.
-Бутылка пуста, в ней лишь блики и эхо,
-Драйв растворился в полночном дожде.
-В клубе GY-GY не до пьяного смеха,
-Мы ищем просвет в абсолютной ниште.\nТема: ${userTopic}`;
-            finalizeCard(id, mockText);
-            btn.disabled = false;
+            const result = `[ОБЛАКО GY-GY: ${style.toUpperCase()}]\n\nШеф, импульс принят! \nЖду, когда ты вставишь сюда готовый куплет по теме: "${finalTopic}" из нашего чата.`;
+            finalizeCard(id, result);
         }, 1000);
     }
 
@@ -111,8 +148,14 @@
                 <span class="remote-btn" onclick="bridge('CLIP', '${id}')">🎬 CLIP</span>
                 <span class="remote-btn" onclick="bridge('TG', '${id}')">✉ TG</span>
                 <span class="remote-btn" onclick="bridge('ARCHIVE', '${id}')">🏛️ ARCH</span>
-                <span class="remote-btn" onclick="this.closest('.card').remove()" style="color:#aa0000">❌ DEL</span>
+                <span class="remote-btn" onclick="deleteCard('${id}')" style="color:#aa0000">❌ DEL</span>
             </div>`;
+    }
+
+    function deleteCard(id) {
+        const card = document.getElementById(id);
+        if (card) card.remove();
+        checkWall();
     }
 
     function bridge(action, id) {
@@ -121,13 +164,13 @@
             localStorage.setItem('currentVerse', text); 
             location.href = 'clip.html'; 
         }
+        if(action === 'TG') alert("Отправка в Telegram...");
+        if(action === 'ARCHIVE') alert("Сохранено в цифровые архивы клуба.");
     }
 
-    function setIdea() { 
-        const ideas = ["Квантовый скачок", "Неоновый банан", "Код хаоса", "Реголит и джаз", "Сингулярность"];
-        document.getElementById('words').value = ideas.sort(() => .5 - Math.random()).slice(0,2).join(' ');
-    }
+    // Инициализация при загрузке
+    checkWall();
 </script>
+
 </body>
 </html>
-
