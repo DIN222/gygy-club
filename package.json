@@ -1,0 +1,9 @@
+{
+  "name": "gy-gy-club",
+  "version": "3.5.0",
+  "description": "The most humorous club in the universe",
+  "main": "index.html",
+  "engines": {
+    "node": "18.x"
+  }
+}
