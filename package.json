@@ -1,8 +1,11 @@
 {
   "name": "gy-gy-club",
-  "version": "3.5.0",
-  "description": "The most humorous club in the universe",
+  "version": "3.7.0",
+  "description": "Humor everywhere",
   "main": "index.html",
+  "scripts": {
+    "build": "echo 'No build needed'"
+  },
   "engines": {
     "node": "18.x"
   }
