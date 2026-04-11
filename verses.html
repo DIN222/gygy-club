@@ -93,30 +93,63 @@
         }
     }
 
-    async function quickGen() {
-        const input = document.getElementById('words');
-        const style = document.getElementById('style').value;
-        const wall = document.getElementById('wall');
-        
-        let userWords = input.value.trim();
-        let finalTopic = "";
-        let mode = "";
+  async function quickGen() {
+    const input = document.getElementById('words');
+    const style = document.getElementById('style').value;
+    const wall = document.getElementById('wall');
+    
+    let userWords = input.value.trim();
+    let finalTopic = "";
+    let mode = "";
 
-        // ЛОГИКА: Человек или Автомат
-        if (userWords) {
-            finalTopic = userWords;
-            mode = "ЧЕЛОВЕК VS МАШИНА";
-        } else {
-            const autoThemes = {
-                absurd: "Пьяный кактус поет караоке в открытом космосе",
-                cyber: "Нейро-конь взламывает терминал за порцию овса",
-                luxury: "Алмазные слезы на золотом капоте лимузина",
-                hardcore: "Разрыв шаблона в ритме отбойного молотка",
-                minimal: "Точка. Тишина. Взрыв."
-            };
-            finalTopic = autoThemes[style] || "Случайный драйв системы";
-            mode = "ГЕНЕРЕЛЛО-ИНТУИЦИЯ";
-        }
+    // Оставляем твою логику выбора темы
+    if (userWords) {
+        finalTopic = userWords;
+        mode = "ЧЕЛОВЕК VS МАШИНА";
+    } else {
+        const autoThemes = {
+            absurd: "Пьяный кактус поет караоке в открытом космосе",
+            cyber: "Нейро-конь взламывает терминал за порцию овса",
+            luxury: "Алмазные слезы на золотом капоте лимузина",
+            hardcore: "Разрыв шаблона в ритме отбойного молотка",
+            minimal: "Точка. Тишина. Взрыв."
+        };
+        finalTopic = autoThemes[style] || "Случайный драйв системы";
+        mode = "ГЕНЕРЕЛЛО-ИНТУИЦИЯ";
+    }
+
+    const id = 'v' + Date.now();
+    const card = document.createElement('div');
+    card.className = 'card loading';
+    card.id = id;
+    // Сразу пишем юзеру, что процесс пошел
+    card.innerHTML = `<div class="content">[${mode}] ✂️ Ткань режется... \n Тема: ${finalTopic}</div>`;
+    
+    wall.insertBefore(card, wall.firstChild);
+    input.value = '';
+    checkWall();
+
+    // --- МАГИЯ ОБЛАЧНОГО ПОШИВА ---
+    try {
+        const response = await fetch('/api/chat', { // Стучимся в наш новый шлюз
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                prompt: finalTopic, 
+                user_id: 'GY-' + id,
+                mode: style.toUpperCase()
+            })
+        });
+
+        const data = await response.json();
+        
+        // Нитки подобрались — выводим настоящий куплет!
+        finalizeCard(id, data.text || "🎷 Облако выдало тишину... Попробуй еще раз!");
+
+    } catch (err) {
+        finalizeCard(id, "🧨 Ошибка связи! Проверь шлюз api/chat.js или настройки Vercel.");
+    }
+}
 
         const id = 'v' + Date.now();
         const card = document.createElement('div');
