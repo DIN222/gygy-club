@@ -99,25 +99,56 @@
     const wall = document.getElementById('wall');
     
     let userWords = input.value.trim();
-    let finalTopic = "";
-    let mode = "";
+    let finalTopic = userWords || ( {
+        absurd: "Пьяный кактус поет караоке в открытом космосе",
+        cyber: "Нейро-конь взламывает терминал за порцию овса",
+        luxury: "Алмазные слезы на золотом капоте лимузина",
+        hardcore: "Разрыв шаблона в ритме отбойного молотка",
+        minimal: "Точка. Тишина. Взрыв."
+    }[style] || "Случайный драйв системы");
 
-    // Оставляем твою логику выбора темы
-    if (userWords) {
-        finalTopic = userWords;
-        mode = "ЧЕЛОВЕК VS МАШИНА";
-    } else {
-        const autoThemes = {
-            absurd: "Пьяный кактус поет караоке в открытом космосе",
-            cyber: "Нейро-конь взламывает терминал за порцию овса",
-            luxury: "Алмазные слезы на золотом капоте лимузина",
-            hardcore: "Разрыв шаблона в ритме отбойного молотка",
-            minimal: "Точка. Тишина. Взрыв."
-        };
-        finalTopic = autoThemes[style] || "Случайный драйв системы";
-        mode = "ГЕНЕРЕЛЛО-ИНТУИЦИЯ";
+    const id = 'v' + Date.now();
+    const card = document.createElement('div');
+    card.className = 'card loading';
+    card.id = id;
+    card.innerHTML = `<div class="content">[ОЖИДАНИЕ] ✂️ Ткань режется... \n Тема: ${finalTopic}</div>`;
+    
+    wall.insertBefore(card, wall.firstChild);
+    input.value = '';
+    checkWall();
+
+    try {
+        // ОТПРАВКА ЗАПРОСА
+        const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                prompt: finalTopic, 
+                user_id: 'GY-' + id,
+                mode: style.toUpperCase()
+            })
+        });
+
+        // ПРОВЕРКА ОТВЕТА
+        if (!response.ok) {
+            throw new Error(`Шлюз ответил кодом ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        // ВЫВОД КУПЛЕТА (Завершаем карточку)
+        finalizeCard(id, data.text || "🎷 Облако выдало тишину...");
+
+    } catch (err) {
+        // ОБРАБОТКА ОШИБКИ (Карточка заговорит о проблеме)
+        console.error("ОШИБКА:", err);
+        const cardEl = document.getElementById(id);
+        if (cardEl) {
+            cardEl.classList.remove('loading');
+            cardEl.innerHTML = `<div class="content" style="color: #ff4444;">🧨 [ОШИБКА СВЯЗИ] \n ${err.message} \n Проверь вкладку Network в F12!</div>`;
+        }
     }
-
+}
     const id = 'v' + Date.now();
     const card = document.createElement('div');
     card.className = 'card loading';
