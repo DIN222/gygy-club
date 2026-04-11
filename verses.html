@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY CLUB | VERSES v.3.5.7</title>
+    <title>GY-GY CLUB | VERSES v.3.5.8</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root { --gold: #ffd700; --black: #000; --h-unit: 55px; }
@@ -91,7 +91,7 @@
         }
     }
 
-    // 2. ГЕНЕРАТОР
+    // 2. ГЕНЕРАТОР (Тот самый, что идет в Облако)
     async function quickGen() {
         const input = document.getElementById('words');
         const style = document.getElementById('style').value;
@@ -110,14 +110,15 @@
         const card = document.createElement('div');
         card.className = 'card loading';
         card.id = id;
-        card.innerHTML = `<div class="content">[${style.toUpperCase()}] ✂️ Ткань режется... \n Тема: ${finalTopic}</div>`;
+        card.innerHTML = `<div class="content">[ОЖИДАНИЕ] ✂️ Ткань режется... \n Тема: ${finalTopic}</div>`;
         
         wall.insertBefore(card, wall.firstChild);
         input.value = '';
         checkWall();
 
         try {
-            const response = await fetch('/api/chat.js', {
+            // ВОТ ТУТ ГЛАВНОЕ ИЗМЕНЕНИЕ: путь теперь просто '/chat'
+            const response = await fetch('/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
@@ -127,6 +128,16 @@
                 })
             });
 
+            if (!response.ok) throw new Error(`Шлюз ответил: ${response.status}`);
+
+            const data = await response.json();
+            finalizeCard(id, data.text || "🎷 Облако выдало тишину...");
+
+        } catch (err) {
+            console.error("ОШИБКА:", err);
+            finalizeCard(id, `🧨 [ОШИБКА СВЯЗИ]\n${err.message}\nПроверь папку /functions в GitHub!`);
+        }
+    }
             if (!response.ok) throw new Error(`Шлюз ответил: ${response.status}`);
 
             const data = await response.json();
