@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY CLUB | VERSES v.3.5.6/title>
+    <title>GY-GY CLUB | VERSES v.3.5.7</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root { --gold: #ffd700; --black: #000; --h-unit: 55px; }
@@ -81,162 +81,7 @@
 </footer>
 
 <script>
-    function checkWall() {
-        const wall = document.getElementById('wall');
-        const placeholder = document.getElementById('wall-placeholder');
-        const cards = wall.querySelectorAll('.card');
-        
-        if (cards.length > 0) {
-            if (placeholder) placeholder.style.display = 'none';
-        } else {
-            if (placeholder) placeholder.style.display = 'block';
-        }
-    }
-
-  async function quickGen() {
-    const input = document.getElementById('words');
-    const style = document.getElementById('style').value;
-    const wall = document.getElementById('wall');
-    
-    let userWords = input.value.trim();
-    let finalTopic = userWords || ( {
-        absurd: "Пьяный кактус поет караоке в открытом космосе",
-        cyber: "Нейро-конь взламывает терминал за порцию овса",
-        luxury: "Алмазные слезы на золотом капоте лимузина",
-        hardcore: "Разрыв шаблона в ритме отбойного молотка",
-        minimal: "Точка. Тишина. Взрыв."
-    }[style] || "Случайный драйв системы");
-
-    const id = 'v' + Date.now();
-    const card = document.createElement('div');
-    card.className = 'card loading';
-    card.id = id;
-    card.innerHTML = `<div class="content">[ОЖИДАНИЕ] ✂️ Ткань режется... \n Тема: ${finalTopic}</div>`;
-    
-    wall.insertBefore(card, wall.firstChild);
-    input.value = '';
-    checkWall();
-
-    try {
-        // ОТПРАВКА ЗАПРОСА
-        const response = await fetch('/api/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                prompt: finalTopic, 
-                user_id: 'GY-' + id,
-                mode: style.toUpperCase()
-            })
-        });
-
-        // ПРОВЕРКА ОТВЕТА
-        if (!response.ok) {
-            throw new Error(`Шлюз ответил кодом ${response.status}`);
-        }
-
-        const data = await response.json();
-        
-        // ВЫВОД КУПЛЕТА (Завершаем карточку)
-        finalizeCard(id, data.text || "🎷 Облако выдало тишину...");
-
-    } catch (err) {
-        // ОБРАБОТКА ОШИБКИ (Карточка заговорит о проблеме)
-        console.error("ОШИБКА:", err);
-        const cardEl = document.getElementById(id);
-        if (cardEl) {
-            cardEl.classList.remove('loading');
-            cardEl.innerHTML = `<div class="content" style="color: #ff4444;">🧨 [ОШИБКА СВЯЗИ] \n ${err.message} \n Проверь вкладку Network в F12!</div>`;
-        }
-    }
-}
-    const id = 'v' + Date.now();
-    const card = document.createElement('div');
-    card.className = 'card loading';
-    card.id = id;
-    // Сразу пишем юзеру, что процесс пошел
-    card.innerHTML = `<div class="content">[${mode}] ✂️ Ткань режется... \n Тема: ${finalTopic}</div>`;
-    
-    wall.insertBefore(card, wall.firstChild);
-    input.value = '';
-    checkWall();
-
-    // --- МАГИЯ ОБЛАЧНОГО ПОШИВА ---
-    try {
-        const response = await fetch('/api/chat', { // Стучимся в наш новый шлюз
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                prompt: finalTopic, 
-                user_id: 'GY-' + id,
-                mode: style.toUpperCase()
-            })
-        });
-
-        const data = await response.json();
-        
-        // Нитки подобрались — выводим настоящий куплет!
-        finalizeCard(id, data.text || "🎷 Облако выдало тишину... Попробуй еще раз!");
-
-    } catch (err) {
-        finalizeCard(id, "🧨 Ошибка связи! Проверь шлюз api/chat.js или настройки Vercel.");
-    }
-}
-
-        const id = 'v' + Date.now();
-        const card = document.createElement('div');
-        card.className = 'card loading';
-        card.id = id;
-        card.innerHTML = `<div class="content">[${mode}] СИНТЕЗ В СТИЛЕ ${style.toUpperCase()}... \n Тема: ${finalTopic}</div>`;
-        
-        // Вставляем новую карточку перед остальными (в начало списка)
-        const placeholder = document.getElementById('wall-placeholder');
-        wall.insertBefore(card, wall.firstChild);
-        
-        input.value = '';
-        checkWall();
-
-        // Имитация ответа от облака
-        setTimeout(() => {
-            const result = `[ОБЛАКО GY-GY: ${style.toUpperCase()}]\n\nШеф, импульс принят! \nЖду, когда ты вставишь сюда готовый куплет по теме: "${finalTopic}" из нашего чата.`;
-            finalizeCard(id, result);
-        }, 1000);
-    }
-
-    function finalizeCard(id, text) {
-        const card = document.getElementById(id);
-        if (!card) return;
-        card.classList.remove('loading');
-        card.innerHTML = `
-            <div class="content" contenteditable="true">${text}</div>
-            <div class="remote">
-                <span class="remote-btn" onclick="bridge('CLIP', '${id}')">🎬 CLIP</span>
-                <span class="remote-btn" onclick="bridge('TG', '${id}')">✉ TG</span>
-                <span class="remote-btn" onclick="bridge('ARCHIVE', '${id}')">🏛️ ARCH</span>
-                <span class="remote-btn" onclick="deleteCard('${id}')" style="color:#aa0000">❌ DEL</span>
-            </div>`;
-    }
-
-    function deleteCard(id) {
-        const card = document.getElementById(id);
-        if (card) card.remove();
-        checkWall();
-    }
-
-    function bridge(action, id) {
-        const text = document.querySelector(`#${id} .content`).innerText;
-        if(action === 'CLIP') { 
-            localStorage.setItem('currentVerse', text); 
-            location.href = 'clip.html'; 
-        }
-        if(action === 'TG') alert("Отправка в Telegram...");
-        if(action === 'ARCHIVE') alert("Сохранено в цифровые архивы клуба.");
-    }
-
-    // Инициализация при загрузке
-    checkWall();
-</script>
-<script>
-    // 1. Проверка стены (показывает/скрывает инструкцию)
+    // 1. Проверка стены
     function checkWall() {
         const wall = document.getElementById('wall');
         const placeholder = document.getElementById('wall-placeholder');
@@ -246,7 +91,7 @@
         }
     }
 
-    // 2. ГЕНЕРАТОР (Тот самый, что идет в Облако)
+    // 2. ГЕНЕРАТОР
     async function quickGen() {
         const input = document.getElementById('words');
         const style = document.getElementById('style').value;
@@ -265,7 +110,7 @@
         const card = document.createElement('div');
         card.className = 'card loading';
         card.id = id;
-        card.innerHTML = `<div class="content">[ОЖИДАНИЕ] ✂️ Ткань режется... \n Тема: ${finalTopic}</div>`;
+        card.innerHTML = `<div class="content">[${style.toUpperCase()}] ✂️ Ткань режется... \n Тема: ${finalTopic}</div>`;
         
         wall.insertBefore(card, wall.firstChild);
         input.value = '';
@@ -289,11 +134,11 @@
 
         } catch (err) {
             console.error("ОШИБКА:", err);
-            finalizeCard(id, `🧨 [ОШИБКА СВЯЗИ]\n${err.message}`);
+            finalizeCard(id, `🧨 [ОШИБКА СВЯЗИ]\n${err.message}\nПроверь Vercel Deployment!`);
         }
     }
 
-    // 3. Завершение карточки (убирает loading и ставит кнопки)
+    // 3. Завершение карточки
     function finalizeCard(id, text) {
         const card = document.getElementById(id);
         if (!card) return;
@@ -314,9 +159,11 @@
         checkWall();
     }
 
-    // 5. Мост (Логика кнопок)
+    // 5. Мост
     function bridge(action, id) {
-        const text = document.querySelector(`#${id} .content`).innerText;
+        const contentEl = document.querySelector(`#${id} .content`);
+        if (!contentEl) return;
+        const text = contentEl.innerText;
         if(action === 'CLIP') { 
             localStorage.setItem('currentVerse', text); 
             location.href = 'clip.html'; 
@@ -324,29 +171,27 @@
         if(action === 'TG') alert("Отправка в Telegram...");
     }
 
-    // 6. Опрос сервера (api/pull) — если он тебе всё еще нужен
+    // 6. Опрос сервера (api/pull)
     setInterval(async () => {
+        const wall = document.getElementById('wall');
         try {
             const response = await fetch('/api/pull');
             if (response.ok) {
                 const data = await response.json();
                 if (data && data.text) {
-                    // Используем finalizeCard для вставки внешних данных
                     const id = 'cloud-' + Date.now();
                     const card = document.createElement('div');
                     card.className = 'card';
                     card.id = id;
                     wall.prepend(card);
                     finalizeCard(id, `[ОБЛАКО ПРИСЛАЛО]\n\n${data.text}`);
+                    checkWall();
                 }
             }
         } catch (e) {}
-    }, 5000); // 5 секунд, чтобы не перегружать сеть
+    }, 5000);
 
-    // Старт
     checkWall();
 </script>
 </body>
 </html>
-
-
