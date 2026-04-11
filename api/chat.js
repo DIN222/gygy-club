@@ -1,42 +1,30 @@
 // api/chat.js
-export const config = {
-  runtime: 'edge', // Используем быструю среду Vercel Edge
-};
+export const config = { runtime: 'edge' };
 
 export default async function handler(req) {
-  // 1. Получаем данные из запроса от твоего HTML
-  const { prompt, user_id } = await req.json();
+  const { prompt, user_id, mode } = await req.json();
 
-  // 2. Формируем "Системную инструкцию" (Душа клуба)
-  const systemInstruction = `Ты — искусственный интеллект клуба GY-GY. 
-  Твой стиль: киберпанк, лаконичность, таинственность. 
-  Ты общаешься с пользователем ID: ${user_id}. 
-  Отвечай коротко (не более 2-3 предложений).`;
-
-  // 3. Вызываем API ИИ (здесь пример для Google Gemini)
-  const apiKey = process.env.GEMINI_API_KEY; // Ключ берется из настроек Vercel
-  const apiURL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
+  // Вместо прямого вызова Gemini, стучимся в наш развернутый Воркер
+  const workerURL = 'https://gygy-club.2work21955.workers.dev/';
 
   try {
-    const response = await fetch(apiURL, {
+    const response = await fetch(workerURL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{
-          parts: [{ text: `${systemInstruction}\n\nПользователь спрашивает: ${prompt}` }]
-        }]
+      body: JSON.stringify({ 
+        mode: mode || 'GOLD', 
+        userPrompt: prompt,
+        user_id: user_id 
       })
     });
 
     const data = await response.json();
-    const aiText = data.candidates[0].content.parts[0].text;
 
-    // 4. Возвращаем чистый ответ обратно на витрину
-    return new Response(JSON.stringify({ text: aiText }), {
+    return new Response(JSON.stringify({ text: data.text }), {
       headers: { 'Content-Type': 'application/json' }
     });
 
   } catch (error) {
-    return new Response(JSON.stringify({ error: "Связь со шлюзом прервана..." }), { status: 500 });
+    return new Response(JSON.stringify({ error: "Клуб временно в тумане..." }), { status: 500 });
   }
 }
