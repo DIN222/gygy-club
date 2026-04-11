@@ -1,34 +1,27 @@
 
-export default async function handler(req, res) {
-  // Разрешаем CORS
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
+module.exports = async (req, res) => {
+  // Разрешаем только POST
   if (req.method !== 'POST') {
-    return res.status(405).json({ text: "🎷 Только POST, Шеф!" });
+    return res.status(405).json({ error: 'Метод не позволен. Используй POST, Шеф!' });
   }
 
   try {
     const { prompt, mode } = req.body;
 
-    const cfResponse = await fetch('https://gygy-club.2work21955.workers.dev/', {
+    // Стучимся к Gemini напрямую (или твой прокси)
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.GEMINI_KEY}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 
-        userPrompt: prompt, 
-        mode: mode || 'ABSURD' 
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: `Ты — поэт GY-GY CLUB. Стиль: ${mode}. Напиши смешной куплет про: ${prompt}` }] }]
       })
     });
 
-    const data = await cfResponse.json();
-    return res.status(200).json({ text: data.text });
+    const data = await response.json();
+    const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "🎷 Облако задумалось...";
 
+    res.status(200).json({ text: aiText });
   } catch (error) {
-    return res.status(200).json({ text: "🎷 Облако в тумане, но шлюз работает! Попробуй еще раз." });
+    res.status(500).json({ error: 'Ошибка на стороне шлюза', details: error.message });
   }
-}
+};
