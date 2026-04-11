@@ -1,13 +1,13 @@
 {
+  "functions": {
+    "api/*.js": {
+      "runtime": "vercel-nodejs@20"
+    }
+  },
   "rewrites": [
-    { "source": "/api/chat", "destination": "/api/chat.js" }
-  ],
-  "headers": [
     {
       "source": "/api/(.*)",
-      "headers": [
-        { "key": "Access-Control-Allow-Methods", "value": "GET,OPTIONS,PATCH,DELETE,POST,PUT" }
-      ]
+      "destination": "/api/$1"
     }
   ]
 }
