@@ -1,22 +1,21 @@
 
-// api/chat.js
-export const config = {
-  runtime: 'edge',
-};
+export default async function handler(req, res) {
+  // Разрешаем CORS
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-export default async function handler(req) {
-  // 1. Проверяем метод. Если это не POST, мы вежливо просим не баловаться.
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   if (req.method !== 'POST') {
-    return new Response(JSON.stringify({ text: "🎷 Шеф, используй POST!" }), {
-      status: 405,
-      headers: { 'Content-Type': 'application/json' }
-    });
+    return res.status(405).json({ text: "🎷 Только POST, Шеф!" });
   }
 
   try {
-    const { prompt, mode } = await req.json();
+    const { prompt, mode } = req.body;
 
-    // 2. Стучимся в Cloudflare
     const cfResponse = await fetch('https://gygy-club.2work21955.workers.dev/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -26,25 +25,10 @@ export default async function handler(req) {
       })
     });
 
-    if (!cfResponse.ok) {
-        throw new Error(`Cloudflare error: ${cfResponse.status}`);
-    }
-
     const data = await cfResponse.json();
-
-    // 3. Возвращаем чистый джаз
-    return new Response(JSON.stringify({ text: data.text }), {
-      status: 200,
-      headers: { 
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*' // На всякий случай для свободы
-      }
-    });
+    return res.status(200).json({ text: data.text });
 
   } catch (error) {
-    return new Response(JSON.stringify({ text: "🎷 Облако в тумане... Но мы пробьемся! Попробуй еще раз." }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
+    return res.status(200).json({ text: "🎷 Облако в тумане, но шлюз работает! Попробуй еще раз." });
   }
 }
