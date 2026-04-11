@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY CLUB | VERSES v.3.4</title>
+    <title>GY-GY CLUB | VERSES v.3.5</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root { --gold: #ffd700; --black: #000; --h-unit: 55px; }
@@ -236,89 +236,116 @@
     checkWall();
 </script>
 <script>
-        // 1. Функция, которую вызываю Я (Облако), чтобы выложить куплет на стену
-        function GY_Cloud_Insert(style, text, clip) {
-            const wall = document.getElementById('wall');
-            const placeholder = document.getElementById('wall-placeholder');
-            
-            // Скрываем инструкцию, если она есть
-            if(placeholder) placeholder.style.display = 'none';
-            
-            // Создаем карточку
-            const card = document.createElement('div');
-            card.className = 'card active'; // Используем твои классы из CSS
-            card.style.marginBottom = "20px"; // Чтобы не слипались
-            
-            card.innerHTML = `
-                <div style="color:var(--gold); font-size:10px; margin-bottom:10px; opacity:0.6;">
-                    [ОБЛАКО GY-GY: ${style.toUpperCase()}]
-                </div>
-                <div class="verse-text" style="white-space: pre-line; line-height:1.6;">
-                    ${text}
-                </div>
-                <hr style="border:0; border-top:1px solid rgba(212,175,55,0.2); margin:15px 0;">
-                <div class="card-controls" style="display:flex; gap:10px;">
-                    <button class="btn-gy" onclick="alert('CLIP PROMPT: ${clip}')">🎬 CLIP</button>
-                    <button class="btn-gy" onclick="this.closest('.card').remove(); checkWall();">❌ DEL</button>
-                </div>
-            `;
-            
-            // Добавляем на стену (в начало списка)
-            wall.prepend(card);
+    // 1. Проверка стены (показывает/скрывает инструкцию)
+    function checkWall() {
+        const wall = document.getElementById('wall');
+        const placeholder = document.getElementById('wall-placeholder');
+        const cards = wall.querySelectorAll('.card');
+        if (placeholder) {
+            placeholder.style.display = (cards.length > 0) ? 'none' : 'block';
         }
-
-        // 2. Функция проверки стены (показывает инструкцию, если пусто)
-        function checkWall() {
-            const wall = document.getElementById('wall');
-            const placeholder = document.getElementById('wall-placeholder');
-            const cards = wall.getElementsByClassName('card');
-            if(cards.length === 0 && placeholder) {
-                placeholder.style.display = 'flex';
-            }
-        }
-
-        // Твои остальные функции (генератор, логика кнопок и т.д.) здесь...
-    // 1. "РУКИ" — Функция, которая физически вешает карточку на стену
-function GY_Cloud_Insert(style, text, clip) {
-    const wall = document.getElementById('wall'); // Убедись, что у тебя есть <div id="wall">
-    if (!wall) {
-        console.error("❌ Шеф, я не вижу стену! Добавь в HTML <div id='wall'></div>");
-        return;
     }
 
-    const card = document.createElement('div');
-    card.className = 'card active'; // Твои стили
-    card.style.border = "1px solid var(--gold)";
-    card.style.margin = "15px";
-    card.style.padding = "15px";
-    card.style.background = "rgba(0,0,0,0.8)";
-    
-    card.innerHTML = `
-        <div style="color:var(--gold); font-size:11px;">[ОБЛАКО GY-GY: ${style.toUpperCase()}]</div>
-        <div class="verse-text" style="margin: 10px 0; line-height:1.5; color:#fff;">${text}</div>
-        <div style="font-size:10px; color:#aaa; font-style:italic;">🎬 Clip: ${clip}</div>
-        <button class="btn-gy" onclick="this.parentElement.remove()" style="margin-top:10px; cursor:pointer;">❌ УБРАТЬ</button>
-    `;
-    
-    wall.prepend(card); // Клеим в самый верх
-    console.log("✅ Карточка на стене!");
-}
-
-// 2. "УШИ" — Опрос сервера каждые 2 секунды
-setInterval(async () => {
-    try {
-        const response = await fetch('/api/pull');
-        const data = await response.json();
+    // 2. ГЕНЕРАТОР (Тот самый, что идет в Облако)
+    async function quickGen() {
+        const input = document.getElementById('words');
+        const style = document.getElementById('style').value;
+        const wall = document.getElementById('wall');
         
-        if (data && data.text) {
-            console.log("🎁 ПОЙМАЛ ИМПУЛЬС:", data);
-            GY_Cloud_Insert(data.style, data.text, data.clip);
+        let userWords = input.value.trim();
+        let finalTopic = userWords || ({
+            absurd: "Пьяный кактус поет караоке в открытом космосе",
+            cyber: "Нейро-конь взламывает терминал за порцию овса",
+            luxury: "Алмазные слезы на золотом капоте лимузина",
+            hardcore: "Разрыв шаблона в ритме отбойного молотка",
+            minimal: "Точка. Тишина. Взрыв."
+        }[style] || "Случайный драйв системы");
+
+        const id = 'v' + Date.now();
+        const card = document.createElement('div');
+        card.className = 'card loading';
+        card.id = id;
+        card.innerHTML = `<div class="content">[ОЖИДАНИЕ] ✂️ Ткань режется... \n Тема: ${finalTopic}</div>`;
+        
+        wall.insertBefore(card, wall.firstChild);
+        input.value = '';
+        checkWall();
+
+        try {
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    prompt: finalTopic, 
+                    user_id: 'GY-' + id,
+                    mode: style.toUpperCase()
+                })
+            });
+
+            if (!response.ok) throw new Error(`Шлюз ответил: ${response.status}`);
+
+            const data = await response.json();
+            finalizeCard(id, data.text || "🎷 Облако выдало тишину...");
+
+        } catch (err) {
+            console.error("ОШИБКА:", err);
+            finalizeCard(id, `🧨 [ОШИБКА СВЯЗИ]\n${err.message}`);
         }
-    } catch (e) {
-        // Сервер молчит — не мешаем ему спать
     }
-}, 2000);
-    </script>
+
+    // 3. Завершение карточки (убирает loading и ставит кнопки)
+    function finalizeCard(id, text) {
+        const card = document.getElementById(id);
+        if (!card) return;
+        card.classList.remove('loading');
+        card.innerHTML = `
+            <div class="content" contenteditable="true">${text}</div>
+            <div class="remote">
+                <span class="remote-btn" onclick="bridge('CLIP', '${id}')">🎬 CLIP</span>
+                <span class="remote-btn" onclick="bridge('TG', '${id}')">✉ TG</span>
+                <span class="remote-btn" onclick="deleteCard('${id}')" style="color:#aa0000">❌ DEL</span>
+            </div>`;
+    }
+
+    // 4. Удаление
+    function deleteCard(id) {
+        const card = document.getElementById(id);
+        if (card) card.remove();
+        checkWall();
+    }
+
+    // 5. Мост (Логика кнопок)
+    function bridge(action, id) {
+        const text = document.querySelector(`#${id} .content`).innerText;
+        if(action === 'CLIP') { 
+            localStorage.setItem('currentVerse', text); 
+            location.href = 'clip.html'; 
+        }
+        if(action === 'TG') alert("Отправка в Telegram...");
+    }
+
+    // 6. Опрос сервера (api/pull) — если он тебе всё еще нужен
+    setInterval(async () => {
+        try {
+            const response = await fetch('/api/pull');
+            if (response.ok) {
+                const data = await response.json();
+                if (data && data.text) {
+                    // Используем finalizeCard для вставки внешних данных
+                    const id = 'cloud-' + Date.now();
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.id = id;
+                    wall.prepend(card);
+                    finalizeCard(id, `[ОБЛАКО ПРИСЛАЛО]\n\n${data.text}`);
+                }
+            }
+        } catch (e) {}
+    }, 5000); // 5 секунд, чтобы не перегружать сеть
+
+    // Старт
+    checkWall();
+</script>
 </body>
 </html>
 
