@@ -2,12 +2,12 @@
 export async function onRequest(context) {
   try {
     const apiKey = context.env.GEMINI_KEY;
-    if (!apiKey) return new Response(JSON.stringify({ text: "Ключ не найден в настройках!" }));
+    if (!apiKey) return new Response(JSON.stringify({ text: "Ключ потерялся в облаках!" }));
 
     const { prompt, mode } = await context.request.json();
 
-    // Переходим на классику, которая доступна всем
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
+    // ПРЫЖОК В БУДУЩЕЕ: Используем актуальную модель 2026 года
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
     const res = await fetch(apiUrl, {
       method: "POST",
@@ -15,7 +15,7 @@ export async function onRequest(context) {
       body: JSON.stringify({
         contents: [{ 
           parts: [{ 
-            text: `Ты — юморист в GY-GY CLUB. Напиши смешной, дерзкий стишок (4 строки) на тему: ${prompt}. Стиль: ${mode}` 
+            text: `Ты — юморист GY-GY CLUB. Напиши дерзкое четверостишие. Тема: ${prompt}. Стиль: ${mode}` 
           }] 
         }]
       })
@@ -24,11 +24,11 @@ export async function onRequest(context) {
     const data = await res.json();
 
     if (data.error) {
-      // Если даже gemini-pro не сработает, выведи нам всё, что он о себе возомнил!
-      return new Response(JSON.stringify({ text: `Google (Error ${data.error.code}): ${data.error.message}` }));
+      // Если 2.5 ещё не везде раскатали, попробуем дать тебе знать
+      return new Response(JSON.stringify({ text: `Google сказал: ${data.error.message} (Попробуй тогда gemini-2.0-flash)` }));
     }
 
-    const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Нейронка молчит как партизан...";
+    const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Модель молчит, как рыба об лёд...";
 
     return new Response(JSON.stringify({ text: aiText }), {
       headers: { "Content-Type": "application/json" }
