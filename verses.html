@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY CLUB | VERSES v.3.5.12</title>
+    <title>GY-GY CLUB | VERSES v.3.5.13</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root { --gold: #ffd700; --black: #000; --h-unit: 55px; }
@@ -176,13 +176,15 @@ function bridge(action, id) {
     const card = document.getElementById(id);
     if (!card) return;
     const text = card.querySelector('.content').innerText;
+    
     if(action === 'CLIP') { 
+        console.log("🚀 Отправка в клиповочную:", text);
         localStorage.setItem('currentVerse', text); 
-        location.href = 'clip.html'; 
+        // Небольшая задержка перед переходом, чтобы браузер успел записать диск
+        setTimeout(() => { location.href = 'clip.html'; }, 100);
     }
     if(action === 'TG') alert("Отправка в Telegram...");
 }
-
 // Инициализация
 checkWall();
 </script>
