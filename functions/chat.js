@@ -7,7 +7,7 @@ export async function onRequest(context) {
     const { prompt, mode } = await context.request.json();
 
     // ПРЫЖОК В БУДУЩЕЕ: Используем актуальную модель 2026 года
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+ const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
     const res = await fetch(apiUrl, {
       method: "POST",
