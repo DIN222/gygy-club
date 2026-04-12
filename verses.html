@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY CLUB | VERSES v.3.5.13</title>
+    <title>GY-GY CLUB | VERSES v.3.5.14</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root { --gold: #ffd700; --black: #000; --h-unit: 55px; }
@@ -175,14 +175,21 @@ function deleteCard(id) {
 function bridge(action, id) {
     const card = document.getElementById(id);
     if (!card) return;
+    
+    // Берем текст именно из той карточки, на которой нажали кнопку
     const text = card.querySelector('.content').innerText;
     
     if(action === 'CLIP') { 
-        console.log("🚀 Отправка в клиповочную:", text);
+        console.log("🚀 Передача в студию:", text);
+        
+        // Сначала удаляем старое, потом пишем новое — так надежнее
+        localStorage.removeItem('currentVerse');
         localStorage.setItem('currentVerse', text); 
-        // Небольшая задержка перед переходом, чтобы браузер успел записать диск
-        setTimeout(() => { location.href = 'clip.html'; }, 100);
+        
+        // Переходим в клиповочную
+        location.href = 'clip.html'; 
     }
+    
     if(action === 'TG') alert("Отправка в Telegram...");
 }
 // Инициализация
