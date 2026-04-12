@@ -2,13 +2,16 @@
 export async function onRequest(context) {
   const { request, env } = context;
 
-  // Разрешаем только POST запросы
   if (request.method !== "POST") {
     return new Response("Method Not Allowed", { status: 405 });
   }
 
   try {
-    const { prompt } = await request.json();
+    // 1. ЧИТАЕМ JSON ТОЛЬКО ОДИН РАЗ ( prompt И mode ВМЕСТЕ)
+    const body = await request.json();
+    const prompt = body.prompt;
+    const mode = body.mode;
+    
     const apiKey = env.GEMINI_KEY;
 
     if (!apiKey) {
@@ -18,18 +21,12 @@ export async function onRequest(context) {
       });
     }
 
-    // Используем максимально стабильную модель 2.5-flash
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
-    // Формируем системную инструкцию: ЖЕСТКО ЗАПРЕЩАЕМ КОММЕНТАРИИ
     const systemInstruction = "Ты — Мастер Юмора GY-GY CLUB. Твоя задача: писать только рифмованные куплеты. " +
                               "ВАЖНО: Выдавай СТРОГО текст стихов. Никаких приветствий, никаких 'ХА-ХА', " +
                               "никаких комментариев до или после текста. Только куплеты.";
 
-  // Достаем prompt и mode из входящего запроса
-    const { prompt, mode } = await request.json(); 
-
-    // Формируем полезную нагрузку для Google
     const payload = {
       contents: [{
         parts: [{ text: `${systemInstruction}\n\nСтиль: ${mode || 'Юмор'}\nТема: ${prompt}` }]
@@ -60,8 +57,6 @@ export async function onRequest(context) {
 
     const data = await response.json();
     let text = data.candidates?.[0]?.content?.parts?.[0]?.text || "Гы-Гы... что-то пошло не так.";
-
-    // Финальная зачистка на случай, если нейронка всё же решила поболтать
     text = text.trim();
 
     return new Response(JSON.stringify({ text }), {
