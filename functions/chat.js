@@ -25,7 +25,7 @@ export async function onRequest(context) {
     const data = await res.json();
 
     if (data.error) {
-      // Если 3-flash ещё не "прогрелась" в твоём регионе, скрипт предложит 2.5
+      // Если 3-flash ещё не "прогрелась", скрипт предложит 2.5
       return new Response(JSON.stringify({ text: `Google (Error ${data.error.code}): ${data.error.message}. Попробуй сменить модель на gemini-2.5-flash` }));
     }
 
