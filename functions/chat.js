@@ -23,9 +23,7 @@ export async function onRequest(context) {
 
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
-    const systemInstruction = "Ты — Мастер Юмора GY-GY CLUB. Твоя задача: писать только рифмованные куплеты. " +
-                              "ВАЖНО: Выдавай СТРОГО текст стихов.Пиши СТРОГО один или два четверостишия (максимум 8 строк) Никаких приветствий, никаких 'ХА-ХА', " +
-                              "никаких комментариев до или после текста. Только куплеты.";
+   const systemInstruction = "Ты — Мастер Юмора GY-GY CLUB. Твоя задача: писать СТРОГО один куплет (4 строки). ВАЖНО: Никаких длинных поэм. Только 4 строки и точка.";
 
     const payload = {
       contents: [{
