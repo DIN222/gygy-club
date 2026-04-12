@@ -26,9 +26,13 @@ export async function onRequest(context) {
                               "ВАЖНО: Выдавай СТРОГО текст стихов. Никаких приветствий, никаких 'ХА-ХА', " +
                               "никаких комментариев до или после текста. Только куплеты.";
 
+  // Достаем prompt и mode из входящего запроса
+    const { prompt, mode } = await request.json(); 
+
+    // Формируем полезную нагрузку для Google
     const payload = {
       contents: [{
-        parts: [{ text: `${systemInstruction}\n\nТема: ${prompt}` }]
+        parts: [{ text: `${systemInstruction}\n\nСтиль: ${mode || 'Юмор'}\nТема: ${prompt}` }]
       }],
       generationConfig: {
         temperature: 0.8,
