@@ -1,41 +1,73 @@
 
 export async function onRequest(context) {
+  const { request, env } = context;
+
+  // Разрешаем только POST запросы
+  if (request.method !== "POST") {
+    return new Response("Method Not Allowed", { status: 405 });
+  }
+
   try {
-    const apiKey = context.env.GEMINI_KEY;
-    if (!apiKey) return new Response(JSON.stringify({ text: "Ключ не найден!" }));
+    const { prompt } = await request.json();
+    const apiKey = env.GEMINI_KEY;
 
-    const { prompt, mode } = await context.request.json();
-
-    // АКТУАЛЬНЫЙ ПУТЬ 2026 ГОДА:
-    // Мы используем Gemini 3 Flash Preview - она самая быстрая и лояльная к лимитам сейчас
-    // Используем 2.5-flash, она сейчас стабильнее и не боится очередей
-const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
-    const res = await fetch(apiUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ 
-          parts: [{ 
-            text: `Ты — мастер юмора в GY-GY CLUB. Стиль: ${mode}. Напиши дерзкий и смешной стишок (4 строки) про: ${prompt}` 
-          }] 
-        }]
-      })
-    });
-
-    const data = await res.json();
-
-    if (data.error) {
-      // Если 3-flash ещё не "прогрелась", скрипт предложит 2.5
-      return new Response(JSON.stringify({ text: `Google (Error ${data.error.code}): ${data.error.message}. Попробуй сменить модель на gemini-2.5-flash` }));
+    if (!apiKey) {
+      return new Response(JSON.stringify({ error: "Ключ API не найден в настройках Cloudflare" }), {
+        status: 500,
+        headers: { "Content-Type": "application/json" }
+      });
     }
 
-    const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Нейронка в глубоком офлайне...";
+    // Используем максимально стабильную модель 2.5-flash
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
-    return new Response(JSON.stringify({ text: aiText }), {
+    // Формируем системную инструкцию: ЖЕСТКО ЗАПРЕЩАЕМ КОММЕНТАРИИ
+    const systemInstruction = "Ты — Мастер Юмора GY-GY CLUB. Твоя задача: писать только рифмованные куплеты. " +
+                              "ВАЖНО: Выдавай СТРОГО текст стихов. Никаких приветствий, никаких 'ХА-ХА', " +
+                              "никаких комментариев до или после текста. Только куплеты.";
+
+    const payload = {
+      contents: [{
+        parts: [{ text: `${systemInstruction}\n\nТема: ${prompt}` }]
+      }],
+      generationConfig: {
+        temperature: 0.8,
+        topK: 40,
+        topP: 0.95,
+        maxOutputTokens: 1024,
+      }
+    };
+
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return new Response(JSON.stringify({ 
+        error: `Ошибка Google API: ${errorData.error?.message || response.statusText}` 
+      }), {
+        status: response.status,
+        headers: { "Content-Type": "application/json" }
+      });
+    }
+
+    const data = await response.json();
+    let text = data.candidates?.[0]?.content?.parts?.[0]?.text || "Гы-Гы... что-то пошло не так.";
+
+    // Финальная зачистка на случай, если нейронка всё же решила поболтать
+    text = text.trim();
+
+    return new Response(JSON.stringify({ text }), {
       headers: { "Content-Type": "application/json" }
     });
 
-  } catch (e) {
-    return new Response(JSON.stringify({ text: `Ошибка шлюза: ${e.message}` }));
+  } catch (error) {
+    return new Response(JSON.stringify({ error: `Ошибка шлюза: ${error.message}` }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" }
+    });
   }
 }
