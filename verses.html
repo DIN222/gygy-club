@@ -142,10 +142,17 @@ async function quickGen() {
 }
 
 // 3. Завершение карточки
+
 function finalizeCard(id, text) {
     const card = document.getElementById(id);
     if (!card) return;
     card.classList.remove('loading');
+    
+    // АВТО-СОХРАНЕНИЕ ПОСЛЕДНЕГО УДАЧНОГО КУПЛЕТА
+    if (!text.includes("ОШИБКА")) {
+        localStorage.setItem('currentVerse', text);
+    }
+
     card.innerHTML = `
         <div class="content" contenteditable="true">${text}</div>
         <div class="remote">
@@ -154,7 +161,6 @@ function finalizeCard(id, text) {
             <span class="remote-btn" onclick="deleteCard('${id}')" style="color:#aa0000">❌ DEL</span>
         </div>`;
 }
-
 // 4. Удаление и Мост
 function deleteCard(id) {
     const card = document.getElementById(id);
