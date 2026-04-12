@@ -8,8 +8,8 @@ export async function onRequest(context) {
 
     // АКТУАЛЬНЫЙ ПУТЬ 2026 ГОДА:
     // Мы используем Gemini 3 Flash Preview - она самая быстрая и лояльная к лимитам сейчас
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
-
+    // Используем 2.5-flash, она сейчас стабильнее и не боится очередей
+const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
     const res = await fetch(apiUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
