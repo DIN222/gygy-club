@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY CLUB | VERSES v.3.5.11</title>
+    <title>GY-GY CLUB | VERSES v.3.5.12</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root { --gold: #ffd700; --black: #000; --h-unit: 55px; }
@@ -119,9 +119,11 @@ async function quickGen() {
     input.value = '';
     checkWall();
 
+// ... внутри функции quickGen ...
+
     try {
-        // Путь для Cloudflare Pages Functions
-        const response = await fetch('/chat', {
+        // Заменяем '/chat' на './chat'
+        const response = await fetch('./chat', { 
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
@@ -129,6 +131,8 @@ async function quickGen() {
                 mode: style.toUpperCase()
             })
         });
+
+// ... дальше остальной код ...
 
         if (!response.ok) throw new Error(`Шлюз ответил: ${response.status}`);
 
