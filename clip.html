@@ -3,12 +3,11 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY CLUB | CLIP STUDIO v.1.3</title>
+    <title>GY-GY CLUB | CLIP STUDIO v.1.4</title>
     <style>
         :root { --gold: #ffd700; --black: #000; --h-unit: 42px; }
         body { background: var(--black); color: var(--gold); font-family: monospace; margin: 0; overflow: hidden; display: flex; flex-direction: column; height: 100vh; }
 
-        /* HEADER STRUCTURE */
         header { 
             display: grid; 
             grid-template-columns: 1fr auto 1fr; 
@@ -19,7 +18,6 @@
         .header-left { display: flex; gap: 15px; align-items: center; }
         .header-right { display: flex; justify-content: flex-end; }
 
-        /* UI ELEMENTS */
         .ui-box { 
             height: var(--h-unit); 
             border: 1px solid var(--gold); 
@@ -40,7 +38,6 @@
         .avatar { width: var(--h-unit); padding: 0; font-size: 10px; }
         .logo { font-size: 28px; font-weight: bold; letter-spacing: 6px; }
 
-        /* MAIN STUDIO AREA (СТЕНА) */
         #studio-mirror { 
             flex: 1; 
             display: flex; 
@@ -49,26 +46,42 @@
             justify-content: center; 
             padding: 40px;
             background: radial-gradient(circle, #0a0a0a 0%, #000 80%);
+            position: relative;
         }
 
-        /* ПРИНЯТЫЙ ТЕКСТ (КУПЛЕТ) */
         #received-verse {
             border: 1px double var(--gold);
             padding: 30px;
-            max-width: 500px;
+            max-width: 600px;
             text-align: center;
-            font-size: 18px;
+            font-size: 20px;
             line-height: 1.6;
             color: #fff;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.7);
             white-space: pre-line;
             margin-bottom: 20px;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
+            z-index: 10;
         }
 
-        /* FOOTER (УПРАВЛЕНИЕ КЛИПОМ) */
-        footer { padding: 20px; border-top: 1px solid #222; background: var(--black); }
+        /* Анимация пульсации для статусов */
+        .render-pulse { animation: pulse 2s infinite; color: #ff4500; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+
+        #visual-canvas {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1;
+            background: linear-gradient(45deg, #000, #1a0000);
+            opacity: 0.4;
+        }
+
+        footer { padding: 20px; border-top: 1px solid #222; background: var(--black); z-index: 10; }
         .control-row { display: flex; gap: 15px; max-width: 1000px; margin: 0 auto; }
         .btn-action { flex: 1; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Стиль для плеера */
+        audio { width: 100%; max-width: 400px; filter: invert(1) hue-rotate(180deg) brightness(1.5); margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -78,7 +91,7 @@
         <button class="ui-box arrow" onclick="location.href='verses.html'">⟵</button>
         <div class="ui-box" style="border:none">RU/EN</div>
         <div class="ui-box avatar">ID:01</div>
-        <div class="ui-box" style="cursor:default">STUDIO MODE</div>
+        <div class="ui-box" style="cursor:default; background: rgba(255,215,0,0.1)">STUDIO MODE</div>
     </div>
     
     <div class="logo">GY-GY</div>
@@ -89,72 +102,52 @@
 </header>
 
 <main id="studio-mirror">
-    <div id="received-verse">Ожидание передачи данных из verses.html...</div>
-    <div style="font-size: 10px; color: #444;">[ ВИЗУАЛЬНЫЙ РЕНДЕР ОБЪЕКТА ]</div>
+    <div id="visual-canvas"></div>
+    
+    <div id="received-verse">Загрузка данных...</div>
+    
+    <div id="audio-module" style="z-index: 10; text-align: center;">
+        <div id="status-line" style="font-size: 11px; color: #444; margin-bottom: 5px;">[ СИСТЕМА ГОТОВА ]</div>
+        <audio id="clip-audio" controls style="display: none;">
+            <source src="" type="audio/mpeg">
+        </audio>
+    </div>
 </main>
 
 <footer>
     <div class="control-row">
-        <button class="ui-box btn-action" onclick="alert('💾 Сохранено на диск')">SAVE TO PC</button>
-        <button class="ui-box btn-action" onclick="alert('✈️ Отправлено в Telegram')">SEND TO TG</button>
-        <button class="ui-box btn-action" onclick="alert('⭐ Добавлено в Хит-Парад')">HIT PARADE</button>
-        <button class="ui-box btn-action" style="border-color: #555; color: #555;" onclick="alert('📦 В Clip-Box')">CLIP-BOX</button>
+        <button class="ui-box btn-action" onclick="alert('💾 Сохранено')">SAVE</button>
+        <button class="ui-box btn-action" onclick="alert('✈️ В Telegram')">SEND</button>
+        <button class="ui-box btn-action" onclick="alert('⭐ В Хит-Парад')">HIT</button>
+        <button class="ui-box btn-action" style="border-color: #555; color: #555;">BOX</button>
     </div>
 </footer>
 
-<style>
-    .render-pulse {
-        animation: pulse 2s infinite;
-        color: #ff4500; /* Цвет раскаленного металла */
-    }
-    @keyframes pulse {
-        0% { opacity: 1; }
-        50% { opacity: 0.3; }
-        100% { opacity: 1; }
-    }
-    #visual-canvas {
-        position: absolute;
-        top: 0; left: 0; width: 100%; height: 100%;
-        z-index: -1;
-        background: linear-gradient(45deg, #000, #1a0000);
-        opacity: 0.5;
-    }
-</style>
-
-<div id="visual-canvas"></div>
-
 <script>
     window.onload = function() {
-        console.log("🛠 Студия загружена. Ищем данные...");
+        console.log("🛠 STUDIO v.1.4: Инициализация...");
         const verse = localStorage.getItem('currentVerse');
         const display = document.getElementById('received-verse');
         
         if (verse && verse.trim() !== "") {
-            console.log("✅ Куплет получен!");
             display.innerText = verse;
             startAIVisualization();
         } else {
-            console.log("❌ Канал пуст");
-            display.innerHTML = "<span class='render-pulse'>КАНАЛ ПУСТ. ВЕРНИТЕСЬ В VERSES И ЗАПУСТИТЕ КАКТУСА.</span>";
+            display.innerHTML = "<span class='render-pulse'>ОЖИДАНИЕ ТЕКСТА ИЗ VERSES...</span>";
         }
     };
 
     function startAIVisualization() {
-        console.log("🎬 Запуск рендеринга медиа-потока...");
-        const statusLine = document.querySelector('div[style*="color: #444"]');
-        if (statusLine) {
-            statusLine.innerHTML = "<span class='render-pulse'>[ МОДУЛЬ VEO: ГЕНЕРАЦИЯ ВИДЕО-РЯДА... ]</span>";
-            
-            setTimeout(() => {
-                statusLine.innerHTML = "<span style='color: var(--gold)'>[ МОДУЛЬ LYRIA: САУНДТРЕК СФОРМИРОВАН ]</span>";
-            }, 3000);
-        }
-    }
+        const statusLine = document.getElementById('status-line');
+        const audio = document.getElementById('clip-audio');
 
-    function sendToTG() {
-        const display = document.getElementById('received-verse');
-        const verse = display ? display.innerText : "";
-        alert("✈️ Отправляем в Telegram:\n" + verse.substring(0, 50) + "...");
+        statusLine.innerHTML = "<span class='render-pulse'>[ МОДУЛЬ VEO: ГЕНЕРАЦИЯ ВИЗУАЛА... ]</span>";
+        
+        setTimeout(() => {
+            statusLine.innerHTML = "<span style='color: var(--gold)'>[ МОДУЛЬ LYRIA: САУНДТРЕК СИНХРОНИЗИРОВАН ]</span>";
+            audio.style.display = "block"; // Показываем плеер, когда "музыка готова"
+            console.log("✅ Рендеринг завершен.");
+        }, 3000);
     }
 </script>
 
