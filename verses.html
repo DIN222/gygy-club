@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY CLUB | VERSES v.3.5.14</title>
+    <title>GY-GY CLUB | VERSES v.3.5.15</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root { --gold: #ffd700; --black: #000; --h-unit: 55px; }
@@ -194,6 +194,42 @@ function bridge(action, id) {
 }
 // Инициализация
 checkWall();
-</script>
-</body>
+    <button onclick="startGyGyGen()" class="gygy-btn">Запустить генераторы</button>
+
+    <script type="module">
+      import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
+
+      const API_KEY = "ВАШ_КЛЮЧ_API"; 
+      const genAI = new GoogleGenerativeAI(API_KEY);
+
+      async function startGeneration() {
+        try {
+          console.log("🚀 Запуск генераторов GY-GY: Veo-1 и Lyria-3");
+          
+          const videoModel = genAI.getGenerativeModel({ model: "veo-1" });
+          const musicModel = genAI.getGenerativeModel({ model: "lyria-3" });
+
+          const prompt = "Кактус-шансонье в вакууме, черный магнит, кипящая текила, стиль GY-GY";
+
+          // Видео
+          const videoResult = await videoModel.generateContent(prompt);
+          console.log("🎬 Видео готово:", videoResult);
+
+          // Музыка
+          const musicResult = await musicModel.generateContent({
+            contents: [{ role: 'user', parts: [{ text: prompt }] }],
+            generationConfig: { duration_seconds: 30 }
+          });
+          console.log("🎵 Музыка готова:", musicResult);
+
+        } catch (error) {
+          console.error("💥 Ошибка в системе GY-GY:", error);
+        }
+      }
+
+      window.startGyGyGen = startGeneration;
+    </script>
+    </body>
 </html>
+.
+
