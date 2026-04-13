@@ -3,7 +3,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GY-GY CLUB | CLIP STUDIO v.1.4</title>
+    <title>GY-GY CLUB | CLIP STUDIO v.1.6</title>
     <style>
         :root { --gold: #ffd700; --black: #000; --h-unit: 42px; }
         body { background: var(--black); color: var(--gold); font-family: monospace; margin: 0; overflow: hidden; display: flex; flex-direction: column; height: 100vh; }
@@ -14,6 +14,7 @@
             align-items: center; 
             padding: 10px 20px; 
             border-bottom: 1px solid var(--gold);
+            z-index: 20;
         }
         .header-left { display: flex; gap: 15px; align-items: center; }
         .header-right { display: flex; justify-content: flex-end; }
@@ -45,7 +46,7 @@
             align-items: center; 
             justify-content: center; 
             padding: 40px;
-            background: radial-gradient(circle, #0a0a0a 0%, #000 80%);
+            background: #000;
             position: relative;
         }
 
@@ -57,14 +58,13 @@
             font-size: 20px;
             line-height: 1.6;
             color: #fff;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.8);
             white-space: pre-line;
             margin-bottom: 20px;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 1);
             z-index: 10;
         }
 
-        /* Анимация пульсации для статусов */
         .render-pulse { animation: pulse 2s infinite; color: #ff4500; }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
@@ -72,16 +72,17 @@
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: 1;
-            background: linear-gradient(45deg, #000, #1a0000);
-            opacity: 0.4;
+            background-size: cover;
+            background-position: center;
+            opacity: 0.5;
+            transition: 1s;
         }
 
-        footer { padding: 20px; border-top: 1px solid #222; background: var(--black); z-index: 10; }
+        footer { padding: 20px; border-top: 1px solid #222; background: var(--black); z-index: 20; }
         .control-row { display: flex; gap: 15px; max-width: 1000px; margin: 0 auto; }
         .btn-action { flex: 1; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* Стиль для плеера */
-        audio { width: 100%; max-width: 400px; filter: invert(1) hue-rotate(180deg) brightness(1.5); margin-top: 10px; }
+        audio { width: 100%; max-width: 400px; filter: invert(1) hue-rotate(180deg) brightness(1.5); margin-top: 10px; display: none; }
     </style>
 </head>
 <body>
@@ -107,8 +108,8 @@
     <div id="received-verse">Загрузка данных...</div>
     
     <div id="audio-module" style="z-index: 10; text-align: center;">
-        <div id="status-line" style="font-size: 11px; color: #444; margin-bottom: 5px;">[ СИСТЕМА ГОТОВА ]</div>
-        <audio id="clip-audio" controls style="display: none;">
+        <div id="status-line" style="font-size: 11px; color: #666; margin-bottom: 5px;">[ ИНИЦИАЛИЗАЦИЯ ОБЛАКА... ]</div>
+        <audio id="clip-audio" controls>
             <source src="" type="audio/mpeg">
         </audio>
     </div>
@@ -125,12 +126,22 @@
 
 <script>
     window.onload = function() {
-        console.log("🛠 STUDIO v.1.4: Инициализация...");
         const verse = localStorage.getItem('currentVerse');
+        const cloudImg = localStorage.getItem('lastCloudImg'); // Проверяем картинку из облака
+        
         const display = document.getElementById('received-verse');
+        const canvas = document.getElementById('visual-canvas');
         
         if (verse && verse.trim() !== "") {
             display.innerText = verse;
+            
+            // Если в памяти есть ссылка на ИИ-картинку — ставим её, иначе градиент
+            if (cloudImg) {
+                canvas.style.backgroundImage = `url('${cloudImg}')`;
+            } else {
+                canvas.style.background = "radial-gradient(circle, #1a0000 0%, #000 100%)";
+            }
+            
             startAIVisualization();
         } else {
             display.innerHTML = "<span class='render-pulse'>ОЖИДАНИЕ ТЕКСТА ИЗ VERSES...</span>";
@@ -141,12 +152,12 @@
         const statusLine = document.getElementById('status-line');
         const audio = document.getElementById('clip-audio');
 
-        statusLine.innerHTML = "<span class='render-pulse'>[ МОДУЛЬ VEO: ГЕНЕРАЦИЯ ВИЗУАЛА... ]</span>";
+        statusLine.innerHTML = "<span class='render-pulse'>[ МОДУЛЬ VEO: СИНХРОНИЗАЦИЯ ВИЗУАЛА... ]</span>";
         
         setTimeout(() => {
-            statusLine.innerHTML = "<span style='color: var(--gold)'>[ МОДУЛЬ LYRIA: САУНДТРЕК СИНХРОНИЗИРОВАН ]</span>";
-            audio.style.display = "block"; // Показываем плеер, когда "музыка готова"
-            console.log("✅ Рендеринг завершен.");
+            statusLine.innerHTML = "<span style='color: var(--gold)'>[ МОДУЛЬ LYRIA: ПОТОК ПОДКЛЮЧЕН ]</span>";
+            audio.style.display = "inline-block"; 
+            console.log("✅ Студия готова.");
         }, 3000);
     }
 </script>
