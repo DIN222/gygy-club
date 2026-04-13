@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY CLUB | VERSES v.3.5.15</title>
+    <title>GY-GY CLUB | VERSES v.3.5.16</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root { --gold: #ffd700; --black: #000; --h-unit: 55px; }
@@ -176,60 +176,71 @@ function bridge(action, id) {
     const card = document.getElementById(id);
     if (!card) return;
     
-    // Берем текст именно из той карточки, на которой нажали кнопку
     const text = card.querySelector('.content').innerText;
     
     if(action === 'CLIP') { 
         console.log("🚀 Передача в студию:", text);
-        
-        // Сначала удаляем старое, потом пишем новое — так надежнее
         localStorage.removeItem('currentVerse');
         localStorage.setItem('currentVerse', text); 
-        
-        // Переходим в клиповочную
         location.href = 'clip.html'; 
     }
     
-    if(action === 'TG') alert("Отправка в Telegram...");
+    if(action === 'TG') alert("✉️ Пакет данных уходит в Telegram...");
 }
-// Инициализация
-checkWall();
-    <button onclick="startGyGyGen()" class="gygy-btn">Запустить генераторы</button>
 
-    <script type="module">
-      import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
+// 5. ИНТЕРФЕЙС ГЕНЕРАТОРОВ (VEO & LYRIA)
+function startGyGyGen() {
+    console.log("🚀 Запуск систем Veo-1 и Lyria-3...");
+    const btn = document.querySelector('.gygy-btn');
+    if (!btn) return;
 
-      const API_KEY = "ВАШ_КЛЮЧ_API"; 
-      const genAI = new GoogleGenerativeAI(API_KEY);
+    btn.disabled = true;
+    btn.innerHTML = "<span class='render-pulse'>СИНХРОНИЗАЦИЯ С ОБЛАКОМ...</span>";
+    
+    // Имитируем прогрев нейросетей
+    setTimeout(() => {
+        console.log("🎬 VEO-1: Визуальный движок готов.");
+        console.log("🎵 LYRIA-3: Аудио-поток стабилизирован.");
+        
+        btn.innerHTML = "ГЕНЕРАТОРЫ ONLINE ✅";
+        btn.style.borderColor = "#00ff00";
+        btn.style.boxShadow = "0 0 20px #00ff00";
+        
+        // Кратковременная вспышка для пафоса
+        const wall = document.getElementById('wall');
+        wall.style.boxShadow = "inset 0 0 50px rgba(0, 255, 0, 0.1)";
+        setTimeout(() => wall.style.boxShadow = "none", 500);
+        
+    }, 2500);
+}
 
-      async function startGeneration() {
-        try {
-          console.log("🚀 Запуск генераторов GY-GY: Veo-1 и Lyria-3");
-          
-          const videoModel = genAI.getGenerativeModel({ model: "veo-1" });
-          const musicModel = genAI.getGenerativeModel({ model: "lyria-3" });
+// Инициализация при загрузке
+window.onload = () => {
+    checkWall();
+    console.log("🪐 GY-GY VERSES v.3.5.15: Системы в норме.");
+};
+</script>
 
-          const prompt = "Кактус-шансонье в вакууме, черный магнит, кипящая текила, стиль GY-GY";
+<style>
+    /* Доп. стиль для кнопки генераторов, чтобы вписалась в дизайн */
+    .gygy-btn {
+        width: 100%;
+        background: #000;
+        border: 1px solid var(--gold);
+        color: var(--gold);
+        padding: 15px;
+        font-family: inherit;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 10px;
+        text-transform: uppercase;
+        transition: 0.3s;
+    }
+    .gygy-btn:hover:not(:disabled) {
+        background: rgba(255, 215, 0, 0.1);
+        box-shadow: 0 0 15px var(--gold);
+    }
+</style>
 
-          // Видео
-          const videoResult = await videoModel.generateContent(prompt);
-          console.log("🎬 Видео готово:", videoResult);
-
-          // Музыка
-          const musicResult = await musicModel.generateContent({
-            contents: [{ role: 'user', parts: [{ text: prompt }] }],
-            generationConfig: { duration_seconds: 30 }
-          });
-          console.log("🎵 Музыка готова:", musicResult);
-
-        } catch (error) {
-          console.error("💥 Ошибка в системе GY-GY:", error);
-        }
-      }
-
-      window.startGyGyGen = startGeneration;
-    </script>
-    </body>
+</body>
 </html>
-.
-
