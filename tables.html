@@ -4,41 +4,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY Club | Tables v1.3.11</title>
+    <title>GY-GY Club | Tables v1.4.1</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #d4af37; --violet: #8A2BE2; --neon-glow: rgba(138, 43, 226, 0.6); }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; font-family: 'Share Tech Mono', monospace; overflow: hidden; }
 
-        /* ЯЗЫКОВАЯ ПАНЕЛЬ */
         #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 6000; }
         
-        /* СТАНДАРТНАЯ КНОПКА ВОЗВРАТА */
         .ui-back-to-bar { 
             position: fixed; top: 65px; left: 15px; z-index: 6000;
             background: rgba(0,0,0,0.8); border: 1px solid var(--gold); color: var(--gold);
             padding: 8px 15px; cursor: pointer; font-family: 'Share Tech Mono', monospace; 
             font-size: 11px; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s;
         }
-        .ui-back-to-bar:hover { background: var(--gold); color: #000; box-shadow: 0 0 15px var(--gold); }
 
         #ui-logo { position: fixed; top: 15px; right: 25px; z-index: 5000; color: var(--gold); font-size: 24px; font-weight: bold; letter-spacing: 5px; pointer-events: none; }
 
         /* СЛОИ */
-        #entry-layer { position: fixed; inset: 0; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2000; }
-        #hall-layer { width: 100vw; height: 100vh; background: url('lounge.jpg') no-repeat center bottom / contain #000; position: relative; display: none; }
+        #entry-layer { position: fixed; inset: 0; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2000; transition: opacity 1s; }
+        #hall-layer { width: 100vw; height: 100vh; background: url('lounge.jpg') no-repeat center bottom / contain #000; position: relative; display: none; opacity: 0; transition: opacity 1.2s; }
         
-        /* ЛАМПЫ (ФИОЛЕТОВЫЕ СВЕТЛЯЧКИ) */
+        /* ЛАМПЫ */
         .lamp-zone { 
             position: absolute; width: 42px; height: 42px; border-radius: 50%; 
             cursor: pointer; z-index: 100; 
             background: radial-gradient(circle, var(--neon-glow) 0%, transparent 75%); 
             border: 1px solid var(--violet); 
             box-shadow: 0 0 18px var(--neon-glow);
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            transform: translate(-50%, -50%); 
+            transition: 0.4s; transform: translate(-50%, -50%); 
         }
-        .lamp-zone:hover { transform: translate(-50%, -50%) scale(1.3); box-shadow: 0 0 35px var(--violet); filter: brightness(1.2); }
+        .lamp-zone:hover { transform: translate(-50%, -50%) scale(1.3); box-shadow: 0 0 35px var(--violet); }
 
         /* КООРДИНАТЫ */
         #table-1 { bottom: 49.2%; left: 49.9%; } 
@@ -49,87 +45,91 @@
         #table-6 { bottom: 21.9%; left: 63.8%; } 
         #mic-zone { bottom: 32.4%; left: 58.3%; border-width: 2px; }
 
-        /* МИНИ-АВАТАР В УГЛУ */
-        #hud { position: fixed; top: 110px; left: 15px; z-index: 1500; display: none; border: 1px solid var(--gold); padding: 5px; background: rgba(0,0,0,0.5); border-radius: 50%; }
-        .user-mini { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; display: block; }
+        #hud { position: fixed; top: 110px; left: 15px; z-index: 1500; display: none; }
+        .user-mini { width: 45px; height: 45px; border-radius: 50%; border: 1px solid var(--gold); object-fit: cover; }
 
-        .reg-btn { background: #000; border: 2px solid var(--gold); color: var(--gold); padding: 18px 45px; cursor: pointer; margin-top: 20px; font-family: inherit; letter-spacing: 2px; font-weight: bold; transition: 0.3s; }
-        .reg-btn:hover { background: var(--gold); color: #000; box-shadow: 0 0 20px var(--gold); }
+        .reg-btn { background: #000; border: 2px solid var(--gold); color: var(--gold); padding: 18px 45px; cursor: pointer; margin-top: 20px; font-family: inherit; letter-spacing: 2px; }
     </style>
 </head>
 <body>
 
+    <audio id="snd-ambient" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
+
     <div id="google_translate_element"></div>
-    
     <button class="ui-back-to-bar" onclick="window.location.href='index.html'">← В БАР</button>
-    
     <div id="ui-logo">GY-GY</div>
 
     <div id="entry-layer">
-        <div style="border: 1px solid var(--gold); padding: 40px; text-align: center; background: #050505; max-width: 80%;">
-            <p id="charlie-msg" style="color: #fff; font-size: 1.1rem; margin-bottom: 25px;">Чарли: "Добро пожаловать. Оцифруйте ваш ID для доступа к столам."</p>
-            <button id="gate-btn" class="reg-btn" onclick="Core.register()">ОЦИФРОВАТЬ</button>
+        <div style="border: 1px solid var(--gold); padding: 40px; text-align: center; background: #050505;">
+            <p id="charlie-msg" style="color: #fff;">Чарли: "Выбирай столик, здесь все свои."</p>
+            <button class="reg-btn" onclick="Core.register()">К СТОЛАМ</button>
         </div>
     </div>
 
     <div id="hall-layer">
-      <div id="hall-layer">
-        <div id="hud">
-            <img id="user-avatar" class="user-mini" src="">
-        </div>
+        <div id="hud"><img id="user-avatar" class="user-mini" src=""></div>
         
-        <div id="table-1" class="lamp-zone" title="РИСК (ИГРА)" onclick="location.href='risk.html'"></div>
-        
-        <div id="table-2" class="lamp-zone" title="ДУЭЛЬ ЦИТАТ" onclick="location.href='battle.html'"></div>
-        
-        <div id="table-3" class="lamp-zone" title="АНОНИМНЫЙ ЧАТ" onclick="location.href='roulette.html'"></div>
-        
-        <div id="table-4" class="lamp-zone" title="M&Ж ПЕРЕВОДЧИК" onclick="location.href='translator.html'"></div>
-        
-        <div id="table-5" class="lamp-zone" title="ДУЭЛЬ КОМПЛИМЕНТОВ" onclick="location.href='compliments.html'"></div>
-        
-        <div id="table-6" class="lamp-zone" title="ТЕНЬ БАРОНА (AI)" onclick="location.href='ai_shadow.html'"></div>
-        
-        <div id="mic-zone" class="lamp-zone" title="ОТКРЫТЫЙ МИКРОФОН" onclick="location.href='open_mic.html'"></div>
+        <div id="table-1" class="lamp-zone" onclick="Core.transitionToTable('risk.html')"></div>
+        <div id="table-2" class="lamp-zone" onclick="Core.transitionToTable('battle.html')"></div>
+        <div id="table-3" class="lamp-zone" onclick="Core.transitionToTable('roulette.html')"></div>
+        <div id="table-4" class="lamp-zone" onclick="Core.transitionToTable('translator.html')"></div>
+        <div id="table-5" class="lamp-zone" onclick="Core.transitionToTable('compliments.html')"></div>
+        <div id="table-6" class="lamp-zone" onclick="Core.transitionToTable('ai_shadow.html')"></div>
+        <div id="mic-zone" class="lamp-zone" onclick="Core.transitionToTable('open_mic.html')"></div>
     </div>
 
     <script>
         const Core = {
-            // Регистрация, если зашли напрямую в tables.html
             register() {
-                const id = 'GY-' + Math.random().toString(36).substr(2, 6).toUpperCase();
-                localStorage.setItem('gy_trace', id); // Синхрон с index.html
-                // Генерируем временный аватар, если его нет
-                const avatar = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${id}`;
-                localStorage.setItem('gy_avatar_data', avatar);
+                const id = localStorage.getItem('gy_trace') || 'GY-' + Math.random().toString(36).substr(2, 6).toUpperCase();
+                localStorage.setItem('gy_trace', id);
                 this.enter();
             },
 
             enter() {
-                // Проверяем наличие ID из любого источника (холл или этот экран)
-                const savedID = localStorage.getItem('gy_trace');
-                if(!savedID) return;
+                const amb = document.getElementById('snd-ambient');
+                amb.volume = 0;
+                amb.play().catch(() => { console.log("Ждем взаимодействия..."); });
+                this.fadeAudio(amb, 0.6, 2000);
 
-                // Берем аватар из хранилища (тот, что сделали в холлле) или ставим дефолт
-                const avatar = localStorage.getItem('gy_avatar_data') || `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${savedID}`;
-                
-                document.getElementById('user-avatar').src = avatar;
-                document.getElementById('entry-layer').style.display = 'none';
-                document.getElementById('hall-layer').style.display = 'block';
-                document.getElementById('hud').style.display = 'block';
+                document.getElementById('entry-layer').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('entry-layer').style.display = 'none';
+                    const hall = document.getElementById('hall-layer');
+                    hall.style.display = 'block';
+                    setTimeout(() => { 
+                        hall.style.opacity = '1'; 
+                        document.getElementById('hud').style.display = 'block';
+                        document.getElementById('user-avatar').src = localStorage.getItem('gy_avatar_data') || '';
+                    }, 50);
+                }, 1000);
+            },
+
+            // Плавный уход в активность
+            transitionToTable(url) {
+                const amb = document.getElementById('snd-ambient');
+                this.fadeAudio(amb, 0, 1200); // Глушим бар
+
+                document.body.style.transition = "filter 1.2s, opacity 1.2s";
+                document.body.style.filter = "blur(15px) brightness(0.5)";
+                document.body.style.opacity = "0";
+
+                setTimeout(() => { window.location.href = url; }, 1200);
+            },
+
+            fadeAudio(audio, target, duration) {
+                const start = audio.volume;
+                const startTime = Date.now();
+                const interval = setInterval(() => {
+                    const progress = Math.min((Date.now() - startTime) / duration, 1);
+                    audio.volume = start + (target - start) * progress;
+                    if (progress === 1) clearInterval(interval);
+                }, 50);
             }
         };
 
-        window.onload = () => { 
-            // Если ID уже есть (пришли из Холла), пускаем сразу
-            if(localStorage.getItem('gy_trace')) {
-                Core.enter(); 
-            }
-        };
-
-        function googleTranslateElementInit() { 
-            new google.translate.TranslateElement({pageLanguage: 'ru', autoDisplay: false}, 'google_translate_element'); 
-        }
+        window.onload = () => { if(localStorage.getItem('gy_trace')) Core.enter(); };
+        function googleTranslateElementInit() { new google.translate.TranslateElement({pageLanguage: 'ru', autoDisplay: false}, 'google_translate_element'); }
     </script>
     <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
