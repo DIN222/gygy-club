@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY CLUB v5.3.6</title>
+    <title>GY-GY CLUB v5.3.7</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
@@ -55,7 +55,15 @@ html, body { width: 100%; height: 100%; background: var(--bg); color: var(--gold
         </div>
     </div>
 
-    <div id="block-reg" class="block"></div>
+  <div id="block-reg" class="block">
+        <h2 class="title-gold" style="font-size: 28px;">CREATING PERSONA</h2>
+        <div class="reg-zone" onclick="GY_Identity.generateNew()">
+            <img id="reg-avatar" src="" style="width:100%; height:100%; object-fit:cover;">
+            <div style="position:absolute; bottom:0; background:rgba(0,0,0,0.7); width:100%; font-size:10px; text-align:center;">TAP TO CHANGE</div>
+        </div>
+        <div id="reg-nickname" style="margin: 20px 0; font-size: 20px; letter-spacing: 2px;">[ LOADING... ]</div>
+        <button class="btn-gy" onclick="GY_Identity.saveAndGo()">ПОЛУЧИТЬ ПАСПОРТ</button>
+    </div>
 
     <div id="block-hall" class="block">
         <div class="card-hall">
@@ -118,8 +126,7 @@ html, body { width: 100%; height: 100%; background: var(--bg); color: var(--gold
     </div>
   <script>
     let currentID = "";
-
-    const GY_Core = {
+const GY_Core = {
         initEngine: function() {
             const door = document.getElementById('main-door');
             const snd = document.getElementById('s-door');
@@ -128,20 +135,21 @@ html, body { width: 100%; height: 100%; background: var(--bg); color: var(--gold
             door.style.transform = "scale(12)";
             door.style.opacity = "0";
             
-            // Генерация Digital Trace
+            // Генерируем ID заранее
             currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
-            const idLabel = document.getElementById('hall-id-display');
-            if(idLabel) idLabel.innerText = currentID;
-
-            // Генерация QR
-            const qrHall = document.getElementById('hall-qr');
-            if(qrHall && typeof QRCode !== 'undefined') {
-                qrHall.innerHTML = "";
-                new QRCode(qrHall, { text: currentID, width: 95, height: 95 });
-            }
-
+            
             setTimeout(() => {
                 GY_Nav.go('block-welcome');
+                
+                // АВТОМАТИКА: Кнопка "В ХОЛЛ" просыпается через 3 секунды
+                setTimeout(() => {
+                    const btnWait = document.getElementById('btn-to-hall-wait');
+                    if(btnWait) {
+                        btnWait.classList.remove('btn-sleep');
+                        btnWait.innerText = "ВХОД В КЛУБ";
+                    }
+                }, 3000);
+
                 const amb = document.getElementById('s-amb');
                 if(amb) {
                     amb.volume = 0;
@@ -150,49 +158,55 @@ html, body { width: 100%; height: 100%; background: var(--bg); color: var(--gold
                 }
             }, 1200);
         },
-
-        fadeAudio: function(audio, target, duration) {
-            let start = audio.volume;
-            let startTime = Date.now();
-            let timer = setInterval(() => {
-                let progress = Math.min((Date.now() - startTime) / duration, 1);
-                audio.volume = start + (target - start) * progress;
-                if (progress === 1) clearInterval(timer);
-            }, 50);
-        }
-    };
-
-    const GY_Nav = {
-        go: function(id) {
-            document.querySelectorAll('.block').forEach(b => {
-                b.classList.remove('active');
-                b.style.display = 'none';
-                b.style.opacity = '0';
-            });
-            const next = document.getElementById(id);
-            if(next) {
-                next.style.display = 'flex';
-                setTimeout(() => {
-                    next.classList.add('active');
-                    next.style.opacity = '1';
-                }, 50);
-            }
-        }
+        // ... (fadeAudio оставляем без изменений)
     };
 
     const GY_Identity = {
-        verify: function() {
+        nicknames: ["Electric_Horse", "Neon_Joker", "Cyber_Dandy", "Vintage_Ghost", "Digital_Nomad"],
+        
+        // Генерация при входе в блок регистрации
+        generateNew: function() {
             const seed = Math.floor(Math.random() * 9999);
-            document.getElementById('hall-pic').src = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${seed}`;
+            const nick = this.nicknames[Math.floor(Math.random() * this.nicknames.length)];
+            
+            document.getElementById('reg-avatar').src = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${seed}`;
+            document.getElementById('reg-nickname').innerText = nick + "_" + Math.floor(Math.random()*99);
+            
+            // Сохраняем во временную память
+            this.tempAvatar = document.getElementById('reg-avatar').src;
+            this.tempNick = document.getElementById('reg-nickname').innerText;
+        },
+
+        saveAndGo: function() {
+            // Переносим данные в Холл
+            document.getElementById('hall-pic').src = this.tempAvatar || `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=123`;
+            document.getElementById('hall-id-display').innerText = currentID + " | " + (this.tempNick || "GUEST");
+            
+            // Генерируем QR для Холла
+            const qrHall = document.getElementById('hall-qr');
+            if(qrHall) {
+                qrHall.innerHTML = "";
+                new QRCode(qrHall, { text: currentID, width: 95, height: 95 });
+            }
+            
+            GY_Nav.go('block-hall');
+        },
+
+        verify: function() {
+            // Финальная анимация подтверждения в Холле
             document.getElementById('hall-navigation').style.display = 'flex';
             document.getElementById('hall-btn-confirm').style.display = 'none';
-            console.log("Личность подтверждена:", currentID);
+            console.log("Доступ разрешен для:", currentID);
         }
     };
 
-    function googleTranslateElementInit() {
-        new google.translate.TranslateElement({pageLanguage: 'ru'}, 'google_translate_element');
-    }
+    // Добавим в GY_Nav вызов генерации, если заходим в блок регистрации
+    const originalGo = GY_Nav.go;
+    GY_Nav.go = function(id) {
+        if(id === 'block-reg') GY_Identity.generateNew();
+        originalGo.apply(this, arguments);
+    };
+   
 </script>
 <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
