@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI ROOM CORE | v8.1.16 (Internal 4.4)</title>
+    <title>AI ROOM CORE | v8.1.17 (Internal 4.4)</title>
     <style>
        :root {
             --orange-neon: #ff8c00;
@@ -44,13 +43,14 @@
             z-index: 1000;
         }
 
-      .brand-logo {
+        /* ИСПРАВЛЕННЫЙ ЛОГОТИП */
+        .brand-logo {
             color: var(--gold);
             font-size: 2.2rem;
             font-weight: 900;
-            letter-spacing: 8px; /* Увеличили разлет букв для солидности */
-            font-family: monospace; /* Стандарт нашего клуба */
-            text-shadow: 0 0 15px rgba(255, 215, 0, 0.7); /* Золотое свечение */
+            letter-spacing: 8px;
+            font-family: monospace;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
             text-transform: uppercase;
         }
 
@@ -69,41 +69,37 @@
             text-align: center;
         }
 
-      #studio-zone {
+        /* ЛЕВАЯ ЗОНА */
+        #studio-zone {
             top: 20%; 
-            left: 20%; 
+            left: 15%; 
             width: 25%;
             height: 20%;
             font-size: clamp(30px, 4.0vw, 50px); 
         }
 
+        /* ПРАВАЯ ЗОНА - ВЫРОВНЯЛИ ПО ВЫСОТЕ СО СТУДИЕЙ */
+        #universe-zone {
+            top: 20%; 
+            right: 15%;
+            width: 30%;
+            height: 20%;
+            font-size: clamp(20px, 3.5vw, 45px);
+        }
+
+        /* ЦЕНТРАЛЬНАЯ НИЖНЯЯ ЗОНА */
         #techpark-zone {
             top: 45%; 
-            left: 43.5%;
+            left: 42.5%;
             width: 15%;
             height: 12%;
             font-size: clamp(14px, 2.5vw, 40px);
         }
 
-        /* Тот самый третий экран — портал во Вселенную */
-        #universe-zone {
-            top: 65%; 
-            left: 15%;
-            width: 30%;
-            height: 15%;
-            font-size: clamp(20px, 3.5vw, 45px);
-            color: #00ffff; /* Голубой неон для космического вайба */
-            text-shadow: 0 0 20px rgba(0, 255, 255, 0.9);
-        }
-
-    .screen-label:hover {
+        .screen-label:hover {
             filter: brightness(1.5);
             transform: scale(1.05);
             text-shadow: 0 0 30px var(--orange-neon);
-        }
-
-    #universe-zone:hover {
-            text-shadow: 0 0 30px #00ffff;
         }
 
         .bottom-nav {
@@ -141,18 +137,17 @@
 <div class="viewport">
     <div class="top-bar">
         <div id="google_translate_element"></div>
-        <div class="ui-header-right">GY-GY</div>
+        <div class="brand-logo">GY-GY</div>
     </div>
 
     <a href="studio.html" class="screen-label" id="studio-zone">studio</a>
     <a href="techpark.html" class="screen-label" id="techpark-zone">techpark</a>
-    
     <a href="universe.html" class="screen-label" id="universe-zone">Хелло Вселенная</a>
 
     <div class="bottom-nav">
         <button class="btn-back" onclick="history.back()">← RETURN</button>
         <div class="meta-data">
-            CORE_VER: 4.3 (Build 8.1.7)<br>
+            CORE_VER: 4.4 (Build 8.1.16)<br>
             TRACE_ID: <span id="digital-trace">...</span>
         </div>
     </div>
