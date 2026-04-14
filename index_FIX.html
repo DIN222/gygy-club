@@ -3,38 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY CLUB v5.3.7</title>
+    <title>GY-GY CLUB v5.3.8</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root { --gold: #d4af37; --bg: #000; }
-* { -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none; }
-html, body { width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Share Tech Mono', monospace; margin: 0; overflow: hidden; position: fixed; }
+        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; outline: none; }
+        html, body { width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Share Tech Mono', monospace; margin: 0; overflow: hidden; position: fixed; }
 
-/* СИСТЕМНЫЙ СЛОЙ — ВСЕГДА ПОВЕРХ ВСЕГО */
-.ui-brand { position: fixed; top: 18px; right: 25px; z-index: 2000000; font-size: 24px; font-weight: 900; letter-spacing: 4px; text-shadow: 0 0 10px rgba(212,175,55,0.5); pointer-events: none; }
-#google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 2000000; pointer-events: auto !important; }
+        /* СИСТЕМНЫЙ СЛОЙ */
+        .ui-brand { position: fixed; top: 18px; right: 25px; z-index: 2000000; font-size: 24px; font-weight: 900; letter-spacing: 4px; text-shadow: 0 0 10px rgba(212,175,55,0.5); pointer-events: none; }
+        #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 2000000; pointer-events: auto !important; }
 
-/* ОБЩАЯ ЛОГИКА БЛОКОВ */
-.block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; opacity: 0; transition: opacity 0.4s ease; pointer-events: none; z-index: 10; }
-.block.active { display: flex !important; opacity: 1; pointer-events: auto !important; z-index: 1000; }
+        /* ЛОГИКА БЛОКОВ */
+        .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; opacity: 0; transition: opacity 0.4s ease; pointer-events: none; z-index: 10; }
+        .block.active { display: flex !important; opacity: 1; pointer-events: auto !important; z-index: 1000; }
 
-/* ДВЕРЬ — ПРИОРИТЕТ №1 ПРИ СТАРТЕ */
-#block-entrance { z-index: 1500000 !important; }
-#main-door { width: 260px; cursor: pointer; transition: 1.2s; z-index: 1500001 !important; pointer-events: auto !important; position: relative; }
+        /* ВХОД */
+        #block-entrance { z-index: 1500000 !important; }
+        #main-door { width: 260px; cursor: pointer; transition: 1.2s; z-index: 1500001 !important; pointer-events: auto !important; position: relative; }
 
-/* КНОПКИ */
-.btn-gy { padding: 12px 24px; font-size: 13px; background: transparent; color: var(--gold); border: 1px solid var(--gold); cursor: pointer; transition: 0.3s; text-transform: uppercase; font-family: 'Share Tech Mono'; pointer-events: auto; }
-.btn-gy:hover { color: #fff; border-color: #fff; box-shadow: 0 0 15px rgba(212,175,55,0.4); }
-.btn-sleep { opacity: 0.2; filter: grayscale(1); pointer-events: none !important; }
+        /* КНОПКИ */
+        .btn-gy { padding: 12px 24px; font-size: 13px; background: transparent; color: var(--gold); border: 1px solid var(--gold); cursor: pointer; transition: 0.3s; text-transform: uppercase; font-family: 'Share Tech Mono'; pointer-events: auto; margin: 5px; }
+        .btn-gy:hover { color: #fff; border-color: #fff; box-shadow: 0 0 15px rgba(212,175,55,0.4); }
+        .btn-sleep { opacity: 0.2; filter: grayscale(1); pointer-events: none !important; }
 
-/* РЕГИСТРАЦИЯ, ХОЛЛ И БАР (Остальное без изменений) */
-.reg-zone { width: 135px; height: 135px; border: 1px solid var(--gold); background: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; position: relative; pointer-events: auto; }
-#block-hall { background: #fdfdfd !important; color: #000; }
-.card-hall { width: 300px; padding: 30px; background: #F5F5DC; border: 3px solid var(--gold); border-radius: 20px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 15px 50px rgba(0,0,0,0.3); }
-.hall-nav { margin-top: 20px; display: none; flex-direction: column; width: 100%; gap: 10px; }
-.title-gold { font-family: 'Playfair Display'; color: var(--gold); font-size: 44px; letter-spacing: 8px; margin: 15px 0; text-transform: uppercase; }
-            </style>
+        /* ЗОНЫ */
+        .reg-zone { width: 135px; height: 135px; border: 1px solid var(--gold); background: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; position: relative; pointer-events: auto; }
+        #block-hall { background: #fdfdfd !important; color: #000; }
+        .card-hall { width: 300px; padding: 30px; background: #F5F5DC; border: 3px solid var(--gold); border-radius: 20px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 15px 50px rgba(0,0,0,0.3); }
+        .hall-nav { margin-top: 20px; display: none; flex-direction: column; width: 100%; gap: 10px; }
+        .title-gold { font-family: 'Playfair Display'; color: var(--gold); font-size: 44px; letter-spacing: 8px; margin: 15px 0; text-transform: uppercase; text-align: center; }
+        .quote { font-style: italic; opacity: 0.8; margin-bottom: 20px; text-align: center; padding: 0 20px; }
+    </style>
 </head>
 <body oncontextmenu="return false;">
 
@@ -49,17 +50,17 @@ html, body { width: 100%; height: 100%; background: var(--bg); color: var(--gold
         <div class="quote">«В каждой шутке есть доля виски»</div>
         <img src="horse_welcome.png" style="height: 35vh; margin-bottom: 20px;">
         <h1 class="title-gold">WELCOME</h1>
-        <div style="display:flex; gap:15px;">
+        <div style="display:flex; flex-wrap: wrap; justify-content: center;">
             <button id="btn-to-hall-wait" class="btn-gy btn-sleep" onclick="GY_Nav.go('block-hall')">В ХОЛЛ</button>
             <button class="btn-gy" onclick="GY_Nav.go('block-reg')">РЕГИСТРАЦИЯ</button>
         </div>
     </div>
 
-  <div id="block-reg" class="block">
+    <div id="block-reg" class="block">
         <h2 class="title-gold" style="font-size: 28px;">CREATING PERSONA</h2>
         <div class="reg-zone" onclick="GY_Identity.generateNew()">
             <img id="reg-avatar" src="" style="width:100%; height:100%; object-fit:cover;">
-            <div style="position:absolute; bottom:0; background:rgba(0,0,0,0.7); width:100%; font-size:10px; text-align:center;">TAP TO CHANGE</div>
+            <div style="position:absolute; bottom:0; background:rgba(0,0,0,0.7); width:100%; font-size:10px; text-align:center; color: #fff;">TAP TO CHANGE</div>
         </div>
         <div id="reg-nickname" style="margin: 20px 0; font-size: 20px; letter-spacing: 2px;">[ LOADING... ]</div>
         <button class="btn-gy" onclick="GY_Identity.saveAndGo()">ПОЛУЧИТЬ ПАСПОРТ</button>
@@ -67,8 +68,8 @@ html, body { width: 100%; height: 100%; background: var(--bg); color: var(--gold
 
     <div id="block-hall" class="block">
         <div class="card-hall">
-            <h2 style="margin:0 0 10px 0; letter-spacing: 2px;">CLUB PASS</h2>
-            <div id="hall-id-display" style="font-weight:900; margin-bottom:15px; font-size:14px;">#ID-CHECK</div>
+            <h2 style="margin:0 0 10px 0; letter-spacing: 2px; color: #000;">CLUB PASS</h2>
+            <div id="hall-id-display" style="font-weight:900; margin-bottom:15px; font-size:14px; color: #000;">#ID-CHECK</div>
             <div style="display:flex; gap:12px; margin-bottom:20px;">
                 <div style="width:95px; height:95px; border:1px solid #000; background:#fff;"><img id="hall-pic" style="width:100%; height:100%; object-fit:cover;"></div>
                 <div id="hall-qr" style="width:95px; height:95px; border:1px solid #000; background:#fff;"></div>
@@ -83,40 +84,31 @@ html, body { width: 100%; height: 100%; background: var(--bg); color: var(--gold
 
     <div id="block-bar" class="block" style="justify-content: flex-end;">
         <div style="margin-bottom: 6vh; z-index:100; display:flex; flex-direction:column; align-items:center; gap:10px;">
-            <h2 style="font-family:'Playfair Display'; letter-spacing:3px; color:#fff;">THE CLUB BAR</h2>
+            <h2 style="font-family:'Playfair Display'; letter-spacing:3px; color:#fff; text-shadow: 0 0 10px #000;">THE CLUB BAR</h2>
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
                 <button class="btn-gy" onclick="GY_Nav.go('block-tables')">СТОЛИКИ</button>
-                <button class="btn-gy" onclick="GY_Nav.go('block-server')">AI ROOM</button>
+                <button class="btn-gy" onclick="window.location.href='ai_room_core_v8.html'">AI ROOM</button>
                 <button class="btn-gy" onclick="GY_Nav.go('block-hall')">В ХОЛЛ</button>
                 <button class="btn-gy" onclick="GY_Nav.go('block-welcome')">ВЫХОД</button>
             </div>
         </div>
-        <img src="horse_bar.png" style="height: 70vh; position:relative; z-index:5;">
+        <img src="horse_bar.png" style="height: 70vh; position:absolute; bottom: 0; z-index:5;">
     </div>
 
-    <div id="block-server" class="block" style="background: #000; color: #00ff00; font-family: 'Share Tech Mono';">
-        <div style="text-align: center; border: 1px solid #00ff00; padding: 40px; background: rgba(0,255,0,0.05); max-width: 90%;">
-            <h1 style="letter-spacing: 5px; font-size: 24px;">SERVER ROOM :: AI UNIT</h1>
-            <p style="opacity: 0.7;">[ СТАТУС: ПОДКЛЮЧЕНО ]</p>
-            <div style="margin: 20px 0; font-size: 12px; color: #008800; text-align: left; line-height: 1.5;">
-                > Инициализация нейронных связей... OK<br>
-                > Анализ чувства юмора... OK<br>
-                > Загрузка острот... 99%<br>
-                > Поиск смысла жизни... [ОШИБКА 404: СМЫСЛ НЕ НАЙДЕН]
-            </div>
-            <button class="btn-gy" style="border-color: #00ff00; color: #00ff00;" onclick="GY_Nav.go('block-bar')">ВЕРНУТЬСЯ В БАР</button>
-        </div>
+    <div id="block-server" class="block" style="background: #000; color: #00ff00;">
+         <div style="text-align: center; border: 1px solid #00ff00; padding: 40px;">
+            <h1>AI UNIT STATUS</h1>
+            <button class="btn-gy" style="color:#00ff00; border-color:#00ff00;" onclick="GY_Nav.go('block-bar')">BACK</button>
+         </div>
     </div>
 
-    <div id="block-tables" class="block" style="background: #0a0a0a;">
+    <div id="block-tables" class="block">
         <h1 class="title-gold">ЗАЛ СО СТОЛИКАМИ</h1>
-        <div class="quote" style="color:rgba(212,175,55,0.6);">Здесь обсуждают великое и шутят над вечным.</div>
-        <button class="btn-gy" onclick="GY_Nav.go('block-bar')">ВЕРНУТЬСЯ В БАР</button>
+        <button class="btn-gy" onclick="GY_Nav.go('block-bar')">В БАР</button>
     </div>
 
     <div id="block-atelier" class="block" style="background: #fff; color: #000;">
-        <h1 style="font-family: 'Playfair Display'; font-size: 40px;">ATELIER</h1>
-        <p>Примерка цифровых масок и образов...</p>
+        <h1 class="title-gold" style="color:#000;">ATELIER</h1>
         <button class="btn-gy" style="color:#000; border-color:#000;" onclick="GY_Nav.go('block-hall')">В ХОЛЛ</button>
     </div>
 
@@ -124,9 +116,30 @@ html, body { width: 100%; height: 100%; background: var(--bg); color: var(--gold
         <audio id="s-door" preload="auto"><source src="door_open.mp3"></audio>
         <audio id="s-amb" loop preload="auto"><source src="bar_ambient.mp3"></audio>
     </div>
-  <script>
+
+<script>
     let currentID = "";
-const GY_Core = {
+
+    const GY_Nav = {
+        go: function(id) {
+            document.querySelectorAll('.block').forEach(b => {
+                b.classList.remove('active');
+                b.style.display = 'none';
+                b.style.opacity = '0';
+            });
+            const next = document.getElementById(id);
+            if(next) {
+                if(id === 'block-reg') GY_Identity.generateNew();
+                next.style.display = 'flex';
+                setTimeout(() => {
+                    next.classList.add('active');
+                    next.style.opacity = '1';
+                }, 50);
+            }
+        }
+    };
+
+    const GY_Core = {
         initEngine: function() {
             const door = document.getElementById('main-door');
             const snd = document.getElementById('s-door');
@@ -135,13 +148,11 @@ const GY_Core = {
             door.style.transform = "scale(12)";
             door.style.opacity = "0";
             
-            // Генерируем ID заранее
             currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
             
             setTimeout(() => {
                 GY_Nav.go('block-welcome');
                 
-                // АВТОМАТИКА: Кнопка "В ХОЛЛ" просыпается через 3 секунды
                 setTimeout(() => {
                     const btnWait = document.getElementById('btn-to-hall-wait');
                     if(btnWait) {
@@ -158,55 +169,56 @@ const GY_Core = {
                 }
             }, 1200);
         },
-        // ... (fadeAudio оставляем без изменений)
+
+        fadeAudio: function(audio, target, duration) {
+            let start = audio.volume;
+            let startTime = Date.now();
+            let timer = setInterval(() => {
+                let progress = Math.min((Date.now() - startTime) / duration, 1);
+                audio.volume = start + (target - start) * progress;
+                if (progress === 1) clearInterval(timer);
+            }, 50);
+        }
     };
 
     const GY_Identity = {
-        nicknames: ["Electric_Horse", "Neon_Joker", "Cyber_Dandy", "Vintage_Ghost", "Digital_Nomad"],
-        
-        // Генерация при входе в блок регистрации
+        nicknames: ["Electric_Horse", "Neon_Joker", "Cyber_Dandy", "Vintage_Ghost", "Digital_Nomad", "Pixel_Duke", "Radio_Star"],
+        tempAvatar: "",
+        tempNick: "",
+
         generateNew: function() {
             const seed = Math.floor(Math.random() * 9999);
             const nick = this.nicknames[Math.floor(Math.random() * this.nicknames.length)];
+            const avatarUrl = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${seed}`;
             
-            document.getElementById('reg-avatar').src = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${seed}`;
+            document.getElementById('reg-avatar').src = avatarUrl;
             document.getElementById('reg-nickname').innerText = nick + "_" + Math.floor(Math.random()*99);
             
-            // Сохраняем во временную память
-            this.tempAvatar = document.getElementById('reg-avatar').src;
+            this.tempAvatar = avatarUrl;
             this.tempNick = document.getElementById('reg-nickname').innerText;
         },
 
         saveAndGo: function() {
-            // Переносим данные в Холл
-            document.getElementById('hall-pic').src = this.tempAvatar || `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=123`;
+            document.getElementById('hall-pic').src = this.tempAvatar || `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=guest`;
             document.getElementById('hall-id-display').innerText = currentID + " | " + (this.tempNick || "GUEST");
             
-            // Генерируем QR для Холла
             const qrHall = document.getElementById('hall-qr');
-            if(qrHall) {
+            if(qrHall && typeof QRCode !== 'undefined') {
                 qrHall.innerHTML = "";
                 new QRCode(qrHall, { text: currentID, width: 95, height: 95 });
             }
-            
             GY_Nav.go('block-hall');
         },
 
         verify: function() {
-            // Финальная анимация подтверждения в Холле
             document.getElementById('hall-navigation').style.display = 'flex';
             document.getElementById('hall-btn-confirm').style.display = 'none';
-            console.log("Доступ разрешен для:", currentID);
         }
     };
 
-    // Добавим в GY_Nav вызов генерации, если заходим в блок регистрации
-    const originalGo = GY_Nav.go;
-    GY_Nav.go = function(id) {
-        if(id === 'block-reg') GY_Identity.generateNew();
-        originalGo.apply(this, arguments);
-    };
-   
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({pageLanguage: 'ru'}, 'google_translate_element');
+    }
 </script>
 <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
