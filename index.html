@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.57 | AVATAR READY</title>
+    <title>GY-GY Club v4.4.58 | AVATAR READY</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -142,7 +142,23 @@
             }, 1200);
         }
 
-        function portalTransition(nextId) {
+       function portalTransition(nextId) {
+            // --- НОВАЯ ВСТАВКА ТУТ ---
+            if (nextId === 'block-tables') {
+                const amb = document.getElementById('snd-ambient');
+                if (amb) fadeAudio(amb, 0, 800); 
+
+                document.body.style.transition = "opacity 0.8s, filter 0.8s";
+                document.body.style.opacity = "0";
+                document.body.style.filter = "blur(10px)";
+                
+                setTimeout(() => { 
+                    window.location.href = 'tables.html'; 
+                }, 800);
+                return; // Дальше код не пойдет, мы улетаем на другой файл
+            }
+            // --- КОНЕЦ ВСТАВКИ ---
+
             const current = document.querySelector('.block.active');
             const backBtn = document.getElementById('btn-global-back');
             const amb = document.getElementById('snd-ambient');
@@ -153,6 +169,10 @@
             setTimeout(() => {
                 if(current) { current.classList.remove('active'); current.style.display = "none"; }
                 const next = document.getElementById(nextId);
+                
+                // Проверка на всякий случай, если блока вдруг нет в HTML
+                if(!next) return; 
+
                 next.style.display = "flex";
 
                 setTimeout(() => { 
@@ -162,11 +182,8 @@
 
                     setTimeout(() => {
                         if (nextId === 'block-bar') fadeAudio(amb, 1, 800);
-                        if (nextId === 'block-tables') {
-                            backBtn.style.display = 'block';
-                            setTimeout(() => { backBtn.style.opacity = "1"; }, 50);
-                            fadeAudio(amb, 0, 800);
-                        } else { backBtn.style.display = 'none'; }
+                        // Эту часть про block-tables ниже можно тоже удалять, 
+                        // так как мы обработали переход выше через window.location
                     }, 800);
 
                     if(nextId === 'block-bar' && (!current || current.id !== 'block-tables')) {
