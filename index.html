@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.55 | FULL MASTER</title>
+    <title>GY-GY Club v4.4.56 | AVATAR READY</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -16,7 +16,6 @@
 
         html, body { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; position: fixed; margin:0; }
         
-        /* UI ЭЛЕМЕНТЫ */
         #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000001; pointer-events: auto; }
         .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000000; font-size: 24px; letter-spacing: 5px; font-weight: bold; color: var(--gold); pointer-events: none; }
         
@@ -38,16 +37,13 @@
         .btn-gy { min-width: 270px; padding: 14px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; text-transform: uppercase; font-weight: 900; margin: 8px 0; font-family: 'Share Tech Mono'; transition: 0.3s; pointer-events: auto !important; }
         .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
 
-        /* БАРНЫЙ КОНТЕЙНЕР */
         .bar-ui-container { position: absolute; bottom: 5vh; left: 50%; transform: translateX(-50%); width: 100%; max-width: 380px; z-index: 1000; pointer-events: none; display: flex; flex-direction: column; align-items: center; }
         .bar-side-buttons { width: 100%; display: flex; justify-content: space-between; margin-bottom: 12px; pointer-events: none; }
         .bar-side-buttons button, .bar-bottom-button button { pointer-events: auto; min-width: 145px; background: rgba(0,0,0,0.6); }
 
-        /* ID КАРТОЧКА В ХОЛЛЕ */
         .id-card-hall { position: absolute; top: 72%; left: 50%; transform: translate(-50%,-50%); width: 220px; padding: 15px; border: 2px solid var(--gold); background: #F5F5DC; border-radius: 12px; display: flex; flex-direction: column; align-items: center; color: #000; z-index: 30; }
         .box-final { width: 85px; height: 85px; border: 2px solid #000; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
         
-        /* ДВЕРЬ - КРИТИЧЕСКИЙ Z-INDEX */
         #main-door { width: 280px; cursor: pointer; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s; z-index: 9999; pointer-events: auto !important; }
         
         #block-tables { background: url('lounge.jpg') no-repeat center bottom / contain #000; }
@@ -79,13 +75,19 @@
 
     <div id="block-identity" class="block">
         <div class="quote-text">«Шампанского много не бывает»</div>
-        <div style="display:flex; gap:12px; margin-bottom:25px; align-items:center;">
+        <div style="display:flex; gap:10px; margin-bottom:25px; align-items:center;">
             <div class="box-final" style="background:transparent; border-color:var(--gold); color:var(--gold); font-size:11px; font-family:'Share Tech Mono';" id="id-label">#ID</div>
             <div class="box-final" id="qr-box-reg" style="border-color:var(--gold);"></div>
-            <div class="box-final" style="border-color:var(--gold); position:relative;">
-                <input type="file" onchange="preview(this)" style="position:absolute; inset:0; opacity:0; z-index:10; cursor:pointer;">
+            
+            <div class="box-final" style="border-color:var(--gold); position:relative; cursor:pointer;" onclick="document.getElementById('file-input').click()">
+                <input type="file" id="file-input" onchange="preview(this)" style="display:none;">
                 <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
-                <span id="txt-photo" style="color:#000; font-size:10px; font-weight:900;">ФОТО</span>
+                <span id="txt-photo" style="color:var(--gold); font-size:10px; font-weight:900;">ФОТО</span>
+            </div>
+
+            <div class="box-final" style="border-color:var(--gold); cursor:pointer; background:rgba(212,175,55,0.1);" onclick="generateAvatar()">
+                <img id="avatar-img" style="display:none; width:100%; height:100%; object-fit:cover;">
+                <span id="txt-avatar" style="color:var(--gold); font-size:10px; font-weight:900; text-align:center;">GEN<br>AVATAR</span>
             </div>
         </div>
         <button id="btn-save" class="btn-gy" onclick="swapButtons('btn-save', 'btn-pass')">СОХРАНИТЬ</button>
@@ -128,7 +130,6 @@
     <script>
         let currentID = "";
 
-        // ФУНКЦИЯ ГЛУБОКОГО ПОГРУЖЕНИЯ В МОСТ
         function deepDive() {
             document.body.style.transition = "opacity 1.2s ease, filter 1.2s ease";
             document.body.style.opacity = "0";
@@ -201,15 +202,41 @@
             }, 50);
         }
 
+        // ЗАГРУЗКА ФОТО
         function preview(i) {
             if(i.files && i.files[0]) {
                 const r = new FileReader();
                 r.onload = (e) => { 
-                    document.getElementById('pp').src = e.target.result; document.getElementById('pp').style.display = "block";
-                    document.getElementById('h-photo').src = e.target.result; document.getElementById('txt-photo').style.display = "none";
+                    // Сбрасываем аватар, если выбрали фото
+                    document.getElementById('avatar-img').style.display = "none";
+                    document.getElementById('txt-avatar').style.display = "block";
+                    
+                    document.getElementById('pp').src = e.target.result; 
+                    document.getElementById('pp').style.display = "block";
+                    document.getElementById('h-photo').src = e.target.result; 
+                    document.getElementById('txt-photo').style.display = "none";
                 };
                 r.readAsDataURL(i.files[0]);
             }
+        }
+
+        // ГЕНЕРАЦИЯ АВАТАРА (НОВОЕ)
+        function generateAvatar() {
+            // Сбрасываем фото, если выбрали аватар
+            document.getElementById('pp').style.display = "none";
+            document.getElementById('txt-photo').style.display = "block";
+            document.getElementById('file-input').value = "";
+
+            const seed = Math.random().toString(36).substring(7);
+            const avatarUrl = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${seed}`;
+            
+            const avImg = document.getElementById('avatar-img');
+            avImg.src = avatarUrl;
+            avImg.style.display = "block";
+            document.getElementById('txt-avatar').style.display = "none";
+            
+            // Передаем в финальное удостоверение
+            document.getElementById('h-photo').src = avatarUrl;
         }
 
         function swapButtons(a, s) { 
