@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.58 | AVATAR READY</title>
+    <title>GY-GY Club v4.4.59 | AVATAR READY</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -142,21 +142,26 @@
             }, 1200);
         }
 
-       function portalTransition(nextId) {
-            // --- НОВАЯ ВСТАВКА ТУТ ---
+      function portalTransition(nextId) {
             if (nextId === 'block-tables') {
                 const amb = document.getElementById('snd-ambient');
                 if (amb) fadeAudio(amb, 0, 800); 
 
+                // МГНОВЕННО СКРЫВАЕМ ВСЮ ГРЯЗЬ (UI и лишние блоки)
+                const uiElements = document.querySelectorAll('.ui-header-right, #google_translate_element, .quote-text, .bar-ui-container, .ui-back-to-bar');
+                uiElements.forEach(el => el.style.display = 'none');
+
+                // ПЛАВНО ГАСИМ ВСЕ ТЕЛО СТРАНИЦЫ
                 document.body.style.transition = "opacity 0.8s, filter 0.8s";
                 document.body.style.opacity = "0";
-                document.body.style.filter = "blur(10px)";
+                document.body.style.filter = "blur(10px) brightness(0)";
                 
                 setTimeout(() => { 
                     window.location.href = 'tables.html'; 
                 }, 800);
-                return; // Дальше код не пойдет, мы улетаем на другой файл
+                return; 
             }
+            // ... остальной код
             // --- КОНЕЦ ВСТАВКИ ---
 
             const current = document.querySelector('.block.active');
