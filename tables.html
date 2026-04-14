@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY Club | Tables v1.4.4</title>
+    <title>GY-GY Club | Tables v1.4.5</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #d4af37; --violet: #8A2BE2; --neon-glow: rgba(138, 43, 226, 0.6); }
@@ -18,34 +18,23 @@
             padding: 8px 15px; cursor: pointer; font-family: 'Share Tech Mono', monospace; 
             font-size: 11px; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s;
         }
+        .ui-back-to-bar:hover { background: var(--gold); color: #000; box-shadow: 0 0 15px var(--gold); }
 
         #ui-logo { position: fixed; top: 15px; right: 25px; z-index: 5000; color: var(--gold); font-size: 24px; font-weight: bold; letter-spacing: 5px; pointer-events: none; }
 
         /* СЛОИ */
-   /* СЛОЙ ПРОВЕРКИ ID (ТЕПЕРЬ СКРЫТ ПО УМОЛЧАНИЮ) */
         #entry-layer { 
-            position: fixed; 
-            inset: 0; 
-            background: #000; 
-            display: none; /* Убираем flex, ставим none */
-            flex-direction: column; 
-            justify-content: center; 
-            align-items: center; 
-            z-index: 2000; 
-            transition: opacity 1s; 
-            pointer-events: none; 
+            position: fixed; inset: 0; background: #000; 
+            display: none; flex-direction: column; justify-content: center; align-items: center; 
+            z-index: 2000; transition: opacity 1s; 
         }
 
-        /* Чтобы картинка не дергалась при загрузке */
         #hall-layer { 
-            width: 100vw; 
-            height: 100vh; 
+            width: 100vw; height: 100vh; 
             background: url('lounge.jpg') no-repeat center bottom / contain #000; 
-            position: relative; 
-            display: none; 
-            opacity: 0; 
-            transition: opacity 1.2s; 
+            position: relative; display: none; opacity: 0; transition: opacity 1.2s; 
         }
+
         /* ЛАМПЫ */
         .lamp-zone { 
             position: absolute; width: 42px; height: 42px; border-radius: 50%; 
@@ -76,15 +65,6 @@
     <audio id="snd-ambient" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
 
     <div id="google_translate_element"></div>
-    
-    <button class="ui-back-to-bar" onclick="window.location.href='index.html'">← В БАР</button>
-    
-    <div id="ui-logo">GY-GY</div>
-    
-    ... остальной код ...
-    <audio id="snd-ambient" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
-
-    <div id="google_translate_element"></div>
     <button class="ui-back-to-bar" onclick="window.location.href='index.html'">← В БАР</button>
     <div id="ui-logo">GY-GY</div>
 
@@ -98,13 +78,13 @@
     <div id="hall-layer">
         <div id="hud"><img id="user-avatar" class="user-mini" src=""></div>
         
-        <div id="table-1" class="lamp-zone" onclick="Core.transitionToTable('risk.html')"></div>
-        <div id="table-2" class="lamp-zone" onclick="Core.transitionToTable('battle.html')"></div>
-        <div id="table-3" class="lamp-zone" onclick="Core.transitionToTable('roulette.html')"></div>
-        <div id="table-4" class="lamp-zone" onclick="Core.transitionToTable('translator.html')"></div>
-        <div id="table-5" class="lamp-zone" onclick="Core.transitionToTable('compliments.html')"></div>
-        <div id="table-6" class="lamp-zone" onclick="Core.transitionToTable('ai_shadow.html')"></div>
-        <div id="mic-zone" class="lamp-zone" onclick="Core.transitionToTable('open_mic.html')"></div>
+        <div id="table-1" class="lamp-zone" title="РИСК" onclick="Core.transitionToTable('risk.html')"></div>
+        <div id="table-2" class="lamp-zone" title="ДУЭЛЬ ЦИТАТ" onclick="Core.transitionToTable('battle.html')"></div>
+        <div id="table-3" class="lamp-zone" title="АНОНИМНЫЙ ЧАТ" onclick="Core.transitionToTable('roulette.html')"></div>
+        <div id="table-4" class="lamp-zone" title="ПЕРЕВОДЧИК" onclick="Core.transitionToTable('translator.html')"></div>
+        <div id="table-5" class="lamp-zone" title="ДУЭЛЬ КОМПЛИМЕНТОВ" onclick="Core.transitionToTable('compliments.html')"></div>
+        <div id="table-6" class="lamp-zone" title="ИИ ТЕНЬ" onclick="Core.transitionToTable('ai_shadow.html')"></div>
+        <div id="mic-zone" class="lamp-zone" title="ОТКРЫТЫЙ МИКРОФОН" onclick="Core.transitionToTable('open_mic.html')"></div>
     </div>
 
     <script>
@@ -115,32 +95,65 @@
                 this.enter();
             },
 
-            enter() {
+            enter(instant = false) {
                 const amb = document.getElementById('snd-ambient');
-                amb.volume = 0;
-                amb.play().catch(() => { console.log("Ждем взаимодействия..."); });
-                this.fadeAudio(amb, 0.6, 2000);
+                const entry = document.getElementById('entry-layer');
+                const hall = document.getElementById('hall-layer');
 
-                document.getElementById('entry-layer').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('entry-layer').style.display = 'none';
-                    const hall = document.getElementById('hall-layer');
+                amb.volume = 0;
+                amb.play().catch(() => {});
+                
+                if (instant) {
+                    entry.style.display = 'none';
                     hall.style.display = 'block';
-                    setTimeout(() => { 
-                        hall.style.opacity = '1'; 
-                        document.getElementById('hud').style.display = 'block';
-                        document.getElementById('user-avatar').src = localStorage.getItem('gy_avatar_data') || '';
-                    }, 50);
-                }, 1000);
+                    hall.style.opacity = '1';
+                    document.getElementById('hud').style.display = 'block';
+                    this.fadeAudio(amb, 0.6, 500);
+                } else {
+                    entry.style.opacity = '0';
+                    setTimeout(() => {
+                        entry.style.display = 'none';
+                        hall.style.display = 'block';
+                        setTimeout(() => { 
+                            hall.style.opacity = '1'; 
+                            document.getElementById('hud').style.display = 'block';
+                        }, 50);
+                    }, 1000);
+                    this.fadeAudio(amb, 0.6, 2000);
+                }
+                document.getElementById('user-avatar').src = localStorage.getItem('gy_avatar_data') || '';
             },
 
-         
-        // Стандартный инициализатор перевода (без изменений)
+            transitionToTable(url) {
+                const amb = document.getElementById('snd-ambient');
+                this.fadeAudio(amb, 0, 800);
+                document.body.style.transition = "opacity 0.8s, filter 0.8s";
+                document.body.style.opacity = "0";
+                document.body.style.filter = "blur(10px) brightness(0)";
+                setTimeout(() => { window.location.href = url; }, 800);
+            },
+
+            fadeAudio(audio, target, duration) {
+                const start = audio.volume;
+                const startTime = Date.now();
+                const interval = setInterval(() => {
+                    const progress = Math.min((Date.now() - startTime) / duration, 1);
+                    audio.volume = start + (target - start) * progress;
+                    if (progress === 1) clearInterval(interval);
+                }, 50);
+            }
+        };
+
+        window.onload = () => { 
+            if(localStorage.getItem('gy_trace')) {
+                Core.enter(true); 
+            } else {
+                document.getElementById('entry-layer').style.display = 'flex';
+            }
+        };
+
         function googleTranslateElementInit() { 
-            new google.translate.TranslateElement({
-                pageLanguage: 'ru', 
-                autoDisplay: false
-            }, 'google_translate_element'); 
+            new google.translate.TranslateElement({pageLanguage: 'ru', autoDisplay: false}, 'google_translate_element'); 
         }
     </script>
     <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
