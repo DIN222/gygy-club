@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY Club | Tables v1.4.3</title>
+    <title>GY-GY Club | Tables v1.4.4</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #d4af37; --violet: #8A2BE2; --neon-glow: rgba(138, 43, 226, 0.6); }
@@ -73,7 +73,15 @@
     </style>
 </head>
 <body>
+    <audio id="snd-ambient" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
 
+    <div id="google_translate_element"></div>
+    
+    <button class="ui-back-to-bar" onclick="window.location.href='index.html'">← В БАР</button>
+    
+    <div id="ui-logo">GY-GY</div>
+    
+    ... остальной код ...
     <audio id="snd-ambient" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
 
     <div id="google_translate_element"></div>
@@ -126,43 +134,7 @@
                 }, 1000);
             },
 
-            // Плавный уход в активность
-            transitionToTable(url) {
-                const amb = document.getElementById('snd-ambient');
-                this.fadeAudio(amb, 0, 1200); // Глушим бар
-
-                document.body.style.transition = "filter 1.2s, opacity 1.2s";
-                document.body.style.filter = "blur(15px) brightness(0.5)";
-                document.body.style.opacity = "0";
-
-                setTimeout(() => { window.location.href = url; }, 1200);
-            },
-
-            fadeAudio(audio, target, duration) {
-                const start = audio.volume;
-                const startTime = Date.now();
-                const interval = setInterval(() => {
-                    const progress = Math.min((Date.now() - startTime) / duration, 1);
-                    audio.volume = start + (target - start) * progress;
-                    if (progress === 1) clearInterval(interval);
-                }, 50);
-            }
-        };
-
-        window.onload = () => { 
-            const hasTrace = localStorage.getItem('gy_trace');
-            
-            if(hasTrace) {
-                // Если след ID найден, входим мгновенно (true)
-                Core.enter(true); 
-            } else {
-                // Если зашли "с улицы", проявляем рамку регистрации
-                const entry = document.getElementById('entry-layer');
-                entry.style.display = 'flex';
-                entry.style.pointerEvents = 'auto';
-            }
-        };
-
+         
         // Стандартный инициализатор перевода (без изменений)
         function googleTranslateElementInit() { 
             new google.translate.TranslateElement({
