@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI ROOM CORE | v8.1.14 (Internal 4.3)</title>
+    <title>AI ROOM CORE | v8.1.15 (Internal 4.3)</title>
     <style>
        :root {
             --orange-neon: #ff8c00;
@@ -63,6 +63,7 @@
             justify-content: center;
             transition: all 0.3s ease;
             text-transform: lowercase;
+            text-align: center;
         }
 
       #studio-zone {
@@ -81,10 +82,25 @@
             font-size: clamp(14px, 2.5vw, 40px);
         }
 
+        /* Тот самый третий экран — портал во Вселенную */
+        #universe-zone {
+            top: 65%; 
+            left: 15%;
+            width: 30%;
+            height: 15%;
+            font-size: clamp(20px, 3.5vw, 45px);
+            color: #00ffff; /* Голубой неон для космического вайба */
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.9);
+        }
+
     .screen-label:hover {
             filter: brightness(1.5);
             transform: scale(1.05);
             text-shadow: 0 0 30px var(--orange-neon);
+        }
+
+    #universe-zone:hover {
+            text-shadow: 0 0 30px #00ffff;
         }
 
         .bottom-nav {
@@ -127,6 +143,8 @@
 
     <a href="studio.html" class="screen-label" id="studio-zone">studio</a>
     <a href="techpark.html" class="screen-label" id="techpark-zone">techpark</a>
+    
+    <a href="universe.html" class="screen-label" id="universe-zone">Хелло Вселенная</a>
 
     <div class="bottom-nav">
         <button class="btn-back" onclick="history.back()">← RETURN</button>
