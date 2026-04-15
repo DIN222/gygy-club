@@ -3,216 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY STUDIO v.3.5.19</title>
+    <title>GY-GY STUDIO - REACTOR CORE</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #ffd700; --black: #000; --h-unit: 55px; }
-        body { background: var(--black); color: var(--gold); font-family: 'Share Tech Mono', monospace; margin: 0; overflow: hidden; display: flex; flex-direction: column; height: 100vh; }
-        
-        header { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 10px 15px; border-bottom: 2px solid var(--gold); background: #000; z-index: 10; }
-        .header-left { display: flex; gap: 10px; align-items: center; }
-        .header-right { display: flex; justify-content: flex-end; }
-        .ui-box { height: var(--h-unit); border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; padding: 0 15px; background: transparent; color: var(--gold); cursor: pointer; box-sizing: border-box; font-size: 18px; font-weight: bold; transition: 0.3s; text-decoration: none; outline: none; }
-        .ui-box:hover { background: rgba(255,215,0,0.1); box-shadow: 0 0 15px var(--gold); }
-        .arrow { font-size: 32px; width: 60px; font-family: sans-serif; }
-        .logo { font-size: 30px; font-weight: bold; letter-spacing: 6px; padding: 0 10px; text-shadow: 0 0 10px var(--gold); }
-        .ui-header-center { text-align: center; font-size: 24px; letter-spacing: 5px; color: var(--gold); }
-
-        #wall { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 20px; scroll-behavior: smooth; position: relative; }
-        #wall-placeholder { padding: 40px; text-align: center; color: rgba(255,215,0,0.4); font-size: 18px; line-height: 1.6; border: 1px dashed rgba(255,215,0,0.2); margin: 20px; border-radius: 15px; }
-        
-        .card { border: 1px solid #333; padding: 20px; background: #050505; max-width: 800px; margin: 0 auto; width: 95%; transition: 0.4s; position: relative; animation: slideIn 0.3s ease-out; }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-        .card.loading { border-color: var(--gold); opacity: 0.7; border-style: dashed; }
-        .content { color: #fff; min-height: 80px; outline: none; margin-bottom: 15px; white-space: pre-line; font-size: 20px; line-height: 1.4; }
-        
-        .remote { display: flex; gap: 20px; border-top: 1px solid #222; padding-top: 15px; font-size: 13px; }
-        .remote-btn { cursor: pointer; color: #777; text-transform: uppercase; font-weight: bold; transition: 0.2s; }
-        .remote-btn:hover { color: var(--gold); }
-
-        footer { padding: 15px; border-top: 2px solid var(--gold); background: #000; }
-        .input-row { display: flex; gap: 10px; width: 100%; height: var(--h-unit); margin-bottom: 10px; }
-        input, select { background: #000; border: 1px solid var(--gold); color: #fff; padding: 0 15px; font-family: inherit; font-size: 18px; outline: none; }
-        input { flex: 1; }
-        input::placeholder { color: rgba(255,215,0,0.3); }
-        
-        .gygy-btn {
-            width: 100%; background: #000; border: 1px solid var(--gold); color: var(--gold);
-            padding: 15px; font-family: inherit; font-weight: bold; cursor: pointer;
-            text-transform: uppercase; transition: 0.3s; font-size: 16px;
+        :root { --gold: #ffd700; --black: #0a0a0a; --h-unit: 60px; }
+        body { 
+            background: var(--black); 
+            color: var(--gold); 
+            font-family: 'Share Tech Mono', monospace; 
+            margin: 0; overflow: hidden; 
+            display: flex; flex-direction: column; height: 100vh; 
         }
-        .gygy-btn:hover:not(:disabled) { background: rgba(255, 215, 0, 0.1); box-shadow: 0 0 15px var(--gold); }
-        .render-pulse { animation: pulse 1.5s infinite; color: var(--gold); }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+
+        /* ШАПКА КЛУБА */
+        header { 
+            display: grid; grid-template-columns: 1fr auto 1fr; 
+            align-items: center; padding: 10px 20px; 
+            border-bottom: 2px solid var(--gold); background: #000; 
+        }
+        .header-left { display: flex; gap: 15px; }
+        .ui-box { 
+            height: 45px; border: 1px solid var(--gold); 
+            display: flex; align-items: center; justify-content: center; 
+            padding: 0 20px; color: var(--gold); cursor: pointer; 
+            font-weight: bold; text-decoration: none; transition: 0.3s;
+        }
+        .ui-box:hover { background: rgba(255,215,0,0.2); box-shadow: 0 0 15px var(--gold); }
+        .logo { font-size: 28px; letter-spacing: 8px; text-shadow: 0 0 10px var(--gold); }
+
+        /* ГЛАВНЫЙ ОТСЕК С ПУЛЬТОМ */
+        main { 
+            flex: 1; display: flex; justify-content: center; align-items: center; 
+            position: relative; background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
+        }
+        
+        /* КОНТЕЙНЕР ДЛЯ IFRAME (МАСШТАБИРУЕМ ПУЛЬТ) */
+        .pult-frame-wrapper {
+            width: 1024px; height: 1024px;
+            transform: scale(0.65); /* Ужимаем, чтобы влезло в экран */
+            transform-origin: center center;
+            border: 5px solid #222;
+            box-shadow: 0 0 50px rgba(0,0,0,1);
+        }
+        iframe { width: 100%; height: 100%; border: none; }
+
+        /* ФУТЕР */
+        footer { 
+            padding: 15px; border-top: 2px solid var(--gold); 
+            text-align: center; font-size: 12px; opacity: 0.6;
+        }
     </style>
 </head>
 <body>
 
 <header>
     <div class="header-left">
-        <button class="ui-box arrow" onclick="location.href='index.html'">«</button>
-        <div class="ui-box" style="border:none">RU</div>
-        <button class="ui-box" style="width: auto; padding: 0 20px;" onclick="Core.quickGen()">ГЕНЕРАТОР</button>
+        <a href="index.html" class="ui-box">« НАЗАД</a>
+        <div class="ui-box" style="border-color: #444; color: #666;">RU / EN</div>
     </div>
-    <div class="ui-header-center">GY-GY</div>
-    <div class="header-right">
-        <button class="ui-box arrow" onclick="location.href='clip.html'">»</button>
+    <div class="logo">GY-GY</div>
+    <div class="header-right" style="text-align: right;">
+        <div class="ui-box" style="display: inline-flex;">STUDIO V.3.6</div>
     </div>
 </header>
 
-<main id="wall">
-    <div id="wall-placeholder">
-        Выберите стиль, введите объект и нажмите <b>ГЕНЕРАТОР</b>. <br>
-        ИИ создаст уникальный куплет-принт для вашего ателье.
+<main>
+    <div class="pult-frame-wrapper">
+        <iframe src="pult_reactor_v31.html"></iframe>
     </div>
 </main>
 
 <footer>
-   <div class="input-row">
-    <select id="style">
-        <option value="old_school">OLD SCHOOL</option>
-        <option value="totem">TOTEM</option>
-        <option value="memento">MEMENTO</option>
-        <option value="street">STREET</option>
-        <option value="future">FUTURE</option>
-    </select>
-    
-    <select id="culture" style="width: 100px;">
-        <option value="global">GLOBAL</option>
-        <option value="fr">FRANCE</option>
-        <option value="us">USA</option>
-        <option value="jp">JAPAN</option>
-    </select>
-
-    <select id="era" style="width: 100px;">
-        <option value="now">NOW</option>
-        <option value="80s">80s</option>
-        <option value="60s">60s</option>
-        <option value="20s">20s</option>
-    </select>
-
-    <input type="text" id="words" placeholder="Объект (например: Кот)...">
-    <button class="ui-box" style="width: 80px;" onclick="Core.quickGen()">OK</button>
-</div>
-    <button id="main-gen-btn" onclick="Core.startCloudSync()" class="gygy-btn">СИНХРОНИЗАЦИЯ VEO & LYRIA</button>
+    © 2026 GY-GY CLUB | INDUSTRIAL GENERATION UNIT | VEO-READY
 </footer>
 
-<script>
-const Core = {
-    checkWall() {
-        const wall = document.getElementById('wall');
-        const placeholder = document.getElementById('wall-placeholder');
-        const cards = wall.querySelectorAll('.card');
-        if (placeholder) placeholder.style.display = (cards.length > 0) ? 'none' : 'block';
-    },
-
-    async quickGen() {
-        const input = document.getElementById('words');
-        const style = document.getElementById('style').value;
-        const culture = document.getElementById('culture').value;
-        const era = document.getElementById('era').value;
-        const wall = document.getElementById('wall');
-        
-        let userWords = input.value.trim() || "Нечто странное";
-
-        // Формируем "жирный" промпт для ИИ
-        const promptData = {
-            style: style,
-            culture: culture,
-            era: era,
-            subject: userWords,
-            instruction: "Make it witty, ironic, and perfect for a high-end t-shirt print. Style: GY-GY Club aesthetic."
-        };
-
-        const id = 'v' + Date.now();
-        const card = document.createElement('div');
-        card.className = 'card loading';
-        card.id = id;
-        
-        // Рандомные фразы ожидания для атмосферы
-        const loadingMsgs = ["Кроим метафоры...", "Заправляем нити иронии...", "Синхронизируем облако...", "Ткань режется..."];
-        const msg = loadingMsgs[Math.floor(Math.random() * loadingMsgs.length)];
-        
-        card.innerHTML = `<div class="content render-pulse">[${msg}]<br><span style="font-size:12px; color: #555;">Target: ${userWords}</span></div>`;
-        
-        wall.insertBefore(card, wall.firstChild);
-        input.value = '';
-        this.checkWall();
-
-        try {
-            const response = await fetch('./chat', { 
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(promptData)
-            });
-
-            if (!response.ok) throw new Error(`Status: ${response.status}`);
-            const data = await response.json();
-            
-            this.finalizeCard(id, data.text || "🎷 Облако выдало тишину...", style, era);
-
-        } catch (err) {
-            this.finalizeCard(id, `🧨 [ОШИБКА СВЯЗИ]\nПроверьте подключение к облаку.`);
-        }
-    },
-
-    finalizeCard(id, text, style, era) {
-        const card = document.getElementById(id);
-        if (!card) return;
-        card.classList.remove('loading');
-        
-        // Сохраняем последнее удачное в память
-        if (!text.includes("ОШИБКА")) {
-            localStorage.setItem('currentVerse', text);
-            localStorage.setItem('currentStyle', style);
-            localStorage.setItem('currentEra', era);
-        }
-
-        card.innerHTML = `
-            <div class="content" contenteditable="true">${text}</div>
-            <div class="remote">
-                <span class="remote-btn" onclick="Core.bridge('ATELIER', '${id}')">👕 ATELIER</span>
-                <span class="remote-btn" onclick="Core.bridge('TG', '${id}')">✉ TG</span>
-                <span class="remote-btn" onclick="Core.deleteCard('${id}')" style="color:#aa0000">❌ DEL</span>
-            </div>`;
-    },
-
-    deleteCard(id) {
-        const card = document.getElementById(id);
-        if (card) card.remove();
-        this.checkWall();
-    },
-
-    bridge(action, id) {
-        const card = document.getElementById(id);
-        if (!card) return;
-        const text = card.querySelector('.content').innerText;
-        
-        if(action === 'ATELIER') { 
-            localStorage.setItem('currentPrintData', text); 
-            location.href = 'atelier.html'; 
-        }
-        if(action === 'TG') alert("✉️ Пакет отправлен боту-приемщику...");
-    },
-
-    startCloudSync() {
-        const btn = document.getElementById('main-gen-btn');
-        btn.disabled = true;
-        btn.innerHTML = "<span class='render-pulse'>ПОДКЛЮЧЕНИЕ VEO & LYRIA...</span>";
-        
-        setTimeout(() => {
-            btn.innerHTML = "СИСТЕМЫ ONLINE ✅";
-            btn.style.borderColor = "#00ff00";
-            btn.style.color = "#00ff00";
-            btn.style.boxShadow = "0 0 20px rgba(0,255,0,0.3)";
-        }, 2000);
-    }
-};
-
-window.onload = () => {
-    Core.checkWall();
-    console.log("🪐 GY-GY STUDIO v.3.5.19: SYSTEM ONLINE.");
-};
-</script>
 </body>
 </html>
