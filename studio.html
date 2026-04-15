@@ -38,15 +38,34 @@
         }
         
         /* КОНТЕЙНЕР ДЛЯ IFRAME (МАСШТАБИРУЕМ ПУЛЬТ) */
+        /* ГЛАВНЫЙ ОТСЕК С ПУЛЬТОМ */
+        main { 
+            flex: 1; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
+            overflow: hidden; /* Чтобы не было скролла */
+        }
+        
+        /* АДАПТИВНЫЙ КОНТЕЙНЕР */
         .pult-frame-wrapper {
-            width: 1024px; height: 1024px;
-            transform: scale(0.65); /* Ужимаем, чтобы влезло в экран */
+            width: 1024px; 
+            height: 1024px;
+            /* Вычисляем масштаб исходя из высоты экрана за вычетом шапки и футера */
+            /* Если 0.5 мало или много — можно поправить это число */
+            transform: scale(min(0.8, calc((100vh - 180px) / 1024))); 
             transform-origin: center center;
             border: 5px solid #222;
             box-shadow: 0 0 50px rgba(0,0,0,1);
+            flex-shrink: 0;
         }
-        iframe { width: 100%; height: 100%; border: none; }
 
+        iframe { 
+            width: 1024px; 
+            height: 1024px; 
+            border: none; 
+        }
         /* ФУТЕР */
         footer { 
             padding: 15px; border-top: 2px solid var(--gold); 
