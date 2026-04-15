@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.62 | AVATAR READY</title>
+    <title>GY-GY Club v4.4.63 | AVATAR READY</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -120,299 +120,185 @@
         </div>
         <img src="horse_bar.png" style="height: 80vh; width: auto; object-fit: contain; margin-bottom: -10px;">
     </div>
+<script>
+    let currentID = "";
 
-    <script>
-        let currentID = "";
-        // --- ЛИНГВИСТИЧЕСКАЯ МАГИСТРАЛЬ ЧАРЛИ (УНИВЕРСАЛЬНАЯ) ---
-function syncLangWire() {
-    // 1. Ищем, что выбрано в Гугл-переводчике
-    const googData = document.cookie.split('; ').find(row => row.startsWith('googtrans='));
-    let activeLang = "";
-
-    if (googData) {
-        // Извлекаем код (например, 'en' из '/ru/en')
-        activeLang = googData.split('/').pop().toUpperCase();
-    } else {
-        // Если куки нет, берем из памяти или оставляем пустым для выбора
-        activeLang = localStorage.getItem('gy_session_lang') || "";
+    // 1. СИНХРОНИЗАЦИЯ ЯЗЫКА
+    function syncLangWire() {
+        const googData = document.cookie.split('; ').find(row => row.startsWith('googtrans='));
+        let activeLang = "";
+        if (googData) {
+            activeLang = googData.split('/').pop().toUpperCase();
+        } else {
+            activeLang = localStorage.getItem('gy_session_lang') || "";
+        }
+        if (activeLang) {
+            localStorage.setItem('gy_session_lang', activeLang);
+        }
+        return activeLang;
     }
 
-    if (activeLang) {
-        localStorage.setItem('gy_session_lang', activeLang);
-        console.log("ПРОВОД ПОД НАПРЯЖЕНИЕМ. ЛИНЗА: " + activeLang);
-    }
-    return activeLang;
-}
-
-window.onload = () => {
-    // Синхронизируем язык при каждом входе
-    const currentLang = syncLangWire();
-    
-    // Проверяем наличие ID (цифрового следа)
-    const savedID = localStorage.getItem('gy_trace');
-    
-    if (savedID) {
-        currentID = savedID;
-        document.getElementById('id-label').innerText = currentID;
-        document.getElementById('h-id').innerText = currentID;
+    // 2. ИНИЦИАЛИЗАЦИЯ (ОДИН БЛОК window.onload)
+    window.onload = () => {
+        const savedID = localStorage.getItem('gy_trace');
+        const currentLang = syncLangWire();
         
-        // Перерисовываем QR-коды
-        document.getElementById('qr-box-reg').innerHTML = "";
-        new QRCode(document.getElementById("qr-box-reg"), { text: currentID, width: 85, height: 85 });
-        document.getElementById('h-qr').innerHTML = "";
-        new QRCode(document.getElementById("h-qr"), { text: currentID, width: 75, height: 75 });
-
-        // Если язык уже выбран и ID есть — активируем кнопку входа в холл
-        if (currentLang) {
+        if (savedID) {
+            console.log("Распознан старый знакомый: " + savedID);
+            currentID = savedID;
+            updateIDUI(currentID);
+            // Если ID есть — кнопка входа в холл готова
             document.getElementById('btn-w-hall').classList.remove('btn-sleep');
         }
+
+        // Всегда активируем дверь при загрузке
+        const entrance = document.getElementById('block-entrance');
+        entrance.style.display = "flex";
+        setTimeout(() => { entrance.style.opacity = "1"; entrance.classList.add('active'); }, 50);
+    };
+
+    // Вспомогательная функция обновления интерфейса ID
+    function updateIDUI(id) {
+        document.getElementById('id-label').innerText = id;
+        document.getElementById('h-id').innerText = id;
+        
+        document.getElementById('qr-box-reg').innerHTML = "";
+        new QRCode(document.getElementById("qr-box-reg"), { text: id, width: 85, height: 85 });
+        
+        document.getElementById('h-qr').innerHTML = "";
+        new QRCode(document.getElementById("h-qr"), { text: id, width: 75, height: 75 });
     }
 
-    // ВСЕГДА показываем входную дверь (по уставу Шефа)
-    const entrance = document.getElementById('block-entrance');
-    entrance.style.display = "flex";
-    setTimeout(() => { entrance.style.opacity = "1"; }, 50);
-};
+    // 3. ЛОГИКА ДВЕРИ (handleDoor теперь одна и работает четко)
+    function handleDoor() {
+        const d = document.getElementById('main-door');
+        const snd = document.getElementById('snd-door');
+        
+        if(snd) snd.play();
+        
+        // Визуальный эффект
+        d.style.transform = "scale(5)"; 
+        d.style.opacity = "0";
+        d.style.pointerEvents = "none";
 
-// Обновляем функцию handleDoor, чтобы она «зашивала» язык в память
-const originalHandleDoor = handleDoor;
-handleDoor = function() {
-    // Перед тем как открыть дверь, фиксируем язык в ID
-    syncLangWire();
-    
-    // Вызываем оригинальную функцию (генерация ID и переход)
-    originalHandleDoor();
-    
-    // Сохраняем всё в цифровой след
-    localStorage.setItem('gy_trace', currentID);
-    localStorage.setItem('gy_origin_lang', localStorage.getItem('gy_session_lang'));
-};
+        // Генерируем ID, если его нет
+        if (!currentID) {
+            currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
+        }
+        
+        // Сохраняем "цифровой след" и язык
+        localStorage.setItem('gy_trace', currentID);
+        syncLangWire(); 
+        updateIDUI(currentID);
 
-      // ФУНКЦИЯ ГЛУБОКОГО ПОГРУЖЕНИЯ В МОСТ (AI ROOM)
-        function deepDive() {
+        setTimeout(() => { 
+            portalTransition('block-welcome'); 
+            const a = document.getElementById('snd-ambient'); 
+            if(a) { a.volume = 0; a.play(); fadeAudio(a, 1, 2000); }
+        }, 1800);
+    }
+
+    // 4. ПЕРЕХОДЫ МЕЖДУ БЛОКАМИ
+    function portalTransition(nextId) {
+        if (nextId === 'block-tables') {
             const amb = document.getElementById('snd-ambient');
-            
-            // Плавное затухание звука бара за 1.2 секунды
-            if (amb) fadeAudio(amb, 0, 1200);
+            if (amb) fadeAudio(amb, 0, 800); 
 
-            // Визуальные эффекты перехода
-            document.body.style.transition = "opacity 1.2s ease, filter 1.2s ease";
+            document.body.style.transition = "opacity 0.8s, filter 0.8s";
             document.body.style.opacity = "0";
             document.body.style.filter = "blur(10px) brightness(0)";
-
-            // Переход в серверную после завершения эффектов
-            setTimeout(() => { 
-                window.location.href = 'bridge_protocol.html'; 
-            }, 1200);
+            
+            setTimeout(() => { window.location.href = 'tables.html'; }, 800);
+            return; 
         }
 
-      function portalTransition(nextId) {
-            if (nextId === 'block-tables') {
-                const amb = document.getElementById('snd-ambient');
-                if (amb) fadeAudio(amb, 0, 800); 
+        const current = document.querySelector('.block.active');
+        if(current) { 
+            current.style.opacity = "0"; 
+            current.style.pointerEvents = "none"; 
+        }
 
-                // МГНОВЕННО СКРЫВАЕМ ВСЮ ГРЯЗЬ (UI и лишние блоки)
-                const uiElements = document.querySelectorAll('.ui-header-right, #google_translate_element, .quote-text, .bar-ui-container, .ui-back-to-bar');
-                uiElements.forEach(el => el.style.display = 'none');
-
-                // ПЛАВНО ГАСИМ ВСЕ ТЕЛО СТРАНИЦЫ
-                document.body.style.transition = "opacity 0.8s, filter 0.8s";
-                document.body.style.opacity = "0";
-                document.body.style.filter = "blur(10px) brightness(0)";
-                
-                setTimeout(() => { 
-                    window.location.href = 'tables.html'; 
-                }, 800);
-                return; 
+        setTimeout(() => {
+            if(current) { 
+                current.classList.remove('active'); 
+                current.style.display = "none"; 
             }
-            // ... остальной код
-            // --- КОНЕЦ ВСТАВКИ ---
+            const next = document.getElementById(nextId);
+            if(!next) return;
 
-            const current = document.querySelector('.block.active');
-            const backBtn = document.getElementById('btn-global-back');
-            const amb = document.getElementById('snd-ambient');
-
-            if(current) { current.style.opacity = "0"; current.style.pointerEvents = "none"; }
-            backBtn.style.opacity = "0";
-
-            setTimeout(() => {
-                if(current) { current.classList.remove('active'); current.style.display = "none"; }
-                const next = document.getElementById(nextId);
-                
-                // Проверка на всякий случай, если блока вдруг нет в HTML
-                if(!next) return; 
-
-                next.style.display = "flex";
-
-                setTimeout(() => { 
-                    next.classList.add('active'); 
-                    next.style.opacity = "1";
-                    next.style.pointerEvents = "auto";
-
-                    setTimeout(() => {
-                        if (nextId === 'block-bar') fadeAudio(amb, 1, 800);
-                        // Эту часть про block-tables ниже можно тоже удалять, 
-                        // так как мы обработали переход выше через window.location
-                    }, 800);
-
-                    if(nextId === 'block-bar' && (!current || current.id !== 'block-tables')) {
-                        setTimeout(() => { document.getElementById('snd-khe').play(); }, 800);
-                        setTimeout(() => { document.getElementById('snd-pour').play(); }, 2200);
-                    }
-                }, 50);
-            }, 800);
-        }
-
-        function handleDoor() {
-            const d = document.getElementById('main-door');
-            document.getElementById('snd-door').play();
-            d.style.transform = "scale(5)"; d.style.opacity = "0";
-            d.style.pointerEvents = "none";
-            
-            currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
-            document.getElementById('id-label').innerText = currentID;
-            document.getElementById('h-id').innerText = currentID;
-            
-            document.getElementById('qr-box-reg').innerHTML = "";
-            new QRCode(document.getElementById("qr-box-reg"), { text: currentID, width: 85, height: 85 });
-            document.getElementById('h-qr').innerHTML = "";
-            new QRCode(document.getElementById("h-qr"), { text: currentID, width: 75, height: 75 });
-            
+            next.style.display = "flex";
             setTimeout(() => { 
-                portalTransition('block-welcome'); 
-                const a = document.getElementById('snd-ambient'); a.volume = 0; a.play(); fadeAudio(a, 1, 2000); 
-            }, 1800);
-        }
+                next.classList.add('active'); 
+                next.style.opacity = "1";
+                next.style.pointerEvents = "auto";
 
-        function fadeAudio(audio, target, duration) {
-            const start = audio.volume; const startTime = Date.now();
-            const interval = setInterval(() => {
-                const progress = Math.min((Date.now() - startTime) / duration, 1);
-                audio.volume = start + (target - start) * progress;
-                if (progress === 1) clearInterval(interval);
+                // Специфические звуки бара
+                if(nextId === 'block-bar') {
+                    setTimeout(() => { document.getElementById('snd-khe').play(); }, 800);
+                    setTimeout(() => { document.getElementById('snd-pour').play(); }, 2200);
+                }
             }, 50);
-        }
-
-        // ЗАГРУЗКА ФОТО
-        function preview(i) {
-            if(i.files && i.files[0]) {
-                const r = new FileReader();
-                r.onload = (e) => { 
-                    // Сбрасываем аватар, если выбрали фото
-                    document.getElementById('avatar-img').style.display = "none";
-                    document.getElementById('txt-avatar').style.display = "block";
-                    
-                    document.getElementById('pp').src = e.target.result; 
-                    document.getElementById('pp').style.display = "block";
-                    document.getElementById('h-photo').src = e.target.result; 
-                    document.getElementById('txt-photo').style.display = "none";
-                };
-                r.readAsDataURL(i.files[0]);
-            }
-        }
-
-        // ГЕНЕРАЦИЯ АВАТАРА (НОВОЕ)
-        function generateAvatar() {
-            // Сбрасываем фото, если выбрали аватар
-            document.getElementById('pp').style.display = "none";
-            document.getElementById('txt-photo').style.display = "block";
-            document.getElementById('file-input').value = "";
-
-            const seed = Math.random().toString(36).substring(7);
-            const avatarUrl = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${seed}`;
-            
-            const avImg = document.getElementById('avatar-img');
-            avImg.src = avatarUrl;
-            avImg.style.display = "block";
-            document.getElementById('txt-avatar').style.display = "none";
-            
-            // Передаем в финальное удостоверение
-            document.getElementById('h-photo').src = avatarUrl;
-        }
-
-        function swapButtons(a, s) { 
-            document.getElementById(a).classList.add('btn-sleep'); 
-            document.getElementById(s).classList.remove('btn-sleep'); 
-        }
-
-        <style>
-    .lang-hint {
-        position: fixed;
-        top: 60px; /* Чуть ниже самого гугл-блока */
-        left: 15px;
-        font-size: 10px;
-        letter-spacing: 2px;
-        color: var(--gold);
-        text-transform: uppercase;
-        animation: pulse-gold 2s infinite;
-        z-index: 1000001;
+        }, 800);
     }
-    @keyframes pulse-gold {
-        0% { opacity: 0.4; }
-        50% { opacity: 1; }
-        100% { opacity: 0.4; }
-    }
-</style>
 
-<style>
-    .lang-hint {
-        position: fixed;
-        top: 60px; /* Чуть ниже самого гугл-блока */
-        left: 15px;
-        font-size: 10px;
-        letter-spacing: 2px;
-        color: var(--gold);
-        text-transform: uppercase;
-        animation: pulse-gold 2s infinite;
-        z-index: 1000001;
+    // AI ROOM Deep Dive
+    function deepDive() {
+        const amb = document.getElementById('snd-ambient');
+        if (amb) fadeAudio(amb, 0, 1200);
+        document.body.style.transition = "opacity 1.2s, filter 1.2s";
+        document.body.style.opacity = "0";
+        document.body.style.filter = "blur(10px) brightness(0)";
+        setTimeout(() => { window.location.href = 'bridge_protocol.html'; }, 1200);
     }
-    @keyframes pulse-gold {
-        0% { opacity: 0.4; }
-        50% { opacity: 1; }
-        100% { opacity: 0.4; }
-    }
-</style>
 
-<div class="lang-hint">ВЫБЕРИ ЯЗЫК КЛУБА / SELECT LANGUAGE</div>
-        function googleTranslateElementInit() { 
-            new google.translate.TranslateElement({pageLanguage: 'ru', autoDisplay: false}, 'google_translate_element'); 
+    function fadeAudio(audio, target, duration) {
+        const start = audio.volume; 
+        const startTime = Date.now();
+        const interval = setInterval(() => {
+            const progress = Math.min((Date.now() - startTime) / duration, 1);
+            audio.volume = start + (target - start) * progress;
+            if (progress === 1) clearInterval(interval);
+        }, 50);
+    }
+
+    // ФОТО И АВАТАР
+    function preview(i) {
+        if(i.files && i.files[0]) {
+            const r = new FileReader();
+            r.onload = (e) => { 
+                document.getElementById('avatar-img').style.display = "none";
+                document.getElementById('txt-avatar').style.display = "block";
+                document.getElementById('pp').src = e.target.result; 
+                document.getElementById('pp').style.display = "block";
+                document.getElementById('h-photo').src = e.target.result; 
+                document.getElementById('txt-photo').style.display = "none";
+            };
+            r.readAsDataURL(i.files[0]);
         }
-        // --- ЛОГИКА АВТОВХОДА ДЛЯ СВОИХ ---
-window.onload = () => {
-    const savedID = localStorage.getItem('gy_trace');
-    
-    if (savedID) {
-        console.log("Распознан старый знакомый: " + savedID);
-        // Просто подгружаем данные в переменные, но НИКУДА не переключаем
-        currentID = savedID;
-        document.getElementById('id-label').innerText = currentID;
-        document.getElementById('h-id').innerText = currentID;
-        
-        // Обновляем QR-коды в фоне
-        document.getElementById('qr-box-reg').innerHTML = "";
-        new QRCode(document.getElementById("qr-box-reg"), { text: currentID, width: 85, height: 85 });
-        document.getElementById('h-qr').innerHTML = "";
-        new QRCode(document.getElementById("h-qr"), { text: currentID, width: 75, height: 75 });
-        
-        // Кнопка входа в холл в блоке welcome должна быть активна
-        document.getElementById('btn-w-hall').classList.remove('btn-sleep');
     }
-    
-    // ВСЕГДА показываем только входную дверь
-    const entrance = document.getElementById('block-entrance');
-    entrance.style.display = "flex";
-    entrance.style.opacity = "1";
-    entrance.classList.add('active');
-};
 
-// Дополним функцию handleDoor, чтобы она СОХРАНЯЛА ID при первом входе
-const originalHandleDoor = handleDoor;
-handleDoor = function() {
-    originalHandleDoor();
-    // Сохраняем сгенерированный ID в память браузера
-    localStorage.setItem('gy_trace', currentID);
-};
-    </script>
-    <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    function generateAvatar() {
+        document.getElementById('pp').style.display = "none";
+        document.getElementById('txt-photo').style.display = "block";
+        const seed = Math.random().toString(36).substring(7);
+        const avatarUrl = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${seed}`;
+        const avImg = document.getElementById('avatar-img');
+        avImg.src = avatarUrl;
+        avImg.style.display = "block";
+        document.getElementById('txt-avatar').style.display = "none";
+        document.getElementById('h-photo').src = avatarUrl;
+    }
+
+    function swapButtons(a, s) { 
+        document.getElementById(a).classList.add('btn-sleep'); 
+        document.getElementById(s).classList.remove('btn-sleep'); 
+    }
+
+    function googleTranslateElementInit() { 
+        new google.translate.TranslateElement({pageLanguage: 'ru', autoDisplay: false}, 'google_translate_element'); 
+    }
+</script>
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
 </body>
 </html>
