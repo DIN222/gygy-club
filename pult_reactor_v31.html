@@ -1,1 +1,129 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GY-GY PULT V3.1 - GOLDEN REACTOR</title>
+    <style>
+        body { background: #1a1a1a; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        
+        /* КОРПУС ПУЛЬТА - ВИНТАЖНАЯ ПАТИНА И ЗОЛОТО */
+        #pult {
+            width: 900px; height: 700px; /* Шире вертикального экрана */
+            background: linear-gradient(135deg, #d4af37, #aa771c); /* Золотой/латунный градиент */
+            border: 15px solid #5d4037;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 2px 2px 5px rgba(255,255,255,0.1);
+            position: relative;
+            font-family: 'Courier New', monospace;
+            border-radius: 5px;
+            overflow: hidden; /* Скрываем лишнее на мобилке */
+        }
+        
+        /* МОБИЛЬНЫЙ СКРОЛЛ - ХИТРОСТЬ СО СДВИГОМ */
+        @media (max-width: 600px) {
+            #pult {
+                width: 1400px; /* Интерфейс шире экрана, чтобы провоцировать скролл/поворот */
+                left: 0;
+            }
+            body { justify-content: start; }
+        }
 
+        /* ЦЕНТРАЛЬНЫЙ ЭКРАН (ОСЦИЛЛОГРАФ) */
+        #screen-core {
+            position: absolute; top: 100px; left: 280px;
+            width: 360px; height: 280px;
+            background: #010;
+            border: 10px solid #333;
+            box-shadow: 0 0 30px rgba(0,255,0,0.2);
+            overflow: hidden;
+            display: flex; justify-content: center; align-items: center;
+        }
+        #screen-core::after { /* Эффект старого монитора - CRT Scanlines */
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 4px, 3px 100%; pointer-events: none;
+        }
+
+        /* ТВОРЧЕСКИЕ СЕЛЕКТОРЫ (Левый Блок 3+3) */
+        .controls-genesis { position: absolute; left: 50px; top: 120px; display: flex; flex-direction: column; gap: 40px; }
+        .fader-track { width: 15px; height: 180px; background: #111; border-radius: 6px; position: relative; border: 2px solid #5d4037; }
+        .fader-handle { width: 45px; height: 30px; background: #999; border: 3px solid #333; position: absolute; left: -15px; cursor: pointer; transition: 0.1s; }
+        .label { position: absolute; bottom: -30px; left: -10px; color: #4e342e; font-size: 11px; text-align: center; width: 50px; font-weight: bold; }
+
+        /* ОКНО ТЕЛЕТАЙПА (ПОДСКАЗКА) */
+        #teletype-log {
+            position: absolute; top: 390px; left: 290px;
+            width: 340px; height: 60px;
+            background: #010;
+            border: 5px solid #333;
+            box-shadow: 0 0 10px rgba(0,255,0,0.2);
+            padding: 5px 10px;
+            font-size: 11px; color: #0f0;
+            overflow: hidden;
+            border-radius: 5px;
+        }
+
+        /* СЕРВИСНЫЕ КНОПКИ (Нижний Блок) */
+        .controls-operations { position: absolute; bottom: 50px; left: 100px; display: flex; gap: 40px; }
+        .gold-button {
+            width: 160px; height: 60px;
+            background: #999; border: 4px solid #333; border-radius: 10px;
+            color: #333; font-size: 16px; font-weight: bold; cursor: pointer;
+            box-shadow: 0 5px 0 #5d4037, 2px 2px #fff inset; text-shadow: 1px 1px #fff;
+        }
+        .gold-button:active { transform: translateY(4px); box-shadow: 0 1px 0 #5d4037; }
+        
+        /* КНОПКА ЗАЛП (МЕДЬ И СТЕКЛО) */
+        #fire-salvo {
+            position: absolute; bottom: 40px; right: 80px;
+            width: 140px; height: 140px;
+            background: radial-gradient(circle, #f00, #a00); /* Свечение красного */
+            border: 8px solid #5d4037; border-radius: 50%;
+            box-shadow: 0 10px 0 #5d4037, 0 15px 20px rgba(0,0,0,0.6);
+            cursor: pointer;
+            color: white; font-size: 28px; font-weight: bold; text-shadow: 2px 2px #000;
+        }
+        #fire-salvo:active { transform: translateY(4px); box-shadow: 0 2px 0 #5d4037; }
+    </style>
+</head>
+<body>
+
+<div id="pult">
+    <div class="plate" style="position: absolute; top: 20px; right: 20px; background: #ccc; padding: 5px 10px; color: #333; font-weight: bold; font-size: 12px; border: 1px solid #999;">SEKTOR: RU</div>
+    
+    <div class="controls-genesis">
+        <div class="fader-track"><div class="fader-handle" style="top: 20%;"></div><div class="label">STYLE</div></div>
+        <div class="fader-track"><div class="fader-handle" style="top: 50%;"></div><div class="label">ERA</div></div>
+        <div class="fader-track"><div class="fader-handle" style="top: 80%;"></div><div class="label">CULTURE</div></div>
+    </div>
+
+    <div class="controls-genesis" style="left: auto; right: 100px;">
+        <div class="fader-track"><div class="fader-handle" style="top: 20%;"></div><div class="label">MEDIUM</div></div>
+        <div class="fader-track"><div class="fader-handle" style="top: 50%;"></div><div class="label">MOOD</div></div>
+        <div class="fader-track"><div class="fader-handle" style="top: 80%;"></div><div class="label">DENSITY</div></div>
+    </div>
+
+    <div id="screen-core">
+        <svg width="200" height="200">
+            <polyline points="0,100 40,100 50,20 70,180 80,100 200,100" fill="none" stroke="#0f0" stroke-width="2">
+                <animate attributeName="points" dur="1s" repeatCount="indefinite" values="0,100 40,100 50,20 70,180 80,100 200,100; 0,100 40,100 55,40 65,160 80,100 200,100; 0,100 40,100 50,20 70,180 80,100 200,100" />
+            </polyline>
+        </svg>
+    </div>
+
+    <div id="teletype-log">
+        «Opiši svoju modelv predelah vydelennogo polja...»<br>
+        GY-GY SEKTOR RU ACTIVE
+    </div>
+
+    <div class="controls-operations">
+        <button class="gold-button">УДАЛИТЬ</button>
+        <button class="gold-button">СОХРАНИТЬ</button>
+        <button class="gold-button">ПЕРЕСЛАТЬ</button>
+    </div>
+
+    <button id="fire-salvo" onclick="alert('ЧАРЛИ: МАТЕРИАЛИЗАЦИЯ!')">В АТЕЛЬЕ</button>
+</div>
+
+</body>
+</html>
