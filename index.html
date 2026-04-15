@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.60 | AVATAR READY</title>
+    <title>GY-GY Club v4.4.61 | AVATAR READY</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -276,44 +276,30 @@
         }
         // --- ЛОГИКА АВТОВХОДА ДЛЯ СВОИХ ---
 window.onload = () => {
-    // Проверяем, есть ли сохраненный ID (след)
     const savedID = localStorage.getItem('gy_trace');
     
     if (savedID) {
-        console.log("Распознан ID: " + savedID);
-        
-        // 1. Убираем входной блок мгновенно
-        const entrance = document.getElementById('block-entrance');
-        entrance.classList.remove('active');
-        entrance.style.display = "none";
-
-        // 2. Восстанавливаем ID в интерфейсе
+        console.log("Распознан старый знакомый: " + savedID);
+        // Просто подгружаем данные в переменные, но НИКУДА не переключаем
         currentID = savedID;
         document.getElementById('id-label').innerText = currentID;
         document.getElementById('h-id').innerText = currentID;
         
-        // Перерисовываем QR-коды для этого ID
+        // Обновляем QR-коды в фоне
         document.getElementById('qr-box-reg').innerHTML = "";
         new QRCode(document.getElementById("qr-box-reg"), { text: currentID, width: 85, height: 85 });
         document.getElementById('h-qr').innerHTML = "";
         new QRCode(document.getElementById("h-qr"), { text: currentID, width: 75, height: 75 });
-
-        // 3. Прыгаем сразу в БАР, пропуская двери и холл
-        const barBlock = document.getElementById('block-bar');
-        barBlock.classList.add('active');
-        barBlock.style.display = "flex";
-        barBlock.style.opacity = "1";
         
-        // 4. Включаем музыку (юзер уже давал разрешение на звук на прошлой странице)
-        const amb = document.getElementById('snd-ambient');
-        amb.volume = 0;
-        amb.play().catch(() => { console.log("Нужен клик для звука"); });
-        fadeAudio(amb, 1, 1500);
-        
-    } else {
-        // Если ID нет (первый вход) — ничего не делаем, код сработает по дефолту
-        console.log("Новый гость. Ожидание клика по двери...");
+        // Кнопка входа в холл в блоке welcome должна быть активна
+        document.getElementById('btn-w-hall').classList.remove('btn-sleep');
     }
+    
+    // ВСЕГДА показываем только входную дверь
+    const entrance = document.getElementById('block-entrance');
+    entrance.style.display = "flex";
+    entrance.style.opacity = "1";
+    entrance.classList.add('active');
 };
 
 // Дополним функцию handleDoor, чтобы она СОХРАНЯЛА ID при первом входе
