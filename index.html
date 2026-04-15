@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.61 | AVATAR READY</title>
+    <title>GY-GY Club v4.4.62 | AVATAR READY</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -123,6 +123,70 @@
 
     <script>
         let currentID = "";
+        // --- ЛИНГВИСТИЧЕСКАЯ МАГИСТРАЛЬ ЧАРЛИ (УНИВЕРСАЛЬНАЯ) ---
+function syncLangWire() {
+    // 1. Ищем, что выбрано в Гугл-переводчике
+    const googData = document.cookie.split('; ').find(row => row.startsWith('googtrans='));
+    let activeLang = "";
+
+    if (googData) {
+        // Извлекаем код (например, 'en' из '/ru/en')
+        activeLang = googData.split('/').pop().toUpperCase();
+    } else {
+        // Если куки нет, берем из памяти или оставляем пустым для выбора
+        activeLang = localStorage.getItem('gy_session_lang') || "";
+    }
+
+    if (activeLang) {
+        localStorage.setItem('gy_session_lang', activeLang);
+        console.log("ПРОВОД ПОД НАПРЯЖЕНИЕМ. ЛИНЗА: " + activeLang);
+    }
+    return activeLang;
+}
+
+window.onload = () => {
+    // Синхронизируем язык при каждом входе
+    const currentLang = syncLangWire();
+    
+    // Проверяем наличие ID (цифрового следа)
+    const savedID = localStorage.getItem('gy_trace');
+    
+    if (savedID) {
+        currentID = savedID;
+        document.getElementById('id-label').innerText = currentID;
+        document.getElementById('h-id').innerText = currentID;
+        
+        // Перерисовываем QR-коды
+        document.getElementById('qr-box-reg').innerHTML = "";
+        new QRCode(document.getElementById("qr-box-reg"), { text: currentID, width: 85, height: 85 });
+        document.getElementById('h-qr').innerHTML = "";
+        new QRCode(document.getElementById("h-qr"), { text: currentID, width: 75, height: 75 });
+
+        // Если язык уже выбран и ID есть — активируем кнопку входа в холл
+        if (currentLang) {
+            document.getElementById('btn-w-hall').classList.remove('btn-sleep');
+        }
+    }
+
+    // ВСЕГДА показываем входную дверь (по уставу Шефа)
+    const entrance = document.getElementById('block-entrance');
+    entrance.style.display = "flex";
+    setTimeout(() => { entrance.style.opacity = "1"; }, 50);
+};
+
+// Обновляем функцию handleDoor, чтобы она «зашивала» язык в память
+const originalHandleDoor = handleDoor;
+handleDoor = function() {
+    // Перед тем как открыть дверь, фиксируем язык в ID
+    syncLangWire();
+    
+    // Вызываем оригинальную функцию (генерация ID и переход)
+    originalHandleDoor();
+    
+    // Сохраняем всё в цифровой след
+    localStorage.setItem('gy_trace', currentID);
+    localStorage.setItem('gy_origin_lang', localStorage.getItem('gy_session_lang'));
+};
 
       // ФУНКЦИЯ ГЛУБОКОГО ПОГРУЖЕНИЯ В МОСТ (AI ROOM)
         function deepDive() {
@@ -271,6 +335,45 @@
             document.getElementById(s).classList.remove('btn-sleep'); 
         }
 
+        <style>
+    .lang-hint {
+        position: fixed;
+        top: 60px; /* Чуть ниже самого гугл-блока */
+        left: 15px;
+        font-size: 10px;
+        letter-spacing: 2px;
+        color: var(--gold);
+        text-transform: uppercase;
+        animation: pulse-gold 2s infinite;
+        z-index: 1000001;
+    }
+    @keyframes pulse-gold {
+        0% { opacity: 0.4; }
+        50% { opacity: 1; }
+        100% { opacity: 0.4; }
+    }
+</style>
+
+<style>
+    .lang-hint {
+        position: fixed;
+        top: 60px; /* Чуть ниже самого гугл-блока */
+        left: 15px;
+        font-size: 10px;
+        letter-spacing: 2px;
+        color: var(--gold);
+        text-transform: uppercase;
+        animation: pulse-gold 2s infinite;
+        z-index: 1000001;
+    }
+    @keyframes pulse-gold {
+        0% { opacity: 0.4; }
+        50% { opacity: 1; }
+        100% { opacity: 0.4; }
+    }
+</style>
+
+<div class="lang-hint">ВЫБЕРИ ЯЗЫК КЛУБА / SELECT LANGUAGE</div>
         function googleTranslateElementInit() { 
             new google.translate.TranslateElement({pageLanguage: 'ru', autoDisplay: false}, 'google_translate_element'); 
         }
