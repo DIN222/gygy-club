@@ -1,20 +1,19 @@
 
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY STUDIO - FINAL PRECISION 001</title>
+    <title>GY-GY STUDIO - SURGICAL PRECISION 001</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #ffd700; --black: #0a0a0a; }
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body { 
             background: var(--black); color: var(--gold); 
             font-family: 'Share Tech Mono', monospace; 
-            margin: 0; padding: 0; overflow: hidden; 
+            overflow: hidden; 
             display: flex; flex-direction: column; height: 100vh; 
         }
 
@@ -38,17 +37,18 @@
         main { 
             flex: 1; display: flex; justify-content: center; align-items: center; 
             background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
-            overflow: hidden; padding: 0;
+            overflow: hidden;
         }
 
-        /* ЧИСТАЯ РАМКА */
+        /* КОНТЕЙНЕР-РАМКА */
         #pult-viewport {
-            width: 75vh; height: 75vh;
-            border: 10px solid #1a1a1a;
-            box-shadow: 0 0 100px #000;
+            width: 78vh; height: 78vh; /* Чуть увеличил для солидности */
+            border: 8px solid #1a1a1a;
+            box-shadow: 0 0 80px #000;
             background: #000;
             overflow: hidden;
             position: relative;
+            display: block;
         }
 
         /* ОБЪЕКТ МАСШТАБИРОВАНИЯ */
@@ -56,11 +56,17 @@
             width: 1024px; height: 1024px;
             position: absolute;
             top: 0; left: 0;
-            transform-origin: 0 0; /* Строго от угла! */
+            transform-origin: 0 0; 
             display: block;
+            line-height: 0; /* Убирает нижний отступ строки */
         }
 
-        iframe { width: 1024px; height: 1024px; border: none; }
+        iframe { 
+            width: 1024px; height: 1024px; 
+            border: none; 
+            display: block;
+            margin: 0; padding: 0;
+        }
 
         footer { 
             height: 40px; border-top: 1px solid var(--gold); 
@@ -78,7 +84,7 @@
     </div>
     <div class="logo">GY-GY</div>
     <div class="header-right" style="text-align: right;">
-        <div class="ui-box" style="display: inline-flex; border-color: #444;">V.3.6.7</div>
+        <div class="ui-box" style="display: inline-flex; border-color: #444;">V.3.6.8</div>
     </div>
 </header>
 
@@ -99,20 +105,28 @@
         const viewport = document.getElementById('pult-viewport');
         const scaler = document.getElementById('pult-scaler');
         
-        // Берем текущий физический размер рамки (которая 75vh)
-        const currentSize = viewport.offsetWidth;
+        if (!viewport || !scaler) return;
+
+        // Берем точный физический размер внутренней части рамки
+        const rect = viewport.getBoundingClientRect();
+        const currentSize = rect.width;
         
-        // Вычисляем точный коэффициент
+        // Вычисляем масштаб
         const scale = currentSize / 1024;
         
-        // Применяем масштаб
+        // Применяем масштаб и жестко сбрасываем координаты в 0,0
         scaler.style.transform = `scale(${scale})`;
+        scaler.style.top = "0px";
+        scaler.style.left = "0px";
     }
 
-    // Запускаем при загрузке и при изменении размера окна
     window.addEventListener('load', adjustScale);
     window.addEventListener('resize', adjustScale);
+    
+    // На случай, если iframe грузится долго
+    setTimeout(adjustScale, 500);
 </script>
 
 </body>
 </html>
+
