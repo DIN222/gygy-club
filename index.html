@@ -1,10 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="google" content="notranslate">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.72 | EN START & SOUND FIXED</title>
+    <title>GY-GY Club v4.4.75 | FULL STABLE + FLAGS</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -12,24 +13,31 @@
     <style>
         :root { --gold: #d4af37; --door-wood: #3E2723; }
 
-        /* GOOGLE CLEANUP */
+        /* 1. ЧИСТКА GOOGLE */
         .goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame, .skiptranslate > iframe { display: none !important; }
-        body { top: 0px !important; margin: 0; background: #000; }
+        body { top: 0px !important; margin: 0; background: #000; overflow: hidden; }
 
+        /* 2. ЯЗЫКОВОЙ БЛОК + ПОДСКАЗКА */
         #google_translate_element { 
             position: fixed; top: 15px; left: 15px; z-index: 1000005; 
             background: rgba(0,0,0,0.9); border: 1px solid var(--gold); 
-            padding: 2px; border-radius: 4px;
+            padding: 5px; border-radius: 4px;
         }
         .goog-te-gadget .goog-te-combo { 
             background: #000 !important; color: var(--gold) !important; 
-            border: 1px solid var(--gold) !important; font-family: 'Share Tech Mono', monospace;
-            font-size: 12px; outline: none;
+            border: 1px solid var(--gold) !important; font-family: 'Share Tech Mono';
+            font-size: 14px; outline: none;
         }
+        .lang-hint {
+            position: fixed; top: 68px; left: 15px; z-index: 1000005;
+            font-size: 10px; color: var(--gold); text-transform: uppercase;
+            letter-spacing: 1px; animation: blink 2s infinite; font-family: 'Share Tech Mono';
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
 
+        /* 3. ОБЩИЕ СТИЛИ */
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-        html, body { width: 100%; height: 100vh; color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; }
-
+        html, body { width: 100%; height: 100vh; color: var(--gold); font-family: 'Share Tech Mono', monospace; }
         .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000000; font-size: 24px; letter-spacing: 5px; font-weight: bold; pointer-events: none; }
         
         .block { 
@@ -39,18 +47,17 @@
         }
         .block.active { display: flex !important; opacity: 1; pointer-events: auto; }
 
-        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 24px; text-align: center; max-width: 85%; margin-bottom: 20px; line-height: 1.2; color: var(--gold); }
-
+        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 24px; text-align: center; max-width: 85%; margin-bottom: 20px; line-height: 1.2; }
         .btn-gy { 
             min-width: 270px; padding: 14px; background: rgba(0,0,0,0.5); 
             border: 2px solid var(--gold); color: var(--gold); 
             cursor: pointer; text-transform: uppercase; font-weight: 900; 
             font-family: 'Share Tech Mono'; transition: 0.3s; margin: 8px 0;
-            flex-shrink: 0; /* Чтобы рамки не ломались */
+            flex-shrink: 0;
         }
         .btn-sleep { opacity: 0.2 !important; pointer-events: none !important; }
 
-        /* ID CARD (REACTOR) */
+        /* 4. ID-CARD (РЕАКТОР) + ФЛАГ */
         .id-card-hall { 
             width: 240px; padding: 20px; border: 3px solid var(--gold); 
             background: #F5F5DC; border-radius: 12px; display: flex; 
@@ -58,14 +65,13 @@
             margin-top: 15px; box-shadow: 0 0 30px rgba(212,175,87,0.5);
             z-index: 100;
         }
-        
-        .box-final { width: 85px; height: 85px; border: 2px solid #000; background: #fff; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .box-final { width: 85px; height: 85px; border: 2px solid #000; background: #fff; overflow: hidden; display: flex; align-items: center; justify-content: center; position: relative; flex-direction: column;}
+        .user-flag-icon { font-size: 38px; line-height: 1; }
 
         #main-door { width: 280px; cursor: pointer; transition: transform 2s, opacity 1s; z-index: 9999; }
         
-        /* БАРНЫЕ КНОПКИ - ФИКС РАМОК */
-        .bar-ui-container { width: 100%; max-width: 380px; display: flex; flex-direction: column; padding: 0 20px; gap: 5px; }
-        .bar-side-buttons { display: flex; width: 100%; justify-content: center; gap: 15px; }
+        .bar-ui-container { width: 100%; max-width: 380px; display: flex; flex-direction: column; padding: 0 20px; }
+        .bar-side-buttons { display: flex; width: 100%; justify-content: center; gap: 15px; margin-bottom: 8px;}
         .bar-side-buttons .btn-gy { min-width: 140px; font-size: 11px; margin: 0; }
 
         img { -webkit-user-drag: none; pointer-events: none; }
@@ -74,19 +80,21 @@
 <body class="notranslate" oncontextmenu="return false;">
 
     <div id="google_translate_element"></div>
+    <div class="lang-hint">← Choose language / Выберите язык</div>
     <div class="ui-header-right">GY-GY</div>
 
     <audio id="snd-door" preload="auto"><source src="door_open.mp3" type="audio/mpeg"></audio>
     <audio id="snd-ambient" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active" style="opacity: 1; display: flex;">
-        <div style="opacity:0.1; position:absolute; top:20px;">English language initialized</div>
+        <div style="opacity:0; position:absolute;">Welcome to the joke club. Please enter.</div>
         <img src="door_1.jpg" id="main-door" onclick="handleDoor()" style="pointer-events: auto;">
+        <p style="margin-top: 20px; font-size: 12px; letter-spacing: 2px;">KNOCK TO ENTER</p>
     </div>
 
     <div id="block-welcome" class="block">
         <div class="quote-text">«In every joke there is a drop of whiskey»</div>
-        <img src="horse_welcome.png" style="max-height: 45vh; margin-bottom: 15px;">
+        <img src="horse_welcome.png" style="max-height: 40vh; margin-bottom: 15px;">
         <button id="btn-w-hall" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">Proceed to Hall</button>
         <button class="btn-gy" onclick="portalTransition('block-identity')">Get Your ID</button>
     </div>
@@ -94,16 +102,19 @@
     <div id="block-identity" class="block">
         <div class="quote-text">«There is never too much champagne»</div>
         <div style="display:flex; gap:10px; margin-bottom:20px;">
-            <div class="box-final" style="background:transparent; border-color:var(--gold); color:var(--gold);" id="id-label">#ID</div>
+            <div class="box-final" style="background:transparent; border-color:var(--gold); color:var(--gold);">
+                <span id="id-label" style="font-size:10px; font-weight:900;">#ID</span>
+                <div id="flag-slot" class="user-flag-icon">🇬🇧</div>
+            </div>
             <div class="box-final" id="qr-box-reg" style="border-color:var(--gold);"></div>
             <div class="box-final" style="border-color:var(--gold); cursor:pointer; pointer-events:auto;" onclick="document.getElementById('file-input').click()">
                 <input type="file" id="file-input" onchange="preview(this)" style="display:none;">
                 <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
-                <span id="txt-photo" style="font-size:10px;">PHOTO</span>
+                <span id="txt-photo" style="font-size:10px; color:#000; font-weight:900;">PHOTO</span>
             </div>
             <div class="box-final" style="border-color:var(--gold); cursor:pointer; pointer-events:auto;" onclick="generateAvatar()">
                 <img id="avatar-img" style="display:none; width:100%; height:100%; object-fit:cover;">
-                <span id="txt-avatar" style="font-size:10px; text-align:center;">AVATAR</span>
+                <span id="txt-avatar" style="font-size:10px; text-align:center; color:#000; font-weight:900;">GEN<br>AVATAR</span>
             </div>
         </div>
         <button id="btn-save" class="btn-gy" onclick="swapButtons('btn-save', 'btn-pass')">Save Identity</button>
@@ -112,7 +123,7 @@
 
     <div id="block-hall" class="block">
         <div style="position:absolute; inset:0; background:url('hall_bg_jpg.jpg') center/cover; opacity: 0.9; z-index:-1;"></div>
-        <div style="font-family:'Playfair Display'; font-size:32px; font-weight:900; color:#fff; text-shadow: 2px 2px 5px #000;">GY-GY HALL</div>
+        <div style="font-family:'Playfair Display'; font-size:32px; font-weight:900; color:#fff; text-shadow: 2px 2px 4px #000;">GY-GY HALL</div>
         <div class="id-card-hall">
             <div id="h-id" style="font-weight:900; margin-bottom:10px; font-size:14px;">#ID</div>
             <div style="display:flex; gap:12px; margin-bottom:12px;">
@@ -126,26 +137,37 @@
 
     <div id="block-bar" class="block" style="justify-content: flex-end; padding-bottom: 20px;">
         <div class="quote-text" style="position:absolute; top:8vh;">«Igogo, let's get started!»</div>
-        <img src="horse_bar.png" style="height: 65vh; width: auto; object-fit: contain; margin-bottom: -10px;">
+        <img src="horse_bar.png" style="height: 65vh; width: auto; object-fit: contain;">
         <div class="bar-ui-container">
             <div class="bar-side-buttons">
                 <button class="btn-gy" onclick="window.location.href='tables.html'">Tables</button>
                 <button class="btn-gy" onclick="window.location.href='bridge_protocol.html'">AI Room</button>
             </div>
-            <button class="btn-gy" style="min-width:100%;" onclick="portalTransition('block-hall')">Back to Hall</button>
+            <button class="btn-gy" style="width:100%;" onclick="portalTransition('block-hall')">Back to Hall</button>
         </div>
     </div>
 
 <script>
     let currentID = "";
 
-    // 1. СТАРТ НА АНГЛИЙСКОМ
-    function setEnglishDefault() {
-        const googCookie = document.cookie.split('; ').find(row => row.startsWith('googtrans='));
-        if (!googCookie) {
+    // 1. ПРИНУДИТЕЛЬНЫЙ АНГЛИЙСКИЙ
+    (function preInitLang() {
+        if (!document.cookie.includes('googtrans')) {
             document.cookie = "googtrans=/ru/en; path=/";
-            document.cookie = "googtrans=/ru/en; domain=" + window.location.hostname + "; path=/";
         }
+    })();
+
+    // 2. ЛОГИКА ФЛАГОВ
+    function getFlagByLang() {
+        const googData = document.cookie.split('; ').find(row => row.startsWith('googtrans='));
+        let lang = 'en';
+        if (googData) lang = googData.split('/').pop();
+        
+        const flags = { 'en': '🇬🇧', 'ru': '🇷🇺', 'de': '🇩🇪', 'fr': '🇫🇷', 'es': '🇪🇸', 'zh-CN': '🇨🇳' };
+        const flag = flags[lang] || '🏳️';
+        
+        const slot = document.getElementById('flag-slot');
+        if (slot) slot.innerText = flag;
     }
 
     function updateIDUI(id) {
@@ -156,6 +178,7 @@
         new QRCode(document.getElementById("qr-box-reg"), { text: id, width: 85, height: 85 });
         document.getElementById('h-qr').innerHTML = "";
         new QRCode(document.getElementById("h-qr"), { text: id, width: 85, height: 85 });
+        getFlagByLang();
     }
 
     function handleDoor() {
@@ -209,7 +232,6 @@
     }
 
     window.onload = () => {
-        setEnglishDefault();
         const saved = localStorage.getItem('gy_trace');
         if(saved) { 
             currentID = saved; 
@@ -220,6 +242,14 @@
 
     function googleTranslateElementInit() {
         new google.translate.TranslateElement({pageLanguage: 'ru'}, 'google_translate_element');
+        
+        // Отслеживаем смену языка
+        setTimeout(() => {
+            const combo = document.querySelector('.goog-te-combo');
+            if(combo) combo.addEventListener('change', () => {
+                setTimeout(getFlagByLang, 150);
+            });
+        }, 1500);
     }
 </script>
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
