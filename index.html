@@ -1,20 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="notranslate" google="notranslate">
 <head>
     <meta charset="UTF-8">
     <meta name="google" content="notranslate">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.98 | TOTAL FAT EDITION</title>
+    <title>GY-GY Club v4.5.00 | FIXED UI & LANG</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
         :root { --gold: #d4af37; --door-wood: #3E2723; }
         
-        * { -webkit-tap-highlight-color: transparent !important; -webkit-touch-callout: none !important; outline: none !important; }
+        * { -webkit-tap-highlight-color: transparent !important; outline: none !important; box-sizing: border-box; }
         
-        /* КИЛЛЕР СЕРОЙ ПОДСВЕТКИ ГУГЛА */
-        font { background-color: transparent !important; box-shadow: none !important; position: relative !important; display: inline !important; }
+        /* УДАЛЕНИЕ СЕРЫХ ПЯТЕН ПЕРЕВОДА */
+        font { background-color: transparent !important; box-shadow: none !important; position: relative !important; }
         .goog-text-highlight { background-color: transparent !important; box-shadow: none !important; border: none !important; }
         
         html, body { 
@@ -27,8 +27,8 @@
             margin:0; padding:0;
         }
 
-        /* ЯЗЫКОВОЙ ВИДЖЕТ (FORCE ENGLISH) */
-        #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000001; pointer-events: auto; }
+        /* ЯЗЫКОВОЙ ИНТЕРФЕЙС */
+        #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000001; }
         .goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame, .skiptranslate > iframe { display: none !important; }
         body { top: 0px !important; }
         
@@ -43,29 +43,31 @@
         }
 
         .lang-hint { 
-            position: fixed; 
-            top: 52px; left: 15px; 
-            z-index: 1000001; 
-            font-size: 11px; 
-            color: var(--gold); 
-            width: 140px; 
-            text-align: center;
-            animation: blink 2s infinite; 
-            line-height: 1.2;
-            letter-spacing: 1px;
+            position: fixed; top: 52px; left: 15px; z-index: 1000001; 
+            font-size: 11px; color: var(--gold); width: 140px; text-align: center;
+            animation: blink 2s infinite; letter-spacing: 1px;
         }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
 
-        .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000000; font-size: 24px; letter-spacing: 5px; font-weight: bold; color: var(--gold); pointer-events: none; }
+        .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000000; font-size: 24px; letter-spacing: 5px; font-weight: bold; color: var(--gold); }
         
-        /* КРУПНЫЙ КОНЬ С ЧИСТЫМ ОРЕОЛОМ */
+        /* КОНЬ И КНОПКИ */
         .golden-glow-horse {
-            max-height: 55vh; 
+            max-height: 48vh; 
             width: auto;
-            margin-bottom: 15px;
-            filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.8));
-            transform: scale(1.15);
-            transition: 0.5s ease;
+            filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.7));
+            transform: scale(1.1);
+            flex-shrink: 1;
+            margin-bottom: 10px;
+        }
+
+        .btn-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            flex-shrink: 0; /* ЗАПРЕЩАЕМ ВЫТАЛКИВАНИЕ */
+            padding-bottom: 20px;
         }
 
         .block { 
@@ -75,28 +77,20 @@
             align-items: center; 
             justify-content: center; 
             background: #000; 
-            z-index: 10; 
-            opacity: 0; 
+            z-index: 10; opacity: 0; 
             transition: opacity 0.8s ease-in-out; 
-            pointer-events: none; 
         }
         .block.active { display: flex !important; opacity: 1; pointer-events: auto; }
 
-        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 26px; color: var(--gold); text-align: center; max-width: 85%; line-height: 1.3; margin-bottom: 25px; letter-spacing: 1px; }
-        .btn-gy { min-width: 270px; padding: 14px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; text-transform: uppercase; font-weight: 900; margin: 8px 0; font-family: 'Share Tech Mono'; transition: 0.3s; pointer-events: auto !important; }
-        .btn-gy:active { background: var(--gold); color: #000; }
+        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 24px; color: var(--gold); text-align: center; max-width: 85%; line-height: 1.2; margin-bottom: 15px; }
+        .btn-gy { min-width: 270px; padding: 14px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; text-transform: uppercase; font-weight: 900; margin: 6px 0; font-family: 'Share Tech Mono'; transition: 0.3s; }
         .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
 
         #main-door { width: 280px; cursor: pointer; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s; z-index: 9999; }
 
-        /* ИДЕНТИФИКАЦИЯ */
-        .box-final { width: 85px; height: 85px; border: 2px solid var(--gold); display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; background: rgba(212,175,55,0.05); }
-        .id-card-hall { position: absolute; top: 72%; left: 50%; transform: translate(-50%,-50%); width: 240px; padding: 15px; border: 2px solid var(--gold); background: #F5F5DC; border-radius: 12px; display: flex; flex-direction: column; align-items: center; color: #000; z-index: 30; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
-        
-        /* БАРНЫЙ ИНТЕРФЕЙС */
-        .bar-ui-container { position: absolute; bottom: 5vh; left: 50%; transform: translateX(-50%); width: 100%; max-width: 380px; z-index: 1000; pointer-events: none; display: flex; flex-direction: column; align-items: center; }
-        .bar-side-buttons { width: 95%; display: flex; justify-content: space-between; margin-bottom: 12px; pointer-events: none; }
-        .bar-side-buttons button { pointer-events: auto; min-width: 150px; background: rgba(0,0,0,0.8); font-size: 13px; }
+        /* ЭЛЕМЕНТЫ ХОЛЛА */
+        .id-card-hall { position: absolute; top: 70%; left: 50%; transform: translate(-50%,-50%); width: 240px; padding: 15px; border: 2px solid var(--gold); background: #F5F5DC; border-radius: 12px; display: flex; flex-direction: column; align-items: center; color: #000; z-index: 30; }
+        .box-final { width: 85px; height: 85px; border: 2px solid var(--gold); display: flex; align-items: center; justify-content: center; background: rgba(212,175,55,0.05); }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -107,46 +101,47 @@
 
     <audio id="snd-door" preload="auto"><source src="door_open.mp3" type="audio/mpeg"></audio>
     <audio id="snd-ambient" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
-    <audio id="snd-khe" preload="auto"><source src="charlie_bar_fx.mp3" type="audio/mpeg"></audio>
-    <audio id="snd-pour" preload="auto"><source src="pour_whisky.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active" style="opacity: 1; display: flex; pointer-events: auto;">
         <img src="door_1.jpg" id="main-door" onclick="handleDoor()">
     </div>
 
-    <div id="block-welcome" class="block" style="justify-content: flex-start; padding-top: 4vh;">
+    <div id="block-welcome" class="block" style="justify-content: flex-start; padding-top: 5vh;">
         <div class="quote-text">«В каждой шутке есть доля виски»</div>
         <img src="horse_welcome.png" class="golden-glow-horse">
-        <div style="font-family: 'Playfair Display'; font-size: 40px; font-weight: 900; letter-spacing: 14px; margin-bottom: 20px; font-style: italic; text-transform: uppercase;">WELCOME</div>
-        <button id="btn-w-hall" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">ПРОХОДИТЕ В ХОЛЛ</button>
-        <button class="btn-gy" onclick="portalTransition('block-identity')">ПОЛУЧИТЬ ID</button>
+        <div class="btn-container">
+            <div style="font-family: 'Playfair Display'; font-size: 32px; font-weight: 900; letter-spacing: 10px; margin-bottom: 15px; font-style: italic; text-transform: uppercase;">WELCOME</div>
+            <button id="btn-w-hall" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">ПРОХОДИТЕ В ХОЛЛ</button>
+            <button class="btn-gy" onclick="portalTransition('block-identity')">ПОЛУЧИТЬ ID</button>
+        </div>
     </div>
 
     <div id="block-identity" class="block">
         <div class="quote-text">«Шампанского много не бывает»</div>
-        <div style="display:flex; gap:12px; margin-bottom:30px;">
-            <div class="box-final" style="color:var(--gold); font-size:10px; font-weight:bold;" id="id-label">#ID</div>
+        <div style="display:flex; gap:10px; margin-bottom:20px;">
+            <div class="box-final" style="color:var(--gold); font-size:10px; border-color:var(--gold);" id="id-label">#ID</div>
             <div class="box-final" id="qr-box-reg"></div>
-            <div class="box-final" style="cursor:pointer;" onclick="document.getElementById('file-input').click()">
+            <div class="box-final" onclick="document.getElementById('file-input').click()" style="cursor:pointer;">
                 <input type="file" id="file-input" onchange="preview(this)" style="display:none;">
                 <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
-                <span id="txt-photo" style="font-size:10px; font-weight:900;">PHOTO</span>
+                <span id="txt-photo" style="font-size:10px;">PHOTO</span>
             </div>
-            <div class="box-final" style="cursor:pointer;" onclick="generateAvatar()">
+            <div class="box-final" onclick="generateAvatar()" style="cursor:pointer;">
                 <img id="avatar-img" style="display:none; width:100%; height:100%; object-fit:cover;">
-                <span id="txt-avatar" style="font-size:10px; font-weight:900; text-align:center;">AVATAR</span>
+                <span id="txt-avatar" style="font-size:10px;">AVATAR</span>
             </div>
         </div>
-        <button id="btn-save" class="btn-gy" onclick="swapButtons('btn-save', 'btn-pass')">СОХРАНИТЬ</button>
-        <button id="btn-pass" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">ПРОЙТИ В ХОЛЛ</button>
+        <div class="btn-container">
+            <button id="btn-save" class="btn-gy" onclick="swapButtons('btn-save', 'btn-pass')">СОХРАНИТЬ</button>
+            <button id="btn-pass" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">ПРОЙТИ В ХОЛЛ</button>
+        </div>
     </div>
 
     <div id="block-hall" class="block">
         <div style="position:absolute; inset:0; background:url('hall_bg_jpg.jpg') center/cover; z-index:15;"></div>
-        <div style="position:absolute; top: 7%; width: 100%; text-align: center; color: var(--door-wood); font-size: 36px; font-weight: 900; font-family: 'Playfair Display'; z-index: 25; font-style: italic;">«Всё будет GY-GY»</div>
         <div class="id-card-hall">
-            <div id="h-id" style="font-weight:900; font-size:15px; margin-bottom:12px; font-family:'Share Tech Mono'; letter-spacing:1px;">#ID</div>
-            <div style="display:flex; gap:12px; margin-bottom:15px;">
+            <div id="h-id" style="font-weight:900; margin-bottom:10px;">#ID</div>
+            <div style="display:flex; gap:10px; margin-bottom:10px;">
                 <div class="box-final" style="border-color:#000;"><img id="h-photo" style="width:100%; height:100%; object-fit:cover;"></div>
                 <div class="box-final" id="h-qr" style="border-color:#000;"></div>
             </div>
@@ -155,81 +150,56 @@
         </div>
     </div>
 
-    <div id="block-bar" class="block" style="padding:0; justify-content: flex-end;">
-        <div class="quote-text" style="position:absolute; top:12vh; z-index:100; font-size: 30px;">«Игого, сейчас начнем!»</div>
-        <div class="bar-ui-container">
-            <div class="bar-side-buttons">
-                <button class="btn-gy" onclick="portalTransition('block-tables')">ЗА СТОЛИКИ</button>
-                <button class="btn-gy" onclick="deepDive()">AI ROOM</button>
-            </div>
-            <button class="btn-gy" style="min-width:95%;" onclick="portalTransition('block-hall')">ВЕРНУТЬСЯ В ХОЛЛ</button>
+    <div id="block-bar" class="block">
+        <div class="quote-text">«Игого, сейчас начнем!»</div>
+        <img src="horse_bar.png" style="height: 70vh; width: auto; object-fit: contain;">
+        <div class="btn-container">
+            <button class="btn-gy" onclick="portalTransition('block-tables')">ЗА СТОЛИКИ</button>
         </div>
-        <img src="horse_bar.png" style="height: 80vh; width: auto; object-fit: contain;">
     </div>
 
 <script>
-    let currentID = "";
-
-    // ПРИНУДИТЕЛЬНЫЙ ЯЗЫК ЭКРАНА И СПИСКА
+    // FORCE ENGLISH LOGIC
     (function() {
         const domain = window.location.hostname;
-        document.cookie = "googtrans=/en/en; path=/; domain=" + domain;
+        // Очистка старых настроек и форсирование EN
+        document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + domain;
         document.cookie = "googtrans=/en/en; path=/";
+        document.cookie = "googtrans=/en/en; path=/; domain=" + domain;
     })();
 
-    window.onload = () => {
-        const savedID = localStorage.getItem('gy_trace');
-        if (savedID) {
-            currentID = savedID;
-            updateIDUI(currentID);
-            document.getElementById('btn-w-hall').classList.remove('btn-sleep');
-        }
-    };
+    let currentID = localStorage.getItem('gy_trace') || "";
 
     function handleDoor() {
-        const snd = document.getElementById('snd-door');
-        if(snd) snd.play().catch(()=>{});
+        document.getElementById('snd-door').play().catch(()=>{});
         document.getElementById('main-door').style.transform = "scale(10)";
         document.getElementById('main-door').style.opacity = "0";
         document.getElementById('l-hint').style.display = 'none';
-
         if (!currentID) {
             currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
             localStorage.setItem('gy_trace', currentID);
-            updateIDUI(currentID);
         }
-
-        setTimeout(() => { 
-            portalTransition('block-welcome'); 
-            const a = document.getElementById('snd-ambient'); 
-            if(a) { a.volume = 0; a.play(); fadeAudio(a, 1, 2000); }
-        }, 1500);
+        updateIDUI(currentID);
+        setTimeout(() => { portalTransition('block-welcome'); }, 1500);
     }
 
     function updateIDUI(id) {
         document.getElementById('id-label').innerText = id;
         document.getElementById('h-id').innerText = id;
-        document.getElementById('qr-box-reg').innerHTML = "";
-        new QRCode(document.getElementById("qr-box-reg"), { text: id, width: 85, height: 85 });
-        document.getElementById('h-qr').innerHTML = "";
-        new QRCode(document.getElementById("h-qr"), { text: id, width: 85, height: 85 });
+        document.querySelectorAll("[id*='qr-box'], [id='h-qr']").forEach(el => {
+            el.innerHTML = "";
+            new QRCode(el, { text: id, width: 85, height: 85 });
+        });
     }
 
     function portalTransition(nextId) {
-        if (nextId === 'block-tables') { window.location.href = 'tables.html'; return; }
-        const current = document.querySelector('.block.active');
-        if(current) { current.style.opacity = "0"; current.style.pointerEvents = "none"; }
+        document.querySelectorAll('.block').forEach(b => { b.style.opacity = "0"; b.style.pointerEvents = "none"; });
         setTimeout(() => {
-            if(current) { current.classList.remove('active'); current.style.display = "none"; }
+            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
             const next = document.getElementById(nextId);
-            next.style.display = "flex";
-            setTimeout(() => { 
-                next.classList.add('active'); next.style.opacity = "1"; next.style.pointerEvents = "auto";
-                if(nextId === 'block-bar') {
-                    setTimeout(() => document.getElementById('snd-khe').play(), 1000);
-                    setTimeout(() => document.getElementById('snd-pour').play(), 2500);
-                }
-            }, 50);
+            next.classList.add('active');
+            setTimeout(() => { next.style.opacity = "1"; }, 50);
         }, 800);
     }
 
@@ -241,42 +211,27 @@
                 document.getElementById('pp').style.display = "block";
                 document.getElementById('h-photo').src = e.target.result; 
                 document.getElementById('txt-photo').style.display = "none";
-                document.getElementById('avatar-img').style.display = "none";
             };
             r.readAsDataURL(i.files[0]);
         }
     }
 
     function generateAvatar() {
-        const seed = Math.random().toString(36).substring(7);
-        const avatarUrl = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${seed}`;
-        const avImg = document.getElementById('avatar-img');
-        avImg.src = avatarUrl;
-        avImg.style.display = "block";
+        const url = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${Math.random()}`;
+        document.getElementById('avatar-img').src = url;
+        document.getElementById('avatar-img').style.display = "block";
+        document.getElementById('h-photo').src = url;
         document.getElementById('txt-avatar').style.display = "none";
-        document.getElementById('pp').style.display = "none";
-        document.getElementById('h-photo').src = avatarUrl;
     }
 
-    function swapButtons(a, s) { 
-        document.getElementById(a).classList.add('btn-sleep'); 
-        document.getElementById(s).classList.remove('btn-sleep'); 
+    function swapButtons(a, s) {
+        document.getElementById(a).classList.add('btn-sleep');
+        document.getElementById(s).classList.remove('btn-sleep');
     }
-
-    function fadeAudio(audio, target, duration) {
-        const start = audio.volume; const startTime = Date.now();
-        const interval = setInterval(() => {
-            const progress = Math.min((Date.now() - startTime) / duration, 1);
-            audio.volume = start + (target - start) * progress;
-            if (progress === 1) clearInterval(interval);
-        }, 50);
-    }
-
-    function deepDive() { window.location.href = 'bridge_protocol.html'; }
 
     function googleTranslateElementInit() { 
         new google.translate.TranslateElement({
-            pageLanguage: 'en', 
+            pageLanguage: 'en',
             includedLanguages: 'en,ru,uk,pl,fr,de,zh-CN,es,it,ja',
             layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
             autoDisplay: false
