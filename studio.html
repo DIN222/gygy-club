@@ -5,84 +5,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY STUDIO - SURGICAL FIX 03</title>
+    <title>GY-GY STUDIO - FINAL PRECISION 001</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #ffd700; --black: #0a0a0a; }
         * { box-sizing: border-box; }
 
         body { 
-            background: var(--black); 
-            color: var(--gold); 
+            background: var(--black); color: var(--gold); 
             font-family: 'Share Tech Mono', monospace; 
-            margin: 0; padding: 0;
-            overflow: hidden; 
+            margin: 0; padding: 0; overflow: hidden; 
             display: flex; flex-direction: column; height: 100vh; 
         }
 
         header { 
             display: grid; grid-template-columns: 1fr auto 1fr; 
-            align-items: center; padding: 10px 20px; 
+            align-items: center; padding: 0 20px; 
             border-bottom: 2px solid var(--gold); background: #000; 
-            flex-shrink: 0; height: 70px; z-index: 10;
+            flex-shrink: 0; height: 60px; z-index: 10;
         }
 
         .header-left { display: flex; gap: 15px; }
         .ui-box { 
-            height: 40px; border: 1px solid var(--gold); 
+            height: 35px; border: 1px solid var(--gold); 
             display: flex; align-items: center; justify-content: center; 
-            padding: 0 20px; color: var(--gold); cursor: pointer; 
-            font-weight: bold; text-decoration: none; font-size: 14px;
+            padding: 0 15px; color: var(--gold); cursor: pointer; 
+            font-weight: bold; text-decoration: none; font-size: 13px;
         }
 
-        .logo { font-size: 24px; letter-spacing: 6px; text-shadow: 0 0 10px var(--gold); }
+        .logo { font-size: 22px; letter-spacing: 6px; text-shadow: 0 0 10px var(--gold); }
 
         main { 
-            flex: 1; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
+            flex: 1; display: flex; justify-content: center; align-items: center; 
             background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
-            overflow: hidden;
-            padding: 0; /* Убираем падинги, чтобы не мешали */
+            overflow: hidden; padding: 0;
         }
 
-        /* КОНТЕЙНЕР, КОТОРЫЙ ЗАДАЕТ ФИЗИЧЕСКИЙ РАЗМЕР */
-        .pult-container {
-            width: 70vh; /* Ровно 70% от высоты экрана */
-            height: 70vh;
-            max-width: 95vw; /* Чтобы не вылез по ширине */
-            max-height: 95vw;
-            position: relative;
+        /* ЧИСТАЯ РАМКА */
+        #pult-viewport {
+            width: 75vh; height: 75vh;
             border: 10px solid #1a1a1a;
             box-shadow: 0 0 100px #000;
             background: #000;
+            overflow: hidden;
+            position: relative;
         }
 
-        /* САМА ОБОЛОЧКА IFRAME */
-        .iframe-wrapper {
-            width: 1024px;
-            height: 1024px;
+        /* ОБЪЕКТ МАСШТАБИРОВАНИЯ */
+        #pult-scaler {
+            width: 1024px; height: 1024px;
             position: absolute;
-            top: 0;
-            left: 0;
-            /* Высчитываем масштаб как отношение контейнера к 1024 */
-            transform: scale(calc(70vh / 1024));
-            /* КРИТИЧЕСКИЙ ПАРАМЕТР: масштабируем из левого верхнего угла */
-            transform-origin: 0 0; 
-        }
-
-        iframe { 
-            width: 1024px; 
-            height: 1024px; 
-            border: none;
+            top: 0; left: 0;
+            transform-origin: 0 0; /* Строго от угла! */
             display: block;
         }
 
+        iframe { width: 1024px; height: 1024px; border: none; }
+
         footer { 
-            height: 50px; border-top: 2px solid var(--gold); 
+            height: 40px; border-top: 1px solid var(--gold); 
             text-align: center; font-size: 11px; opacity: 0.5;
-            background: #000; flex-shrink: 0; line-height: 50px;
+            background: #000; flex-shrink: 0; line-height: 40px;
         }
     </style>
 </head>
@@ -95,21 +78,41 @@
     </div>
     <div class="logo">GY-GY</div>
     <div class="header-right" style="text-align: right;">
-        <div class="ui-box" style="display: inline-flex; border-color: #444;">V.3.6.6</div>
+        <div class="ui-box" style="display: inline-flex; border-color: #444;">V.3.6.7</div>
     </div>
 </header>
 
 <main>
-    <div class="pult-container">
-        <div class="iframe-wrapper">
+    <div id="pult-viewport">
+        <div id="pult-scaler">
             <iframe src="pult_reactor_v31.html"></iframe>
         </div>
     </div>
 </main>
 
 <footer>
-    © 2026 GY-GY CLUB | INDUSTRIAL GENERATION UNIT
+    © 2026 GY-GY CLUB | INDUSTRIAL UNIT
 </footer>
+
+<script>
+    function adjustScale() {
+        const viewport = document.getElementById('pult-viewport');
+        const scaler = document.getElementById('pult-scaler');
+        
+        // Берем текущий физический размер рамки (которая 75vh)
+        const currentSize = viewport.offsetWidth;
+        
+        // Вычисляем точный коэффициент
+        const scale = currentSize / 1024;
+        
+        // Применяем масштаб
+        scaler.style.transform = `scale(${scale})`;
+    }
+
+    // Запускаем при загрузке и при изменении размера окна
+    window.addEventListener('load', adjustScale);
+    window.addEventListener('resize', adjustScale);
+</script>
 
 </body>
 </html>
