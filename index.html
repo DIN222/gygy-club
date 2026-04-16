@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="google" content="notranslate">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.82 | PRO FULL</title>
+    <title>GY-GY Club v4.4.83 | FULL RESTORED</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -18,11 +18,18 @@
 
         html, body { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; position: fixed; margin:0; }
         
-        /* ГУГЛ ПАНЕЛЬ НА АНГЛИЙСКОМ */
+        /* ГУГЛ ПАНЕЛЬ И СПИСОК НА АНГЛИЙСКОМ */
         #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000001; pointer-events: auto; }
         .goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame, .skiptranslate > iframe { display: none !important; }
         body { top: 0px !important; }
-        .goog-te-gadget .goog-te-combo { background: #000 !important; color: var(--gold) !important; border: 1px solid var(--gold) !important; padding: 4px; border-radius: 4px; font-family: 'Share Tech Mono'; }
+        .goog-te-gadget .goog-te-combo { 
+            background: #000 !important; 
+            color: var(--gold) !important; 
+            border: 1px solid var(--gold) !important; 
+            padding: 4px; 
+            border-radius: 4px; 
+            font-family: 'Share Tech Mono';
+        }
 
         .lang-hint { position: fixed; top: 68px; left: 15px; z-index: 1000001; font-size: 10px; color: var(--gold); text-transform: uppercase; animation: blink 2s infinite; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
@@ -50,7 +57,7 @@
     </style>
     
     <script>
-        // ЖЕСТКАЯ ПРЕДУСТАНОВКА ЯЗЫКА
+        // АВТО-АНГЛИЙСКИЙ ДЛЯ ПАНЕЛИ И СПИСКА ЯЗЫКОВ
         (function() {
             const domain = window.location.hostname;
             document.cookie = "googtrans=/ru/en; path=/; domain=" + domain;
@@ -72,7 +79,6 @@
 
     <div id="block-entrance" class="block active" style="opacity: 1; display: flex; pointer-events: auto;">
         <img src="door_1.jpg" id="main-door" onclick="handleDoor()">
-        <p style="margin-top: 30px; letter-spacing: 5px; font-size: 14px; text-transform: uppercase;">Open the Club</p>
     </div>
 
     <div id="block-welcome" class="block" style="justify-content: flex-start; padding-top: 5vh;">
@@ -174,9 +180,7 @@
         const d = document.getElementById('main-door');
         const snd = document.getElementById('snd-door');
         if(snd) snd.play().catch(()=>{});
-        d.style.transform = "scale(10)"; 
-        d.style.opacity = "0";
-        d.style.pointerEvents = "none";
+        d.style.transform = "scale(10)"; d.style.opacity = "0"; d.style.pointerEvents = "none";
         if (!currentID) {
             currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
         }
@@ -214,6 +218,16 @@
                 }
             }, 50);
         }, 800);
+    }
+
+    // ВОССТАНОВЛЕННЫЙ ПЕРЕХОД В AI ROOM
+    function deepDive() {
+        const amb = document.getElementById('snd-ambient');
+        if (amb) fadeAudio(amb, 0, 1200);
+        document.body.style.transition = "opacity 1.2s, filter 1.2s";
+        document.body.style.opacity = "0";
+        document.body.style.filter = "blur(10px) brightness(0)";
+        setTimeout(() => { window.location.href = 'bridge_protocol.html'; }, 1200);
     }
 
     function fadeAudio(audio, target, duration) {
@@ -258,7 +272,11 @@
     }
 
     function googleTranslateElementInit() { 
-        new google.translate.TranslateElement({pageLanguage: 'ru', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element'); 
+        new google.translate.TranslateElement({
+            pageLanguage: 'ru', 
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE, // Английское меню
+            autoDisplay: false
+        }, 'google_translate_element'); 
     }
 </script>
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
