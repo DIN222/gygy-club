@@ -4,105 +4,81 @@
     <meta charset="UTF-8">
     <meta name="google" content="notranslate">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.5.00 | FIXED UI & LANG</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
+    <title>GY-GY Club v4.5.20 | MEGA FAT EDITION</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
-        :root { --gold: #d4af37; --door-wood: #3E2723; }
-        
+        :root { --gold: #d4af37; --wood: #3E2723; }
         * { -webkit-tap-highlight-color: transparent !important; outline: none !important; box-sizing: border-box; }
         
-        /* УДАЛЕНИЕ СЕРЫХ ПЯТЕН ПЕРЕВОДА */
-        font { background-color: transparent !important; box-shadow: none !important; position: relative !important; }
+        /* КИЛЛЕР СЕРЫХ ПЯТЕН GOOGLE */
+        font { background-color: transparent !important; box-shadow: none !important; position: relative !important; display: inline !important; }
         .goog-text-highlight { background-color: transparent !important; box-shadow: none !important; border: none !important; }
         
         html, body { 
-            width: 100%; height: 100%; 
-            background: #000 !important; 
-            color: var(--gold); 
-            font-family: 'Share Tech Mono', monospace; 
-            overflow: hidden; 
-            position: fixed; 
-            margin:0; padding:0;
+            width: 100%; height: 100%; background: #000 !important; color: var(--gold); 
+            font-family: 'Share Tech Mono', monospace; overflow: hidden; position: fixed; margin:0; 
         }
 
-        /* ЯЗЫКОВОЙ ИНТЕРФЕЙС */
+        /* ЯЗЫКОВОЙ ВИДЖЕТ */
         #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000001; }
         .goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame, .skiptranslate > iframe { display: none !important; }
         body { top: 0px !important; }
         
         .goog-te-gadget .goog-te-combo { 
-            background: #000 !important; 
-            color: var(--gold) !important; 
-            border: 1px solid var(--gold) !important; 
-            padding: 6px; 
-            border-radius: 4px; 
-            font-family: 'Share Tech Mono';
-            font-size: 14px;
+            background: #000 !important; color: var(--gold) !important; 
+            border: 1px solid var(--gold) !important; padding: 6px; border-radius: 4px; 
+            font-family: 'Share Tech Mono'; font-size: 14px;
         }
 
-        .lang-hint { 
-            position: fixed; top: 52px; left: 15px; z-index: 1000001; 
-            font-size: 11px; color: var(--gold); width: 140px; text-align: center;
-            animation: blink 2s infinite; letter-spacing: 1px;
-        }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
-
-        .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000000; font-size: 24px; letter-spacing: 5px; font-weight: bold; color: var(--gold); }
+        .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000000; font-size: 24px; letter-spacing: 5px; font-weight: bold; color: var(--gold); pointer-events: none; }
         
-        /* КОНЬ И КНОПКИ */
+        /* WELCOME & HORSE */
         .golden-glow-horse {
-            max-height: 48vh; 
-            width: auto;
-            filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.7));
-            transform: scale(1.1);
-            flex-shrink: 1;
-            margin-bottom: 10px;
+            max-height: 45vh; width: auto;
+            filter: drop-shadow(0 0 35px rgba(212, 175, 55, 0.7));
+            margin-bottom: 5px; flex-shrink: 1; transform: scale(1.1);
         }
 
-        .btn-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            flex-shrink: 0; /* ЗАПРЕЩАЕМ ВЫТАЛКИВАНИЕ */
-            padding-bottom: 20px;
+        .btn-container { display: flex; flex-direction: column; align-items: center; width: 100%; flex-shrink: 0; padding-bottom: 10px; }
+        
+        .btn-gy { 
+            min-width: 260px; padding: 10px; 
+            background: transparent; border: 2px solid var(--gold); color: var(--gold); 
+            cursor: pointer; text-transform: uppercase; font-weight: 900; 
+            margin: 5px 0; font-family: 'Share Tech Mono'; font-size: 13px;
+            transition: 0.3s; 
         }
+        .btn-gy:active { background: var(--gold); color: #000; }
+        .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
 
         .block { 
-            position: fixed; inset: 0; 
-            display: none; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            background: #000; 
-            z-index: 10; opacity: 0; 
-            transition: opacity 0.8s ease-in-out; 
+            position: fixed; inset: 0; display: none; flex-direction: column; 
+            align-items: center; justify-content: center; background: #000; 
+            z-index: 10; opacity: 0; transition: opacity 0.8s ease-in-out; 
         }
         .block.active { display: flex !important; opacity: 1; pointer-events: auto; }
 
-        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 24px; color: var(--gold); text-align: center; max-width: 85%; line-height: 1.2; margin-bottom: 15px; }
-        .btn-gy { min-width: 270px; padding: 14px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; text-transform: uppercase; font-weight: 900; margin: 6px 0; font-family: 'Share Tech Mono'; transition: 0.3s; }
-        .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
+        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 22px; color: var(--gold); text-align: center; max-width: 85%; margin-bottom: 15px; line-height: 1.2; }
+        #main-door { width: 280px; cursor: pointer; transition: 2.5s cubic-bezier(0.4, 0, 0.2, 1); z-index: 9999; }
 
-        #main-door { width: 280px; cursor: pointer; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s; z-index: 9999; }
-
-        /* ЭЛЕМЕНТЫ ХОЛЛА */
-        .id-card-hall { position: absolute; top: 70%; left: 50%; transform: translate(-50%,-50%); width: 240px; padding: 15px; border: 2px solid var(--gold); background: #F5F5DC; border-radius: 12px; display: flex; flex-direction: column; align-items: center; color: #000; z-index: 30; }
-        .box-final { width: 85px; height: 85px; border: 2px solid var(--gold); display: flex; align-items: center; justify-content: center; background: rgba(212,175,55,0.05); }
+        /* IDENTITY & HALL */
+        .box-final { width: 85px; height: 85px; border: 2px solid var(--gold); display: flex; align-items: center; justify-content: center; background: rgba(212,175,55,0.05); overflow: hidden; position: relative; }
+        .id-card-hall { position: absolute; top: 70%; left: 50%; transform: translate(-50%,-50%); width: 250px; padding: 15px; border: 2px solid var(--gold); background: #F5F5DC; border-radius: 12px; display: flex; flex-direction: column; align-items: center; color: #000; z-index: 30; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
     <div id="google_translate_element"></div>
-    <div class="lang-hint" id="l-hint">↑<br>SELECT LANGUAGE</div>
     <div class="ui-header-right">GY-GY</div>
 
     <audio id="snd-door" preload="auto"><source src="door_open.mp3" type="audio/mpeg"></audio>
     <audio id="snd-ambient" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
+    <audio id="snd-pour" preload="auto"><source src="pour_whisky.mp3" type="audio/mpeg"></audio>
+    <audio id="snd-khe" preload="auto"><source src="charlie_bar_fx.mp3" type="audio/mpeg"></audio>
 
-    <div id="block-entrance" class="block active" style="opacity: 1; display: flex; pointer-events: auto;">
+    <div id="block-entrance" class="block active" style="opacity: 1; display: flex;">
         <img src="door_1.jpg" id="main-door" onclick="handleDoor()">
     </div>
 
@@ -110,96 +86,103 @@
         <div class="quote-text">«В каждой шутке есть доля виски»</div>
         <img src="horse_welcome.png" class="golden-glow-horse">
         <div class="btn-container">
-            <div style="font-family: 'Playfair Display'; font-size: 32px; font-weight: 900; letter-spacing: 10px; margin-bottom: 15px; font-style: italic; text-transform: uppercase;">WELCOME</div>
-            <button id="btn-w-hall" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">ПРОХОДИТЕ В ХОЛЛ</button>
-            <button class="btn-gy" onclick="portalTransition('block-identity')">ПОЛУЧИТЬ ID</button>
+            <div style="font-family: 'Playfair Display'; font-size: 30px; font-weight: 900; letter-spacing: 10px; margin-bottom: 10px; font-style: italic; text-transform: uppercase;">WELCOME</div>
+            <button id="btn-w-hall" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">HALLWAY</button>
+            <button class="btn-gy" onclick="portalTransition('block-identity')">GET CLUB ID</button>
         </div>
     </div>
 
     <div id="block-identity" class="block">
         <div class="quote-text">«Шампанского много не бывает»</div>
-        <div style="display:flex; gap:10px; margin-bottom:20px;">
-            <div class="box-final" style="color:var(--gold); font-size:10px; border-color:var(--gold);" id="id-label">#ID</div>
-            <div class="box-final" id="qr-box-reg"></div>
-            <div class="box-final" onclick="document.getElementById('file-input').click()" style="cursor:pointer;">
-                <input type="file" id="file-input" onchange="preview(this)" style="display:none;">
+        <div style="display:flex; gap:10px; margin-bottom:25px;">
+            <div class="box-final" style="font-size:10px; font-weight:bold; text-align:center;" id="id-label">#ID</div>
+            <div class="box-final" id="qr-reg"></div>
+            <div class="box-final" onclick="document.getElementById('file-in').click()" style="cursor:pointer;">
+                <input type="file" id="file-in" onchange="preview(this)" style="display:none;">
                 <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
-                <span id="txt-photo" style="font-size:10px;">PHOTO</span>
+                <span id="txt-ph" style="font-size:10px; font-weight:900;">PHOTO</span>
             </div>
-            <div class="box-final" onclick="generateAvatar()" style="cursor:pointer;">
-                <img id="avatar-img" style="display:none; width:100%; height:100%; object-fit:cover;">
-                <span id="txt-avatar" style="font-size:10px;">AVATAR</span>
+            <div class="box-final" onclick="genAv()" style="cursor:pointer;">
+                <img id="av-img" style="display:none; width:100%; height:100%; object-fit:cover;">
+                <span id="txt-av" style="font-size:10px; font-weight:900;">AVATAR</span>
             </div>
         </div>
         <div class="btn-container">
-            <button id="btn-save" class="btn-gy" onclick="swapButtons('btn-save', 'btn-pass')">СОХРАНИТЬ</button>
-            <button id="btn-pass" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">ПРОЙТИ В ХОЛЛ</button>
+            <button id="btn-save" class="btn-gy" onclick="swapBtns('btn-save', 'btn-pass')">SAVE DATA</button>
+            <button id="btn-pass" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">PROCEED TO HALL</button>
         </div>
     </div>
 
     <div id="block-hall" class="block">
         <div style="position:absolute; inset:0; background:url('hall_bg_jpg.jpg') center/cover; z-index:15;"></div>
+        <div style="position:absolute; top: 6%; width: 100%; text-align: center; color: var(--wood); font-size: 30px; font-weight: 900; font-family: 'Playfair Display'; z-index: 25; font-style: italic;">«Everything will be GY-GY»</div>
         <div class="id-card-hall">
-            <div id="h-id" style="font-weight:900; margin-bottom:10px;">#ID</div>
-            <div style="display:flex; gap:10px; margin-bottom:10px;">
+            <div id="h-id" style="font-weight:900; margin-bottom:10px; font-size:14px; letter-spacing:1px;">#ID</div>
+            <div style="display:flex; gap:10px; margin-bottom:15px;">
                 <div class="box-final" style="border-color:#000;"><img id="h-photo" style="width:100%; height:100%; object-fit:cover;"></div>
                 <div class="box-final" id="h-qr" style="border-color:#000;"></div>
             </div>
-            <button id="btn-confirm" class="btn-gy" style="min-width:100%; border-color:#000; color:#000;" onclick="swapButtons('btn-confirm', 'btn-enter-bar')">ПОДТВЕРДИТЬ</button>
-            <button id="btn-enter-bar" class="btn-gy btn-sleep" style="min-width:100%; border-color:#000; color:#000;" onclick="portalTransition('block-bar')">ВХОД В БАР</button>
+            <button id="btn-conf" class="btn-gy" style="min-width:100%; border-color:#000; color:#000;" onclick="swapBtns('btn-conf', 'btn-bar')">CONFIRM ACCESS</button>
+            <button id="btn-bar" class="btn-gy btn-sleep" style="min-width:100%; border-color:#000; color:#000;" onclick="portalTransition('block-bar')">ENTER THE BAR</button>
         </div>
     </div>
 
-    <div id="block-bar" class="block">
-        <div class="quote-text">«Игого, сейчас начнем!»</div>
-        <img src="horse_bar.png" style="height: 70vh; width: auto; object-fit: contain;">
-        <div class="btn-container">
-            <button class="btn-gy" onclick="portalTransition('block-tables')">ЗА СТОЛИКИ</button>
+    <div id="block-bar" class="block" style="justify-content: flex-end; padding:0;">
+        <div class="quote-text" style="position:absolute; top:10vh; z-index:100; font-size: 28px;">«Cheers! Let's start»</div>
+        <div class="btn-container" style="position:absolute; bottom:5vh; z-index:100;">
+            <button class="btn-gy" style="background:rgba(0,0,0,0.7);" onclick="window.location.href='tables.html'">TABLES</button>
+            <button class="btn-gy" style="background:rgba(0,0,0,0.7);" onclick="portalTransition('block-hall')">BACK TO HALL</button>
         </div>
+        <img src="horse_bar.png" style="height: 75vh; width: auto; object-fit: contain;">
     </div>
 
 <script>
-    // FORCE ENGLISH LOGIC
+    // ПРИНУДИТЕЛЬНАЯ ЛОКАЛИЗАЦИЯ (FORCE ENGLISH)
     (function() {
         const domain = window.location.hostname;
-        // Очистка старых настроек и форсирование EN
-        document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" + domain;
-        document.cookie = "googtrans=/en/en; path=/";
         document.cookie = "googtrans=/en/en; path=/; domain=" + domain;
+        document.cookie = "googtrans=/en/en; path=/";
+        localStorage.setItem('google_translate_lang', 'en');
     })();
 
     let currentID = localStorage.getItem('gy_trace') || "";
 
     function handleDoor() {
         document.getElementById('snd-door').play().catch(()=>{});
-        document.getElementById('main-door').style.transform = "scale(10)";
+        document.getElementById('main-door').style.transform = "scale(12)";
         document.getElementById('main-door').style.opacity = "0";
-        document.getElementById('l-hint').style.display = 'none';
         if (!currentID) {
             currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
             localStorage.setItem('gy_trace', currentID);
         }
-        updateIDUI(currentID);
-        setTimeout(() => { portalTransition('block-welcome'); }, 1500);
+        updateUI(currentID);
+        setTimeout(() => { 
+            portalTransition('block-welcome'); 
+            const amb = document.getElementById('snd-ambient');
+            amb.volume = 0; amb.play(); fadeAudio(amb, 0.6, 2000);
+        }, 1500);
     }
 
-    function updateIDUI(id) {
+    function updateUI(id) {
         document.getElementById('id-label').innerText = id;
         document.getElementById('h-id').innerText = id;
-        document.querySelectorAll("[id*='qr-box'], [id='h-qr']").forEach(el => {
-            el.innerHTML = "";
-            new QRCode(el, { text: id, width: 85, height: 85 });
+        [document.getElementById('qr-reg'), document.getElementById('h-qr')].forEach(el => {
+            el.innerHTML = ""; new QRCode(el, { text: id, width: 85, height: 85 });
         });
     }
 
     function portalTransition(nextId) {
-        document.querySelectorAll('.block').forEach(b => { b.style.opacity = "0"; b.style.pointerEvents = "none"; });
+        const current = document.querySelector('.block.active');
+        if(current) { current.style.opacity = "0"; current.style.pointerEvents = "none"; }
         setTimeout(() => {
-            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
-            const next = document.getElementById(nextId);
-            next.classList.add('active');
-            setTimeout(() => { next.style.opacity = "1"; }, 50);
+            if(current) current.classList.remove('active');
+            const n = document.getElementById(nextId);
+            n.classList.add('active');
+            if(nextId === 'block-bar') {
+                setTimeout(()=>document.getElementById('snd-khe').play(), 800);
+                setTimeout(()=>document.getElementById('snd-pour').play(), 2200);
+            }
+            setTimeout(() => { n.style.opacity = "1"; n.style.pointerEvents = "auto"; }, 50);
         }, 800);
     }
 
@@ -207,26 +190,33 @@
         if(i.files && i.files[0]) {
             const r = new FileReader();
             r.onload = (e) => { 
-                document.getElementById('pp').src = e.target.result; 
-                document.getElementById('pp').style.display = "block";
-                document.getElementById('h-photo').src = e.target.result; 
-                document.getElementById('txt-photo').style.display = "none";
+                document.getElementById('pp').src = e.target.result; document.getElementById('pp').style.display = "block";
+                document.getElementById('h-photo').src = e.target.result; document.getElementById('txt-ph').style.display = "none";
+                document.getElementById('av-img').style.display = "none";
             };
             r.readAsDataURL(i.files[0]);
         }
     }
 
-    function generateAvatar() {
+    function genAv() {
         const url = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${Math.random()}`;
-        document.getElementById('avatar-img').src = url;
-        document.getElementById('avatar-img').style.display = "block";
-        document.getElementById('h-photo').src = url;
-        document.getElementById('txt-avatar').style.display = "none";
+        document.getElementById('av-img').src = url; document.getElementById('av-img').style.display = "block";
+        document.getElementById('h-photo').src = url; document.getElementById('txt-av').style.display = "none";
+        document.getElementById('pp').style.display = "none";
     }
 
-    function swapButtons(a, s) {
+    function swapBtns(a, s) {
         document.getElementById(a).classList.add('btn-sleep');
         document.getElementById(s).classList.remove('btn-sleep');
+    }
+
+    function fadeAudio(audio, target, duration) {
+        let start = audio.volume;
+        let step = (target - start) / (duration / 50);
+        let interval = setInterval(() => {
+            audio.volume = Math.min(Math.max(audio.volume + step, 0), 1);
+            if (Math.abs(audio.volume - target) < 0.05) clearInterval(interval);
+        }, 50);
     }
 
     function googleTranslateElementInit() { 
