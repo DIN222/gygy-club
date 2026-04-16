@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY STUDIO - FIXED CORE 3.6.4</title>
+    <title>GY-GY STUDIO - ULTIMATE FIX  01</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #ffd700; --black: #0a0a0a; }
@@ -43,31 +43,36 @@
             align-items: center; 
             background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
             overflow: hidden;
-            padding: 10px;
+            padding: 20px;
         }
         
-        /* НОВАЯ ЛОГИКА: МЫ МАСШТАБИРУЕМ ВСЁ ЧЕРЕЗ ZOOM */
-        .pult-scaler {
-            /* Контейнер теперь реально сжимается до высоты экрана */
-            height: min(80vh, 1024px); 
-            aspect-ratio: 1 / 1; /* Всегда квадрат */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border: 10px solid #1a1a1a;
-            box-shadow: 0 0 80px rgba(0,0,0,1);
+        /* КОНТЕЙНЕР-ЗАЖИМ */
+        .pult-outer-limits {
+            --target-size: min(75vh, 700px); /* Жестко задаем видимый размер */
+            width: var(--target-size);
+            height: var(--target-size);
             position: relative;
+            overflow: hidden; /* Обрезаем всё, что вылезает */
+            border: 8px solid #1a1a1a;
+            box-shadow: 0 0 80px rgba(0,0,0,1);
             background: #000;
         }
 
         iframe { 
-            /* Фрейм остается большим внутри, но сжимается трансформом под размер родителя */
+            /* Исходный размер пульта */
             width: 1024px; 
             height: 1024px; 
             border: none;
             position: absolute;
-            /* Вычисляем масштаб динамически: текущая высота родителя / 1024 */
-            transform: scale(calc(min(80vh, 1024px) / 1024));
+            
+            /* Центрируем iframe внутри маленького контейнера */
+            top: 50%;
+            left: 50%;
+            
+            /* ВЫЧИСЛЯЕМ МАСШТАБ: (Желаемый размер / 1024) */
+            --scale-factor: calc(var(--target-size) / 1024);
+            transform: translate(-50%, -50%) scale(var(--scale-factor));
+            
             transform-origin: center center;
         }
 
@@ -87,12 +92,12 @@
     </div>
     <div class="logo">GY-GY</div>
     <div class="header-right" style="text-align: right;">
-        <div class="ui-box" style="display: inline-flex; border-color: #444;">V.3.6.4</div>
+        <div class="ui-box" style="display: inline-flex; border-color: #444;">V.3.6.5</div>
     </div>
 </header>
 
 <main>
-    <div class="pult-scaler">
+    <div class="pult-outer-limits">
         <iframe src="pult_reactor_v31.html"></iframe>
     </div>
 </main>
