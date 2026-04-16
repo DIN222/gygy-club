@@ -1,47 +1,40 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="google" content="notranslate">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.83 | FULL RESTORED</title>
+    <title>GY-GY Club v4.4.64 | AVATAR READY</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
         :root { --gold: #d4af37; --door-wood: #3E2723; --violet: #8A2BE2; --neon-glow: rgba(138, 43, 226, 0.6); }
         
-        * { -webkit-tap-highlight-color: transparent !important; -webkit-touch-callout: none !important; outline: none !important; }
+        * { -webkit-tap-highlight-color: transparent !important; -webkit-touch-callout: none !important; -webkit-user-select: none !important; user-select: none !important; outline: none !important; }
         a, button, input { -webkit-appearance: none; outline: none !important; pointer-events: auto !important; }
         img { -webkit-user-drag: none !important; pointer-events: none; border: none !important; }
 
         html, body { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; position: fixed; margin:0; }
         
-        /* ГУГЛ ПАНЕЛЬ И СПИСОК НА АНГЛИЙСКОМ */
         #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000001; pointer-events: auto; }
-        .goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame, .skiptranslate > iframe { display: none !important; }
-        body { top: 0px !important; }
-        .goog-te-gadget .goog-te-combo { 
-            background: #000 !important; 
-            color: var(--gold) !important; 
-            border: 1px solid var(--gold) !important; 
-            padding: 4px; 
-            border-radius: 4px; 
-            font-family: 'Share Tech Mono';
-        }
-
-        .lang-hint { position: fixed; top: 68px; left: 15px; z-index: 1000001; font-size: 10px; color: var(--gold); text-transform: uppercase; animation: blink 2s infinite; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
-
         .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000000; font-size: 24px; letter-spacing: 5px; font-weight: bold; color: var(--gold); pointer-events: none; }
         
-        .ui-back-to-bar { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 1000005; background: rgba(0,0,0,0.85); border: 1px solid var(--gold); color: var(--gold); padding: 12px 24px; cursor: pointer; font-family: 'Share Tech Mono'; font-size: 14px; text-transform: uppercase; display: none; border-radius: 4px; opacity: 0; transition: opacity 0.5s ease; }
+        .ui-back-to-bar { 
+            position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 1000005;
+            background: rgba(0,0,0,0.85); border: 1px solid var(--gold); color: var(--gold);
+            padding: 12px 24px; cursor: pointer; font-family: 'Share Tech Mono'; 
+            font-size: 14px; text-transform: uppercase; display: none; border-radius: 4px; opacity: 0; transition: opacity 0.5s ease;
+        }
 
         .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; z-index: 10; opacity: 0; transition: opacity 0.8s ease-in-out; pointer-events: none; }
         .block.active { display: flex !important; opacity: 1; pointer-events: auto; }
 
-        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 28px; color: var(--gold); text-align: center; max-width: 85%; line-height: 1.3; margin-bottom: 30px; letter-spacing: 1px; }
+        .quote-text { 
+            font-family: 'Playfair Display', serif; font-style: italic; font-size: 28px; color: var(--gold); 
+            text-align: center; max-width: 85%; line-height: 1.3; margin-bottom: 30px; letter-spacing: 1px;
+        }
+
         .btn-gy { min-width: 270px; padding: 14px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; text-transform: uppercase; font-weight: 900; margin: 8px 0; font-family: 'Share Tech Mono'; transition: 0.3s; pointer-events: auto !important; }
         .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
 
@@ -53,24 +46,15 @@
         .box-final { width: 85px; height: 85px; border: 2px solid #000; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
         
         #main-door { width: 280px; cursor: pointer; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s; z-index: 9999; pointer-events: auto !important; }
+        
         #block-tables { background: url('lounge.jpg') no-repeat center bottom / contain #000; }
-    </style>
-    
-    <script>
-        // АВТО-АНГЛИЙСКИЙ ДЛЯ ПАНЕЛИ И СПИСКА ЯЗЫКОВ
-        (function() {
-            const domain = window.location.hostname;
-            document.cookie = "googtrans=/ru/en; path=/; domain=" + domain;
-            document.cookie = "googtrans=/ru/en; path=/";
-        })();
-    </script>
+        </style>
 </head>
 <body oncontextmenu="return false;">
 
     <div id="google_translate_element"></div>
-    <div class="lang-hint">← Select language</div>
     <div class="ui-header-right">GY-GY</div>
-    <button class="ui-back-to-bar" id="btn-global-back" onclick="portalTransition('block-bar')">Back to bar</button>
+    <button class="ui-back-to-bar" id="btn-global-back" onclick="portalTransition('block-bar')">Назад в бар</button>
 
     <audio id="snd-door" preload="auto"><source src="door_open.mp3" type="audio/mpeg"></audio>
     <audio id="snd-ambient" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
@@ -94,11 +78,13 @@
         <div style="display:flex; gap:10px; margin-bottom:25px; align-items:center;">
             <div class="box-final" style="background:transparent; border-color:var(--gold); color:var(--gold); font-size:11px; font-family:'Share Tech Mono';" id="id-label">#ID</div>
             <div class="box-final" id="qr-box-reg" style="border-color:var(--gold);"></div>
+            
             <div class="box-final" style="border-color:var(--gold); position:relative; cursor:pointer;" onclick="document.getElementById('file-input').click()">
                 <input type="file" id="file-input" onchange="preview(this)" style="display:none;">
                 <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
                 <span id="txt-photo" style="color:var(--gold); font-size:10px; font-weight:900;">ФОТО</span>
             </div>
+
             <div class="box-final" style="border-color:var(--gold); cursor:pointer; background:rgba(212,175,55,0.1);" onclick="generateAvatar()">
                 <img id="avatar-img" style="display:none; width:100%; height:100%; object-fit:cover;">
                 <span id="txt-avatar" style="color:var(--gold); font-size:10px; font-weight:900; text-align:center;">GEN<br>AVATAR</span>
@@ -135,83 +121,134 @@
         </div>
         <img src="horse_bar.png" style="height: 80vh; width: auto; object-fit: contain; margin-bottom: -10px;">
     </div>
-
 <script>
     let currentID = "";
 
-    function syncLangWire() {
-        let savedLang = localStorage.getItem('gy_session_lang');
-        const googData = document.cookie.split('; ').find(row => row.startsWith('googtrans='));
-        if (googData) {
-            let activeLang = googData.split('/').pop().toUpperCase();
-            localStorage.setItem('gy_session_lang', activeLang);
-            return activeLang;
-        } else if (savedLang) {
-            const domain = window.location.hostname;
-            document.cookie = `googtrans=/ru/${savedLang.toLowerCase()}; path=/; domain=${domain}`;
-            return savedLang;
-        }
-        return "";
+    // 1. СИНХРОНИЗАЦИЯ ЯЗЫКА
+   function syncLangWire() {
+    let savedLang = localStorage.getItem('gy_session_lang'); // Что мы помним
+    const googData = document.cookie.split('; ').find(row => row.startsWith('googtrans='));
+    
+    if (googData) {
+        // Если панель открыта и язык выбран — обновляем память
+        let activeLang = googData.split('/').pop().toUpperCase();
+        localStorage.setItem('gy_session_lang', activeLang);
+        return activeLang;
+    } else if (savedLang) {
+        // ПАНЕЛЬ ЗАКРЫТА, НО МЫ ПОМНИМ! 
+        // Насильно возвращаем куку гуглу, чтобы он проснулся
+        const domain = window.location.hostname;
+        document.cookie = `googtrans=/ru/${savedLang.toLowerCase()}; path=/; domain=${domain}`;
+        document.cookie = `googtrans=/ru/${savedLang.toLowerCase()}; path=/;`; // На всякий случай без домена
+        return savedLang;
+    }
+    return "";
+}
+
+    // 2. ИНИЦИАЛИЗАЦИЯ (ОДИН БЛОК window.onload)
+ window.onload = () => {
+    // 1. Сначала восстанавливаем лингвистический статус
+    const currentLang = syncLangWire();
+    
+    // 2. Проверяем ID
+    const savedID = localStorage.getItem('gy_trace');
+    if (savedID) {
+        currentID = savedID;
+        updateIDUI(currentID);
+        // Если ID есть И язык (хоть какой-то) — пускаем дальше
+        document.getElementById('btn-w-hall').classList.remove('btn-sleep');
     }
 
-    window.onload = () => {
-        syncLangWire();
-        const savedID = localStorage.getItem('gy_trace');
-        if (savedID) {
-            currentID = savedID;
-            updateIDUI(currentID);
-            document.getElementById('btn-w-hall').classList.remove('btn-sleep');
-        }
-        const entrance = document.getElementById('block-entrance');
-        entrance.style.display = "flex";
-        setTimeout(() => { entrance.style.opacity = "1"; entrance.classList.add('active'); }, 50);
-    };
+    // 3. Показываем дверь
+    const entrance = document.getElementById('block-entrance');
+    entrance.style.display = "flex";
+    setTimeout(() => { entrance.style.opacity = "1"; entrance.classList.add('active'); }, 50);
 
+    // 4. Если язык в памяти был, а панель закрыта — гугл может тупить. 
+    // Перезагрузим виджет через 2 секунды, если перевод не применился
+    if (currentLang && !document.cookie.includes('googtrans')) {
+         console.log("Реанимация языка...");
+         // Можно добавить легкий рефреш, если очень надо, 
+         // но обычно записи куки в пункте выше достаточно.
+    }
+};
+
+    // Вспомогательная функция обновления интерфейса ID
     function updateIDUI(id) {
         document.getElementById('id-label').innerText = id;
         document.getElementById('h-id').innerText = id;
+        
         document.getElementById('qr-box-reg').innerHTML = "";
         new QRCode(document.getElementById("qr-box-reg"), { text: id, width: 85, height: 85 });
+        
         document.getElementById('h-qr').innerHTML = "";
         new QRCode(document.getElementById("h-qr"), { text: id, width: 75, height: 75 });
     }
 
+    // 3. ЛОГИКА ДВЕРИ (handleDoor теперь одна и работает четко)
     function handleDoor() {
         const d = document.getElementById('main-door');
         const snd = document.getElementById('snd-door');
-        if(snd) snd.play().catch(()=>{});
-        d.style.transform = "scale(10)"; d.style.opacity = "0"; d.style.pointerEvents = "none";
+        
+        if(snd) snd.play();
+        
+        // Визуальный эффект
+        d.style.transform = "scale(5)"; 
+        d.style.opacity = "0";
+        d.style.pointerEvents = "none";
+
+        // Генерируем ID, если его нет
         if (!currentID) {
             currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
         }
+        
+        // Сохраняем "цифровой след" и язык
         localStorage.setItem('gy_trace', currentID);
+        syncLangWire(); 
         updateIDUI(currentID);
+
         setTimeout(() => { 
             portalTransition('block-welcome'); 
             const a = document.getElementById('snd-ambient'); 
             if(a) { a.volume = 0; a.play(); fadeAudio(a, 1, 2000); }
-        }, 1500);
+        }, 1800);
     }
 
+    // 4. ПЕРЕХОДЫ МЕЖДУ БЛОКАМИ
     function portalTransition(nextId) {
         if (nextId === 'block-tables') {
             const amb = document.getElementById('snd-ambient');
             if (amb) fadeAudio(amb, 0, 800); 
+
             document.body.style.transition = "opacity 0.8s, filter 0.8s";
             document.body.style.opacity = "0";
             document.body.style.filter = "blur(10px) brightness(0)";
+            
             setTimeout(() => { window.location.href = 'tables.html'; }, 800);
             return; 
         }
+
         const current = document.querySelector('.block.active');
-        if(current) { current.style.opacity = "0"; current.style.pointerEvents = "none"; }
+        if(current) { 
+            current.style.opacity = "0"; 
+            current.style.pointerEvents = "none"; 
+        }
+
         setTimeout(() => {
-            if(current) { current.classList.remove('active'); current.style.display = "none"; }
+            if(current) { 
+                current.classList.remove('active'); 
+                current.style.display = "none"; 
+            }
             const next = document.getElementById(nextId);
             if(!next) return;
+
             next.style.display = "flex";
             setTimeout(() => { 
-                next.classList.add('active'); next.style.opacity = "1"; next.style.pointerEvents = "auto";
+                next.classList.add('active'); 
+                next.style.opacity = "1";
+                next.style.pointerEvents = "auto";
+
+                // Специфические звуки бара
                 if(nextId === 'block-bar') {
                     setTimeout(() => { document.getElementById('snd-khe').play(); }, 800);
                     setTimeout(() => { document.getElementById('snd-pour').play(); }, 2200);
@@ -220,7 +257,7 @@
         }, 800);
     }
 
-    // ВОССТАНОВЛЕННЫЙ ПЕРЕХОД В AI ROOM
+    // AI ROOM Deep Dive
     function deepDive() {
         const amb = document.getElementById('snd-ambient');
         if (amb) fadeAudio(amb, 0, 1200);
@@ -231,7 +268,8 @@
     }
 
     function fadeAudio(audio, target, duration) {
-        const start = audio.volume; const startTime = Date.now();
+        const start = audio.volume; 
+        const startTime = Date.now();
         const interval = setInterval(() => {
             const progress = Math.min((Date.now() - startTime) / duration, 1);
             audio.volume = start + (target - start) * progress;
@@ -239,6 +277,7 @@
         }, 50);
     }
 
+    // ФОТО И АВАТАР
     function preview(i) {
         if(i.files && i.files[0]) {
             const r = new FileReader();
@@ -272,13 +311,10 @@
     }
 
     function googleTranslateElementInit() { 
-        new google.translate.TranslateElement({
-            pageLanguage: 'ru', 
-            layout: google.translate.TranslateElement.InlineLayout.SIMPLE, // Английское меню
-            autoDisplay: false
-        }, 'google_translate_element'); 
+        new google.translate.TranslateElement({pageLanguage: 'ru', autoDisplay: false}, 'google_translate_element'); 
     }
 </script>
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
 </body>
 </html>
