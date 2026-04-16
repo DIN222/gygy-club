@@ -4,21 +4,31 @@
     <meta charset="UTF-8">
     <meta name="google" content="notranslate">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.65 | AVATAR READY</title>
+    <title>GY-GY Club v4.4.66 | AVATAR READY</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
-        /* 1. Блокировка гугл-панели */
-        .skiptranslate, .goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame { display: none !important; }
+        /* 1. Блокировка гугл-панели (кроме самого выбора языка) */
+        .goog-te-banner-frame, 
+        #goog-gt-tt, 
+        .goog-te-balloon-frame,
+        .skiptranslate > iframe { display: none !important; }
+        
+        /* Это правило не трогаем, оно возвращает контент на место */
         body { top: 0px !important; }
 
-        :root { 
-            --gold: #d4af37; 
-            --door-wood: #3E2723; 
-            --violet: #8A2BE2; 
-            --neon-glow: rgba(138, 43, 226, 0.6); 
+        /* Стиль для самого виджета, чтобы он был виден на черном фоне */
+        #google_translate_element { 
+            position: fixed; 
+            top: 15px; 
+            left: 15px; 
+            z-index: 1000001; 
+            pointer-events: auto;
+            border: 1px solid var(--gold);
+            padding: 2px;
+            background: #000;
         }
         
         * { 
