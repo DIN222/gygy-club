@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="google" content="notranslate">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.86 | UI FINAL</title>
+    <title>GY-GY Club v4.4.87 | NO-GRAY EDITION</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -13,12 +13,14 @@
         :root { --gold: #d4af37; --door-wood: #3E2723; }
         
         * { -webkit-tap-highlight-color: transparent !important; -webkit-touch-callout: none !important; outline: none !important; }
-        a, button, input { -webkit-appearance: none; outline: none !important; pointer-events: auto !important; }
-        img { -webkit-user-drag: none !important; pointer-events: none; border: none !important; }
-
-        html, body { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; position: fixed; margin:0; }
         
-        /* ПАНЕЛЬ ЯЗЫКА */
+        /* УБИРАЕМ СЕРУЮ ПОДСВЕТКУ ОТ ГУГЛА */
+        font { background-color: transparent !important; box-shadow: none !important; position: relative !important; }
+        .goog-text-highlight { background-color: transparent !important; box-shadow: none !important; border: none !important; }
+        
+        html, body { width: 100%; height: 100%; background: #000 !important; color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; position: fixed; margin:0; }
+        
+        /* ЯЗЫКОВАЯ ПАНЕЛЬ */
         #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000001; pointer-events: auto; }
         .goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame, .skiptranslate > iframe { display: none !important; }
         body { top: 0px !important; }
@@ -27,20 +29,20 @@
             background: #000 !important; 
             color: var(--gold) !important; 
             border: 1px solid var(--gold) !important; 
-            padding: 4px; 
+            padding: 6px; 
             border-radius: 4px; 
             font-family: 'Share Tech Mono';
+            font-size: 14px;
         }
 
-        /* ПОДСКАЗКА SELECT LANGUAGE СО СТРЕЛКОЙ ВВЕРХ */
         .lang-hint { 
             position: fixed; 
-            top: 48px; 
+            top: 52px; 
             left: 15px; 
             z-index: 1000001; 
             font-size: 11px; 
             color: var(--gold); 
-            width: 130px; 
+            width: 140px; 
             text-align: center;
             animation: blink 2s infinite; 
             line-height: 1.2;
@@ -49,7 +51,6 @@
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
 
         .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000000; font-size: 24px; letter-spacing: 5px; font-weight: bold; color: var(--gold); pointer-events: none; }
-        
         .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; z-index: 10; opacity: 0; transition: opacity 0.8s ease-in-out; pointer-events: none; }
         .block.active { display: flex !important; opacity: 1; pointer-events: auto; }
 
@@ -59,7 +60,6 @@
 
         #main-door { width: 280px; cursor: pointer; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s; z-index: 9999; pointer-events: auto !important; }
         
-        /* Специфические стили для других страниц сохранены */
         .id-card-hall { position: absolute; top: 72%; left: 50%; transform: translate(-50%,-50%); width: 220px; padding: 15px; border: 2px solid var(--gold); background: #F5F5DC; border-radius: 12px; display: flex; flex-direction: column; align-items: center; color: #000; z-index: 30; }
         .box-final { width: 85px; height: 85px; border: 2px solid #000; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
         .bar-ui-container { position: absolute; bottom: 5vh; left: 50%; transform: translateX(-50%); width: 100%; max-width: 380px; z-index: 1000; pointer-events: none; display: flex; flex-direction: column; align-items: center; }
@@ -142,37 +142,11 @@
 <script>
     let currentID = "";
 
-    // Принудительный английский ТОЛЬКО для первой страницы
-    (function() {
-        const domain = window.location.hostname;
-        document.cookie = "googtrans=/ru/en; path=/; domain=" + domain;
-    })();
-
-    window.onload = () => {
-        const savedID = localStorage.getItem('gy_trace');
-        if (savedID) {
-            currentID = savedID;
-            updateIDUI(currentID);
-            document.getElementById('btn-w-hall').classList.remove('btn-sleep');
-        }
-    };
-
-    function updateIDUI(id) {
-        document.getElementById('id-label').innerText = id;
-        document.getElementById('h-id').innerText = id;
-        document.getElementById('qr-box-reg').innerHTML = "";
-        new QRCode(document.getElementById("qr-box-reg"), { text: id, width: 85, height: 85 });
-        document.getElementById('h-qr').innerHTML = "";
-        new QRCode(document.getElementById("h-qr"), { text: id, width: 75, height: 75 });
-    }
-
     function handleDoor() {
         const d = document.getElementById('main-door');
         const snd = document.getElementById('snd-door');
         if(snd) snd.play().catch(()=>{});
         d.style.transform = "scale(10)"; d.style.opacity = "0"; d.style.pointerEvents = "none";
-        
-        // Скрываем подсказку выбора языка после входа
         document.getElementById('l-hint').style.display = 'none';
 
         if (!currentID) {
@@ -187,14 +161,18 @@
         }, 1500);
     }
 
+    function updateIDUI(id) {
+        document.getElementById('id-label').innerText = id;
+        document.getElementById('h-id').innerText = id;
+        document.getElementById('qr-box-reg').innerHTML = "";
+        new QRCode(document.getElementById("qr-box-reg"), { text: id, width: 85, height: 85 });
+        document.getElementById('h-qr').innerHTML = "";
+        new QRCode(document.getElementById("h-qr"), { text: id, width: 75, height: 75 });
+    }
+
     function portalTransition(nextId) {
         if (nextId === 'block-tables') {
-            const amb = document.getElementById('snd-ambient');
-            if (amb) fadeAudio(amb, 0, 800); 
-            document.body.style.transition = "opacity 0.8s, filter 0.8s";
-            document.body.style.opacity = "0";
-            document.body.style.filter = "blur(10px) brightness(0)";
-            setTimeout(() => { window.location.href = 'tables.html'; }, 800);
+            window.location.href = 'tables.html';
             return; 
         }
         const current = document.querySelector('.block.active');
@@ -210,14 +188,7 @@
         }, 800);
     }
 
-    function deepDive() {
-        const amb = document.getElementById('snd-ambient');
-        if (amb) fadeAudio(amb, 0, 1200);
-        document.body.style.transition = "opacity 1.2s, filter 1.2s";
-        document.body.style.opacity = "0";
-        document.body.style.filter = "blur(10px) brightness(0)";
-        setTimeout(() => { window.location.href = 'bridge_protocol.html'; }, 1200);
-    }
+    function deepDive() { window.location.href = 'bridge_protocol.html'; }
 
     function fadeAudio(audio, target, duration) {
         const start = audio.volume; const startTime = Date.now();
@@ -258,9 +229,11 @@
 
     function googleTranslateElementInit() { 
         new google.translate.TranslateElement({
-            pageLanguage: 'ru', 
+            pageLanguage: 'en', // Устанавливаем базу EN, чтобы список был на английском
+            includedLanguages: 'en,ru,fr,de,zh-CN,es,it,ja',
             layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-            autoDisplay: false
+            autoDisplay: false,
+            multilanguagePage: true
         }, 'google_translate_element'); 
     }
 </script>
