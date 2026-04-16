@@ -1,10 +1,11 @@
 
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GY-GY STUDIO - ULTIMATE FIX  01</title>
+    <title>GY-GY STUDIO - SURGICAL FIX 03</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #ffd700; --black: #0a0a0a; }
@@ -30,7 +31,7 @@
         .ui-box { 
             height: 40px; border: 1px solid var(--gold); 
             display: flex; align-items: center; justify-content: center; 
-            padding: 0 15px; color: var(--gold); cursor: pointer; 
+            padding: 0 20px; color: var(--gold); cursor: pointer; 
             font-weight: bold; text-decoration: none; font-size: 14px;
         }
 
@@ -43,37 +44,39 @@
             align-items: center; 
             background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
             overflow: hidden;
-            padding: 20px;
+            padding: 0; /* Убираем падинги, чтобы не мешали */
         }
-        
-        /* КОНТЕЙНЕР-ЗАЖИМ */
-        .pult-outer-limits {
-            --target-size: min(75vh, 700px); /* Жестко задаем видимый размер */
-            width: var(--target-size);
-            height: var(--target-size);
+
+        /* КОНТЕЙНЕР, КОТОРЫЙ ЗАДАЕТ ФИЗИЧЕСКИЙ РАЗМЕР */
+        .pult-container {
+            width: 70vh; /* Ровно 70% от высоты экрана */
+            height: 70vh;
+            max-width: 95vw; /* Чтобы не вылез по ширине */
+            max-height: 95vw;
             position: relative;
-            overflow: hidden; /* Обрезаем всё, что вылезает */
-            border: 8px solid #1a1a1a;
-            box-shadow: 0 0 80px rgba(0,0,0,1);
+            border: 10px solid #1a1a1a;
+            box-shadow: 0 0 100px #000;
             background: #000;
         }
 
+        /* САМА ОБОЛОЧКА IFRAME */
+        .iframe-wrapper {
+            width: 1024px;
+            height: 1024px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            /* Высчитываем масштаб как отношение контейнера к 1024 */
+            transform: scale(calc(70vh / 1024));
+            /* КРИТИЧЕСКИЙ ПАРАМЕТР: масштабируем из левого верхнего угла */
+            transform-origin: 0 0; 
+        }
+
         iframe { 
-            /* Исходный размер пульта */
             width: 1024px; 
             height: 1024px; 
             border: none;
-            position: absolute;
-            
-            /* Центрируем iframe внутри маленького контейнера */
-            top: 50%;
-            left: 50%;
-            
-            /* ВЫЧИСЛЯЕМ МАСШТАБ: (Желаемый размер / 1024) */
-            --scale-factor: calc(var(--target-size) / 1024);
-            transform: translate(-50%, -50%) scale(var(--scale-factor));
-            
-            transform-origin: center center;
+            display: block;
         }
 
         footer { 
@@ -92,13 +95,15 @@
     </div>
     <div class="logo">GY-GY</div>
     <div class="header-right" style="text-align: right;">
-        <div class="ui-box" style="display: inline-flex; border-color: #444;">V.3.6.5</div>
+        <div class="ui-box" style="display: inline-flex; border-color: #444;">V.3.6.6</div>
     </div>
 </header>
 
 <main>
-    <div class="pult-outer-limits">
-        <iframe src="pult_reactor_v31.html"></iframe>
+    <div class="pult-container">
+        <div class="iframe-wrapper">
+            <iframe src="pult_reactor_v31.html"></iframe>
+        </div>
     </div>
 </main>
 
