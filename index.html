@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="google" content="notranslate">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.71 | STABLE REBUILD</title>
+    <title>GY-GY Club v4.4.72 | EN START & SOUND FIXED</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -12,11 +12,10 @@
     <style>
         :root { --gold: #d4af37; --door-wood: #3E2723; }
 
-        /* БЛОКИРОВКА ГУГЛ-МУСОРА */
+        /* GOOGLE CLEANUP */
         .goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame, .skiptranslate > iframe { display: none !important; }
         body { top: 0px !important; margin: 0; background: #000; }
 
-        /* ЯЗЫКОВАЯ ПАНЕЛЬ */
         #google_translate_element { 
             position: fixed; top: 15px; left: 15px; z-index: 1000005; 
             background: rgba(0,0,0,0.9); border: 1px solid var(--gold); 
@@ -28,36 +27,35 @@
             font-size: 12px; outline: none;
         }
 
-        /* ГЕОМЕТРИЯ */
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
         html, body { width: 100%; height: 100vh; color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; }
 
         .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000000; font-size: 24px; letter-spacing: 5px; font-weight: bold; pointer-events: none; }
         
-        /* ГЛАВНЫЙ СТЕК БЛОКОВ */
         .block { 
             position: absolute; inset: 0; display: none; 
             flex-direction: column; align-items: center; justify-content: center; 
-            background: #000; z-index: 10; opacity: 0; transition: opacity 0.5s ease-in-out; 
+            background: #000; z-index: 10; opacity: 0; transition: opacity 0.6s ease-in-out; 
         }
         .block.active { display: flex !important; opacity: 1; pointer-events: auto; }
 
-        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 24px; text-align: center; max-width: 85%; margin-bottom: 20px; line-height: 1.2; }
+        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 24px; text-align: center; max-width: 85%; margin-bottom: 20px; line-height: 1.2; color: var(--gold); }
 
         .btn-gy { 
-            min-width: 270px; padding: 14px; background: transparent; 
+            min-width: 270px; padding: 14px; background: rgba(0,0,0,0.5); 
             border: 2px solid var(--gold); color: var(--gold); 
             cursor: pointer; text-transform: uppercase; font-weight: 900; 
-            font-family: 'Share Tech Mono'; transition: 0.3s; margin: 6px 0;
+            font-family: 'Share Tech Mono'; transition: 0.3s; margin: 8px 0;
+            flex-shrink: 0; /* Чтобы рамки не ломались */
         }
         .btn-sleep { opacity: 0.2 !important; pointer-events: none !important; }
 
-        /* РЕАКТОР (ID КАРТА) - ЖЕСТКАЯ ЦЕНТРОВКА */
+        /* ID CARD (REACTOR) */
         .id-card-hall { 
-            width: 230px; padding: 15px; border: 2px solid var(--gold); 
+            width: 240px; padding: 20px; border: 3px solid var(--gold); 
             background: #F5F5DC; border-radius: 12px; display: flex; 
             flex-direction: column; align-items: center; color: #000; 
-            margin-top: 10px; box-shadow: 0 0 30px rgba(212,175,87,0.3);
+            margin-top: 15px; box-shadow: 0 0 30px rgba(212,175,87,0.5);
             z-index: 100;
         }
         
@@ -65,9 +63,10 @@
 
         #main-door { width: 280px; cursor: pointer; transition: transform 2s, opacity 1s; z-index: 9999; }
         
-        .bar-ui-container { width: 100%; max-width: 360px; padding: 10px; display: flex; flex-direction: column; gap: 10px; }
-        .bar-side-buttons { display: flex; justify-content: space-between; gap: 10px; }
-        .bar-side-buttons button { flex: 1; font-size: 11px; }
+        /* БАРНЫЕ КНОПКИ - ФИКС РАМОК */
+        .bar-ui-container { width: 100%; max-width: 380px; display: flex; flex-direction: column; padding: 0 20px; gap: 5px; }
+        .bar-side-buttons { display: flex; width: 100%; justify-content: center; gap: 15px; }
+        .bar-side-buttons .btn-gy { min-width: 140px; font-size: 11px; margin: 0; }
 
         img { -webkit-user-drag: none; pointer-events: none; }
     </style>
@@ -77,80 +76,97 @@
     <div id="google_translate_element"></div>
     <div class="ui-header-right">GY-GY</div>
 
+    <audio id="snd-door" preload="auto"><source src="door_open.mp3" type="audio/mpeg"></audio>
+    <audio id="snd-ambient" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
+
     <div id="block-entrance" class="block active" style="opacity: 1; display: flex;">
-        <div style="opacity:0; position:absolute;">Добро пожаловать в клуб ГЫ-ГЫ</div>
+        <div style="opacity:0.1; position:absolute; top:20px;">English language initialized</div>
         <img src="door_1.jpg" id="main-door" onclick="handleDoor()" style="pointer-events: auto;">
     </div>
 
     <div id="block-welcome" class="block">
-        <div class="quote-text">«В каждой шутке есть доля виски»</div>
-        <img src="horse_welcome.png" style="max-height: 40vh; margin-bottom: 20px;">
-        <button id="btn-w-hall" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">ПРОХОДИТЕ В ХОЛЛ</button>
-        <button class="btn-gy" onclick="portalTransition('block-identity')">ПОЛУЧИТЬ ID</button>
+        <div class="quote-text">«In every joke there is a drop of whiskey»</div>
+        <img src="horse_welcome.png" style="max-height: 45vh; margin-bottom: 15px;">
+        <button id="btn-w-hall" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">Proceed to Hall</button>
+        <button class="btn-gy" onclick="portalTransition('block-identity')">Get Your ID</button>
     </div>
 
     <div id="block-identity" class="block">
-        <div class="quote-text">«Шампанского много не бывает»</div>
+        <div class="quote-text">«There is never too much champagne»</div>
         <div style="display:flex; gap:10px; margin-bottom:20px;">
-            <div class="box-final" style="background:transparent; border-color:var(--gold); color:var(--gold); font-size:10px;" id="id-label">#ID</div>
+            <div class="box-final" style="background:transparent; border-color:var(--gold); color:var(--gold);" id="id-label">#ID</div>
             <div class="box-final" id="qr-box-reg" style="border-color:var(--gold);"></div>
             <div class="box-final" style="border-color:var(--gold); cursor:pointer; pointer-events:auto;" onclick="document.getElementById('file-input').click()">
                 <input type="file" id="file-input" onchange="preview(this)" style="display:none;">
                 <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
-                <span id="txt-photo" style="font-size:10px;">ФОТО</span>
+                <span id="txt-photo" style="font-size:10px;">PHOTO</span>
             </div>
             <div class="box-final" style="border-color:var(--gold); cursor:pointer; pointer-events:auto;" onclick="generateAvatar()">
                 <img id="avatar-img" style="display:none; width:100%; height:100%; object-fit:cover;">
-                <span id="txt-avatar" style="font-size:10px; text-align:center;">GEN AVATAR</span>
+                <span id="txt-avatar" style="font-size:10px; text-align:center;">AVATAR</span>
             </div>
         </div>
-        <button id="btn-save" class="btn-gy" onclick="swapButtons('btn-save', 'btn-pass')">СОХРАНИТЬ</button>
-        <button id="btn-pass" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">ПРОЙТИ В ХОЛЛ</button>
+        <button id="btn-save" class="btn-gy" onclick="swapButtons('btn-save', 'btn-pass')">Save Identity</button>
+        <button id="btn-pass" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">Enter Hall</button>
     </div>
 
     <div id="block-hall" class="block">
-        <div style="position:absolute; inset:0; background:url('hall_bg_jpg.jpg') center/cover; opacity: 0.5; z-index:-1;"></div>
-        <div style="font-family:'Playfair Display'; font-size:32px; font-weight:900;">GY-GY HALL</div>
+        <div style="position:absolute; inset:0; background:url('hall_bg_jpg.jpg') center/cover; opacity: 0.9; z-index:-1;"></div>
+        <div style="font-family:'Playfair Display'; font-size:32px; font-weight:900; color:#fff; text-shadow: 2px 2px 5px #000;">GY-GY HALL</div>
         <div class="id-card-hall">
             <div id="h-id" style="font-weight:900; margin-bottom:10px; font-size:14px;">#ID</div>
-            <div style="display:flex; gap:10px; margin-bottom:15px;">
+            <div style="display:flex; gap:12px; margin-bottom:12px;">
                 <div class="box-final"><img id="h-photo" style="width:100%; height:100%; object-fit:cover;"></div>
                 <div id="h-qr" class="box-final"></div>
             </div>
-            <button id="btn-confirm" class="btn-gy" style="min-width:100%; border-color:#000; color:#000; padding:10px;" onclick="swapButtons('btn-confirm', 'btn-enter-bar')">ПОДТВЕРДИТЬ</button>
-            <button id="btn-enter-bar" class="btn-gy btn-sleep" style="min-width:100%; border-color:#000; color:#000; padding:10px;" onclick="portalTransition('block-bar')">ВХОД В БАР</button>
+            <button id="btn-confirm" class="btn-gy" style="min-width:100%; border-color:#000; color:#000;" onclick="swapButtons('btn-confirm', 'btn-enter-bar')">Confirm</button>
+            <button id="btn-enter-bar" class="btn-gy btn-sleep" style="min-width:100%; border-color:#000; color:#000;" onclick="portalTransition('block-bar')">Enter Bar</button>
         </div>
     </div>
 
-    <div id="block-bar" class="block" style="justify-content: flex-end;">
-        <div class="quote-text" style="position:absolute; top:8vh;">«Игого, сейчас начнем!»</div>
-        <img src="horse_bar.png" style="height: 70vh; width: auto; object-fit: contain;">
+    <div id="block-bar" class="block" style="justify-content: flex-end; padding-bottom: 20px;">
+        <div class="quote-text" style="position:absolute; top:8vh;">«Igogo, let's get started!»</div>
+        <img src="horse_bar.png" style="height: 65vh; width: auto; object-fit: contain; margin-bottom: -10px;">
         <div class="bar-ui-container">
             <div class="bar-side-buttons">
-                <button class="btn-gy" onclick="window.location.href='tables.html'">ЗА СТОЛИКИ</button>
-                <button class="btn-gy" onclick="window.location.href='bridge_protocol.html'">В AI ROOM</button>
+                <button class="btn-gy" onclick="window.location.href='tables.html'">Tables</button>
+                <button class="btn-gy" onclick="window.location.href='bridge_protocol.html'">AI Room</button>
             </div>
-            <button class="btn-gy" style="width:100%;" onclick="portalTransition('block-hall')">ВЕРНУТЬСЯ В ХОЛЛ</button>
+            <button class="btn-gy" style="min-width:100%;" onclick="portalTransition('block-hall')">Back to Hall</button>
         </div>
     </div>
 
 <script>
     let currentID = "";
 
+    // 1. СТАРТ НА АНГЛИЙСКОМ
+    function setEnglishDefault() {
+        const googCookie = document.cookie.split('; ').find(row => row.startsWith('googtrans='));
+        if (!googCookie) {
+            document.cookie = "googtrans=/ru/en; path=/";
+            document.cookie = "googtrans=/ru/en; domain=" + window.location.hostname + "; path=/";
+        }
+    }
+
     function updateIDUI(id) {
         if(!id) return;
         document.getElementById('id-label').innerText = id;
         document.getElementById('h-id').innerText = id;
-        const qrc = { text: id, width: 85, height: 85 };
         document.getElementById('qr-box-reg').innerHTML = "";
-        new QRCode(document.getElementById("qr-box-reg"), qrc);
+        new QRCode(document.getElementById("qr-box-reg"), { text: id, width: 85, height: 85 });
         document.getElementById('h-qr').innerHTML = "";
-        new QRCode(document.getElementById("h-qr"), qrc);
+        new QRCode(document.getElementById("h-qr"), { text: id, width: 85, height: 85 });
     }
 
     function handleDoor() {
+        const sndD = document.getElementById('snd-door');
+        const sndA = document.getElementById('snd-ambient');
+        if(sndD) sndD.play().catch(()=>{});
+        if(sndA) { sndA.volume = 0.3; sndA.play().catch(()=>{}); }
+
         document.getElementById('main-door').style.transform = "scale(10)";
         document.getElementById('main-door').style.opacity = "0";
+        
         if (!currentID) currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
         localStorage.setItem('gy_trace', currentID);
         updateIDUI(currentID);
@@ -193,6 +209,7 @@
     }
 
     window.onload = () => {
+        setEnglishDefault();
         const saved = localStorage.getItem('gy_trace');
         if(saved) { 
             currentID = saved; 
