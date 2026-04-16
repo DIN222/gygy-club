@@ -4,53 +4,211 @@
     <meta charset="UTF-8">
     <meta name="google" content="notranslate">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.5.80 | CLASSIC BACK</title>
+    <title>GY-GY Club v4.7.0 | FULL SOURCE</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
-        :root { --gold: #d4af37; }
-        * { -webkit-tap-highlight-color: transparent !important; outline: none !important; box-sizing: border-box; }
-        
-        html, body { width: 100%; height: 100%; background: #000 !important; color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; position: fixed; margin:0; }
+        :root {
+            --gold: #d4af37;
+            --wood: #3E2723;
+        }
 
-        /* HEADER & LANG */
-        #ui-top-bar { position: fixed; top: 15px; left: 15px; right: 25px; display: flex; justify-content: space-between; align-items: center; z-index: 1000001; }
-        #google_translate_element { display: flex; align-items: center; min-width: 140px; justify-content: center; }
-        .goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame, .skiptranslate > iframe { display: none !important; }
+        /* RESET & BASE */
+        * {
+            -webkit-tap-highlight-color: transparent !important;
+            outline: none !important;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            background: #000 !important;
+            color: var(--gold);
+            font-family: 'Share Tech Mono', monospace;
+            overflow: hidden;
+            position: fixed;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* ПРЕДОТВРАЩЕНИЕ ВИЗУАЛЬНОГО МУСОРА ГУГЛА */
+        font {
+            background-color: transparent !important;
+            box-shadow: none !important;
+            position: relative !important;
+            display: inline !important;
+        }
+
+        /* HEADER & LANGUAGE PANEL */
+        #ui-top-bar {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            right: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000001;
+        }
+
+        #google_translate_element {
+            display: flex;
+            align-items: center;
+            min-width: 140px;
+            justify-content: center;
+        }
+
+        /* СТИЛЬ ВЫПАДАЮЩЕГО СПИСКА */
+        .goog-te-gadget .goog-te-combo {
+            background: #000 !important;
+            color: var(--gold) !important;
+            border: 1px solid var(--gold) !important;
+            padding: 4px;
+            border-radius: 4px;
+            font-family: 'Share Tech Mono';
+            font-size: 12px;
+            width: 130px;
+        }
+
+        /* СКРЫВАЕМ ПАНЕЛИ ГУГЛА */
+        .goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame, .skiptranslate > iframe {
+            display: none !important;
+        }
         body { top: 0px !important; }
-        
-        .goog-te-gadget .goog-te-combo { 
-            background: #000 !important; color: var(--gold) !important; 
-            border: 1px solid var(--gold) !important; padding: 4px; border-radius: 4px; 
-            font-family: 'Share Tech Mono'; font-size: 12px; width: 130px;
+
+        /* ЦЕНТРИРОВАННАЯ ПОДСКАЗКА ЯЗЫКА */
+        .lang-hint {
+            position: fixed;
+            top: 52px;
+            left: 15px;
+            z-index: 1000001;
+            font-size: 11px;
+            color: var(--gold);
+            width: 140px;
+            text-align: center;
+            animation: blink 2s infinite;
+            font-weight: bold;
+            letter-spacing: 1px;
         }
 
-        .lang-hint { 
-            position: fixed; top: 52px; left: 15px; z-index: 1000001; 
-            font-size: 11px; color: var(--gold); width: 140px; 
-            text-align: center; animation: blink 2s infinite; font-weight: bold; 
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.2; }
         }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
-        .logo-gy { font-size: 24px; letter-spacing: 5px; font-weight: bold; color: var(--gold); }
 
-        /* BLOCKS */
-        .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; z-index: 10; opacity: 0; transition: opacity 0.8s; }
-        .block.active { display: flex !important; opacity: 1; pointer-events: auto; }
+        .logo-gy {
+            font-size: 24px;
+            letter-spacing: 5px;
+            font-weight: bold;
+            color: var(--gold);
+        }
 
-        /* IDENTITY - WHITE BACKGROUND RETURNED */
-        .box-final { width: 85px; height: 85px; border: 2px solid var(--gold); display: flex; align-items: center; justify-content: center; background: #fff !important; overflow: hidden; position: relative; color: #000; }
-        .dynamic-flag { position: absolute; bottom: 2px; right: 2px; font-size: 18px; z-index: 20; filter: drop-shadow(0 0 2px rgba(0,0,0,0.5)); }
+        /* ENGINE OF BLOCKS */
+        .block {
+            position: fixed;
+            inset: 0;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.8s;
+        }
 
-        .btn-gy { min-width: 240px; padding: 10px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; text-transform: uppercase; font-weight: 900; margin: 5px 0; font-family: 'Share Tech Mono'; font-size: 13px; transition: 0.3s; }
-        .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
-        
-        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 22px; color: var(--gold); text-align: center; max-width: 85%; margin-bottom: 15px; }
-        .golden-glow-horse { max-height: 45vh; width: auto; filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.7)); margin-bottom: 10px; }
-        .id-card-hall { position: absolute; top: 70%; left: 50%; transform: translate(-50%,-50%); width: 250px; padding: 15px; border: 2px solid var(--gold); background: #F5F5DC; border-radius: 12px; display: flex; flex-direction: column; align-items: center; color: #000; z-index: 30; }
+        .block.active {
+            display: flex !important;
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* IDENTITY BLOCKS - REAL WHITE BACKGROUNDS */
+        .box-final {
+            width: 85px;
+            height: 85px;
+            border: 2px solid var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #FFFFFF !important; /* Чистый белый */
+            overflow: hidden;
+            position: relative;
+            color: #000;
+        }
+
+        .dynamic-flag {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            font-size: 18px;
+            z-index: 20;
+            filter: drop-shadow(0 0 2px rgba(0,0,0,0.5));
+        }
+
+        /* BUTTONS */
+        .btn-gy {
+            min-width: 240px;
+            padding: 10px;
+            background: transparent;
+            border: 2px solid var(--gold);
+            color: var(--gold);
+            cursor: pointer;
+            text-transform: uppercase;
+            font-weight: 900;
+            margin: 5px 0;
+            font-family: 'Share Tech Mono';
+            font-size: 13px;
+            transition: 0.3s;
+        }
+
+        .btn-sleep {
+            opacity: 0.15 !important;
+            pointer-events: none !important;
+        }
+
+        /* TEXTS & IMAGES */
+        .quote-text {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 22px;
+            color: var(--gold);
+            text-align: center;
+            max-width: 85%;
+            margin-bottom: 15px;
+        }
+
+        .golden-glow-horse {
+            max-height: 45vh;
+            width: auto;
+            filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.7));
+            margin-bottom: 10px;
+        }
+
+        /* HALLWAY ID CARD */
+        .id-card-hall {
+            position: absolute;
+            top: 70%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            width: 250px;
+            padding: 15px;
+            border: 2px solid var(--gold);
+            background: #F5F5DC;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #000;
+            z-index: 30;
+        }
     </style>
 </head>
-<body>
+<body oncontextmenu="return false;">
 
     <div id="ui-top-bar">
         <div id="google_translate_element"></div>
@@ -64,12 +222,13 @@
     <audio id="snd-khe" preload="auto"><source src="charlie_bar_fx.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active" style="opacity: 1; display: flex;">
-        <img src="door_1.jpg" id="main-door" onclick="handleDoor()" style="width:280px; cursor:pointer; transition:2.5s;">
+        <img src="door_1.jpg" id="main-door" onclick="handleDoor()" style="width:280px; cursor:pointer; transition:2.5s cubic-bezier(0.4, 0, 0.2, 1);">
     </div>
 
     <div id="block-welcome" class="block">
         <div class="quote-text">«In every joke there's a drop of whiskey»</div>
         <img src="horse_welcome.png" class="golden-glow-horse">
+        <div style="font-family: 'Playfair Display'; font-size: 30px; font-weight: 900; letter-spacing: 10px; margin-bottom: 10px; font-style: italic;">WELCOME</div>
         <button id="btn-w-hall" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">HALLWAY</button>
         <button class="btn-gy" onclick="portalTransition('block-identity')">GET CLUB ID</button>
     </div>
@@ -100,117 +259,158 @@
     <div id="block-hall" class="block">
         <div style="position:absolute; inset:0; background:url('hall_bg_jpg.jpg') center/cover; z-index:15;"></div>
         <div class="id-card-hall">
-            <div id="h-id" style="font-weight:900; margin-bottom:10px;">#ID</div>
+            <div id="h-id" style="font-weight:900; margin-bottom:10px; font-size:14px;">#ID</div>
             <div style="display:flex; gap:10px; margin-bottom:15px;">
-                <div class="box-final" style="border-color:#000;"><img id="h-photo" style="width:100%; height:100%; object-fit:cover;"><div class="dynamic-flag">🌐</div></div>
-                <div class="box-final" id="h-qr" style="border-color:#000;"></div>
+                <div class="box-final" style="border-color:#000; background: #fff !important;">
+                    <img id="h-photo" style="width:100%; height:100%; object-fit:cover;">
+                    <div class="dynamic-flag" style="bottom:0; right:0;">🌐</div>
+                </div>
+                <div class="box-final" id="h-qr" style="border-color:#000; background: #fff !important;"></div>
             </div>
-            <button id="btn-conf" class="btn-gy" style="border-color:#000; color:#000;" onclick="swapBtns('btn-conf', 'btn-bar')">CONFIRM</button>
-            <button id="btn-bar" class="btn-gy btn-sleep" style="border-color:#000; color:#000;" onclick="portalTransition('block-bar')">ENTER BAR</button>
+            <button id="btn-conf" class="btn-gy" style="border-color:#000; color:#000;" onclick="swapBtns('btn-conf', 'btn-bar')">CONFIRM ACCESS</button>
+            <button id="btn-bar" class="btn-gy btn-sleep" style="border-color:#000; color:#000;" onclick="portalTransition('block-bar')">ENTER THE BAR</button>
         </div>
     </div>
 
     <div id="block-bar" class="block">
         <div class="quote-text" style="margin-bottom: 20px;">«Cheers! Let's start»</div>
         <img src="horse_bar.png" style="height: 55vh; margin-bottom: 20px;">
-        <div class="btn-container">
+        <div class="btn-container" style="display: flex; flex-direction: column; align-items: center;">
             <button class="btn-gy" onclick="window.location.href='tables.html'">TABLES</button>
             <button class="btn-gy" onclick="portalTransition('block-hall')">BACK TO HALL</button>
         </div>
     </div>
 
-<script>
-    const flags = { 'en': '🇬🇧', 'ru': '🇷🇺', 'uk': '🇺🇦', 'pl': '🇵🇱', 'fr': '🇫🇷', 'de': '🇩🇪', 'zh-CN': '🇨🇳', 'es': '🇪🇸', 'it': '🇮🇹' };
-    const langNames = { 'ru': 'Russian', 'uk': 'Ukrainian', 'en': 'English', 'pl': 'Polish', 'fr': 'French', 'de': 'German', 'zh-CN': 'Chinese', 'es': 'Spanish', 'it': 'Italian' };
+    <script>
+        // --- LANGUAGE LOGIC ---
+        const flags = {
+            'en': '🇬🇧', 'ru': '🇷🇺', 'uk': '🇺🇦', 'pl': '🇵🇱', 
+            'fr': '🇫🇷', 'de': '🇩🇪', 'zh-CN': '🇨🇳', 'es': '🇪🇸', 'it': '🇮🇹'
+        };
 
-    function forceEnglishMenu() {
-        const select = document.querySelector('.goog-te-combo');
-        if (select) {
-            Array.from(select.options).forEach(opt => {
-                if(langNames[opt.value]) opt.text = langNames[opt.value];
+        const langNames = {
+            'ru': 'Russian', 'uk': 'Ukrainian', 'en': 'English', 'pl': 'Polish', 
+            'fr': 'French', 'de': 'German', 'zh-CN': 'Chinese', 'es': 'Spanish', 'it': 'Italian'
+        };
+
+        function forceEnglishMenu() {
+            const select = document.querySelector('.goog-te-combo');
+            if (select) {
+                Array.from(select.options).forEach(option => {
+                    if (langNames[option.value]) {
+                        option.text = langNames[option.value];
+                    }
+                });
+            }
+        }
+
+        function googleTranslateElementInit() { 
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'en,ru,uk,pl,fr,de,zh-CN,es,it',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element'); 
+            
+            // Наблюдатель за изменениями для принудительного перевода меню
+            const observer = new MutationObserver(() => {
+                forceEnglishMenu();
+                const select = document.querySelector('.goog-te-combo');
+                if (select) {
+                    select.addEventListener('change', () => {
+                        const emoji = flags[select.value] || '🌐';
+                        document.querySelectorAll('.dynamic-flag').forEach(el => el.innerText = emoji);
+                    });
+                }
+            });
+            observer.observe(document.body, { childList: true, subtree: true });
+        }
+
+        // --- CORE CLUB LOGIC ---
+        let currentID = localStorage.getItem('gy_trace') || "";
+
+        function handleDoor() {
+            document.getElementById('snd-door').play().catch(()=>{});
+            const door = document.getElementById('main-door');
+            door.style.transform = "scale(10)";
+            door.style.opacity = "0";
+            document.getElementById('l-hint').style.display = 'none';
+
+            if (!currentID) {
+                currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
+                localStorage.setItem('gy_trace', currentID);
+            }
+            updateUI(currentID);
+
+            setTimeout(() => { 
+                portalTransition('block-welcome'); 
+                document.getElementById('snd-ambient').play();
+            }, 1500);
+        }
+
+        function updateUI(id) {
+            document.getElementById('id-label').innerText = id;
+            document.getElementById('h-id').innerText = id;
+            const qrTargets = [document.getElementById('qr-reg'), document.getElementById('h-qr')];
+            qrTargets.forEach(el => {
+                el.innerHTML = "";
+                new QRCode(el, { text: id, width: 85, height: 85 });
             });
         }
-    }
 
-    function googleTranslateElementInit() { 
-        new google.translate.TranslateElement({
-            pageLanguage: 'en',
-            includedLanguages: 'en,ru,uk,pl,fr,de,zh-CN,es,it',
-            layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-            autoDisplay: false
-        }, 'google_translate_element'); 
-        
-        let itv = setInterval(() => {
-            const s = document.querySelector('.goog-te-combo');
-            if(s) {
-                forceEnglishMenu();
-                s.addEventListener('change', () => {
-                    const emoji = flags[s.value] || '🌐';
-                    document.querySelectorAll('.dynamic-flag').forEach(el => el.innerText = emoji);
-                });
-                clearInterval(itv);
+        function portalTransition(nextId) {
+            const active = document.querySelector('.block.active');
+            if (active) {
+                active.style.opacity = "0";
+                active.style.pointerEvents = "none";
             }
-        }, 150);
-    }
-
-    let currentID = localStorage.getItem('gy_trace') || "";
-    function handleDoor() {
-        document.getElementById('snd-door').play().catch(()=>{});
-        document.getElementById('main-door').style.transform = "scale(10)";
-        document.getElementById('main-door').style.opacity = "0";
-        document.getElementById('l-hint').style.display = 'none';
-        if (!currentID) {
-            currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
-            localStorage.setItem('gy_trace', currentID);
+            
+            setTimeout(() => {
+                if (active) active.classList.remove('active');
+                const next = document.getElementById(nextId);
+                next.classList.add('active');
+                
+                if (nextId === 'block-bar') {
+                    setTimeout(() => document.getElementById('snd-khe').play(), 800);
+                    setTimeout(() => document.getElementById('snd-pour').play(), 1800);
+                }
+                
+                setTimeout(() => {
+                    next.style.opacity = "1";
+                    next.style.pointerEvents = "auto";
+                }, 50);
+            }, 800);
         }
-        updateUI(currentID);
-        setTimeout(() => { portalTransition('block-welcome'); document.getElementById('snd-ambient').play(); }, 1500);
-    }
 
-    function updateUI(id) {
-        document.getElementById('id-label').innerText = id;
-        document.getElementById('h-id').innerText = id;
-        [document.getElementById('qr-reg'), document.getElementById('h-qr')].forEach(el => {
-            el.innerHTML = ""; new QRCode(el, { text: id, width: 85, height: 85 });
-        });
-    }
-
-    function portalTransition(nextId) {
-        const active = document.querySelector('.block.active');
-        if(active) { active.style.opacity = "0"; active.style.pointerEvents = "none"; }
-        setTimeout(() => {
-            if(active) active.classList.remove('active');
-            const n = document.getElementById(nextId);
-            n.classList.add('active');
-            if(nextId === 'block-bar') {
-                setTimeout(()=>document.getElementById('snd-khe').play(), 800);
-                setTimeout(()=>document.getElementById('snd-pour').play(), 1800);
+        function preview(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) { 
+                    document.getElementById('pp').src = e.target.result;
+                    document.getElementById('pp').style.display = "block";
+                    document.getElementById('h-photo').src = e.target.result;
+                    document.getElementById('txt-ph').style.display = "none";
+                    document.getElementById('av-img').style.display = "none";
+                };
+                reader.readAsDataURL(input.files[0]);
             }
-            setTimeout(() => { n.style.opacity = "1"; n.style.pointerEvents = "auto"; }, 50);
-        }, 800);
-    }
-
-    function preview(i) {
-        if(i.files && i.files[0]) {
-            const r = new FileReader();
-            r.onload = (e) => { 
-                document.getElementById('pp').src = e.target.result; document.getElementById('pp').style.display = "block";
-                document.getElementById('h-photo').src = e.target.result; document.getElementById('txt-ph').style.display = "none";
-                document.getElementById('av-img').style.display = "none";
-            };
-            r.readAsDataURL(i.files[0]);
         }
-    }
 
-    function genAv() {
-        const url = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${Math.random()}`;
-        document.getElementById('av-img').src = url; document.getElementById('av-img').style.display = "block";
-        document.getElementById('h-photo').src = url; document.getElementById('txt-av').style.display = "none";
-        document.getElementById('pp').style.display = "none";
-    }
+        function genAv() {
+            const url = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${Math.random()}`;
+            document.getElementById('av-img').src = url;
+            document.getElementById('av-img').style.display = "block";
+            document.getElementById('h-photo').src = url;
+            document.getElementById('txt-av').style.display = "none";
+            document.getElementById('pp').style.display = "none";
+        }
 
-    function swapBtns(a, s) { document.getElementById(a).classList.add('btn-sleep'); document.getElementById(s).classList.remove('btn-sleep'); }
-</script>
-<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+        function swapBtns(active, sleep) {
+            document.getElementById(active).classList.add('btn-sleep');
+            document.getElementById(sleep).classList.remove('btn-sleep');
+        }
+    </script>
+    
+    <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
