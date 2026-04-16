@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="google" content="notranslate">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.5.20 | MEGA FAT EDITION</title>
+    <title>GY-GY Club v4.5.40 | FLAG EMBEDDED</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -12,7 +12,6 @@
         :root { --gold: #d4af37; --wood: #3E2723; }
         * { -webkit-tap-highlight-color: transparent !important; outline: none !important; box-sizing: border-box; }
         
-        /* КИЛЛЕР СЕРЫХ ПЯТЕН GOOGLE */
         font { background-color: transparent !important; box-shadow: none !important; position: relative !important; display: inline !important; }
         .goog-text-highlight { background-color: transparent !important; box-shadow: none !important; border: none !important; }
         
@@ -21,57 +20,64 @@
             font-family: 'Share Tech Mono', monospace; overflow: hidden; position: fixed; margin:0; 
         }
 
-        /* ЯЗЫКОВОЙ ВИДЖЕТ */
-        #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000001; }
+        /* TOP NAVIGATION PANEL */
+        #ui-top-bar { position: fixed; top: 15px; left: 15px; right: 25px; display: flex; justify-content: space-between; align-items: center; z-index: 1000001; }
+        #google_translate_element { display: flex; align-items: center; }
         .goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame, .skiptranslate > iframe { display: none !important; }
         body { top: 0px !important; }
         
         .goog-te-gadget .goog-te-combo { 
             background: #000 !important; color: var(--gold) !important; 
-            border: 1px solid var(--gold) !important; padding: 6px; border-radius: 4px; 
-            font-family: 'Share Tech Mono'; font-size: 14px;
+            border: 1px solid var(--gold) !important; padding: 4px; border-radius: 4px; 
+            font-family: 'Share Tech Mono'; font-size: 12px;
         }
 
-        .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000000; font-size: 24px; letter-spacing: 5px; font-weight: bold; color: var(--gold); pointer-events: none; }
-        
-        /* WELCOME & HORSE */
+        .lang-hint { 
+            position: fixed; top: 52px; left: 15px; z-index: 1000001; 
+            font-size: 10px; color: var(--gold); animation: blink 2s infinite; font-weight: bold;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+
+        .logo-gy { font-size: 24px; letter-spacing: 5px; font-weight: bold; color: var(--gold); }
+
+        /* HORSE & WELCOME */
         .golden-glow-horse {
             max-height: 45vh; width: auto;
             filter: drop-shadow(0 0 35px rgba(212, 175, 55, 0.7));
             margin-bottom: 5px; flex-shrink: 1; transform: scale(1.1);
         }
-
         .btn-container { display: flex; flex-direction: column; align-items: center; width: 100%; flex-shrink: 0; padding-bottom: 10px; }
-        
         .btn-gy { 
-            min-width: 260px; padding: 10px; 
-            background: transparent; border: 2px solid var(--gold); color: var(--gold); 
-            cursor: pointer; text-transform: uppercase; font-weight: 900; 
-            margin: 5px 0; font-family: 'Share Tech Mono'; font-size: 13px;
-            transition: 0.3s; 
+            min-width: 250px; padding: 10px; background: transparent; border: 2px solid var(--gold); color: var(--gold); 
+            cursor: pointer; text-transform: uppercase; font-weight: 900; margin: 5px 0; font-family: 'Share Tech Mono'; font-size: 13px; transition: 0.3s; 
         }
-        .btn-gy:active { background: var(--gold); color: #000; }
         .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
 
-        .block { 
-            position: fixed; inset: 0; display: none; flex-direction: column; 
-            align-items: center; justify-content: center; background: #000; 
-            z-index: 10; opacity: 0; transition: opacity 0.8s ease-in-out; 
-        }
+        .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; z-index: 10; opacity: 0; transition: opacity 0.8s ease-in-out; }
         .block.active { display: flex !important; opacity: 1; pointer-events: auto; }
 
-        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 22px; color: var(--gold); text-align: center; max-width: 85%; margin-bottom: 15px; line-height: 1.2; }
-        #main-door { width: 280px; cursor: pointer; transition: 2.5s cubic-bezier(0.4, 0, 0.2, 1); z-index: 9999; }
+        /* IDENTITY BOXES WITH EMBEDDED FLAG */
+        .box-final { 
+            width: 85px; height: 85px; border: 2px solid var(--gold); display: flex; align-items: center; justify-content: center; 
+            background: rgba(212,175,55,0.05) !important; overflow: hidden; position: relative; 
+        }
+        /* Тот самый Флаг/Планета, прикрепленный к аватару */
+        .avatar-flag {
+            position: absolute; bottom: 2px; right: 2px; font-size: 16px; 
+            z-index: 5; filter: drop-shadow(0 0 2px #000);
+        }
 
-        /* IDENTITY & HALL */
-        .box-final { width: 85px; height: 85px; border: 2px solid var(--gold); display: flex; align-items: center; justify-content: center; background: rgba(212,175,55,0.05); overflow: hidden; position: relative; }
         .id-card-hall { position: absolute; top: 70%; left: 50%; transform: translate(-50%,-50%); width: 250px; padding: 15px; border: 2px solid var(--gold); background: #F5F5DC; border-radius: 12px; display: flex; flex-direction: column; align-items: center; color: #000; z-index: 30; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
+        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 22px; color: var(--gold); text-align: center; max-width: 85%; margin-bottom: 15px; }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
-    <div id="google_translate_element"></div>
-    <div class="ui-header-right">GY-GY</div>
+    <div id="ui-top-bar">
+        <div id="google_translate_element"></div>
+        <div class="logo-gy">GY-GY</div>
+    </div>
+    <div class="lang-hint" id="l-hint">↑ SELECT LANG</div>
 
     <audio id="snd-door" preload="auto"><source src="door_open.mp3" type="audio/mpeg"></audio>
     <audio id="snd-ambient" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
@@ -79,32 +85,36 @@
     <audio id="snd-khe" preload="auto"><source src="charlie_bar_fx.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active" style="opacity: 1; display: flex;">
-        <img src="door_1.jpg" id="main-door" onclick="handleDoor()">
+        <img src="door_1.jpg" id="main-door" onclick="handleDoor()" style="width:280px; cursor:pointer; transition:2.5s cubic-bezier(0.4, 0, 0.2, 1);">
     </div>
 
-    <div id="block-welcome" class="block" style="justify-content: flex-start; padding-top: 5vh;">
-        <div class="quote-text">«В каждой шутке есть доля виски»</div>
+    <div id="block-welcome" class="block" style="justify-content: flex-start; padding-top: 8vh;">
+        <div class="quote-text">«In every joke there's a drop of whiskey»</div>
         <img src="horse_welcome.png" class="golden-glow-horse">
         <div class="btn-container">
-            <div style="font-family: 'Playfair Display'; font-size: 30px; font-weight: 900; letter-spacing: 10px; margin-bottom: 10px; font-style: italic; text-transform: uppercase;">WELCOME</div>
+            <div style="font-family: 'Playfair Display'; font-size: 30px; font-weight: 900; letter-spacing: 10px; margin-bottom: 10px; font-style: italic;">WELCOME</div>
             <button id="btn-w-hall" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">HALLWAY</button>
             <button class="btn-gy" onclick="portalTransition('block-identity')">GET CLUB ID</button>
         </div>
     </div>
 
     <div id="block-identity" class="block">
-        <div class="quote-text">«Шампанского много не бывает»</div>
+        <div class="quote-text">«Never too much champagne»</div>
         <div style="display:flex; gap:10px; margin-bottom:25px;">
-            <div class="box-final" style="font-size:10px; font-weight:bold; text-align:center;" id="id-label">#ID</div>
+            <div class="box-final" id="id-label" style="font-size:10px; font-weight:bold; color:var(--gold);">#ID</div>
             <div class="box-final" id="qr-reg"></div>
+            
             <div class="box-final" onclick="document.getElementById('file-in').click()" style="cursor:pointer;">
                 <input type="file" id="file-in" onchange="preview(this)" style="display:none;">
                 <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
                 <span id="txt-ph" style="font-size:10px; font-weight:900;">PHOTO</span>
+                <div class="avatar-flag">🌐</div>
             </div>
+
             <div class="box-final" onclick="genAv()" style="cursor:pointer;">
                 <img id="av-img" style="display:none; width:100%; height:100%; object-fit:cover;">
                 <span id="txt-av" style="font-size:10px; font-weight:900;">AVATAR</span>
+                <div class="avatar-flag">🌐</div>
             </div>
         </div>
         <div class="btn-container">
@@ -115,12 +125,14 @@
 
     <div id="block-hall" class="block">
         <div style="position:absolute; inset:0; background:url('hall_bg_jpg.jpg') center/cover; z-index:15;"></div>
-        <div style="position:absolute; top: 6%; width: 100%; text-align: center; color: var(--wood); font-size: 30px; font-weight: 900; font-family: 'Playfair Display'; z-index: 25; font-style: italic;">«Everything will be GY-GY»</div>
         <div class="id-card-hall">
-            <div id="h-id" style="font-weight:900; margin-bottom:10px; font-size:14px; letter-spacing:1px;">#ID</div>
+            <div id="h-id" style="font-weight:900; margin-bottom:10px; font-size:14px;">#ID</div>
             <div style="display:flex; gap:10px; margin-bottom:15px;">
-                <div class="box-final" style="border-color:#000;"><img id="h-photo" style="width:100%; height:100%; object-fit:cover;"></div>
-                <div class="box-final" id="h-qr" style="border-color:#000;"></div>
+                <div class="box-final" style="border-color:#000; background:rgba(0,0,0,0.1) !important;">
+                    <img id="h-photo" style="width:100%; height:100%; object-fit:cover;">
+                    <div class="avatar-flag" style="bottom:0; right:0;">🌐</div>
+                </div>
+                <div class="box-final" id="h-qr" style="border-color:#000; background:rgba(0,0,0,0.1) !important;"></div>
             </div>
             <button id="btn-conf" class="btn-gy" style="min-width:100%; border-color:#000; color:#000;" onclick="swapBtns('btn-conf', 'btn-bar')">CONFIRM ACCESS</button>
             <button id="btn-bar" class="btn-gy btn-sleep" style="min-width:100%; border-color:#000; color:#000;" onclick="portalTransition('block-bar')">ENTER THE BAR</button>
@@ -128,16 +140,15 @@
     </div>
 
     <div id="block-bar" class="block" style="justify-content: flex-end; padding:0;">
-        <div class="quote-text" style="position:absolute; top:10vh; z-index:100; font-size: 28px;">«Cheers! Let's start»</div>
+        <div class="quote-text" style="position:absolute; top:12vh; z-index:100; font-size: 28px;">«Cheers! Let's start»</div>
+        <img src="horse_bar.png" style="height: 75vh; width: auto; object-fit: contain;">
         <div class="btn-container" style="position:absolute; bottom:5vh; z-index:100;">
             <button class="btn-gy" style="background:rgba(0,0,0,0.7);" onclick="window.location.href='tables.html'">TABLES</button>
             <button class="btn-gy" style="background:rgba(0,0,0,0.7);" onclick="portalTransition('block-hall')">BACK TO HALL</button>
         </div>
-        <img src="horse_bar.png" style="height: 75vh; width: auto; object-fit: contain;">
     </div>
 
 <script>
-    // ПРИНУДИТЕЛЬНАЯ ЛОКАЛИЗАЦИЯ (FORCE ENGLISH)
     (function() {
         const domain = window.location.hostname;
         document.cookie = "googtrans=/en/en; path=/; domain=" + domain;
@@ -149,8 +160,9 @@
 
     function handleDoor() {
         document.getElementById('snd-door').play().catch(()=>{});
-        document.getElementById('main-door').style.transform = "scale(12)";
-        document.getElementById('main-door').style.opacity = "0";
+        const door = document.getElementById('main-door');
+        door.style.transform = "scale(12)"; door.style.opacity = "0";
+        document.getElementById('l-hint').style.display = 'none';
         if (!currentID) {
             currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
             localStorage.setItem('gy_trace', currentID);
@@ -158,8 +170,7 @@
         updateUI(currentID);
         setTimeout(() => { 
             portalTransition('block-welcome'); 
-            const amb = document.getElementById('snd-ambient');
-            amb.volume = 0; amb.play(); fadeAudio(amb, 0.6, 2000);
+            const amb = document.getElementById('snd-ambient'); amb.volume = 0; amb.play(); fadeAudio(amb, 0.5, 2000);
         }, 1500);
     }
 
@@ -205,14 +216,10 @@
         document.getElementById('pp').style.display = "none";
     }
 
-    function swapBtns(a, s) {
-        document.getElementById(a).classList.add('btn-sleep');
-        document.getElementById(s).classList.remove('btn-sleep');
-    }
+    function swapBtns(a, s) { document.getElementById(a).classList.add('btn-sleep'); document.getElementById(s).classList.remove('btn-sleep'); }
 
     function fadeAudio(audio, target, duration) {
-        let start = audio.volume;
-        let step = (target - start) / (duration / 50);
+        let step = (target - audio.volume) / (duration / 50);
         let interval = setInterval(() => {
             audio.volume = Math.min(Math.max(audio.volume + step, 0), 1);
             if (Math.abs(audio.volume - target) < 0.05) clearInterval(interval);
@@ -226,6 +233,14 @@
             layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
             autoDisplay: false
         }, 'google_translate_element'); 
+        
+        setTimeout(() => {
+            const select = document.querySelector('.goog-te-combo');
+            if(select && select.value !== 'en') {
+                select.value = 'en';
+                select.dispatchEvent(new Event('change'));
+            }
+        }, 1200);
     }
 </script>
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
