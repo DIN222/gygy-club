@@ -1,11 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="google" content="notranslate">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.96 | GOLDEN HORSE</title>
+    <title>GY-GY Club v4.4.98 | TOTAL FAT EDITION</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -59,13 +58,14 @@
 
         .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000000; font-size: 24px; letter-spacing: 5px; font-weight: bold; color: var(--gold); pointer-events: none; }
         
-        /* ГРАДИЕНТНЫЙ КОНЬ */
-        .golden-horse {
-            max-height: 40vh; /* Чтобы не вылетало за экран */
+        /* КРУПНЫЙ КОНЬ С ЧИСТЫМ ОРЕОЛОМ */
+        .golden-glow-horse {
+            max-height: 55vh; 
             width: auto;
-            margin-bottom: 10px;
-            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5)) sepia(100%) saturate(300%) hue-rotate(-10deg) brightness(1.1);
-            transition: 0.5s;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.8));
+            transform: scale(1.15);
+            transition: 0.5s ease;
         }
 
         .block { 
@@ -82,18 +82,21 @@
         }
         .block.active { display: flex !important; opacity: 1; pointer-events: auto; }
 
-        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 26px; color: var(--gold); text-align: center; max-width: 85%; line-height: 1.3; margin-bottom: 20px; letter-spacing: 1px; }
+        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 26px; color: var(--gold); text-align: center; max-width: 85%; line-height: 1.3; margin-bottom: 25px; letter-spacing: 1px; }
         .btn-gy { min-width: 270px; padding: 14px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; text-transform: uppercase; font-weight: 900; margin: 8px 0; font-family: 'Share Tech Mono'; transition: 0.3s; pointer-events: auto !important; }
+        .btn-gy:active { background: var(--gold); color: #000; }
         .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
 
         #main-door { width: 280px; cursor: pointer; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s; z-index: 9999; }
 
+        /* ИДЕНТИФИКАЦИЯ */
         .box-final { width: 85px; height: 85px; border: 2px solid var(--gold); display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; background: rgba(212,175,55,0.05); }
-        .id-card-hall { position: absolute; top: 72%; left: 50%; transform: translate(-50%,-50%); width: 230px; padding: 15px; border: 2px solid var(--gold); background: #F5F5DC; border-radius: 12px; display: flex; flex-direction: column; align-items: center; color: #000; z-index: 30; }
+        .id-card-hall { position: absolute; top: 72%; left: 50%; transform: translate(-50%,-50%); width: 240px; padding: 15px; border: 2px solid var(--gold); background: #F5F5DC; border-radius: 12px; display: flex; flex-direction: column; align-items: center; color: #000; z-index: 30; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
         
+        /* БАРНЫЙ ИНТЕРФЕЙС */
         .bar-ui-container { position: absolute; bottom: 5vh; left: 50%; transform: translateX(-50%); width: 100%; max-width: 380px; z-index: 1000; pointer-events: none; display: flex; flex-direction: column; align-items: center; }
-        .bar-side-buttons { width: 90%; display: flex; justify-content: space-between; margin-bottom: 12px; pointer-events: none; }
-        .bar-side-buttons button { pointer-events: auto; min-width: 140px; background: rgba(0,0,0,0.7); font-size: 12px; }
+        .bar-side-buttons { width: 95%; display: flex; justify-content: space-between; margin-bottom: 12px; pointer-events: none; }
+        .bar-side-buttons button { pointer-events: auto; min-width: 150px; background: rgba(0,0,0,0.8); font-size: 13px; }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -111,18 +114,18 @@
         <img src="door_1.jpg" id="main-door" onclick="handleDoor()">
     </div>
 
-    <div id="block-welcome" class="block" style="justify-content: flex-start; padding-top: 5vh;">
+    <div id="block-welcome" class="block" style="justify-content: flex-start; padding-top: 4vh;">
         <div class="quote-text">«В каждой шутке есть доля виски»</div>
-        <img src="horse_welcome.png" class="golden-horse">
-        <div style="font-family: 'Playfair Display'; font-size: 38px; font-weight: 900; letter-spacing: 12px; margin-bottom: 20px; font-style: italic;">WELCOME</div>
+        <img src="horse_welcome.png" class="golden-glow-horse">
+        <div style="font-family: 'Playfair Display'; font-size: 40px; font-weight: 900; letter-spacing: 14px; margin-bottom: 20px; font-style: italic; text-transform: uppercase;">WELCOME</div>
         <button id="btn-w-hall" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">ПРОХОДИТЕ В ХОЛЛ</button>
         <button class="btn-gy" onclick="portalTransition('block-identity')">ПОЛУЧИТЬ ID</button>
     </div>
 
     <div id="block-identity" class="block">
         <div class="quote-text">«Шампанского много не бывает»</div>
-        <div style="display:flex; gap:10px; margin-bottom:30px;">
-            <div class="box-final" style="color:var(--gold); font-size:10px;" id="id-label">#ID</div>
+        <div style="display:flex; gap:12px; margin-bottom:30px;">
+            <div class="box-final" style="color:var(--gold); font-size:10px; font-weight:bold;" id="id-label">#ID</div>
             <div class="box-final" id="qr-box-reg"></div>
             <div class="box-final" style="cursor:pointer;" onclick="document.getElementById('file-input').click()">
                 <input type="file" id="file-input" onchange="preview(this)" style="display:none;">
@@ -140,10 +143,10 @@
 
     <div id="block-hall" class="block">
         <div style="position:absolute; inset:0; background:url('hall_bg_jpg.jpg') center/cover; z-index:15;"></div>
-        <div style="position:absolute; top: 8%; width: 100%; text-align: center; color: var(--door-wood); font-size: 32px; font-weight: 900; font-family: 'Playfair Display'; z-index: 25;">«Всё будет GY-GY»</div>
+        <div style="position:absolute; top: 7%; width: 100%; text-align: center; color: var(--door-wood); font-size: 36px; font-weight: 900; font-family: 'Playfair Display'; z-index: 25; font-style: italic;">«Всё будет GY-GY»</div>
         <div class="id-card-hall">
-            <div id="h-id" style="font-weight:900; font-size:14px; margin-bottom:12px; font-family:'Share Tech Mono';">#ID</div>
-            <div style="display:flex; gap:10px; margin-bottom:12px;">
+            <div id="h-id" style="font-weight:900; font-size:15px; margin-bottom:12px; font-family:'Share Tech Mono'; letter-spacing:1px;">#ID</div>
+            <div style="display:flex; gap:12px; margin-bottom:15px;">
                 <div class="box-final" style="border-color:#000;"><img id="h-photo" style="width:100%; height:100%; object-fit:cover;"></div>
                 <div class="box-final" id="h-qr" style="border-color:#000;"></div>
             </div>
@@ -153,21 +156,21 @@
     </div>
 
     <div id="block-bar" class="block" style="padding:0; justify-content: flex-end;">
-        <div class="quote-text" style="position:absolute; top:10vh; z-index:100;">«Игого, сейчас начнем!»</div>
+        <div class="quote-text" style="position:absolute; top:12vh; z-index:100; font-size: 30px;">«Игого, сейчас начнем!»</div>
         <div class="bar-ui-container">
             <div class="bar-side-buttons">
                 <button class="btn-gy" onclick="portalTransition('block-tables')">ЗА СТОЛИКИ</button>
                 <button class="btn-gy" onclick="deepDive()">AI ROOM</button>
             </div>
-            <button class="btn-gy" style="min-width:90%;" onclick="portalTransition('block-hall')">В ХОЛЛ</button>
+            <button class="btn-gy" style="min-width:95%;" onclick="portalTransition('block-hall')">ВЕРНУТЬСЯ В ХОЛЛ</button>
         </div>
-        <img src="horse_bar.png" style="height: 75vh; width: auto; object-fit: contain;">
+        <img src="horse_bar.png" style="height: 80vh; width: auto; object-fit: contain;">
     </div>
 
 <script>
     let currentID = "";
 
-    // ПРИНУДИТЕЛЬНО АНГЛИЙСКИЙ ДЛЯ СКРИПТА
+    // ПРИНУДИТЕЛЬНЫЙ ЯЗЫК ЭКРАНА И СПИСКА
     (function() {
         const domain = window.location.hostname;
         document.cookie = "googtrans=/en/en; path=/; domain=" + domain;
@@ -222,6 +225,10 @@
             next.style.display = "flex";
             setTimeout(() => { 
                 next.classList.add('active'); next.style.opacity = "1"; next.style.pointerEvents = "auto";
+                if(nextId === 'block-bar') {
+                    setTimeout(() => document.getElementById('snd-khe').play(), 1000);
+                    setTimeout(() => document.getElementById('snd-pour').play(), 2500);
+                }
             }, 50);
         }, 800);
     }
@@ -269,7 +276,7 @@
 
     function googleTranslateElementInit() { 
         new google.translate.TranslateElement({
-            pageLanguage: 'en', // Устанавливаем EN базой для английского меню
+            pageLanguage: 'en', 
             includedLanguages: 'en,ru,uk,pl,fr,de,zh-CN,es,it,ja',
             layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
             autoDisplay: false
