@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="google" content="notranslate">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.90 | TOTAL EDITION</title>
+    <title>GY-GY Club v4.4.95 | GOLDEN HORSE</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -28,7 +28,7 @@
             margin:0; padding:0;
         }
 
-        /* ЯЗЫКОВОЙ ВИДЖЕТ */
+        /* ЯЗЫКОВОЙ ВИДЖЕТ (FORCE ENGLISH) */
         #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000001; pointer-events: auto; }
         .goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame, .skiptranslate > iframe { display: none !important; }
         body { top: 0px !important; }
@@ -43,7 +43,6 @@
             font-size: 14px;
         }
 
-        /* ПОДСКАЗКА SELECT LANGUAGE */
         .lang-hint { 
             position: fixed; 
             top: 52px; left: 15px; 
@@ -60,7 +59,15 @@
 
         .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000000; font-size: 24px; letter-spacing: 5px; font-weight: bold; color: var(--gold); pointer-events: none; }
         
-        /* БЛОКИ (СТРАНИЦЫ) */
+        /* ГРАДИЕНТНЫЙ КОНЬ */
+        .golden-horse {
+            max-height: 40vh; /* Чтобы не вылетало за экран */
+            width: auto;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5)) sepia(100%) saturate(300%) hue-rotate(-10deg) brightness(1.1);
+            transition: 0.5s;
+        }
+
         .block { 
             position: fixed; inset: 0; 
             display: none; 
@@ -75,18 +82,15 @@
         }
         .block.active { display: flex !important; opacity: 1; pointer-events: auto; }
 
-        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 26px; color: var(--gold); text-align: center; max-width: 85%; line-height: 1.3; margin-bottom: 30px; letter-spacing: 1px; }
+        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 26px; color: var(--gold); text-align: center; max-width: 85%; line-height: 1.3; margin-bottom: 20px; letter-spacing: 1px; }
         .btn-gy { min-width: 270px; padding: 14px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; text-transform: uppercase; font-weight: 900; margin: 8px 0; font-family: 'Share Tech Mono'; transition: 0.3s; pointer-events: auto !important; }
-        .btn-gy:active { background: var(--gold); color: #000; }
         .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
 
         #main-door { width: 280px; cursor: pointer; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s; z-index: 9999; }
 
-        /* ИДЕНТИФИКАЦИЯ И ХОЛЛ */
         .box-final { width: 85px; height: 85px; border: 2px solid var(--gold); display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; background: rgba(212,175,55,0.05); }
-        .id-card-hall { position: absolute; top: 72%; left: 50%; transform: translate(-50%,-50%); width: 230px; padding: 15px; border: 2px solid var(--gold); background: #F5F5DC; border-radius: 12px; display: flex; flex-direction: column; align-items: center; color: #000; z-index: 30; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .id-card-hall { position: absolute; top: 72%; left: 50%; transform: translate(-50%,-50%); width: 230px; padding: 15px; border: 2px solid var(--gold); background: #F5F5DC; border-radius: 12px; display: flex; flex-direction: column; align-items: center; color: #000; z-index: 30; }
         
-        /* БАРНЫЙ ИНТЕРФЕЙС */
         .bar-ui-container { position: absolute; bottom: 5vh; left: 50%; transform: translateX(-50%); width: 100%; max-width: 380px; z-index: 1000; pointer-events: none; display: flex; flex-direction: column; align-items: center; }
         .bar-side-buttons { width: 90%; display: flex; justify-content: space-between; margin-bottom: 12px; pointer-events: none; }
         .bar-side-buttons button { pointer-events: auto; min-width: 140px; background: rgba(0,0,0,0.7); font-size: 12px; }
@@ -109,7 +113,7 @@
 
     <div id="block-welcome" class="block" style="justify-content: flex-start; padding-top: 5vh;">
         <div class="quote-text">«В каждой шутке есть доля виски»</div>
-        <img src="horse_welcome.png" style="max-height: 45vh; width: auto; margin-bottom: 10px;">
+        <img src="horse_welcome.png" class="golden-horse">
         <div style="font-family: 'Playfair Display'; font-size: 38px; font-weight: 900; letter-spacing: 12px; margin-bottom: 20px; font-style: italic;">WELCOME</div>
         <button id="btn-w-hall" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">ПРОХОДИТЕ В ХОЛЛ</button>
         <button class="btn-gy" onclick="portalTransition('block-identity')">ПОЛУЧИТЬ ID</button>
@@ -163,11 +167,11 @@
 <script>
     let currentID = "";
 
-    // 1. ПРИНУДИТЕЛЬНЫЙ ЯЗЫК ЭКРАНА
+    // ПРИНУДИТЕЛЬНО АНГЛИЙСКИЙ ДЛЯ СКРИПТА
     (function() {
         const domain = window.location.hostname;
-        document.cookie = "googtrans=/ru/en; path=/; domain=" + domain;
-        document.cookie = "googtrans=/ru/en; path=/";
+        document.cookie = "googtrans=/en/en; path=/; domain=" + domain;
+        document.cookie = "googtrans=/en/en; path=/";
     })();
 
     window.onload = () => {
@@ -218,10 +222,6 @@
             next.style.display = "flex";
             setTimeout(() => { 
                 next.classList.add('active'); next.style.opacity = "1"; next.style.pointerEvents = "auto";
-                if(nextId === 'block-bar') {
-                    setTimeout(() => document.getElementById('snd-khe').play(), 800);
-                    setTimeout(() => document.getElementById('snd-pour').play(), 2200);
-                }
             }, 50);
         }, 800);
     }
@@ -267,10 +267,9 @@
 
     function deepDive() { window.location.href = 'bridge_protocol.html'; }
 
-    // ИНИЦИАЛИЗАЦИЯ ПЕРЕВОДЧИКА
     function googleTranslateElementInit() { 
         new google.translate.TranslateElement({
-            pageLanguage: 'en', 
+            pageLanguage: 'en', // Устанавливаем EN базой для английского меню
             includedLanguages: 'en,ru,uk,pl,fr,de,zh-CN,es,it,ja',
             layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
             autoDisplay: false
