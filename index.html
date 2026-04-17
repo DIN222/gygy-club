@@ -1,51 +1,81 @@
+
 <!DOCTYPE html>
 <html lang="en" class="notranslate" google="notranslate">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.9.2 | TOTAL RESTORATION</title>
+    <title>GY-GY Club v4.9.3 | STABLE CORE</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
         :root { --gold: #d4af37; --glow: rgba(212, 175, 55, 0.8); }
         * { -webkit-tap-highlight-color: transparent !important; box-sizing: border-box; outline: none; }
-        html, body { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Share Tech Mono', monospace; margin:0; overflow: hidden; position: fixed; }
         
-        /* LANGUAGE AREA */
+        /* Жесткая блокировка прыжков скролла */
+        html, body { 
+            width: 100%; height: 100%; background: #000; color: var(--gold); 
+            font-family: 'Share Tech Mono', monospace; margin:0; 
+            overflow: hidden !important; position: fixed; touch-action: none;
+        }
+        
+        /* Языковая панель */
         #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000001; }
-        .goog-te-gadget .goog-te-combo { background: #000 !important; color: var(--gold) !important; border: 2px solid var(--gold) !important; padding: 6px; border-radius: 4px; font-family: 'Share Tech Mono'; font-size: 13px; width: 210px; cursor: pointer; }
-        .lang-hint { position: fixed; top: 58px; left: 15px; z-index: 1000001; font-size: 12px; color: var(--gold); width: 210px; text-align: center; animation: blink 2s infinite; font-weight: bold; pointer-events: none; }
+        .goog-te-gadget .goog-te-combo { 
+            background: #000 !important; color: var(--gold) !important; 
+            border: 2px solid var(--gold) !important; padding: 8px; 
+            border-radius: 4px; font-family: 'Share Tech Mono'; font-size: 14px; width: 220px; 
+        }
+        .lang-hint { 
+            position: fixed; top: 62px; left: 15px; z-index: 1000001; font-size: 12px; 
+            color: var(--gold); width: 220px; text-align: center; animation: blink 2s infinite; 
+            font-weight: bold; pointer-events: none; 
+        }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
         
-        .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000001; font-size: 32px; font-weight: bold; text-shadow: 0 0 15px var(--glow); letter-spacing: 6px; }
+        .ui-header-right { 
+            position: fixed; top: 18px; right: 25px; z-index: 1000001; 
+            font-size: 32px; font-weight: bold; text-shadow: 0 0 15px var(--glow); letter-spacing: 6px; 
+        }
 
-        /* CORE ENGINE */
-        .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; z-index: 10; opacity: 0; transition: opacity 0.6s ease; }
+        /* Блоки */
+        .block { 
+            position: absolute; inset: 0; display: none; flex-direction: column; 
+            align-items: center; justify-content: center; background: #000; opacity: 0; 
+            transition: opacity 0.5s ease; z-index: 10;
+        }
         .block.active { display: flex !important; opacity: 1; }
         
-        /* TEXT STYLES */
-        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 26px; color: var(--gold); text-align: center; max-width: 85%; margin-bottom: 25px; text-shadow: 0 0 10px var(--glow); }
-        .welcome-title { font-family: 'Playfair Display'; font-size: 42px; font-weight: 900; letter-spacing: 15px; margin-bottom: 25px; text-transform: uppercase; font-style: italic; }
+        /* Текст и Конь */
+        .quote-text { 
+            font-family: 'Playfair Display', serif; font-style: italic; font-size: 26px; 
+            color: var(--gold); text-align: center; max-width: 85%; margin-bottom: 25px; 
+        }
+        .welcome-title { 
+            font-family: 'Playfair Display'; font-size: 45px; font-weight: 900; 
+            letter-spacing: 15px; margin-bottom: 25px; text-transform: uppercase; 
+        }
+        .horse-welcome-img { max-height: 50vh; filter: drop-shadow(0 0 40px var(--glow)); margin-bottom: 10px; }
 
-        /* BUTTONS */
-        .btn-gy { background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; text-transform: uppercase; font-weight: 900; font-family: 'Share Tech Mono'; transition: 0.3s; box-shadow: 0 0 8px var(--glow); position: relative; z-index: 100; }
-        .btn-gy:active { background: var(--gold); color: #000; box-shadow: 0 0 20px var(--gold); }
+        /* Кнопки */
+        .btn-gy { 
+            background: transparent; border: 2px solid var(--gold); color: var(--gold); 
+            cursor: pointer; text-transform: uppercase; font-weight: 900; font-family: 'Share Tech Mono'; 
+            transition: 0.3s; box-shadow: 0 0 8px var(--glow); z-index: 100; padding: 15px;
+        }
+        .btn-gy:active { background: var(--gold); color: #000; }
         .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
 
-        /* WELCOME LAYOUT */
-        .horse-welcome-img { max-height: 52vh; filter: drop-shadow(0 0 40px var(--glow)); margin-bottom: 10px; }
-        .welcome-row { display: flex; gap: 15px; margin-top: 10px; }
-        .btn-welcome { min-width: 155px; padding: 14px; font-size: 12px; }
-
-        /* REGISTRATION & HALL */
-        .id-card-hall { width: 300px; padding: 25px; border: 2px solid var(--gold); background: #F5F5DC; border-radius: 15px; display: flex; flex-direction: column; align-items: center; color: #000; box-shadow: 0 0 50px var(--gold); }
-        .box-final { width: 100px; height: 100px; border: 2px solid #000; background: #FFF !important; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
-        .dynamic-flag { position: absolute; bottom: 2px; right: 2px; font-size: 22px; z-index: 20; }
-        
-        /* BAR AREA */
-        .horse-bar-img { height: 68vh; filter: drop-shadow(0 0 35px var(--glow)); margin-bottom: 16vh; }
-        .bar-controls { position: absolute; bottom: 5vh; display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+        /* Регистрация и Холл */
+        .id-card-hall { 
+            width: 300px; padding: 25px; border: 2px solid var(--gold); background: #F5F5DC; 
+            border-radius: 15px; display: flex; flex-direction: column; align-items: center; color: #000; 
+        }
+        .box-final { 
+            width: 105px; height: 105px; border: 2px solid #000; background: #FFF !important; 
+            display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; 
+        }
+        .dynamic-flag { position: absolute; bottom: 2px; right: 2px; font-size: 24px; z-index: 20; }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -61,40 +91,38 @@
         <img src="door_1.jpg" id="main-door" onclick="handleEntrance()" style="width:290px; cursor:pointer; filter: drop-shadow(0 0 25px var(--glow));">
     </div>
 
-    <div id="block-welcome" class="block" style="justify-content: flex-start; padding-top: 4vh;">
+    <div id="block-welcome" class="block" style="justify-content: flex-start; padding-top: 5vh;">
         <div class="quote-text">"Every joke has a grain of whiskey"</div>
         <img src="horse_welcome.png" class="horse-welcome-img">
         <div class="welcome-title">WELCOME</div>
-        <div class="welcome-row">
-            <button id="btn-w-hall" class="btn-gy btn-welcome btn-sleep" onclick="portal('block-hall')">TO HALL</button>
-            <button class="btn-gy btn-welcome" onclick="portal('block-identity')">GET ID</button>
+        <div style="display:flex; gap:15px;">
+            <button id="btn-w-hall" class="btn-gy btn-sleep" style="min-width:150px;" onclick="portal('block-hall')">TO HALL</button>
+            <button class="btn-gy" style="min-width:150px;" onclick="portal('block-identity')">GET ID</button>
         </div>
     </div>
 
     <div id="block-identity" class="block">
-        <div class="quote-text">"Identification is the soul of the club"</div>
+        <div class="quote-text">"Identification"</div>
         <div style="display:flex; gap:12px; margin-bottom:35px;">
-            <div class="box-final" style="background:rgba(212,175,55,0.1) !important; border-color:var(--gold); color:var(--gold); font-size:11px; font-weight:bold;" id="id-label">#ID</div>
+            <div class="box-final" style="color:var(--gold); background:rgba(0,0,0,0.8)!important; border-color:var(--gold); font-size:12px; font-weight:bold;" id="id-label">#ID</div>
             <div class="box-final" id="qr-reg" style="border-color:var(--gold);"></div>
             <div class="box-final" style="border-color:var(--gold); cursor:pointer;" onclick="document.getElementById('file-in').click()">
                 <input type="file" id="file-in" onchange="preview(this)" style="display:none;" accept="image/*">
                 <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
-                <span id="txt-ph" style="color:var(--gold); font-size:11px; font-weight:900; text-align:center;">PHOTO</span>
-                <div class="dynamic-flag">🌐</div>
+                <span id="txt-ph" style="color:var(--gold); font-size:11px; font-weight:bold;">PHOTO</span>
             </div>
             <div class="box-final" style="border-color:var(--gold); cursor:pointer;" onclick="genAvatar()">
                 <img id="av-img" style="display:none; width:100%; height:100%; object-fit:cover;">
-                <span id="txt-av" style="color:var(--gold); font-size:11px; font-weight:900; text-align:center;">AVATAR</span>
-                <div class="dynamic-flag">🌐</div>
+                <span id="txt-av" style="color:var(--gold); font-size:11px; font-weight:bold;">AVATAR</span>
             </div>
         </div>
-        <button id="btn-save" class="btn-gy" style="min-width: 290px; padding: 18px;" onclick="saveData()">SAVE IDENTITY</button>
-        <button id="btn-pass" class="btn-gy btn-sleep" style="min-width: 290px; padding: 18px; margin-top: 15px;" onclick="portal('block-hall')">ENTER THE HALL</button>
+        <button id="btn-save" class="btn-gy" style="width: 300px;" onclick="saveData()">SAVE IDENTITY</button>
+        <button id="btn-pass" class="btn-gy btn-sleep" style="width: 300px; margin-top: 15px;" onclick="portal('block-hall')">ENTER HALL</button>
     </div>
 
     <div id="block-hall" class="block">
         <div class="id-card-hall">
-            <div id="h-id" style="font-weight:900; font-size:18px; margin-bottom:15px; letter-spacing:3px;">#ID-TOKEN</div>
+            <div id="h-id" style="font-weight:900; font-size:18px; margin-bottom:15px;">#ID-TOKEN</div>
             <div style="display:flex; gap:15px; margin-bottom:20px;">
                 <div class="box-final" style="border: 3px solid #000;">
                     <img id="h-photo" style="width:100%; height:100%; object-fit:cover;">
@@ -102,30 +130,31 @@
                 </div>
                 <div class="box-final" id="h-qr" style="border: 3px solid #000;"></div>
             </div>
-            <button class="btn-gy" style="min-width:100%; border-color:#000; color:#000; padding: 16px;" onclick="portal('block-bar')">PROCEED TO BAR</button>
+            <button class="btn-gy" style="width:100%; border-color:#000; color:#000;" onclick="portal('block-bar')">TO BAR</button>
         </div>
     </div>
 
     <div id="block-bar" class="block" style="justify-content: flex-end; padding-bottom: 5vh;">
-        <img src="horse_bar.png" class="horse-bar-img">
-        <div class="bar-controls">
+        <img src="horse_bar.png" style="height:65vh; filter: drop-shadow(0 0 35px var(--glow)); margin-bottom: 15vh;">
+        <div style="position:absolute; bottom:5vh; display:flex; flex-direction:column; gap:12px; width:100%; align-items:center;">
             <div style="display:flex; gap:15px;">
-                <button class="btn-gy" style="width:145px; padding:12px; font-size:11px;" onclick="location.href='server.html'">AI SERVER</button>
-                <button class="btn-gy" style="width:145px; padding:12px; font-size:11px;" onclick="location.href='tables.html'">TABLES</button>
+                <button class="btn-gy" style="width:145px; font-size:11px;" onclick="location.href='server.html'">SERVER</button>
+                <button class="btn-gy" style="width:145px; font-size:11px;" onclick="location.href='tables.html'">TABLES</button>
             </div>
-            <button class="btn-gy" style="width:305px; padding:12px;" onclick="portal('block-hall')">BACK TO HALL</button>
+            <button class="btn-gy" style="width:305px;" onclick="portal('block-hall')">BACK</button>
         </div>
     </div>
 
 <script>
     let currentID = "";
+    // ЖЕСТКИЙ МАППИНГ ДЛЯ АНГЛИЙСКОГО + ФЛАГИ
     const langMap = {
         'en': '🇬🇧 English', 'ru': '🇷🇺 Russian', 'uk': '🇺🇦 Ukrainian', 'pl': '🇵🇱 Polish',
         'fr': '🇫🇷 French', 'de': '🇩🇪 German', 'es': '🇪🇸 Spanish', 'it': '🇮🇹 Italian',
-        'zh-CN': '🇨🇳 Chinese', 'ja': '🇯🇵 Japanese'
+        'zh-CN': '🇨🇳 Chinese', 'ja': '🇯🇵 Japanese', 'ko': '🇰🇷 Korean'
     };
 
-    function fixLanguageMenu() {
+    function fixLangs() {
         const sel = document.querySelector('.goog-te-combo');
         if (sel) {
             Array.from(sel.options).forEach(o => {
@@ -135,7 +164,8 @@
             });
         }
     }
-    setInterval(fixLanguageMenu, 300);
+    // Интервал 100мс для предотвращения «прыжков» текста обратно
+    setInterval(fixLangs, 100);
 
     function googleTranslateElementInit() { 
         new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element'); 
@@ -144,19 +174,15 @@
     function handleEntrance() {
         document.getElementById('snd-door').play().catch(()=>{});
         const d = document.getElementById('main-door');
-        d.style.transition = "2.5s cubic-bezier(0.4, 0, 0.2, 1)";
+        d.style.transition = "2s";
         d.style.transform = "scale(12)";
         d.style.opacity = "0";
-        
         if (!currentID) {
             currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
             localStorage.setItem('gy_trace', currentID);
         }
         updateUI(currentID);
-        setTimeout(() => { 
-            portal('block-welcome'); 
-            document.getElementById('snd-ambient').play().catch(()=>{});
-        }, 1200);
+        setTimeout(() => { portal('block-welcome'); document.getElementById('snd-ambient').play().catch(()=>{}); }, 1000);
     }
 
     function portal(id) {
@@ -170,9 +196,9 @@
         document.getElementById('id-label').innerText = id;
         document.getElementById('h-id').innerText = id;
         document.getElementById('qr-reg').innerHTML = "";
-        new QRCode(document.getElementById("qr-reg"), { text: id, width: 100, height: 100 });
+        new QRCode(document.getElementById("qr-reg"), { text: id, width: 105, height: 105 });
         document.getElementById('h-qr').innerHTML = "";
-        new QRCode(document.getElementById("h-qr"), { text: id, width: 100, height: 100 });
+        new QRCode(document.getElementById("h-qr"), { text: id, width: 105, height: 105 });
     }
 
     function saveData() {
