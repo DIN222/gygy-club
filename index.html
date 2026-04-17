@@ -4,42 +4,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.7.2 | FIXED</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
+    <title>GY-GY Club v4.7.3 | TOTAL FIX</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
-        :root { --gold: #d4af37; --door-wood: #3E2723; }
-        * { -webkit-tap-highlight-color: transparent !important; outline: none !important; }
+        :root { --gold: #d4af37; }
+        * { -webkit-tap-highlight-color: transparent !important; box-sizing: border-box; }
         html, body { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; position: fixed; margin:0; }
         
-        /* LANGUAGE PANEL */
-        #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000001; pointer-events: auto !important; }
-        .goog-te-gadget .goog-te-combo { background: #000 !important; color: var(--gold) !important; border: 1px solid var(--gold) !important; padding: 4px; border-radius: 4px; font-family: 'Share Tech Mono'; width: 130px; }
+        /* UI ELEMENTS */
+        #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000001; }
+        .goog-te-gadget .goog-te-combo { background: #000 !important; color: var(--gold) !important; border: 1px solid var(--gold) !important; padding: 4px; border-radius: 4px; font-family: 'Share Tech Mono'; font-size: 12px; width: 130px; cursor: pointer; }
         .goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame, .skiptranslate > iframe { display: none !important; }
         body { top: 0px !important; }
 
-        .lang-hint { position: fixed; top: 52px; left: 15px; z-index: 1000001; font-size: 11px; color: var(--gold); width: 140px; text-align: center; animation: blink 2s infinite; font-weight: bold; letter-spacing: 1px; }
+        .lang-hint { position: fixed; top: 52px; left: 15px; z-index: 1000001; font-size: 11px; color: var(--gold); width: 140px; text-align: center; animation: blink 2s infinite; font-weight: bold; pointer-events: none; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
 
         .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000000; font-size: 24px; letter-spacing: 5px; font-weight: bold; color: var(--gold); pointer-events: none; }
 
-        /* BLOCKS */
-        .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; z-index: 10; opacity: 0; transition: opacity 0.8s ease; }
+        /* BLOCKS SYSTEM */
+        .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; z-index: 10; opacity: 0; transition: opacity 0.6s ease; }
         .block.active { display: flex !important; opacity: 1; pointer-events: auto !important; }
 
-        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 28px; color: var(--gold); text-align: center; max-width: 85%; margin-bottom: 30px; }
-        .btn-gy { min-width: 270px; padding: 14px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; text-transform: uppercase; font-weight: 900; margin: 8px 0; font-family: 'Share Tech Mono'; transition: 0.3s; pointer-events: auto !important; }
+        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 26px; color: var(--gold); text-align: center; max-width: 85%; margin-bottom: 25px; }
+        .btn-gy { min-width: 270px; padding: 14px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; text-transform: uppercase; font-weight: 900; margin: 8px 0; font-family: 'Share Tech Mono'; transition: 0.3s; z-index: 100; }
         .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
 
+        /* IDENTITY CARDS */
         .id-card-hall { position: absolute; top: 72%; left: 50%; transform: translate(-50%,-50%); width: 220px; padding: 15px; border: 2px solid var(--gold); background: #F5F5DC; border-radius: 12px; display: flex; flex-direction: column; align-items: center; color: #000; z-index: 30; }
         .box-final { width: 85px; height: 85px; border: 2px solid #000; background: #FFFFFF !important; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; color: #000; }
         .dynamic-flag { position: absolute; bottom: 2px; right: 2px; font-size: 18px; z-index: 20; }
         
-        #main-door { width: 280px; cursor: pointer; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s; z-index: 9999; pointer-events: auto !important; }
+        #main-door { width: 280px; cursor: pointer; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s; pointer-events: auto !important; }
         
-        .bar-ui-container { position: absolute; bottom: 5vh; width: 100%; max-width: 380px; display: flex; flex-direction: column; align-items: center; }
-        .bar-side-buttons { width: 100%; display: flex; justify-content: space-around; margin-bottom: 12px; }
+        .bar-ui-container { position: absolute; bottom: 5vh; width: 100%; display: flex; flex-direction: column; align-items: center; z-index: 1000; }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -53,27 +53,27 @@
     <audio id="snd-khe" preload="auto"><source src="charlie_bar_fx.mp3" type="audio/mpeg"></audio>
     <audio id="snd-pour" preload="auto"><source src="pour_whisky.mp3" type="audio/mpeg"></audio>
 
-    <div id="block-entrance" class="block active" style="opacity: 1; pointer-events: auto;">
+    <div id="block-entrance" class="block active" style="opacity: 1;">
         <img src="door_1.jpg" id="main-door" onclick="handleDoor()">
     </div>
 
     <div id="block-welcome" class="block" style="justify-content: flex-start; padding-top: 5vh;">
         <div class="quote-text">«В каждой шутке есть доля виски»</div>
-        <img src="horse_welcome.png" style="max-height: 45vh; width: auto;">
-        <div style="font-family: 'Playfair Display'; font-size: 38px; font-weight: 700; letter-spacing: 12px; margin: 15px 0; text-transform: uppercase; font-style: italic;">WELCOME</div>
+        <img src="horse_welcome.png" style="max-height: 40vh; width: auto; margin-bottom: 10px;">
+        <div style="font-family: 'Playfair Display'; font-size: 38px; font-weight: 700; letter-spacing: 12px; margin-bottom: 20px; text-transform: uppercase; font-style: italic;">WELCOME</div>
         <button id="btn-w-hall" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">ПРОХОДИТЕ В ХОЛЛ</button>
         <button class="btn-gy" onclick="portalTransition('block-identity')">ПОЛУЧИТЬ ID</button>
     </div>
 
     <div id="block-identity" class="block">
         <div class="quote-text">«Шампанского много не бывает»</div>
-        <div style="display:flex; gap:10px; margin-bottom:25px; align-items:center;">
+        <div style="display:flex; gap:10px; margin-bottom:25px;">
             <div class="box-final" style="background:rgba(212,175,55,0.1) !important; border-color:var(--gold); color:var(--gold); font-size:11px;" id="id-label">#ID</div>
             <div class="box-final" id="qr-box-reg" style="border-color:var(--gold);"></div>
             <div class="box-final" style="border-color:var(--gold); cursor:pointer;" onclick="document.getElementById('file-input').click()">
                 <input type="file" id="file-input" onchange="preview(this)" style="display:none;">
                 <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
-                <span id="txt-photo" style="color:var(--gold); font-size:10px; font-weight:900;">ФОТО</span>
+                <span id="txt-photo" style="color:var(--gold); font-size:10px; font-weight:900;">PHOTO</span>
                 <div class="dynamic-flag">🌐</div>
             </div>
             <div class="box-final" style="border-color:var(--gold); cursor:pointer;" onclick="generateAvatar()">
@@ -102,9 +102,9 @@
     <div id="block-bar" class="block" style="justify-content: flex-end;">
         <div class="quote-text" style="position:absolute; top:8vh;">«Игого, сейчас начнем!»</div>
         <div class="bar-ui-container">
-            <div class="bar-side-buttons">
-                <button class="btn-gy" style="min-width:140px;" onclick="window.location.href='tables.html'">ЗА СТОЛИКИ</button>
-                <button class="btn-gy" style="min-width:140px;" onclick="window.location.href='bridge_protocol.html'">В AI ROOM</button>
+            <div style="display:flex; gap:10px; margin-bottom:10px;">
+                <button class="btn-gy" style="min-width:130px; font-size:12px;" onclick="window.location.href='tables.html'">ЗА СТОЛИКИ</button>
+                <button class="btn-gy" style="min-width:130px; font-size:12px;" onclick="window.location.href='bridge_protocol.html'">В AI ROOM</button>
             </div>
             <button class="btn-gy" onclick="portalTransition('block-hall')">В ХОЛЛ</button>
         </div>
@@ -116,6 +116,7 @@
     const flags = { 'en': '🇬🇧', 'ru': '🇷🇺', 'uk': '🇺🇦', 'pl': '🇵🇱', 'fr': '🇫🇷', 'de': '🇩🇪', 'zh-CN': '🇨🇳', 'es': '🇪🇸', 'it': '🇮🇹' };
     const langNames = { 'ru': 'Russian', 'uk': 'Ukrainian', 'en': 'English', 'pl': 'Polish', 'fr': 'French', 'de': 'German', 'zh-CN': 'Chinese', 'es': 'Spanish', 'it': 'Italian' };
 
+    // Исправленная логика меню
     function forceEnglishMenu() {
         const select = document.querySelector('.goog-te-combo');
         if (select) {
@@ -127,17 +128,20 @@
 
     function googleTranslateElementInit() { 
         new google.translate.TranslateElement({pageLanguage: 'ru', autoDisplay: false}, 'google_translate_element'); 
-        const observer = new MutationObserver(() => {
+        
+        // Надежный наблюдатель
+        const obs = new MutationObserver(() => {
             forceEnglishMenu();
-            const select = document.querySelector('.goog-te-combo');
-            if (select) {
-                select.onchange = () => {
-                    const emoji = flags[select.value] || '🌐';
+            const s = document.querySelector('.goog-te-combo');
+            if (s && !s.getAttribute('data-ready')) {
+                s.setAttribute('data-ready', 'true');
+                s.addEventListener('change', () => {
+                    const emoji = flags[s.value] || '🌐';
                     document.querySelectorAll('.dynamic-flag').forEach(el => el.innerText = emoji);
-                };
+                });
             }
         });
-        observer.observe(document.body, { childList: true, subtree: true });
+        obs.observe(document.body, { childList: true, subtree: true });
     }
 
     window.onload = () => {
@@ -160,7 +164,9 @@
 
     function handleDoor() {
         const d = document.getElementById('main-door');
-        document.getElementById('snd-door').play().catch(()=>{});
+        const s = document.getElementById('snd-door');
+        if(s) s.play().catch(()=>{});
+        
         d.style.transform = "scale(8)"; d.style.opacity = "0"; d.style.pointerEvents = "none";
         document.getElementById('l-hint').style.display = 'none';
 
@@ -169,23 +175,28 @@
             localStorage.setItem('gy_trace', currentID);
         }
         updateIDUI(currentID);
+        
         setTimeout(() => { 
             portalTransition('block-welcome'); 
-            const a = document.getElementById('snd-ambient'); a.volume = 0.5; a.play();
+            const a = document.getElementById('snd-ambient'); if(a) { a.volume = 0.5; a.play().catch(()=>{}); }
         }, 1500);
     }
 
     function portalTransition(nextId) {
         const current = document.querySelector('.block.active');
-        if(current) { current.style.opacity = "0"; current.classList.remove('active'); }
+        if(current) { current.style.opacity = "0"; }
+        
         setTimeout(() => {
+            if(current) current.classList.remove('active');
             const next = document.getElementById(nextId);
-            next.classList.add('active');
-            if(nextId === 'block-bar') {
-                setTimeout(() => document.getElementById('snd-khe').play(), 800);
-                setTimeout(() => document.getElementById('snd-pour').play(), 2200);
+            if(next) {
+                next.classList.add('active');
+                if(nextId === 'block-bar') {
+                    setTimeout(() => document.getElementById('snd-khe').play(), 600);
+                    setTimeout(() => document.getElementById('snd-pour').play(), 1800);
+                }
             }
-        }, 400);
+        }, 600);
     }
 
     function preview(i) {
