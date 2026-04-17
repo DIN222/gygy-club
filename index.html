@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.8.2 | DARK BAR EDITION</title>
+    <title>GY-GY Club v4.8.3 | GLOBAL ENGLISH & SLEEK BAR</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -14,11 +14,11 @@
         
         /* HEADER & LANGUAGE */
         #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000001; }
-        .goog-te-gadget .goog-te-combo { background: #000 !important; color: var(--gold) !important; border: 2px solid var(--gold) !important; padding: 6px; border-radius: 4px; font-family: 'Share Tech Mono'; font-size: 12px; width: 160px; cursor: pointer; }
+        .goog-te-gadget .goog-te-combo { background: #000 !important; color: var(--gold) !important; border: 2px solid var(--gold) !important; padding: 6px; border-radius: 4px; font-family: 'Share Tech Mono'; font-size: 12px; width: 165px; cursor: pointer; }
         .goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame, .skiptranslate > iframe { display: none !important; }
         body { top: 0px !important; }
 
-        .lang-hint { position: fixed; top: 55px; left: 15px; z-index: 1000001; font-size: 11px; color: var(--gold); width: 160px; text-align: center; animation: blink 2s infinite; font-weight: bold; pointer-events: none; }
+        .lang-hint { position: fixed; top: 55px; left: 15px; z-index: 1000001; font-size: 11px; color: var(--gold); width: 165px; text-align: center; animation: blink 2s infinite; font-weight: bold; pointer-events: none; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
         .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000001; font-size: 26px; letter-spacing: 6px; font-weight: bold; color: var(--gold); text-shadow: 0 0 15px var(--glow); }
 
@@ -32,8 +32,8 @@
         .btn-gy:active { background: var(--gold); color: #000; box-shadow: 0 0 20px var(--gold); }
         .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; box-shadow: none !important; }
 
-        /* BAR BUTTONS (BLACK BACKGROUND) */
-        .btn-bar { background: #000 !important; min-width: 270px !important; font-size: 14px !important; }
+        /* BAR BUTTONS (COMPACT & BOTTOM) */
+        .btn-bar-small { background: #000 !important; min-width: 200px !important; padding: 8px !important; font-size: 12px !important; margin: 4px 0 !important; }
 
         /* WELCOME ZONE */
         .btn-welcome { min-width: 220px; padding: 8px; font-size: 12px; margin: 4px 0; }
@@ -45,9 +45,9 @@
         
         #main-door { width: 280px; cursor: pointer; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s; z-index: 9999; filter: drop-shadow(0 0 20px var(--glow)); }
         .horse-welcome-img { max-height: 52vh; width: auto; filter: drop-shadow(0 0 25px var(--glow)); margin-bottom: 5px; }
-        .horse-bar-img { height: 72vh; width: auto; object-fit: contain; filter: drop-shadow(0 0 30px var(--glow)); }
+        .horse-bar-img { height: 75vh; width: auto; object-fit: contain; filter: drop-shadow(0 0 30px var(--glow)); margin-bottom: 12vh; }
         
-        .bar-ui-container { position: absolute; bottom: 5vh; width: 100%; display: flex; flex-direction: column; align-items: center; z-index: 1000; }
+        .bar-ui-container { position: absolute; bottom: 3vh; width: 100%; display: flex; flex-direction: column; align-items: center; z-index: 1000; }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -108,30 +108,38 @@
 
     <div id="block-bar" class="block" style="justify-content: flex-end;">
         <div class="quote-text" style="position:absolute; top:8vh;">"Neigh, let's get started!"</div>
-        <div class="bar-ui-container">
-            <button class="btn-gy btn-bar" onclick="window.location.href='tables.html'">TABLES</button>
-            <button class="btn-gy btn-bar" onclick="window.location.href='bridge_protocol.html'">AI ROOM</button>
-            <button class="btn-gy btn-bar" onclick="portalTransition('block-hall')">BACK TO HALL</button>
-        </div>
         <img src="horse_bar.png" class="horse-bar-img">
+        <div class="bar-ui-container">
+            <button class="btn-gy btn-bar-small" onclick="window.location.href='tables.html'">TABLES</button>
+            <button class="btn-gy btn-bar-small" onclick="window.location.href='bridge_protocol.html'">AI ROOM</button>
+            <button class="btn-gy btn-bar-small" onclick="portalTransition('block-hall')">BACK TO HALL</button>
+        </div>
     </div>
 
 <script>
     let currentID = "";
-    const languageConfig = {
-        'en': { name: 'English', flag: '🇬🇧' }, 'ru': { name: 'Russian', flag: '🇷🇺' },
-        'uk': { name: 'Ukrainian', flag: '🇺🇦' }, 'pl': { name: 'Polish', flag: '🇵🇱' },
-        'fr': { name: 'French', flag: '🇫🇷' }, 'de': { name: 'German', flag: '🇩🇪' },
-        'es': { name: 'Spanish', flag: '🇪🇸' }, 'it': { name: 'Italian', flag: '🇮🇹' },
-        'zh-CN': { name: 'Chinese', flag: '🇨🇳' }, 'ja': { name: 'Japanese', flag: '🇯🇵' }
+    
+    // THE ULTIMATE ENGLISH DICTIONARY WITH FLAGS
+    const fullLangMap = {
+        'en': {n: 'English', f: '🇬🇧'}, 'ru': {n: 'Russian', f: '🇷🇺'}, 'uk': {n: 'Ukrainian', f: '🇺🇦'},
+        'pl': {n: 'Polish', f: '🇵🇱'}, 'fr': {n: 'French', f: '🇫🇷'}, 'de': {n: 'German', f: '🇩🇪'},
+        'es': {n: 'Spanish', f: '🇪🇸'}, 'it': {n: 'Italian', f: '🇮🇹'}, 'zh-CN': {n: 'Chinese', f: '🇨🇳'},
+        'ja': {n: 'Japanese', f: '🇯🇵'}, 'ko': {n: 'Korean', f: '🇰🇷'}, 'pt': {n: 'Portuguese', f: '🇵🇹'},
+        'tr': {n: 'Turkish', f: '🇹🇷'}, 'ar': {n: 'Arabic', f: '🇦🇪'}, 'nl': {n: 'Dutch', f: '🇳🇱'},
+        'sv': {n: 'Swedish', f: '🇸🇪'}, 'no': {n: 'Norwegian', f: '🇳🇴'}, 'fi': {n: 'Finnish', f: '🇫🇮'},
+        'da': {n: 'Danish', f: '🇩🇰'}, 'cs': {n: 'Czech', f: '🇨🇿'}, 'hu': {n: 'Hungarian', f: '🇭🇺'},
+        'ro': {n: 'Romanian', f: '🇷🇴'}, 'el': {n: 'Greek', f: '🇬🇷'}, 'he': {n: 'Hebrew', f: '🇮🇱'},
+        'hi': {n: 'Hindi', f: '🇮🇳'}, 'th': {n: 'Thai', f: '🇹🇭'}, 'vi': {n: 'Vietnamese', f: '🇻🇳'},
+        'id': {n: 'Indonesian', f: '🇮🇩'}
     };
 
     function forceEnglishMenu() {
         const select = document.querySelector('.goog-te-combo');
         if (select) {
             Array.from(select.options).forEach(opt => {
-                const cfg = languageConfig[opt.value];
-                if (cfg) opt.text = `${cfg.flag} ${cfg.name}`;
+                const cfg = fullLangMap[opt.value];
+                if (cfg) opt.text = `${cfg.f} ${cfg.n}`;
+                else if (opt.value === "") opt.text = "🌐 Select Language";
             });
         }
     }
@@ -144,8 +152,8 @@
             if (s && !s.getAttribute('data-ready')) {
                 s.setAttribute('data-ready', 'true');
                 s.addEventListener('change', () => {
-                    const cfg = languageConfig[s.value];
-                    document.querySelectorAll('.dynamic-flag').forEach(el => el.innerText = cfg ? cfg.flag : '🌐');
+                    const cfg = fullLangMap[s.value];
+                    document.querySelectorAll('.dynamic-flag').forEach(el => el.innerText = cfg ? cfg.f : '🌐');
                 });
             }
         });
@@ -205,7 +213,8 @@
             r.onload = (e) => { 
                 document.getElementById('avatar-img').style.display = "none";
                 document.getElementById('pp').src = e.target.result; document.getElementById('pp').style.display = "block";
-                document.getElementById('h-photo').src = e.target.result; document.getElementById('txt-photo').style.display = "none";
+                document.getElementById('h-photo').src = e.target.result; 
+                document.getElementById('txt-photo').style.display = "none";
                 document.getElementById('txt-avatar').style.display = "none";
             };
             r.readAsDataURL(i.files[0]);
