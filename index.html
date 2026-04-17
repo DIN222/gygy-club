@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v5.1.1 | GLOBAL START</title>
+    <title>GY-GY Club v5.1.2 | TOTAL RESTORE</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -13,6 +12,7 @@
         * { -webkit-tap-highlight-color: transparent !important; margin: 0; padding: 0; box-sizing: border-box; }
         html, body { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; position: fixed; }
 
+        /* ВЕРХНЯЯ ПАНЕЛЬ С ЛОГОТИПОМ */
         .ui-top-bar { position: fixed; top: 0; left: 0; width: 100%; height: 70px; display: flex; justify-content: space-between; align-items: center; padding: 0 25px; z-index: 1000000; background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent); }
         .ui-logo { font-size: 28px; font-weight: 900; letter-spacing: 5px; text-shadow: 0 0 15px var(--neon-glow); }
         .nav-btn { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 5px 20px; cursor: pointer; font-size: 20px; border-radius: 4px; transition: 0.3s; }
@@ -23,17 +23,21 @@
 
         .neon-horse { max-height: 45vh; filter: drop-shadow(0 0 20px var(--neon-glow)); margin-bottom: 20px; }
         .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 24px; text-align: center; max-width: 85%; margin-bottom: 25px; line-height: 1.2; }
-        .btn-gy { min-width: 270px; padding: 14px; background: rgba(0,0,0,0.5); border: 2px solid var(--gold); color: var(--gold); cursor: pointer; text-transform: uppercase; font-weight: 900; margin: 8px 0; font-family: 'Share Tech Mono'; }
+        
+        .btn-gy { min-width: 270px; padding: 14px; background: rgba(0,0,0,0.6); border: 2px solid var(--gold); color: var(--gold); cursor: pointer; text-transform: uppercase; font-weight: 900; margin: 8px 0; font-family: 'Share Tech Mono'; transition: 0.3s; }
         .btn-sleep { opacity: 0.2 !important; pointer-events: none !important; }
 
+        /* РЕГИСТРАЦИЯ - БЕЛЫЕ БОКСЫ */
         .reg-container { display: flex; gap: 10px; margin-bottom: 25px; align-items: center; justify-content: center; }
-        .box-final { width: 80px; height: 80px; border: 1px solid var(--gold); background: rgba(212,175,55,0.1); display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; text-align: center; font-size: 10px; }
+        .box-final { width: 85px; height: 85px; border: 1px solid var(--gold); background: #FFFFFF; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; text-align: center; color: #000; font-size: 11px; font-weight: 900; }
         .box-final img { width: 100%; height: 100%; object-fit: cover; }
 
+        /* ХОЛЛ - ВОЗВРАТ К БЕЖЕВОЙ КАРТОЧКЕ */
         #block-hall { background: url('hall_bg_jpg.jpg') center/cover no-repeat; }
-        .id-card-hall { width: 240px; padding: 20px; background: #F5F5DC; border-radius: 12px; border: 3px solid #3E2723; color: #000; display: flex; flex-direction: column; align-items: center; }
+        .id-card-hall { width: 240px; padding: 20px; background: #F5F5DC; border-radius: 12px; border: 3px solid #3E2723; color: #000; display: flex; flex-direction: column; align-items: center; box-shadow: 0 10px 40px rgba(0,0,0,0.9); }
+        .box-hall-inner { width: 80px; height: 80px; border: 1px solid #000; background: #FFF; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 
-        #main-door { width: 280px; cursor: pointer; transition: transform 2.5s, opacity 1s; z-index: 100; }
+        #main-door { width: 280px; cursor: pointer; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 1s; z-index: 100; }
     </style>
 </head>
 <body>
@@ -43,6 +47,11 @@
         <div class="ui-logo">GY-GY</div>
         <button id="btn-forward" class="nav-btn nav-hidden" onclick="goForward()">→</button>
     </div>
+
+    <audio id="snd-door" preload="auto"><source src="door_open.mp3" type="audio/mpeg"></audio>
+    <audio id="snd-ambient" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
+    <audio id="snd-fx1" preload="auto"><source src="charlie_bar_fx.mp3" type="audio/mpeg"></audio>
+    <audio id="snd-fx2" preload="auto"><source src="pour_whisky.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active" style="opacity: 1;">
         <img src="door_1.jpg" id="main-door" onclick="handleDoor()">
@@ -58,7 +67,7 @@
     <div id="block-identity" class="block">
         <div class="quote-text">"There is no such thing as too much champagne"</div>
         <div class="reg-container">
-            <div class="box-final" id="id-label" style="font-size:11px; font-weight:900;">#ID</div>
+            <div class="box-final" id="id-label">#ID</div>
             <div class="box-final" id="qr-box-reg"></div>
             <div class="box-final" onclick="document.getElementById('file-input').click()" style="cursor:pointer;">
                 <input type="file" id="file-input" onchange="preview(this)" style="display:none;">
@@ -76,10 +85,10 @@
 
     <div id="block-hall" class="block">
         <div class="id-card-hall">
-            <div id="h-id" style="font-weight:900; margin-bottom:15px;">#ID</div>
+            <div id="h-id" style="font-weight:900; margin-bottom:15px; font-size:16px;">#ID</div>
             <div style="display:flex; gap:10px; margin-bottom:15px;">
-                <div class="box-final" style="border-color:#000;"><img id="h-photo"></div>
-                <div class="box-final" id="h-qr" style="border-color:#000;"></div>
+                <div class="box-hall-inner"><img id="h-photo" style="width:100%; height:100%; object-fit:cover;"></div>
+                <div class="box-hall-inner" id="h-qr"></div>
             </div>
             <button id="btn-confirm" class="btn-gy" style="min-width:100%; border-color:#000; color:#000;" onclick="swapButtons('btn-confirm', 'btn-enter-bar')">CONFIRM</button>
             <button id="btn-enter-bar" class="btn-gy btn-sleep" style="min-width:100%; border-color:#000; color:#000;" onclick="portalTransition('block-bar')">ENTER THE BAR</button>
@@ -91,11 +100,11 @@
         <img src="horse_bar.png" class="neon-horse">
         <button class="btn-gy" onclick="window.location.href='tables.html'">TABLES</button>
         <button class="btn-gy" onclick="window.location.href='bridge_protocol.html'">AI ROOM</button>
-        <button class="btn-gy" onclick="portalTransition('block-hall')">BACK TO HALL</button>
+        <button class="btn-gy" onclick="portalTransition('block-hall')">RETURN TO HALL</button>
     </div>
 
 <script>
-    let currentID = "";
+    let currentID = localStorage.getItem('gy_trace') || "";
     let historyStack = ['block-entrance'];
 
     function generateNewID() {
@@ -136,12 +145,26 @@
                     next.classList.add('active'); next.style.opacity = "1";
                     if (!isBack) historyStack.push(nextId);
                     updateNavUI(nextId);
+                    // Звуковые эффекты при входе в бар
+                    if (nextId === 'block-bar' && !isBack) {
+                        setTimeout(() => document.getElementById('snd-fx1').play(), 600);
+                        setTimeout(() => document.getElementById('snd-fx2').play(), 1800);
+                    }
                 }, 50);
             }, 600);
         }
     }
 
     function handleDoor() {
+        const doorSnd = document.getElementById('snd-door');
+        const ambSnd = document.getElementById('snd-ambient');
+        
+        // Разблокировка звука
+        [doorSnd, ambSnd, document.getElementById('snd-fx1'), document.getElementById('snd-fx2')].forEach(s => {
+            s.play(); s.pause(); s.currentTime = 0;
+        });
+
+        if(doorSnd) doorSnd.play();
         document.getElementById('main-door').style.transform = "scale(5)";
         document.getElementById('main-door').style.opacity = "0";
         document.getElementById('main-door').style.pointerEvents = "none";
@@ -151,7 +174,11 @@
             localStorage.setItem('gy_trace', currentID);
         }
         updateIDUI(currentID);
-        setTimeout(() => { portalTransition('block-welcome'); }, 1500);
+
+        setTimeout(() => { 
+            portalTransition('block-welcome');
+            if(ambSnd) { ambSnd.volume = 0; ambSnd.play(); fadeAudio(ambSnd, 0.5, 2000); }
+        }, 1500);
     }
 
     function updateIDUI(id) {
@@ -161,7 +188,7 @@
             const q1 = document.getElementById('qr-box-reg');
             const q2 = document.getElementById('h-qr');
             q1.innerHTML = ""; q2.innerHTML = "";
-            new QRCode(q1, {text: id, width: 80, height: 80});
+            new QRCode(q1, {text: id, width: 85, height: 85});
             new QRCode(q2, {text: id, width: 80, height: 80});
         }, 200);
     }
@@ -203,10 +230,17 @@
         if (a === 'btn-save') document.getElementById('btn-w-hall').classList.remove('btn-sleep');
     }
 
-    window.onload = () => { 
-        currentID = localStorage.getItem('gy_trace');
-        if(currentID) updateIDUI(currentID); 
-    };
+    function fadeAudio(audio, target, duration) {
+        let start = audio.volume;
+        let startTime = Date.now();
+        let interval = setInterval(() => {
+            let progress = Math.min((Date.now() - startTime) / duration, 1);
+            audio.volume = start + (target - start) * progress;
+            if (progress === 1) clearInterval(interval);
+        }, 50);
+    }
+
+    window.onload = () => { if(currentID) updateIDUI(currentID); };
 </script>
 </body>
 </html>
