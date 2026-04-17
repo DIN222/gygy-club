@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.8.0 | GLOBAL ENGLISH EDITION</title>
+    <title>GY-GY Club v4.8.1 | THE BIG HORSE EDITION</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -26,12 +26,15 @@
         .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; z-index: 10; opacity: 0; transition: opacity 0.6s ease; }
         .block.active { display: flex !important; opacity: 1; pointer-events: auto !important; }
 
-        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 26px; color: var(--gold); text-align: center; max-width: 85%; margin-bottom: 25px; text-shadow: 0 0 10px var(--glow); }
+        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 24px; color: var(--gold); text-align: center; max-width: 85%; margin-bottom: 20px; text-shadow: 0 0 10px var(--glow); }
         
         /* BUTTONS */
         .btn-gy { min-width: 270px; padding: 14px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; text-transform: uppercase; font-weight: 900; margin: 8px 0; font-family: 'Share Tech Mono'; font-size: 14px; transition: 0.3s; box-shadow: 0 0 8px var(--glow); position: relative; z-index: 100; }
         .btn-gy:active { background: var(--gold); color: #000; box-shadow: 0 0 20px var(--gold); }
         .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; box-shadow: none !important; }
+
+        /* WELCOME SPECIFIC: SMALLER BUTTONS */
+        .btn-welcome { min-width: 220px; padding: 8px; font-size: 12px; margin: 4px 0; }
 
         /* ID STYLES */
         .id-card-hall { position: absolute; top: 72%; left: 50%; transform: translate(-50%,-50%); width: 240px; padding: 15px; border: 2px solid var(--gold); background: #F5F5DC; border-radius: 12px; display: flex; flex-direction: column; align-items: center; color: #000; z-index: 30; box-shadow: 0 0 30px var(--gold); }
@@ -40,7 +43,10 @@
         
         #main-door { width: 280px; cursor: pointer; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s; z-index: 9999; position: relative; pointer-events: auto !important; filter: drop-shadow(0 0 20px var(--glow)); }
         
-        .horse-img { max-height: 40vh; width: auto; filter: drop-shadow(0 0 25px var(--glow)); margin-bottom: 10px; }
+        /* THE BIG HORSE */
+        .horse-welcome-img { max-height: 55vh; width: auto; filter: drop-shadow(0 0 25px var(--glow)); margin-bottom: 5px; }
+        .horse-bar-img { height: 75vh; width: auto; object-fit: contain; filter: drop-shadow(0 0 30px var(--glow)); }
+        
         .bar-ui-container { position: absolute; bottom: 5vh; width: 100%; display: flex; flex-direction: column; align-items: center; z-index: 1000; }
     </style>
 </head>
@@ -59,12 +65,12 @@
         <img src="door_1.jpg" id="main-door" onclick="handleDoor()" alt="ENTER">
     </div>
 
-    <div id="block-welcome" class="block" style="justify-content: flex-start; padding-top: 5vh;">
+    <div id="block-welcome" class="block" style="justify-content: flex-start; padding-top: 2vh;">
         <div class="quote-text">"Every joke has a grain of whiskey"</div>
-        <img src="horse_welcome.png" class="horse-img">
-        <div style="font-family: 'Playfair Display'; font-size: 38px; font-weight: 700; letter-spacing: 12px; margin-bottom: 20px; text-transform: uppercase; font-style: italic;">WELCOME</div>
-        <button id="btn-w-hall" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">PROCEED TO HALL</button>
-        <button class="btn-gy" onclick="portalTransition('block-identity')">GET YOUR ID</button>
+        <img src="horse_welcome.png" class="horse-welcome-img">
+        <div style="font-family: 'Playfair Display'; font-size: 32px; font-weight: 700; letter-spacing: 10px; margin-bottom: 10px; text-transform: uppercase; font-style: italic;">WELCOME</div>
+        <button id="btn-w-hall" class="btn-gy btn-welcome btn-sleep" onclick="portalTransition('block-hall')">PROCEED TO HALL</button>
+        <button class="btn-gy btn-welcome" onclick="portalTransition('block-identity')">GET YOUR ID</button>
     </div>
 
     <div id="block-identity" class="block">
@@ -72,12 +78,6 @@
         <div style="display:flex; gap:10px; margin-bottom:25px;">
             <div class="box-final" style="background:rgba(212,175,55,0.1) !important; border-color:var(--gold); color:var(--gold); font-size:11px;" id="id-label">#ID</div>
             <div class="box-final" id="qr-box-reg" style="border-color:var(--gold);"></div>
-            <div class="box-final" style="border-color:var(--gold); cursor:pointer;" onclick="document.getElementById('file-input').click()">
-                <input type="file" id="file-input" onchange="preview(this)" style="display:none;" accept="image/*">
-                <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
-                <span id="txt-photo" style="color:var(--gold); font-size:10px; font-weight:900; text-align:center;">UPLOAD<br>PHOTO</span>
-                <div class="dynamic-flag">🌐</div>
-            </div>
             <div class="box-final" style="border-color:var(--gold); cursor:pointer;" onclick="generateAvatar()">
                 <img id="avatar-img" style="display:none; width:100%; height:100%; object-fit:cover;">
                 <span id="txt-avatar" style="color:var(--gold); font-size:10px; font-weight:900; text-align:center;">GENERATE<br>AVATAR</span>
@@ -110,39 +110,35 @@
             </div>
             <button class="btn-gy" onclick="portalTransition('block-hall')">BACK TO HALL</button>
         </div>
-        <img src="horse_bar.png" style="height: 75vh; width: auto; object-fit: contain; filter: drop-shadow(0 0 30px var(--glow));">
+        <img src="horse_bar.png" class="horse-bar-img">
     </div>
 
 <script>
     let currentID = "";
     
-    // FULL LIST OF LANGUAGES IN ENGLISH
-    const langNames = {
-        'en': 'English',
-        'ru': 'Russian',
-        'uk': 'Ukrainian',
-        'pl': 'Polish',
-        'fr': 'French',
-        'de': 'German',
-        'es': 'Spanish',
-        'it': 'Italian',
-        'zh-CN': 'Chinese (Simplified)',
-        'ja': 'Japanese',
-        'ko': 'Korean',
-        'pt': 'Portuguese',
-        'tr': 'Turkish'
+    // FULL LANGUAGE LIST WITH FLAGS AND ENGLISH NAMES
+    const languageConfig = {
+        'en': { name: 'English', flag: '🇬🇧' },
+        'ru': { name: 'Russian', flag: '🇷🇺' },
+        'uk': { name: 'Ukrainian', flag: '🇺🇦' },
+        'pl': { name: 'Polish', flag: '🇵🇱' },
+        'fr': { name: 'French', flag: '🇫🇷' },
+        'de': { name: 'German', flag: '🇩🇪' },
+        'es': { name: 'Spanish', flag: '🇪🇸' },
+        'it': { name: 'Italian', flag: '🇮🇹' },
+        'zh-CN': { name: 'Chinese', flag: '🇨🇳' },
+        'ja': { name: 'Japanese', flag: '🇯🇵' },
+        'ko': { name: 'Korean', flag: '🇰🇷' },
+        'ar': { name: 'Arabic', flag: '🇦🇪' }
     };
 
-    const flags = { 'en': '🇬🇧', 'ru': '🇷🇺', 'uk': '🇺🇦', 'pl': '🇵🇱', 'fr': '🇫🇷', 'de': '🇩🇪', 'zh-CN': '🇨🇳', 'es': '🇪🇸', 'it': '🇮🇹' };
-
-    // --- LANGUAGE FORCE LOGIC ---
     function forceEnglishMenu() {
         const select = document.querySelector('.goog-te-combo');
         if (select) {
             Array.from(select.options).forEach(opt => {
-                const langName = langNames[opt.value];
-                if (langName) {
-                    opt.text = langName; // Overwrite with English name
+                const cfg = languageConfig[opt.value];
+                if (cfg) {
+                    opt.text = `${cfg.flag} ${cfg.name}`; // ADDED FLAG + ENGLISH NAME
                 }
             });
         }
@@ -156,7 +152,8 @@
             if (s && !s.getAttribute('data-ready')) {
                 s.setAttribute('data-ready', 'true');
                 s.addEventListener('change', () => {
-                    const emoji = flags[s.value] || '🌐';
+                    const cfg = languageConfig[s.value];
+                    const emoji = cfg ? cfg.flag : '🌐';
                     document.querySelectorAll('.dynamic-flag').forEach(el => el.innerText = emoji);
                 });
             }
@@ -164,7 +161,6 @@
         obs.observe(document.body, { childList: true, subtree: true });
     }
 
-    // --- NAVIGATION & UI LOGIC ---
     window.onload = () => {
         const savedID = localStorage.getItem('gy_trace');
         if (savedID) {
@@ -220,26 +216,13 @@
         }, 600);
     }
 
-    // --- PHOTO & AVATAR LOGIC ---
-    function preview(i) {
-        if(i.files && i.files[0]) {
-            const r = new FileReader();
-            r.onload = (e) => { 
-                document.getElementById('avatar-img').style.display = "none";
-                document.getElementById('pp').src = e.target.result; document.getElementById('pp').style.display = "block";
-                document.getElementById('h-photo').src = e.target.result; document.getElementById('txt-photo').style.display = "none";
-            };
-            r.readAsDataURL(i.files[0]);
-        }
-    }
-
     function generateAvatar() {
-        document.getElementById('pp').style.display = "none";
         const seed = Math.random().toString(36).substring(7);
         const url = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${seed}`;
-        document.getElementById('avatar-img').src = url; document.getElementById('avatar-img').style.display = "block";
-        document.getElementById('h-photo').src = url; document.getElementById('txt-avatar').style.display = "none";
-        document.getElementById('txt-photo').style.display = "none";
+        document.getElementById('avatar-img').src = url; 
+        document.getElementById('avatar-img').style.display = "block";
+        document.getElementById('h-photo').src = url; 
+        document.getElementById('txt-avatar').style.display = "none";
     }
 
     function swapButtons(a, s) { 
