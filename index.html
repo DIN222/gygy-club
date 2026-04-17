@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.8.6 | THE GLOW EDITION</title>
+    <title>GY-GY Club v4.8.7 | THE ARCHITECT</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
-        :root { --gold: #d4af37; --glow: rgba(212, 175, 55, 0.8); } /* Slightly stronger glow */
+        :root { --gold: #d4af37; --glow: rgba(212, 175, 55, 0.8); }
         * { -webkit-tap-highlight-color: transparent !important; box-sizing: border-box; outline: none; }
         html, body { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; position: fixed; margin:0; }
         
@@ -26,28 +26,24 @@
         .block.active { display: flex !important; opacity: 1; pointer-events: auto !important; }
         .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 22px; color: var(--gold); text-align: center; max-width: 85%; margin-bottom: 15px; text-shadow: 0 0 10px var(--glow); }
         
-        /* BUTTONS BASE */
         .btn-gy { background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; text-transform: uppercase; font-weight: 900; font-family: 'Share Tech Mono'; transition: 0.3s; box-shadow: 0 0 8px var(--glow); position: relative; z-index: 100; }
         .btn-gy:active { background: var(--gold); color: #000; box-shadow: 0 0 20px var(--gold); }
         .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; box-shadow: none !important; }
 
-        /* WELCOME: HORIZONTAL COMPACT BUTTONS */
         .welcome-btn-container { display: flex; gap: 10px; justify-content: center; width: 95%; margin-top: 10px; }
         .btn-welcome-mini { min-width: 145px; padding: 10px 5px; font-size: 11px; margin: 0; }
 
-        /* BAR: 2 TOP, 1 BOTTOM */
         .bar-ui-container { position: absolute; bottom: 3vh; width: 100%; display: flex; flex-direction: column; align-items: center; z-index: 1000; }
         .bar-row { display: flex; gap: 10px; margin-bottom: 10px; width: 90%; justify-content: center; }
         .btn-bar-small { background: #000 !important; min-width: 140px !important; padding: 10px !important; font-size: 11px !important; flex: 1; max-width: 160px; }
         .btn-bar-wide { background: #000 !important; min-width: 290px !important; padding: 10px !important; font-size: 12px !important; }
 
-        .id-card-hall { position: absolute; top: 72%; left: 50%; transform: translate(-50%,-50%); width: 240px; padding: 15px; border: 2px solid var(--gold); background: #F5F5DC; border-radius: 12px; display: flex; flex-direction: column; align-items: center; color: #000; z-index: 30; box-shadow: 0 0 30px var(--gold); }
-        .box-final { width: 85px; height: 85px; border: 2px solid #000; background: #FFF !important; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
+        /* HALL ID FIX */
+        .id-card-hall { position: absolute; top: 65%; left: 50%; transform: translate(-50%,-50%); width: 260px; padding: 20px; border: 2px solid var(--gold); background: #F5F5DC; border-radius: 12px; display: flex; flex-direction: column; align-items: center; color: #000; z-index: 30; box-shadow: 0 0 30px var(--gold); }
+        .box-final { width: 90px; height: 90px; border: 2px solid #000; background: #FFF !important; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
         .dynamic-flag { position: absolute; bottom: 2px; right: 2px; font-size: 18px; z-index: 20; }
         
         #main-door { width: 280px; cursor: pointer; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s; z-index: 9999; filter: drop-shadow(0 0 20px var(--glow)); }
-        
-        /* THE BIGGER & GLOWIER HORSE */
         .horse-welcome-img { max-height: 58vh; width: auto; filter: drop-shadow(0 0 35px var(--glow)); margin-bottom: 10px; }
         .horse-bar-img { height: 70vh; width: auto; object-fit: contain; filter: drop-shadow(0 0 30px var(--glow)); margin-bottom: 18vh; }
     </style>
@@ -94,7 +90,7 @@
                 <div class="dynamic-flag">🌐</div>
             </div>
         </div>
-        <button id="btn-save" class="btn-gy" style="min-width: 270px; padding: 14px;" onclick="swapButtons('btn-save', 'btn-pass')">SAVE DATA</button>
+        <button id="btn-save" class="btn-gy" style="min-width: 270px; padding: 14px;" onclick="saveReg()">SAVE DATA</button>
         <button id="btn-pass" class="btn-gy btn-sleep" style="min-width: 270px; padding: 14px;" onclick="portalTransition('block-hall')">ENTER THE HALL</button>
     </div>
 
@@ -102,8 +98,11 @@
         <div class="id-card-hall">
             <div id="h-id" style="font-weight:900; font-size:14px; margin-bottom:12px;">#ID</div>
             <div style="display:flex; gap:15px; margin-bottom:12px;">
-                <div class="box-final"><img id="h-photo" style="width:100%; height:100%; object-fit:cover;"><div class="dynamic-flag">🌐</div></div>
-                <div class="box-final" id="h-qr"></div>
+                <div class="box-final" style="border: 2px solid #000;">
+                    <img id="h-photo" style="width:100%; height:100%; object-fit:cover;">
+                    <div class="dynamic-flag">🌐</div>
+                </div>
+                <div class="box-final" id="h-qr" style="border: 2px solid #000;"></div>
             </div>
             <button id="btn-confirm" class="btn-gy" style="min-width:100%; border-color:#000; color:#000; padding: 14px;" onclick="swapButtons('btn-confirm', 'btn-enter-bar')">CONFIRM</button>
             <button id="btn-enter-bar" class="btn-gy btn-sleep" style="min-width:100%; border-color:#000; color:#000; padding: 14px;" onclick="portalTransition('block-bar')">ENTER THE BAR</button>
@@ -124,21 +123,27 @@
 
 <script>
     let currentID = "";
-    const langMap = {
+    const fullLangMap = {
         'en': {n: 'English', f: '🇬🇧'}, 'ru': {n: 'Russian', f: '🇷🇺'}, 'uk': {n: 'Ukrainian', f: '🇺🇦'},
         'pl': {n: 'Polish', f: '🇵🇱'}, 'fr': {n: 'French', f: '🇫🇷'}, 'de': {n: 'German', f: '🇩🇪'},
         'es': {n: 'Spanish', f: '🇪🇸'}, 'it': {n: 'Italian', f: '🇮🇹'}, 'zh-CN': {n: 'Chinese', f: '🇨🇳'},
         'ja': {n: 'Japanese', f: '🇯🇵'}, 'ko': {n: 'Korean', f: '🇰🇷'}, 'tr': {n: 'Turkish', f: '🇹🇷'},
-        'ar': {n: 'Arabic', f: '🇦🇪'}, 'pt': {n: 'Portuguese', f: '🇵🇹'}, 'nl': {n: 'Dutch', f: '🇳🇱'}
+        'ar': {n: 'Arabic', f: '🇦🇪'}, 'pt': {n: 'Portuguese', f: '🇵🇹'}, 'nl': {n: 'Dutch', f: '🇳🇱'},
+        'sv': {n: 'Swedish', f: '🇸🇪'}, 'no': {n: 'Norwegian', f: '🇳🇴'}, 'fi': {n: 'Finnish', f: '🇫🇮'},
+        'da': {n: 'Danish', f: '🇩🇰'}, 'cs': {n: 'Czech', f: '🇨🇿'}, 'hu': {n: 'Hungarian', f: '🇭🇺'}
     };
 
     function forceEnglish() {
         const sel = document.querySelector('.goog-te-combo');
         if (sel) {
             Array.from(sel.options).forEach(o => {
-                const c = langMap[o.value];
+                const c = fullLangMap[o.value];
                 if (c) o.text = `${c.f} ${c.n}`;
                 else if (o.value === "") o.text = "🌐 Select Language";
+                else {
+                    // Fail-safe: if not in map, just capitalize first letter
+                    o.text = `🏳️ ${o.text.charAt(0).toUpperCase() + o.text.slice(1)}`;
+                }
             });
         }
     }
@@ -151,7 +156,7 @@
             if (s && !s.getAttribute('data-ready')) {
                 s.setAttribute('data-ready', 'true');
                 s.addEventListener('change', () => {
-                    const c = langMap[s.value];
+                    const c = fullLangMap[s.value];
                     document.querySelectorAll('.dynamic-flag').forEach(el => el.innerText = c ? c.f : '🌐');
                 });
             }
@@ -168,9 +173,9 @@
         document.getElementById('id-label').innerText = id;
         document.getElementById('h-id').innerText = id;
         document.getElementById('qr-box-reg').innerHTML = "";
-        new QRCode(document.getElementById("qr-box-reg"), { text: id, width: 85, height: 85 });
+        new QRCode(document.getElementById("qr-box-reg"), { text: id, width: 90, height: 90 });
         document.getElementById('h-qr').innerHTML = "";
-        new QRCode(document.getElementById("h-qr"), { text: id, width: 85, height: 85 });
+        new QRCode(document.getElementById("h-qr"), { text: id, width: 90, height: 90 });
     }
 
     function handleDoor() {
@@ -183,10 +188,7 @@
             localStorage.setItem('gy_trace', currentID);
         }
         updateIDUI(currentID);
-        setTimeout(() => { 
-            portalTransition('block-welcome'); 
-            const a = document.getElementById('snd-ambient'); if(a) { a.volume = 0.4; a.play().catch(()=>{}); }
-        }, 1300);
+        setTimeout(() => { portalTransition('block-welcome'); }, 1300);
     }
 
     function portalTransition(nextId) {
@@ -197,10 +199,6 @@
             const nxt = document.getElementById(nextId);
             if(nxt) {
                 nxt.classList.add('active');
-                if(nextId === 'block-bar') {
-                    setTimeout(() => document.getElementById('snd-khe').play().catch(()=>{}), 600);
-                    setTimeout(() => document.getElementById('snd-pour').play().catch(()=>{}), 1800);
-                }
                 setTimeout(() => nxt.style.opacity = "1", 50);
             }
         }, 600);
@@ -228,6 +226,11 @@
         document.getElementById('h-photo').src = url; 
         document.getElementById('txt-avatar').style.display = "none";
         document.getElementById('txt-photo').style.display = "none";
+    }
+
+    function saveReg() {
+        swapButtons('btn-save', 'btn-pass');
+        document.getElementById('btn-w-hall').classList.remove('btn-sleep');
     }
 
     function swapButtons(a, s) { document.getElementById(a).classList.add('btn-sleep'); document.getElementById(s).classList.remove('btn-sleep'); }
