@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.9.7 | ARCHITECT RECOVERY</title>
+    <title>GY-GY Club v4.9.8 | FORCED TRANSLATION</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
-        :root { --gold: #d4af37; --glow: rgba(212, 175, 55, 0.5); }
+        :root { --gold: #d4af37; --glow: rgba(212, 175, 55, 0.4); }
         * { -webkit-tap-highlight-color: transparent !important; box-sizing: border-box; outline: none; }
         
         html, body { 
@@ -17,61 +17,55 @@
             overflow: hidden !important; position: fixed;
         }
         
-        /* LANGUAGE SELECTOR (CUSTOM) */
-        #google_translate_element { display: none !important; }
+        /* LANGUAGE AREA - REFIXED */
         .custom-lang-wrapper { position: fixed; top: 15px; left: 15px; z-index: 1000000; }
         .lang-select-custom { 
             background: #000; color: var(--gold); border: 2px solid var(--gold);
-            padding: 8px 12px; font-family: 'Share Tech Mono'; font-size: 14px;
-            border-radius: 4px; cursor: pointer; width: 220px;
+            padding: 10px; font-family: 'Share Tech Mono'; font-size: 16px;
+            border-radius: 4px; cursor: pointer; width: 230px;
         }
-        .lang-hint { 
-            font-size: 11px; text-align: center; margin-top: 5px; 
-            animation: blink 2s infinite; font-weight: bold; letter-spacing: 1px;
-        }
+        .lang-hint { font-size: 11px; text-align: center; margin-top: 5px; animation: blink 2s infinite; font-weight: bold; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-        .ui-logo { 
-            position: fixed; top: 18px; right: 25px; z-index: 1000000; 
-            font-size: 32px; font-weight: bold; letter-spacing: 6px; 
-        }
+        /* Hidden Original UI */
+        #google_translate_element { visibility: hidden; position: absolute; top: -100px; }
 
-        /* BLOCK ENGINE */
+        .ui-logo { position: fixed; top: 18px; right: 25px; z-index: 1000000; font-size: 32px; font-weight: bold; letter-spacing: 6px; }
+
+        /* ENGINE - STABLE LAYERS */
         .block { 
             position: fixed; inset: 0; display: none; flex-direction: column; 
             align-items: center; justify-content: center; background: #000; 
-            z-index: 10; opacity: 0; transition: opacity 0.8s ease, transform 0.8s ease;
+            opacity: 0; transition: opacity 0.6s ease;
         }
-        .block.active { display: flex !important; opacity: 1; z-index: 100; }
+        .block.active { display: flex !important; opacity: 1; z-index: 500; }
+        #block-hall.active { z-index: 600; } /* Hall Always Top */
 
-        /* DOOR ANIMATION (RESTORED) */
-        #main-door { 
-            width: 280px; cursor: pointer; 
-            transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s ease;
-        }
+        /* DOOR ANIMATION */
+        #main-door { width: 280px; cursor: pointer; transition: transform 2.5s ease-in, opacity 1.5s ease; }
         .door-open { transform: scale(15); opacity: 0; pointer-events: none; }
 
-        /* TYPOGRAPHY */
-        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 24px; text-align: center; max-width: 85%; margin-bottom: 25px; }
-        .welcome-title { font-family: 'Playfair Display'; font-size: 45px; font-weight: 900; letter-spacing: 10px; margin-bottom: 20px; }
+        /* STYLES */
+        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 24px; text-align: center; max-width: 85%; margin-bottom: 20px; }
+        .welcome-title { font-family: 'Playfair Display'; font-size: 45px; font-weight: 900; letter-spacing: 10px; margin-bottom: 20px; text-transform: uppercase; }
         .horse-img { max-height: 52vh; filter: drop-shadow(0 0 30px var(--glow)); margin-bottom: 20px; }
 
-        /* REGISTRATION & HALL */
+        .btn-gy { 
+            background: transparent; border: 2px solid var(--gold); color: var(--gold); 
+            cursor: pointer; text-transform: uppercase; font-weight: 900; font-family: 'Share Tech Mono'; 
+            padding: 16px; min-width: 150px; font-size: 13px;
+        }
+        .btn-gy:active { background: var(--gold); color: #000; }
+        .btn-sleep { opacity: 0.1 !important; pointer-events: none !important; }
+
+        /* HALL CARD */
         .id-card-hall { 
             width: 320px; padding: 30px; border: 2px solid var(--gold); background: #F5F5DC; 
             border-radius: 15px; display: flex; flex-direction: column; align-items: center; color: #000; 
         }
         .box-final { width: 105px; height: 105px; border: 2px solid #000; background: #FFF !important; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
-        
-        .btn-gy { 
-            background: transparent; border: 2px solid var(--gold); color: var(--gold); 
-            cursor: pointer; text-transform: uppercase; font-weight: 900; font-family: 'Share Tech Mono'; 
-            padding: 16px; min-width: 150px; font-size: 13px; transition: 0.3s;
-        }
-        .btn-gy:active { background: var(--gold); color: #000; }
-        .btn-sleep { opacity: 0.1 !important; pointer-events: none !important; }
 
-        /* CLEANUP */
+        /* GOOGLE CLEANUP */
         .skiptranslate, .goog-te-banner-frame { display: none !important; }
         body { top: 0 !important; }
     </style>
@@ -79,7 +73,7 @@
 <body>
 
     <div class="custom-lang-wrapper">
-        <select class="lang-select-custom" onchange="changeLang(this.value)">
+        <select class="lang-select-custom" onchange="forceTranslate(this.value)">
             <option value="">🌐 Language</option>
             <option value="en">🇬🇧 English</option>
             <option value="ru">🇷🇺 Russian</option>
@@ -88,6 +82,7 @@
             <option value="de">🇩🇪 German</option>
             <option value="fr">🇫🇷 French</option>
             <option value="es">🇪🇸 Spanish</option>
+            <option value="it">🇮🇹 Italian</option>
         </select>
         <div class="lang-hint">↑ SELECT LANGUAGE</div>
     </div>
@@ -100,7 +95,7 @@
 
     <div id="block-entrance" class="block active">
         <img src="door_1.jpg" id="main-door" onclick="handleEntrance()">
-        <div style="margin-top:30px; letter-spacing:5px; font-size:12px;">CLICK TO OPEN</div>
+        <div style="margin-top:25px; letter-spacing:4px;">CLICK TO ENTER</div>
     </div>
 
     <div id="block-welcome" class="block">
@@ -116,7 +111,7 @@
     <div id="block-identity" class="block">
         <div class="quote-text" style="font-size: 18px;">Identification is the soul of the club</div>
         <div class="welcome-title" style="font-size: 26px; letter-spacing:4px;">MEMBERSHIP</div>
-        <div style="display:flex; gap:12px; margin-bottom:40px;">
+        <div style="display:flex; gap:10px; margin-bottom:40px;">
             <div class="box-final" style="background:#000!important; color:var(--gold); border-color:var(--gold); font-size:11px; font-weight:bold; text-align:center;" id="id-label">#ID</div>
             <div class="box-final" id="qr-reg" style="border-color:var(--gold);"></div>
             <div class="box-final" style="border-color:var(--gold); cursor:pointer;" onclick="document.getElementById('file-in').click()">
@@ -129,26 +124,26 @@
                 <span id="txt-av" style="color:#000; font-size:11px; font-weight:bold;">AVATAR</span>
             </div>
         </div>
-        <button id="btn-save" class="btn-gy" style="width: 320px;" onclick="saveData()">SAVE IDENTITY</button>
-        <button id="btn-pass" class="btn-gy btn-sleep" style="width: 320px; margin-top: 15px;" onclick="portal('block-hall')">ENTER THE HALL</button>
+        <button id="btn-save" class="btn-gy" style="width: 310px;" onclick="saveData()">SAVE IDENTITY</button>
+        <button id="btn-pass" class="btn-gy btn-sleep" style="width: 310px; margin-top: 15px;" onclick="portal('block-hall')">ENTER THE HALL</button>
     </div>
 
     <div id="block-hall" class="block">
         <div class="id-card-hall">
-            <div id="h-id" style="font-weight:900; font-size:18px; margin-bottom:20px;">#ID-TOKEN</div>
-            <div style="display:flex; gap:15px; margin-bottom:25px;">
+            <div id="h-id" style="font-weight:900; font-size:18px; margin-bottom:15px;">#ID-TOKEN</div>
+            <div style="display:flex; gap:15px; margin-bottom:20px;">
                 <div class="box-final" style="border: 3px solid #000;">
                     <img id="h-photo" style="width:100%; height:100%; object-fit:cover;">
                 </div>
                 <div class="box-final" id="h-qr" style="border: 3px solid #000;"></div>
             </div>
-            <button class="btn-gy" style="width:100%; border-color:#000; color:#000;" onclick="portal('block-bar')">PROCEED TO BAR</button>
+            <button class="btn-gy" style="width:100%; border-color:#000; color:#000;" onclick="portal('block-bar')">TO THE BAR</button>
         </div>
     </div>
 
     <div id="block-bar" class="block">
         <img src="horse_bar.png" style="height:65vh; margin-bottom: 2vh;">
-        <div style="display:flex; flex-direction:column; gap:15px; width:100%; align-items:center;">
+        <div style="display:flex; flex-direction:column; gap:12px; align-items:center;">
             <div style="display:flex; gap:15px;">
                 <button class="btn-gy" style="min-width:145px; font-size:11px;" onclick="location.href='server.html'">SERVER AI</button>
                 <button class="btn-gy" style="min-width:145px; font-size:11px;" onclick="location.href='tables.html'">TABLES</button>
@@ -164,11 +159,12 @@
         new google.translate.TranslateElement({pageLanguage: 'en', autoDisplay: false}, 'google_translate_element');
     }
 
-    function changeLang(lang) {
-        const select = document.querySelector('.goog-te-combo');
-        if (select) {
-            select.value = lang;
-            select.dispatchEvent(new Event('change'));
+    // ФОРСИРОВАННЫЙ ПЕРЕВОД
+    function forceTranslate(lang) {
+        const frame = document.querySelector('.goog-te-combo');
+        if (frame) {
+            frame.value = lang;
+            frame.dispatchEvent(new Event('change'));
         }
     }
 
@@ -191,11 +187,11 @@
     function portal(id) {
         document.querySelectorAll('.block').forEach(b => {
             b.classList.remove('active');
-            setTimeout(() => { if(!b.classList.contains('active')) b.style.display = 'none'; }, 800);
+            setTimeout(() => { if(!b.classList.contains('active')) b.style.display='none'; }, 600);
         });
         const target = document.getElementById(id);
         target.style.display = 'flex';
-        setTimeout(() => target.classList.add('active'), 50);
+        setTimeout(() => target.classList.add('active'), 10);
     }
 
     function updateAll(id) {
@@ -218,11 +214,11 @@
         if(i.files && i.files[0]) {
             const r = new FileReader();
             r.onload = (e) => {
-                const data = e.target.result;
+                const img = e.target.result;
                 document.getElementById('av-img').style.display = "none";
-                document.getElementById('pp').src = data;
+                document.getElementById('pp').src = img;
                 document.getElementById('pp').style.display = "block";
-                document.getElementById('h-photo').src = data;
+                document.getElementById('h-photo').src = img;
                 document.getElementById('txt-ph').style.display = "none";
             };
             r.readAsDataURL(i.files[0]);
