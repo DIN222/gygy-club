@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.8.1 | THE BIG HORSE EDITION</title>
+    <title>GY-GY Club v4.8.2 | DARK BAR EDITION</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -14,18 +14,17 @@
         
         /* HEADER & LANGUAGE */
         #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000001; }
-        .goog-te-gadget .goog-te-combo { background: #000 !important; color: var(--gold) !important; border: 2px solid var(--gold) !important; padding: 6px; border-radius: 4px; font-family: 'Share Tech Mono'; font-size: 12px; width: 140px; cursor: pointer; }
+        .goog-te-gadget .goog-te-combo { background: #000 !important; color: var(--gold) !important; border: 2px solid var(--gold) !important; padding: 6px; border-radius: 4px; font-family: 'Share Tech Mono'; font-size: 12px; width: 160px; cursor: pointer; }
         .goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame, .skiptranslate > iframe { display: none !important; }
         body { top: 0px !important; }
 
-        .lang-hint { position: fixed; top: 55px; left: 15px; z-index: 1000001; font-size: 11px; color: var(--gold); width: 140px; text-align: center; animation: blink 2s infinite; font-weight: bold; pointer-events: none; }
+        .lang-hint { position: fixed; top: 55px; left: 15px; z-index: 1000001; font-size: 11px; color: var(--gold); width: 160px; text-align: center; animation: blink 2s infinite; font-weight: bold; pointer-events: none; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
         .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000001; font-size: 26px; letter-spacing: 6px; font-weight: bold; color: var(--gold); text-shadow: 0 0 15px var(--glow); }
 
         /* CORE BLOCKS */
         .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; z-index: 10; opacity: 0; transition: opacity 0.6s ease; }
         .block.active { display: flex !important; opacity: 1; pointer-events: auto !important; }
-
         .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 24px; color: var(--gold); text-align: center; max-width: 85%; margin-bottom: 20px; text-shadow: 0 0 10px var(--glow); }
         
         /* BUTTONS */
@@ -33,7 +32,10 @@
         .btn-gy:active { background: var(--gold); color: #000; box-shadow: 0 0 20px var(--gold); }
         .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; box-shadow: none !important; }
 
-        /* WELCOME SPECIFIC: SMALLER BUTTONS */
+        /* BAR BUTTONS (BLACK BACKGROUND) */
+        .btn-bar { background: #000 !important; min-width: 270px !important; font-size: 14px !important; }
+
+        /* WELCOME ZONE */
         .btn-welcome { min-width: 220px; padding: 8px; font-size: 12px; margin: 4px 0; }
 
         /* ID STYLES */
@@ -41,11 +43,9 @@
         .box-final { width: 85px; height: 85px; border: 2px solid #000; background: #FFF !important; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
         .dynamic-flag { position: absolute; bottom: 2px; right: 2px; font-size: 18px; z-index: 20; }
         
-        #main-door { width: 280px; cursor: pointer; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s; z-index: 9999; position: relative; pointer-events: auto !important; filter: drop-shadow(0 0 20px var(--glow)); }
-        
-        /* THE BIG HORSE */
-        .horse-welcome-img { max-height: 55vh; width: auto; filter: drop-shadow(0 0 25px var(--glow)); margin-bottom: 5px; }
-        .horse-bar-img { height: 75vh; width: auto; object-fit: contain; filter: drop-shadow(0 0 30px var(--glow)); }
+        #main-door { width: 280px; cursor: pointer; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s; z-index: 9999; filter: drop-shadow(0 0 20px var(--glow)); }
+        .horse-welcome-img { max-height: 52vh; width: auto; filter: drop-shadow(0 0 25px var(--glow)); margin-bottom: 5px; }
+        .horse-bar-img { height: 72vh; width: auto; object-fit: contain; filter: drop-shadow(0 0 30px var(--glow)); }
         
         .bar-ui-container { position: absolute; bottom: 5vh; width: 100%; display: flex; flex-direction: column; align-items: center; z-index: 1000; }
     </style>
@@ -56,10 +56,10 @@
     <div class="lang-hint" id="l-hint">↑<br>SELECT LANGUAGE</div>
     <div class="ui-header-right">GY-GY</div>
 
-    <audio id="snd-door" preload="auto"><source src="door_open.mp3" type="audio/mpeg"></audio>
-    <audio id="snd-ambient" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
-    <audio id="snd-khe" preload="auto"><source src="charlie_bar_fx.mp3" type="audio/mpeg"></audio>
-    <audio id="snd-pour" preload="auto"><source src="pour_whisky.mp3" type="audio/mpeg"></audio>
+    <audio id="snd-door"><source src="door_open.mp3" type="audio/mpeg"></audio>
+    <audio id="snd-ambient" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
+    <audio id="snd-khe"><source src="charlie_bar_fx.mp3" type="audio/mpeg"></audio>
+    <audio id="snd-pour"><source src="pour_whisky.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active" style="opacity: 1;">
         <img src="door_1.jpg" id="main-door" onclick="handleDoor()" alt="ENTER">
@@ -78,6 +78,12 @@
         <div style="display:flex; gap:10px; margin-bottom:25px;">
             <div class="box-final" style="background:rgba(212,175,55,0.1) !important; border-color:var(--gold); color:var(--gold); font-size:11px;" id="id-label">#ID</div>
             <div class="box-final" id="qr-box-reg" style="border-color:var(--gold);"></div>
+            <div class="box-final" style="border-color:var(--gold); cursor:pointer;" onclick="document.getElementById('file-input').click()">
+                <input type="file" id="file-input" onchange="preview(this)" style="display:none;" accept="image/*">
+                <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
+                <span id="txt-photo" style="color:var(--gold); font-size:10px; font-weight:900; text-align:center;">UPLOAD<br>PHOTO</span>
+                <div class="dynamic-flag">🌐</div>
+            </div>
             <div class="box-final" style="border-color:var(--gold); cursor:pointer;" onclick="generateAvatar()">
                 <img id="avatar-img" style="display:none; width:100%; height:100%; object-fit:cover;">
                 <span id="txt-avatar" style="color:var(--gold); font-size:10px; font-weight:900; text-align:center;">GENERATE<br>AVATAR</span>
@@ -89,7 +95,6 @@
     </div>
 
     <div id="block-hall" class="block">
-        <div style="position:absolute; inset:0; background:url('hall_bg_jpg.jpg') center/cover; z-index:15; opacity: 0.5;"></div>
         <div class="id-card-hall">
             <div id="h-id" style="font-weight:900; font-size:14px; margin-bottom:12px;">#ID</div>
             <div style="display:flex; gap:15px; margin-bottom:12px;">
@@ -104,32 +109,21 @@
     <div id="block-bar" class="block" style="justify-content: flex-end;">
         <div class="quote-text" style="position:absolute; top:8vh;">"Neigh, let's get started!"</div>
         <div class="bar-ui-container">
-            <div style="display:flex; gap:10px; margin-bottom:10px;">
-                <button class="btn-gy" style="min-width:130px; font-size:12px;" onclick="window.location.href='tables.html'">TABLES</button>
-                <button class="btn-gy" style="min-width:130px; font-size:12px;" onclick="window.location.href='bridge_protocol.html'">AI ROOM</button>
-            </div>
-            <button class="btn-gy" onclick="portalTransition('block-hall')">BACK TO HALL</button>
+            <button class="btn-gy btn-bar" onclick="window.location.href='tables.html'">TABLES</button>
+            <button class="btn-gy btn-bar" onclick="window.location.href='bridge_protocol.html'">AI ROOM</button>
+            <button class="btn-gy btn-bar" onclick="portalTransition('block-hall')">BACK TO HALL</button>
         </div>
         <img src="horse_bar.png" class="horse-bar-img">
     </div>
 
 <script>
     let currentID = "";
-    
-    // FULL LANGUAGE LIST WITH FLAGS AND ENGLISH NAMES
     const languageConfig = {
-        'en': { name: 'English', flag: '🇬🇧' },
-        'ru': { name: 'Russian', flag: '🇷🇺' },
-        'uk': { name: 'Ukrainian', flag: '🇺🇦' },
-        'pl': { name: 'Polish', flag: '🇵🇱' },
-        'fr': { name: 'French', flag: '🇫🇷' },
-        'de': { name: 'German', flag: '🇩🇪' },
-        'es': { name: 'Spanish', flag: '🇪🇸' },
-        'it': { name: 'Italian', flag: '🇮🇹' },
-        'zh-CN': { name: 'Chinese', flag: '🇨🇳' },
-        'ja': { name: 'Japanese', flag: '🇯🇵' },
-        'ko': { name: 'Korean', flag: '🇰🇷' },
-        'ar': { name: 'Arabic', flag: '🇦🇪' }
+        'en': { name: 'English', flag: '🇬🇧' }, 'ru': { name: 'Russian', flag: '🇷🇺' },
+        'uk': { name: 'Ukrainian', flag: '🇺🇦' }, 'pl': { name: 'Polish', flag: '🇵🇱' },
+        'fr': { name: 'French', flag: '🇫🇷' }, 'de': { name: 'German', flag: '🇩🇪' },
+        'es': { name: 'Spanish', flag: '🇪🇸' }, 'it': { name: 'Italian', flag: '🇮🇹' },
+        'zh-CN': { name: 'Chinese', flag: '🇨🇳' }, 'ja': { name: 'Japanese', flag: '🇯🇵' }
     };
 
     function forceEnglishMenu() {
@@ -137,9 +131,7 @@
         if (select) {
             Array.from(select.options).forEach(opt => {
                 const cfg = languageConfig[opt.value];
-                if (cfg) {
-                    opt.text = `${cfg.flag} ${cfg.name}`; // ADDED FLAG + ENGLISH NAME
-                }
+                if (cfg) opt.text = `${cfg.flag} ${cfg.name}`;
             });
         }
     }
@@ -153,8 +145,7 @@
                 s.setAttribute('data-ready', 'true');
                 s.addEventListener('change', () => {
                     const cfg = languageConfig[s.value];
-                    const emoji = cfg ? cfg.flag : '🌐';
-                    document.querySelectorAll('.dynamic-flag').forEach(el => el.innerText = emoji);
+                    document.querySelectorAll('.dynamic-flag').forEach(el => el.innerText = cfg ? cfg.flag : '🌐');
                 });
             }
         });
@@ -163,11 +154,7 @@
 
     window.onload = () => {
         const savedID = localStorage.getItem('gy_trace');
-        if (savedID) {
-            currentID = savedID;
-            updateIDUI(currentID);
-            document.getElementById('btn-w-hall').classList.remove('btn-sleep');
-        }
+        if (savedID) { currentID = savedID; updateIDUI(savedID); document.getElementById('btn-w-hall').classList.remove('btn-sleep'); }
     };
 
     function updateIDUI(id) {
@@ -180,19 +167,15 @@
     }
 
     function handleDoor() {
+        document.getElementById('snd-door').play().catch(()=>{});
         const d = document.getElementById('main-door');
-        const s = document.getElementById('snd-door');
-        if(s) s.play().catch(()=>{});
-        
         d.style.transform = "scale(12)"; d.style.opacity = "0"; d.style.pointerEvents = "none";
         document.getElementById('l-hint').style.display = 'none';
-
         if (!currentID) {
             currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
             localStorage.setItem('gy_trace', currentID);
         }
         updateIDUI(currentID);
-        
         setTimeout(() => { 
             portalTransition('block-welcome'); 
             const a = document.getElementById('snd-ambient'); if(a) { a.volume = 0.4; a.play().catch(()=>{}); }
@@ -201,34 +184,45 @@
 
     function portalTransition(nextId) {
         const current = document.querySelector('.block.active');
-        if(current) { current.style.opacity = "0"; }
-        
+        if(current) current.style.opacity = "0";
         setTimeout(() => {
             if(current) current.classList.remove('active');
             const next = document.getElementById(nextId);
             if(next) {
                 next.classList.add('active');
                 if(nextId === 'block-bar') {
-                    setTimeout(() => { document.getElementById('snd-khe').play().catch(()=>{}); }, 600);
-                    setTimeout(() => { document.getElementById('snd-pour').play().catch(()=>{}); }, 1800);
+                    setTimeout(() => document.getElementById('snd-khe').play().catch(()=>{}), 600);
+                    setTimeout(() => document.getElementById('snd-pour').play().catch(()=>{}), 1800);
                 }
+                setTimeout(() => next.style.opacity = "1", 50);
             }
         }, 600);
     }
 
-    function generateAvatar() {
-        const seed = Math.random().toString(36).substring(7);
-        const url = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${seed}`;
-        document.getElementById('avatar-img').src = url; 
-        document.getElementById('avatar-img').style.display = "block";
-        document.getElementById('h-photo').src = url; 
-        document.getElementById('txt-avatar').style.display = "none";
+    function preview(i) {
+        if(i.files && i.files[0]) {
+            const r = new FileReader();
+            r.onload = (e) => { 
+                document.getElementById('avatar-img').style.display = "none";
+                document.getElementById('pp').src = e.target.result; document.getElementById('pp').style.display = "block";
+                document.getElementById('h-photo').src = e.target.result; document.getElementById('txt-photo').style.display = "none";
+                document.getElementById('txt-avatar').style.display = "none";
+            };
+            r.readAsDataURL(i.files[0]);
+        }
     }
 
-    function swapButtons(a, s) { 
-        document.getElementById(a).classList.add('btn-sleep'); 
-        document.getElementById(s).classList.remove('btn-sleep'); 
+    function generateAvatar() {
+        document.getElementById('pp').style.display = "none";
+        const seed = Math.random().toString(36).substring(7);
+        const url = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${seed}`;
+        document.getElementById('avatar-img').src = url; document.getElementById('avatar-img').style.display = "block";
+        document.getElementById('h-photo').src = url; 
+        document.getElementById('txt-avatar').style.display = "none";
+        document.getElementById('txt-photo').style.display = "none";
     }
+
+    function swapButtons(a, s) { document.getElementById(a).classList.add('btn-sleep'); document.getElementById(s).classList.remove('btn-sleep'); }
 </script>
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
