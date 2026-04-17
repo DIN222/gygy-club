@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.9.4 | FINAL STABILITY</title>
+    <title>GY-GY Club v4.9.5 | FINAL CORE</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -14,161 +14,148 @@
         html, body { 
             width: 100%; height: 100%; background: #000; color: var(--gold); 
             font-family: 'Share Tech Mono', monospace; margin: 0; padding: 0;
-            overflow: hidden !important; position: fixed;
+            overflow: hidden !important; position: fixed; touch-action: none;
         }
         
-        /* UI FIXES */
-        #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000002; min-height: 40px; }
+        /* LANGUAGE PANEL */
+        #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 999999; }
         .goog-te-gadget .goog-te-combo { 
             background: #000 !important; color: var(--gold) !important; 
-            border: 2px solid var(--gold) !important; padding: 8px; 
-            border-radius: 4px; font-family: 'Share Tech Mono'; font-size: 14px; width: 220px; 
+            border: 2px solid var(--gold) !important; padding: 10px; 
+            border-radius: 4px; font-family: 'Share Tech Mono'; font-size: 15px; width: 230px; 
         }
         .lang-hint { 
-            position: fixed; top: 65px; left: 15px; z-index: 1000002; font-size: 12px; 
-            color: var(--gold); width: 220px; text-align: center; animation: blink 2s infinite; 
-            font-weight: bold; pointer-events: none; 
+            position: fixed; top: 68px; left: 15px; z-index: 999999; font-size: 13px; 
+            color: var(--gold); width: 230px; text-align: center; animation: blink 2s infinite; 
+            font-weight: bold; 
         }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
         
-        .ui-header-right { 
-            position: fixed; top: 18px; right: 25px; z-index: 1000002; 
-            font-size: 32px; font-weight: bold; text-shadow: 0 0 15px var(--glow); letter-spacing: 6px; 
+        .ui-logo { 
+            position: fixed; top: 18px; right: 25px; z-index: 999999; 
+            font-size: 35px; font-weight: bold; text-shadow: 0 0 15px var(--glow); letter-spacing: 8px; 
         }
 
-        /* ENGINE - BLOCK SYSTEM */
+        /* ENGINE */
         .block { 
-            position: fixed; inset: 0; width: 100%; height: 100%;
+            position: fixed; inset: 0; width: 100vw; height: 100vh;
             display: none; flex-direction: column; align-items: center; justify-content: center; 
-            background: #000; z-index: 100; opacity: 0; transition: opacity 0.5s ease;
+            background: #000; z-index: 10; opacity: 0; transition: opacity 0.4s ease-in-out;
         }
-        .block.active { display: flex !important; opacity: 1; z-index: 500; }
+        .block.active { display: flex !important; opacity: 1; z-index: 100; }
         
-        /* CONTENT */
-        .quote-text { 
-            font-family: 'Playfair Display', serif; font-style: italic; font-size: 24px; 
-            color: var(--gold); text-align: center; max-width: 85%; margin-bottom: 25px; 
-        }
-        .welcome-title { 
-            font-family: 'Playfair Display'; font-size: 45px; font-weight: 900; 
-            letter-spacing: 12px; margin-bottom: 20px; text-transform: uppercase; 
-        }
-        .horse-img { max-height: 50vh; filter: drop-shadow(0 0 35px var(--glow)); margin-bottom: 10px; }
+        /* ELEMENTS */
+        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 24px; text-align: center; max-width: 85%; margin-bottom: 20px; }
+        .welcome-title { font-family: 'Playfair Display'; font-size: 48px; font-weight: 900; letter-spacing: 15px; margin-bottom: 20px; }
+        .horse-img { max-height: 55vh; filter: drop-shadow(0 0 40px var(--glow)); margin-bottom: 15px; }
 
         /* BUTTONS */
         .btn-gy { 
             background: transparent; border: 2px solid var(--gold); color: var(--gold); 
             cursor: pointer; text-transform: uppercase; font-weight: 900; font-family: 'Share Tech Mono'; 
-            transition: 0.3s; box-shadow: 0 0 8px var(--glow); padding: 15px; min-width: 145px;
+            padding: 16px; min-width: 160px; font-size: 13px; box-shadow: 0 0 10px var(--glow);
         }
         .btn-gy:active { background: var(--gold); color: #000; }
-        .btn-sleep { opacity: 0.2 !important; pointer-events: none !important; }
+        .btn-sleep { opacity: 0.1 !important; pointer-events: none !important; }
 
-        /* HALL & REGISTRATION */
+        /* CARD STYLE */
         .id-card-hall { 
-            width: 300px; padding: 25px; border: 2px solid var(--gold); background: #F5F5DC; 
-            border-radius: 15px; display: flex; flex-direction: column; align-items: center; color: #000; 
-            box-shadow: 0 0 40px var(--gold);
+            width: 320px; padding: 30px; border: 2px solid var(--gold); background: #F5F5DC; 
+            border-radius: 20px; display: flex; flex-direction: column; align-items: center; color: #000; 
+            box-shadow: 0 0 50px var(--gold);
         }
         .box-final { 
-            width: 100px; height: 100px; border: 2px solid #000; background: #FFF !important; 
+            width: 110px; height: 110px; border: 2px solid #000; background: #FFF !important; 
             display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; 
         }
-        .dynamic-flag { position: absolute; bottom: 2px; right: 2px; font-size: 22px; }
-
-        .goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame { display: none !important; }
-        body { top: 0px !important; }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
     <div id="google_translate_element"></div>
-    <div class="lang-hint">↑<br>SELECT LANGUAGE</div>
-    <div class="ui-header-right">GY-GY</div>
+    <div class="lang-hint">↑ SELECT LANGUAGE</div>
+    <div class="ui-logo">GY-GY</div>
 
     <audio id="snd-door"><source src="door_open.mp3" type="audio/mpeg"></audio>
     <audio id="snd-ambient" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active">
-        <img src="door_1.jpg" id="main-door" onclick="handleEntrance()" style="width:280px; cursor:pointer; filter: drop-shadow(0 0 25px var(--glow));">
-        <div style="margin-top:20px; font-size:12px; letter-spacing:3px;">CLICK TO ENTER</div>
+        <img src="door_1.jpg" onclick="handleEntrance()" style="width:300px; cursor:pointer; filter: drop-shadow(0 0 25px var(--glow));">
+        <div style="margin-top:25px; font-size:14px; letter-spacing:5px;">ENTER CLUB</div>
     </div>
 
-    <div id="block-welcome" class="block" style="justify-content: flex-start; padding-top: 6vh;">
+    <div id="block-welcome" class="block" style="justify-content: flex-start; padding-top: 5vh;">
         <div class="quote-text">"Every joke has a grain of whiskey"</div>
         <img src="horse_welcome.png" class="horse-img">
         <div class="welcome-title">WELCOME</div>
-        <div style="display:flex; gap:15px;">
+        <div style="display:flex; gap:20px;">
             <button id="btn-w-hall" class="btn-gy btn-sleep" onclick="portal('block-hall')">TO HALL</button>
             <button class="btn-gy" onclick="portal('block-identity')">GET ID</button>
         </div>
     </div>
 
     <div id="block-identity" class="block">
-        <div class="quote-text">Registration</div>
-        <div style="display:flex; gap:10px; margin-bottom:30px;">
-            <div class="box-final" style="background:#000!important; color:var(--gold); border-color:var(--gold); font-size:11px; font-weight:bold;" id="id-label">#ID</div>
-            <div class="box-final" id="qr-reg"></div>
-            <div class="box-final" style="cursor:pointer;" onclick="document.getElementById('file-in').click()">
+        <div class="welcome-title" style="font-size: 28px; letter-spacing: 5px;">MEMBERSHIP</div>
+        <div style="display:flex; gap:12px; margin-bottom:40px;">
+            <div class="box-final" style="background:#000!important; color:var(--gold); border-color:var(--gold); font-size:12px; font-weight:bold;" id="id-label">#ID</div>
+            <div class="box-final" id="qr-reg" style="border-color:var(--gold);"></div>
+            <div class="box-final" style="border-color:var(--gold); cursor:pointer;" onclick="document.getElementById('file-in').click()">
                 <input type="file" id="file-in" onchange="preview(this)" style="display:none;" accept="image/*">
                 <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
-                <span id="txt-ph" style="color:#000; font-size:11px; font-weight:bold;">PHOTO</span>
+                <span id="txt-ph" style="color:#000; font-size:12px; font-weight:bold;">PHOTO</span>
             </div>
-            <div class="box-final" style="cursor:pointer;" onclick="genAvatar()">
+            <div class="box-final" style="border-color:var(--gold); cursor:pointer;" onclick="genAvatar()">
                 <img id="av-img" style="display:none; width:100%; height:100%; object-fit:cover;">
-                <span id="txt-av" style="color:#000; font-size:11px; font-weight:bold;">AVATAR</span>
+                <span id="txt-av" style="color:#000; font-size:12px; font-weight:bold;">AVATAR</span>
             </div>
         </div>
-        <button id="btn-save" class="btn-gy" style="width: 300px;" onclick="saveData()">SAVE IDENTITY</button>
-        <button id="btn-pass" class="btn-gy btn-sleep" style="width: 300px; margin-top: 15px;" onclick="portal('block-hall')">ENTER HALL</button>
+        <button id="btn-save" class="btn-gy" style="width: 320px;" onclick="saveData()">CONFIRM & SAVE</button>
+        <button id="btn-pass" class="btn-gy btn-sleep" style="width: 320px; margin-top: 15px;" onclick="portal('block-hall')">PROCEED TO HALL</button>
     </div>
 
     <div id="block-hall" class="block">
         <div class="id-card-hall">
-            <div id="h-id" style="font-weight:900; font-size:18px; margin-bottom:15px; letter-spacing:2px;">#ID-TOKEN</div>
-            <div style="display:flex; gap:15px; margin-bottom:20px;">
+            <div id="h-id" style="font-weight:900; font-size:20px; margin-bottom:20px; letter-spacing:3px;">#ID-TOKEN</div>
+            <div style="display:flex; gap:15px; margin-bottom:25px;">
                 <div class="box-final" style="border: 3px solid #000;">
                     <img id="h-photo" style="width:100%; height:100%; object-fit:cover;">
-                    <div class="dynamic-flag">🌐</div>
                 </div>
                 <div class="box-final" id="h-qr" style="border: 3px solid #000;"></div>
             </div>
-            <button class="btn-gy" style="width:100%; border-color:#000; color:#000;" onclick="portal('block-bar')">PROCEED TO BAR</button>
+            <button class="btn-gy" style="width:100%; border-color:#000; color:#000;" onclick="portal('block-bar')">ENTER THE BAR</button>
         </div>
     </div>
 
     <div id="block-bar" class="block" style="justify-content: flex-end; padding-bottom: 5vh;">
-        <img src="horse_bar.png" style="height:65vh; filter: drop-shadow(0 0 35px var(--glow)); margin-bottom: 12vh;">
-        <div style="position:absolute; bottom:5vh; display:flex; flex-direction:column; gap:12px; width:100%; align-items:center;">
+        <img src="horse_bar.png" style="height:65vh; filter: drop-shadow(0 0 40px var(--glow)); margin-bottom: 12vh;">
+        <div style="position:absolute; bottom:5vh; display:flex; flex-direction:column; gap:15px; width:100%; align-items:center;">
             <div style="display:flex; gap:15px;">
-                <button class="btn-gy" style="width:145px; font-size:11px;" onclick="location.href='server.html'">SERVER</button>
-                <button class="btn-gy" style="width:145px; font-size:11px;" onclick="location.href='tables.html'">TABLES</button>
+                <button class="btn-gy" style="min-width:145px; font-size:11px;" onclick="location.href='server.html'">AI SERVER</button>
+                <button class="btn-gy" style="min-width:145px; font-size:11px;" onclick="location.href='tables.html'">TABLES</button>
             </div>
-            <button class="btn-gy" style="width:305px;" onclick="portal('block-hall')">BACK TO HALL</button>
+            <button class="btn-gy" style="width:310px;" onclick="portal('block-hall')">BACK TO HALL</button>
         </div>
     </div>
 
 <script>
     let currentID = "";
-    
-    // LANGUAGE FORCING
     const langMap = {
         'en': '🇬🇧 English', 'ru': '🇷🇺 Russian', 'uk': '🇺🇦 Ukrainian', 'pl': '🇵🇱 Polish',
         'fr': '🇫🇷 French', 'de': '🇩🇪 German', 'es': '🇪🇸 Spanish', 'it': '🇮🇹 Italian',
-        'zh-CN': '🇨🇳 Chinese', 'ja': '🇯🇵 Japanese', 'ko': '🇰🇷 Korean'
+        'zh-CN': '🇨🇳 Chinese', 'ja': '🇯🇵 Japanese'
     };
 
-    function forceLangs() {
+    function fixLanguages() {
         const sel = document.querySelector('.goog-te-combo');
         if (sel) {
             Array.from(sel.options).forEach(o => {
-                const text = langMap[o.value];
-                if (text && o.text !== text) o.text = text;
+                const targetText = langMap[o.value];
+                if (targetText && o.text !== targetText) o.text = targetText;
                 else if (o.value === "" && o.text !== "🌐 Language") o.text = "🌐 Language";
             });
         }
     }
-    setInterval(forceLangs, 100);
+    setInterval(fixLanguages, 300);
 
     function googleTranslateElementInit() { 
         new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element'); 
@@ -176,36 +163,33 @@
 
     function handleEntrance() {
         document.getElementById('snd-door').play().catch(()=>{});
-        const d = document.getElementById('main-door');
-        d.style.transition = "2s";
-        d.style.transform = "scale(12)";
-        d.style.opacity = "0";
         if (!currentID) {
             currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
             localStorage.setItem('gy_trace', currentID);
         }
-        updateUI(currentID);
-        setTimeout(() => { portal('block-welcome'); document.getElementById('snd-ambient').play().catch(()=>{}); }, 1000);
+        updateAllUI(currentID);
+        portal('block-welcome'); 
+        setTimeout(() => document.getElementById('snd-ambient').play().catch(()=>{}), 1000);
     }
 
     function portal(id) {
-        const blocks = document.querySelectorAll('.block');
-        blocks.forEach(b => { 
-            b.classList.remove('active'); 
-            b.style.display = 'none';
+        document.querySelectorAll('.block').forEach(b => {
+            b.classList.remove('active');
+            setTimeout(() => { if(!b.classList.contains('active')) b.style.display = 'none'; }, 400);
         });
         const target = document.getElementById(id);
         target.style.display = 'flex';
         setTimeout(() => target.classList.add('active'), 50);
     }
 
-    function updateUI(id) {
+    function updateAllUI(id) {
         document.getElementById('id-label').innerText = id;
         document.getElementById('h-id').innerText = id;
-        document.getElementById('qr-reg').innerHTML = "";
-        new QRCode(document.getElementById("qr-reg"), { text: id, width: 100, height: 100 });
-        document.getElementById('h-qr').innerHTML = "";
-        new QRCode(document.getElementById("h-qr"), { text: id, width: 100, height: 100 });
+        const qrs = ['qr-reg', 'h-qr'];
+        qrs.forEach(container => {
+            document.getElementById(container).innerHTML = "";
+            new QRCode(document.getElementById(container), { text: id, width: 110, height: 110 });
+        });
     }
 
     function saveData() {
@@ -218,10 +202,11 @@
         if(i.files && i.files[0]) {
             const r = new FileReader();
             r.onload = (e) => {
+                const img = e.target.result;
                 document.getElementById('av-img').style.display = "none";
-                document.getElementById('pp').src = e.target.result;
+                document.getElementById('pp').src = img;
                 document.getElementById('pp').style.display = "block";
-                document.getElementById('h-photo').src = e.target.result;
+                document.getElementById('h-photo').src = img;
                 document.getElementById('txt-ph').style.display = "none";
             };
             r.readAsDataURL(i.files[0]);
@@ -242,7 +227,7 @@
         const saved = localStorage.getItem('gy_trace');
         if(saved) {
             currentID = saved;
-            updateUI(saved);
+            updateAllUI(saved);
             document.getElementById('btn-w-hall').classList.remove('btn-sleep');
         }
     }
