@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v5.1.4 | FINAL FIX</title>
+    <title>GY-GY Club v5.1.5 | RECTIFIED</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -12,37 +12,35 @@
         * { -webkit-tap-highlight-color: transparent !important; margin: 0; padding: 0; box-sizing: border-box; }
         html, body { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; position: fixed; }
 
-        /* HEADER */
+        /* HEADER - ПРЯМОУГОЛЬНАЯ КНОПКА */
         .ui-top-bar { position: fixed; top: 0; left: 0; width: 100%; height: 70px; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; z-index: 1000000; }
         .ui-logo { font-size: 28px; font-weight: 900; letter-spacing: 5px; text-shadow: 0 0 15px var(--neon-glow); }
-        .nav-btn { background: none; border: 1px solid var(--gold); color: var(--gold); width: 40px; height: 40px; cursor: pointer; font-size: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+        .nav-btn { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 5px 15px; cursor: pointer; font-size: 20px; border-radius: 0; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
         .nav-hidden { opacity: 0; pointer-events: none; }
 
         .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; z-index: 10; opacity: 0; transition: opacity 0.5s ease; }
         .block.active { display: flex; opacity: 1; pointer-events: auto; }
 
-        /* WELCOME ZONE - ИСПРАВЛЕННЫЙ ВИД */
-        .welcome-title { font-size: 50px; font-weight: 900; letter-spacing: 10px; margin-bottom: 10px; text-shadow: 0 0 20px var(--gold); }
-        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 22px; margin-bottom: 20px; text-align: center; max-width: 80%; }
-        .neon-horse { max-height: 45vh; filter: drop-shadow(0 0 25px var(--neon-glow)); margin-bottom: 25px; }
+        /* WELCOME ZONE - ИСПРАВЛЕННЫЙ ПОРЯДОК */
+        .neon-horse { max-height: 40vh; filter: drop-shadow(0 0 25px var(--neon-glow)); margin-bottom: 15px; }
+        .welcome-title { font-size: 40px; font-weight: 900; letter-spacing: 8px; margin-bottom: 10px; text-shadow: 0 0 15px var(--gold); }
+        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 20px; margin-bottom: 25px; text-align: center; max-width: 80%; }
         
         /* КНОПКИ В РЯД */
-        .btn-row { display: flex; gap: 15px; justify-content: center; width: 100%; }
-        .btn-gy { min-width: 160px; padding: 12px 10px; background: rgba(0,0,0,0.6); border: 2px solid var(--gold); color: var(--gold); cursor: pointer; text-transform: uppercase; font-weight: 900; font-family: 'Share Tech Mono'; font-size: 14px; transition: 0.3s; }
-        .btn-gy:active { background: var(--gold); color: #000; }
+        .btn-row { display: flex; gap: 10px; justify-content: center; width: 100%; }
+        .btn-gy { min-width: 140px; padding: 12px; background: rgba(0,0,0,0.6); border: 2px solid var(--gold); color: var(--gold); cursor: pointer; text-transform: uppercase; font-weight: 900; font-family: 'Share Tech Mono'; font-size: 14px; }
         .btn-sleep { opacity: 0.2 !important; pointer-events: none !important; }
 
-        /* REGISTRATION */
+        /* REGISTRATION BOXES */
         .reg-container { display: flex; gap: 8px; margin-bottom: 20px; }
         .box-final { width: 80px; height: 80px; border: 1px solid var(--gold); background: #FFFFFF; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; color: #000; font-size: 10px; font-weight: 900; }
-        .box-final img { width: 100%; height: 100%; object-fit: cover; }
 
         /* HALL & ID CARD */
         #block-hall { background: url('hall_bg_jpg.jpg') center/cover no-repeat; }
-        .id-card-hall { width: 240px; padding: 20px; background: #F5F5DC; border-radius: 12px; border: 3px solid #3E2723; color: #000; display: flex; flex-direction: column; align-items: center; box-shadow: 0 15px 40px rgba(0,0,0,0.9); }
+        .id-card-hall { width: 240px; padding: 20px; background: #F5F5DC; border-radius: 12px; border: 3px solid #3E2723; color: #000; display: flex; flex-direction: column; align-items: center; }
         .box-hall-inner { width: 80px; height: 80px; border: 1px solid #3E2723; background: #FFF; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 
-        #main-door { width: 280px; cursor: pointer; transition: transform 2.5s ease-in-out, opacity 1s; z-index: 100; }
+        #main-door { width: 280px; cursor: pointer; transition: transform 2.5s ease; z-index: 100; }
     </style>
 </head>
 <body>
@@ -61,9 +59,9 @@
     </div>
 
     <div id="block-welcome" class="block">
+        <img src="horse_welcome.png" class="neon-horse">
         <div class="welcome-title">WELCOME</div>
         <div class="quote-text">"Every joke has a grain of whiskey"</div>
-        <img src="horse_welcome.png" class="neon-horse">
         <div class="btn-row">
             <button class="btn-gy" onclick="portalTransition('block-identity')">GET ID</button>
             <button id="btn-w-hall" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">TO HALL</button>
@@ -77,12 +75,10 @@
             <div class="box-final" id="qr-box-reg"></div>
             <div class="box-final" onclick="document.getElementById('file-input').click()" style="cursor:pointer;">
                 <input type="file" id="file-input" onchange="preview(this)" style="display:none;">
-                <img id="pp" style="display:none;">
-                <span id="txt-photo">PHOTO</span>
+                <img id="pp" style="display:none;"><span id="txt-photo">PHOTO</span>
             </div>
             <div class="box-final" onclick="generateAvatar()" style="cursor:pointer;">
-                <img id="avatar-img" style="display:none;">
-                <span id="txt-avatar">AVATAR</span>
+                <img id="avatar-img" style="display:none;"><span id="txt-avatar">AVATAR</span>
             </div>
         </div>
         <div class="btn-row">
@@ -104,8 +100,8 @@
     </div>
 
     <div id="block-bar" class="block">
-        <div class="welcome-title" style="font-size:35px;">THE BAR</div>
         <img src="horse_bar.png" class="neon-horse">
+        <div class="welcome-title" style="font-size:30px;">THE BAR</div>
         <div class="btn-row">
             <button class="btn-gy" onclick="window.location.href='tables.html'">TABLES</button>
             <button class="btn-gy" onclick="window.location.href='bridge_protocol.html'">SERVER</button>
@@ -144,7 +140,6 @@
     function portalTransition(nextId, isBack = false) {
         const current = document.querySelector('.block.active');
         const next = document.getElementById(nextId);
-        if (!next) return;
         if (current) {
             current.style.opacity = "0";
             setTimeout(() => {
@@ -170,7 +165,7 @@
         updateIDUI(currentID);
         setTimeout(() => { 
             portalTransition('block-welcome');
-            if(ambSnd) { ambSnd.volume = 0; ambSnd.play(); fadeAudio(ambSnd, 0.4, 2000); }
+            if(ambSnd) { ambSnd.volume = 0.4; ambSnd.play(); }
         }, 1500);
     }
 
@@ -190,11 +185,10 @@
         if(i.files && i.files[0]) {
             const r = new FileReader();
             r.onload = (e) => {
-                const img = document.getElementById('pp');
-                img.src = e.target.result; img.style.display = "block";
+                document.getElementById('pp').src = e.target.result;
+                document.getElementById('pp').style.display = "block";
                 document.getElementById('h-photo').src = e.target.result;
                 document.getElementById('txt-photo').style.display = "none";
-                document.getElementById('avatar-img').style.display = "none";
             };
             r.readAsDataURL(i.files[0]);
         }
@@ -203,33 +197,16 @@
     function generateAvatar() {
         const seed = Math.random().toString(36).substring(7);
         const url = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${seed}`;
-        const av = document.getElementById('avatar-img');
-        av.src = url; av.style.display = "block";
+        document.getElementById('avatar-img').src = url;
+        document.getElementById('avatar-img').style.display = "block";
         document.getElementById('h-photo').src = url;
         document.getElementById('txt-avatar').style.display = "none";
-        document.getElementById('pp').style.display = "none";
-        document.getElementById('txt-photo').style.display = "block";
     }
 
     function swapButtons(a, s) {
-        const hasPhoto = document.getElementById('pp').style.display === "block";
-        const hasAvatar = document.getElementById('avatar-img').style.display === "block";
-        if (a === 'btn-save' && !hasPhoto && !hasAvatar) {
-            alert("Choose photo or avatar"); return;
-        }
         document.getElementById(a).classList.add('btn-sleep');
         document.getElementById(s).classList.remove('btn-sleep');
         if (a === 'btn-save') document.getElementById('btn-w-hall').classList.remove('btn-sleep');
-    }
-
-    function fadeAudio(audio, target, duration) {
-        let start = audio.volume;
-        let startTime = Date.now();
-        let interval = setInterval(() => {
-            let progress = Math.min((Date.now() - startTime) / duration, 1);
-            audio.volume = start + (target - start) * progress;
-            if (progress === 1) clearInterval(interval);
-        }, 50);
     }
 
     window.onload = () => { if(currentID) updateIDUI(currentID); };
