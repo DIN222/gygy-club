@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.9.5 | FINAL CORE</title>
+    <title>GY-GY Club v4.9.6 | TITANIUM CORE</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -17,37 +17,37 @@
             overflow: hidden !important; position: fixed; touch-action: none;
         }
         
-        /* LANGUAGE PANEL */
-        #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 999999; }
+        /* LANGUAGE OVERRIDE */
+        #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 10000000; }
         .goog-te-gadget .goog-te-combo { 
             background: #000 !important; color: var(--gold) !important; 
             border: 2px solid var(--gold) !important; padding: 10px; 
             border-radius: 4px; font-family: 'Share Tech Mono'; font-size: 15px; width: 230px; 
         }
         .lang-hint { 
-            position: fixed; top: 68px; left: 15px; z-index: 999999; font-size: 13px; 
+            position: fixed; top: 68px; left: 15px; z-index: 10000000; font-size: 13px; 
             color: var(--gold); width: 230px; text-align: center; animation: blink 2s infinite; 
-            font-weight: bold; 
+            font-weight: bold; pointer-events: none;
         }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
         
         .ui-logo { 
-            position: fixed; top: 18px; right: 25px; z-index: 999999; 
+            position: fixed; top: 18px; right: 25px; z-index: 10000000; 
             font-size: 35px; font-weight: bold; text-shadow: 0 0 15px var(--glow); letter-spacing: 8px; 
         }
 
-        /* ENGINE */
+        /* BLOCK SYSTEM */
         .block { 
             position: fixed; inset: 0; width: 100vw; height: 100vh;
             display: none; flex-direction: column; align-items: center; justify-content: center; 
-            background: #000; z-index: 10; opacity: 0; transition: opacity 0.4s ease-in-out;
+            background: #000; z-index: 10; opacity: 0; transition: opacity 0.3s ease;
         }
-        .block.active { display: flex !important; opacity: 1; z-index: 100; }
+        .block.active { display: flex !important; opacity: 1; z-index: 99999; }
         
-        /* ELEMENTS */
-        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 24px; text-align: center; max-width: 85%; margin-bottom: 20px; }
-        .welcome-title { font-family: 'Playfair Display'; font-size: 48px; font-weight: 900; letter-spacing: 15px; margin-bottom: 20px; }
-        .horse-img { max-height: 55vh; filter: drop-shadow(0 0 40px var(--glow)); margin-bottom: 15px; }
+        /* CONTENT STYLES */
+        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 26px; text-align: center; max-width: 85%; margin-bottom: 20px; text-shadow: 0 0 10px var(--glow); }
+        .welcome-title { font-family: 'Playfair Display'; font-size: 48px; font-weight: 900; letter-spacing: 12px; margin-bottom: 15px; text-transform: uppercase; }
+        .horse-img { max-height: 52vh; filter: drop-shadow(0 0 40px var(--glow)); margin-bottom: 15px; }
 
         /* BUTTONS */
         .btn-gy { 
@@ -58,16 +58,20 @@
         .btn-gy:active { background: var(--gold); color: #000; }
         .btn-sleep { opacity: 0.1 !important; pointer-events: none !important; }
 
-        /* CARD STYLE */
+        /* ID CARDS */
         .id-card-hall { 
             width: 320px; padding: 30px; border: 2px solid var(--gold); background: #F5F5DC; 
             border-radius: 20px; display: flex; flex-direction: column; align-items: center; color: #000; 
-            box-shadow: 0 0 50px var(--gold);
+            box-shadow: 0 0 60px var(--gold);
         }
         .box-final { 
             width: 110px; height: 110px; border: 2px solid #000; background: #FFF !important; 
             display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; 
         }
+
+        /* HIDE GOOGLE GARBAGE */
+        .goog-te-banner-frame, .skiptranslate, iframe.goog-te-menu-frame { display: none !important; }
+        body { top: 0px !important; }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -80,24 +84,25 @@
     <audio id="snd-ambient" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active">
-        <img src="door_1.jpg" onclick="handleEntrance()" style="width:300px; cursor:pointer; filter: drop-shadow(0 0 25px var(--glow));">
-        <div style="margin-top:25px; font-size:14px; letter-spacing:5px;">ENTER CLUB</div>
+        <img src="door_1.jpg" onclick="handleEntrance()" style="width:280px; cursor:pointer; filter: drop-shadow(0 0 25px var(--glow));">
+        <div style="margin-top:25px; font-size:14px; letter-spacing:5px;">CLICK TO ENTER</div>
     </div>
 
     <div id="block-welcome" class="block" style="justify-content: flex-start; padding-top: 5vh;">
         <div class="quote-text">"Every joke has a grain of whiskey"</div>
         <img src="horse_welcome.png" class="horse-img">
         <div class="welcome-title">WELCOME</div>
-        <div style="display:flex; gap:20px;">
+        <div style="display:flex; gap:15px;">
             <button id="btn-w-hall" class="btn-gy btn-sleep" onclick="portal('block-hall')">TO HALL</button>
             <button class="btn-gy" onclick="portal('block-identity')">GET ID</button>
         </div>
     </div>
 
     <div id="block-identity" class="block">
+        <div class="quote-text" style="font-size: 20px; margin-bottom: 10px;">Identification is the soul of the club</div>
         <div class="welcome-title" style="font-size: 28px; letter-spacing: 5px;">MEMBERSHIP</div>
-        <div style="display:flex; gap:12px; margin-bottom:40px;">
-            <div class="box-final" style="background:#000!important; color:var(--gold); border-color:var(--gold); font-size:12px; font-weight:bold;" id="id-label">#ID</div>
+        <div style="display:flex; gap:10px; margin-bottom:40px;">
+            <div class="box-final" style="background:#000!important; color:var(--gold); border-color:var(--gold); font-size:11px; font-weight:bold; text-align:center;" id="id-label">#ID</div>
             <div class="box-final" id="qr-reg" style="border-color:var(--gold);"></div>
             <div class="box-final" style="border-color:var(--gold); cursor:pointer;" onclick="document.getElementById('file-in').click()">
                 <input type="file" id="file-in" onchange="preview(this)" style="display:none;" accept="image/*">
@@ -109,13 +114,13 @@
                 <span id="txt-av" style="color:#000; font-size:12px; font-weight:bold;">AVATAR</span>
             </div>
         </div>
-        <button id="btn-save" class="btn-gy" style="width: 320px;" onclick="saveData()">CONFIRM & SAVE</button>
-        <button id="btn-pass" class="btn-gy btn-sleep" style="width: 320px; margin-top: 15px;" onclick="portal('block-hall')">PROCEED TO HALL</button>
+        <button id="btn-save" class="btn-gy" style="width: 320px;" onclick="saveData()">SAVE IDENTITY</button>
+        <button id="btn-pass" class="btn-gy btn-sleep" style="width: 320px; margin-top: 15px;" onclick="portal('block-hall')">ENTER THE HALL</button>
     </div>
 
     <div id="block-hall" class="block">
         <div class="id-card-hall">
-            <div id="h-id" style="font-weight:900; font-size:20px; margin-bottom:20px; letter-spacing:3px;">#ID-TOKEN</div>
+            <div id="h-id" style="font-weight:900; font-size:18px; margin-bottom:20px; letter-spacing:2px;">#ID-TOKEN</div>
             <div style="display:flex; gap:15px; margin-bottom:25px;">
                 <div class="box-final" style="border: 3px solid #000;">
                     <img id="h-photo" style="width:100%; height:100%; object-fit:cover;">
@@ -127,10 +132,10 @@
     </div>
 
     <div id="block-bar" class="block" style="justify-content: flex-end; padding-bottom: 5vh;">
-        <img src="horse_bar.png" style="height:65vh; filter: drop-shadow(0 0 40px var(--glow)); margin-bottom: 12vh;">
+        <img src="horse_bar.png" style="height:68vh; filter: drop-shadow(0 0 40px var(--glow)); margin-bottom: 12vh;">
         <div style="position:absolute; bottom:5vh; display:flex; flex-direction:column; gap:15px; width:100%; align-items:center;">
             <div style="display:flex; gap:15px;">
-                <button class="btn-gy" style="min-width:145px; font-size:11px;" onclick="location.href='server.html'">AI SERVER</button>
+                <button class="btn-gy" style="min-width:145px; font-size:11px;" onclick="location.href='server.html'">SERVER AI</button>
                 <button class="btn-gy" style="min-width:145px; font-size:11px;" onclick="location.href='tables.html'">TABLES</button>
             </div>
             <button class="btn-gy" style="width:310px;" onclick="portal('block-hall')">BACK TO HALL</button>
@@ -141,24 +146,29 @@
     let currentID = "";
     const langMap = {
         'en': '🇬🇧 English', 'ru': '🇷🇺 Russian', 'uk': '🇺🇦 Ukrainian', 'pl': '🇵🇱 Polish',
-        'fr': '🇫🇷 French', 'de': '🇩🇪 German', 'es': '🇪🇸 Spanish', 'it': '🇮🇹 Italian',
-        'zh-CN': '🇨🇳 Chinese', 'ja': '🇯🇵 Japanese'
+        'fr': '🇫🇷 French', 'de': '🇩🇪 German', 'es': '🇪🇸 Spanish', 'it': '🇮🇹 Italian'
     };
 
-    function fixLanguages() {
+    function fixLangs() {
         const sel = document.querySelector('.goog-te-combo');
         if (sel) {
             Array.from(sel.options).forEach(o => {
-                const targetText = langMap[o.value];
-                if (targetText && o.text !== targetText) o.text = targetText;
+                const mapped = langMap[o.value];
+                if (mapped && o.text !== mapped) o.text = mapped;
                 else if (o.value === "" && o.text !== "🌐 Language") o.text = "🌐 Language";
             });
         }
     }
-    setInterval(fixLanguages, 300);
-
+    
+    // MutationObserver для борьбы с откатами Google Translate
+    const observer = new MutationObserver(() => fixLangs());
+    const config = { childList: true, subtree: true };
+    
     function googleTranslateElementInit() { 
         new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element'); 
+        const target = document.getElementById('google_translate_element');
+        observer.observe(target, config);
+        setInterval(fixLangs, 500); // Дополнительная подстраховка
     }
 
     function handleEntrance() {
@@ -167,28 +177,31 @@
             currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
             localStorage.setItem('gy_trace', currentID);
         }
-        updateAllUI(currentID);
+        updateAll(currentID);
         portal('block-welcome'); 
         setTimeout(() => document.getElementById('snd-ambient').play().catch(()=>{}), 1000);
     }
 
     function portal(id) {
+        // Убираем все активные блоки
         document.querySelectorAll('.block').forEach(b => {
             b.classList.remove('active');
-            setTimeout(() => { if(!b.classList.contains('active')) b.style.display = 'none'; }, 400);
+            b.style.display = 'none';
         });
+        // Активируем нужный
         const target = document.getElementById(id);
         target.style.display = 'flex';
+        // Небольшая задержка для плавности opacity
         setTimeout(() => target.classList.add('active'), 50);
     }
 
-    function updateAllUI(id) {
+    function updateAll(id) {
         document.getElementById('id-label').innerText = id;
         document.getElementById('h-id').innerText = id;
-        const qrs = ['qr-reg', 'h-qr'];
-        qrs.forEach(container => {
-            document.getElementById(container).innerHTML = "";
-            new QRCode(document.getElementById(container), { text: id, width: 110, height: 110 });
+        ['qr-reg', 'h-qr'].forEach(cid => {
+            const el = document.getElementById(cid);
+            el.innerHTML = "";
+            new QRCode(el, { text: id, width: 110, height: 110 });
         });
     }
 
@@ -202,11 +215,11 @@
         if(i.files && i.files[0]) {
             const r = new FileReader();
             r.onload = (e) => {
-                const img = e.target.result;
+                const data = e.target.result;
                 document.getElementById('av-img').style.display = "none";
-                document.getElementById('pp').src = img;
+                document.getElementById('pp').src = data;
                 document.getElementById('pp').style.display = "block";
-                document.getElementById('h-photo').src = img;
+                document.getElementById('h-photo').src = data;
                 document.getElementById('txt-ph').style.display = "none";
             };
             r.readAsDataURL(i.files[0]);
@@ -227,7 +240,7 @@
         const saved = localStorage.getItem('gy_trace');
         if(saved) {
             currentID = saved;
-            updateAllUI(saved);
+            updateAll(saved);
             document.getElementById('btn-w-hall').classList.remove('btn-sleep');
         }
     }
