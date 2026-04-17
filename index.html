@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.64 | AVATAR READY</title>
+    <title>GY-GY Club v5.0.7 | STABLE</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -47,7 +48,7 @@
         #main-door { width: 280px; cursor: pointer; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s; z-index: 9999; pointer-events: auto !important; }
         
         #block-tables { background: url('lounge.jpg') no-repeat center bottom / contain #000; }
-        </style>
+    </style>
 </head>
 <body oncontextmenu="return false;">
 
@@ -120,101 +121,108 @@
         </div>
         <img src="horse_bar.png" style="height: 80vh; width: auto; object-fit: contain; margin-bottom: -10px;">
     </div>
+
 <script>
     let currentID = "";
 
     // 1. СИНХРОНИЗАЦИЯ ЯЗЫКА
-   function syncLangWire() {
-    let savedLang = localStorage.getItem('gy_session_lang'); // Что мы помним
-    const googData = document.cookie.split('; ').find(row => row.startsWith('googtrans='));
-    
-    if (googData) {
-        // Если панель открыта и язык выбран — обновляем память
-        let activeLang = googData.split('/').pop().toUpperCase();
-        localStorage.setItem('gy_session_lang', activeLang);
-        return activeLang;
-    } else if (savedLang) {
-        // ПАНЕЛЬ ЗАКРЫТА, НО МЫ ПОМНИМ! 
-        // Насильно возвращаем куку гуглу, чтобы он проснулся
-        const domain = window.location.hostname;
-        document.cookie = `googtrans=/ru/${savedLang.toLowerCase()}; path=/; domain=${domain}`;
-        document.cookie = `googtrans=/ru/${savedLang.toLowerCase()}; path=/;`; // На всякий случай без домена
-        return savedLang;
-    }
-    return "";
-}
-
-    // 2. ИНИЦИАЛИЗАЦИЯ (ОДИН БЛОК window.onload)
- window.onload = () => {
-    // 1. Сначала восстанавливаем лингвистический статус
-    const currentLang = syncLangWire();
-    
-    // 2. Проверяем ID
-    const savedID = localStorage.getItem('gy_trace');
-    if (savedID) {
-        currentID = savedID;
-        updateIDUI(currentID);
-        // Если ID есть И язык (хоть какой-то) — пускаем дальше
-        document.getElementById('btn-w-hall').classList.remove('btn-sleep');
+    function syncLangWire() {
+        let savedLang = localStorage.getItem('gy_session_lang');
+        const googData = document.cookie.split('; ').find(row => row.startsWith('googtrans='));
+        
+        if (googData) {
+            let activeLang = googData.split('/').pop().toUpperCase();
+            localStorage.setItem('gy_session_lang', activeLang);
+            return activeLang;
+        } else if (savedLang) {
+            const domain = window.location.hostname;
+            document.cookie = `googtrans=/ru/${savedLang.toLowerCase()}; path=/; domain=${domain}`;
+            document.cookie = `googtrans=/ru/${savedLang.toLowerCase()}; path=/;`;
+            return savedLang;
+        }
+        return "";
     }
 
-    // 3. Показываем дверь
-    const entrance = document.getElementById('block-entrance');
-    entrance.style.display = "flex";
-    setTimeout(() => { entrance.style.opacity = "1"; entrance.classList.add('active'); }, 50);
+    // 2. ИНИЦИАЛИЗАЦИЯ
+    window.onload = () => {
+        const currentLang = syncLangWire();
+        const savedID = localStorage.getItem('gy_trace');
+        if (savedID) {
+            currentID = savedID;
+            updateIDUI(currentID);
+            document.getElementById('btn-w-hall').classList.remove('btn-sleep');
+        }
 
-    // 4. Если язык в памяти был, а панель закрыта — гугл может тупить. 
-    // Перезагрузим виджет через 2 секунды, если перевод не применился
-    if (currentLang && !document.cookie.includes('googtrans')) {
-         console.log("Реанимация языка...");
-         // Можно добавить легкий рефреш, если очень надо, 
-         // но обычно записи куки в пункте выше достаточно.
-    }
-};
+        const entrance = document.getElementById('block-entrance');
+        entrance.style.display = "flex";
+        setTimeout(() => { entrance.style.opacity = "1"; entrance.classList.add('active'); }, 50);
 
-    // Вспомогательная функция обновления интерфейса ID
+        if (currentLang && !document.cookie.includes('googtrans')) {
+             console.log("Реанимация языка...");
+        }
+    };
+
     function updateIDUI(id) {
         document.getElementById('id-label').innerText = id;
         document.getElementById('h-id').innerText = id;
         
-        document.getElementById('qr-box-reg').innerHTML = "";
-        new QRCode(document.getElementById("qr-box-reg"), { text: id, width: 85, height: 85 });
-        
-        document.getElementById('h-qr').innerHTML = "";
-        new QRCode(document.getElementById("h-qr"), { text: id, width: 75, height: 75 });
+        // Правка: Задержка для стабильности QR при работе переводчика
+        setTimeout(() => {
+            const qrReg = document.getElementById('qr-box-reg');
+            const qrHall = document.getElementById('h-qr');
+            
+            if(qrReg) {
+                qrReg.innerHTML = "";
+                new QRCode(qrReg, { text: id, width: 85, height: 85, correctLevel: QRCode.CorrectLevel.H });
+            }
+            if(qrHall) {
+                qrHall.innerHTML = "";
+                new QRCode(qrHall, { text: id, width: 75, height: 75, correctLevel: QRCode.CorrectLevel.H });
+            }
+        }, 100);
     }
 
-    // 3. ЛОГИКА ДВЕРИ (handleDoor теперь одна и работает четко)
+    // Правка: Прогрев аудио при входе для обхода блокировок
     function handleDoor() {
         const d = document.getElementById('main-door');
         const snd = document.getElementById('snd-door');
+        const amb = document.getElementById('snd-ambient');
+        const fx1 = document.getElementById('snd-khe');
+        const fx2 = document.getElementById('snd-pour');
         
+        [snd, amb, fx1, fx2].forEach(s => { if(s) { s.play(); s.pause(); s.currentTime = 0; }});
+
         if(snd) snd.play();
         
-        // Визуальный эффект
         d.style.transform = "scale(5)"; 
         d.style.opacity = "0";
         d.style.pointerEvents = "none";
 
-        // Генерируем ID, если его нет
         if (!currentID) {
             currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
         }
         
-        // Сохраняем "цифровой след" и язык
         localStorage.setItem('gy_trace', currentID);
         syncLangWire(); 
         updateIDUI(currentID);
 
         setTimeout(() => { 
             portalTransition('block-welcome'); 
-            const a = document.getElementById('snd-ambient'); 
-            if(a) { a.volume = 0; a.play(); fadeAudio(a, 1, 2000); }
+            if(amb) { amb.volume = 0; amb.play(); fadeAudio(amb, 1, 2000); }
         }, 1800);
     }
 
-    // 4. ПЕРЕХОДЫ МЕЖДУ БЛОКАМИ
+    // Правка: Логика кнопки "Назад" и плавность переходов
     function portalTransition(nextId) {
+        const backBtn = document.getElementById('btn-global-back');
+        if (['block-tables', 'block-identity', 'block-hall'].includes(nextId)) {
+            backBtn.style.display = "block";
+            setTimeout(() => backBtn.style.opacity = "1", 10);
+        } else {
+            backBtn.style.opacity = "0";
+            setTimeout(() => backBtn.style.display = "none", 500);
+        }
+
         if (nextId === 'block-tables') {
             const amb = document.getElementById('snd-ambient');
             if (amb) fadeAudio(amb, 0, 800); 
@@ -247,7 +255,6 @@
                 next.style.opacity = "1";
                 next.style.pointerEvents = "auto";
 
-                // Специфические звуки бара
                 if(nextId === 'block-bar') {
                     setTimeout(() => { document.getElementById('snd-khe').play(); }, 800);
                     setTimeout(() => { document.getElementById('snd-pour').play(); }, 2200);
@@ -256,7 +263,6 @@
         }, 800);
     }
 
-    // AI ROOM Deep Dive
     function deepDive() {
         const amb = document.getElementById('snd-ambient');
         if (amb) fadeAudio(amb, 0, 1200);
@@ -276,7 +282,6 @@
         }, 50);
     }
 
-    // ФОТО И АВАТАР
     function preview(i) {
         if(i.files && i.files[0]) {
             const r = new FileReader();
@@ -304,7 +309,16 @@
         document.getElementById('h-photo').src = avatarUrl;
     }
 
+    // Правка: Проверка наличия фото/аватара перед сохранением
     function swapButtons(a, s) { 
+        const photo = document.getElementById('pp').style.display === "block";
+        const avatar = document.getElementById('avatar-img').style.display === "block";
+
+        if (a === 'btn-save' && !photo && !avatar) {
+            alert("В нашем клубе без лица нельзя! Загрузи фото или создай аватар.");
+            return;
+        }
+
         document.getElementById(a).classList.add('btn-sleep'); 
         document.getElementById(s).classList.remove('btn-sleep'); 
     }
@@ -317,4 +331,3 @@
 
 </body>
 </html>
-
