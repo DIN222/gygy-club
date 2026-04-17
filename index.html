@@ -1,44 +1,46 @@
-
 <!DOCTYPE html>
 <html lang="ru" class="notranslate" google="notranslate">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.7.3 | TOTAL FIX</title>
+    <title>GY-GY Club v4.7.5 | FULL RECOVERY</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
-        :root { --gold: #d4af37; }
-        * { -webkit-tap-highlight-color: transparent !important; box-sizing: border-box; }
-        html, body { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; position: fixed; margin:0; }
+        :root { --gold: #d4af37; --bg: #000; }
+        * { -webkit-tap-highlight-color: transparent !important; box-sizing: border-box; outline: none; }
+        html, body { width: 100%; height: 100%; background: var(--bg); color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; position: fixed; margin:0; }
         
-        /* UI ELEMENTS */
-        #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000001; }
+        /* UI: Языковая панель и Лого */
+        #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000000; }
         .goog-te-gadget .goog-te-combo { background: #000 !important; color: var(--gold) !important; border: 1px solid var(--gold) !important; padding: 4px; border-radius: 4px; font-family: 'Share Tech Mono'; font-size: 12px; width: 130px; cursor: pointer; }
-        .goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame, .skiptranslate > iframe { display: none !important; }
+        .goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame, .skiptranslate > iframe { display: none !important; visibility: hidden !important; }
         body { top: 0px !important; }
 
-        .lang-hint { position: fixed; top: 52px; left: 15px; z-index: 1000001; font-size: 11px; color: var(--gold); width: 140px; text-align: center; animation: blink 2s infinite; font-weight: bold; pointer-events: none; }
+        .lang-hint { position: fixed; top: 52px; left: 15px; z-index: 1000000; font-size: 11px; color: var(--gold); width: 140px; text-align: center; animation: blink 2s infinite; font-weight: bold; pointer-events: none; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
 
         .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000000; font-size: 24px; letter-spacing: 5px; font-weight: bold; color: var(--gold); pointer-events: none; }
 
-        /* BLOCKS SYSTEM */
-        .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; z-index: 10; opacity: 0; transition: opacity 0.6s ease; }
+        /* Система Блоков */
+        .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: var(--bg); z-index: 10; opacity: 0; transition: opacity 0.6s ease; }
         .block.active { display: flex !important; opacity: 1; pointer-events: auto !important; }
 
-        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 26px; color: var(--gold); text-align: center; max-width: 85%; margin-bottom: 25px; }
-        .btn-gy { min-width: 270px; padding: 14px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; text-transform: uppercase; font-weight: 900; margin: 8px 0; font-family: 'Share Tech Mono'; transition: 0.3s; z-index: 100; }
+        /* Элементы интерфейса */
+        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 26px; color: var(--gold); text-align: center; max-width: 85%; margin-bottom: 25px; z-index: 20; }
+        .btn-gy { min-width: 270px; padding: 14px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; text-transform: uppercase; font-weight: 900; margin: 8px 0; font-family: 'Share Tech Mono'; transition: 0.3s; z-index: 100; position: relative; }
         .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
 
-        /* IDENTITY CARDS */
-        .id-card-hall { position: absolute; top: 72%; left: 50%; transform: translate(-50%,-50%); width: 220px; padding: 15px; border: 2px solid var(--gold); background: #F5F5DC; border-radius: 12px; display: flex; flex-direction: column; align-items: center; color: #000; z-index: 30; }
+        /* Карточка ID */
+        .id-card-hall { position: absolute; top: 72%; left: 50%; transform: translate(-50%,-50%); width: 240px; padding: 15px; border: 2px solid var(--gold); background: #F5F5DC; border-radius: 12px; display: flex; flex-direction: column; align-items: center; color: #000; z-index: 30; box-shadow: 0 0 20px rgba(212,175,55,0.3); }
         .box-final { width: 85px; height: 85px; border: 2px solid #000; background: #FFFFFF !important; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; color: #000; }
         .dynamic-flag { position: absolute; bottom: 2px; right: 2px; font-size: 18px; z-index: 20; }
         
-        #main-door { width: 280px; cursor: pointer; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s; pointer-events: auto !important; }
+        /* Дверь */
+        #main-door { width: 280px; cursor: pointer; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s; z-index: 9999; position: relative; pointer-events: auto !important; }
         
+        /* Контейнер бара */
         .bar-ui-container { position: absolute; bottom: 5vh; width: 100%; display: flex; flex-direction: column; align-items: center; z-index: 1000; }
     </style>
 </head>
@@ -54,13 +56,13 @@
     <audio id="snd-pour" preload="auto"><source src="pour_whisky.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active" style="opacity: 1;">
-        <img src="door_1.jpg" id="main-door" onclick="handleDoor()">
+        <img src="door_1.jpg" id="main-door" onclick="handleDoor()" alt="Enter">
     </div>
 
     <div id="block-welcome" class="block" style="justify-content: flex-start; padding-top: 5vh;">
         <div class="quote-text">«В каждой шутке есть доля виски»</div>
         <img src="horse_welcome.png" style="max-height: 40vh; width: auto; margin-bottom: 10px;">
-        <div style="font-family: 'Playfair Display'; font-size: 38px; font-weight: 700; letter-spacing: 12px; margin-bottom: 20px; text-transform: uppercase; font-style: italic;">WELCOME</div>
+        <div style="font-family: 'Playfair Display'; font-size: 38px; font-weight: 700; letter-spacing: 10px; margin-bottom: 20px; text-transform: uppercase; font-style: italic;">WELCOME</div>
         <button id="btn-w-hall" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">ПРОХОДИТЕ В ХОЛЛ</button>
         <button class="btn-gy" onclick="portalTransition('block-identity')">ПОЛУЧИТЬ ID</button>
     </div>
@@ -71,9 +73,9 @@
             <div class="box-final" style="background:rgba(212,175,55,0.1) !important; border-color:var(--gold); color:var(--gold); font-size:11px;" id="id-label">#ID</div>
             <div class="box-final" id="qr-box-reg" style="border-color:var(--gold);"></div>
             <div class="box-final" style="border-color:var(--gold); cursor:pointer;" onclick="document.getElementById('file-input').click()">
-                <input type="file" id="file-input" onchange="preview(this)" style="display:none;">
+                <input type="file" id="file-input" onchange="preview(this)" style="display:none;" accept="image/*">
                 <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
-                <span id="txt-photo" style="color:var(--gold); font-size:10px; font-weight:900;">PHOTO</span>
+                <span id="txt-photo" style="color:var(--gold); font-size:10px; font-weight:900; text-align:center;">UPLOAD<br>PHOTO</span>
                 <div class="dynamic-flag">🌐</div>
             </div>
             <div class="box-final" style="border-color:var(--gold); cursor:pointer;" onclick="generateAvatar()">
@@ -87,7 +89,7 @@
     </div>
 
     <div id="block-hall" class="block">
-        <div style="position:absolute; inset:0; background:url('hall_bg_jpg.jpg') center/cover; z-index:15;"></div>
+        <div style="position:absolute; inset:0; background:url('hall_bg_jpg.jpg') center/cover; z-index:15; opacity:0.6;"></div>
         <div class="id-card-hall">
             <div id="h-id" style="font-weight:900; font-size:14px; margin-bottom:12px;">#ID</div>
             <div style="display:flex; gap:15px; margin-bottom:12px;">
@@ -103,10 +105,10 @@
         <div class="quote-text" style="position:absolute; top:8vh;">«Игого, сейчас начнем!»</div>
         <div class="bar-ui-container">
             <div style="display:flex; gap:10px; margin-bottom:10px;">
-                <button class="btn-gy" style="min-width:130px; font-size:12px;" onclick="window.location.href='tables.html'">ЗА СТОЛИКИ</button>
-                <button class="btn-gy" style="min-width:130px; font-size:12px;" onclick="window.location.href='bridge_protocol.html'">В AI ROOM</button>
+                <button class="btn-gy" style="min-width:135px; font-size:11px;" onclick="window.location.href='tables.html'">ЗА СТОЛИКИ</button>
+                <button class="btn-gy" style="min-width:135px; font-size:11px;" onclick="window.location.href='bridge_protocol.html'">В AI ROOM</button>
             </div>
-            <button class="btn-gy" onclick="portalTransition('block-hall')">В ХОЛЛ</button>
+            <button class="btn-gy" onclick="portalTransition('block-hall')">ВЕРНУТЬСЯ В ХОЛЛ</button>
         </div>
         <img src="horse_bar.png" style="height: 75vh; width: auto; object-fit: contain;">
     </div>
@@ -116,7 +118,7 @@
     const flags = { 'en': '🇬🇧', 'ru': '🇷🇺', 'uk': '🇺🇦', 'pl': '🇵🇱', 'fr': '🇫🇷', 'de': '🇩🇪', 'zh-CN': '🇨🇳', 'es': '🇪🇸', 'it': '🇮🇹' };
     const langNames = { 'ru': 'Russian', 'uk': 'Ukrainian', 'en': 'English', 'pl': 'Polish', 'fr': 'French', 'de': 'German', 'zh-CN': 'Chinese', 'es': 'Spanish', 'it': 'Italian' };
 
-    // Исправленная логика меню
+    // --- ЛОГИКА ПЕРЕВОДА ---
     function forceEnglishMenu() {
         const select = document.querySelector('.goog-te-combo');
         if (select) {
@@ -125,16 +127,16 @@
             });
         }
     }
+    // Проверка меню каждые полсекунды (чтобы не слетело)
+    setInterval(forceEnglishMenu, 500);
 
     function googleTranslateElementInit() { 
         new google.translate.TranslateElement({pageLanguage: 'ru', autoDisplay: false}, 'google_translate_element'); 
         
-        // Надежный наблюдатель
         const obs = new MutationObserver(() => {
-            forceEnglishMenu();
             const s = document.querySelector('.goog-te-combo');
-            if (s && !s.getAttribute('data-ready')) {
-                s.setAttribute('data-ready', 'true');
+            if (s && !s.getAttribute('data-listened')) {
+                s.setAttribute('data-listened', 'true');
                 s.addEventListener('change', () => {
                     const emoji = flags[s.value] || '🌐';
                     document.querySelectorAll('.dynamic-flag').forEach(el => el.innerText = emoji);
@@ -144,6 +146,7 @@
         obs.observe(document.body, { childList: true, subtree: true });
     }
 
+    // --- ОСНОВНЫЕ ФУНКЦИИ ---
     window.onload = () => {
         const savedID = localStorage.getItem('gy_trace');
         if (savedID) {
@@ -156,6 +159,7 @@
     function updateIDUI(id) {
         document.getElementById('id-label').innerText = id;
         document.getElementById('h-id').innerText = id;
+        // Регенерация QR
         document.getElementById('qr-box-reg').innerHTML = "";
         new QRCode(document.getElementById("qr-box-reg"), { text: id, width: 85, height: 85 });
         document.getElementById('h-qr').innerHTML = "";
@@ -167,7 +171,9 @@
         const s = document.getElementById('snd-door');
         if(s) s.play().catch(()=>{});
         
-        d.style.transform = "scale(8)"; d.style.opacity = "0"; d.style.pointerEvents = "none";
+        d.style.transform = "scale(12)";
+        d.style.opacity = "0";
+        d.style.pointerEvents = "none";
         document.getElementById('l-hint').style.display = 'none';
 
         if (!currentID) {
@@ -178,8 +184,9 @@
         
         setTimeout(() => { 
             portalTransition('block-welcome'); 
-            const a = document.getElementById('snd-ambient'); if(a) { a.volume = 0.5; a.play().catch(()=>{}); }
-        }, 1500);
+            const a = document.getElementById('snd-ambient'); 
+            if(a) { a.volume = 0.4; a.play().catch(()=>{}); }
+        }, 1200);
     }
 
     function portalTransition(nextId) {
@@ -192,20 +199,23 @@
             if(next) {
                 next.classList.add('active');
                 if(nextId === 'block-bar') {
-                    setTimeout(() => document.getElementById('snd-khe').play(), 600);
-                    setTimeout(() => document.getElementById('snd-pour').play(), 1800);
+                    setTimeout(() => { document.getElementById('snd-khe').play().catch(()=>{}); }, 600);
+                    setTimeout(() => { document.getElementById('snd-pour').play().catch(()=>{}); }, 1800);
                 }
             }
         }, 600);
     }
 
+    // --- ФОТО И АВАТАРЫ ---
     function preview(i) {
         if(i.files && i.files[0]) {
             const r = new FileReader();
             r.onload = (e) => { 
                 document.getElementById('avatar-img').style.display = "none";
-                document.getElementById('pp').src = e.target.result; document.getElementById('pp').style.display = "block";
-                document.getElementById('h-photo').src = e.target.result; document.getElementById('txt-photo').style.display = "none";
+                const pp = document.getElementById('pp');
+                pp.src = e.target.result; pp.style.display = "block";
+                document.getElementById('h-photo').src = e.target.result; 
+                document.getElementById('txt-photo').style.display = "none";
             };
             r.readAsDataURL(i.files[0]);
         }
@@ -215,8 +225,11 @@
         document.getElementById('pp').style.display = "none";
         const seed = Math.random().toString(36).substring(7);
         const url = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${seed}`;
-        document.getElementById('avatar-img').src = url; document.getElementById('avatar-img').style.display = "block";
-        document.getElementById('h-photo').src = url; document.getElementById('txt-avatar').style.display = "none";
+        const av = document.getElementById('avatar-img');
+        av.src = url; av.style.display = "block";
+        document.getElementById('h-photo').src = url; 
+        document.getElementById('txt-avatar').style.display = "none";
+        document.getElementById('txt-photo').style.display = "none";
     }
 
     function swapButtons(a, s) { 
