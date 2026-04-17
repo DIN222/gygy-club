@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en" class="notranslate" google="notranslate">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.8.3 | GLOBAL ENGLISH & SLEEK BAR</title>
+    <title>GY-GY Club v4.8.4 | THE GLOBAL DICTIONARY</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -12,42 +13,34 @@
         * { -webkit-tap-highlight-color: transparent !important; box-sizing: border-box; outline: none; }
         html, body { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; position: fixed; margin:0; }
         
-        /* HEADER & LANGUAGE */
         #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000001; }
-        .goog-te-gadget .goog-te-combo { background: #000 !important; color: var(--gold) !important; border: 2px solid var(--gold) !important; padding: 6px; border-radius: 4px; font-family: 'Share Tech Mono'; font-size: 12px; width: 165px; cursor: pointer; }
+        .goog-te-gadget .goog-te-combo { background: #000 !important; color: var(--gold) !important; border: 2px solid var(--gold) !important; padding: 6px; border-radius: 4px; font-family: 'Share Tech Mono'; font-size: 12px; width: 180px; cursor: pointer; }
         .goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame, .skiptranslate > iframe { display: none !important; }
         body { top: 0px !important; }
 
-        .lang-hint { position: fixed; top: 55px; left: 15px; z-index: 1000001; font-size: 11px; color: var(--gold); width: 165px; text-align: center; animation: blink 2s infinite; font-weight: bold; pointer-events: none; }
+        .lang-hint { position: fixed; top: 55px; left: 15px; z-index: 1000001; font-size: 11px; color: var(--gold); width: 180px; text-align: center; animation: blink 2s infinite; font-weight: bold; pointer-events: none; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
         .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000001; font-size: 26px; letter-spacing: 6px; font-weight: bold; color: var(--gold); text-shadow: 0 0 15px var(--glow); }
 
-        /* CORE BLOCKS */
         .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; z-index: 10; opacity: 0; transition: opacity 0.6s ease; }
         .block.active { display: flex !important; opacity: 1; pointer-events: auto !important; }
         .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 24px; color: var(--gold); text-align: center; max-width: 85%; margin-bottom: 20px; text-shadow: 0 0 10px var(--glow); }
         
-        /* BUTTONS */
         .btn-gy { min-width: 270px; padding: 14px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; text-transform: uppercase; font-weight: 900; margin: 8px 0; font-family: 'Share Tech Mono'; font-size: 14px; transition: 0.3s; box-shadow: 0 0 8px var(--glow); position: relative; z-index: 100; }
         .btn-gy:active { background: var(--gold); color: #000; box-shadow: 0 0 20px var(--gold); }
         .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; box-shadow: none !important; }
 
-        /* BAR BUTTONS (COMPACT & BOTTOM) */
-        .btn-bar-small { background: #000 !important; min-width: 200px !important; padding: 8px !important; font-size: 12px !important; margin: 4px 0 !important; }
+        .btn-bar-small { background: #000 !important; min-width: 220px !important; padding: 10px !important; font-size: 13px !important; margin: 5px 0 !important; }
 
-        /* WELCOME ZONE */
-        .btn-welcome { min-width: 220px; padding: 8px; font-size: 12px; margin: 4px 0; }
-
-        /* ID STYLES */
         .id-card-hall { position: absolute; top: 72%; left: 50%; transform: translate(-50%,-50%); width: 240px; padding: 15px; border: 2px solid var(--gold); background: #F5F5DC; border-radius: 12px; display: flex; flex-direction: column; align-items: center; color: #000; z-index: 30; box-shadow: 0 0 30px var(--gold); }
         .box-final { width: 85px; height: 85px; border: 2px solid #000; background: #FFF !important; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
         .dynamic-flag { position: absolute; bottom: 2px; right: 2px; font-size: 18px; z-index: 20; }
         
         #main-door { width: 280px; cursor: pointer; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.5s; z-index: 9999; filter: drop-shadow(0 0 20px var(--glow)); }
         .horse-welcome-img { max-height: 52vh; width: auto; filter: drop-shadow(0 0 25px var(--glow)); margin-bottom: 5px; }
-        .horse-bar-img { height: 75vh; width: auto; object-fit: contain; filter: drop-shadow(0 0 30px var(--glow)); margin-bottom: 12vh; }
+        .horse-bar-img { height: 70vh; width: auto; object-fit: contain; filter: drop-shadow(0 0 30px var(--glow)); margin-bottom: 15vh; }
         
-        .bar-ui-container { position: absolute; bottom: 3vh; width: 100%; display: flex; flex-direction: column; align-items: center; z-index: 1000; }
+        .bar-ui-container { position: absolute; bottom: 2vh; width: 100%; display: flex; flex-direction: column; align-items: center; z-index: 1000; }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -69,8 +62,8 @@
         <div class="quote-text">"Every joke has a grain of whiskey"</div>
         <img src="horse_welcome.png" class="horse-welcome-img">
         <div style="font-family: 'Playfair Display'; font-size: 32px; font-weight: 700; letter-spacing: 10px; margin-bottom: 10px; text-transform: uppercase; font-style: italic;">WELCOME</div>
-        <button id="btn-w-hall" class="btn-gy btn-welcome btn-sleep" onclick="portalTransition('block-hall')">PROCEED TO HALL</button>
-        <button class="btn-gy btn-welcome" onclick="portalTransition('block-identity')">GET YOUR ID</button>
+        <button id="btn-w-hall" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')">PROCEED TO HALL</button>
+        <button class="btn-gy" onclick="portalTransition('block-identity')">GET YOUR ID</button>
     </div>
 
     <div id="block-identity" class="block">
@@ -110,8 +103,8 @@
         <div class="quote-text" style="position:absolute; top:8vh;">"Neigh, let's get started!"</div>
         <img src="horse_bar.png" class="horse-bar-img">
         <div class="bar-ui-container">
+            <button class="btn-gy btn-bar-small" onclick="window.location.href='bridge_protocol.html'">SERVER ROOM (AI)</button>
             <button class="btn-gy btn-bar-small" onclick="window.location.href='tables.html'">TABLES</button>
-            <button class="btn-gy btn-bar-small" onclick="window.location.href='bridge_protocol.html'">AI ROOM</button>
             <button class="btn-gy btn-bar-small" onclick="portalTransition('block-hall')">BACK TO HALL</button>
         </div>
     </div>
@@ -119,31 +112,34 @@
 <script>
     let currentID = "";
     
-    // THE ULTIMATE ENGLISH DICTIONARY WITH FLAGS
-    const fullLangMap = {
+    // THE EXTENDED GLOBAL DICTIONARY (40+ LANGUAGES)
+    const langMap = {
         'en': {n: 'English', f: '🇬🇧'}, 'ru': {n: 'Russian', f: '🇷🇺'}, 'uk': {n: 'Ukrainian', f: '🇺🇦'},
         'pl': {n: 'Polish', f: '🇵🇱'}, 'fr': {n: 'French', f: '🇫🇷'}, 'de': {n: 'German', f: '🇩🇪'},
-        'es': {n: 'Spanish', f: '🇪🇸'}, 'it': {n: 'Italian', f: '🇮🇹'}, 'zh-CN': {n: 'Chinese', f: '🇨🇳'},
-        'ja': {n: 'Japanese', f: '🇯🇵'}, 'ko': {n: 'Korean', f: '🇰🇷'}, 'pt': {n: 'Portuguese', f: '🇵🇹'},
-        'tr': {n: 'Turkish', f: '🇹🇷'}, 'ar': {n: 'Arabic', f: '🇦🇪'}, 'nl': {n: 'Dutch', f: '🇳🇱'},
-        'sv': {n: 'Swedish', f: '🇸🇪'}, 'no': {n: 'Norwegian', f: '🇳🇴'}, 'fi': {n: 'Finnish', f: '🇫🇮'},
-        'da': {n: 'Danish', f: '🇩🇰'}, 'cs': {n: 'Czech', f: '🇨🇿'}, 'hu': {n: 'Hungarian', f: '🇭🇺'},
-        'ro': {n: 'Romanian', f: '🇷🇴'}, 'el': {n: 'Greek', f: '🇬🇷'}, 'he': {n: 'Hebrew', f: '🇮🇱'},
-        'hi': {n: 'Hindi', f: '🇮🇳'}, 'th': {n: 'Thai', f: '🇹🇭'}, 'vi': {n: 'Vietnamese', f: '🇻🇳'},
-        'id': {n: 'Indonesian', f: '🇮🇩'}
+        'es': {n: 'Spanish', f: '🇪🇸'}, 'it': {n: 'Italian', f: '🇮🇹'}, 'zh-CN': {n: 'Chinese (Simp)', f: '🇨🇳'},
+        'zh-TW': {n: 'Chinese (Trad)', f: '🇭🇰'}, 'ja': {n: 'Japanese', f: '🇯🇵'}, 'ko': {n: 'Korean', f: '🇰🇷'},
+        'pt': {n: 'Portuguese', f: '🇵🇹'}, 'tr': {n: 'Turkish', f: '🇹🇷'}, 'ar': {n: 'Arabic', f: '🇦🇪'},
+        'nl': {n: 'Dutch', f: '🇳🇱'}, 'sv': {n: 'Swedish', f: '🇸🇪'}, 'no': {n: 'Norwegian', f: '🇳🇴'},
+        'fi': {n: 'Finnish', f: '🇫🇮'}, 'da': {n: 'Danish', f: '🇩🇰'}, 'cs': {n: 'Czech', f: '🇨🇿'},
+        'hu': {n: 'Hungarian', f: '🇭🇺'}, 'ro': {n: 'Romanian', f: '🇷🇴'}, 'el': {n: 'Greek', f: '🇬🇷'},
+        'he': {n: 'Hebrew', f: '🇮🇱'}, 'hi': {n: 'Hindi', f: '🇮🇳'}, 'th': {n: 'Thai', f: '🇹🇭'},
+        'vi': {n: 'Vietnamese', f: '🇻🇳'}, 'id': {n: 'Indonesian', f: '🇮🇩'}, 'ms': {n: 'Malay', f: '🇲🇾'},
+        'bg': {n: 'Bulgarian', f: '🇧🇬'}, 'hr': {n: 'Croatian', f: '🇭🇷'}, 'sk': {n: 'Slovak', f: '🇸🇰'},
+        'sl': {n: 'Slovenian', f: '🇸🇮'}, 'et': {n: 'Estonian', f: '🇪🇪'}, 'lv': {n: 'Latvian', f: '🇱🇻'},
+        'lt': {n: 'Lithuanian', f: '🇱🇹'}, 'sr': {n: 'Serbian', f: '🇷🇸'}, 'fa': {n: 'Persian', f: '🇮🇷'}
     };
 
-    function forceEnglishMenu() {
-        const select = document.querySelector('.goog-te-combo');
-        if (select) {
-            Array.from(select.options).forEach(opt => {
-                const cfg = fullLangMap[opt.value];
-                if (cfg) opt.text = `${cfg.f} ${cfg.n}`;
-                else if (opt.value === "") opt.text = "🌐 Select Language";
+    function forceEnglish() {
+        const sel = document.querySelector('.goog-te-combo');
+        if (sel) {
+            Array.from(sel.options).forEach(o => {
+                const c = langMap[o.value];
+                if (c) o.text = `${c.f} ${c.n}`;
+                else if (o.value === "") o.text = "🌐 Select Language";
             });
         }
     }
-    setInterval(forceEnglishMenu, 400);
+    setInterval(forceEnglish, 400);
 
     function googleTranslateElementInit() { 
         new google.translate.TranslateElement({pageLanguage: 'en', autoDisplay: false}, 'google_translate_element'); 
@@ -152,8 +148,8 @@
             if (s && !s.getAttribute('data-ready')) {
                 s.setAttribute('data-ready', 'true');
                 s.addEventListener('change', () => {
-                    const cfg = fullLangMap[s.value];
-                    document.querySelectorAll('.dynamic-flag').forEach(el => el.innerText = cfg ? cfg.f : '🌐');
+                    const c = langMap[s.value];
+                    document.querySelectorAll('.dynamic-flag').forEach(el => el.innerText = c ? c.f : '🌐');
                 });
             }
         });
@@ -161,8 +157,8 @@
     }
 
     window.onload = () => {
-        const savedID = localStorage.getItem('gy_trace');
-        if (savedID) { currentID = savedID; updateIDUI(savedID); document.getElementById('btn-w-hall').classList.remove('btn-sleep'); }
+        const saved = localStorage.getItem('gy_trace');
+        if (saved) { currentID = saved; updateIDUI(saved); document.getElementById('btn-w-hall').classList.remove('btn-sleep'); }
     };
 
     function updateIDUI(id) {
@@ -191,18 +187,18 @@
     }
 
     function portalTransition(nextId) {
-        const current = document.querySelector('.block.active');
-        if(current) current.style.opacity = "0";
+        const cur = document.querySelector('.block.active');
+        if(cur) cur.style.opacity = "0";
         setTimeout(() => {
-            if(current) current.classList.remove('active');
-            const next = document.getElementById(nextId);
-            if(next) {
-                next.classList.add('active');
+            if(cur) cur.classList.remove('active');
+            const nxt = document.getElementById(nextId);
+            if(nxt) {
+                nxt.classList.add('active');
                 if(nextId === 'block-bar') {
                     setTimeout(() => document.getElementById('snd-khe').play().catch(()=>{}), 600);
                     setTimeout(() => document.getElementById('snd-pour').play().catch(()=>{}), 1800);
                 }
-                setTimeout(() => next.style.opacity = "1", 50);
+                setTimeout(() => nxt.style.opacity = "1", 50);
             }
         }, 600);
     }
@@ -225,7 +221,8 @@
         document.getElementById('pp').style.display = "none";
         const seed = Math.random().toString(36).substring(7);
         const url = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${seed}`;
-        document.getElementById('avatar-img').src = url; document.getElementById('avatar-img').style.display = "block";
+        document.getElementById('avatar-img').src = url; 
+        document.getElementById('avatar-img').style.display = "block";
         document.getElementById('h-photo').src = url; 
         document.getElementById('txt-avatar').style.display = "none";
         document.getElementById('txt-photo').style.display = "none";
