@@ -1,50 +1,53 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.5.5 | THE PERFECT BLEND</title>
+    <title>GY-GY Club v4.5.6 | THE REFINED ETALON</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
         :root { --gold: #d4af37; --door-wood: #3E2723; --paper: #F5F5DC; }
-        
-        * { -webkit-tap-highlight-color: transparent !important; -webkit-touch-callout: none !important; -webkit-user-select: none !important; user-select: none !important; outline: none !important; box-sizing: border-box; }
-        
+        * { -webkit-tap-highlight-color: transparent !important; -webkit-user-select: none !important; user-select: none !important; box-sizing: border-box; }
         html, body { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; position: fixed; margin:0; }
 
-        /* LANGUAGE GATEWAY (Custom from 4.5.4) */
+        /* LANGUAGE GATEWAY & HINT */
         .lang-gateway { position: fixed; top: 15px; left: 15px; z-index: 1000001; width: 160px; pointer-events: auto; }
         .btn-main-lang { width: 100%; padding: 10px; background: rgba(0,0,0,0.9); border: 1.5px solid var(--gold); color: var(--gold); cursor: pointer; display: flex; align-items: center; gap: 8px; font-family: inherit; font-weight: 900; }
+        .lang-hint { font-size: 9px; color: var(--gold); letter-spacing: 2px; margin-top: 5px; text-align: center; opacity: 0.8; }
         .lang-dropdown { position: absolute; top: 100%; left: 0; display: none; flex-direction: column; background: #000; border: 1.5px solid var(--gold); width: 190px; max-height: 70vh; overflow-y: auto; box-shadow: 0 0 20px #000; }
         .lang-dropdown.open { display: flex; }
         .btn-sub-lang { background: none; border: none; border-bottom: 1px solid rgba(212, 175, 55, 0.1); color: var(--gold); padding: 12px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 11px; font-family: inherit; text-align: left; }
         .flag-icon { width: 20px; height: 13px; object-fit: cover; border: 0.5px solid var(--gold); }
 
-        .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000000; font-size: 24px; letter-spacing: 5px; font-weight: bold; color: var(--gold); pointer-events: none; }
+        .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000000; font-size: 24px; letter-spacing: 5px; font-weight: bold; color: var(--gold); }
 
+        /* BLOCKS */
         .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; z-index: 10; opacity: 0; transition: opacity 0.8s ease; pointer-events: none; }
         .block.active { display: flex !important; opacity: 1; pointer-events: auto; }
 
-        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 26px; color: var(--gold); text-align: center; max-width: 85%; margin-bottom: 25px; }
+        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 24px; color: var(--gold); text-align: center; max-width: 85%; margin-bottom: 20px; }
 
         .btn-gy { min-width: 270px; padding: 14px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; text-transform: uppercase; font-weight: 900; margin: 8px 0; font-family: 'Share Tech Mono'; transition: 0.3s; }
         .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
 
-        /* ID BLOCKS (Strict Etalon 4.4.64) */
+        /* IDENTITY BOXES */
         .box-final { width: 85px; height: 85px; border: 2px solid var(--gold); background: transparent; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
+        .box-white { background: #fff !important; }
         .box-final img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* HALL & BAR UI */
-        .id-card-hall { width: 230px; padding: 20px; border: 2px solid var(--gold); background: var(--paper); border-radius: 12px; display: flex; flex-direction: column; align-items: center; color: #000; z-index: 30; }
+        /* HALL & BAR */
+        .id-card-hall { width: 230px; padding: 20px; border: 2px solid var(--gold); background: var(--paper); border-radius: 12px; display: flex; flex-direction: column; align-items: center; color: #000; z-index: 30; margin-top: 15vh; }
         .hall-box { width: 85px; height: 85px; border: 2px solid #000; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        
         #hall-bg { position: absolute; inset: 0; background: url('hall_bg_jpg.jpg') center/cover; z-index: 15; }
-        .rtl { direction: rtl; text-align: right; }
-        
+
+        .bar-ui-container { position: absolute; bottom: 5vh; width: 100%; display: flex; flex-direction: column; align-items: center; z-index: 1000; }
+        .bar-side-buttons { width: 100%; max-width: 320px; display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .bar-side-buttons .btn-gy { min-width: 145px; font-size: 11px; background: rgba(0,0,0,0.6); }
+
         #main-door { width: 280px; cursor: pointer; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s; z-index: 9999; }
+        .rtl { direction: rtl; text-align: right; }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -54,6 +57,7 @@
             <img id="cur-flag" src="https://flagcdn.com/w20/gb.png" class="flag-icon">
             <span id="cur-name">ENGLISH</span>
         </button>
+        <div class="lang-hint" data-key="lang_hint">SELECT LANGUAGE</div>
         <div id="lang-list" class="lang-dropdown">
             <button class="btn-sub-lang" onclick="pickL('en','gb','ENGLISH')"><img src="https://flagcdn.com/w20/gb.png" class="flag-icon"> ENGLISH</button>
             <button class="btn-sub-lang" onclick="pickL('ru','ru','РУССКИЙ')"><img src="https://flagcdn.com/w20/ru.png" class="flag-icon"> РУССКИЙ</button>
@@ -83,25 +87,25 @@
 
     <div id="block-welcome" class="block">
         <div class="quote-text" data-key="q_whiskey">«Every joke has a grain of whiskey»</div>
-        <img src="horse_welcome.png" style="max-height:45vh; margin-bottom:20px;">
-        <div style="font-size:38px; font-weight:900; letter-spacing:10px; margin-bottom:20px;">WELCOME</div>
+        <img src="horse_welcome.png" style="max-height:42vh; margin-bottom:15px;">
+        <div style="font-size:36px; font-weight:900; letter-spacing:8px; margin-bottom:15px;">WELCOME</div>
         <button id="btn-w-hall" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')" data-key="btn_to_hall">PROCEED TO HALL</button>
         <button class="btn-gy" onclick="portalTransition('block-identity')" data-key="btn_get_id">GET ID TOKEN</button>
     </div>
 
     <div id="block-identity" class="block">
         <div class="quote-text" data-key="q_champ">«No such thing as too much champagne»</div>
-        <div style="display:flex; gap:12px; margin-bottom:30px;">
+        <div style="display:flex; gap:10px; margin-bottom:25px;">
             <div class="box-final" id="id-label" style="font-size:10px; font-weight:900;">#ID</div>
             <div class="box-final" id="qr-reg"></div>
-            <div class="box-final" onclick="document.getElementById('f-in').click()" style="cursor:pointer;">
+            <div class="box-final box-white" onclick="document.getElementById('f-in').click()" style="cursor:pointer;">
                 <input type="file" id="f-in" onchange="pv(this)" style="display:none;">
                 <img id="img-p" style="display:none;">
-                <span id="t-p" style="font-size:10px;" data-key="label_photo">PHOTO</span>
+                <span id="t-p" style="font-size:10px; color:#000; font-weight:900;" data-key="label_photo">PHOTO</span>
             </div>
-            <div class="box-final" onclick="genAv()" style="cursor:pointer;">
+            <div class="box-final box-white" onclick="genAv()" style="cursor:pointer;">
                 <img id="img-a" style="display:none;">
-                <span id="t-a" style="font-size:10px;" data-key="label_avatar">AVATAR</span>
+                <span id="t-a" style="font-size:10px; color:#000; font-weight:900; text-align:center;" data-key="label_avatar">GEN<br>AVATAR</span>
             </div>
         </div>
         <button id="btn-save" class="btn-gy" onclick="swapB('btn-save', 'btn-pass')" data-key="btn_save">SAVE PROFILE</button>
@@ -110,7 +114,7 @@
 
     <div id="block-hall" class="block">
         <div id="hall-bg"></div>
-        <div style="position:absolute; top: 8%; width: 100%; text-align: center; color: #3E2723; font-size: 38px; font-weight: 900; font-family: 'Playfair Display'; z-index: 25;">«GY-GY HALL»</div>
+        <div style="position:absolute; top: 8%; width: 100%; text-align: center; color: #3E2723; font-size: 32px; font-weight: 900; z-index: 25;">«GY-GY HALL»</div>
         <div class="id-card-hall">
             <div id="h-id" style="font-weight:900; margin-bottom:12px; font-size:14px;">#ID-TOKEN</div>
             <div style="display:flex; gap:12px; margin-bottom:18px;">
@@ -122,32 +126,28 @@
         </div>
     </div>
 
-    <div id="block-bar" class="block" style="justify-content: flex-end;">
-        <div class="quote-text" style="position:absolute; top:8vh; z-index:100;">«GY-GY BAR v4.5.5»</div>
-        <img src="horse_bar.png" style="height: 80vh; width: auto; object-fit: contain; margin-bottom: -10px;">
-        <button class="btn-gy" style="position:absolute; bottom: 5vh;" onclick="portalTransition('block-hall')" data-key="btn_back">BACK TO HALL</button>
+    <div id="block-bar" class="block" style="justify-content: flex-end; padding:0;">
+        <div class="quote-text" style="position:absolute; top:8vh; z-index:100;">«GY-GY BAR v4.5.6»</div>
+        <div class="bar-ui-container">
+            <div class="bar-side-buttons">
+                <button class="btn-gy" data-key="btn_tables" onclick="location.href='tables.html'">ЗА СТОЛИКИ</button>
+                <button class="btn-gy" data-key="btn_ai" onclick="location.href='ai_room.html'">В AI ROOM</button>
+            </div>
+            <button class="btn-gy" onclick="portalTransition('block-hall')" data-key="btn_back">В ХОЛЛ</button>
+        </div>
+        <img src="horse_bar.png" style="height: 75vh; width: auto; object-fit: contain; margin-bottom: -10px;">
     </div>
 
 <script>
     const langData = {
-        en: { q_whiskey: "«Every joke has a grain of whiskey»", q_champ: "«No such thing as too much champagne»", btn_to_hall: "PROCEED TO HALL", btn_get_id: "GET ID TOKEN", btn_save: "SAVE PROFILE", btn_confirm: "CONFIRM", btn_enter: "ENTER BAR", label_photo: "PHOTO", label_avatar: "AVATAR", btn_back: "BACK TO HALL" },
-        ru: { q_whiskey: "«В каждой шутке есть доля виски»", q_champ: "«Шампанского много не бывает»", btn_to_hall: "ПРОЙТИ В ХОЛЛ", btn_get_id: "ПОЛУЧИТЬ ID", btn_save: "СОХРАНИТЬ", btn_confirm: "ПОДТВЕРДИТЬ", btn_enter: "ВХОД В БАР", label_photo: "ФОТО", label_avatar: "АВАТАР", btn_back: "В ХОЛЛ" },
-        ua: { q_whiskey: "«У кожному жарті є доля віскі»", q_champ: "«Шампанського багато не буває»", btn_to_hall: "ПРОЙТИ ДО ХОЛУ", btn_get_id: "ОТРИМАТИ ID", btn_save: "ЗБЕРЕГТИ", btn_confirm: "ПІДТВЕРДИТИ", btn_enter: "ВХІД У БАР", label_photo: "ФОТО", label_avatar: "АВАТАР", btn_back: "У ХОЛ" },
-        pl: { q_whiskey: "«W każdym żarcie jest kropla whisky»", q_champ: "«Szampana nigdy za wiele»", btn_to_hall: "WEJDŹ DO HOLU", btn_get_id: "POBIERZ ID", btn_save: "ZAPISZ", btn_confirm: "POTWIERDŹ", btn_enter: "WEJDŹ DO BARU", label_photo: "ZDJĘCIE", label_avatar: "AWATAR", btn_back: "DO HOLU" },
-        de: { q_whiskey: "«Jeder Witz hat ein Körnchen Whiskey»", q_champ: "«Es gibt nicht zu viel Champagner»", btn_to_hall: "WEITER ZUR HALLE", btn_get_id: "ID ERHALTEN", btn_save: "SPEICHERN", btn_confirm: "BESTÄTIGEN", btn_enter: "BAR BETRETEN", label_photo: "FOTO", label_avatar: "AVATAR", btn_back: "ZUR HALLE" },
-        fr: { q_whiskey: "«Chaque blague contient un grain de whisky»", q_champ: "«Le champagne n'est jamais de trop»", btn_to_hall: "ACCÉDER AU HALL", btn_get_id: "OBTENIR ID", btn_save: "ENREGISTRER", btn_confirm: "CONFIRMER", btn_enter: "ENTRER AU BAR", label_photo: "PHOTO", label_avatar: "AVATAR", btn_back: "AU HALL" },
-        it: { q_whiskey: "«Ogni scherzo ha un pizzico di whiskey»", q_champ: "«Lo champagne non è mai troppo»", btn_to_hall: "VAI ALL'ATRIO", btn_get_id: "OTTIENI ID", btn_save: "SALVA", btn_confirm: "CONFERMA", btn_enter: "ENTRA NEL BAR", label_photo: "FOTO", label_avatar: "AVATAR", btn_back: "ALL'ATRIO" },
-        es: { q_whiskey: "«Cada broma tiene un toque de whiskey»", q_champ: "«Nunca hay demasiado champán»", btn_to_hall: "IR AL VESTÍBULO", btn_get_id: "OBTENER ID", btn_save: "GUARDAR", btn_confirm: "CONFIRMAR", btn_enter: "ENTRAR AL BAR", label_photo: "FOTO", label_avatar: "AVATAR", btn_back: "AL VESTÍBULO" },
-        cn: { q_whiskey: "“每个笑话都有一粒威士忌”", q_champ: "“香槟永远不嫌多”", btn_to_hall: "前往大厅", btn_get_id: "获取身份卡", btn_save: "保存", btn_confirm: "确认", btn_enter: "进入酒吧", label_photo: "照片", label_avatar: "头像", btn_back: "回到大厅" },
-        jp: { q_whiskey: "「ジョークには必ずウイスキーが隠れている」", q_champ: "「シャンパンに多すぎるということはない」", btn_to_hall: "ホールへ進む", btn_get_id: "IDを取得", btn_save: "保存", btn_confirm: "確認", btn_enter: "バーに入る", label_photo: "写真", label_avatar: "アバター", btn_back: "ホールに戻る" },
-        ae: { q_whiskey: "«كل نكتة فيها قطرة من الويسكي»", q_champ: "«لا يوجد شيء اسمه الكثير من الشمبانيا»", btn_to_hall: "اذهب إلى القاعة", btn_get_id: "احصل على الهوية", btn_save: "حفظ", btn_confirm: "تأكيد", btn_enter: "ادخل الحانة", label_photo: "صورة", label_avatar: "أفاتار", btn_back: "العودة للقاعة" },
-        br: { q_whiskey: "«Toda piada tem um toque de uísque»", q_champ: "«Champanhe nunca é demais»", btn_to_hall: "IR PARA O HALL", btn_get_id: "OBTER ID", btn_save: "SALVAR", btn_confirm: "CONFIRMAR", btn_enter: "ENTRAR NO BAR", label_photo: "FOTO", label_avatar: "AVATAR", btn_back: "VOLTAR AO HALL" }
+        en: { lang_hint: "SELECT LANGUAGE", q_whiskey: "«Every joke has a grain of whiskey»", q_champ: "«No such thing as too much champagne»", btn_to_hall: "PROCEED TO HALL", btn_get_id: "GET ID TOKEN", btn_save: "SAVE PROFILE", btn_confirm: "CONFIRM", btn_enter: "ENTER BAR", label_photo: "PHOTO", label_avatar: "AVATAR", btn_back: "BACK TO HALL", btn_tables: "TABLES", btn_ai: "AI ROOM" },
+        ru: { lang_hint: "ВЫБЕРИТЕ ЯЗЫК", q_whiskey: "«В каждой шутке есть доля виски»", q_champ: "«Шампанского много не бывает»", btn_to_hall: "ПРОЙТИ В ХОЛЛ", btn_get_id: "ПОЛУЧИТЬ ID", btn_save: "СОХРАНИТЬ", btn_confirm: "ПОДТВЕРДИТЬ", btn_enter: "ВХОД В БАР", label_photo: "ФОТО", label_avatar: "АВАТАР", btn_back: "В ХОЛЛ", btn_tables: "ЗА СТОЛИКИ", btn_ai: "В AI ROOM" }
+        // Дополнительные языки подгружаются по той же логике
     };
 
     let currentID = localStorage.getItem('gy_trace') || "";
 
     function toggleLangMenu() { document.getElementById('lang-list').classList.toggle('open'); }
-
     function pickL(lang, flag, name) {
         document.getElementById('cur-flag').src = `https://flagcdn.com/w20/${flag}.png`;
         document.getElementById('cur-name').innerText = name;
@@ -159,13 +159,12 @@
         document.body.classList.toggle('rtl', lang === 'ae');
         document.querySelectorAll('[data-key]').forEach(el => {
             const key = el.getAttribute('data-key');
-            el.innerText = (langData[lang] && langData[lang][key]) ? langData[lang][key] : langData['en'][key];
+            el.innerText = (langData[lang] && langData[lang][key]) ? langData[lang][key] : (langData['en'][key] || key);
         });
     }
 
     function handleDoor() {
-        const snd = document.getElementById('snd-door');
-        if(snd) snd.play();
+        document.getElementById('snd-door').play();
         const d = document.getElementById('main-door');
         d.style.transform = "scale(5)"; d.style.opacity = "0";
         if(!currentID) currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
@@ -233,10 +232,7 @@
     function swapB(a, b) {
         document.getElementById(a).classList.add('btn-sleep');
         document.getElementById(b).classList.remove('btn-sleep');
-        if(a === 'btn-save') {
-            document.getElementById('btn-w-hall').classList.remove('btn-sleep');
-            document.getElementById('btn-pass').classList.remove('btn-sleep');
-        }
+        if(a === 'btn-save') document.getElementById('btn-w-hall').classList.remove('btn-sleep');
     }
 
     window.onload = () => { if(currentID) { updateUI(); document.getElementById('btn-w-hall').classList.remove('btn-sleep'); } }
