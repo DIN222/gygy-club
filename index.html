@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v5.2.9 | Etalon Fix</title>
+    <title>GY-GY Club v5.3.0 | HARD ETALON</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -15,27 +15,13 @@
         /* CONSTANT UI */
         .ui-top-bar { position: fixed; top: 0; left: 0; width: 100%; height: 70px; display: flex; justify-content: center; align-items: center; z-index: 5000; pointer-events: none; }
         .ui-logo { font-size: 24px; font-weight: 900; letter-spacing: 5px; text-shadow: 0 0 15px var(--neon); pointer-events: auto; }
-        
-        .nav-btn-back { position: fixed; top: 20px; right: 20px; background: none; border: 1px solid var(--gold); color: var(--gold); padding: 8px 15px; cursor: pointer; z-index: 6000; font-weight: 900; }
+        .nav-btn-back { position: fixed; top: 20px; right: 20px; background: none; border: 1.5px solid var(--gold); color: var(--gold); padding: 8px 15px; cursor: pointer; z-index: 6000; font-weight: 900; }
         .nav-hidden { display: none; }
 
-        /* LANGUAGE SELECTOR - POSITIONED TOP LEFT */
-        .lang-gateway { position: fixed; top: 20px; left: 20px; z-index: 7000; width: 150px; }
-        .btn-main-lang { 
-            width: 100%; padding: 10px; background: #000; border: 1.5px solid var(--gold); 
-            color: var(--gold); cursor: pointer; display: flex; align-items: center; gap: 10px; font-family: inherit; font-weight: 900;
-        }
-        
-        /* THE HINT - NOW BELOW THE BUTTON */
-        .lang-hint { 
-            position: absolute; top: 50px; left: 0; width: 200px;
-            font-size: 10px; letter-spacing: 1px; color: var(--gold); font-weight: 900;
-            display: flex; align-items: center; gap: 8px; margin-top: 10px;
-            pointer-events: none;
-        }
-        .arrow-up { animation: pointUp 0.6s infinite alternate; font-size: 14px; }
-        @keyframes pointUp { from { transform: translateY(0); } to { transform: translateY(-5px); } }
-
+        /* LANG SELECTOR */
+        .lang-gateway { position: fixed; top: 20px; left: 20px; z-index: 7000; width: 140px; }
+        .btn-main-lang { width: 100%; padding: 10px; background: #000; border: 1.5px solid var(--gold); color: var(--gold); cursor: pointer; display: flex; align-items: center; gap: 8px; font-family: inherit; font-weight: 900; font-size: 12px; }
+        .lang-hint { position: absolute; top: 50px; left: 0; width: 100%; font-size: 9px; color: var(--gold); display: flex; align-items: center; gap: 5px; margin-top: 8px; opacity: 0.8; }
         .lang-dropdown { position: absolute; top: 100%; left: 0; display: none; flex-direction: column; background: #000; border: 1.5px solid var(--gold); width: 180px; max-height: 60vh; overflow-y: auto; }
         .lang-dropdown.open { display: flex; }
         .btn-sub-lang { background: none; border: none; border-bottom: 1px solid rgba(212, 175, 55, 0.1); color: var(--gold); padding: 12px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 12px; font-family: inherit; }
@@ -45,20 +31,27 @@
         .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; opacity: 0; transition: opacity 0.5s; z-index: 10; }
         .block.active { display: flex; opacity: 1; }
 
-        /* WELCOME HIERARCHY: QUOTE -> HORSE -> WELCOME */
-        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 18px; text-align: center; max-width: 85%; line-height: 1.4; color: var(--gold); margin-bottom: 5px; }
-        .neon-horse { max-height: 30vh; filter: drop-shadow(0 0 20px var(--neon)); margin: 20px 0; }
-        .welcome-title { font-size: 38px; font-weight: 900; letter-spacing: 8px; text-shadow: 0 0 15px var(--gold); margin-bottom: 25px; }
+        /* WELCOME HIERARCHY */
+        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 18px; text-align: center; max-width: 85%; line-height: 1.4; margin-bottom: 10px; }
+        .neon-horse { max-height: 30vh; filter: drop-shadow(0 0 20px var(--neon)); margin: 15px 0; }
+        .welcome-title { font-size: 36px; font-weight: 900; letter-spacing: 8px; text-shadow: 0 0 15px var(--gold); margin-bottom: 20px; }
 
-        #main-door { width: 280px; cursor: pointer; transition: 2s cubic-bezier(0.4, 0, 0.2, 1); }
-        .btn-gy { min-width: 150px; padding: 15px; background: none; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: inherit; font-weight: 900; text-transform: uppercase; }
+        /* REGISTRATION BOXES (THE FIXED FRAMES) */
+        .reg-grid { display: flex; gap: 10px; margin-bottom: 25px; }
+        .box-frame { width: 75px; height: 75px; background: #000; border: 2px solid var(--gold); display: flex; align-items: center; justify-content: center; overflow: hidden; color: var(--gold); font-size: 9px; text-align: center; cursor: pointer; position: relative; }
+        .box-frame img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* HALL & BAR (THE ETALON SOUL) */
+        .id-card-hall { width: 280px; padding: 25px; background: #F5F5DC; border: 4px solid #3E2723; color: #3E2723; border-radius: 15px; text-align: center; }
+        .h-box-frame { width: 80px; height: 80px; background: #FFF; border: 2px solid #3E2723; display: flex; align-items: center; justify-content: center; overflow: hidden; margin: 0 auto; }
+        .bar-interior { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%); }
+
+        .btn-gy { min-width: 140px; padding: 15px; background: none; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: inherit; font-weight: 900; text-transform: uppercase; }
         .btn-sleep { opacity: 0.2; pointer-events: none; }
-
-        .id-card-hall { width: 280px; padding: 25px; background: #F5F5DC; border: 3px solid #3E2723; color: #000; border-radius: 15px; text-align: center; }
-        .box-white { width: 80px; height: 80px; background: #FFF; border: 1px solid #3E2723; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        #main-door { width: 280px; cursor: pointer; transition: 2s ease; }
     </style>
 </head>
-<body translate="no">
+<body>
 
     <div class="lang-gateway">
         <button class="btn-main-lang" onclick="toggleLangMenu()">
@@ -79,9 +72,7 @@
             <button class="btn-sub-lang" onclick="pickLang('ae', 'ae', 'العربية')"><img src="https://flagcdn.com/w20/ae.png" class="flag-icon"> العربية</button>
             <button class="btn-sub-lang" onclick="pickLang('br', 'br', 'PORTUGUÊS')"><img src="https://flagcdn.com/w20/br.png" class="flag-icon"> PORTUGUÊS</button>
         </div>
-        <div class="lang-hint" id="hint-box">
-            <span class="arrow-up">↑</span> SELECT LANGUAGE
-        </div>
+        <div class="lang-hint" id="hint-box">↑ SELECT LANGUAGE</div>
     </div>
 
     <div class="ui-top-bar"><div class="ui-logo">GY-GY</div></div>
@@ -106,16 +97,16 @@
 
     <div id="block-identity" class="block">
         <div class="quote-text" style="font-size:16px; margin-bottom:20px;" data-i18n="quote2">"No such thing as too much champagne"</div>
-        <div style="display:flex; gap:10px; margin-bottom:20px;">
-            <div class="box-white" id="id-label" style="color:#000; font-weight:900; font-size:10px;">#ID</div>
-            <div class="box-white" id="qr-reg"></div>
-            <div class="box-white" onclick="document.getElementById('file-in').click()" style="cursor:pointer;">
+        <div class="reg-grid">
+            <div class="box-frame" id="id-label">#ID</div>
+            <div class="box-frame" id="qr-reg"></div>
+            <div class="box-frame" onclick="document.getElementById('file-in').click()">
                 <input type="file" id="file-in" onchange="preview(this)" style="display:none;">
-                <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
+                <img id="pp" style="display:none;">
                 <span id="txt-p" data-i18n="photo">PHOTO</span>
             </div>
-            <div class="box-white" onclick="genAvatar()" style="cursor:pointer;">
-                <img id="av" style="display:none; width:100%; height:100%;">
+            <div class="box-frame" onclick="genAvatar()">
+                <img id="av" style="display:none;">
                 <span id="txt-a" data-i18n="avatar">AVATAR</span>
             </div>
         </div>
@@ -126,16 +117,18 @@
         <div class="id-card-hall">
             <div id="h-id" style="font-weight:900; font-size:16px; margin-bottom:15px;">#ID</div>
             <div style="display:flex; gap:10px; justify-content:center; margin-bottom:20px;">
-                <div class="box-white"><img id="h-photo" style="width:100%; height:100%; object-fit:cover;"></div>
-                <div class="box-white" id="h-qr"></div>
+                <div class="h-box-frame"><img id="h-photo" style="width:100%; height:100%; object-fit:cover;"></div>
+                <div class="h-box-frame" id="h-qr" style="background:#FFF;"></div>
             </div>
             <button class="btn-gy" style="color:#3E2723; border-color:#3E2723; width:100%;" onclick="portalTransition('block-bar')" data-i18n="go_bar">ENTER BAR</button>
         </div>
     </div>
 
     <div id="block-bar" class="block">
-        <div class="welcome-title">THE BAR</div>
-        <div class="quote-text">"Welcome home"</div>
+        <div class="bar-interior">
+            <div class="welcome-title">GY-GY BAR</div>
+            <div class="quote-text">"The best stories start here"</div>
+        </div>
     </div>
 
 <script>
@@ -159,19 +152,14 @@
     let currentID = localStorage.getItem('gy_trace') || "";
     let historyStack = ['block-entrance'];
 
-    function toggleLangMenu() { 
-        const list = document.getElementById('lang-list');
-        list.classList.toggle('open');
-        document.getElementById('hint-box').style.display = list.classList.contains('open') ? 'none' : 'flex';
-    }
+    function toggleLangMenu() { document.getElementById('lang-list').classList.toggle('open'); }
 
     function pickLang(lang, flag, name) {
         currentLang = lang; currentFlag = flag;
         localStorage.setItem('gy_lang', lang); localStorage.setItem('gy_flag_code', flag);
         document.getElementById('active-flag-img').src = `https://flagcdn.com/w20/${flag}.png`;
         document.getElementById('active-name').innerText = name;
-        toggleLangMenu();
-        applyStrings();
+        toggleLangMenu(); applyStrings();
         if(currentID) updateIDVisuals();
     }
 
@@ -186,8 +174,8 @@
 
     function handleDoor() {
         document.getElementById('snd-door').play();
-        const door = document.getElementById('main-door');
-        door.style.transform = "scale(8)"; door.style.opacity = "0";
+        document.getElementById('main-door').style.transform = "scale(8)"; 
+        document.getElementById('main-door').style.opacity = "0";
         if(!currentID) {
             currentID = `#GY-${Math.floor(100 + Math.random()*900)}-${Math.floor(1000 + Math.random()*9000)}`;
             localStorage.setItem('gy_trace', currentID);
@@ -195,8 +183,7 @@
         updateIDVisuals();
         setTimeout(() => {
             portalTransition('block-welcome');
-            const amb = document.getElementById('snd-ambient');
-            amb.volume = 0.3; amb.play();
+            document.getElementById('snd-ambient').play();
         }, 1200);
     }
 
@@ -207,9 +194,9 @@
         setTimeout(() => {
             const q1 = document.getElementById('qr-reg'), q2 = document.getElementById('h-qr');
             q1.innerHTML = ""; q2.innerHTML = "";
-            new QRCode(q1, {text: currentID, width: 80, height: 80});
+            new QRCode(q1, {text: currentID, width: 75, height: 75});
             new QRCode(q2, {text: currentID, width: 80, height: 80});
-        }, 100);
+        }, 200);
     }
 
     function portalTransition(nextId) {
