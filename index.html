@@ -1,22 +1,27 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v5.3.1 | White Background Fix</title>
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <title>GY-GY Club v5.3.2 | Monolith Build</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
         :root { --gold: #d4af37; --neon: rgba(212, 175, 55, 0.8); }
-        body { background: #000; color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; margin: 0; }
+        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #000; color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; height: 100vh; }
 
-        .ui-logo { position: fixed; top: 20px; width: 100%; text-align: center; font-size: 24px; letter-spacing: 5px; text-shadow: 0 0 15px var(--neon); z-index: 5000; }
+        /* UI ELEMENTS */
+        .ui-logo { position: fixed; top: 20px; width: 100%; text-align: center; font-size: 24px; letter-spacing: 5px; text-shadow: 0 0 15px var(--neon); z-index: 5000; font-weight: 900; }
+        
+        .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; opacity: 0; transition: opacity 0.5s; z-index: 10; }
+        .block.active { display: flex; opacity: 1; }
 
-        .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; z-index: 10; }
-        .block.active { display: flex; }
-
-        /* ИДЕНТИФИКАЦИЯ */
+        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 18px; text-align: center; max-width: 85%; line-height: 1.4; color: var(--gold); margin-bottom: 25px; }
+        
+        /* REGISTRATION GRID */
         .identity-grid { display: flex; gap: 10px; margin-bottom: 30px; }
         .box-gold { 
             width: 80px; height: 80px; 
@@ -24,25 +29,24 @@
             display: flex; flex-direction: column; align-items: center; justify-content: center; 
             position: relative; background: rgba(212, 175, 55, 0.03);
             overflow: hidden;
-            transition: 0.3s;
         }
-
-        /* [ПРАВКА] Белый фон для 3-го и 4-го квадратов */
-        #frame-photo, #frame-avatar { background: #FFFFFF; color: #000; }
+        
+        /* Белый фон для выбора фото/аватара */
+        #frame-photo, #frame-avatar { background: #FFFFFF; cursor: pointer; }
         #frame-photo span, #frame-avatar span { color: #000; font-weight: 900; font-size: 10px; }
 
         .box-gold img { width: 100%; height: 100%; object-fit: cover; }
-        .box-gold span { font-size: 9px; font-weight: 900; text-align: center; pointer-events: none; }
-
         .content-hidden { display: none !important; }
 
+        /* BUTTONS */
         .btn-gy { min-width: 250px; padding: 15px; background: none; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: inherit; font-weight: 900; text-transform: uppercase; margin: 10px 0; transition: 0.3s; }
+        .btn-gy:active { background: var(--gold); color: #000; }
         #btn-go-bar { display: none; background: var(--gold); color: #000; }
 
-        /* ХОЛЛ */
+        /* HALL CARD */
         .id-card-hall { 
             width: 290px; padding: 25px; background: #F5F5DC; border: 4px solid #3E2723; 
-            color: #000; border-radius: 12px; text-align: center;
+            color: #000; border-radius: 12px; text-align: center; box-shadow: 0 20px 50px #000;
         }
     </style>
 </head>
@@ -50,26 +54,34 @@
 
     <div class="ui-logo">GY-GY</div>
 
-    <div id="block-entrance" class="block active">
-        <img src="door_1.jpg" style="width:280px; cursor:pointer;" onclick="handleDoor()">
+    <div id="block-entrance" class="block active" style="opacity: 1;">
+        <img src="door_1.jpg" id="main-door" style="width: 280px; cursor: pointer; transition: 2s;" onclick="handleDoor()">
+    </div>
+
+    <div id="block-welcome" class="block">
+        <div class="quote-text">"Every joke has a grain of whiskey"</div>
+        <img src="horse_welcome.png" style="max-height: 30vh; filter: drop-shadow(0 0 15px var(--neon)); margin-bottom: 20px;">
+        <button class="btn-gy" onclick="portalTransition('block-identity')">IDENTITY</button>
     </div>
 
     <div id="block-identity" class="block">
+        <div class="quote-text">"No such thing as too much champagne"</div>
+        
         <div class="identity-grid">
             <div class="box-gold">
-                <span id="id-label" style="color: var(--gold)">#ID</span>
+                <span id="id-label" style="font-size: 9px; font-weight: 900;">#ID</span>
                 <img id="id-flag" src="https://flagcdn.com/w20/gb.png" style="width:20px; height:14px; margin-top:5px; object-fit:contain;">
             </div>
             
             <div class="box-gold" id="qr-reg"></div>
             
-            <div class="box-gold" id="frame-photo" onclick="document.getElementById('file-in').click()" style="cursor:pointer;">
+            <div class="box-gold" id="frame-photo" onclick="document.getElementById('file-in').click()">
                 <input type="file" id="file-in" onchange="usePhoto(this)" style="display:none;">
                 <img id="pp" class="content-hidden">
                 <span id="txt-p">PHOTO</span>
             </div>
 
-            <div class="box-gold" id="frame-avatar" onclick="useAvatar()" style="cursor:pointer;">
+            <div class="box-gold" id="frame-avatar" onclick="useAvatar()">
                 <img id="av" class="content-hidden">
                 <span id="txt-a">AVATAR</span>
             </div>
@@ -81,14 +93,14 @@
 
     <div id="block-hall" class="block">
         <div class="id-card-hall">
-            <div id="h-id" style="font-weight:900; margin-bottom:15px; border-bottom: 1px solid #3E2723;">#ID-CARD</div>
+            <div id="h-id" style="font-weight:900; margin-bottom:15px; border-bottom: 1px solid #3E2723; padding-bottom: 5px;">#ID-CARD</div>
             <div style="display:flex; gap:10px; justify-content:center; margin-bottom:20px;">
                 <div style="width:80px; height:80px; background:#fff; border:1px solid #3E2723; overflow:hidden;">
                     <img id="h-photo" style="width:100%; height:100%; object-fit:cover;">
                 </div>
                 <div id="h-qr" style="width:80px; height:80px; background:#fff; border:1px solid #3E2723;"></div>
             </div>
-            <div style="font-weight:900; text-transform:uppercase;">Welcome to GY-GY</div>
+            <div style="font-weight:900; text-transform:uppercase; font-size: 14px;">Welcome to the Club</div>
         </div>
     </div>
 
@@ -96,26 +108,31 @@
         let currentID = `#GY-${Math.floor(100+Math.random()*900)}-${Math.floor(1000+Math.random()*9000)}`;
 
         function handleDoor() {
-            updateVisuals();
-            portalTransition('block-identity');
+            const door = document.getElementById('main-door');
+            door.style.transform = "scale(5)";
+            door.style.opacity = "0";
+            updateIDVisuals();
+            setTimeout(() => portalTransition('block-welcome'), 1000);
         }
 
-        function updateVisuals() {
+        function updateIDVisuals() {
             document.getElementById('id-label').innerText = currentID;
             document.getElementById('h-id').innerText = currentID;
             
-            const qrContainer = document.getElementById('qr-reg');
-            qrContainer.innerHTML = "";
-            new QRCode(qrContainer, {
+            // Золотой QR на прозрачном фоне
+            const qrReg = document.getElementById('qr-reg');
+            qrReg.innerHTML = "";
+            new QRCode(qrReg, {
                 text: currentID, 
                 width: 70, height: 70, 
                 colorDark: "#d4af37", 
                 colorLight: "rgba(0,0,0,0)" 
             });
 
-            const hQr = document.getElementById('h-qr');
-            hQr.innerHTML = "";
-            new QRCode(hQr, { text: currentID, width: 80, height: 80, colorDark: "#000000" });
+            // Черный QR для карточки в Холле
+            const qrHall = document.getElementById('h-qr');
+            qrHall.innerHTML = "";
+            new QRCode(qrHall, { text: currentID, width: 80, height: 80, colorDark: "#000000" });
         }
 
         function usePhoto(input) {
@@ -128,6 +145,7 @@
                     document.getElementById('txt-p').classList.add('content-hidden');
                     document.getElementById('h-photo').src = e.target.result;
 
+                    // Очистка соседа
                     document.getElementById('av').classList.add('content-hidden');
                     document.getElementById('txt-a').classList.remove('content-hidden');
                 };
@@ -143,6 +161,7 @@
             document.getElementById('txt-a').classList.add('content-hidden');
             document.getElementById('h-photo').src = url;
 
+            // Очистка соседа
             document.getElementById('pp').classList.add('content-hidden');
             document.getElementById('txt-p').classList.remove('content-hidden');
         }
@@ -153,8 +172,13 @@
         }
 
         function portalTransition(id) {
-            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
+            document.querySelectorAll('.block').forEach(b => {
+                b.classList.remove('active');
+                setTimeout(() => { if(!b.classList.contains('active')) b.style.display = "none"; }, 500);
+            });
+            const next = document.getElementById(id);
+            next.style.display = "flex";
+            setTimeout(() => next.classList.add('active'), 50);
         }
     </script>
 </body>
