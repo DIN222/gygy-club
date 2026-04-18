@@ -1,47 +1,53 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.5.4 | THE ABSOLUTE</title>
+    <title>GY-GY Club v4.5.5 | THE PERFECT BLEND</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
-        :root { --gold: #d4af37; --paper: #F5F5DC; --wood: #3E2723; }
-        * { -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; box-sizing: border-box; -webkit-user-select: none; user-select: none; }
-        body { background: #000; color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; height: 100vh; position: fixed; width: 100%; }
-
-        /* UI ELEMENTS */
-        .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 5000; font-size: 24px; letter-spacing: 5px; font-weight: bold; }
+        :root { --gold: #d4af37; --door-wood: #3E2723; --paper: #F5F5DC; }
         
-        /* LANGUAGE GATEWAY */
-        .lang-gateway { position: fixed; top: 15px; left: 15px; z-index: 7000; width: 160px; }
+        * { -webkit-tap-highlight-color: transparent !important; -webkit-touch-callout: none !important; -webkit-user-select: none !important; user-select: none !important; outline: none !important; box-sizing: border-box; }
+        
+        html, body { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; position: fixed; margin:0; }
+
+        /* LANGUAGE GATEWAY (Custom from 4.5.4) */
+        .lang-gateway { position: fixed; top: 15px; left: 15px; z-index: 1000001; width: 160px; pointer-events: auto; }
         .btn-main-lang { width: 100%; padding: 10px; background: rgba(0,0,0,0.9); border: 1.5px solid var(--gold); color: var(--gold); cursor: pointer; display: flex; align-items: center; gap: 8px; font-family: inherit; font-weight: 900; }
-        .lang-dropdown { position: absolute; top: 100%; left: 0; display: none; flex-direction: column; background: #000; border: 1.5px solid var(--gold); width: 190px; max-height: 70vh; overflow-y: auto; }
+        .lang-dropdown { position: absolute; top: 100%; left: 0; display: none; flex-direction: column; background: #000; border: 1.5px solid var(--gold); width: 190px; max-height: 70vh; overflow-y: auto; box-shadow: 0 0 20px #000; }
         .lang-dropdown.open { display: flex; }
         .btn-sub-lang { background: none; border: none; border-bottom: 1px solid rgba(212, 175, 55, 0.1); color: var(--gold); padding: 12px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 11px; font-family: inherit; text-align: left; }
         .flag-icon { width: 20px; height: 13px; object-fit: cover; border: 0.5px solid var(--gold); }
 
-        /* BLOCKS */
+        .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000000; font-size: 24px; letter-spacing: 5px; font-weight: bold; color: var(--gold); pointer-events: none; }
+
         .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; z-index: 10; opacity: 0; transition: opacity 0.8s ease; pointer-events: none; }
         .block.active { display: flex !important; opacity: 1; pointer-events: auto; }
 
-        /* BOXES & BUTTONS */
-        .box-final { width: 85px; height: 85px; border: 2px solid var(--gold); background: transparent; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
-        .box-final img { width: 100%; height: 100%; object-fit: cover; }
-        .btn-gy { min-width: 270px; padding: 14px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; text-transform: uppercase; font-weight: 900; margin: 8px 0; font-family: inherit; transition: 0.3s; }
+        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 26px; color: var(--gold); text-align: center; max-width: 85%; margin-bottom: 25px; }
+
+        .btn-gy { min-width: 270px; padding: 14px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; text-transform: uppercase; font-weight: 900; margin: 8px 0; font-family: 'Share Tech Mono'; transition: 0.3s; }
         .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
 
-        /* HALL ID CARD */
-        .id-card-hall { width: 230px; padding: 20px; border: 2px solid var(--gold); background: var(--paper); border-radius: 12px; display: flex; flex-direction: column; align-items: center; color: #000; box-shadow: 0 0 30px rgba(212,175,55,0.2); z-index: 20; }
-        .hall-box { width: 85px; height: 85px; border: 2px solid var(--wood); background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        /* ID BLOCKS (Strict Etalon 4.4.64) */
+        .box-final { width: 85px; height: 85px; border: 2px solid var(--gold); background: transparent; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
+        .box-final img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* HALL & BAR UI */
+        .id-card-hall { width: 230px; padding: 20px; border: 2px solid var(--gold); background: var(--paper); border-radius: 12px; display: flex; flex-direction: column; align-items: center; color: #000; z-index: 30; }
+        .hall-box { width: 85px; height: 85px; border: 2px solid #000; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         
-        #hall-bg { position: absolute; inset: 0; background: url('hall_bg_jpg.jpg') center/cover; opacity: 0.4; z-index: 15; }
+        #hall-bg { position: absolute; inset: 0; background: url('hall_bg_jpg.jpg') center/cover; z-index: 15; }
         .rtl { direction: rtl; text-align: right; }
+        
+        #main-door { width: 280px; cursor: pointer; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s; z-index: 9999; }
     </style>
 </head>
-<body>
+<body oncontextmenu="return false;">
 
     <div class="lang-gateway">
         <button class="btn-main-lang" onclick="toggleLangMenu()">
@@ -72,11 +78,11 @@
     <audio id="snd-pour"><source src="pour_whisky.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active" style="opacity: 1; display: flex;">
-        <img src="door_1.jpg" id="main-door" onclick="handleDoor()" style="width:280px; cursor:pointer; transition: 2s cubic-bezier(0.4, 0, 0.2, 1);">
+        <img src="door_1.jpg" id="main-door" onclick="handleDoor()">
     </div>
 
     <div id="block-welcome" class="block">
-        <div data-key="q_whiskey" style="font-family:'Playfair Display'; font-style:italic; font-size:24px; margin-bottom:20px; text-align:center;">«Every joke has a grain of whiskey»</div>
+        <div class="quote-text" data-key="q_whiskey">«Every joke has a grain of whiskey»</div>
         <img src="horse_welcome.png" style="max-height:45vh; margin-bottom:20px;">
         <div style="font-size:38px; font-weight:900; letter-spacing:10px; margin-bottom:20px;">WELCOME</div>
         <button id="btn-w-hall" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')" data-key="btn_to_hall">PROCEED TO HALL</button>
@@ -84,7 +90,7 @@
     </div>
 
     <div id="block-identity" class="block">
-        <div data-key="q_champ" style="font-style:italic; margin-bottom:30px; font-size:20px;">«No such thing as too much champagne»</div>
+        <div class="quote-text" data-key="q_champ">«No such thing as too much champagne»</div>
         <div style="display:flex; gap:12px; margin-bottom:30px;">
             <div class="box-final" id="id-label" style="font-size:10px; font-weight:900;">#ID</div>
             <div class="box-final" id="qr-reg"></div>
@@ -104,21 +110,22 @@
 
     <div id="block-hall" class="block">
         <div id="hall-bg"></div>
+        <div style="position:absolute; top: 8%; width: 100%; text-align: center; color: #3E2723; font-size: 38px; font-weight: 900; font-family: 'Playfair Display'; z-index: 25;">«GY-GY HALL»</div>
         <div class="id-card-hall">
             <div id="h-id" style="font-weight:900; margin-bottom:12px; font-size:14px;">#ID-TOKEN</div>
             <div style="display:flex; gap:12px; margin-bottom:18px;">
                 <div class="hall-box"><img id="h-photo" style="width:100%; height:100%; object-fit:cover;"></div>
                 <div class="hall-box" id="h-qr"></div>
             </div>
-            <button id="btn-confirm" class="btn-gy" style="min-width:100%; color:var(--wood); border-color:var(--wood);" onclick="swapB('btn-confirm', 'btn-bar')" data-key="btn_confirm">CONFIRM</button>
-            <button id="btn-bar" class="btn-gy btn-sleep" style="min-width:100%; color:var(--wood); border-color:var(--wood);" onclick="portalTransition('block-bar')" data-key="btn_enter">ENTER BAR</button>
+            <button id="btn-confirm" class="btn-gy" style="min-width:100%; color:#000; border-color:#000;" onclick="swapB('btn-confirm', 'btn-bar')" data-key="btn_confirm">CONFIRM</button>
+            <button id="btn-bar" class="btn-gy btn-sleep" style="min-width:100%; color:#000; border-color:#000;" onclick="portalTransition('block-bar')" data-key="btn_enter">ENTER BAR</button>
         </div>
     </div>
 
-    <div id="block-bar" class="block">
-        <div style="font-size:32px; margin-bottom:20px;">GY-GY BAR v4.5.4</div>
-        <img src="horse_bar.png" style="max-height:55vh; margin-bottom:20px;">
-        <button class="btn-gy" onclick="portalTransition('block-hall')" data-key="btn_back">BACK TO HALL</button>
+    <div id="block-bar" class="block" style="justify-content: flex-end;">
+        <div class="quote-text" style="position:absolute; top:8vh; z-index:100;">«GY-GY BAR v4.5.5»</div>
+        <img src="horse_bar.png" style="height: 80vh; width: auto; object-fit: contain; margin-bottom: -10px;">
+        <button class="btn-gy" style="position:absolute; bottom: 5vh;" onclick="portalTransition('block-hall')" data-key="btn_back">BACK TO HALL</button>
     </div>
 
 <script>
@@ -157,9 +164,10 @@
     }
 
     function handleDoor() {
-        document.getElementById('snd-door').play();
+        const snd = document.getElementById('snd-door');
+        if(snd) snd.play();
         const d = document.getElementById('main-door');
-        d.style.transform = "scale(8)"; d.style.opacity = "0";
+        d.style.transform = "scale(5)"; d.style.opacity = "0";
         if(!currentID) currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
         localStorage.setItem('gy_trace', currentID);
         updateUI();
@@ -181,7 +189,7 @@
 
     function portalTransition(id) {
         const cur = document.querySelector('.block.active');
-        if(cur) { cur.style.opacity = "0"; setTimeout(() => { cur.classList.remove('active'); cur.style.display = "none"; }, 700); }
+        if(cur) { cur.style.opacity = "0"; setTimeout(() => { cur.classList.remove('active'); cur.style.display = "none"; }, 750); }
         setTimeout(() => {
             const next = document.getElementById(id);
             next.style.display = "flex";
@@ -189,10 +197,10 @@
                 next.classList.add('active'); next.style.opacity = "1"; 
                 if(id === 'block-bar') {
                     setTimeout(() => document.getElementById('snd-khe').play(), 600);
-                    setTimeout(() => document.getElementById('snd-pour').play(), 1800);
+                    setTimeout(() => document.getElementById('snd-pour').play(), 2000);
                 }
             }, 50);
-        }, 750);
+        }, 800);
     }
 
     function fadeAudio(audio, target, duration) {
