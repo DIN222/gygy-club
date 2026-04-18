@@ -1,170 +1,255 @@
+
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.4.64 | STABLE SCENE 1&2</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
+    <title>GY-GY Club v5.2.8 | Etalon 4.4.64 Sync</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
-        :root { --gold: #d4af37; --door-wood: #3E2723; --violet: #8A2BE2; }
+        :root { --gold: #d4af37; --neon: rgba(212, 175, 55, 0.8); }
+        * { -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #000; color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; height: 100vh; }
+
+        /* CONSTANT UI */
+        .ui-top-bar { position: fixed; top: 0; left: 0; width: 100%; height: 70px; display: flex; justify-content: center; align-items: center; z-index: 5000; pointer-events: none; }
+        .ui-logo { font-size: 24px; font-weight: 900; letter-spacing: 5px; text-shadow: 0 0 15px var(--neon); pointer-events: auto; }
+        .nav-btn-back { position: fixed; top: 20px; right: 20px; background: none; border: 1px solid var(--gold); color: var(--gold); padding: 8px 15px; cursor: pointer; z-index: 6000; font-weight: 900; }
+        .nav-hidden { display: none; }
+
+        /* LANGUAGE SELECTOR */
+        .lang-gateway { position: fixed; top: 20px; left: 20px; z-index: 7000; }
+        .btn-main-lang { min-width: 130px; padding: 10px; background: #000; border: 1.5px solid var(--gold); color: var(--gold); cursor: pointer; display: flex; align-items: center; gap: 10px; font-family: inherit; font-weight: 900; }
+        .lang-dropdown { position: absolute; top: 100%; left: 0; display: none; flex-direction: column; background: #000; border: 1.5px solid var(--gold); width: 180px; max-height: 70vh; overflow-y: auto; }
+        .lang-dropdown.open { display: flex; }
+        .btn-sub-lang { background: none; border: none; border-bottom: 1px solid rgba(212, 175, 55, 0.1); color: var(--gold); padding: 12px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 12px; font-family: inherit; }
+        .flag-icon { width: 20px; height: 14px; object-fit: cover; }
+
+        /* BLOCKS */
+        .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; opacity: 0; transition: opacity 0.5s; z-index: 10; }
+        .block.active { display: flex; opacity: 1; }
+
+        /* ELEMENTS */
+        #main-door { width: 280px; cursor: pointer; transition: 2s cubic-bezier(0.4, 0, 0.2, 1); z-index: 100; }
+        .neon-horse { max-height: 30vh; filter: drop-shadow(0 0 20px var(--neon)); margin: 15px 0; }
+        .welcome-title { font-size: 38px; font-weight: 900; letter-spacing: 8px; text-shadow: 0 0 15px var(--gold); margin-bottom: 20px; }
+        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 18px; text-align: center; max-width: 85%; line-height: 1.4; color: var(--gold); }
         
-        * { -webkit-tap-highlight-color: transparent !important; -webkit-touch-callout: none !important; -webkit-user-select: none !important; user-select: none !important; outline: none !important; }
-        a, button, input { -webkit-appearance: none; outline: none !important; pointer-events: auto !important; }
-        img { -webkit-user-drag: none !important; pointer-events: none; border: none !important; }
+        .btn-gy { min-width: 150px; padding: 15px; background: none; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: inherit; font-weight: 900; text-transform: uppercase; }
+        .btn-sleep { opacity: 0.2; pointer-events: none; }
 
-        html, body { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; position: fixed; margin:0; }
-        
-        /* [ФИКС: ПОВОРОТ СТРЕЛКИ НА 180 ГРАДУСОВ] */
-        .goog-te-gadget-icon { transform: rotate(180deg) !important; -webkit-transform: rotate(180deg) !important; }
-        
-        /* Исчезновение панели после выбора */
-        .hide-goog { display: none !important; visibility: hidden !important; }
-        body { top: 0 !important; }
+        /* CARD & HALL */
+        .id-card-hall { width: 280px; padding: 25px; background: #F5F5DC; border: 3px solid #3E2723; color: #000; border-radius: 15px; text-align: center; box-shadow: 0 15px 40px #000; }
+        .box-white { width: 80px; height: 80px; background: #FFF; border: 1px solid #3E2723; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 
-        #google_translate_element { position: fixed; top: 15px; left: 15px; z-index: 1000001; pointer-events: auto; }
-        .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000000; font-size: 24px; letter-spacing: 5px; font-weight: bold; color: var(--gold); pointer-events: none; }
-        
-        /* [ФИКС: КНОПКА ВОЗВРАТА В НИЖНЕМ ЛЕВОМ УГЛУ] */
-        .ui-back-to-bar { 
-            position: fixed; bottom: 30px; left: 25px; z-index: 1000005;
-            background: rgba(0,0,0,0.85); border: 1px solid var(--gold); color: var(--gold);
-            padding: 10px 18px; cursor: pointer; font-family: 'Share Tech Mono'; 
-            font-size: 12px; text-transform: uppercase; border-radius: 4px; opacity: 1; display: block;
-        }
-
-        .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; z-index: 10; opacity: 0; transition: opacity 0.8s ease-in-out; pointer-events: none; }
-        .block.active { display: flex !important; opacity: 1; pointer-events: auto; }
-
-        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 24px; color: var(--gold); text-align: center; max-width: 85%; line-height: 1.3; margin-bottom: 25px; letter-spacing: 1px; }
-
-        /* [ФИКС: ПОДСВЕТКА КОНЯ] */
-        .horse-glow {
-            max-height: 42vh; width: auto; margin-bottom: 0px;
-            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.4));
-            animation: horse-pulse 2.5s infinite alternate ease-in-out;
-        }
-        @keyframes horse-pulse {
-            from { filter: drop-shadow(0 0 8px var(--gold)); }
-            to { filter: drop-shadow(0 0 25px var(--gold)); }
-        }
-
-        /* [ФИКС: УМЕНЬШЕННЫЕ КНОПКИ В РЯД] */
-        .welcome-btns-row { display: flex; gap: 10px; justify-content: center; width: 90%; max-width: 400px; margin-top: 15px; }
-        .btn-gy-sm { 
-            flex: 1; padding: 12px 5px; background: transparent; border: 1.5px solid var(--gold); 
-            color: var(--gold); font-size: 10px; font-family: 'Share Tech Mono'; 
-            text-transform: uppercase; font-weight: 900; cursor: pointer; transition: 0.3s;
-        }
-        .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
-
-        #main-door { width: 280px; cursor: pointer; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s; z-index: 9999; }
+        /* BAR PLACEHOLDER */
+        .bar-view { width: 100%; height: 100%; background: radial-gradient(circle, #1a1a1a 0%, #000 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; }
     </style>
 </head>
-<body oncontextmenu="return false;">
+<body translate="no">
 
-    <div id="google_translate_element"></div>
-    <div class="ui-header-right">GY-GY</div>
+    <div class="lang-gateway">
+        <button class="btn-main-lang" onclick="toggleLangMenu()">
+            <img id="active-flag-img" src="https://flagcdn.com/w20/gb.png" class="flag-icon">
+            <span id="active-name">ENGLISH</span>
+        </button>
+        <div id="lang-list" class="lang-dropdown">
+            <button class="btn-sub-lang" onclick="pickLang('en', 'gb', 'ENGLISH')"><img src="https://flagcdn.com/w20/gb.png" class="flag-icon"> ENGLISH</button>
+            <button class="btn-sub-lang" onclick="pickLang('ru', 'ru', 'РУССКИЙ')"><img src="https://flagcdn.com/w20/ru.png" class="flag-icon"> РУССКИЙ</button>
+            <button class="btn-sub-lang" onclick="pickLang('ua', 'ua', 'УКРАЇНСЬКА')"><img src="https://flagcdn.com/w20/ua.png" class="flag-icon"> УКРАЇНСЬКА</button>
+            <button class="btn-sub-lang" onclick="pickLang('pl', 'pl', 'POLSKI')"><img src="https://flagcdn.com/w20/pl.png" class="flag-icon"> POLSKI</button>
+            <button class="btn-sub-lang" onclick="pickLang('de', 'de', 'DEUTSCH')"><img src="https://flagcdn.com/w20/de.png" class="flag-icon"> DEUTSCH</button>
+            <button class="btn-sub-lang" onclick="pickLang('fr', 'fr', 'FRANÇAIS')"><img src="https://flagcdn.com/w20/fr.png" class="flag-icon"> FRANÇAIS</button>
+            <button class="btn-sub-lang" onclick="pickLang('it', 'it', 'ITALIANO')"><img src="https://flagcdn.com/w20/it.png" class="flag-icon"> ITALIANO</button>
+            <button class="btn-sub-lang" onclick="pickLang('es', 'es', 'ESPAÑOL')"><img src="https://flagcdn.com/w20/es.png" class="flag-icon"> ESPAÑOL</button>
+            <button class="btn-sub-lang" onclick="pickLang('cn', 'cn', '中文')"><img src="https://flagcdn.com/w20/cn.png" class="flag-icon"> 中文</button>
+            <button class="btn-sub-lang" onclick="pickLang('jp', 'jp', '日本語')"><img src="https://flagcdn.com/w20/jp.png" class="flag-icon"> 日本語</button>
+            <button class="btn-sub-lang" onclick="pickLang('ae', 'ae', 'العربية')"><img src="https://flagcdn.com/w20/ae.png" class="flag-icon"> العربية</button>
+            <button class="btn-sub-lang" onclick="pickLang('br', 'br', 'PORTUGUÊS')"><img src="https://flagcdn.com/w20/br.png" class="flag-icon"> PORTUGUÊS</button>
+        </div>
+    </div>
+
+    <div class="ui-top-bar"><div class="ui-logo">GY-GY</div></div>
+    <button id="btn-back" class="nav-btn-back nav-hidden" onclick="goBack()">BACK</button>
 
     <audio id="snd-door" preload="auto"><source src="door_open.mp3" type="audio/mpeg"></audio>
     <audio id="snd-ambient" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
 
-    <div id="block-entrance" class="block active" style="opacity: 1; display: flex; pointer-events: auto;">
+    <div id="block-entrance" class="block active" style="opacity: 1;">
         <img src="door_1.jpg" id="main-door" onclick="handleDoor()">
     </div>
 
-    <div id="block-welcome" class="block" style="justify-content: flex-start; padding-top: 5vh;">
-        <div class="quote-text">«В каждой шутке есть доля виски»</div>
-        <img src="horse_welcome.png" class="horse-glow">
-        <div style="font-family: 'Playfair Display', serif; font-size: 34px; font-weight: 700; letter-spacing: 10px; margin-bottom: 15px; color: var(--gold); text-transform: uppercase; font-style: italic;">WELCOME</div>
-        
-        <div class="welcome-btns-row">
-            <button id="btn-w-hall" class="btn-gy-sm btn-sleep" onclick="portalTransition('block-hall')">В ХОЛЛ</button>
-            <button class="btn-gy-sm" onclick="portalTransition('block-identity')">ПОЛУЧИТЬ ID</button>
+    <div id="block-welcome" class="block">
+        <div class="quote-text" data-i18n="quote1">"Every joke has a grain of whiskey"</div>
+        <img src="horse_welcome.png" class="neon-horse">
+        <div class="welcome-title" data-i18n="welcome">WELCOME</div>
+        <div style="display:flex; gap:15px;">
+            <button class="btn-gy" onclick="portalTransition('block-identity')" data-i18n="btn_id">GET ID</button>
+            <button id="btn-w-hall" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')" data-i18n="btn_hall">TO HALL</button>
         </div>
-
-        <button class="ui-back-to-bar" onclick="location.reload()">← ВЫХОД</button>
     </div>
 
-    <script>
-    let currentID = "";
+    <div id="block-identity" class="block">
+        <div class="quote-text" style="font-size:16px; margin-bottom:20px;" data-i18n="quote2">"No such thing as too much champagne"</div>
+        <div style="display:flex; gap:10px; margin-bottom:20px;">
+            <div class="box-white" id="id-label" style="color:#000; font-weight:900; font-size:10px;">#ID</div>
+            <div class="box-white" id="qr-reg"></div>
+            <div class="box-white" onclick="document.getElementById('file-in').click()" style="cursor:pointer;">
+                <input type="file" id="file-in" onchange="preview(this)" style="display:none;">
+                <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
+                <span id="txt-p" data-i18n="photo">PHOTO</span>
+            </div>
+            <div class="box-white" onclick="genAvatar()" style="cursor:pointer;">
+                <img id="av" style="display:none; width:100%; height:100%;">
+                <span id="txt-a" data-i18n="avatar">AVATAR</span>
+            </div>
+        </div>
+        <button class="btn-gy" style="min-width:250px;" onclick="saveProfile()" data-i18n="btn_save">SAVE PROFILE</button>
+    </div>
 
-    // Наблюдатель за Google Translate — скрывает панель после выбора языка
-    const observer = new MutationObserver(() => {
-        const banner = document.querySelector('.goog-te-banner-frame');
-        if (banner) {
-            banner.classList.add('hide-goog');
-            document.body.style.top = '0';
-        }
-    });
-    observer.observe(document.documentElement, { childList: true, subtree: true });
+    <div id="block-hall" class="block">
+        <div class="id-card-hall">
+            <div id="h-id" style="font-weight:900; font-size:16px; margin-bottom:15px;">#ID</div>
+            <div style="display:flex; gap:10px; justify-content:center; margin-bottom:20px;">
+                <div class="box-white"><img id="h-photo" style="width:100%; height:100%; object-fit:cover;"></div>
+                <div class="box-white" id="h-qr"></div>
+            </div>
+            <button class="btn-gy" style="color:#3E2723; border-color:#3E2723; width:100%;" onclick="portalTransition('block-bar')" data-i18n="go_bar">ENTER BAR</button>
+        </div>
+    </div>
 
-    window.onload = () => {
-        const savedID = localStorage.getItem('gy_trace');
-        if (savedID) {
-            currentID = savedID;
-            document.getElementById('btn-w-hall').classList.remove('btn-sleep');
-        }
+    <div id="block-bar" class="block">
+        <div class="bar-view">
+            <div class="welcome-title">THE BAR</div>
+            <div class="quote-text">"Enjoy your stay in GY-GY Club"</div>
+        </div>
+    </div>
+
+<script>
+    const langData = {
+        en: { welcome: "WELCOME", quote1: '"Every joke has a grain of whiskey"', quote2: '"No such thing as too much champagne"', btn_id: "GET ID", btn_hall: "TO HALL", btn_save: "SAVE PROFILE", photo: "PHOTO", avatar: "AVATAR", go_bar: "ENTER BAR", back: "BACK" },
+        ru: { welcome: "ДОБРО ПОЖАЛОВАТЬ", quote1: '"В каждой шутке есть доля виски"', quote2: '"Шампанского много не бывает"', btn_id: "ПОЛУЧИТЬ ID", btn_hall: "В ХОЛЛ", btn_save: "СОХРАНИТЬ", photo: "ФОТО", avatar: "АВАТАР", go_bar: "В БАР", back: "НАЗАД" },
+        ua: { welcome: "ЛАСКАВО ПРОСИМО", quote1: '"У кожному жарті є доля віскі"', quote2: '"Шампанського багато не буває"', btn_id: "ОТРИМАТИ ID", btn_hall: "У ХОЛ", btn_save: "ЗБЕРЕГТИ", photo: "ФОТО", avatar: "АВАТАР", go_bar: "В БАР", back: "НАЗАД" },
+        pl: { welcome: "WITAMY", quote1: '"W każdym żarcie jest ziarno whiskey"', quote2: '"Szampana nigdy za wiele"', btn_id: "POBIERZ ID", btn_hall: "DO HOLU", btn_save: "ZAPISZ", photo: "FOTO", avatar: "AWATAR", go_bar: "DO BARU", back: "COFNIJ" },
+        de: { welcome: "WILLKOMMEN", quote1: '"Jeder Witz hat ein Korn Whiskey"', quote2: '"Es gibt nicht zu viel Champagner"', btn_id: "ID ERHALTEN", btn_hall: "ZUR HALLE", btn_save: "SPEICHERN", photo: "FOTO", avatar: "AVATAR", go_bar: "ZUR BAR", back: "ZURÜCK" },
+        fr: { welcome: "BIENVENUE", quote1: '"Chaque blague a un grain de whisky"', quote2: '"Il n\'y a pas de trop plein de champagne"', btn_id: "OBTENIR ID", btn_hall: "VERS LE HALL", btn_save: "ENREGISTRER", photo: "PHOTO", avatar: "AVATAR", go_bar: "AU BAR", back: "RETOUR" },
+        it: { welcome: "BENVENUTI", quote1: '"Ogni scherzo ha un chicco di whisky"', quote2: '"Non esiste troppo champagne"', btn_id: "OTTIENI ID", btn_hall: "AL SALONE", btn_save: "SALVA", photo: "FOTO", avatar: "AVATAR", go_bar: "AL BAR", back: "INDIETRO" },
+        es: { welcome: "BIENVENIDOS", quote1: '"Cada broma tiene un grano de whisky"', quote2: '"No existe tal cosa como demasiado champán"', btn_id: "OBTENER ID", btn_hall: "AL VESTÍBULO", btn_save: "GUARDAR", photo: "FOTO", avatar: "AVATAR", go_bar: "AL BAR", back: "VOLVER" },
+        cn: { welcome: "欢迎", quote1: '"每个笑话都有一粒威士忌"', quote2: '"香槟永远不嫌多"', btn_id: "获取ID", btn_hall: "前往大厅", btn_save: "保存", photo: "照片", avatar: "头像", go_bar: "进入酒吧", back: "返回" },
+        jp: { welcome: "ようこそ", quote1: '"すべての冗談にはウイスキーの粒がある"', quote2: '"シャンパンに多すぎることはない"', btn_id: "IDを取得", btn_hall: "ホールへ", btn_save: "保存", photo: "写真", avatar: "アバター", go_bar: "バーへ", back: "戻る" },
+        ae: { welcome: "أهلاً بك", quote1: '"كل نكتة فيها حبة ويسكي"', quote2: '"لا يوجد شيء اسمه الكثير من الشمبانيا"', btn_id: "احصل على ID", btn_hall: "إلى القاعة", btn_save: "حفظ", photo: "صورة", avatar: "أفاتار", go_bar: "إلى البار", back: "عودة" },
+        br: { welcome: "BEM-VINDO", quote1: '"Toda piada tem um grão de uísque"', quote2: '"Não existe champanhe demais"', btn_id: "OBTER ID", btn_hall: "AO SALÃO", btn_save: "SALVAR", photo: "FOTO", avatar: "AVATAR", go_bar: "AO BAR", back: "VOLTAR" }
     };
 
-    function handleDoor() {
-        const d = document.getElementById('main-door');
-        const snd = document.getElementById('snd-door');
-        if(snd) snd.play();
-        
-        d.style.transform = "scale(5)"; 
-        d.style.opacity = "0";
-        d.style.pointerEvents = "none";
+    let currentLang = localStorage.getItem('gy_lang') || 'en';
+    let currentFlag = localStorage.getItem('gy_flag_code') || 'gb';
+    let currentID = localStorage.getItem('gy_trace') || "";
+    let historyStack = ['block-entrance'];
 
-        if (!currentID) {
-            currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
+    function toggleLangMenu() { document.getElementById('lang-list').classList.toggle('open'); }
+
+    function pickLang(lang, flag, name) {
+        currentLang = lang; currentFlag = flag;
+        localStorage.setItem('gy_lang', lang); localStorage.setItem('gy_flag_code', flag);
+        document.getElementById('active-flag-img').src = `https://flagcdn.com/w20/${flag}.png`;
+        document.getElementById('active-name').innerText = name;
+        toggleLangMenu();
+        applyStrings();
+        if(currentID) updateIDVisuals();
+    }
+
+    function applyStrings() {
+        const s = langData[currentLang] || langData['en'];
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if(s[key]) el.innerText = s[key];
+        });
+        document.getElementById('btn-back').innerText = s.back || "BACK";
+    }
+
+    function handleDoor() {
+        document.getElementById('snd-door').play();
+        const door = document.getElementById('main-door');
+        door.style.transform = "scale(8)"; door.style.opacity = "0";
+        if(!currentID) {
+            currentID = `#GY-${Math.floor(100 + Math.random()*900)}-${Math.floor(1000 + Math.random()*9000)}`;
             localStorage.setItem('gy_trace', currentID);
         }
+        updateIDVisuals();
+        setTimeout(() => {
+            portalTransition('block-welcome');
+            const amb = document.getElementById('snd-ambient');
+            amb.volume = 0.3; amb.play();
+        }, 1200);
+    }
 
-        setTimeout(() => { 
-            portalTransition('block-welcome'); 
-            const a = document.getElementById('snd-ambient'); 
-            if(a) { a.volume = 0; a.play(); fadeAudio(a, 1, 2000); }
-        }, 1800);
+    function updateIDVisuals() {
+        const flagUrl = `https://flagcdn.com/w20/${currentFlag}.png`;
+        document.getElementById('id-label').innerText = currentID;
+        document.getElementById('h-id').innerHTML = `${currentID} <img src="${flagUrl}" style="vertical-align:middle; margin-left:8px; border:1px solid #3E2723">`;
+        setTimeout(() => {
+            const q1 = document.getElementById('qr-reg'), q2 = document.getElementById('h-qr');
+            q1.innerHTML = ""; q2.innerHTML = "";
+            new QRCode(q1, {text: currentID, width: 80, height: 80});
+            new QRCode(q2, {text: currentID, width: 80, height: 80});
+        }, 100);
     }
 
     function portalTransition(nextId) {
-        const current = document.querySelector('.block.active');
-        if(current) { current.style.opacity = "0"; current.style.pointerEvents = "none"; }
-
+        const cur = document.querySelector('.block.active');
+        const nxt = document.getElementById(nextId);
+        if(cur) { cur.style.opacity = "0"; setTimeout(() => { cur.classList.remove('active'); cur.style.display="none"; }, 500); }
         setTimeout(() => {
-            if(current) { current.classList.remove('active'); current.style.display = "none"; }
-            const next = document.getElementById(nextId);
-            if(!next) return;
-            next.style.display = "flex";
-            setTimeout(() => { 
-                next.classList.add('active'); 
-                next.style.opacity = "1";
-                next.style.pointerEvents = "auto";
-            }, 50);
-        }, 800);
+            nxt.style.display = "flex";
+            setTimeout(() => { nxt.classList.add('active'); nxt.style.opacity = "1"; updateNavUI(); }, 50);
+        }, 550);
+        if(historyStack[historyStack.length-1] !== nextId) historyStack.push(nextId);
     }
 
-    function fadeAudio(audio, target, duration) {
-        const start = audio.volume; 
-        const startTime = Date.now();
-        const interval = setInterval(() => {
-            const progress = Math.min((Date.now() - startTime) / duration, 1);
-            audio.volume = start + (target - start) * progress;
-            if (progress === 1) clearInterval(interval);
-        }, 50);
+    function updateNavUI() {
+        const btn = document.getElementById('btn-back');
+        const curId = document.querySelector('.block.active').id;
+        curId === 'block-entrance' ? btn.classList.add('nav-hidden') : btn.classList.remove('nav-hidden');
     }
 
-    function googleTranslateElementInit() { 
-        new google.translate.TranslateElement({
-            pageLanguage: 'ru', 
-            includedLanguages: 'en,de,fr,it,es,zh-CN,ja,ar,hi,pt,tr,ru',
-            autoDisplay: false
-        }, 'google_translate_element'); 
+    function goBack() {
+        if(historyStack.length > 1) {
+            historyStack.pop();
+            const prev = historyStack[historyStack.length - 1];
+            if(prev === 'block-entrance') location.reload();
+            else portalTransition(prev);
+        }
     }
+
+    function preview(i) {
+        if(i.files && i.files[0]) {
+            const r = new FileReader();
+            r.onload = (e) => {
+                document.getElementById('pp').src = e.target.result; document.getElementById('pp').style.display = "block";
+                document.getElementById('h-photo').src = e.target.result; document.getElementById('txt-p').style.display = "none";
+            };
+            r.readAsDataURL(i.files[0]);
+        }
+    }
+
+    function genAvatar() {
+        const url = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${Math.random()}`;
+        document.getElementById('av').src = url; document.getElementById('av').style.display = "block";
+        document.getElementById('h-photo').src = url; document.getElementById('txt-a').style.display = "none";
+    }
+
+    function saveProfile() {
+        document.getElementById('btn-w-hall').classList.remove('btn-sleep');
+        portalTransition('block-hall');
+    }
+
+    window.onload = () => {
+        applyStrings();
+        document.getElementById('active-flag-img').src = `https://flagcdn.com/w20/${currentFlag}.png`;
+        document.getElementById('active-name').innerText = currentLang === 'en' ? 'ENGLISH' : currentLang.toUpperCase();
+    };
 </script>
-<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
 </body>
 </html>
