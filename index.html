@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v5.2.7 | Universal Build</title>
+    <title>GY-GY Club v5.2.8 | Etalon 4.4.64 Sync</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -13,45 +13,38 @@
         body { background: #000; color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; height: 100vh; }
 
         /* CONSTANT UI */
-        .ui-top-bar { position: fixed; top: 0; left: 0; width: 100%; height: 70px; display: flex; justify-content: center; align-items: center; z-index: 1000; pointer-events: none; }
+        .ui-top-bar { position: fixed; top: 0; left: 0; width: 100%; height: 70px; display: flex; justify-content: center; align-items: center; z-index: 5000; pointer-events: none; }
         .ui-logo { font-size: 24px; font-weight: 900; letter-spacing: 5px; text-shadow: 0 0 15px var(--neon); pointer-events: auto; }
-        .nav-btn-back { position: fixed; top: 20px; right: 20px; background: none; border: 1px solid var(--gold); color: var(--gold); padding: 8px 15px; cursor: pointer; z-index: 2000; font-weight: 900; }
+        .nav-btn-back { position: fixed; top: 20px; right: 20px; background: none; border: 1px solid var(--gold); color: var(--gold); padding: 8px 15px; cursor: pointer; z-index: 6000; font-weight: 900; }
         .nav-hidden { display: none; }
 
-        /* LANGUAGE SELECTOR (TOP LEFT) */
-        .lang-gateway { position: fixed; top: 20px; left: 20px; z-index: 3000; }
-        .btn-main-lang { 
-            min-width: 130px; padding: 10px; background: #000; border: 1.5px solid var(--gold); 
-            color: var(--gold); cursor: pointer; display: flex; align-items: center; gap: 10px; font-family: inherit; font-weight: 900;
-        }
-        .lang-dropdown { 
-            position: absolute; top: 100%; left: 0; display: none; flex-direction: column; 
-            background: #000; border: 1.5px solid var(--gold); width: 180px; max-height: 70vh; overflow-y: auto; 
-        }
+        /* LANGUAGE SELECTOR */
+        .lang-gateway { position: fixed; top: 20px; left: 20px; z-index: 7000; }
+        .btn-main-lang { min-width: 130px; padding: 10px; background: #000; border: 1.5px solid var(--gold); color: var(--gold); cursor: pointer; display: flex; align-items: center; gap: 10px; font-family: inherit; font-weight: 900; }
+        .lang-dropdown { position: absolute; top: 100%; left: 0; display: none; flex-direction: column; background: #000; border: 1.5px solid var(--gold); width: 180px; max-height: 70vh; overflow-y: auto; }
         .lang-dropdown.open { display: flex; }
         .btn-sub-lang { background: none; border: none; border-bottom: 1px solid rgba(212, 175, 55, 0.1); color: var(--gold); padding: 12px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 12px; font-family: inherit; }
-        .btn-sub-lang:hover { background: var(--gold); color: #000; }
-        .flag-icon { width: 20px; height: 14px; object-fit: cover; border: 1px solid rgba(255,255,255,0.2); }
-
-        .lang-hint { position: absolute; left: 145px; top: 12px; white-space: nowrap; font-size: 10px; letter-spacing: 1px; animation: blink 1s infinite alternate; }
-        @keyframes blink { from { opacity: 0.3; transform: translateX(0); } to { opacity: 1; transform: translateX(5px); } }
+        .flag-icon { width: 20px; height: 14px; object-fit: cover; }
 
         /* BLOCKS */
-        .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; opacity: 0; transition: opacity 0.4s; }
+        .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; opacity: 0; transition: opacity 0.5s; z-index: 10; }
         .block.active { display: flex; opacity: 1; }
 
         /* ELEMENTS */
-        #main-door { width: 280px; cursor: pointer; transition: 2s ease; z-index: 100; }
-        .neon-horse { max-height: 35vh; filter: drop-shadow(0 0 20px var(--neon)); margin: 20px 0; }
+        #main-door { width: 280px; cursor: pointer; transition: 2s cubic-bezier(0.4, 0, 0.2, 1); z-index: 100; }
+        .neon-horse { max-height: 30vh; filter: drop-shadow(0 0 20px var(--neon)); margin: 15px 0; }
         .welcome-title { font-size: 38px; font-weight: 900; letter-spacing: 8px; text-shadow: 0 0 15px var(--gold); margin-bottom: 20px; }
-        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 18px; text-align: center; max-width: 85%; line-height: 1.4; }
+        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 18px; text-align: center; max-width: 85%; line-height: 1.4; color: var(--gold); }
         
-        .btn-gy { min-width: 140px; padding: 15px; background: none; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: inherit; font-weight: 900; text-transform: uppercase; }
+        .btn-gy { min-width: 150px; padding: 15px; background: none; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: inherit; font-weight: 900; text-transform: uppercase; }
         .btn-sleep { opacity: 0.2; pointer-events: none; }
 
-        .reg-grid { display: flex; gap: 10px; margin-bottom: 25px; }
-        .box-white { width: 80px; height: 80px; background: #FFF; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; overflow: hidden; color: #000; font-size: 9px; font-weight: 900; text-align: center; }
-        .id-card-hall { width: 280px; padding: 25px; background: #F5F5DC; border: 3px solid #3E2723; color: #000; border-radius: 15px; text-align: center; }
+        /* CARD & HALL */
+        .id-card-hall { width: 280px; padding: 25px; background: #F5F5DC; border: 3px solid #3E2723; color: #000; border-radius: 15px; text-align: center; box-shadow: 0 15px 40px #000; }
+        .box-white { width: 80px; height: 80px; background: #FFF; border: 1px solid #3E2723; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+
+        /* BAR PLACEHOLDER */
+        .bar-view { width: 100%; height: 100%; background: radial-gradient(circle, #1a1a1a 0%, #000 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; }
     </style>
 </head>
 <body translate="no">
@@ -75,13 +68,13 @@
             <button class="btn-sub-lang" onclick="pickLang('ae', 'ae', 'العربية')"><img src="https://flagcdn.com/w20/ae.png" class="flag-icon"> العربية</button>
             <button class="btn-sub-lang" onclick="pickLang('br', 'br', 'PORTUGUÊS')"><img src="https://flagcdn.com/w20/br.png" class="flag-icon"> PORTUGUÊS</button>
         </div>
-        <div class="lang-hint" id="hint-box">← SELECT LANGUAGE</div>
     </div>
 
     <div class="ui-top-bar"><div class="ui-logo">GY-GY</div></div>
     <button id="btn-back" class="nav-btn-back nav-hidden" onclick="goBack()">BACK</button>
 
     <audio id="snd-door" preload="auto"><source src="door_open.mp3" type="audio/mpeg"></audio>
+    <audio id="snd-ambient" loop preload="auto"><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active" style="opacity: 1;">
         <img src="door_1.jpg" id="main-door" onclick="handleDoor()">
@@ -99,8 +92,8 @@
 
     <div id="block-identity" class="block">
         <div class="quote-text" style="font-size:16px; margin-bottom:20px;" data-i18n="quote2">"No such thing as too much champagne"</div>
-        <div class="reg-grid">
-            <div class="box-white" id="id-label">#ID</div>
+        <div style="display:flex; gap:10px; margin-bottom:20px;">
+            <div class="box-white" id="id-label" style="color:#000; font-weight:900; font-size:10px;">#ID</div>
             <div class="box-white" id="qr-reg"></div>
             <div class="box-white" onclick="document.getElementById('file-in').click()" style="cursor:pointer;">
                 <input type="file" id="file-in" onchange="preview(this)" style="display:none;">
@@ -126,33 +119,41 @@
         </div>
     </div>
 
+    <div id="block-bar" class="block">
+        <div class="bar-view">
+            <div class="welcome-title">THE BAR</div>
+            <div class="quote-text">"Enjoy your stay in GY-GY Club"</div>
+        </div>
+    </div>
+
 <script>
     const langData = {
         en: { welcome: "WELCOME", quote1: '"Every joke has a grain of whiskey"', quote2: '"No such thing as too much champagne"', btn_id: "GET ID", btn_hall: "TO HALL", btn_save: "SAVE PROFILE", photo: "PHOTO", avatar: "AVATAR", go_bar: "ENTER BAR", back: "BACK" },
         ru: { welcome: "ДОБРО ПОЖАЛОВАТЬ", quote1: '"В каждой шутке есть доля виски"', quote2: '"Шампанского много не бывает"', btn_id: "ПОЛУЧИТЬ ID", btn_hall: "В ХОЛЛ", btn_save: "СОХРАНИТЬ", photo: "ФОТО", avatar: "АВАТАР", go_bar: "В БАР", back: "НАЗАД" },
         ua: { welcome: "ЛАСКАВО ПРОСИМО", quote1: '"У кожному жарті є доля віскі"', quote2: '"Шампанського багато не буває"', btn_id: "ОТРИМАТИ ID", btn_hall: "У ХОЛ", btn_save: "ЗБЕРЕГТИ", photo: "ФОТО", avatar: "АВАТАР", go_bar: "В БАР", back: "НАЗАД" },
-        pl: { welcome: "WITAMY", quote1: '"W każdym żarcie jest ziarno whiskey"', quote2: '"Szampana nigdy za wiele"', btn_id: "POBIERZ ID", btn_hall: "DO HOLU", btn_save: "ZAPISZ", photo: "FOTO", avatar: "AWATAR", go_bar: "DO BARU", back: "COFNIJ" }
+        pl: { welcome: "WITAMY", quote1: '"W każdym żarcie jest ziarno whiskey"', quote2: '"Szampana nigdy za wiele"', btn_id: "POBIERZ ID", btn_hall: "DO HOLU", btn_save: "ZAPISZ", photo: "FOTO", avatar: "AWATAR", go_bar: "DO BARU", back: "COFNIJ" },
+        de: { welcome: "WILLKOMMEN", quote1: '"Jeder Witz hat ein Korn Whiskey"', quote2: '"Es gibt nicht zu viel Champagner"', btn_id: "ID ERHALTEN", btn_hall: "ZUR HALLE", btn_save: "SPEICHERN", photo: "FOTO", avatar: "AVATAR", go_bar: "ZUR BAR", back: "ZURÜCK" },
+        fr: { welcome: "BIENVENUE", quote1: '"Chaque blague a un grain de whisky"', quote2: '"Il n\'y a pas de trop plein de champagne"', btn_id: "OBTENIR ID", btn_hall: "VERS LE HALL", btn_save: "ENREGISTRER", photo: "PHOTO", avatar: "AVATAR", go_bar: "AU BAR", back: "RETOUR" },
+        it: { welcome: "BENVENUTI", quote1: '"Ogni scherzo ha un chicco di whisky"', quote2: '"Non esiste troppo champagne"', btn_id: "OTTIENI ID", btn_hall: "AL SALONE", btn_save: "SALVA", photo: "FOTO", avatar: "AVATAR", go_bar: "AL BAR", back: "INDIETRO" },
+        es: { welcome: "BIENVENIDOS", quote1: '"Cada broma tiene un grano de whisky"', quote2: '"No existe tal cosa como demasiado champán"', btn_id: "OBTENER ID", btn_hall: "AL VESTÍBULO", btn_save: "GUARDAR", photo: "FOTO", avatar: "AVATAR", go_bar: "AL BAR", back: "VOLVER" },
+        cn: { welcome: "欢迎", quote1: '"每个笑话都有一粒威士忌"', quote2: '"香槟永远不嫌多"', btn_id: "获取ID", btn_hall: "前往大厅", btn_save: "保存", photo: "照片", avatar: "头像", go_bar: "进入酒吧", back: "返回" },
+        jp: { welcome: "ようこそ", quote1: '"すべての冗談にはウイスキーの粒がある"', quote2: '"シャンパンに多すぎることはない"', btn_id: "IDを取得", btn_hall: "ホールへ", btn_save: "保存", photo: "写真", avatar: "アバター", go_bar: "バーへ", back: "戻る" },
+        ae: { welcome: "أهلاً بك", quote1: '"كل نكتة فيها حبة ويسكي"', quote2: '"لا يوجد شيء اسمه الكثير من الشمبانيا"', btn_id: "احصل على ID", btn_hall: "إلى القاعة", btn_save: "حفظ", photo: "صورة", avatar: "أفاتار", go_bar: "إلى البار", back: "عودة" },
+        br: { welcome: "BEM-VINDO", quote1: '"Toda piada tem um grão de uísque"', quote2: '"Não existe champanhe demais"', btn_id: "OBTER ID", btn_hall: "AO SALÃO", btn_save: "SALVAR", photo: "FOTO", avatar: "AVATAR", go_bar: "AO BAR", back: "VOLTAR" }
     };
 
     let currentLang = localStorage.getItem('gy_lang') || 'en';
-    let currentFlagCode = localStorage.getItem('gy_flag_code') || 'gb';
+    let currentFlag = localStorage.getItem('gy_flag_code') || 'gb';
     let currentID = localStorage.getItem('gy_trace') || "";
     let historyStack = ['block-entrance'];
 
-    function toggleLangMenu() {
-        const list = document.getElementById('lang-list');
-        list.classList.toggle('open');
-        document.getElementById('hint-box').style.display = list.classList.contains('open') ? 'none' : 'block';
-    }
+    function toggleLangMenu() { document.getElementById('lang-list').classList.toggle('open'); }
 
-    function pickLang(lang, flagCode, name) {
-        currentLang = lang; currentFlagCode = flagCode;
-        localStorage.setItem('gy_lang', lang); 
-        localStorage.setItem('gy_flag_code', flagCode);
-        
-        document.getElementById('active-flag-img').src = `https://flagcdn.com/w20/${flagCode}.png`;
+    function pickLang(lang, flag, name) {
+        currentLang = lang; currentFlag = flag;
+        localStorage.setItem('gy_lang', lang); localStorage.setItem('gy_flag_code', flag);
+        document.getElementById('active-flag-img').src = `https://flagcdn.com/w20/${flag}.png`;
         document.getElementById('active-name').innerText = name;
-        
         toggleLangMenu();
         applyStrings();
         if(currentID) updateIDVisuals();
@@ -170,20 +171,23 @@
     function handleDoor() {
         document.getElementById('snd-door').play();
         const door = document.getElementById('main-door');
-        door.style.transform = "scale(6)"; door.style.opacity = "0";
+        door.style.transform = "scale(8)"; door.style.opacity = "0";
         if(!currentID) {
             currentID = `#GY-${Math.floor(100 + Math.random()*900)}-${Math.floor(1000 + Math.random()*9000)}`;
             localStorage.setItem('gy_trace', currentID);
         }
         updateIDVisuals();
-        setTimeout(() => portalTransition('block-welcome'), 1200);
+        setTimeout(() => {
+            portalTransition('block-welcome');
+            const amb = document.getElementById('snd-ambient');
+            amb.volume = 0.3; amb.play();
+        }, 1200);
     }
 
     function updateIDVisuals() {
-        const flagUrl = `https://flagcdn.com/w20/${currentFlagCode}.png`;
+        const flagUrl = `https://flagcdn.com/w20/${currentFlag}.png`;
         document.getElementById('id-label').innerText = currentID;
         document.getElementById('h-id').innerHTML = `${currentID} <img src="${flagUrl}" style="vertical-align:middle; margin-left:8px; border:1px solid #3E2723">`;
-        
         setTimeout(() => {
             const q1 = document.getElementById('qr-reg'), q2 = document.getElementById('h-qr');
             q1.innerHTML = ""; q2.innerHTML = "";
@@ -195,12 +199,11 @@
     function portalTransition(nextId) {
         const cur = document.querySelector('.block.active');
         const nxt = document.getElementById(nextId);
-        if(cur) { cur.style.opacity = "0"; setTimeout(() => { cur.classList.remove('active'); cur.style.display="none"; }, 400); }
-        
+        if(cur) { cur.style.opacity = "0"; setTimeout(() => { cur.classList.remove('active'); cur.style.display="none"; }, 500); }
         setTimeout(() => {
             nxt.style.display = "flex";
             setTimeout(() => { nxt.classList.add('active'); nxt.style.opacity = "1"; updateNavUI(); }, 50);
-        }, 450);
+        }, 550);
         if(historyStack[historyStack.length-1] !== nextId) historyStack.push(nextId);
     }
 
@@ -243,7 +246,7 @@
 
     window.onload = () => {
         applyStrings();
-        document.getElementById('active-flag-img').src = `https://flagcdn.com/w20/${currentFlagCode}.png`;
+        document.getElementById('active-flag-img').src = `https://flagcdn.com/w20/${currentFlag}.png`;
         document.getElementById('active-name').innerText = currentLang === 'en' ? 'ENGLISH' : currentLang.toUpperCase();
     };
 </script>
