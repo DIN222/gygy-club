@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v5.2.8 | Etalon 4.4.64 Sync</title>
+    <title>GY-GY Club v5.2.8 | Etalon Sync</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -12,39 +12,37 @@
         * { -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; box-sizing: border-box; }
         body { background: #000; color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; height: 100vh; }
 
-        /* CONSTANT UI */
+        /* UI ELEMENTS */
         .ui-top-bar { position: fixed; top: 0; left: 0; width: 100%; height: 70px; display: flex; justify-content: center; align-items: center; z-index: 5000; pointer-events: none; }
         .ui-logo { font-size: 24px; font-weight: 900; letter-spacing: 5px; text-shadow: 0 0 15px var(--neon); pointer-events: auto; }
-        .nav-btn-back { position: fixed; top: 20px; right: 20px; background: none; border: 1px solid var(--gold); color: var(--gold); padding: 8px 15px; cursor: pointer; z-index: 6000; font-weight: 900; }
+        .nav-btn-back { position: fixed; top: 20px; right: 20px; background: none; border: 1.5px solid var(--gold); color: var(--gold); padding: 8px 15px; cursor: pointer; z-index: 6000; font-weight: 900; }
         .nav-hidden { display: none; }
 
-        /* LANGUAGE SELECTOR */
+        /* LANG SELECTOR (SVG FLAGS) */
         .lang-gateway { position: fixed; top: 20px; left: 20px; z-index: 7000; }
-        .btn-main-lang { min-width: 130px; padding: 10px; background: #000; border: 1.5px solid var(--gold); color: var(--gold); cursor: pointer; display: flex; align-items: center; gap: 10px; font-family: inherit; font-weight: 900; }
-        .lang-dropdown { position: absolute; top: 100%; left: 0; display: none; flex-direction: column; background: #000; border: 1.5px solid var(--gold); width: 180px; max-height: 70vh; overflow-y: auto; }
+        .btn-main-lang { min-width: 140px; padding: 10px; background: #000; border: 1.5px solid var(--gold); color: var(--gold); cursor: pointer; display: flex; align-items: center; gap: 10px; font-family: inherit; font-weight: 900; }
+        .lang-dropdown { position: absolute; top: 100%; left: 0; display: none; flex-direction: column; background: #000; border: 1.5px solid var(--gold); width: 190px; max-height: 70vh; overflow-y: auto; }
         .lang-dropdown.open { display: flex; }
-        .btn-sub-lang { background: none; border: none; border-bottom: 1px solid rgba(212, 175, 55, 0.1); color: var(--gold); padding: 12px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 12px; font-family: inherit; }
-        .flag-icon { width: 20px; height: 14px; object-fit: cover; }
+        .btn-sub-lang { background: none; border: none; border-bottom: 1px solid rgba(212, 175, 55, 0.1); color: var(--gold); padding: 12px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 13px; font-family: inherit; }
+        .btn-sub-lang:hover { background: var(--gold); color: #000; }
+        .flag-icon { width: 22px; height: 15px; object-fit: cover; border: 1px solid rgba(255,255,255,0.2); }
 
-        /* BLOCKS */
+        /* BLOCKS SYSTEM */
         .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; opacity: 0; transition: opacity 0.5s; z-index: 10; }
         .block.active { display: flex; opacity: 1; }
 
-        /* ELEMENTS */
-        #main-door { width: 280px; cursor: pointer; transition: 2s cubic-bezier(0.4, 0, 0.2, 1); z-index: 100; }
-        .neon-horse { max-height: 30vh; filter: drop-shadow(0 0 20px var(--neon)); margin: 15px 0; }
-        .welcome-title { font-size: 38px; font-weight: 900; letter-spacing: 8px; text-shadow: 0 0 15px var(--gold); margin-bottom: 20px; }
-        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 18px; text-align: center; max-width: 85%; line-height: 1.4; color: var(--gold); }
+        /* WELCOME HIERARCHY */
+        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 19px; text-align: center; max-width: 85%; line-height: 1.4; color: var(--gold); margin-bottom: 10px; }
+        .neon-horse { max-height: 32vh; filter: drop-shadow(0 0 25px var(--neon)); margin: 15px 0; }
+        .welcome-title { font-size: 40px; font-weight: 900; letter-spacing: 10px; text-shadow: 0 0 20px var(--gold); margin-bottom: 25px; }
         
-        .btn-gy { min-width: 150px; padding: 15px; background: none; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: inherit; font-weight: 900; text-transform: uppercase; }
+        #main-door { width: 300px; cursor: pointer; transition: 2s cubic-bezier(0.4, 0, 0.2, 1); }
+        .btn-gy { min-width: 160px; padding: 15px; background: none; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: inherit; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
         .btn-sleep { opacity: 0.2; pointer-events: none; }
 
-        /* CARD & HALL */
-        .id-card-hall { width: 280px; padding: 25px; background: #F5F5DC; border: 3px solid #3E2723; color: #000; border-radius: 15px; text-align: center; box-shadow: 0 15px 40px #000; }
-        .box-white { width: 80px; height: 80px; background: #FFF; border: 1px solid #3E2723; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-
-        /* BAR PLACEHOLDER */
-        .bar-view { width: 100%; height: 100%; background: radial-gradient(circle, #1a1a1a 0%, #000 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        /* HALL & BAR */
+        .id-card-hall { width: 290px; padding: 30px; background: #F5F5DC; border: 4px solid #3E2723; color: #3E2723; border-radius: 20px; text-align: center; box-shadow: 0 20px 50px #000; }
+        .box-white { width: 85px; height: 85px; background: #FFF; border: 1px solid #3E2723; display: flex; align-items: center; justify-content: center; overflow: hidden; }
     </style>
 </head>
 <body translate="no">
@@ -105,12 +103,12 @@
                 <span id="txt-a" data-i18n="avatar">AVATAR</span>
             </div>
         </div>
-        <button class="btn-gy" style="min-width:250px;" onclick="saveProfile()" data-i18n="btn_save">SAVE PROFILE</button>
+        <button class="btn-gy" style="min-width:260px;" onclick="saveProfile()" data-i18n="btn_save">SAVE PROFILE</button>
     </div>
 
     <div id="block-hall" class="block">
         <div class="id-card-hall">
-            <div id="h-id" style="font-weight:900; font-size:16px; margin-bottom:15px;">#ID</div>
+            <div id="h-id" style="font-weight:900; font-size:17px; margin-bottom:15px;">#ID</div>
             <div style="display:flex; gap:10px; justify-content:center; margin-bottom:20px;">
                 <div class="box-white"><img id="h-photo" style="width:100%; height:100%; object-fit:cover;"></div>
                 <div class="box-white" id="h-qr"></div>
@@ -120,10 +118,8 @@
     </div>
 
     <div id="block-bar" class="block">
-        <div class="bar-view">
-            <div class="welcome-title">THE BAR</div>
-            <div class="quote-text">"Enjoy your stay in GY-GY Club"</div>
-        </div>
+        <div class="welcome-title">THE BAR</div>
+        <div class="quote-text">"Enjoy your stay"</div>
     </div>
 
 <script>
@@ -191,9 +187,9 @@
         setTimeout(() => {
             const q1 = document.getElementById('qr-reg'), q2 = document.getElementById('h-qr');
             q1.innerHTML = ""; q2.innerHTML = "";
-            new QRCode(q1, {text: currentID, width: 80, height: 80});
-            new QRCode(q2, {text: currentID, width: 80, height: 80});
-        }, 100);
+            new QRCode(q1, {text: currentID, width: 85, height: 85});
+            new QRCode(q2, {text: currentID, width: 85, height: 85});
+        }, 150);
     }
 
     function portalTransition(nextId) {
