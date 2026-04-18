@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v5.3.0 | Identity Final</title>
+    <title>GY-GY Club v5.3.1 | White Background Fix</title>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -26,10 +26,14 @@
             overflow: hidden;
             transition: 0.3s;
         }
-        .box-gold img { width: 100%; height: 100%; object-fit: cover; }
-        .box-gold span { font-size: 9px; font-weight: 900; color: var(--gold); text-align: center; pointer-events: none; }
 
-        /* Состояние "Погашено" для контента внутри рамки */
+        /* [ПРАВКА] Белый фон для 3-го и 4-го квадратов */
+        #frame-photo, #frame-avatar { background: #FFFFFF; color: #000; }
+        #frame-photo span, #frame-avatar span { color: #000; font-weight: 900; font-size: 10px; }
+
+        .box-gold img { width: 100%; height: 100%; object-fit: cover; }
+        .box-gold span { font-size: 9px; font-weight: 900; text-align: center; pointer-events: none; }
+
         .content-hidden { display: none !important; }
 
         .btn-gy { min-width: 250px; padding: 15px; background: none; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: inherit; font-weight: 900; text-transform: uppercase; margin: 10px 0; transition: 0.3s; }
@@ -53,7 +57,7 @@
     <div id="block-identity" class="block">
         <div class="identity-grid">
             <div class="box-gold">
-                <span id="id-label">#ID</span>
+                <span id="id-label" style="color: var(--gold)">#ID</span>
                 <img id="id-flag" src="https://flagcdn.com/w20/gb.png" style="width:20px; height:14px; margin-top:5px; object-fit:contain;">
             </div>
             
@@ -100,7 +104,6 @@
             document.getElementById('id-label').innerText = currentID;
             document.getElementById('h-id').innerText = currentID;
             
-            // Чистый золотой QR
             const qrContainer = document.getElementById('qr-reg');
             qrContainer.innerHTML = "";
             new QRCode(qrContainer, {
@@ -119,14 +122,12 @@
             if(input.files && input.files[0]) {
                 const r = new FileReader();
                 r.onload = (e) => {
-                    // 1. Активируем Фото
                     const imgP = document.getElementById('pp');
                     imgP.src = e.target.result;
                     imgP.classList.remove('content-hidden');
                     document.getElementById('txt-p').classList.add('content-hidden');
                     document.getElementById('h-photo').src = e.target.result;
 
-                    // 2. Гасим Аватар (рамка остается, контент исчезает)
                     document.getElementById('av').classList.add('content-hidden');
                     document.getElementById('txt-a').classList.remove('content-hidden');
                 };
@@ -136,14 +137,12 @@
 
         function useAvatar() {
             const url = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${Math.random()}`;
-            // 1. Активируем Аватар
             const imgA = document.getElementById('av');
             imgA.src = url;
             imgA.classList.remove('content-hidden');
             document.getElementById('txt-a').classList.add('content-hidden');
             document.getElementById('h-photo').src = url;
 
-            // 2. Гасим Фото (рамка остается, контент исчезает)
             document.getElementById('pp').classList.add('content-hidden');
             document.getElementById('txt-p').classList.remove('content-hidden');
         }
