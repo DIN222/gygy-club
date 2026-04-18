@@ -3,99 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v5.2.9 | STABLE</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <title>GY-GY Club v5.3.0 | Identity Final</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
         :root { --gold: #d4af37; --neon: rgba(212, 175, 55, 0.8); }
-        * { -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #000; color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; height: 100vh; }
+        body { background: #000; color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; margin: 0; }
 
-        /* --- СЕКЦИЯ 1: ЗАМОРОЖЕНО (UI & TOP BAR) --- */
-        .ui-top-bar { position: fixed; top: 0; left: 0; width: 100%; height: 70px; display: flex; justify-content: center; align-items: center; z-index: 5000; pointer-events: none; }
-        .ui-logo { font-size: 24px; font-weight: 900; letter-spacing: 5px; text-shadow: 0 0 15px var(--neon); pointer-events: auto; }
-        .lang-gateway { position: fixed; top: 20px; left: 20px; z-index: 7000; }
-        .btn-main-lang { min-width: 130px; padding: 10px; background: #000; border: 1.5px solid var(--gold); color: var(--gold); cursor: pointer; display: flex; align-items: center; gap: 10px; font-weight: 900; font-family: inherit; }
-        .lang-dropdown { position: absolute; top: 100%; left: 0; display: none; flex-direction: column; background: #000; border: 1.5px solid var(--gold); width: 180px; max-height: 70vh; overflow-y: auto; }
-        .lang-dropdown.open { display: flex; }
-        .btn-sub-lang { background: none; border: none; border-bottom: 1px solid rgba(212, 175, 55, 0.1); color: var(--gold); padding: 12px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 12px; font-family: inherit; }
-        
-        .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; opacity: 0; transition: opacity 0.5s; z-index: 10; }
-        .block.active { display: flex; opacity: 1; }
+        .ui-logo { position: fixed; top: 20px; width: 100%; text-align: center; font-size: 24px; letter-spacing: 5px; text-shadow: 0 0 15px var(--neon); z-index: 5000; }
 
-        /* --- СЕКЦИЯ 2: РАБОЧАЯ (IDENTITY & GRID) --- */
-        .identity-grid { display: flex; gap: 15px; margin-bottom: 30px; }
+        .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; z-index: 10; }
+        .block.active { display: flex; }
+
+        /* ИДЕНТИФИКАЦИЯ */
+        .identity-grid { display: flex; gap: 10px; margin-bottom: 30px; }
         .box-gold { 
             width: 80px; height: 80px; 
             border: 2px solid var(--gold); 
-            background: rgba(255, 255, 255, 0.03);
             display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            position: relative; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative; background: rgba(212, 175, 55, 0.03);
             overflow: hidden;
+            transition: 0.3s;
         }
-        .box-gold span { font-size: 9px; font-weight: 900; text-transform: uppercase; }
-        
-        /* Состояния выбора */
-        .state-off { opacity: 0.15; filter: grayscale(1) blur(1px); transform: scale(0.9); pointer-events: none; }
-        .state-on { border-width: 3px; box-shadow: 0 0 20px var(--neon); background: rgba(212, 175, 55, 0.15); transform: scale(1.05); }
+        .box-gold img { width: 100%; height: 100%; object-fit: cover; }
+        .box-gold span { font-size: 9px; font-weight: 900; color: var(--gold); text-align: center; pointer-events: none; }
 
-        .btn-gy { min-width: 250px; padding: 15px; background: none; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: inherit; font-weight: 900; text-transform: uppercase; margin: 10px 0; }
-        .btn-sleep { opacity: 0.2; pointer-events: none; }
+        /* Состояние "Погашено" для контента внутри рамки */
+        .content-hidden { display: none !important; }
+
+        .btn-gy { min-width: 250px; padding: 15px; background: none; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: inherit; font-weight: 900; text-transform: uppercase; margin: 10px 0; transition: 0.3s; }
+        #btn-go-bar { display: none; background: var(--gold); color: #000; }
 
         /* ХОЛЛ */
         .id-card-hall { 
-            width: 300px; padding: 25px; background: #F5F5DC; border: 5px solid #3E2723; 
-            color: #000; border-radius: 12px; text-align: center; box-shadow: 0 20px 50px #000;
+            width: 290px; padding: 25px; background: #F5F5DC; border: 4px solid #3E2723; 
+            color: #000; border-radius: 12px; text-align: center;
         }
     </style>
 </head>
 <body>
 
-    <div class="ui-top-bar"><div class="ui-logo">GY-GY</div></div>
+    <div class="ui-logo">GY-GY</div>
 
-    <div id="block-entrance" class="block active" style="opacity:1">
-        <img src="door_1.jpg" id="main-door" style="width:280px; cursor:pointer;" onclick="handleDoor()">
-    </div>
-
-    <div id="block-welcome" class="block">
-        <img src="horse_welcome.png" style="max-height:30vh; margin-bottom:20px;">
-        <div style="display:flex; gap:10px;">
-            <button class="btn-gy" style="min-width:140px;" onclick="portalTransition('block-identity')">IDENTITY</button>
-            <button id="btn-w-hall" class="btn-gy btn-sleep" style="min-width:140px;" onclick="portalTransition('block-hall')">TO HALL</button>
-        </div>
+    <div id="block-entrance" class="block active">
+        <img src="door_1.jpg" style="width:280px; cursor:pointer;" onclick="handleDoor()">
     </div>
 
     <div id="block-identity" class="block">
         <div class="identity-grid">
-            <div class="box-gold" id="box-id">
+            <div class="box-gold">
                 <span id="id-label">#ID</span>
-                <img id="id-flag" src="https://flagcdn.com/w20/gb.png" style="width:20px; margin-top:5px;">
+                <img id="id-flag" src="https://flagcdn.com/w20/gb.png" style="width:20px; height:14px; margin-top:5px; object-fit:contain;">
             </div>
+            
             <div class="box-gold" id="qr-reg"></div>
             
-            <div class="box-gold" id="box-photo" onclick="document.getElementById('file-in').click()">
+            <div class="box-gold" id="frame-photo" onclick="document.getElementById('file-in').click()" style="cursor:pointer;">
                 <input type="file" id="file-in" onchange="usePhoto(this)" style="display:none;">
-                <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
+                <img id="pp" class="content-hidden">
                 <span id="txt-p">PHOTO</span>
             </div>
 
-            <div class="box-gold" id="box-avatar" onclick="useAvatar()">
-                <img id="av" style="display:none; width:100%; height:100%;">
+            <div class="box-gold" id="frame-avatar" onclick="useAvatar()" style="cursor:pointer;">
+                <img id="av" class="content-hidden">
                 <span id="txt-a">AVATAR</span>
             </div>
         </div>
-        <button class="btn-gy" onclick="saveProfile()">SAVE PROFILE</button>
+
+        <button id="btn-save" class="btn-gy" onclick="saveProfile()">SAVE PROFILE</button>
+        <button id="btn-go-bar" class="btn-gy" onclick="portalTransition('block-hall')">PROCEED TO BAR</button>
     </div>
 
     <div id="block-hall" class="block">
         <div class="id-card-hall">
-            <div id="h-id" style="font-weight:900; margin-bottom:15px; font-size:18px;">#ID-CARD</div>
+            <div id="h-id" style="font-weight:900; margin-bottom:15px; border-bottom: 1px solid #3E2723;">#ID-CARD</div>
             <div style="display:flex; gap:10px; justify-content:center; margin-bottom:20px;">
-                <div style="width:80px; height:80px; background:#fff; border:1px solid #3E2723;"><img id="h-photo" style="width:100%; height:100%; object-fit:cover;"></div>
+                <div style="width:80px; height:80px; background:#fff; border:1px solid #3E2723; overflow:hidden;">
+                    <img id="h-photo" style="width:100%; height:100%; object-fit:cover;">
+                </div>
                 <div id="h-qr" style="width:80px; height:80px; background:#fff; border:1px solid #3E2723;"></div>
             </div>
-            <button class="btn-gy" style="color:#3E2723; border-color:#3E2723; width:100%;">ENTER BAR</button>
+            <div style="font-weight:900; text-transform:uppercase;">Welcome to GY-GY</div>
         </div>
     </div>
 
@@ -103,31 +92,43 @@
         let currentID = `#GY-${Math.floor(100+Math.random()*900)}-${Math.floor(1000+Math.random()*9000)}`;
 
         function handleDoor() {
-            document.getElementById('main-door').style.transform = "scale(5)";
-            document.getElementById('main-door').style.opacity = "0";
             updateVisuals();
-            setTimeout(() => portalTransition('block-welcome'), 1000);
+            portalTransition('block-identity');
         }
 
         function updateVisuals() {
             document.getElementById('id-label').innerText = currentID;
             document.getElementById('h-id').innerText = currentID;
-            new QRCode(document.getElementById('qr-reg'), {text: currentID, width: 60, height: 60, colorDark: "#d4af37", colorLight: "transparent"});
-            new QRCode(document.getElementById('h-qr'), {text: currentID, width: 80, height: 80});
+            
+            // Чистый золотой QR
+            const qrContainer = document.getElementById('qr-reg');
+            qrContainer.innerHTML = "";
+            new QRCode(qrContainer, {
+                text: currentID, 
+                width: 70, height: 70, 
+                colorDark: "#d4af37", 
+                colorLight: "rgba(0,0,0,0)" 
+            });
+
+            const hQr = document.getElementById('h-qr');
+            hQr.innerHTML = "";
+            new QRCode(hQr, { text: currentID, width: 80, height: 80, colorDark: "#000000" });
         }
 
-        // ЛОГИКА ВЫБОРА: Одно включаем, второе гасим
         function usePhoto(input) {
             if(input.files && input.files[0]) {
                 const r = new FileReader();
                 r.onload = (e) => {
-                    document.getElementById('pp').src = e.target.result;
-                    document.getElementById('pp').style.display = "block";
+                    // 1. Активируем Фото
+                    const imgP = document.getElementById('pp');
+                    imgP.src = e.target.result;
+                    imgP.classList.remove('content-hidden');
+                    document.getElementById('txt-p').classList.add('content-hidden');
                     document.getElementById('h-photo').src = e.target.result;
-                    document.getElementById('txt-p').style.display = "none";
-                    
-                    document.getElementById('box-photo').className = "box-gold state-on";
-                    document.getElementById('box-avatar').className = "box-gold state-off";
+
+                    // 2. Гасим Аватар (рамка остается, контент исчезает)
+                    document.getElementById('av').classList.add('content-hidden');
+                    document.getElementById('txt-a').classList.remove('content-hidden');
                 };
                 r.readAsDataURL(input.files[0]);
             }
@@ -135,25 +136,26 @@
 
         function useAvatar() {
             const url = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${Math.random()}`;
-            document.getElementById('av').src = url;
-            document.getElementById('av').style.display = "block";
+            // 1. Активируем Аватар
+            const imgA = document.getElementById('av');
+            imgA.src = url;
+            imgA.classList.remove('content-hidden');
+            document.getElementById('txt-a').classList.add('content-hidden');
             document.getElementById('h-photo').src = url;
-            document.getElementById('txt-a').style.display = "none";
 
-            document.getElementById('box-avatar').className = "box-gold state-on";
-            document.getElementById('box-photo').className = "box-gold state-off";
+            // 2. Гасим Фото (рамка остается, контент исчезает)
+            document.getElementById('pp').classList.add('content-hidden');
+            document.getElementById('txt-p').classList.remove('content-hidden');
         }
 
         function saveProfile() {
-            document.getElementById('btn-w-hall').classList.remove('btn-sleep');
-            portalTransition('block-hall');
+            document.getElementById('btn-save').style.display = "none";
+            document.getElementById('btn-go-bar').style.display = "block";
         }
 
         function portalTransition(id) {
-            document.querySelectorAll('.block').forEach(b => { b.classList.remove('active'); b.style.display="none"; });
-            const next = document.getElementById(id);
-            next.style.display = "flex";
-            setTimeout(() => next.classList.add('active'), 50);
+            document.querySelectorAll('.block').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
         }
     </script>
 </body>
