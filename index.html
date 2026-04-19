@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v5.5.2 | Zero Fill Edition</title>
+    <title>GY-GY Club | Hall & Bar Operational</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -23,78 +23,73 @@
 
         body { background: #000; color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; height: 100vh; touch-action: none; }
 
+        /* Постоянные атрибуты */
         .ui-logo { position: fixed; top: 20px; width: 100%; text-align: center; font-size: 24px; letter-spacing: 5px; text-shadow: 0 0 15px var(--neon); z-index: 5000; font-weight: 900; pointer-events: none; }
-        
         #nav-back { position: fixed; top: 20px; left: 20px; z-index: 6000; border: 1px solid var(--gold); color: var(--gold); padding: 8px 12px; font-size: 10px; font-weight: 900; display: none; text-transform: uppercase; }
+        .lang-panel { position: fixed; top: 25px; right: 20px; z-index: 6000; font-size: 10px; font-weight: 900; }
 
-        .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; opacity: 0; transition: opacity 0.5s; z-index: 10; }
+        .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; opacity: 0; transition: opacity 0.5s; z-index: 10; padding: 20px; }
         .block.active { display: flex; opacity: 1; }
 
-        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 18px; text-align: center; max-width: 85%; line-height: 1.4; color: var(--gold); margin-bottom: 25px; }
-        
-        /* IDENTITY GRID */
-        .identity-grid { display: flex; gap: 10px; margin-bottom: 30px; }
-        .box-gold { width: 80px; height: 80px; border: 2px solid var(--gold); display: flex; flex-direction: column; align-items: center; justify-content: center; background: transparent; overflow: hidden; }
-        #frame-photo, #frame-avatar { background: #FFFFFF; }
-        #frame-photo span, #frame-avatar span { color: #000; font-weight: 900; font-size: 10px; pointer-events: none; }
-        .box-gold img { width: 100%; height: 100%; object-fit: cover; }
-        .content-hidden { display: none !important; }
-
-        /* [THE SKELETON BUTTON] */
+        /* Стили кнопок (Заморожено: без заливки) */
         .btn-skeleton { 
-            min-width: 250px; height: 50px; 
+            min-width: 220px; height: 45px; 
             border: 2px solid var(--gold) !important; 
             display: flex; align-items: center; justify-content: center;
-            margin: 10px 0; 
-            background: transparent !important; /* ГАРАНТИЯ ОТСУТСТВИЯ ЗАЛИВКИ */
-            color: var(--gold) !important;
-            font-weight: 900; text-transform: uppercase;
-            -webkit-tap-highlight-color: transparent !important;
+            margin: 10px 0; background: transparent !important;
+            color: var(--gold) !important; font-weight: 900; text-transform: uppercase;
+            font-size: 12px; cursor: default;
         }
 
-        .id-card-final { width: 290px; padding: 25px; background: #F5F5DC; border: 4px solid #3E2723; color: #000; border-radius: 12px; text-align: center; }
+        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 18px; text-align: center; max-width: 85%; line-height: 1.4; color: var(--gold); margin-bottom: 25px; }
+
+        /* Специфика Холла и Бара */
+        .hall-frame { border: 1px solid rgba(212, 175, 55, 0.3); width: 100%; max-width: 400px; padding: 20px; margin-bottom: 20px; text-align: center; }
+        .bar-zone { border-top: 2px solid var(--gold); width: 100%; max-width: 400px; padding-top: 25px; margin-top: 10px; text-align: center; }
+        
+        .id-badge { font-size: 14px; letter-spacing: 2px; margin: 10px 0; color: #fff; }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
-    <p id="nav-back" style="-webkit-tap-highlight-color: transparent;">← BACK</p>
     <div class="ui-logo">GY-GY</div>
+    <div class="lang-panel">EN | RU</div>
+    <p id="nav-back">← BACK</p>
 
     <div id="block-entrance" class="block active" style="opacity: 1;">
-        <img src="door_1.jpg" id="main-door" style="width: 280px; transition: 2s; -webkit-tap-highlight-color: transparent;">
+        <img src="door_1.jpg" id="main-door" style="width: 280px; transition: 2s;">
     </div>
 
     <div id="block-welcome" class="block">
         <div class="quote-text">"Every joke has a grain of whiskey"</div>
-        <img src="horse_welcome.png" style="max-height: 30vh; margin-bottom: 20px;">
         <div id="btn-to-id" class="btn-skeleton">IDENTITY</div>
     </div>
 
     <div id="block-identity" class="block">
         <div class="quote-text">"No such thing as too much champagne"</div>
-        <div class="identity-grid">
-            <div class="box-gold"><p id="id-label" style="font-size: 9px; font-weight: 900; color:var(--gold)">#ID</p></div>
-            <div class="box-gold" id="qr-reg"></div>
-            <div id="frame-photo" class="box-gold">
+        <div style="display: flex; gap: 10px; margin-bottom: 30px;">
+            <div id="qr-reg" style="width: 80px; height: 80px; border: 1px solid var(--gold); display:flex; align-items:center; justify-content:center;"></div>
+            <div id="frame-photo" style="width: 80px; height: 80px; border: 1px solid var(--gold); background: #fff; display:flex; align-items:center; justify-content:center; overflow:hidden;">
                 <input type="file" id="file-in" style="display:none;" accept="image/*">
-                <img id="pp" class="content-hidden"><span id="txt-p">PHOTO</span>
-            </div>
-            <div id="frame-avatar" class="box-gold">
-                <img id="av" class="content-hidden"><span id="txt-a">AVATAR</span>
+                <img id="pp" style="width:100%; height:100%; object-fit:cover; display:none;"><span style="color:#000; font-size:10px; font-weight:900;">PHOTO</span>
             </div>
         </div>
-        
         <div id="action-btn" class="btn-skeleton">SAVE PROFILE</div>
     </div>
 
-    <div id="block-final-card" class="block">
-        <div class="id-card-final">
-            <div id="h-id" style="font-weight:900; margin-bottom:15px; border-bottom: 1px solid #3E2723; padding-bottom: 5px;">#ID-CARD</div>
-            <div style="display:flex; gap:10px; justify-content:center; margin-bottom:20px;">
-                <div style="width:80px; height:80px; background:#fff; border:1px solid #3E2723; overflow:hidden;"><img id="h-photo" style="width:100%; height:100%; object-fit:cover;"></div>
-                <div id="h-qr" style="width:80px; height:80px; background:#fff; border:1px solid #3E2723;"></div>
+    <div id="block-hall-bar" class="block">
+        <div class="hall-frame">
+            <p style="font-size: 10px; text-transform: uppercase; opacity: 0.7;">Welcome to the Hall</p>
+            <div id="hall-id-display" class="id-badge">#GY-000-0000</div>
+            <p style="font-size: 9px;">STATUS: REGISTERED JOKER</p>
+        </div>
+
+        <div class="bar-zone">
+            <div class="quote-text" style="font-size: 16px; margin-bottom: 15px;">"Alcohol: because no great story started with a salad"</div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
+                <div id="btn-order" class="btn-skeleton">ORDER VIRTUAL WHISKEY</div>
+                <div id="btn-joke" class="btn-skeleton">GET A RANDOM JOKE</div>
             </div>
-            <p style="font-weight:900; text-transform:uppercase; font-size: 14px;">Welcome to the Club</p>
         </div>
     </div>
 
@@ -105,79 +100,56 @@
 
         const touchHandler = (id, fn) => {
             const el = document.getElementById(id);
+            if (!el) return;
             el.addEventListener('pointerdown', (e) => {
                 e.preventDefault();
                 fn();
             }, { passive: false });
         };
 
-        touchHandler('main-door', handleDoor);
-        touchHandler('nav-back', goBack);
+        // Навигация
+        touchHandler('main-door', function() {
+            this.style.transform = "scale(5)";
+            this.style.opacity = "0";
+            updateID();
+            setTimeout(() => portalTransition('block-welcome'), 1000);
+        });
+
         touchHandler('btn-to-id', () => portalTransition('block-identity'));
-        touchHandler('frame-photo', triggerPhoto);
-        touchHandler('frame-avatar', useAvatar);
-        
-        // Кнопка действия: только смена текста
+        touchHandler('nav-back', goBack);
+
+        // Логика Бара
+        touchHandler('btn-order', () => alert("🥃 Выпито! Ваша печень в виртуальной безопасности."));
+        touchHandler('btn-joke', () => {
+            const jokes = ["Шутка №1", "Шутка №2", "Шутка №3"];
+            alert(jokes[Math.floor(Math.random()*jokes.length)]);
+        });
+
+        // Сохранение и переход в Холл
         touchHandler('action-btn', () => {
             if (!isSaved) {
                 isSaved = true;
                 document.getElementById('action-btn').innerText = "PROCEED TO THE HALL";
             } else {
-                portalTransition('block-final-card');
+                portalTransition('block-hall-bar');
             }
         });
 
-        document.getElementById('file-in').addEventListener('change', (e) => usePhoto(e.target));
-
-        function handleDoor() {
-            const door = document.getElementById('main-door');
-            door.style.transform = "scale(5)";
-            door.style.opacity = "0";
-            updateIDVisuals();
-            setTimeout(() => portalTransition('block-welcome'), 1000);
-        }
-
-        function updateIDVisuals() {
-            document.getElementById('id-label').innerText = currentID;
-            document.getElementById('h-id').innerText = currentID;
-            const qrReg = document.getElementById('qr-reg');
-            qrReg.innerHTML = "";
-            new QRCode(qrReg, { text: currentID, width: 70, height: 70, colorDark: "#FFFFFF", colorLight: "rgba(0,0,0,0)" });
-            const qrHall = document.getElementById('h-qr');
-            qrHall.innerHTML = "";
-            new QRCode(qrHall, { text: currentID, width: 80, height: 80, colorDark: "#000000" });
-        }
-
-        function triggerPhoto() { document.getElementById('file-in').click(); }
-
-        function usePhoto(input) {
-            if(input.files && input.files[0]) {
+        touchHandler('frame-photo', () => document.getElementById('file-in').click());
+        document.getElementById('file-in').addEventListener('change', function() {
+            if(this.files && this.files[0]) {
                 const r = new FileReader();
                 r.onload = (e) => {
-                    resetChoices();
                     document.getElementById('pp').src = e.target.result;
-                    document.getElementById('pp').classList.remove('content-hidden');
-                    document.getElementById('txt-p').classList.add('content-hidden');
-                    document.getElementById('h-photo').src = e.target.result;
+                    document.getElementById('pp').style.display = "block";
                 };
-                r.readAsDataURL(input.files[0]);
+                r.readAsDataURL(this.files[0]);
             }
-        }
+        });
 
-        function useAvatar() {
-            resetChoices();
-            const url = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${Math.random()}`;
-            document.getElementById('av').src = url;
-            document.getElementById('av').classList.remove('content-hidden');
-            document.getElementById('txt-a').classList.add('content-hidden');
-            document.getElementById('h-photo').src = url;
-        }
-
-        function resetChoices() {
-            document.getElementById('pp').classList.add('content-hidden');
-            document.getElementById('txt-p').classList.remove('content-hidden');
-            document.getElementById('av').classList.add('content-hidden');
-            document.getElementById('txt-a').classList.remove('content-hidden');
+        function updateID() {
+            document.getElementById('hall-id-display').innerText = currentID;
+            new QRCode(document.getElementById('qr-reg'), { text: currentID, width: 70, height: 70, colorDark: "#d4af37", colorLight: "rgba(0,0,0,0)" });
         }
 
         function portalTransition(id) {
@@ -188,7 +160,6 @@
             const next = document.getElementById(id);
             next.style.display = "flex";
             setTimeout(() => next.classList.add('active'), 50);
-
             historyStack.push(id);
             document.getElementById('nav-back').style.display = (id === 'block-entrance') ? 'none' : 'block';
         }
@@ -196,8 +167,7 @@
         function goBack() {
             if (historyStack.length > 1) {
                 historyStack.pop();
-                const prevId = historyStack.pop();
-                portalTransition(prevId);
+                portalTransition(historyStack.pop());
             }
         }
     </script>
