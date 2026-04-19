@@ -1,21 +1,24 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v5.4.9 | The Invisible Link</title>
+    <title>GY-GY Club v5.5.0 | The Zero-Glow Monolith</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
         :root { --gold: #d4af37; --neon: rgba(212, 175, 55, 0.8); }
         
+        /* ПОЛНАЯ ЗАЧИСТКА */
         * { 
             -webkit-tap-highlight-color: transparent !important; 
             -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
+            -webkit-focus-ring-color: transparent !important;
             outline: none !important;
             box-shadow: none !important;
+            -webkit-user-select: none !important;
+            user-select: none !important;
             box-sizing: border-box; 
             margin: 0; padding: 0; 
         }
@@ -24,13 +27,12 @@
             background: #000; color: var(--gold); 
             font-family: 'Share Tech Mono', monospace; 
             overflow: hidden; height: 100vh;
-            user-select: none; -webkit-user-select: none;
-            touch-action: none; /* Полная блокировка системных реакций на касание */
+            touch-action: none; /* Запрет системных реакций */
         }
 
         .ui-logo { position: fixed; top: 20px; width: 100%; text-align: center; font-size: 24px; letter-spacing: 5px; text-shadow: 0 0 15px var(--neon); z-index: 5000; font-weight: 900; pointer-events: none; }
         
-        /* BACK - теперь просто текст */
+        /* КНОПКА BACK (теперь P) */
         #nav-back { 
             position: fixed; top: 20px; left: 20px; z-index: 6000; 
             border: 1px solid var(--gold); color: var(--gold); 
@@ -50,20 +52,19 @@
         .box-gold img { width: 100%; height: 100%; object-fit: cover; }
         .content-hidden { display: none !important; }
 
-        /* [FINAL NO-GLOW STYLE] */
-        .click-zone { 
+        /* [DEAD ZONE STYLE] */
+        .dead-zone { 
             min-width: 250px; padding: 15px; 
             border: 2px solid var(--gold) !important; 
             font-family: inherit; font-weight: 900; text-transform: uppercase; 
             margin: 10px 0; text-align: center;
             background: transparent !important;
             color: var(--gold) !important;
-            touch-action: manipulation;
-            -webkit-appearance: none;
+            cursor: default;
         }
 
-        #action-proceed { 
-            display: none; 
+        /* Кнопка после Save - просто меняем класс */
+        .dead-zone.hall-mode { 
             background-color: var(--gold) !important; 
             color: #000 !important; 
         }
@@ -73,7 +74,7 @@
 </head>
 <body oncontextmenu="return false;">
 
-    <div id="nav-back" tabindex="-1">← BACK</div>
+    <p id="nav-back">← BACK</p>
     <div class="ui-logo">GY-GY</div>
 
     <div id="block-entrance" class="block active" style="opacity: 1;">
@@ -83,13 +84,13 @@
     <div id="block-welcome" class="block">
         <div class="quote-text">"Every joke has a grain of whiskey"</div>
         <img src="horse_welcome.png" style="max-height: 30vh; margin-bottom: 20px;">
-        <div id="to-id" class="click-zone">IDENTITY</div>
+        <p id="to-id" class="dead-zone">IDENTITY</p>
     </div>
 
     <div id="block-identity" class="block">
         <div class="quote-text">"No such thing as too much champagne"</div>
         <div class="identity-grid">
-            <div class="box-gold"><span id="id-label" style="font-size: 9px; font-weight: 900; color:var(--gold)">#ID</span></div>
+            <div class="box-gold"><p id="id-label" style="font-size: 9px; font-weight: 900; color:var(--gold)">#ID</p></div>
             <div class="box-gold" id="qr-reg"></div>
             <div id="frame-photo" class="box-gold">
                 <input type="file" id="file-in" style="display:none;" accept="image/*">
@@ -100,8 +101,7 @@
             </div>
         </div>
         
-        <div id="action-save" class="click-zone">SAVE PROFILE</div>
-        <div id="action-proceed" class="click-zone">PROCEED TO THE HALL</div>
+        <p id="action-btn" class="dead-zone">SAVE PROFILE</p>
     </div>
 
     <div id="block-final-card" class="block">
@@ -111,27 +111,46 @@
                 <div style="width:80px; height:80px; background:#fff; border:1px solid #3E2723; overflow:hidden;"><img id="h-photo" style="width:100%; height:100%; object-fit:cover;"></div>
                 <div id="h-qr" style="width:80px; height:80px; background:#fff; border:1px solid #3E2723;"></div>
             </div>
-            <div style="font-weight:900; text-transform:uppercase; font-size: 14px;">Welcome to the Club</div>
+            <p style="font-weight:900; text-transform:uppercase; font-size: 14px;">Welcome to the Club</p>
         </div>
     </div>
 
     <script>
         let currentID = `#GY-${Math.floor(100+Math.random()*900)}-${Math.floor(1000+Math.random()*9000)}`;
         let historyStack = ['block-entrance'];
+        let isSaved = false;
 
-        // Инициализация событий через JS (убирает системную "кнопочность")
-        document.getElementById('main-door').addEventListener('click', handleDoor);
-        document.getElementById('to-id').addEventListener('click', () => portalTransition('block-identity'));
-        document.getElementById('nav-back').addEventListener('click', goBack);
-        document.getElementById('action-save').addEventListener('click', saveProfile);
-        document.getElementById('action-proceed').addEventListener('click', () => portalTransition('block-final-card'));
-        document.getElementById('frame-photo').addEventListener('click', triggerPhoto);
-        document.getElementById('frame-avatar').addEventListener('click', useAvatar);
+        // Используем pointerdown вместо click для мгновенной реакции без подсветки
+        const bind = (id, fn) => {
+            const el = document.getElementById(id);
+            el.addEventListener('pointerdown', (e) => {
+                e.preventDefault();
+                fn();
+            });
+        };
+
+        bind('main-door', handleDoor);
+        bind('nav-back', goBack);
+        bind('to-id', () => portalTransition('block-identity'));
+        bind('frame-photo', triggerPhoto);
+        bind('frame-avatar', useAvatar);
+        
+        // Логика одной кнопки для двух состояний
+        document.getElementById('action-btn').addEventListener('pointerdown', (e) => {
+            e.preventDefault();
+            if (!isSaved) {
+                saveProfile();
+            } else {
+                portalTransition('block-final-card');
+            }
+        });
+
         document.getElementById('file-in').addEventListener('change', (e) => usePhoto(e.target));
 
         function handleDoor() {
-            this.style.transform = "scale(5)";
-            this.style.opacity = "0";
+            const door = document.getElementById('main-door');
+            door.style.transform = "scale(5)";
+            door.style.opacity = "0";
             updateIDVisuals();
             setTimeout(() => portalTransition('block-welcome'), 1000);
         }
@@ -148,7 +167,6 @@
         }
 
         function triggerPhoto() {
-            document.getElementById('file-in').value = "";
             document.getElementById('file-in').click();
         }
 
@@ -183,8 +201,10 @@
         }
 
         function saveProfile() {
-            document.getElementById('action-save').style.display = "none";
-            document.getElementById('action-proceed').style.display = "block";
+            isSaved = true;
+            const btn = document.getElementById('action-btn');
+            btn.innerText = "PROCEED TO THE HALL";
+            btn.classList.add('hall-mode');
         }
 
         function portalTransition(id) {
