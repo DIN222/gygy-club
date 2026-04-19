@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v5.3.3 | Final Identity</title>
+    <title>GY-GY Club v5.4.1 | Logic Fix</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -19,28 +19,30 @@
 
         .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 18px; text-align: center; max-width: 85%; line-height: 1.4; color: var(--gold); margin-bottom: 25px; }
         
+        /* GRID LOGIC */
         .identity-grid { display: flex; gap: 10px; margin-bottom: 30px; }
         .box-gold { 
             width: 80px; height: 80px; 
             border: 2px solid var(--gold); 
             display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            position: relative; background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.03);
             overflow: hidden;
         }
         
+        /* White frames for Choice */
         #frame-photo, #frame-avatar { background: #FFFFFF; cursor: pointer; }
-        #frame-photo span, #frame-avatar span { color: #000; font-weight: 900; font-size: 10px; }
-
+        #frame-photo span, #frame-avatar span { color: #000; font-weight: 900; font-size: 10px; pointer-events: none; }
         .box-gold img { width: 100%; height: 100%; object-fit: cover; }
         .content-hidden { display: none !important; }
 
         /* BUTTONS */
-        .btn-gy { min-width: 250px; padding: 15px; background: none; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: inherit; font-weight: 900; text-transform: uppercase; margin: 10px 0; outline: none; transition: 0.3s; }
-        /* Без подсветки при нажатии для Save */
-        #btn-save:active { background: none; color: var(--gold); } 
+        .btn-gy { min-width: 250px; padding: 15px; background: none; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: inherit; font-weight: 900; text-transform: uppercase; margin: 10px 0; outline: none; }
+        
+        /* Save button - no highlight */
+        #btn-save:active { background: none; } 
         #btn-go-hall { display: none; background: var(--gold); color: #000; }
 
-        /* ID-CARD */
+        /* FINAL CARD IN HALL */
         .id-card-final { 
             width: 290px; padding: 25px; background: #F5F5DC; border: 4px solid #3E2723; 
             color: #000; border-radius: 12px; text-align: center; box-shadow: 0 20px 50px #000;
@@ -66,14 +68,13 @@
         
         <div class="identity-grid">
             <div class="box-gold">
-                <span id="id-label" style="font-size: 9px; font-weight: 900;">#ID</span>
+                <span id="id-label" style="font-size: 9px; font-weight: 900; color: var(--gold)">#ID</span>
                 <img id="id-flag" src="https://flagcdn.com/w20/gb.png" style="width:20px; height:14px; margin-top:5px; object-fit:contain;">
             </div>
-            
             <div class="box-gold" id="qr-reg"></div>
             
-            <div class="box-gold" id="frame-photo" onclick="document.getElementById('file-in').click()">
-                <input type="file" id="file-in" onchange="usePhoto(this)" style="display:none;">
+            <div class="box-gold" id="frame-photo" onclick="triggerPhoto()">
+                <input type="file" id="file-in" onchange="usePhoto(this)" style="display:none;" accept="image/*">
                 <img id="pp" class="content-hidden">
                 <span id="txt-p">PHOTO</span>
             </div>
@@ -105,9 +106,8 @@
         let currentID = `#GY-${Math.floor(100+Math.random()*900)}-${Math.floor(1000+Math.random()*9000)}`;
 
         function handleDoor() {
-            const door = document.getElementById('main-door');
-            door.style.transform = "scale(5)";
-            door.style.opacity = "0";
+            document.getElementById('main-door').style.transform = "scale(5)";
+            document.getElementById('main-door').style.opacity = "0";
             updateIDVisuals();
             setTimeout(() => portalTransition('block-welcome'), 1000);
         }
@@ -115,47 +115,49 @@
         function updateIDVisuals() {
             document.getElementById('id-label').innerText = currentID;
             document.getElementById('h-id').innerText = currentID;
-            
-            // Белый QR код для темного фона
             const qrReg = document.getElementById('qr-reg');
             qrReg.innerHTML = "";
-            new QRCode(qrReg, {
-                text: currentID, 
-                width: 70, height: 70, 
-                colorDark: "#FFFFFF", 
-                colorLight: "rgba(0,0,0,0)" 
-            });
-
+            new QRCode(qrReg, { text: currentID, width: 70, height: 70, colorDark: "#FFFFFF", colorLight: "rgba(0,0,0,0)" });
             const qrHall = document.getElementById('h-qr');
             qrHall.innerHTML = "";
             new QRCode(qrHall, { text: currentID, width: 80, height: 80, colorDark: "#000000" });
+        }
+
+        function resetChoice() {
+            // Сброс фото
+            document.getElementById('pp').classList.add('content-hidden');
+            document.getElementById('txt-p').classList.remove('content-hidden');
+            // Сброс аватара
+            document.getElementById('av').classList.add('content-hidden');
+            document.getElementById('txt-a').classList.remove('content-hidden');
+        }
+
+        function triggerPhoto() {
+            document.getElementById('file-in').value = ""; // Очистка для повторного выбора
+            document.getElementById('file-in').click();
         }
 
         function usePhoto(input) {
             if(input.files && input.files[0]) {
                 const r = new FileReader();
                 r.onload = (e) => {
-                    const imgP = document.getElementById('pp');
-                    imgP.src = e.target.result;
-                    imgP.classList.remove('content-hidden');
+                    resetChoice();
+                    document.getElementById('pp').src = e.target.result;
+                    document.getElementById('pp').classList.remove('content-hidden');
                     document.getElementById('txt-p').classList.add('content-hidden');
                     document.getElementById('h-photo').src = e.target.result;
-                    document.getElementById('av').classList.add('content-hidden');
-                    document.getElementById('txt-a').classList.remove('content-hidden');
                 };
                 r.readAsDataURL(input.files[0]);
             }
         }
 
         function useAvatar() {
+            resetChoice();
             const url = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${Math.random()}`;
-            const imgA = document.getElementById('av');
-            imgA.src = url;
-            imgA.classList.remove('content-hidden');
+            document.getElementById('av').src = url;
+            document.getElementById('av').classList.remove('content-hidden');
             document.getElementById('txt-a').classList.add('content-hidden');
             document.getElementById('h-photo').src = url;
-            document.getElementById('pp').classList.add('content-hidden');
-            document.getElementById('txt-p').classList.remove('content-hidden');
         }
 
         function saveProfile() {
