@@ -1,17 +1,15 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v5.4.5 | Absolute Zero Glow</title>
+    <title>GY-GY Club v5.4.6 | The Div-Button Fix</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
         :root { --gold: #d4af37; --neon: rgba(212, 175, 55, 0.8); }
         
-        /* Глобальное подавление системных подсветок */
         * { 
             -webkit-tap-highlight-color: transparent !important; 
             -webkit-focus-ring-color: transparent !important;
@@ -44,40 +42,38 @@
         .box-gold img { width: 100%; height: 100%; object-fit: cover; }
         .content-hidden { display: none !important; }
 
-        /* [ФИНАЛЬНЫЙ ФИКС КНОПКИ] */
-        .btn-gy { 
+        /* [АБСОЛЮТНЫЙ ФИКС] КНОПКА-DIV */
+        .btn-fake { 
             min-width: 250px; padding: 15px; 
-            background-color: transparent !important; 
-            border: 2px solid var(--gold) !important; 
-            color: var(--gold) !important; 
+            background: transparent !important; 
+            border: 2px solid var(--gold); 
+            color: var(--gold); 
             cursor: pointer; font-family: inherit; font-weight: 900; text-transform: uppercase; 
             margin: 10px 0; 
-            appearance: none !important;
-            -webkit-appearance: none !important;
-            box-shadow: none !important;
-            transition: none !important;
+            text-align: center;
             user-select: none;
-        }
-
-        /* Принудительное обнуление всех состояний */
-        .btn-gy:hover, .btn-gy:active, .btn-gy:focus, .btn-gy:focus-visible { 
-            background-color: transparent !important; 
-            color: var(--gold) !important; 
-            outline: 0 !important;
-            border-color: var(--gold) !important;
+            transition: none !important;
         }
         
-        /* Кнопка перехода в Холл (инвертированная, золотая) */
+        /* Никаких изменений при любых условиях */
+        .btn-fake:hover, .btn-fake:active, .btn-fake:focus { 
+            background: transparent !important; 
+            color: var(--gold) !important;
+        }
+
+        /* Только финальная кнопка перехода имеет фон */
         #btn-go-hall { 
             display: none; 
-            background-color: var(--gold) !important; 
+            background: var(--gold) !important; 
             color: #000 !important; 
         }
 
         .id-card-final { width: 290px; padding: 25px; background: #F5F5DC; border: 4px solid #3E2723; color: #000; border-radius: 12px; text-align: center; }
     </style>
 </head>
-<body oncontextmenu="return false;"> <button id="main-back" class="btn-back" onclick="goBack()">← BACK</button>
+<body oncontextmenu="return false;">
+
+    <button id="main-back" class="btn-back" onclick="goBack()">← BACK</button>
     <div class="ui-logo">GY-GY</div>
 
     <div id="block-entrance" class="block active" style="opacity: 1;">
@@ -87,7 +83,7 @@
     <div id="block-welcome" class="block">
         <div class="quote-text">"Every joke has a grain of whiskey"</div>
         <img src="horse_welcome.png" style="max-height: 30vh; margin-bottom: 20px;">
-        <button class="btn-gy" onclick="portalTransition('block-identity')">IDENTITY</button>
+        <div class="btn-fake" onclick="portalTransition('block-identity')">IDENTITY</div>
     </div>
 
     <div id="block-identity" class="block">
@@ -103,8 +99,10 @@
                 <img id="av" class="content-hidden"><span id="txt-a">AVATAR</span>
             </div>
         </div>
-        <button id="btn-save" class="btn-gy" onclick="saveProfile()">SAVE PROFILE</button>
-        <button id="btn-go-hall" class="btn-gy" onclick="portalTransition('block-final-card')">PROCEED TO THE HALL</button>
+        
+        <div id="btn-save" class="btn-fake" onclick="saveProfile()">SAVE PROFILE</div>
+        
+        <div id="btn-go-hall" class="btn-fake" onclick="portalTransition('block-final-card')">PROCEED TO THE HALL</div>
     </div>
 
     <div id="block-final-card" class="block">
@@ -121,13 +119,6 @@
     <script>
         let currentID = `#GY-${Math.floor(100+Math.random()*900)}-${Math.floor(1000+Math.random()*9000)}`;
         let historyStack = ['block-entrance'];
-
-        // Блокировка системных подсветок через JS события
-        document.querySelectorAll('.btn-gy').forEach(btn => {
-            btn.addEventListener('touchstart', (e) => {
-                // Предотвращаем стандартную "вспышку" тапа, но разрешаем клик
-            }, {passive: true});
-        });
 
         function handleDoor() {
             document.getElementById('main-door').style.transform = "scale(5)";
