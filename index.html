@@ -1,19 +1,16 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v5.4.3 | Zero Feedback UI</title>
+    <title>GY-GY Club v5.4.4 | Zero Glow Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
         :root { --gold: #d4af37; --neon: rgba(212, 175, 55, 0.8); }
-        * { 
-            -webkit-tap-highlight-color: transparent; /* Убирает подсветку тапа на iOS/Android */
-            box-sizing: border-box; 
-            margin: 0; padding: 0; 
-        }
+        * { -webkit-tap-highlight-color: transparent !important; box-sizing: border-box; margin: 0; padding: 0; }
         body { background: #000; color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; height: 100vh; }
 
         .ui-logo { position: fixed; top: 20px; width: 100%; text-align: center; font-size: 24px; letter-spacing: 5px; text-shadow: 0 0 15px var(--neon); z-index: 5000; font-weight: 900; pointer-events: none; }
@@ -37,27 +34,21 @@
         .box-gold img { width: 100%; height: 100%; object-fit: cover; }
         .content-hidden { display: none !important; }
 
-        /* [ФИКС] КНОПКА БЕЗ ПОДСВЕТКИ */
+        /* КНОПКА БЕЗ ПОДСВЕТКИ */
         .btn-gy { 
-            min-width: 250px; padding: 15px; 
-            background: none; border: 2px solid var(--gold); 
-            color: var(--gold); cursor: pointer; 
-            font-family: inherit; font-weight: 900; text-transform: uppercase; 
-            margin: 10px 0; 
-            outline: none !important; /* Убирает синюю рамку в Chrome/Safari */
-            transition: none !important; /* Убирает любые мигания */
-            user-select: none; /* Убирает выделение текста */
+            min-width: 250px; padding: 15px; background: transparent !important; 
+            border: 2px solid var(--gold); color: var(--gold) !important; 
+            cursor: pointer; font-family: inherit; font-weight: 900; text-transform: uppercase; 
+            margin: 10px 0; outline: none !important; box-shadow: none !important;
+            transition: none !important; user-select: none;
         }
 
-        /* Принудительный сброс состояний */
-        .btn-gy:active, .btn-gy:focus, .btn-gy:hover { 
-            background: none !important; 
-            color: var(--gold) !important; 
-            outline: none !important;
-            box-shadow: none !important;
+        .btn-gy:hover, .btn-gy:active, .btn-gy:focus { 
+            background: transparent !important; color: var(--gold) !important; 
+            box-shadow: none !important; outline: none !important; 
         }
         
-        /* Особое состояние для финальной кнопки, если нужно выделить её цветом после SAVE */
+        /* Финальная кнопка после SAVE всё же должна отличаться, чтобы юзер понял, что можно идти дальше */
         #btn-go-hall { display: none; background: var(--gold) !important; color: #000 !important; }
 
         .id-card-final { width: 290px; padding: 25px; background: #F5F5DC; border: 4px solid #3E2723; color: #000; border-radius: 12px; text-align: center; }
