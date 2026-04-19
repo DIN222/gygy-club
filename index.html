@@ -1,72 +1,55 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v5.5.0 | The Zero-Glow Monolith</title>
+    <title>GY-GY Club v5.5.2 | Zero Fill Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
         :root { --gold: #d4af37; --neon: rgba(212, 175, 55, 0.8); }
         
-        /* ПОЛНАЯ ЗАЧИСТКА */
         * { 
             -webkit-tap-highlight-color: transparent !important; 
-            -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
-            -webkit-focus-ring-color: transparent !important;
             outline: none !important;
             box-shadow: none !important;
-            -webkit-user-select: none !important;
             user-select: none !important;
+            -webkit-user-select: none !important;
             box-sizing: border-box; 
             margin: 0; padding: 0; 
         }
 
-        body { 
-            background: #000; color: var(--gold); 
-            font-family: 'Share Tech Mono', monospace; 
-            overflow: hidden; height: 100vh;
-            touch-action: none; /* Запрет системных реакций */
-        }
+        body { background: #000; color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; height: 100vh; touch-action: none; }
 
         .ui-logo { position: fixed; top: 20px; width: 100%; text-align: center; font-size: 24px; letter-spacing: 5px; text-shadow: 0 0 15px var(--neon); z-index: 5000; font-weight: 900; pointer-events: none; }
         
-        /* КНОПКА BACK (теперь P) */
-        #nav-back { 
-            position: fixed; top: 20px; left: 20px; z-index: 6000; 
-            border: 1px solid var(--gold); color: var(--gold); 
-            padding: 8px 12px; font-size: 10px; font-weight: 900;
-            display: none; text-transform: uppercase;
-        }
+        #nav-back { position: fixed; top: 20px; left: 20px; z-index: 6000; border: 1px solid var(--gold); color: var(--gold); padding: 8px 12px; font-size: 10px; font-weight: 900; display: none; text-transform: uppercase; }
 
         .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; opacity: 0; transition: opacity 0.5s; z-index: 10; }
         .block.active { display: flex; opacity: 1; }
 
         .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 18px; text-align: center; max-width: 85%; line-height: 1.4; color: var(--gold); margin-bottom: 25px; }
         
+        /* IDENTITY GRID */
         .identity-grid { display: flex; gap: 10px; margin-bottom: 30px; }
-        .box-gold { width: 80px; height: 80px; border: 2px solid var(--gold); display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.03); overflow: hidden; }
+        .box-gold { width: 80px; height: 80px; border: 2px solid var(--gold); display: flex; flex-direction: column; align-items: center; justify-content: center; background: transparent; overflow: hidden; }
         #frame-photo, #frame-avatar { background: #FFFFFF; }
         #frame-photo span, #frame-avatar span { color: #000; font-weight: 900; font-size: 10px; pointer-events: none; }
         .box-gold img { width: 100%; height: 100%; object-fit: cover; }
         .content-hidden { display: none !important; }
 
-        /* [DEAD ZONE STYLE] */
-        .dead-zone { 
-            min-width: 250px; padding: 15px; 
+        /* [THE SKELETON BUTTON] */
+        .btn-skeleton { 
+            min-width: 250px; height: 50px; 
             border: 2px solid var(--gold) !important; 
-            font-family: inherit; font-weight: 900; text-transform: uppercase; 
-            margin: 10px 0; text-align: center;
-            background: transparent !important;
+            display: flex; align-items: center; justify-content: center;
+            margin: 10px 0; 
+            background: transparent !important; /* ГАРАНТИЯ ОТСУТСТВИЯ ЗАЛИВКИ */
             color: var(--gold) !important;
-            cursor: default;
-        }
-
-        /* Кнопка после Save - просто меняем класс */
-        .dead-zone.hall-mode { 
-            background-color: var(--gold) !important; 
-            color: #000 !important; 
+            font-weight: 900; text-transform: uppercase;
+            -webkit-tap-highlight-color: transparent !important;
         }
 
         .id-card-final { width: 290px; padding: 25px; background: #F5F5DC; border: 4px solid #3E2723; color: #000; border-radius: 12px; text-align: center; }
@@ -74,17 +57,17 @@
 </head>
 <body oncontextmenu="return false;">
 
-    <p id="nav-back">← BACK</p>
+    <p id="nav-back" style="-webkit-tap-highlight-color: transparent;">← BACK</p>
     <div class="ui-logo">GY-GY</div>
 
     <div id="block-entrance" class="block active" style="opacity: 1;">
-        <img src="door_1.jpg" id="main-door" style="width: 280px; transition: 2s;">
+        <img src="door_1.jpg" id="main-door" style="width: 280px; transition: 2s; -webkit-tap-highlight-color: transparent;">
     </div>
 
     <div id="block-welcome" class="block">
         <div class="quote-text">"Every joke has a grain of whiskey"</div>
         <img src="horse_welcome.png" style="max-height: 30vh; margin-bottom: 20px;">
-        <p id="to-id" class="dead-zone">IDENTITY</p>
+        <div id="btn-to-id" class="btn-skeleton">IDENTITY</div>
     </div>
 
     <div id="block-identity" class="block">
@@ -101,7 +84,7 @@
             </div>
         </div>
         
-        <p id="action-btn" class="dead-zone">SAVE PROFILE</p>
+        <div id="action-btn" class="btn-skeleton">SAVE PROFILE</div>
     </div>
 
     <div id="block-final-card" class="block">
@@ -120,26 +103,25 @@
         let historyStack = ['block-entrance'];
         let isSaved = false;
 
-        // Используем pointerdown вместо click для мгновенной реакции без подсветки
-        const bind = (id, fn) => {
+        const touchHandler = (id, fn) => {
             const el = document.getElementById(id);
             el.addEventListener('pointerdown', (e) => {
                 e.preventDefault();
                 fn();
-            });
+            }, { passive: false });
         };
 
-        bind('main-door', handleDoor);
-        bind('nav-back', goBack);
-        bind('to-id', () => portalTransition('block-identity'));
-        bind('frame-photo', triggerPhoto);
-        bind('frame-avatar', useAvatar);
+        touchHandler('main-door', handleDoor);
+        touchHandler('nav-back', goBack);
+        touchHandler('btn-to-id', () => portalTransition('block-identity'));
+        touchHandler('frame-photo', triggerPhoto);
+        touchHandler('frame-avatar', useAvatar);
         
-        // Логика одной кнопки для двух состояний
-        document.getElementById('action-btn').addEventListener('pointerdown', (e) => {
-            e.preventDefault();
+        // Кнопка действия: только смена текста
+        touchHandler('action-btn', () => {
             if (!isSaved) {
-                saveProfile();
+                isSaved = true;
+                document.getElementById('action-btn').innerText = "PROCEED TO THE HALL";
             } else {
                 portalTransition('block-final-card');
             }
@@ -166,9 +148,7 @@
             new QRCode(qrHall, { text: currentID, width: 80, height: 80, colorDark: "#000000" });
         }
 
-        function triggerPhoto() {
-            document.getElementById('file-in').click();
-        }
+        function triggerPhoto() { document.getElementById('file-in').click(); }
 
         function usePhoto(input) {
             if(input.files && input.files[0]) {
@@ -198,13 +178,6 @@
             document.getElementById('txt-p').classList.remove('content-hidden');
             document.getElementById('av').classList.add('content-hidden');
             document.getElementById('txt-a').classList.remove('content-hidden');
-        }
-
-        function saveProfile() {
-            isSaved = true;
-            const btn = document.getElementById('action-btn');
-            btn.innerText = "PROCEED TO THE HALL";
-            btn.classList.add('hall-mode');
         }
 
         function portalTransition(id) {
