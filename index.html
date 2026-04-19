@@ -3,25 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v5.4.2 | Navigation & Clean UI</title>
+    <title>GY-GY Club v5.4.3 | Zero Feedback UI</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
         :root { --gold: #d4af37; --neon: rgba(212, 175, 55, 0.8); }
-        * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; margin: 0; padding: 0; }
+        * { 
+            -webkit-tap-highlight-color: transparent; /* Убирает подсветку тапа на iOS/Android */
+            box-sizing: border-box; 
+            margin: 0; padding: 0; 
+        }
         body { background: #000; color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; height: 100vh; }
 
-        /* UI ELEMENTS */
         .ui-logo { position: fixed; top: 20px; width: 100%; text-align: center; font-size: 24px; letter-spacing: 5px; text-shadow: 0 0 15px var(--neon); z-index: 5000; font-weight: 900; pointer-events: none; }
         
-        /* КНОПКА ВОЗВРАТА (BACK) */
         .btn-back { 
             position: fixed; top: 20px; left: 20px; z-index: 6000; 
             background: none; border: 1px solid var(--gold); color: var(--gold); 
             padding: 8px 12px; font-family: inherit; font-size: 10px; font-weight: 900;
-            cursor: pointer; display: none; /* Скрыта по умолчанию */
-            text-transform: uppercase;
+            cursor: pointer; display: none; text-transform: uppercase;
         }
 
         .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; opacity: 0; transition: opacity 0.5s; z-index: 10; }
@@ -29,27 +30,36 @@
 
         .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 18px; text-align: center; max-width: 85%; line-height: 1.4; color: var(--gold); margin-bottom: 25px; }
         
-        /* REGISTRATION GRID */
         .identity-grid { display: flex; gap: 10px; margin-bottom: 30px; }
-        .box-gold { 
-            width: 80px; height: 80px; 
-            border: 2px solid var(--gold); 
-            display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            background: rgba(255, 255, 255, 0.03); overflow: hidden;
-        }
+        .box-gold { width: 80px; height: 80px; border: 2px solid var(--gold); display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.03); overflow: hidden; }
         #frame-photo, #frame-avatar { background: #FFFFFF; cursor: pointer; }
         #frame-photo span, #frame-avatar span { color: #000; font-weight: 900; font-size: 10px; pointer-events: none; }
         .box-gold img { width: 100%; height: 100%; object-fit: cover; }
         .content-hidden { display: none !important; }
 
-        /* BUTTONS - CLEAN (NO HIGHLIGHT) */
-        .btn-gy { min-width: 250px; padding: 15px; background: none; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; font-family: inherit; font-weight: 900; text-transform: uppercase; margin: 10px 0; outline: none; transition: none; }
-        .btn-gy:active { background: none; color: var(--gold); } /* Полное отсутствие подсветки */
-        
-        #btn-go-hall { display: none; background: var(--gold); color: #000; }
-        #btn-go-hall:active { background: var(--gold); }
+        /* [ФИКС] КНОПКА БЕЗ ПОДСВЕТКИ */
+        .btn-gy { 
+            min-width: 250px; padding: 15px; 
+            background: none; border: 2px solid var(--gold); 
+            color: var(--gold); cursor: pointer; 
+            font-family: inherit; font-weight: 900; text-transform: uppercase; 
+            margin: 10px 0; 
+            outline: none !important; /* Убирает синюю рамку в Chrome/Safari */
+            transition: none !important; /* Убирает любые мигания */
+            user-select: none; /* Убирает выделение текста */
+        }
 
-        /* ID-CARD */
+        /* Принудительный сброс состояний */
+        .btn-gy:active, .btn-gy:focus, .btn-gy:hover { 
+            background: none !important; 
+            color: var(--gold) !important; 
+            outline: none !important;
+            box-shadow: none !important;
+        }
+        
+        /* Особое состояние для финальной кнопки, если нужно выделить её цветом после SAVE */
+        #btn-go-hall { display: none; background: var(--gold) !important; color: #000 !important; }
+
         .id-card-final { width: 290px; padding: 25px; background: #F5F5DC; border: 4px solid #3E2723; color: #000; border-radius: 12px; text-align: center; }
     </style>
 </head>
@@ -167,15 +177,14 @@
             next.style.display = "flex";
             setTimeout(() => next.classList.add('active'), 50);
 
-            // Логика кнопки BACK
             historyStack.push(id);
             document.getElementById('main-back').style.display = (id === 'block-entrance') ? 'none' : 'block';
         }
 
         function goBack() {
             if (historyStack.length > 1) {
-                historyStack.pop(); // Удаляем текущий
-                const prevId = historyStack.pop(); // Берем предыдущий
+                historyStack.pop();
+                const prevId = historyStack.pop();
                 portalTransition(prevId);
             }
         }
