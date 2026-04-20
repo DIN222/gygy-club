@@ -3,59 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v4.6.5 | TOTAL MONOLITH</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&family=Inter:wght@900&display=swap" rel="stylesheet">
+    <title>GY-GY Club v4.5.5 | THE PERFECT BLEND</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
-        :root { --gold: #d4af37; --door-wood: #3E2723; --black: #000; --paper: #F5F5DC; }
+        :root { --gold: #d4af37; --door-wood: #3E2723; --paper: #F5F5DC; }
         
-        * { -webkit-tap-highlight-color: transparent !important; box-sizing: border-box; outline: none !important; -webkit-user-select: none; user-select: none; }
+        * { -webkit-tap-highlight-color: transparent !important; -webkit-touch-callout: none !important; -webkit-user-select: none !important; user-select: none !important; outline: none !important; box-sizing: border-box; }
         
-        html, body { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; position: fixed; margin: 0; }
-        
-        /* ЯЗЫКОВАЯ ПАНЕЛЬ */
-        .lang-gateway { position: fixed; top: 15px; left: 15px; z-index: 10000; width: 170px; }
-        .btn-main-lang { width: 100%; padding: 10px; background: #000; border: 1.5px solid var(--gold); color: var(--gold); font-weight: 900; cursor: pointer; display: flex; align-items: center; gap: 8px; font-family: inherit; }
-        .lang-hint { font-size: 9px; margin-top: 5px; text-align: center; color: var(--gold); letter-spacing: 1px; }
-        .anime-arrow { display: block; font-size: 18px; animation: bounce 1.2s infinite; }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(5px); opacity: 0.5; } }
-        
-        .lang-dropdown { display: none; flex-direction: column; background: #000; border: 1.5px solid var(--gold); position: absolute; width: 100%; max-height: 60vh; overflow-y: auto; z-index: 10001; }
-        .lang-dropdown.open { display: flex; }
-        .btn-sub-lang { background: none; border: none; border-bottom: 1px solid rgba(212, 175, 55, 0.1); color: var(--gold); padding: 12px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 11px; font-family: inherit; }
-        .flag-icon { width: 20px; border: 0.5px solid var(--gold); }
+        html, body { width: 100%; height: 100%; background: #000; color: var(--gold); font-family: 'Share Tech Mono', monospace; overflow: hidden; position: fixed; margin:0; }
 
-        .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000; font-size: 24px; letter-spacing: 5px; font-weight: bold; color: var(--gold); }
+        /* LANGUAGE GATEWAY (Custom from 4.5.4) */
+        .lang-gateway { position: fixed; top: 15px; left: 15px; z-index: 1000001; width: 160px; pointer-events: auto; }
+        .btn-main-lang { width: 100%; padding: 10px; background: rgba(0,0,0,0.9); border: 1.5px solid var(--gold); color: var(--gold); cursor: pointer; display: flex; align-items: center; gap: 8px; font-family: inherit; font-weight: 900; }
+        .lang-dropdown { position: absolute; top: 100%; left: 0; display: none; flex-direction: column; background: #000; border: 1.5px solid var(--gold); width: 190px; max-height: 70vh; overflow-y: auto; box-shadow: 0 0 20px #000; }
+        .lang-dropdown.open { display: flex; }
+        .btn-sub-lang { background: none; border: none; border-bottom: 1px solid rgba(212, 175, 55, 0.1); color: var(--gold); padding: 12px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 11px; font-family: inherit; text-align: left; }
+        .flag-icon { width: 20px; height: 13px; object-fit: cover; border: 0.5px solid var(--gold); }
+
+        .ui-header-right { position: fixed; top: 18px; right: 25px; z-index: 1000000; font-size: 24px; letter-spacing: 5px; font-weight: bold; color: var(--gold); pointer-events: none; }
 
         .block { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #000; z-index: 10; opacity: 0; transition: opacity 0.8s ease; pointer-events: none; }
         .block.active { display: flex !important; opacity: 1; pointer-events: auto; }
 
-        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 26px; text-align: center; max-width: 85%; line-height: 1.2; margin-bottom: 25px; }
+        .quote-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 26px; color: var(--gold); text-align: center; max-width: 85%; margin-bottom: 25px; }
 
-        .btn-gy { min-width: 275px; padding: 14px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; text-transform: uppercase; font-weight: 900; margin: 8px 0; font-family: inherit; transition: 0.3s; }
+        .btn-gy { min-width: 270px; padding: 14px; background: transparent; border: 2px solid var(--gold); color: var(--gold); cursor: pointer; text-transform: uppercase; font-weight: 900; margin: 8px 0; font-family: 'Share Tech Mono'; transition: 0.3s; }
         .btn-sleep { opacity: 0.15 !important; pointer-events: none !important; }
 
-        .gy-back-btn { min-width: 275px; padding: 10px; border: 1px solid var(--gold); font-size: 10px; background: rgba(0,0,0,0.6); color: var(--gold); cursor: pointer; margin-top: 15px; text-transform: uppercase; font-family: inherit; letter-spacing: 1px; }
+        /* ID BLOCKS (Strict Etalon 4.4.64) */
+        .box-final { width: 85px; height: 85px; border: 2px solid var(--gold); background: transparent; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
+        .box-final img { width: 100%; height: 100%; object-fit: cover; }
 
+        /* HALL & BAR UI */
         .id-card-hall { width: 230px; padding: 20px; border: 2px solid var(--gold); background: var(--paper); border-radius: 12px; display: flex; flex-direction: column; align-items: center; color: #000; z-index: 30; }
-        .box-final { width: 85px; height: 85px; border: 2px solid #000; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
+        .hall-box { width: 85px; height: 85px; border: 2px solid #000; background: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         
-        #main-door { width: 280px; cursor: pointer; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s; }
-        .rtl { direction: rtl; }
+        #hall-bg { position: absolute; inset: 0; background: url('hall_bg_jpg.jpg') center/cover; z-index: 15; }
+        .rtl { direction: rtl; text-align: right; }
+        
+        #main-door { width: 280px; cursor: pointer; transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 2s; z-index: 9999; }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
     <div class="lang-gateway">
-        <button class="btn-main-lang" id="main-lang-trigger" onclick="document.getElementById('lang-list').classList.toggle('open')">
+        <button class="btn-main-lang" onclick="toggleLangMenu()">
             <img id="cur-flag" src="https://flagcdn.com/w20/gb.png" class="flag-icon">
             <span id="cur-name">ENGLISH</span>
         </button>
-        <div class="lang-hint">
-            <span data-key="lang_hint">SELECT LANGUAGE</span>
-            <b class="anime-arrow">↓</b>
-        </div>
         <div id="lang-list" class="lang-dropdown">
             <button class="btn-sub-lang" onclick="pickL('en','gb','ENGLISH')"><img src="https://flagcdn.com/w20/gb.png" class="flag-icon"> ENGLISH</button>
             <button class="btn-sub-lang" onclick="pickL('ru','ru','РУССКИЙ')"><img src="https://flagcdn.com/w20/ru.png" class="flag-icon"> РУССКИЙ</button>
@@ -71,157 +68,177 @@
             <button class="btn-sub-lang" onclick="pickL('br','br','PORTUGUÊS')"><img src="https://flagcdn.com/w20/br.png" class="flag-icon"> PORTUGUÊS</button>
         </div>
     </div>
+
     <div class="ui-header-right">GY-GY</div>
 
     <audio id="snd-door"><source src="door_open.mp3" type="audio/mpeg"></audio>
     <audio id="snd-ambient" loop><source src="bar_ambient.mp3" type="audio/mpeg"></audio>
+    <audio id="snd-khe"><source src="charlie_bar_fx.mp3" type="audio/mpeg"></audio>
+    <audio id="snd-pour"><source src="pour_whisky.mp3" type="audio/mpeg"></audio>
 
     <div id="block-entrance" class="block active" style="opacity: 1; display: flex;">
         <img src="door_1.jpg" id="main-door" onclick="handleDoor()">
     </div>
 
     <div id="block-welcome" class="block">
-        <div class="quote-text" data-key="q_whiskey">«В каждой шутке есть доля виски»</div>
-        <img src="horse_welcome.png" style="max-height: 40vh; margin-bottom: 10px;">
-        <div style="font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 900; letter-spacing: 8px; margin-bottom: 15px; font-style: italic;">WELCOME</div>
-        <button id="btn-w-hall" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')" data-key="btn_to_hall">ПРОХОДИТЕ В ХОЛЛ</button>
-        <button class="btn-gy" onclick="portalTransition('block-identity')" data-key="btn_get_id">ПОЛУЧИТЬ ID</button>
+        <div class="quote-text" data-key="q_whiskey">«Every joke has a grain of whiskey»</div>
+        <img src="horse_welcome.png" style="max-height:45vh; margin-bottom:20px;">
+        <div style="font-size:38px; font-weight:900; letter-spacing:10px; margin-bottom:20px;">WELCOME</div>
+        <button id="btn-w-hall" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')" data-key="btn_to_hall">PROCEED TO HALL</button>
+        <button class="btn-gy" onclick="portalTransition('block-identity')" data-key="btn_get_id">GET ID TOKEN</button>
     </div>
 
     <div id="block-identity" class="block">
-        <div class="quote-text" data-key="q_champ">«Шампанского много не бывает»</div>
-        <div style="display:flex; gap:10px; margin-bottom:25px;">
-            <div class="box-final" style="border-color:var(--gold); color:var(--gold); font-size:11px;" id="id-label">#ID</div>
-            <div class="box-final" id="qr-box-reg" style="border-color:var(--gold);"></div>
-            <div class="box-final" style="border-color:var(--gold); cursor:pointer;" onclick="document.getElementById('file-input').click()">
-                <input type="file" id="file-input" onchange="preview(this)" style="display:none;">
-                <img id="pp" style="display:none; width:100%; height:100%; object-fit:cover;">
-                <span id="txt-photo" style="font-size:10px; font-weight:900;" data-key="label_photo">ФОТО</span>
+        <div class="quote-text" data-key="q_champ">«No such thing as too much champagne»</div>
+        <div style="display:flex; gap:12px; margin-bottom:30px;">
+            <div class="box-final" id="id-label" style="font-size:10px; font-weight:900;">#ID</div>
+            <div class="box-final" id="qr-reg"></div>
+            <div class="box-final" onclick="document.getElementById('f-in').click()" style="cursor:pointer;">
+                <input type="file" id="f-in" onchange="pv(this)" style="display:none;">
+                <img id="img-p" style="display:none;">
+                <span id="t-p" style="font-size:10px;" data-key="label_photo">PHOTO</span>
             </div>
-            <div class="box-final" style="border-color:var(--gold); cursor:pointer;" onclick="generateAvatar()">
-                <img id="avatar-img" style="display:none; width:100%; height:100%; object-fit:cover;">
-                <span id="txt-avatar" style="font-size:10px; font-weight:900; text-align:center;" data-key="label_avatar">GEN<br>AVATAR</span>
+            <div class="box-final" onclick="genAv()" style="cursor:pointer;">
+                <img id="img-a" style="display:none;">
+                <span id="t-a" style="font-size:10px;" data-key="label_avatar">AVATAR</span>
             </div>
         </div>
-        <button id="btn-save" class="btn-gy" onclick="swapButtons('btn-save', 'btn-pass')" data-key="btn_save">СОХРАНИТЬ</button>
-        <button id="btn-pass" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')" data-key="btn_to_hall">ПРОЙТИ В ХОЛЛ</button>
-        <button class="gy-back-btn" onclick="portalTransition('block-welcome')" data-key="btn_back_welcome">← НАЗАД</button>
+        <button id="btn-save" class="btn-gy" onclick="swapB('btn-save', 'btn-pass')" data-key="btn_save">SAVE PROFILE</button>
+        <button id="btn-pass" class="btn-gy btn-sleep" onclick="portalTransition('block-hall')" data-key="btn_to_hall">PROCEED TO HALL</button>
     </div>
 
     <div id="block-hall" class="block">
-        <div style="position:absolute; inset:0; background:url('hall_bg_jpg.jpg') center/cover; opacity:0.6; z-index:15;"></div>
-        <div style="position:relative; z-index:25; font-size:32px; font-weight:900; font-family:'Playfair Display'; margin-bottom:20px; color:var(--door-wood);">«Всё будет GY-GY»</div>
+        <div id="hall-bg"></div>
+        <div style="position:absolute; top: 8%; width: 100%; text-align: center; color: #3E2723; font-size: 38px; font-weight: 900; font-family: 'Playfair Display'; z-index: 25;">«GY-GY HALL»</div>
         <div class="id-card-hall">
-            <div id="h-id" style="font-weight:900; margin-bottom:10px; font-size:14px;">#ID</div>
-            <div style="display:flex; gap:10px; margin-bottom:12px;">
-                <div class="box-final"><img id="h-photo" style="width:100%; height:100%; object-fit:cover;"></div>
-                <div class="box-final" id="h-qr"></div>
+            <div id="h-id" style="font-weight:900; margin-bottom:12px; font-size:14px;">#ID-TOKEN</div>
+            <div style="display:flex; gap:12px; margin-bottom:18px;">
+                <div class="hall-box"><img id="h-photo" style="width:100%; height:100%; object-fit:cover;"></div>
+                <div class="hall-box" id="h-qr"></div>
             </div>
-            <button id="btn-confirm" class="btn-gy" style="min-width:100%; color:#000; border-color:#000;" onclick="swapButtons('btn-confirm', 'btn-enter-bar')" data-key="btn_confirm">ПОДТВЕРДИТЬ</button>
-            <button id="btn-enter-bar" class="btn-gy btn-sleep" style="min-width:100%; color:#000; border-color:#000;" onclick="portalTransition('block-bar')" data-key="btn_enter">ВХОД В БАР</button>
+            <button id="btn-confirm" class="btn-gy" style="min-width:100%; color:#000; border-color:#000;" onclick="swapB('btn-confirm', 'btn-bar')" data-key="btn_confirm">CONFIRM</button>
+            <button id="btn-bar" class="btn-gy btn-sleep" style="min-width:100%; color:#000; border-color:#000;" onclick="portalTransition('block-bar')" data-key="btn_enter">ENTER BAR</button>
         </div>
-        <button class="gy-back-btn" style="z-index:40; background:#000;" onclick="portalTransition('block-welcome')" data-key="btn_back_welcome">← НАЗАД К ПРИВЕТСТВИЮ</button>
     </div>
 
     <div id="block-bar" class="block" style="justify-content: flex-end;">
-        <div style="position:absolute; top:8vh; z-index:100;" class="quote-text">«Игого, сейчас начнем!»</div>
-        <div style="position: absolute; bottom: 5vh; z-index: 1000; display:flex; flex-direction:column; align-items:center;">
-            <div style="display:flex; gap:10px; margin-bottom:10px;">
-                <button class="btn-gy" style="min-width:140px;" data-key="btn_tables">СТОЛИКИ</button>
-                <button class="btn-gy" style="min-width:140px;" data-key="btn_ai">AI ROOM</button>
-            </div>
-            <button class="btn-gy" style="min-width:290px;" onclick="portalTransition('block-hall')" data-key="btn_back_hall">← ВЕРНУТЬСЯ В ХОЛЛ</button>
-        </div>
-        <img src="horse_bar.png" style="height: 75vh; width: auto; object-fit: contain; margin-bottom: -10px;">
+        <div class="quote-text" style="position:absolute; top:8vh; z-index:100;">«GY-GY BAR v4.5.5»</div>
+        <img src="horse_bar.png" style="height: 80vh; width: auto; object-fit: contain; margin-bottom: -10px;">
+        <button class="btn-gy" style="position:absolute; bottom: 5vh;" onclick="portalTransition('block-hall')" data-key="btn_back">BACK TO HALL</button>
     </div>
 
 <script>
     const langData = {
-        en: { lang_hint: "SELECT LANGUAGE", q_whiskey: "«Every joke has a grain of whiskey»", q_champ: "«No such thing as too much champagne»", btn_to_hall: "PROCEED TO HALL", btn_get_id: "GET ID TOKEN", btn_save: "SAVE PROFILE", btn_confirm: "CONFIRM", btn_enter: "ENTER BAR", label_photo: "PHOTO", label_avatar: "AVATAR", btn_back_welcome: "← BACK", btn_back_hall: "← BACK TO HALL", btn_tables: "TABLES", btn_ai: "AI ROOM" },
-        ru: { lang_hint: "ВЫБЕРИТЕ ЯЗЫК", q_whiskey: "«В каждой шутке есть доля виски»", q_champ: "«Шампанского много не бывает»", btn_to_hall: "ПРОЙТИ В ХОЛЛ", btn_get_id: "ПОЛУЧИТЬ ID", btn_save: "СОХРАНИТЬ", btn_confirm: "ПОДТВЕРДИТЬ", btn_enter: "ВХОД В БАР", label_photo: "ФОТО", label_avatar: "АВАТАР", btn_back_welcome: "← НАЗАД", btn_back_hall: "← ВЕРНУТЬСЯ В ХОЛЛ", btn_tables: "СТОЛИКИ", btn_ai: "AI ROOM" },
-        ua: { lang_hint: "ОБЕРІТЬ МОВУ", q_whiskey: "«У кожному жарті є частка віскі»", q_champ: "«Шампанського багато не буває»", btn_to_hall: "ПРОЙТИ ДО ХОЛУ", btn_get_id: "ОТРИМАТИ ID", btn_save: "ЗБЕРЕГТИ", btn_confirm: "ПІДТВЕРДИТЬ", btn_enter: "ВХІД ДО БАРУ", label_photo: "ФОТО", label_avatar: "АВАТАР", btn_back_welcome: "← НАЗАД", btn_back_hall: "← ПОВЕРНУТИСЯ ДО ХОЛУ", btn_tables: "СТОЛИКИ", btn_ai: "AI ROOM" },
-        pl: { lang_hint: "WYBIERZ JĘZYK", q_whiskey: "«W każdym żarcie jest ziarno whisky»", q_champ: "«Szampana nigdy za wiele»", btn_to_hall: "DO HOLU", btn_get_id: "POBIERZ ID", btn_save: "ZAPISZ", btn_confirm: "POTWIERDŹ", btn_enter: "WEJDŹ DO BARU", label_photo: "FOTO", label_avatar: "AWATAR", btn_back_welcome: "← POWRÓT", btn_back_hall: "← DO HOLU", btn_tables: "STOLIKI", btn_ai: "AI ROOM" },
-        de: { lang_hint: "SPRACHE WÄHLEN", q_whiskey: "«Jeder Witz hat einen Kern Whiskey»", q_champ: "«Champagner geht immer»", btn_to_hall: "ZUR HALLE", btn_get_id: "ID ERHALTEN", btn_save: "SPEICHERN", btn_confirm: "BESTÄTIGEN", btn_enter: "ZUR BAR", label_photo: "FOTO", label_avatar: "AVATAR", btn_back_welcome: "← ZURÜCK", btn_back_hall: "← ZUR HALLE", btn_tables: "TISCHE", btn_ai: "AI RAUM" },
-        fr: { lang_hint: "CHOISIR LA LANGUE", q_whiskey: "«Chaque blague a un fond de whiskey»", q_champ: "«Jamais trop de champagne»", btn_to_hall: "VERS LE HALL", btn_get_id: "OBTENIR ID", btn_save: "ENREGISTRER", btn_confirm: "CONFIRMER", btn_enter: "ENTRER AU BAR", label_photo: "PHOTO", label_avatar: "AVATAR", btn_back_welcome: "← RETOUR", btn_back_hall: "← VERS LE HALL", btn_tables: "TABLES", btn_ai: "SALLE AI" },
-        it: { lang_hint: "SCEGLI LINGUA", q_whiskey: "«Ogni scherzo ha un fondo di whiskey»", q_champ: "«Mai troppo champagne»", btn_to_hall: "AL SALONE", btn_get_id: "OTTIENI ID", btn_save: "SALVA", btn_confirm: "CONFERMA", btn_enter: "ENTRA AL BAR", label_photo: "FOTO", label_avatar: "AVATAR", btn_back_welcome: "← INDIETRO", btn_back_hall: "← AL SALONE", btn_tables: "TAVOLI", btn_ai: "SALA AI" },
-        es: { lang_hint: "ELEGIR IDIOMA", q_whiskey: "«Cada broma tiene un poco de whiskey»", q_champ: "«Nunca es suficiente champán»", btn_to_hall: "AL VESTÍBULO", btn_get_id: "OBTENER ID", btn_save: "GUARDAR", btn_confirm: "CONFIRMAR", btn_enter: "ENTRAR AL BAR", label_photo: "FOTO", label_avatar: "AVATAR", btn_back_welcome: "← VOLVER", btn_back_hall: "← AL VESTÍBULO", btn_tables: "MESAS", btn_ai: "SALA AI" },
-        cn: { lang_hint: "选择语言", q_whiskey: "«每个笑话都有一点威士忌»", q_champ: "«香槟永远不嫌多»", btn_to_hall: "前往大厅", btn_get_id: "获取ID", btn_save: "保存", btn_confirm: "确认", btn_enter: "进入酒吧", label_photo: "照片", label_avatar: "头像", btn_back_welcome: "← 返回", btn_back_hall: "← 返回大厅", btn_tables: "桌子", btn_ai: "AI室" },
-        jp: { lang_hint: "言語を選択", q_whiskey: "«すべてのジョークにはウィスキーが含まれている»", q_champ: "«シャンパンはいくらあっても足りない»", btn_to_hall: "ホールへ", btn_get_id: "IDを取得", btn_save: "保存", btn_confirm: "確認", btn_enter: "バーに入る", label_photo: "写真", label_avatar: "アバター", btn_back_welcome: "← 戻る", btn_back_hall: "← ホールに戻る", btn_tables: "テーブル", btn_ai: "AIルーム" },
-        ae: { lang_hint: "اختر اللغة", q_whiskey: "«كل نكتة فيها ذرة من الويسكي»", q_champ: "«الشمبانيا لا تكفي أبدا»", btn_to_hall: "المضي قدما إلى القاعة", btn_get_id: "احصل على معرف", btn_save: "حفظ", btn_confirm: "تأكيد", btn_enter: "ادخل إلى البار", label_photo: "صورة", label_avatar: "الصورة الرمزية", btn_back_welcome: "← العودة", btn_back_hall: "← القاعة", btn_tables: "طاولات", btn_ai: "غرفة الذкاء الاصطناعي" },
-        br: { lang_hint: "ESCOLHER IDIOMA", q_whiskey: "«Toda piada tem um fundo de uísque»", q_champ: "«Champanhe nunca é demais»", btn_to_hall: "IR PARA O HALL", btn_get_id: "OBTER ID", btn_save: "SALVAR", btn_confirm: "CONFIRMAR", btn_enter: "ENTRAR NO BAR", label_photo: "FOTO", label_avatar: "AVATAR", btn_back_welcome: "← VOLTAR", btn_back_hall: "← PARA O HALL", btn_tables: "MESAS", btn_ai: "SALA AI" }
+        en: { q_whiskey: "«Every joke has a grain of whiskey»", q_champ: "«No such thing as too much champagne»", btn_to_hall: "PROCEED TO HALL", btn_get_id: "GET ID TOKEN", btn_save: "SAVE PROFILE", btn_confirm: "CONFIRM", btn_enter: "ENTER BAR", label_photo: "PHOTO", label_avatar: "AVATAR", btn_back: "BACK TO HALL" },
+        ru: { q_whiskey: "«В каждой шутке есть доля виски»", q_champ: "«Шампанского много не бывает»", btn_to_hall: "ПРОЙТИ В ХОЛЛ", btn_get_id: "ПОЛУЧИТЬ ID", btn_save: "СОХРАНИТЬ", btn_confirm: "ПОДТВЕРДИТЬ", btn_enter: "ВХОД В БАР", label_photo: "ФОТО", label_avatar: "АВАТАР", btn_back: "В ХОЛЛ" },
+        ua: { q_whiskey: "«У кожному жарті є доля віскі»", q_champ: "«Шампанського багато не буває»", btn_to_hall: "ПРОЙТИ ДО ХОЛУ", btn_get_id: "ОТРИМАТИ ID", btn_save: "ЗБЕРЕГТИ", btn_confirm: "ПІДТВЕРДИТИ", btn_enter: "ВХІД У БАР", label_photo: "ФОТО", label_avatar: "АВАТАР", btn_back: "У ХОЛ" },
+        pl: { q_whiskey: "«W każdym żarcie jest kropla whisky»", q_champ: "«Szampana nigdy za wiele»", btn_to_hall: "WEJDŹ DO HOLU", btn_get_id: "POBIERZ ID", btn_save: "ZAPISZ", btn_confirm: "POTWIERDŹ", btn_enter: "WEJDŹ DO BARU", label_photo: "ZDJĘCIE", label_avatar: "AWATAR", btn_back: "DO HOLU" },
+        de: { q_whiskey: "«Jeder Witz hat ein Körnchen Whiskey»", q_champ: "«Es gibt nicht zu viel Champagner»", btn_to_hall: "WEITER ZUR HALLE", btn_get_id: "ID ERHALTEN", btn_save: "SPEICHERN", btn_confirm: "BESTÄTIGEN", btn_enter: "BAR BETRETEN", label_photo: "FOTO", label_avatar: "AVATAR", btn_back: "ZUR HALLE" },
+        fr: { q_whiskey: "«Chaque blague contient un grain de whisky»", q_champ: "«Le champagne n'est jamais de trop»", btn_to_hall: "ACCÉDER AU HALL", btn_get_id: "OBTENIR ID", btn_save: "ENREGISTRER", btn_confirm: "CONFIRMER", btn_enter: "ENTRER AU BAR", label_photo: "PHOTO", label_avatar: "AVATAR", btn_back: "AU HALL" },
+        it: { q_whiskey: "«Ogni scherzo ha un pizzico di whiskey»", q_champ: "«Lo champagne non è mai troppo»", btn_to_hall: "VAI ALL'ATRIO", btn_get_id: "OTTIENI ID", btn_save: "SALVA", btn_confirm: "CONFERMA", btn_enter: "ENTRA NEL BAR", label_photo: "FOTO", label_avatar: "AVATAR", btn_back: "ALL'ATRIO" },
+        es: { q_whiskey: "«Cada broma tiene un toque de whiskey»", q_champ: "«Nunca hay demasiado champán»", btn_to_hall: "IR AL VESTÍBULO", btn_get_id: "OBTENER ID", btn_save: "GUARDAR", btn_confirm: "CONFIRMAR", btn_enter: "ENTRAR AL BAR", label_photo: "FOTO", label_avatar: "AVATAR", btn_back: "AL VESTÍBULO" },
+        cn: { q_whiskey: "“每个笑话都有一粒威士忌”", q_champ: "“香槟永远不嫌多”", btn_to_hall: "前往大厅", btn_get_id: "获取身份卡", btn_save: "保存", btn_confirm: "确认", btn_enter: "进入酒吧", label_photo: "照片", label_avatar: "头像", btn_back: "回到大厅" },
+        jp: { q_whiskey: "「ジョークには必ずウイスキーが隠れている」", q_champ: "「シャンパンに多すぎるということはない」", btn_to_hall: "ホールへ進む", btn_get_id: "IDを取得", btn_save: "保存", btn_confirm: "確認", btn_enter: "バーに入る", label_photo: "写真", label_avatar: "アバター", btn_back: "ホールに戻る" },
+        ae: { q_whiskey: "«كل نكتة فيها قطرة من الويسكي»", q_champ: "«لا يوجد شيء اسمه الكثير من الشمبانيا»", btn_to_hall: "اذهب إلى القاعة", btn_get_id: "احصل على الهوية", btn_save: "حفظ", btn_confirm: "تأكيد", btn_enter: "ادخل الحانة", label_photo: "صورة", label_avatar: "أفاتار", btn_back: "العودة للقاعة" },
+        br: { q_whiskey: "«Toda piada tem um toque de uísque»", q_champ: "«Champanhe nunca é demais»", btn_to_hall: "IR PARA O HALL", btn_get_id: "OBTER ID", btn_save: "SALVAR", btn_confirm: "CONFIRMAR", btn_enter: "ENTRAR NO BAR", label_photo: "FOTO", label_avatar: "AVATAR", btn_back: "VOLTAR AO HALL" }
     };
 
     let currentID = localStorage.getItem('gy_trace') || "";
 
-    function pickL(l, f, n) {
-        document.getElementById('cur-flag').src = `https://flagcdn.com/w20/${f}.png`;
-        document.getElementById('cur-name').innerText = n;
-        document.body.classList.toggle('rtl', l === 'ae');
+    function toggleLangMenu() { document.getElementById('lang-list').classList.toggle('open'); }
+
+    function pickL(lang, flag, name) {
+        document.getElementById('cur-flag').src = `https://flagcdn.com/w20/${flag}.png`;
+        document.getElementById('cur-name').innerText = name;
+        applyLang(lang);
+        toggleLangMenu();
+    }
+
+    function applyLang(lang) {
+        document.body.classList.toggle('rtl', lang === 'ae');
         document.querySelectorAll('[data-key]').forEach(el => {
-            const k = el.getAttribute('data-key');
-            el.innerText = langData[l] ? (langData[l][k] || langData['en'][k]) : (langData['en'][k]);
+            const key = el.getAttribute('data-key');
+            el.innerText = (langData[lang] && langData[lang][key]) ? langData[lang][key] : langData['en'][key];
         });
-        document.getElementById('lang-list').classList.remove('open');
     }
 
     function handleDoor() {
         const snd = document.getElementById('snd-door');
         if(snd) snd.play();
-        document.getElementById('main-door').style.transform = "scale(5)"; 
-        document.getElementById('main-door').style.opacity = "0";
-        if (!currentID) currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
+        const d = document.getElementById('main-door');
+        d.style.transform = "scale(5)"; d.style.opacity = "0";
+        if(!currentID) currentID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
         localStorage.setItem('gy_trace', currentID);
-        updateIDUI(currentID);
+        updateUI();
         setTimeout(() => { 
             portalTransition('block-welcome'); 
             const amb = document.getElementById('snd-ambient');
-            if(amb) amb.play();
+            amb.volume = 0; amb.play(); fadeAudio(amb, 1, 2000);
         }, 1800);
     }
 
-    function updateIDUI(id) {
-        document.getElementById('id-label').innerText = id;
-        document.getElementById('h-id').innerText = id;
-        document.getElementById('qr-box-reg').innerHTML = "";
-        new QRCode(document.getElementById("qr-box-reg"), { text: id, width: 85, height: 85 });
-        document.getElementById('h-qr').innerHTML = "";
-        new QRCode(document.getElementById("h-qr"), { text: id, width: 85, height: 85 });
+    function updateUI() {
+        document.getElementById('id-label').innerText = currentID;
+        document.getElementById('h-id').innerText = currentID;
+        const q1 = document.getElementById('qr-reg'), q2 = document.getElementById('h-qr');
+        q1.innerHTML = ""; q2.innerHTML = "";
+        new QRCode(q1, {text: currentID, width: 85, height: 85});
+        new QRCode(q2, {text: currentID, width: 85, height: 85});
     }
 
-    function portalTransition(nextId) {
+    function portalTransition(id) {
         const cur = document.querySelector('.block.active');
-        if(cur) { cur.style.opacity = "0"; setTimeout(() => { cur.classList.remove('active'); cur.style.display="none"; }, 600); }
+        if(cur) { cur.style.opacity = "0"; setTimeout(() => { cur.classList.remove('active'); cur.style.display = "none"; }, 750); }
         setTimeout(() => {
-            const n = document.getElementById(nextId);
-            n.style.display = "flex";
-            setTimeout(() => { n.classList.add('active'); n.style.opacity = "1"; n.style.pointerEvents = "auto"; }, 50);
-        }, 650);
+            const next = document.getElementById(id);
+            next.style.display = "flex";
+            setTimeout(() => { 
+                next.classList.add('active'); next.style.opacity = "1"; 
+                if(id === 'block-bar') {
+                    setTimeout(() => document.getElementById('snd-khe').play(), 600);
+                    setTimeout(() => document.getElementById('snd-pour').play(), 2000);
+                }
+            }, 50);
+        }, 800);
     }
 
-    function preview(i) {
+    function fadeAudio(audio, target, duration) {
+        const start = audio.volume;
+        const startTime = Date.now();
+        const interval = setInterval(() => {
+            const progress = Math.min((Date.now() - startTime) / duration, 1);
+            audio.volume = start + (target - start) * progress;
+            if (progress === 1) clearInterval(interval);
+        }, 50);
+    }
+
+    function pv(i) {
         if(i.files && i.files[0]) {
             const r = new FileReader();
-            r.onload = (e) => { 
-                document.getElementById('pp').src = e.target.result; document.getElementById('pp').style.display = "block";
-                document.getElementById('h-photo').src = e.target.result; document.getElementById('txt-photo').style.display = "none";
+            r.onload = (e) => {
+                document.getElementById('img-p').src = e.target.result; document.getElementById('img-p').style.display="block";
+                document.getElementById('h-photo').src = e.target.result; document.getElementById('t-p').style.display="none";
             };
             r.readAsDataURL(i.files[0]);
         }
     }
 
-    function generateAvatar() {
+    function genAv() {
         const url = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${Math.random()}`;
-        document.getElementById('avatar-img').src = url; document.getElementById('avatar-img').style.display = "block";
-        document.getElementById('h-photo').src = url; document.getElementById('txt-avatar').style.display = "none";
+        document.getElementById('img-a').src = url; document.getElementById('img-a').style.display="block";
+        document.getElementById('h-photo').src = url; document.getElementById('t-a').style.display="none";
     }
 
-    function swapButtons(a, s) { 
-        document.getElementById(a).classList.add('btn-sleep'); 
-        document.getElementById(s).classList.remove('btn-sleep'); 
-        if(a === 'btn-save') document.getElementById('btn-w-hall').classList.remove('btn-sleep');
+    function swapB(a, b) {
+        document.getElementById(a).classList.add('btn-sleep');
+        document.getElementById(b).classList.remove('btn-sleep');
+        if(a === 'btn-save') {
+            document.getElementById('btn-w-hall').classList.remove('btn-sleep');
+            document.getElementById('btn-pass').classList.remove('btn-sleep');
+        }
     }
 
-    window.onload = () => { if(currentID) { updateIDUI(currentID); document.getElementById('btn-w-hall').classList.remove('btn-sleep'); } };
+    window.onload = () => { if(currentID) { updateUI(); document.getElementById('btn-w-hall').classList.remove('btn-sleep'); } }
 </script>
 </body>
 </html>
