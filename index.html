@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>GY-GY Club v7.8.0 | PROFESSIONAL TOOL</title>
+    <title>GY-GY Club v7.8.1 | PROFESSIONAL TOOL</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
@@ -160,127 +160,100 @@
     </div>
 
 <script>
-    // 12-ЯЗЫЧНЫЙ СЛОВАРЬ (Для демонстрации, в идеале выносим в JSON)
     const langData = {
         en: { flag: 'gb', name: 'ENGLISH', lang_hint: "SELECT LANGUAGE", q_whiskey: "«Every joke has a grain of whiskey»", btn_to_hall: "PROCEED TO HALL", btn_get_id: "GET ID", btn_save: "SAVE", btn_confirm: "CONFIRM", btn_enter: "ENTER BAR", label_photo: "PHOTO", label_avatar: "AVATAR", btn_tables: "TABLES", btn_ai: "AI ROOM" },
-        ru: { flag: 'ru', name: 'РУССКИЙ', lang_hint: "ВЫБЕРИТЕ ЯЗЫК", q_whiskey: "«В каждой шутке есть доля виски»", btn_to_hall: "В ХОЛЛ", btn_get_id: "ПОЛУЧИТЬ ID", btn_save: "СОХРАНИТЬ", btn_confirm: "ПОДТВЕРДИТЬ", btn_enter: "В БАР", label_photo: "ФОТО", label_avatar: "АВАТАР", btn_tables: "СТОЛИКИ", btn_ai: "AI ROOM" },
-        // ... другие 10 языков добавляются аналогично
+        ru: { flag: 'ru', name: 'РУССКИЙ', lang_hint: "ВЫБЕРИТЕ ЯЗЫК", q_whiskey: "«В каждой шутке есть доля виски»", btn_to_hall: "В ХОЛЛ", btn_get_id: "ПОЛУЧИТЬ ID", btn_save: "СОХРАНИТЬ", btn_confirm: "ПОДТВЕРДИТЬ", btn_enter: "В БАР", label_photo: "ФОТО", label_avatar: "АВАТАР", btn_tables: "СТОЛИКИ", btn_ai: "AI ROOM" }
     };
 
     let currentLang = 'en';
     let currentFlag = 'gb';
-    let userTrace = JSON.parse(localStorage.getItem('gy_trace')) || null;
+    let userTrace = null;
 
-    // СЕНСОР: Автоопределение языка при загрузке
     window.onload = () => {
+        // Чистим старый мусор, если он мешает
+        try {
+            const raw = localStorage.getItem('gy_trace');
+            if (raw && raw.startsWith('{')) userTrace = JSON.parse(raw);
+        } catch(e) { console.warn("Old storage cleared"); localStorage.removeItem('gy_trace'); }
+
+        // Авто-язык
         const sysLang = navigator.language.split('-')[0];
-        const savedLang = localStorage.getItem('gy_pref_lang');
-        
-        if (savedLang && langData[savedLang]) {
-            applyLang(savedLang);
-        } else if (langData[sysLang]) {
-            applyLang(sysLang);
-        }
+        applyLang(langData[sysLang] ? sysLang : 'en');
         
         if (userTrace) {
             updateIDUI(userTrace.id);
             document.getElementById('btn-w-hall').classList.remove('btn-sleep');
-            if (userTrace.photo) document.getElementById('h-photo').src = userTrace.photo;
-            document.getElementById('h-flag').src = `https://flagcdn.com/w20/${userTrace.flag}.png`;
         }
     };
-
-    function pickL(l, f, n) {
-        localStorage.setItem('gy_pref_lang', l);
-        applyLang(l);
-        document.getElementById('lang-list').classList.remove('open');
-    }
 
     function applyLang(l) {
         currentLang = l;
         const data = langData[l] || langData['en'];
         currentFlag = data.flag;
-        
         document.getElementById('cur-flag').src = `https://flagcdn.com/w20/${data.flag}.png`;
         document.getElementById('cur-name').innerText = data.name;
-        document.body.classList.toggle('rtl', l === 'ae');
-
         document.querySelectorAll('[data-key]').forEach(el => {
             const key = el.getAttribute('data-key');
-            el.innerText = data[key] || langData['en'][key];
+            el.innerText = data[key] || key;
         });
     }
 
     function handleDoor() {
-        document.getElementById('main-door').style.transform = "scale(5) rotate(10deg)";
-        document.getElementById('main-door').style.opacity = "0";
+        const door = document.getElementById('main-door');
+        door.style.transform = "scale(5)";
+        door.style.opacity = "0";
         
+        // Генерим ID если его нет
         if (!userTrace) {
-            const newID = `#GY-${Math.floor(100+Math.random()*899)}-${Math.floor(1000+Math.random()*8999)}`;
+            const newID = `#GY-${Math.floor(100+Math.random()*899)}`;
             userTrace = { id: newID, flag: currentFlag };
             updateIDUI(newID);
         }
         
-        setTimeout(() => portalTransition('block-welcome'), 1500);
+        // ПЕРЕХОД (с защитой от зависания)
+        setTimeout(() => {
+            portalTransition('block-welcome');
+        }, 1000);
     }
 
     function updateIDUI(id) {
         document.getElementById('id-label').innerText = id;
         document.getElementById('h-id').innerText = id;
-        document.getElementById('qr-box-reg').innerHTML = "";
-        new QRCode(document.getElementById("qr-box-reg"), { text: id, width: 85, height: 85 });
-        document.getElementById('h-qr').innerHTML = "";
-        new QRCode(document.getElementById("h-qr"), { text: id, width: 85, height: 85 });
-    }
-
-    function saveUserData() {
-        userTrace.flag = currentFlag;
-        userTrace.photo = document.getElementById('pp').src || document.getElementById('avatar-img').src;
-        localStorage.setItem('gy_trace', JSON.stringify(userTrace));
-        
-        document.getElementById('h-flag').src = `https://flagcdn.com/w20/${currentFlag}.png`;
-        document.getElementById('btn-save').classList.add('btn-sleep');
-        document.getElementById('btn-pass').classList.remove('btn-sleep');
-        document.getElementById('btn-w-hall').classList.remove('btn-sleep');
+        // Защита: если библиотека QRCode не загрузилась, сайт не упадет
+        if (typeof QRCode !== "undefined") {
+            const qrC = document.getElementById("qr-box-reg");
+            qrC.innerHTML = "";
+            new QRCode(qrC, { text: id, width: 85, height: 85 });
+            const qrH = document.getElementById("h-qr");
+            qrH.innerHTML = "";
+            new QRCode(qrH, { text: id, width: 85, height: 85 });
+        }
     }
 
     function portalTransition(nextId) {
         const cur = document.querySelector('.block.active');
-        if(cur) { 
-            cur.style.opacity = "0"; 
-            setTimeout(() => { cur.classList.remove('active'); cur.style.display="none"; }, 600); 
-        }
-        setTimeout(() => {
-            const n = document.getElementById(nextId);
-            n.style.display = "flex";
-            setTimeout(() => { n.classList.add('active'); n.style.opacity = "1"; }, 50);
-        }, 650);
-    }
-
-    function generateAvatar() {
-        const url = `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${Math.random()}`;
-        document.getElementById('avatar-img').src = url;
-        document.getElementById('avatar-img').style.display = "block";
-        document.getElementById('h-photo').src = url;
-        document.getElementById('txt-avatar').style.display = "none";
-    }
-
-    function preview(i) {
-        if(i.files && i.files[0]) {
-            const r = new FileReader();
-            r.onload = (e) => { 
-                document.getElementById('pp').src = e.target.result;
-                document.getElementById('pp').style.display = "block";
-                document.getElementById('h-photo').src = e.target.result;
-                document.getElementById('txt-photo').style.display = "none";
-            };
-            r.readAsDataURL(i.files[0]);
+        if (cur) {
+            cur.style.opacity = "0";
+            setTimeout(() => {
+                cur.classList.remove('active');
+                cur.style.display = "none";
+                
+                const next = document.getElementById(nextId);
+                if (next) {
+                    next.style.display = "flex";
+                    // Маленькая задержка для инициализации opacity
+                    setTimeout(() => {
+                        next.classList.add('active');
+                        next.style.opacity = "1";
+                    }, 50);
+                }
+            }, 600);
         }
     }
 
-    function confirmAndEnter() {
-        document.getElementById('btn-confirm').classList.add('btn-sleep');
-        document.getElementById('btn-enter-bar').classList.remove('btn-sleep');
+    function pickL(l, f, n) {
+        applyLang(l);
+        document.getElementById('lang-list').classList.remove('open');
     }
 </script>
 </body>
